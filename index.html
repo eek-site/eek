@@ -11,6 +11,22 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.eek.nz" />
   <meta property="og:image" content="https://www.eek.nz/og-image.jpg" />
+  
+  <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-17084465163');
+  </script>
+  
+  <!-- Add your Google Analytics tag here if you have one -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script>
+    gtag('config', 'GA_MEASUREMENT_ID');
+  </script> -->
+  
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -128,7 +144,7 @@
   <img src="brand-image.png" alt="Eeek! Broken car illustration" />
   <h1>Eek Mobile Mechanical</h1>
   <p class="tagline">NZ-Wide Mobile Mechanics • Target Arrival: 30–60 Minutes</p>
-  <a class="cta-button" href="tel:0800769000">📞 Call 0800 769 000</a>
+  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('header_call', 'Contact')">📞 Call 0800 769 000</a>
 </header>
 
 <div class="services">
@@ -136,54 +152,97 @@
   <p>Need peace of mind before buying a car? Our certified inspectors come to the vehicle — typically within 30–60 minutes — to deliver a full pre-purchase report on the spot.</p>
   <ul>
     <li>🧾 45+ Point Certified Inspection</li>
-    <li>📍 We travel to seller’s location</li>
+    <li>📍 We travel to seller's location</li>
     <li>💸 $199 fixed flat rate</li>
     <li>⏱️ Nationwide dispatch average: 30–60 minutes</li>
   </ul>
-  <a class="cta-button" href="tel:0800769000">📞 Book an Inspector Now</a>
+  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')">📞 Book an Inspector Now</a>
 </div>
 
 <div class="services">
-  <h2>Breakdown? We’ll Be There in 30–60 Minutes</h2>
-  <p>Engine won’t start? Warning lights on? Call now and our nationwide mobile team will head to you — usually within 30–60 minutes — and diagnose the issue on-site.</p>
+  <h2>Breakdown? We'll Be There in 30–60 Minutes</h2>
+  <p>Engine won't start? Warning lights on? Call now and our nationwide mobile team will head to you — usually within 30–60 minutes — and diagnose the issue on-site.</p>
   <ul>
     <li>🛠️ Fault detection & diagnostics</li>
     <li>📍 Anywhere in New Zealand</li>
     <li>🧰 Tools & scanners onboard</li>
     <li>📞 Speak directly with a mobile tech</li>
   </ul>
-  <a class="cta-button" href="tel:0800769000">📞 Request Fast Assistance</a>
+  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')">📞 Request Fast Assistance</a>
 </div>
 
 <div class="services">
   <h2>Flat Battery? Get a Boost in 30–60 Minutes</h2>
-  <p>Don’t wait hours. If your battery’s dead, we’ll come to you — typically in 30–60 minutes — and get you started with safe, professional-grade jump equipment.</p>
+  <p>Don't wait hours. If your battery's dead, we'll come to you — typically in 30–60 minutes — and get you started with safe, professional-grade jump equipment.</p>
   <ul>
     <li>🔋 All makes/models supported</li>
     <li>⚡ Includes voltage + health check</li>
     <li>📍 Fastest jump service nationwide</li>
     <li>🧭 Real-time tech dispatch</li>
   </ul>
-  <a class="cta-button" href="tel:0800769000">📞 Call for Battery Help</a>
+  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Call for Battery Help</a>
 </div>
 
 <div class="services">
-  <h2>Wrong Fuel Rescue – Don’t Start the Engine</h2>
-  <p>Put petrol in your diesel car? Or vice versa? We’ll be there fast — typically within 30–60 minutes — to safely drain your tank on-site and prevent engine damage.</p>
+  <h2>Wrong Fuel Rescue – Don't Start the Engine</h2>
+  <p>Put petrol in your diesel car? Or vice versa? We'll be there fast — typically within 30–60 minutes — to safely drain your tank on-site and prevent engine damage.</p>
   <ul>
     <li>⛽ Petrol/diesel mix-ups handled</li>
     <li>🧯 Safe, insured on-site fuel drain</li>
     <li>🛻 No towing required</li>
     <li>📞 Trusted across NZ since day one</li>
   </ul>
-  <a class="cta-button" href="tel:0800769000">📞 Get Fuel Drain Help</a>
+  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')">📞 Get Fuel Drain Help</a>
 </div>
 
 <footer>
   &copy; 2025 Eek Mobile Mechanical. All rights reserved.
 </footer>
 
-<a class="sticky-call" href="tel:0800769000">📞 Call Eek Now</a>
+<a class="sticky-call" href="tel:0800769000" onclick="trackConversion('sticky_call', 'Contact')">📞 Call Eek Now</a>
+
+<script>
+// Function to track conversions
+function trackConversion(eventAction, eventCategory) {
+  if (typeof gtag !== 'undefined') {
+    // Track the event for analytics
+    gtag('event', eventAction, {
+      'event_category': eventCategory,
+      'event_label': 'Phone Call Click',
+      'value': 1
+    });
+    
+    // Track Google Ads conversion for Contact
+    gtag('event', 'conversion', {
+      'send_to': 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
+    });
+  }
+}
+
+// Track page engagement
+window.addEventListener('load', function() {
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'page_view', {
+      'page_title': document.title,
+      'page_location': window.location.href
+    });
+  }
+});
+
+// Track scroll depth
+let scrollTracked = false;
+window.addEventListener('scroll', function() {
+  if (!scrollTracked && window.scrollY > document.body.scrollHeight * 0.5) {
+    scrollTracked = true;
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'scroll_50_percent', {
+        'event_category': 'Engagement',
+        'event_label': 'Scrolled 50% of page'
+      });
+    }
+  }
+});
+</script>
 
 </body>
 </html>
