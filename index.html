@@ -112,7 +112,7 @@
       color: #999;
       padding: 20px 0;
     }
-    .sticky-call {
+    .sticky-call, .sticky-payment {
       position: fixed;
       bottom: 15px;
       right: 15px;
@@ -124,6 +124,10 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
       text-decoration: none;
       z-index: 999;
+    }
+    .sticky-payment {
+      right: 150px;
+      display: none;
     }
   </style>
 </head>
@@ -143,14 +147,14 @@
     <li>🧾 45‑point certified mechanical inspection</li>
     <li>📍 Inspection at seller or dealership location</li>
     <li>💸 $199 fixed flat rate, no surprises</li>
-    <li>⏱️ Nationwide dispatch in 30–60 minutes</li>
+    <li>⏱️ Nationwide dispatch in 30–60 minutes</li>
   </ul>
   <a class="cta-button" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')">📞 Book an Inspector Now</a>
 </div>
 
 <div class="services">
-  <h2>Breakdown? We’ll Be There in 30–60 Minutes</h2>
-  <p>Engine won’t start? Warning lights? Our mobile tech arrives fast and diagnoses the issue on-site.</p>
+  <h2>Breakdown? We'll Be There in 30–60 Minutes</h2>
+  <p>Engine won't start? Warning lights? Our mobile tech arrives fast and diagnoses the issue on-site.</p>
   <ul>
     <li>🛠️ Fault detection & diagnostic scanning</li>
     <li>🔍 On-site assessment and minor repairs</li>
@@ -174,8 +178,8 @@
 </div>
 
 <div class="services">
-  <h2>Wrong Fuel Rescue – Don’t Start the Engine</h2>
-  <p>Filled with petrol instead of diesel? Don’t panic—we drain it quickly and safely.</p>
+  <h2>Wrong Fuel Rescue – Don't Start the Engine</h2>
+  <p>Filled with petrol instead of diesel? Don't panic—we drain it quickly and safely.</p>
   <ul>
     <li>⛽ Petrol/diesel mix-ups safely drained on-site</li>
     <li>🧯 Fully insured fuel‑drain process</li>
@@ -200,8 +204,30 @@
   <a class="cta-button" href="tel:0800769000" onclick="trackConversion('trailer_call','Contact')">📞 Call for Trailer Help Now</a>
 </div>
 
+<a id="stripePaymentSticky" class="sticky-payment" href="#">💳 Make Payment</a>
+
+<section id="stripePaymentBlock" style="display: none; background-color: #ffffff; padding: 100px 20px; text-align: center; color: #333;">
+  <div style="background-color: #f5f5f5; padding: 40px; border-radius: 12px; max-width: 700px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+    <h1 style="font-size: 2.5em; margin-bottom: 0.5em;">Secure Roadside Payment</h1>
+    <p style="font-size: 1.2em; margin-bottom: 1.5em;">Confirm your payment to get help on the way — fast, safe, and secure.</p>
+    <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: #333;">
+      <input type="checkbox" id="termsCheckbox" style="transform: scale(1.5);" />
+      <span>I agree to the Eek terms of service 
+        <a href="https://roadandrescue.sharepoint.com/sites/rar/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2Frar%2FShared%20Documents%2F1000%20ACCOUNTING%20AND%20LEGAL%2FRoad%20and%20Rescue%20Ltd%2F1001%20COMPANY%20DOCUMENTS%2F20210401%20RAR%20NI%20END%20USER%20TERMS%20OF%20SERVICE%2Epdf" target="_blank" style="color: #ff5500; text-decoration: underline;">
+          View terms of use
+        </a>
+      </span>
+    </label>
+    <br><br>
+    <button id="payNowButton" style="display: none; background-color: #ff5500; color: white; padding: 14px 32px; font-size: 1.2em; border: none; border-radius: 8px; cursor: pointer;">
+      Pay Now
+    </button>
+  </div>
+</section>
+
 <footer>
-  &copy; 2025 Eek Mobile Mechanical. All rights reserved.
+  &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
+  <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EePeZL039ZdBisigeixY7lkBMWcEEC4SBcSdN5rDmp_B3w?e=0stgCb" target="_blank" style="color: #666; text-decoration: underline;">Privacy Policy</a>
 </footer>
 
 <a class="sticky-call" href="tel:0800769000" onclick="trackConversion('sticky_call', 'Contact')">📞 Call Eek Now</a>
@@ -241,6 +267,31 @@ window.addEventListener('scroll', function() {
     }
   }
 });
+
+(function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+
+  const box = document.getElementById('stripePaymentBlock');
+  const checkbox = document.getElementById('termsCheckbox');
+  const button = document.getElementById('payNowButton');
+  const sticky = document.getElementById('stripePaymentSticky');
+
+  if (token && box && checkbox && button && sticky) {
+    box.style.display = 'block';
+    sticky.style.display = 'inline-block';
+
+    sticky.href = '#stripePaymentBlock';
+
+    checkbox.addEventListener('change', () => {
+      button.style.display = checkbox.checked ? 'inline-block' : 'none';
+    });
+
+    button.addEventListener('click', () => {
+      window.location.href = `https://buy.stripe.com/${token}`;
+    });
+  }
+})();
 </script>
 
 </body>
