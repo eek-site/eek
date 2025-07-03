@@ -8,7 +8,7 @@ GitHub Pages will automatically serve this for any 404 errors.
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting... | Eek Mechanical</title>
+    <title>Redirecting... | Eek Mobile Mechanical</title>
     <style>
         * {
             margin: 0;
@@ -222,37 +222,51 @@ GitHub Pages will automatically serve this for any 404 errors.
             </div>
             
             <div class="manual-link">
-                <a href="https://eek.nz" class="cta-button">🏠 Go to Homepage</a>
+                <a href="https://www.eek.nz" class="cta-button">🏠 Go to Homepage</a>
                 <a href="tel:0800769000" class="cta-button">📞 Call 0800 769 000</a>
             </div>
         </div>
     </div>
 
     <script>
-        // Your comprehensive redirect database
+        // REAL redirect database from actual Road & Rescue redirects
+        // Note: /mjuris and /supplier are NOT here - they will be new pages on eek.nz
         const redirectDatabase = {
-            '/mjuris': 'https://eek.nz/terms-of-service',
-            '/supplier': 'https://eek.nz/supplier-upload',
-            '/rescue-me': 'https://eek.nz/rescue-me',
-            '/customer-support': 'https://eek.nz/customer-escalation',
-            '/terms': 'https://eek.nz/terms-of-service',
-            '/supplier-portal': 'https://eek.nz/supplier-upload',
-            '/invoice-upload': 'https://eek.nz/supplier-upload',
-            '/job-status': 'https://eek.nz/job',
-            '/roadside-assistance': 'https://eek.nz/',
-            '/fuel-delivery': 'https://eek.nz/rescue-me?service=fuel',
-            '/jump-start': 'https://eek.nz/rescue-me?service=jumpstart',
-            '/locksmith': 'https://eek.nz/rescue-me?service=locksmith',
-            '/tyre-service': 'https://eek.nz/rescue-me?service=tyre',
-            '/mechanic': 'https://eek.nz/rescue-me?service=mechanic',
-            '/suppliers': 'https://eek.nz/supplier-upload',
-            '/legal': 'https://eek.nz/terms-of-service',
-            '/support': 'https://eek.nz/customer-escalation',
-            '/help': 'https://eek.nz/customer-escalation',
-            '/contact': 'https://eek.nz/customer-escalation',
-            '/emergency': 'https://eek.nz/rescue-me',
-            '/booking': 'https://eek.nz/rescue-me',
-            '/schedule': 'https://eek.nz/rescue-me'
+            // Application and availability forms
+            '/apply': 'https://forms.office.com/r/XLdGk4wDYY',
+            '/availability': 'https://forms.office.com/r/jGgFgQUj0N',
+            '/candidate': 'https://forms.office.com/r/EsHxc7mAb4',
+            
+            // Legal and policy documents (keep existing SharePoint links)
+            '/privacy': 'https://roadandrescue.sharepoint.com/:b:/s/rar/EePeZL039ZdBisigeixY7lkBMWcEEC4SBcSdN5rDmp_B3w?e=0stgCb',
+            '/terms': 'https://roadandrescue.sharepoint.com/:b:/s/rar/EdoYqNDR0HBKn-XLMtPP2BIBhgNR-mMBJKxTVmnyIbeEJA?e=o8SCDY',
+            '/terms-of-service': 'https://roadandrescue.sharepoint.com/:b:/s/rar/EdoYqNDR0HBKn-XLMtPP2BIBhgNR-mMBJKxTVmnyIbeEJA?e=NAzALO',
+            
+            // Supplier forms (but NOT /supplier itself - that will be a new page)
+            '/supplier-relations': 'https://forms.office.com/r/4XP7Rwpefq',
+            '/supplier-terms': 'https://roadandrescue.sharepoint.com/:b:/s/rar/EZJjHEYujzdOlfcniAlJ8toBE_AcQHZf_o9l0hliX1Ydwg?e=qrrONR',
+            
+            // Customer support and escalation forms
+            '/customer-escalation': 'https://forms.office.com/r/qDtVHgBbJk',
+            '/dispute-form': 'https://forms.office.com/r/qDtVHgBbJk',
+            '/helper-form': 'https://forms.office.com/r/BE90j85gJr',
+            '/triage': 'https://forms.office.com/r/hLJkX3NeLq',
+            
+            // Service and job forms
+            '/rescue-me': 'https://forms.office.com/r/sdf0YirK6s',
+            '/start': 'https://forms.office.com/r/sdf0YirK6s',
+            '/job-sheet': 'https://forms.office.com/r/FNTtRBwQtT',
+            '/find-me': 'https://form.jotform.com/251017058434047',
+            
+            // Utility redirects
+            '/map': 'https://www.google.com/maps/search/where+am+I',
+            
+            // Case variations (common typos)
+            '/Apply': 'https://forms.office.com/r/XLdGk4wDYY',
+            '/APPLY': 'https://forms.office.com/r/XLdGk4wDYY',
+            '/Availability': 'https://forms.office.com/r/jGgFgQUj0N',
+            '/RESCUE-ME': 'https://forms.office.com/r/sdf0YirK6s',
+            '/Rescue-Me': 'https://forms.office.com/r/sdf0YirK6s'
         };
 
         function handleRedirect() {
@@ -307,12 +321,12 @@ GitHub Pages will automatically serve this for any 404 errors.
             // Generate suggestions with Eek branding
             const suggestionsList = document.getElementById('suggestionsList');
             const suggestions = [
-                { url: 'https://eek.nz/', title: '🏠 Homepage', desc: 'Main Eek Mobile Mechanical website' },
-                { url: 'https://eek.nz/rescue-me', title: '🚨 Book Emergency Service', desc: 'Get mobile mechanical assistance in 30-60 minutes' },
+                { url: 'https://www.eek.nz/', title: '🏠 Homepage', desc: 'Main Eek Mobile Mechanical website' },
                 { url: 'tel:0800769000', title: '📞 Call 0800 769 000', desc: 'Speak directly with our dispatch team' },
-                { url: 'https://eek.nz/supplier-upload', title: '🏢 Supplier Portal', desc: 'Upload invoices and manage supplier account' },
-                { url: 'https://eek.nz/customer-escalation', title: '💬 Customer Support', desc: 'Get help with your service' },
-                { url: 'https://eek.nz/job', title: '📋 Job Status', desc: 'Check the status of your current service request' }
+                { url: 'https://forms.office.com/r/sdf0YirK6s', title: '🚨 Emergency Service', desc: 'Get mobile mechanical assistance in 30-60 minutes' },
+                { url: 'https://forms.office.com/r/jGgFgQUj0N', title: '📋 Check Availability', desc: 'See when our technicians are available' },
+                { url: 'https://forms.office.com/r/qDtVHgBbJk', title: '💬 Customer Support', desc: 'Get help with your service or account' },
+                { url: 'https://forms.office.com/r/XLdGk4wDYY', title: '📝 Apply to Work', desc: 'Join our team of mobile technicians' }
             ];
             
             suggestionsList.innerHTML = suggestions.map(s => `
