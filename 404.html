@@ -1,0 +1,334 @@
+<!-- 
+Save this as "404.html" in your GitHub Pages repository root.
+GitHub Pages will automatically serve this for any 404 errors.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecting... | Eek Mechanical</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 700px;
+            padding: 40px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+        
+        .logo {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .brand-tagline {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #f5f5f5;
+            border-top: 4px solid #ff5500;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .message {
+            font-size: 1.2em;
+            margin: 20px 0;
+            color: #333;
+        }
+        
+        .countdown {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #ff5500;
+        }
+        
+        .manual-link {
+            margin-top: 30px;
+        }
+        
+        .manual-link a, .cta-button {
+            background-color: #ff5500;
+            color: white;
+            text-decoration: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin: 0 7px;
+        }
+        
+        .manual-link a:hover, .cta-button:hover {
+            background-color: #e64a00;
+            transform: translateY(-2px);
+        }
+        
+        .error-container {
+            display: none;
+        }
+        
+        .error-container.show {
+            display: block;
+        }
+        
+        .error-container h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .error-container p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .suggestions {
+            margin-top: 30px;
+            text-align: left;
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 12px;
+        }
+        
+        .suggestions h3 {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .suggestions ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .suggestions li {
+            margin: 10px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .suggestions li:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .suggestions a {
+            color: #333;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .suggestions a strong {
+            color: #ff5500;
+            font-size: 1.1em;
+        }
+        
+        .suggestions a small {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .suggestions a:hover strong {
+            color: #e64a00;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .logo {
+                font-size: 2em;
+            }
+            
+            .manual-link a, .cta-button {
+                padding: 12px 20px;
+                font-size: 1.1em;
+                margin: 5px;
+                display: block;
+            }
+            
+            .suggestions {
+                padding: 15px;
+            }
+            
+            .suggestions li {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🔧 Eek Mobile Mechanical</div>
+        <div class="brand-tagline">Looking for the page you requested...</div>
+        
+        <div id="loadingContainer">
+            <div class="spinner"></div>
+            <div class="message">Checking our redirect database</div>
+            <div class="countdown" id="countdown">3</div>
+        </div>
+        
+        <div id="errorContainer" class="error-container">
+            <h2>Page Not Found</h2>
+            <p>We couldn't find the page you're looking for, and no redirect was configured for this URL.</p>
+            
+            <div class="suggestions">
+                <h3>🔧 Try These Popular Pages Instead:</h3>
+                <ul id="suggestionsList">
+                    <!-- Suggestions will be populated here -->
+                </ul>
+            </div>
+            
+            <div class="manual-link">
+                <a href="https://eek.nz" class="cta-button">🏠 Go to Homepage</a>
+                <a href="tel:0800769000" class="cta-button">📞 Call 0800 769 000</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Your comprehensive redirect database
+        const redirectDatabase = {
+            '/mjuris': 'https://eek.nz/terms-of-service',
+            '/supplier': 'https://eek.nz/supplier-upload',
+            '/rescue-me': 'https://eek.nz/rescue-me',
+            '/customer-support': 'https://eek.nz/customer-escalation',
+            '/terms': 'https://eek.nz/terms-of-service',
+            '/supplier-portal': 'https://eek.nz/supplier-upload',
+            '/invoice-upload': 'https://eek.nz/supplier-upload',
+            '/job-status': 'https://eek.nz/job',
+            '/roadside-assistance': 'https://eek.nz/',
+            '/fuel-delivery': 'https://eek.nz/rescue-me?service=fuel',
+            '/jump-start': 'https://eek.nz/rescue-me?service=jumpstart',
+            '/locksmith': 'https://eek.nz/rescue-me?service=locksmith',
+            '/tyre-service': 'https://eek.nz/rescue-me?service=tyre',
+            '/mechanic': 'https://eek.nz/rescue-me?service=mechanic',
+            '/suppliers': 'https://eek.nz/supplier-upload',
+            '/legal': 'https://eek.nz/terms-of-service',
+            '/support': 'https://eek.nz/customer-escalation',
+            '/help': 'https://eek.nz/customer-escalation',
+            '/contact': 'https://eek.nz/customer-escalation',
+            '/emergency': 'https://eek.nz/rescue-me',
+            '/booking': 'https://eek.nz/rescue-me',
+            '/schedule': 'https://eek.nz/rescue-me'
+        };
+
+        function handleRedirect() {
+            const currentPath = window.location.pathname;
+            
+            // Check for exact match
+            if (redirectDatabase[currentPath]) {
+                performRedirect(redirectDatabase[currentPath]);
+                return;
+            }
+            
+            // Check for case-insensitive match
+            const lowerPath = currentPath.toLowerCase();
+            for (const [key, value] of Object.entries(redirectDatabase)) {
+                if (key.toLowerCase() === lowerPath) {
+                    performRedirect(value);
+                    return;
+                }
+            }
+            
+            // No match found - show error page
+            showErrorPage(currentPath);
+        }
+        
+        function performRedirect(url) {
+            const countdown = document.getElementById('countdown');
+            let timeLeft = 3;
+            
+            document.querySelector('.message').innerHTML = `
+                ✅ Found it! Redirecting to:<br>
+                <strong style="color: #ff5500;">${url}</strong>
+            `;
+            
+            document.querySelector('.brand-tagline').innerHTML = 
+                'NZ-Wide Mobile Mechanics • Redirecting you now...';
+            
+            const timer = setInterval(() => {
+                timeLeft--;
+                countdown.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    window.location.href = url;
+                }
+            }, 1000);
+        }
+        
+        function showErrorPage(path) {
+            document.getElementById('loadingContainer').style.display = 'none';
+            document.getElementById('errorContainer').classList.add('show');
+            
+            // Generate suggestions with Eek branding
+            const suggestionsList = document.getElementById('suggestionsList');
+            const suggestions = [
+                { url: 'https://eek.nz/', title: '🏠 Homepage', desc: 'Main Eek Mobile Mechanical website' },
+                { url: 'https://eek.nz/rescue-me', title: '🚨 Book Emergency Service', desc: 'Get mobile mechanical assistance in 30-60 minutes' },
+                { url: 'tel:0800769000', title: '📞 Call 0800 769 000', desc: 'Speak directly with our dispatch team' },
+                { url: 'https://eek.nz/supplier-upload', title: '🏢 Supplier Portal', desc: 'Upload invoices and manage supplier account' },
+                { url: 'https://eek.nz/customer-escalation', title: '💬 Customer Support', desc: 'Get help with your service' },
+                { url: 'https://eek.nz/job', title: '📋 Job Status', desc: 'Check the status of your current service request' }
+            ];
+            
+            suggestionsList.innerHTML = suggestions.map(s => `
+                <li>
+                    <a href="${s.url}">
+                        <strong>${s.title}</strong><br>
+                        <small>${s.desc}</small>
+                    </a>
+                </li>
+            `).join('');
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(handleRedirect, 500);
+        });
+    </script>
+</body>
+</html>
