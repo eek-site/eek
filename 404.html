@@ -207,7 +207,28 @@ GitHub Pages will automatically serve this for any 404 errors.
         <div id="loadingContainer">
             <div class="spinner"></div>
             <div class="message">Checking our redirect database</div>
-            <div class="countdown" id="countdown">3</div>
+            <div class="countdown" id="countdown" style="display: none;">3</div>
+            
+            <!-- Trust indicators -->
+            <div style="margin-top: 30px; padding: 20px; background: #f0f8ff; border-radius: 8px; border-left: 4px solid #007acc;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5em; color: #007acc;">🔒</div>
+                        <small style="color: #666;">Secure Connection</small>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5em; color: #28a745;">✅</div>
+                        <small style="color: #666;">Verified Service</small>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5em; color: #ff6b35;">⚡</div>
+                        <small style="color: #666;">Fast Response</small>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 15px; color: #555; font-size: 0.9em;">
+                    <strong>Your safety is our priority.</strong> You're being connected to official Eek Mechanical services with bank-level security.
+                </p>
+            </div>
         </div>
         
         <div id="errorContainer" class="error-container">
@@ -292,26 +313,86 @@ GitHub Pages will automatically serve this for any 404 errors.
         }
         
         function performRedirect(url) {
-            const countdown = document.getElementById('countdown');
-            let timeLeft = 3;
+            // Determine what type of service they're accessing
+            let serviceInfo = getServiceInfo(url, window.location.pathname);
             
             document.querySelector('.message').innerHTML = `
-                ✅ Found it! Redirecting to:<br>
-                <strong style="color: #ff5500;">${url}</strong>
+                <strong style="color: #ff5500;">✅ ${serviceInfo.title}</strong><br>
+                ${serviceInfo.description}
             `;
             
             document.querySelector('.brand-tagline').innerHTML = 
-                'NZ-Wide Mobile Mechanics • Redirecting you now...';
+                'Securely connecting you to the right service...';
             
-            const timer = setInterval(() => {
-                timeLeft--;
-                countdown.textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    clearInterval(timer);
-                    window.location.href = url;
-                }
-            }, 1000);
+            document.getElementById('countdown').style.display = 'none';
+            
+            // Show loading for a brief moment for UX, then redirect immediately
+            setTimeout(() => {
+                window.location.href = url;
+            }, 1500);
+        }
+        
+        function getServiceInfo(url, path) {
+            // Customer-friendly explanations for each service
+            if (path === '/apply') {
+                return {
+                    title: 'Joining Our Team',
+                    description: 'Taking you to our secure application form. We\'re excited you want to join our team of mobile mechanical experts!'
+                };
+            }
+            if (path === '/availability') {
+                return {
+                    title: 'Checking Technician Availability',
+                    description: 'Connecting you to our real-time availability system to show when our certified technicians can help you.'
+                };
+            }
+            if (path === '/find-me') {
+                return {
+                    title: 'Location Services',
+                    description: 'Opening our secure location service to help us find you quickly for faster emergency response.'
+                };
+            }
+            if (path === '/rescue-me' || path === '/start') {
+                return {
+                    title: 'Emergency Service Request',
+                    description: 'Taking you to our secure emergency booking system. Our dispatch team will contact you within minutes.'
+                };
+            }
+            if (path === '/customer-escalation' || path === '/dispute-form') {
+                return {
+                    title: 'Customer Support',
+                    description: 'Connecting you to our customer care team. We\'re here to resolve any concerns quickly and fairly.'
+                };
+            }
+            if (path === '/supplier-relations') {
+                return {
+                    title: 'Supplier Partnership',
+                    description: 'Taking you to our secure supplier portal for business inquiries and partnership opportunities.'
+                };
+            }
+            if (path === '/map') {
+                return {
+                    title: 'Finding Your Location',
+                    description: 'Opening location services to help our technicians reach you faster. Your privacy and security are protected.'
+                };
+            }
+            if (url.includes('sharepoint.com')) {
+                return {
+                    title: 'Secure Document Access',
+                    description: 'Taking you to our secure document portal for terms, policies, and important information.'
+                };
+            }
+            if (url.includes('forms.office.com')) {
+                return {
+                    title: 'Secure Form Access',
+                    description: 'Connecting you to our protected Microsoft Forms system for safe and secure information submission.'
+                };
+            }
+            // Default fallback
+            return {
+                title: 'Connecting You Safely',
+                description: 'Taking you to the secure service you requested. All your information is protected and encrypted.'
+            };
         }
         
         function showErrorPage(path) {
@@ -341,7 +422,7 @@ GitHub Pages will automatically serve this for any 404 errors.
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(handleRedirect, 500);
+            setTimeout(handleRedirect, 800); // Slightly longer to show trust indicators
         });
     </script>
 </body>
