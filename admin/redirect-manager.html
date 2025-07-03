@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eek Mechanical - Redirect Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .form-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .form-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e8ed;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            margin-left: 10px;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+        
+        .redirects-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e1e8ed;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e1e8ed;
+            vertical-align: top;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .redirect-url {
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .export-section {
+            background: #e8f5e8;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .export-section h4 {
+            color: #155724;
+            margin-bottom: 15px;
+        }
+        
+        textarea.export-output {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            background: #f8f9fa;
+            border: 1px solid #d1ecf1;
+            min-height: 200px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 Redirect Management</h1>
+            <p>Manage URL redirects for Eek Mechanical website migration</p>
+        </div>
+        
+        <div class="content">
+            <!-- Add New Redirect Form -->
+            <div class="form-section">
+                <h3>Add New Redirect</h3>
+                <form id="redirectForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fromUrl">From URL (Old Road & Rescue)</label>
+                            <input type="text" id="fromUrl" placeholder="/mjuris" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="toUrl">To URL (New Destination)</label>
+                            <input type="text" id="toUrl" placeholder="https://eek.nz/legal" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="redirectType">Redirect Type</label>
+                            <select id="redirectType">
+                                <option value="301">301 - Permanent</option>
+                                <option value="302">302 - Temporary</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <select id="status">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Description (Optional)</label>
+                        <input type="text" id="description" placeholder="Legal page redirect for compliance">
+                    </div>
+                    
+                    <button type="submit" class="btn">Add Redirect</button>
+                    <button type="button" class="btn btn-secondary" onclick="importRedirects()">Bulk Import</button>
+                </form>
+            </div>
+            
+            <!-- Redirects Table -->
+            <div class="form-section">
+                <h3>Current Redirects</h3>
+                <div class="redirects-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>From URL</th>
+                                <th>To URL</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="redirectsTable">
+                            <!-- Redirects will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Export Section -->
+            <div class="export-section">
+                <h4>Export Configuration</h4>
+                <p>Generate configuration files for different platforms:</p>
+                <div style="margin: 15px 0;">
+                    <button class="btn" onclick="exportAsNetlify()">Export as Netlify _redirects</button>
+                    <button class="btn" onclick="exportAsApache()">Export as .htaccess</button>
+                    <button class="btn" onclick="exportAsJSON()">Export as JSON</button>
+                    <button class="btn" onclick="exportAsJavaScript()">Export as JavaScript</button>
+                </div>
+                <textarea id="exportOutput" class="export-output" placeholder="Export output will appear here..." readonly></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Pre-populated redirects from Road & Rescue migration
+        let redirects = [
+            {
+                id: 1,
+                fromUrl: '/mjuris',
+                toUrl: 'https://eek.nz/terms-of-service',
+                type: '301',
+                status: 'active',
+                description: 'Legal/terms redirect from old Road & Rescue'
+            },
+            {
+                id: 2,
+                fromUrl: '/supplier',
+                toUrl: 'https://eek.nz/supplier-upload',
+                type: '301',
+                status: 'active',
+                description: 'Supplier portal redirect'
+            },
+            {
+                id: 3,
+                fromUrl: '/rescue-me',
+                toUrl: 'https://eek.nz/rescue-me',
+                type: '301',
+                status: 'active',
+                description: 'Emergency service booking - keep same path'
+            },
+            {
+                id: 4,
+                fromUrl: '/customer-support',
+                toUrl: 'https://eek.nz/customer-escalation',
+                type: '301',
+                status: 'active',
+                description: 'Customer support to escalation page'
+            },
+            {
+                id: 5,
+                fromUrl: '/terms',
+                toUrl: 'https://eek.nz/terms-of-service',
+                type: '301',
+                status: 'active',
+                description: 'Terms page redirect'
+            },
+            {
+                id: 6,
+                fromUrl: '/supplier-portal',
+                toUrl: 'https://eek.nz/supplier-upload',
+                type: '301',
+                status: 'active',
+                description: 'Supplier portal alternative path'
+            },
+            {
+                id: 7,
+                fromUrl: '/invoice-upload',
+                toUrl: 'https://eek.nz/supplier-upload',
+                type: '301',
+                status: 'active',
+                description: 'Invoice upload redirect to supplier portal'
+            },
+            {
+                id: 8,
+                fromUrl: '/job-status',
+                toUrl: 'https://eek.nz/job',
+                type: '301',
+                status: 'active',
+                description: 'Job status page redirect'
+            },
+            {
+                id: 9,
+                fromUrl: '/roadside-assistance',
+                toUrl: 'https://eek.nz/',
+                type: '301',
+                status: 'active',
+                description: 'Main service redirect to homepage'
+            },
+            {
+                id: 10,
+                fromUrl: '/fuel-delivery',
+                toUrl: 'https://eek.nz/rescue-me?service=fuel',
+                type: '301',
+                status: 'active',
+                description: 'Fuel delivery service booking'
+            },
+            {
+                id: 11,
+                fromUrl: '/jump-start',
+                toUrl: 'https://eek.nz/rescue-me?service=jumpstart',
+                type: '301',
+                status: 'active',
+                description: 'Jump start service booking'
+            },
+            {
+                id: 12,
+                fromUrl: '/locksmith',
+                toUrl: 'https://eek.nz/rescue-me?service=locksmith',
+                type: '301',
+                status: 'active',
+                description: 'Locksmith service booking'
+            },
+            {
+                id: 13,
+                fromUrl: '/tyre-service',
+                toUrl: 'https://eek.nz/rescue-me?service=tyre',
+                type: '301',
+                status: 'active',
+                description: 'Tyre service booking'
+            },
+            {
+                id: 14,
+                fromUrl: '/mechanic',
+                toUrl: 'https://eek.nz/rescue-me?service=mechanic',
+                type: '301',
+                status: 'active',
+                description: 'Mechanic service booking'
+            }
+        ];
+        
+        let nextId = 15;
+        
+        // Load redirects from memory (in real implementation, you'd load from a file or API)
+        function loadRedirects() {
+            renderRedirectsTable();
+        }
+        
+        // Add new redirect with validation
+        document.getElementById('redirectForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fromUrl = document.getElementById('fromUrl').value.trim();
+            const toUrl = document.getElementById('toUrl').value.trim();
+            
+            // Security validation
+            if (!isValidFromUrl(fromUrl)) {
+                alert('Invalid "From URL". Must start with / and contain only safe characters.');
+                return;
+            }
+            
+            if (!isValidToUrl(toUrl)) {
+                alert('Invalid "To URL". Must be a valid HTTP/HTTPS URL or start with /');
+                return;
+            }
+            
+            // Check for duplicates
+            if (redirects.some(r => r.fromUrl === fromUrl)) {
+                alert('A redirect for this URL already exists.');
+                return;
+            }
+            
+            const newRedirect = {
+                id: nextId++,
+                fromUrl: sanitizeInput(fromUrl),
+                toUrl: sanitizeInput(toUrl),
+                type: document.getElementById('redirectType').value,
+                status: document.getElementById('status').value,
+                description: sanitizeInput(document.getElementById('description').value)
+            };
+            
+            redirects.push(newRedirect);
+            renderRedirectsTable();
+            
+            // Clear form
+            document.getElementById('redirectForm').reset();
+            
+            alert('Redirect added successfully!');
+        });
+        
+        // Security validation functions
+        function isValidFromUrl(url) {
+            // Must start with / and contain only safe characters
+            const pattern = /^\/[a-zA-Z0-9\-_\/]*$/;
+            return pattern.test(url) && url.length <= 100;
+        }
+        
+        function isValidToUrl(url) {
+            // Must be valid HTTP/HTTPS URL or relative path
+            if (url.startsWith('/')) {
+                return isValidFromUrl(url);
+            }
+            try {
+                const urlObj = new URL(url);
+                return ['http:', 'https:'].includes(urlObj.protocol);
+            } catch {
+                return false;
+            }
+        }
+        
+        function sanitizeInput(input) {
+            // Remove potentially dangerous characters
+            return input.replace(/[<>\"'&]/g, '').trim();
+        }
+        
+        // Render redirects table
+        function renderRedirectsTable() {
+            const tbody = document.getElementById('redirectsTable');
+            tbody.innerHTML = '';
+            
+            redirects.forEach(redirect => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><span class="redirect-url">${redirect.fromUrl}</span></td>
+                    <td><span class="redirect-url">${redirect.toUrl}</span></td>
+                    <td>${redirect.type}</td>
+                    <td><span class="status-badge status-${redirect.status}">${redirect.status}</span></td>
+                    <td>${redirect.description}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn btn-danger" onclick="deleteRedirect(${redirect.id})">Delete</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Delete redirect
+        function deleteRedirect(id) {
+            if (confirm('Are you sure you want to delete this redirect?')) {
+                redirects = redirects.filter(redirect => redirect.id !== id);
+                renderRedirectsTable();
+            }
+        }
+        
+        // Export functions
+        function exportAsNetlify() {
+            let output = '# Netlify _redirects file\n';
+            output += '# https://docs.netlify.com/routing/redirects/\n\n';
+            
+            redirects.filter(r => r.status === 'active').forEach(redirect => {
+                output += `${redirect.fromUrl}    ${redirect.toUrl}    ${redirect.type}\n`;
+            });
+            
+            document.getElementById('exportOutput').value = output;
+        }
+        
+        function exportAsApache() {
+            let output = '# Apache .htaccess redirects\n';
+            output += 'RewriteEngine On\n\n';
+            
+            redirects.filter(r => r.status === 'active').forEach(redirect => {
+                const redirectType = redirect.type === '301' ? 'permanent' : 'temp';
+                output += `RewriteRule ^${redirect.fromUrl.substring(1)}/?$ ${redirect.toUrl} [R=${redirectType},L]\n`;
+            });
+            
+            document.getElementById('exportOutput').value = output;
+        }
+        
+        function exportAsJSON() {
+            const activeRedirects = redirects.filter(r => r.status === 'active');
+            document.getElementById('exportOutput').value = JSON.stringify(activeRedirects, null, 2);
+        }
+        
+        function exportAsJavaScript() {
+            let output = '// JavaScript redirect handler\n';
+            output += 'function handleRedirect() {\n';
+            output += '    const path = window.location.pathname;\n';
+            output += '    const redirects = {\n';
+            
+            redirects.filter(r => r.status === 'active').forEach(redirect => {
+                output += `        "${redirect.fromUrl}": "${redirect.toUrl}",\n`;
+            });
+            
+            output += '    };\n\n';
+            output += '    if (redirects[path]) {\n';
+            output += '        window.location.href = redirects[path];\n';
+            output += '    }\n';
+            output += '}\n\n';
+            output += '// Call on page load\n';
+            output += 'handleRedirect();';
+            
+            document.getElementById('exportOutput').value = output;
+        }
+        
+        function importRedirects() {
+            const csvData = prompt('Paste CSV data (format: fromUrl,toUrl,type,status,description):');
+            if (csvData) {
+                const lines = csvData.split('\n');
+                lines.forEach(line => {
+                    const [fromUrl, toUrl, type, status, description] = line.split(',');
+                    if (fromUrl && toUrl) {
+                        redirects.push({
+                            id: nextId++,
+                            fromUrl: fromUrl.trim(),
+                            toUrl: toUrl.trim(),
+                            type: type?.trim() || '301',
+                            status: status?.trim() || 'active',
+                            description: description?.trim() || ''
+                        });
+                    }
+                });
+                renderRedirectsTable();
+                alert('Redirects imported successfully!');
+            }
+        }
+        
+        // Initialize
+        loadRedirects();
+    </script>
+</body>
+</html>
