@@ -1,0 +1,41 @@
+# Netlify _redirects file
+# Save this as "_redirects" (no extension) in your site's publish directory
+# https://docs.netlify.com/routing/redirects/
+
+# Road & Rescue to Eek Mechanical redirects
+/mjuris                  https://eek.nz/terms-of-service           301
+/supplier                https://eek.nz/supplier-upload            301
+/rescue-me               https://eek.nz/rescue-me                  301
+/customer-support        https://eek.nz/customer-escalation        301
+/terms                   https://eek.nz/terms-of-service           301
+/supplier-portal         https://eek.nz/supplier-upload            301
+/invoice-upload          https://eek.nz/supplier-upload            301
+/job-status              https://eek.nz/job                        301
+/roadside-assistance     https://eek.nz/                           301
+/fuel-delivery           https://eek.nz/rescue-me?service=fuel     301
+/jump-start              https://eek.nz/rescue-me?service=jumpstart 301
+/locksmith               https://eek.nz/rescue-me?service=locksmith 301
+/tyre-service            https://eek.nz/rescue-me?service=tyre     301
+/mechanic                https://eek.nz/rescue-me?service=mechanic 301
+
+# Common variations and typos
+/suppliers               https://eek.nz/supplier-upload            301
+/legal                   https://eek.nz/terms-of-service           301
+/support                 https://eek.nz/customer-escalation        301
+/help                    https://eek.nz/customer-escalation        301
+/contact                 https://eek.nz/customer-escalation        301
+/emergency               https://eek.nz/rescue-me                  301
+/booking                 https://eek.nz/rescue-me                  301
+/schedule                https://eek.nz/rescue-me                  301
+
+# Case-insensitive variations (Netlify handles these automatically, but included for completeness)
+/MJURIS                  https://eek.nz/terms-of-service           301
+/SUPPLIER                https://eek.nz/supplier-upload            301
+/Supplier                https://eek.nz/supplier-upload            301
+
+# Catch-all for dynamic 404 handling
+# This should be the LAST line in your _redirects file
+/*                       /404.html                                 404
+
+# Alternative: If you want ALL 404s to go to your dynamic handler:
+# /*                     /dynamic-redirect-handler.html            404
