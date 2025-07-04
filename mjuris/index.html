@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MJuris - Central Enforcement Authority | Eek Mobile Mechanical</title>
+  <meta name="description" content="MJuris is the centralized legal execution function of Eek Mobile Mechanical Ltd. Contract enforcement, compliance, and litigation clearinghouse for all jurisdictions." />
+  <meta name="keywords" content="legal enforcement, contract disputes, supplier compliance, terms violations, litigation clearinghouse, mjuris, legal authority" />
+  <meta property="og:title" content="MJuris - Central Enforcement Authority | Eek Mobile Mechanical" />
+  <meta property="og:description" content="Centralized legal execution function for contract breaches, terms violations, and compliance enforcement across all jurisdictions." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.eek.nz/mjuris" />
+  <meta property="og:image" content="https://www.eek.nz/mjuris-og-image.jpg" />
+
+  <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-17084465163');
+  </script>
+
+  <!-- Google Analytics tag -->
+  <script>
+    gtag('config', 'G-DQNKF1YLWR');
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LegalService",
+    "name": "MJuris - Eek Mobile Mechanical Legal Authority",
+    "description": "Central Enforcement Authority for contract compliance, dispute resolution, and legal execution across all jurisdictions.",
+    "url": "https://www.eek.nz/mjuris",
+    "parentOrganization": {
+      "@type": "LocalBusiness",
+      "name": "Eek Mobile Mechanical"
+    },
+    "areaServed": {
+      "@type": "Country",
+      "name": "New Zealand"
+    },
+    "serviceType": "Legal Enforcement and Compliance"
+  }
+  </script>
+
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      color: #e0e0e0;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+      border-bottom: 3px solid #ff5500;
+      padding: 40px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="1" height="1" fill="rgba(255,85,0,0.05)"/></svg>') repeat;
+      pointer-events: none;
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .authority-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff5500, #cc4400);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 25px;
+      font-size: 0.9em;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(255,85,0,0.3);
+    }
+
+    .header h1 {
+      font-size: 3.5em;
+      font-weight: bold;
+      color: #ff5500;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+      letter-spacing: 2px;
+    }
+
+    .header .subtitle {
+      font-size: 1.4em;
+      color: #cccccc;
+      margin-bottom: 15px;
+      font-style: italic;
+    }
+
+    .header .legal-notice {
+      font-size: 0.95em;
+      color: #999;
+      font-weight: 300;
+    }
+
+    /* Navigation */
+    .nav {
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid #333;
+    }
+
+    .nav-content {
+      display: flex;
+      justify-content: center;
+      padding: 15px 0;
+      gap: 30px;
+    }
+
+    .nav a {
+      color: #ccc;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    .nav a:hover {
+      color: #ff5500;
+    }
+
+    .nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #ff5500;
+      transition: width 0.3s ease;
+    }
+
+    .nav a:hover::after {
+      width: 100%;
+    }
+
+    /* Main Content */
+    .section {
+      padding: 60px 0;
+    }
+
+    .section-title {
+      font-size: 2.2em;
+      margin-bottom: 30px;
+      color: #ff5500;
+      text-align: center;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, #ff5500, #ff7700);
+    }
+
+    /* Authority Description */
+    .authority-description {
+      background: rgba(0,0,0,0.6);
+      border: 1px solid #333;
+      border-left: 5px solid #ff5500;
+      padding: 40px;
+      margin: 40px 0;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .authority-description h2 {
+      color: #ff5500;
+      font-size: 1.8em;
+      margin-bottom: 20px;
+    }
+
+    .authority-description p {
+      font-size: 1.1em;
+      margin-bottom: 20px;
+      color: #ddd;
+    }
+
+    /* Warning Box */
+    .warning-box {
+      background: linear-gradient(135deg, #cc0000, #990000);
+      border: 2px solid #ff0000;
+      padding: 30px;
+      margin: 40px 0;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .warning-box::before {
+      content: '⚠️';
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 2em;
+      opacity: 0.3;
+    }
+
+    .warning-box h3 {
+      color: #fff;
+      font-size: 1.5em;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+
+    .warning-box p {
+      color: #ffcccc;
+      font-size: 1em;
+      margin-bottom: 10px;
+    }
+
+    /* Enforcement Scope */
+    .enforcement-scope {
+      background: rgba(255,85,0,0.1);
+      border: 1px solid rgba(255,85,0,0.3);
+      padding: 35px;
+      margin: 40px 0;
+      border-radius: 10px;
+    }
+
+    .enforcement-list {
+      list-style: none;
+      margin: 20px 0;
+    }
+
+    .enforcement-list li {
+      padding: 15px 0;
+      border-bottom: 1px solid rgba(255,85,0,0.2);
+      position: relative;
+      padding-left: 30px;
+    }
+
+    .enforcement-list li:last-child {
+      border-bottom: none;
+    }
+
+    .enforcement-list li::before {
+      content: '⚖️';
+      position: absolute;
+      left: 0;
+      top: 15px;
+    }
+
+    .enforcement-list li strong {
+      color: #ff5500;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    /* Contact Section */
+    .contact-authority {
+      background: linear-gradient(135deg, #333, #1a1a1a);
+      border: 2px solid #ff5500;
+      padding: 40px;
+      margin: 40px 0;
+      border-radius: 15px;
+      text-align: center;
+    }
+
+    .contact-authority h3 {
+      color: #ff5500;
+      font-size: 1.8em;
+      margin-bottom: 25px;
+    }
+
+    .contact-item {
+      background: rgba(0,0,0,0.5);
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 8px;
+      border-left: 4px solid #ff5500;
+    }
+
+    .contact-item a {
+      color: #ff5500;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+
+    .contact-item a:hover {
+      color: #ff7700;
+    }
+
+    .contact-item .label {
+      color: #ccc;
+      font-size: 0.9em;
+      margin-bottom: 8px;
+    }
+
+    /* Final Notice */
+    .final-notice {
+      background: rgba(0,0,0,0.8);
+      border: 3px solid #ff5500;
+      padding: 30px;
+      margin: 40px 0;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(255,85,0,0.3);
+    }
+
+    .final-notice h3 {
+      color: #ff5500;
+      font-size: 1.6em;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .final-notice p {
+      font-size: 1.1em;
+      color: #ddd;
+      font-weight: 500;
+    }
+
+    /* Footer */
+    .footer {
+      background: #000;
+      color: #666;
+      padding: 30px 0;
+      text-align: center;
+      border-top: 2px solid #ff5500;
+    }
+
+    .footer a {
+      color: #ff5500;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      color: #ff7700;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2.5em;
+      }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .authority-description,
+      .warning-box,
+      .enforcement-scope,
+      .contact-authority {
+        padding: 25px;
+      }
+      
+      .section {
+        padding: 40px 0;
+      }
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Selection styling */
+    ::selection {
+      background: rgba(255,85,0,0.3);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container">
+    <div class="header-content">
+      <div class="authority-badge">🏛️ CENTRAL ENFORCEMENT AUTHORITY</div>
+      <h1>MJuris</h1>
+      <p class="subtitle">The Compliance & Litigation Clearinghouse</p>
+      <p class="legal-notice">Eek Mobile Mechanical Ltd. | OmniJurisdictional Legal Execution Function</p>
+    </div>
+  </div>
+</header>
+
+<nav class="nav">
+  <div class="container">
+    <div class="nav-content">
+      <a href="#authority">Authority</a>
+      <a href="#enforcement">Enforcement Scope</a>
+      <a href="#contact">Contact Authority</a>
+      <a href="https://www.eek.nz">← Return to Eek.nz</a>
+    </div>
+  </div>
+</nav>
+
+<section id="authority" class="section">
+  <div class="container">
+    <h2 class="section-title">Legal Authority & Jurisdiction</h2>
+    
+    <div class="authority-description">
+      <h2>⚖️ Centralized Legal Execution Function</h2>
+      <p>The Compliance & Litigation Clearinghouse (MJuris) is the centralized legal execution function of Eek Mobile Mechanical Ltd. It operates across all jurisdictions and is responsible for the processing, enforcement, and closure of disputes relating to contract breaches, terms violations, supplier misconduct, and user non-compliance.</p>
+      
+      <p><strong>This is a legal authority channel — not a customer service gateway.</strong> Submissions are reviewed against contractual terms, supplier agreements, and regional regulations, and actions are taken in accordance with Eek Mobile Mechanical Ltd's legally binding policies. Communications are logged, timestamped, and retained for audit and litigation purposes.</p>
+    </div>
+
+    <div class="warning-box">
+      <h3>🚨 LEGAL NOTICE</h3>
+      <p><strong>MJuris actions are not subject to negotiation.</strong> Once activated, all correspondence with regional or operational teams is terminated.</p>
+      <p>All determinations issued by MJuris are final. Legal rights are enforced exactly as agreed. Terms are not advisory — they are executable. Evidence-based processing is mandatory.</p>
+      <p><strong>Failure to respond is considered a formal default.</strong></p>
+    </div>
+  </div>
+</section>
+
+<section id="enforcement" class="section">
+  <div class="container">
+    <h2 class="section-title">Enforcement Scope</h2>
+    
+    <div class="enforcement-scope">
+      <ul class="enforcement-list">
+        <li>
+          <strong>Supplier Enforcement:</strong>
+          Suppliers in breach of commercial obligations, pricing terms, communication protocols, or service delivery conditions will be subject to financial remedy, account termination, blacklisting, and jurisdictional enforcement.
+        </li>
+        
+        <li>
+          <strong>User Compliance:</strong>
+          Users who reverse payments, abandon jobs, misuse services, or fail to comply with service terms may face formal escalation, account revocation, debt recovery, and legal proceedings without further notice.
+        </li>
+        
+        <li>
+          <strong>Contract Violations:</strong>
+          Any breach of terms, misrepresentation, fraudulent activity, or non-compliance with agreed service conditions will result in immediate enforcement action through appropriate legal channels.
+        </li>
+        
+        <li>
+          <strong>Payment Disputes:</strong>
+          Unauthorized chargebacks, payment reversals, or attempts to avoid legitimate service charges will be pursued through debt collection agencies and legal proceedings as applicable.
+        </li>
+        
+        <li>
+          <strong>Service Abuse:</strong>
+          Misuse of emergency services, false claims, harassment of technicians, or abuse of the Eek Mobile Mechanical platform will result in permanent service prohibition and potential legal action.
+        </li>
+      </ul>
+    </div>
+
+    <div class="final-notice">
+      <h3>⚠️ FINAL AUTHORITY</h3>
+      <p>This is Eek Mobile Mechanical Ltd's OmniJurisdictional enforcement function. All matters received here are closed here. No appeals or negotiations will be entertained once enforcement proceedings have commenced.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="section">
+  <div class="container">
+    <h2 class="section-title">Contact Authority</h2>
+    
+    <div class="contact-authority">
+      <h3>📧 Legal Communications</h3>
+      
+      <div class="contact-item">
+        <div class="label">Contract Enforcement & Disputes</div>
+        <a href="mailto:clx@eek.nz">clx@eek.nz</a>
+      </div>
+      
+      <div class="contact-item">
+        <div class="label">Jurisdictional Policy Reference</div>
+        <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EbMAsktroaFEkKbFZUeYxPgBm1SDkvxru4fVlG360u3i9w?e=1CDNtc" target="_blank">Terms of Service</a>
+      </div>
+      
+      <div class="contact-item">
+        <div class="label">Supplier Agreement Reference</div>
+        <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EVItR9WqSDBHpBgS4t5JFhQBLl0heypp7-CjIRgkV-4ytg?e=bajD4c" target="_blank">Supplier Terms</a>
+      </div>
+      
+      <div style="background: rgba(255,0,0,0.1); padding: 20px; margin-top: 30px; border-radius: 8px; border: 1px solid rgba(255,0,0,0.3);">
+        <p style="color: #ffcccc; font-size: 0.95em; margin: 0;">
+          <strong>⚠️ IMPORTANT:</strong> This email address is exclusively for legal enforcement matters. Customer service inquiries, routine support requests, or operational questions sent to this address will not receive a response. For customer support, call <a href="tel:0800769000" style="color: #ff5500;">0800 769 000</a> or visit <a href="https://www.eek.nz" style="color: #ff5500;">www.eek.nz</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p>&copy; 2025 Eek Mobile Mechanical Ltd. All rights reserved. | 
+    <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EWXiDhEQikFPtsjmoapkdWMBeytvuyMEsmlIchxhPdwyXg?e=YcldRN">Privacy Statement</a></p>
+    <p style="margin-top: 10px; font-size: 0.9em; color: #555;">
+      MJuris is the registered legal authority of Eek Mobile Mechanical Ltd. Operating under New Zealand law with international jurisdiction as applicable.
+    </p>
+  </div>
+</footer>
+
+<script>
+// Track page visits for legal/compliance purposes
+window.addEventListener('load', function() {
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'mjuris_page_view', {
+      'page_title': 'MJuris Legal Authority Access',
+      'page_location': window.location.href,
+      'event_category': 'Legal',
+      'event_label': 'Authority Page Access'
+    });
+  }
+});
+
+// Track email clicks for enforcement tracking
+document.addEventListener('DOMContentLoaded', function() {
+  const emailLinks = document.querySelectorAll('a[href^="mailto:clx@"]');
+  emailLinks.forEach(function(link) {
+    link.addEventListener('click', function() {
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'legal_contact_attempt', {
+          'event_category': 'Legal',
+          'event_label': 'Enforcement Email Click'
+        });
+      }
+    });
+  });
+});
+
+// Track document access
+document.querySelectorAll('a[href*="sharepoint.com"]').forEach(function(link) {
+  link.addEventListener('click', function() {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'legal_document_access', {
+        'event_category': 'Legal',
+        'event_label': 'Policy Document Access'
+      });
+    }
+  });
+});
+
+// Prevent right-click and text selection for legal protection
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+});
+
+document.addEventListener('selectstart', function(e) {
+  if (e.target.tagName === 'A' || e.target.closest('a')) {
+    return true; // Allow selection of links
+  }
+  e.preventDefault();
+});
+
+// Add timestamp logging for audit purposes
+console.log('%cMJuris Legal Authority Page Access', 'color: #ff5500; font-weight: bold; font-size: 14px;');
+console.log('Access Time:', new Date().toISOString());
+console.log('User Agent:', navigator.userAgent);
+console.log('Referrer:', document.referrer || 'Direct Access');
+
+// Smooth scrolling for navigation links
+document.querySelectorAll('.nav a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  });
+});
+</script>
+
+</body>
+</html>
