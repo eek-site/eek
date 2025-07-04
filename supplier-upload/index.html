@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supplier Upload Portal | Eek Mobile Mechanical</title>
+  <meta name="description" content="Secure document upload portal for Eek Mobile Mechanical suppliers. Submit invoices, job sheets, certificates, and other required documentation." />
+  <meta name="keywords" content="supplier upload, invoice submission, document portal, job sheets, certificates, eek suppliers" />
+  <meta property="og:title" content="Supplier Upload Portal | Eek Mobile Mechanical" />
+  <meta property="og:description" content="Secure portal for suppliers to upload invoices and documents to the Eek Mobile Mechanical system." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.eek.nz/supplier-upload" />
+  <meta property="og:image" content="https://www.eek.nz/supplier-upload-og-image.jpg" />
+
+  <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-17084465163');
+  </script>
+
+  <!-- Google Analytics tag -->
+  <script>
+    gtag('config', 'G-DQNKF1YLWR');
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Eek Mobile Mechanical Supplier Upload Portal",
+    "description": "Secure document upload system for suppliers to submit invoices and documentation.",
+    "url": "https://www.eek.nz/supplier-upload",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web Browser",
+    "parentOrganization": {
+      "@type": "LocalBusiness",
+      "name": "Eek Mobile Mechanical"
+    }
+  }
+  </script>
+
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: #fff;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #ff5500 0%, #ff7700 100%);
+      padding: 40px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+      animation: float 15s infinite linear;
+    }
+
+    @keyframes float {
+      0% { transform: translateX(0) translateY(0); }
+      100% { transform: translateX(-50px) translateY(-50px); }
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.8em;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header .subtitle {
+      font-size: 1.2em;
+      opacity: 0.9;
+      margin-bottom: 20px;
+    }
+
+    .security-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      padding: 8px 20px;
+      border-radius: 25px;
+      font-size: 0.9em;
+      font-weight: bold;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    /* Navigation */
+    .nav {
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid #333;
+    }
+
+    .nav-content {
+      display: flex;
+      justify-content: center;
+      padding: 15px 0;
+      gap: 30px;
+    }
+
+    .nav a {
+      color: #ccc;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    .nav a:hover {
+      color: #ff5500;
+    }
+
+    /* Authentication Section */
+    .auth-section {
+      padding: 60px 0;
+    }
+
+    .auth-container {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 50px;
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    .auth-container h2 {
+      color: #ff5500;
+      font-size: 2.2em;
+      margin-bottom: 20px;
+    }
+
+    .auth-container p {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+      color: #ddd;
+    }
+
+    .auth-button {
+      background: linear-gradient(135deg, #0078d4, #106ebe);
+      color: white;
+      padding: 18px 40px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 10px;
+      box-shadow: 0 10px 30px rgba(0,120,212,0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .auth-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(0,120,212,0.4);
+      background: linear-gradient(135deg, #106ebe, #005a9e);
+    }
+
+    .upload-button {
+      background: linear-gradient(135deg, #ff5500, #ff7700);
+      box-shadow: 0 10px 30px rgba(255,85,0,0.3);
+    }
+
+    .upload-button:hover {
+      background: linear-gradient(135deg, #ff7700, #e04400);
+      box-shadow: 0 15px 40px rgba(255,85,0,0.4);
+    }
+
+    /* Status Messages */
+    .status-message {
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .status-message.info {
+      background: rgba(23,162,184,0.2);
+      border: 1px solid #17a2b8;
+      color: #17a2b8;
+    }
+
+    .status-message.warning {
+      background: rgba(255,193,7,0.2);
+      border: 1px solid #ffc107;
+      color: #ffc107;
+    }
+
+    /* Guidelines */
+    .upload-guidelines {
+      background: rgba(255,255,255,0.05);
+      border-left: 4px solid #ff5500;
+      padding: 25px;
+      margin: 30px 0;
+      border-radius: 10px;
+    }
+
+    .upload-guidelines h4 {
+      color: #ff5500;
+      margin-bottom: 15px;
+    }
+
+    .upload-guidelines ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .upload-guidelines li {
+      padding: 5px 0;
+      position: relative;
+      padding-left: 25px;
+    }
+
+    .upload-guidelines li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #28a745;
+      font-weight: bold;
+    }
+
+    /* Footer */
+    .footer {
+      background: rgba(0,0,0,0.8);
+      color: #666;
+      padding: 30px 0;
+      text-align: center;
+      margin-top: 60px;
+    }
+
+    .footer a {
+      color: #ff5500;
+      text-decoration: none;
+    }
+
+    /* Hidden state */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Microsoft branding */
+    .ms-logo {
+      width: 20px;
+      height: 20px;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23"><path fill="%23f35325" d="M1 1h10v10H1z"/><path fill="%2381bc06" d="M12 1h10v10H12z"/><path fill="%2305a6f0" d="M1 12h10v10H1z"/><path fill="%23ffba08" d="M12 12h10v10H12z"/></svg>') no-repeat center;
+      background-size: contain;
+      display: inline-block;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2em;
+      }
+      
+      .auth-container {
+        padding: 30px 20px;
+      }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .auth-button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container">
+    <div class="header-content">
+      <h1>📁 Supplier Upload Portal</h1>
+      <p class="subtitle">Secure Document Submission System</p>
+      <div class="security-badge">🔒 Bank-Level Security | SSL Encrypted</div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav">
+  <div class="container">
+    <div class="nav-content">
+      <a href="#auth">Secure Access</a>
+      <a href="#guidelines">Guidelines</a>
+      <a href="https://www.eek.nz/supplier">← Supplier Portal</a>
+      <a href="tel:0800769000">📞 Support</a>
+    </div>
+  </div>
+</nav>
+
+<section id="auth" class="auth-section">
+  <div class="container">
+    <div class="auth-container">
+      <!-- Login Button (shown when not authenticated) -->
+      <div id="loginContainer">
+        <h2>🔐 Secure Supplier Access</h2>
+        <p>Access the secure Microsoft Forms upload system for invoices, job sheets, and supplier documentation.</p>
+        
+        <div class="status-message info">
+          <strong>🔒 Enhanced Security:</strong> This system uses Microsoft Enterprise authentication to ensure your documents are submitted securely to the correct Eek supplier account.
+        </div>
+        
+        <button id="loginButton" class="auth-button">
+          <div class="ms-logo"></div>
+          Sign in with Microsoft
+        </button>
+        
+        <div style="margin-top: 20px; font-size: 0.9em; color: #ccc;">
+          <p>You'll be redirected to Microsoft's secure login system</p>
+        </div>
+      </div>
+
+      <!-- Upload Button (shown when authenticated) -->
+      <div id="uploadContainer" class="hidden">
+        <h2>✅ Authentication Successful</h2>
+        <p>You're now authenticated as an Eek supplier. Click below to access the secure document upload form.</p>
+        
+        <div class="status-message info">
+          <strong>📋 Ready to Upload:</strong> You can now submit invoices, job sheets, certificates, and other supplier documentation through our secure Microsoft Forms system.
+        </div>
+        
+        <a id="uploadButton" href="#" class="auth-button upload-button" target="_blank">
+          📁 Open Upload Form
+        </a>
+        
+        <div style="margin-top: 20px; font-size: 0.9em; color: #ccc;">
+          <p>The form will open in a new tab with your supplier credentials pre-filled</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="guidelines" class="upload-section">
+  <div class="container">
+    <div class="upload-guidelines">
+      <h4>📋 Upload Guidelines</h4>
+      <ul>
+        <li>All invoices must include job reference numbers when applicable</li>
+        <li>Documents should be clear, legible, and in acceptable formats</li>
+        <li>Maximum file size: 10MB per file</li>
+        <li>Supported formats: PDF, JPG, PNG, DOC, DOCX, XLS, XLSX</li>
+        <li>Include GST details on all invoices (if applicable)</li>
+        <li>Ensure contact information matches your supplier records</li>
+        <li>Upload certificates and insurance documents as they expire</li>
+        <li>Processing time: 2-5 business days for standard documents</li>
+      </ul>
+    </div>
+    
+    <div class="upload-guidelines">
+      <h4>🔒 Security & Privacy</h4>
+      <ul>
+        <li>All uploads are encrypted using bank-level SSL security</li>
+        <li>Documents are stored in secure, access-controlled systems</li>
+        <li>Only authorized Eek personnel can access your submissions</li>
+        <li>Files are automatically scanned for viruses and malware</li>
+        <li>Data is retained according to our privacy policy</li>
+        <li>You will receive email confirmation of successful uploads</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p>&copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
+    <a href="https://www.eek.nz/privacy">Privacy Policy</a> | 
+    <a href="https://www.eek.nz/terms">Terms of Service</a></p>
+    <p style="margin-top: 10px;">📞 Upload Support: <a href="tel:0800769000">0800 769 000</a> | 
+    🌐 Supplier Portal: <a href="https://www.eek.nz/supplier">www.eek.nz/supplier</a></p>
+  </div>
+</footer>
+
+<script>
+// Microsoft Authentication Configuration
+const config = {
+  clientId: "2ec61b68-e8d5-45da-b95f-1afadac82547",
+  tenantDomain: "eek.nz", // Update to Eek domain
+  loginHint: "supplier.upload@eek.nz", // Update to Eek email
+  redirectUri: "https://www.eek.nz/supplier-upload",
+  formUrl: "https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUMEFMM0kyU041WERUWU1VRTZPUVhLRkU3NS4u&login_hint=supplier.upload@eek.nz"
+};
+
+// Check authentication status on page load
+document.addEventListener('DOMContentLoaded', function() {
+  checkAuthenticationStatus();
+  setupEventListeners();
+});
+
+function checkAuthenticationStatus() {
+  // Check URL fragment for authentication token
+  const fragment = window.location.hash.substring(1);
+  const params = new URLSearchParams(fragment);
+  
+  if (params.has('id_token')) {
+    // ✅ User is authenticated - show upload interface
+    showUploadInterface();
+    
+    // Track successful authentication
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'supplier_authentication_success', {
+        'event_category': 'Authentication',
+        'event_label': 'Microsoft Auth Success'
+      });
+    }
+  } else {
+    // ❌ User not authenticated - show login interface
+    showLoginInterface();
+  }
+}
+
+function showLoginInterface() {
+  document.getElementById('loginContainer').classList.remove('hidden');
+  document.getElementById('uploadContainer').classList.add('hidden');
+}
+
+function showUploadInterface() {
+  document.getElementById('loginContainer').classList.add('hidden');
+  document.getElementById('uploadContainer').classList.remove('hidden');
+  
+  // Set the upload button link with login_hint
+  document.getElementById('uploadButton').href = config.formUrl;
+}
+
+function setupEventListeners() {
+  // Login button click handler
+  document.getElementById('loginButton').addEventListener('click', function() {
+    initiateAuthentication();
+  });
+
+  // Upload button click handler
+  document.getElementById('uploadButton').addEventListener('click', function() {
+    // Track form access
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'supplier_form_access', {
+        'event_category': 'Supplier',
+        'event_label': 'Microsoft Forms Upload Access'
+      });
+    }
+  });
+}
+
+function initiateAuthentication() {
+  const nonce = Date.now().toString();
+  
+  // Microsoft OAuth 2.0 authentication URL with forced supplier identity
+  const authUrl = `https://login.microsoftonline.com/${config.tenantDomain}/oauth2/v2.0/authorize` +
+    `?client_id=${encodeURIComponent(config.clientId)}` +
+    `&response_type=id_token` +
+    `&redirect_uri=${encodeURIComponent(config.redirectUri)}` +
+    `&response_mode=fragment` +
+    `&scope=openid` +
+    `&login_hint=${encodeURIComponent(config.loginHint)}` +
+    `&domain_hint=organizations` + // Ensures organizational login
+    `&prompt=login` + // Forces fresh login
+    `&nonce=${nonce}`;
+  
+  // Track authentication attempt
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'supplier_authentication_attempt', {
+      'event_category': 'Authentication',
+      'event_label': 'Microsoft Auth Initiated'
+    });
+  }
+  
+  // Redirect to Microsoft authentication
+  window.location.href = authUrl;
+}
+
+// Track page visits
+window.addEventListener('load', function() {
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'supplier_upload_page_view', {
+      'page_title': 'Supplier Upload Portal',
+      'page_location': window.location.href,
+      'event_category': 'Supplier'
+    });
+  }
+});
+
+// Handle authentication errors
+window.addEventListener('error', function(e) {
+  console.error('Authentication error:', e);
+  
+  // Show error message to user
+  const errorContainer = document.createElement('div');
+  errorContainer.className = 'status-message warning';
+  errorContainer.innerHTML = `
+    <strong>⚠️ Authentication Issue:</strong> 
+    There was a problem with the authentication process. Please try again or contact support at 
+    <a href="tel:0800769000" style="color: #ffc107;">0800 769 000</a>.
+  `;
+  
+  document.querySelector('.auth-container').appendChild(errorContainer);
+});
+</script>
+
+</body>
+</html>
