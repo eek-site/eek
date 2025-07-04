@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supplier Portal - Join Eek Mobile Mechanical Network | NZ-Wide Coverage</title>
+  <meta name="description" content="Join Eek Mobile Mechanical's nationwide supplier network. Provide mobile mechanic services, trailer repairs, inspections, and roadside assistance across New Zealand. Apply to become a certified supplier today." />
+  <meta name="keywords" content="mobile mechanic supplier, roadside assistance contractor, trailer repair network, mechanic partnership NZ, automotive service provider, mobile repair franchise" />
+  <meta property="og:title" content="Supplier Portal - Join Eek Mobile Mechanical Network" />
+  <meta property="og:description" content="Partner with Eek Mobile Mechanical to provide mobile mechanic services nationwide. Fast dispatch, competitive rates, and growing demand." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.eek.nz/supplier" />
+  <meta property="og:image" content="https://www.eek.nz/supplier-og-image.jpg" />
+
+  <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-17084465163');
+  </script>
+
+  <!-- Google Analytics tag -->
+  <script>
+    gtag('config', 'G-DQNKF1YLWR');
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Eek Mobile Mechanical Supplier Network",
+    "description": "Join New Zealand's premier mobile mechanic network. Providing roadside assistance, inspections, and repair services nationwide.",
+    "telephone": "+64800769000",
+    "url": "https://www.eek.nz/supplier",
+    "parentOrganization": {
+      "@type": "LocalBusiness",
+      "name": "Eek Mobile Mechanical"
+    },
+    "areaServed": {
+      "@type": "Country",
+      "name": "New Zealand"
+    }
+  }
+  </script>
+
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #ff5500 0%, #ff7700 100%);
+      color: white;
+      padding: 60px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+      animation: float 20s infinite linear;
+    }
+
+    @keyframes float {
+      0% { transform: translateX(0) translateY(0); }
+      100% { transform: translateX(-100px) translateY(-100px); }
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .logo {
+      max-width: 200px;
+      height: auto;
+      margin-bottom: 20px;
+      filter: brightness(0) invert(1);
+    }
+
+    .header h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header .subtitle {
+      font-size: 1.3em;
+      opacity: 0.9;
+      margin-bottom: 30px;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 15px 30px;
+      font-size: 1.1em;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+
+    .cta-button:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    }
+
+    /* Navigation */
+    .nav {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    }
+
+    .nav-content {
+      display: flex;
+      justify-content: center;
+      padding: 15px 0;
+    }
+
+    .nav a {
+      color: #333;
+      text-decoration: none;
+      margin: 0 25px;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    .nav a:hover {
+      color: #ff5500;
+    }
+
+    .nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #ff5500;
+      transition: width 0.3s ease;
+    }
+
+    .nav a:hover::after {
+      width: 100%;
+    }
+
+    /* Sections */
+    .section {
+      padding: 80px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      font-size: 1.2em;
+      color: #666;
+      margin-bottom: 60px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Services Grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .service-card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #ff5500, #ff7700);
+    }
+
+    .service-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+
+    .service-icon {
+      font-size: 3em;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .service-card h3 {
+      font-size: 1.5em;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .service-card p {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .service-features {
+      list-style: none;
+    }
+
+    .service-features li {
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      color: #555;
+    }
+
+    .service-features li:last-child {
+      border-bottom: none;
+    }
+
+    /* Requirements Section */
+    .requirements {
+      background: white;
+    }
+
+    .requirements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .requirement-item {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 30px;
+      border-left: 5px solid #ff5500;
+      transition: all 0.3s ease;
+    }
+
+    .requirement-item:hover {
+      background: #fff;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .requirement-item h4 {
+      color: #ff5500;
+      font-size: 1.3em;
+      margin-bottom: 15px;
+    }
+
+    /* Application Form */
+    .application-form {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .form-container {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 50px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.9);
+      font-size: 1em;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      background: white;
+      box-shadow: 0 0 20px rgba(255,255,255,0.3);
+    }
+
+    .submit-btn {
+      background: #ff5500;
+      color: white;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .submit-btn:hover {
+      background: #ff7700;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255,85,0,0.3);
+    }
+
+    /* Footer */
+    .footer {
+      background: #333;
+      color: white;
+      padding: 40px 0;
+      text-align: center;
+    }
+
+    .footer a {
+      color: #ff5500;
+      text-decoration: none;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2em;
+      }
+      
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .form-container {
+        padding: 30px 20px;
+      }
+      
+      .nav-content {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container">
+    <div class="header-content">
+      <h1>Join the Eek Supplier Network</h1>
+      <p class="subtitle">Partner with New Zealand's fastest-growing mobile mechanic service</p>
+      <a href="#application" class="cta-button">🚀 Apply Now</a>
+    </div>
+  </div>
+</header>
+
+<nav class="nav">
+  <div class="container">
+    <div class="nav-content">
+      <a href="#services">Services</a>
+      <a href="#requirements">Requirements</a>
+      <a href="#benefits">Benefits</a>
+      <a href="#application">Apply</a>
+      <a href="tel:0800769000">📞 0800 769 000</a>
+    </div>
+  </div>
+</nav>
+
+<section id="services" class="section">
+  <div class="container">
+    <h2 class="section-title">Service Areas We Need Suppliers For</h2>
+    <p class="section-subtitle">Eek Mobile Mechanical is rapidly expanding across New Zealand. We need reliable, skilled suppliers to help deliver our signature 30-60 minute response times nationwide.</p>
+    
+    <div class="services-grid">
+      <div class="service-card">
+        <span class="service-icon">🔋</span>
+        <h3>Jump Start Services</h3>
+        <p>Provide fast battery boost services with professional equipment and safety protocols.</p>
+        <ul class="service-features">
+          <li>✓ Compatible with all vehicle makes/models</li>
+          <li>✓ Battery health diagnostics included</li>
+          <li>✓ Safe jump-start procedures</li>
+          <li>✓ 30-60 minute response target</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">🛞</span>
+        <h3>Tyre Change & Repair</h3>
+        <p>Roadside tyre changes and emergency repairs to get drivers back on the road quickly.</p>
+        <ul class="service-features">
+          <li>✓ Full toolkit provided</li>
+          <li>✓ Safety equipment included</li>
+          <li>✓ All weather conditions</li>
+          <li>✓ Professional grade tools</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">🔐</span>
+        <h3>Vehicle Lockout Assistance</h3>
+        <p>Safe vehicle entry without damage using specialized tools and techniques.</p>
+        <ul class="service-features">
+          <li>✓ Non-destructive entry methods</li>
+          <li>✓ Specialized lockout tools</li>
+          <li>✓ All vehicle types covered</li>
+          <li>✓ Fully insured service</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">⛽</span>
+        <h3>Fuel Delivery & Wrong Fuel Rescue</h3>
+        <p>Emergency fuel delivery and safe fuel drain services for mix-up situations.</p>
+        <ul class="service-features">
+          <li>✓ 10L emergency fuel supply</li>
+          <li>✓ Petrol/diesel drain services</li>
+          <li>✓ Fully insured operations</li>
+          <li>✓ Environmental compliance</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">🛠️</span>
+        <h3>Mobile Diagnostics & Repairs</h3>
+        <p>On-site vehicle diagnostics and minor repair services using professional equipment.</p>
+        <ul class="service-features">
+          <li>✓ OBD diagnostic scanning</li>
+          <li>✓ Minor repair capabilities</li>
+          <li>✓ Full mobile toolkit</li>
+          <li>✓ Real-time support communication</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">🚛</span>
+        <h3>Trailer Repairs & Maintenance</h3>
+        <p>Specialized trailer repair services including electrical, mechanical, and safety systems.</p>
+        <ul class="service-features">
+          <li>✓ Hub and bearing replacement</li>
+          <li>✓ Electrical system repairs</li>
+          <li>✓ Brake and suspension work</li>
+          <li>✓ WOF preparation services</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">🧾</span>
+        <h3>Pre-Purchase Inspections</h3>
+        <p>Comprehensive 45-point vehicle inspections at seller or dealership locations.</p>
+        <ul class="service-features">
+          <li>✓ Certified inspection protocols</li>
+          <li>✓ Detailed reporting system</li>
+          <li>✓ $199 fixed rate service</li>
+          <li>✓ Professional documentation</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">🚗</span>
+        <h3>Towing Services</h3>
+        <p>Safe vehicle recovery and transport to repair facilities or secure locations.</p>
+        <ul class="service-features">
+          <li>✓ Professional tow equipment</li>
+          <li>✓ Damage-free transport</li>
+          <li>✓ Secure vehicle handling</li>
+          <li>✓ Insurance compliance</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="requirements" class="section requirements">
+  <div class="container">
+    <h2 class="section-title">Supplier Requirements</h2>
+    <p class="section-subtitle">To maintain Eek's reputation for quality and reliability, all suppliers must meet our stringent standards.</p>
+    
+    <div class="requirements-grid">
+      <div class="requirement-item">
+        <h4>🏆 Professional Qualifications</h4>
+        <p>Trade certifications, automotive qualifications, or equivalent experience in mobile mechanics, roadside assistance, or automotive repair services.</p>
+      </div>
+
+      <div class="requirement-item">
+        <h4>🛡️ Insurance & Compliance</h4>
+        <p>Comprehensive public liability insurance, professional indemnity cover, and full compliance with New Zealand health and safety regulations.</p>
+      </div>
+
+      <div class="requirement-item">
+        <h4>🚐 Professional Equipment</h4>
+        <p>Fully equipped service vehicle with professional tools, diagnostic equipment, safety gear, and branded presentation materials.</p>
+      </div>
+
+      <div class="requirement-item">
+        <h4>📍 Geographic Coverage</h4>
+        <p>Ability to service designated coverage areas within our 30-60 minute response time targets, including rural and urban locations.</p>
+      </div>
+
+      <div class="requirement-item">
+        <h4>📱 Technology Integration</h4>
+        <p>Smartphone with reliable internet connection for our dispatch system, GPS tracking, photo reporting, and real-time communication.</p>
+      </div>
+
+      <div class="requirement-item">
+        <h4>🤝 Customer Service Excellence</h4>
+        <p>Proven track record of professional customer service, clear communication skills, and commitment to the Eek brand standards.</p>
+      </div>
+
+      <div class="requirement-item">
+        <h4>⚡ Response Time Commitment</h4>
+        <p>Ability to consistently meet our 30-60 minute response targets and maintain high availability during peak demand periods.</p>
+      </div>
+
+      <div class="requirement-item">
+        <h4>💼 Business Operations</h4>
+        <p>Registered business entity, GST registration, reliable invoicing systems, and professional business practices.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="benefits" class="section">
+  <div class="container">
+    <h2 class="section-title">Why Partner With Eek?</h2>
+    <p class="section-subtitle">Join New Zealand's fastest-growing mobile mechanic network and grow your business with us.</p>
+    
+    <div class="services-grid">
+      <div class="service-card">
+        <span class="service-icon">📈</span>
+        <h3>Growing Demand</h3>
+        <p>Benefit from our expanding customer base and increasing demand for mobile services across New Zealand.</p>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">💰</span>
+        <h3>Competitive Rates</h3>
+        <p>Fair compensation structure with prompt payment terms and opportunities for performance bonuses.</p>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">🎯</span>
+        <h3>Consistent Work</h3>
+        <p>Steady stream of jobs through our centralized dispatch system and growing customer network.</p>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">🛠️</span>
+        <h3>Support & Training</h3>
+        <p>Ongoing training, technical support, and access to our supplier resource center.</p>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">🏷️</span>
+        <h3>Brand Recognition</h3>
+        <p>Leverage the growing Eek brand and our marketing efforts to build your local reputation.</p>
+      </div>
+
+      <div class="service-card">
+        <span class="service-icon">📱</span>
+        <h3>Modern Technology</h3>
+        <p>Access to our advanced dispatch system, mobile app, and digital payment processing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="application" class="section application-form">
+  <div class="container">
+    <h2 class="section-title">Apply to Join Our Network</h2>
+    <p class="section-subtitle">Ready to partner with Eek? Complete our application form and we'll be in touch within 48 hours.</p>
+    
+    <div class="form-container">
+      <div class="terms-notice" style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; margin-bottom: 30px; border-left: 4px solid #ffd700;">
+        <h3 style="color: white; margin-bottom: 15px;">📋 Before You Apply</h3>
+        <p style="color: rgba(255,255,255,0.9); margin-bottom: 15px;">All suppliers must review and agree to our Supplier Terms before submitting an application.</p>
+        <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+          <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EVItR9WqSDBHpBgS4t5JFhQBLl0heypp7-CjIRgkV-4ytg?e=bajD4c" 
+             target="_blank" 
+             style="background: rgba(255,255,255,0.2); color: white; padding: 12px 20px; border-radius: 25px; text-decoration: none; border: 2px solid rgba(255,255,255,0.3); transition: all 0.3s ease;"
+             onmouseover="this.style.background='rgba(255,255,255,0.3)'"
+             onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+            📄 Review Supplier Terms
+          </a>
+        </div>
+      </div>
+
+      <div class="application-form-content">
+        <div class="form-group">
+          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+            <input type="checkbox" id="termsAccepted" style="transform: scale(1.3);" required>
+            <span>I have read and agree to the 
+              <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EVItR9WqSDBHpBgS4t5JFhQBLl0heypp7-CjIRgkV-4ytg?e=bajD4c" 
+                 target="_blank" 
+                 style="color: #ffd700; text-decoration: underline;">
+                Supplier Terms and Conditions
+              </a> *
+            </span>
+          </label>
+        </div>
+
+        <button id="proceedToApplication" 
+                style="background: #ff5500; color: white; padding: 15px 40px; border: none; border-radius: 50px; font-size: 1.1em; cursor: pointer; transition: all 0.3s ease; width: 100%; opacity: 0.5; pointer-events: none;"
+                disabled>
+          🚀 Proceed to Official Application Form
+        </button>
+        
+        <p style="text-align: center; margin-top: 15px; color: rgba(255,255,255,0.8); font-size: 0.9em;">
+          You'll be redirected to our secure Microsoft Forms application system
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p>&copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
+    <a href="https://www.eek.nz/privacy">Privacy Policy</a> | 
+    <a href="https://www.eek.nz/terms">Terms of Service</a></p>
+    <p style="margin-top: 10px;">📞 Supplier Enquiries: <a href="tel:0800769000">0800 769 000</a> | 
+    ✉️ Email: <a href="mailto:suppliers@eek.nz">suppliers@eek.nz</a></p>
+  </div>
+</footer>
+
+<script>
+// Track form submissions
+document.getElementById('termsAccepted').addEventListener('change', function() {
+  const proceedButton = document.getElementById('proceedToApplication');
+  if (this.checked) {
+    proceedButton.disabled = false;
+    proceedButton.style.opacity = '1';
+    proceedButton.style.pointerEvents = 'auto';
+    proceedButton.style.background = '#ff5500';
+  } else {
+    proceedButton.disabled = true;
+    proceedButton.style.opacity = '0.5';
+    proceedButton.style.pointerEvents = 'none';
+    proceedButton.style.background = '#999';
+  }
+});
+
+document.getElementById('proceedToApplication').addEventListener('click', function() {
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'supplier_application_redirect', {
+      'event_category': 'Supplier',
+      'event_label': 'Redirect to Application Form'
+    });
+  }
+  
+  // Redirect to the official application form via your redirect system
+  window.location.href = 'https://forms.office.com/r/4XP7Rwpefq';
+});
+
+// Track scroll engagement
+let scrollTracked = false;
+window.addEventListener('scroll', function() {
+  if (!scrollTracked && window.scrollY > document.body.scrollHeight * 0.5) {
+    scrollTracked = true;
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'supplier_page_scroll_50', {
+        'event_category': 'Engagement',
+        'event_label': 'Scrolled 50% of supplier page'
+      });
+    }
+  }
+});
+
+// Smooth scrolling for navigation links
+document.querySelectorAll('.nav a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  });
+});
+
+// Form validation enhancement
+document.querySelectorAll('input[required], select[required], textarea[required]').forEach(field => {
+  field.addEventListener('blur', function() {
+    if (!this.value) {
+      this.style.borderColor = '#ff5500';
+      this.style.boxShadow = '0 0 10px rgba(255, 85, 0, 0.3)';
+    } else {
+      this.style.borderColor = '';
+      this.style.boxShadow = '';
+    }
+  });
+});
+</script>
+
+</body>
+</html>
