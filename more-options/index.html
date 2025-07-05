@@ -54,54 +54,24 @@
             line-height: 1.6;
         }
         
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+        .section {
             margin-bottom: 40px;
         }
         
-        .option-card {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            border-left: 4px solid #ff5500;
+        .section-header {
+            text-align: center;
+            margin-bottom: 25px;
         }
         
-        .option-card:hover {
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-            transform: translateY(-3px);
-        }
-        
-        .option-card h3 {
+        .section-header h2 {
             color: #333;
+            font-size: 1.8em;
             margin-bottom: 10px;
-            font-size: 1.3em;
         }
         
-        .option-card p {
+        .section-header p {
             color: #666;
-            margin-bottom: 15px;
-            font-size: 0.95em;
-            line-height: 1.5;
-        }
-        
-        .option-card a {
-            background-color: #ff5500;
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-size: 1em;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-        
-        .option-card a:hover {
-            background-color: #e64a00;
-            transform: translateY(-1px);
+            font-size: 1.1em;
         }
         
         .emergency-section {
@@ -150,6 +120,162 @@
             transform: translateY(-2px);
         }
         
+        .contact-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .contact-section {
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .contact-section.customers {
+            background: linear-gradient(135deg, #007acc, #0056b3);
+            color: white;
+        }
+        
+        .contact-section.suppliers {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+        }
+        
+        .contact-section.employment {
+            background: linear-gradient(135deg, #ff6b35, #e55a2b);
+            color: white;
+        }
+        
+        .contact-section h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        .contact-section p {
+            margin-bottom: 20px;
+            opacity: 0.9;
+            font-size: 1em;
+        }
+        
+        .contact-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .contact-btn {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .contact-btn:hover {
+            background: rgba(255,255,255,0.25);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-1px);
+        }
+        
+        .legal-section {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .legal-section h3 {
+            font-size: 1.6em;
+            margin-bottom: 15px;
+        }
+        
+        .legal-section p {
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+        
+        .legal-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .legal-btn {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .legal-btn:hover {
+            background: rgba(255,255,255,0.25);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+        }
+        
+        .utility-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .utility-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border-left: 4px solid #ff5500;
+            text-align: center;
+        }
+        
+        .utility-card:hover {
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+        }
+        
+        .utility-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .utility-card p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        .utility-card a {
+            background-color: #ff5500;
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1em;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .utility-card a:hover {
+            background-color: #e64a00;
+            transform: translateY(-1px);
+        }
+        
         .footer-nav {
             text-align: center;
             margin-top: 40px;
@@ -178,7 +304,11 @@
                 font-size: 2em;
             }
             
-            .options-grid {
+            .contact-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .utility-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -190,6 +320,10 @@
             .emergency-btn {
                 width: 100%;
                 max-width: 280px;
+            }
+            
+            .legal-buttons {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -205,150 +339,82 @@
             </div>
         </div>
         
+        <!-- EMERGENCY HELP SECTION -->
         <div class="emergency-section">
             <h2>🚨 Need Immediate Help?</h2>
             <p>Get emergency mobile mechanical assistance or speak with our dispatch team</p>
             <div class="emergency-buttons">
                 <a href="https://forms.office.com/r/sdf0YirK6s" class="emergency-btn">🚨 Emergency Service</a>
                 <a href="tel:0800769000" class="emergency-btn">📞 Call 0800 769 000</a>
+                <a href="https://form.jotform.com/251017058434047" class="emergency-btn">📍 Find Me Tool</a>
             </div>
         </div>
         
-        <div class="options-grid">
-            <div class="option-card">
-                <h3>📝 Career Applications</h3>
-                <p>Join our team of mobile mechanical experts. Apply to become a certified technician in our network.</p>
-                <a href="https://forms.office.com/r/XLdGk4wDYY">Apply Now</a>
+        <!-- CONTACT BY AUDIENCE SECTION -->
+        <div class="section">
+            <div class="section-header">
+                <h2>📞 Contact by Purpose</h2>
+                <p>Choose the right contact method based on your needs</p>
             </div>
             
-            <div class="option-card">
-                <h3>📋 Technician Availability</h3>
-                <p>Check real-time availability of our certified technicians in your area.</p>
-                <a href="https://forms.office.com/r/jGgFgQUj0N">Check Availability</a>
+            <div class="contact-sections">
+                <div class="contact-section customers">
+                    <h3>👥 For Customers</h3>
+                    <p>Service requests, support, and assistance</p>
+                    <div class="contact-buttons">
+                        <a href="https://forms.office.com/r/sdf0YirK6s" class="contact-btn">🚨 Emergency Service</a>
+                        <a href="tel:0800769000" class="contact-btn">📞 Call 0800 769 000</a>
+                        <a href="https://forms.office.com/r/qDtVHgBbJk" class="contact-btn">💬 Customer Support</a>
+                        <a href="https://form.jotform.com/251017058434047" class="contact-btn">📍 Find Me Tool</a>
+                    </div>
+                </div>
+                
+                <div class="contact-section suppliers">
+                    <h3>🤝 For Suppliers & Partners</h3>
+                    <p>Business partnerships and supplier relations</p>
+                    <div class="contact-buttons">
+                        <a href="https://www.eek.nz/supplier" class="contact-btn">🤝 Official Supplier Portal</a>
+                        <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNE8yV1kxR0ZHQkpVMUNZMDNKUUNUTEpUUS4u" class="contact-btn">📝 Supplier Relations</a>
+                    </div>
+                </div>
+                
+                <div class="contact-section employment">
+                    <h3>💼 Employment & Careers</h3>
+                    <p>Join our team as a mobile technician</p>
+                    <div class="contact-buttons">
+                        <a href="https://forms.office.com/r/XLdGk4wDYY" class="contact-btn">📝 Apply to Work</a>
+                    </div>
+                </div>
             </div>
-            
-            <div class="option-card">
-                <h3>🤝 Supplier Partnership</h3>
-                <p>Join our supplier network or manage your existing partnership with Eek Mobile Mechanical.</p>
-                <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNE8yV1kxR0ZHQkpVMUNZMDNKUUNUTEpUUS4u">Supplier Portal</a>
-            </div>
-            
-            <div class="option-card">
-                <h3>💬 Customer Support</h3>
-                <p>Get help with your service, account questions, or submit feedback about your experience.</p>
-                <a href="https://forms.office.com/r/qDtVHgBbJk">Contact Support</a>
-            </div>
-            
-            <div class="option-card">
-                <h3>📍 Location Services</h3>
-                <p>Help our technicians find you quickly with our secure location assistance tool.</p>
-                <a href="https://form.jotform.com/251017058434047">Find My Location</a>
-            </div>
-            
-            <div class="option-card">
-                <h3>📄 Job Documentation</h3>
-                <p>Submit job sheets, work completion forms, and service documentation.</p>
-                <a href="https://forms.office.com/r/FNTtRBwQtT">Job Forms</a>
-            </div>
-            
-            <div class="option-card">
-                <h3>🛡️ Legal & Compliance</h3>
-                <p>Access our terms of service, privacy policy, and supplier terms and conditions.</p>
-                <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EbMAsktroaFEkKbFZUeYxPgBm1SDkvxru4fVlG360u3i9w?e=1CDNtc">View Terms</a>
-            </div>
-            
-            <div class="option-card">
-                <h3>🎯 Service Triage</h3>
-                <p>Get directed to the right service based on your specific mechanical needs.</p>
-                <a href="https://forms.office.com/r/hLJkX3NeLq">Start Triage</a>
-            </div>
-            
-            <div class="option-card">
-                <h3>🗺️ Navigation Help</h3>
-                <p>Find your current location or get directions for our mobile technicians.</p>
-                <a href="https://www.google.com/maps/search/where+am+I">Open Maps</a>
-            </div>
-            
-            <div class="option-card">
-                <h3>👤 Candidate Portal</h3>
-                <p>Submit your application as a potential technician candidate in our network.</p>
-                <a href="https://forms.office.com/r/EsHxc7mAb4">Apply as Candidate</a>
-            </div>
-            
-            <div class="option-card">
-                <h3>🆘 Helper Application</h3>
-                <p>Apply to join our helper network for roadside and mechanical assistance.</p>
-                <a href="https://forms.office.com/r/BE90j85gJr">Helper Form</a>
-            </div>
-            
-            <div class="option-card">
-                <h3>💼 Job Opportunities</h3>
-                <p>Browse current job openings and submit applications for available positions.</p>
-                <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNU1UVUNVOEMwMzFSMjBEVlVHRDlIVlBBNC4u&lang=en">View Jobs</a>
-            </div>
-            
-            <div class="option-card">
-                <h3>🔒 Privacy Policy</h3>
-                <p>Read our complete privacy policy and data protection information.</p>
-                <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EWXiDhEQikFPtsjmoapkdWMBeytvuyMEsmlIchxhPdwyXg?e=YcldRN">Privacy Policy</a>
-            </div>
-            
-            <div class="option-card">
-                <h3>📋 Supplier Terms</h3>
-                <p>View terms and conditions specific to our supplier partnership agreements.</p>
-                <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EVItR9WqSDBHpBgS4t5JFhQBLl0heypp7-CjIRgkV-4ytg?e=bajD4c">Supplier Terms</a>
-            </div>
-            
-            <div class="option-card">
-                <h3>🚨 Privacy Report</h3>
-                <p>Report privacy concerns or violations confidentially through our secure form.</p>
-                <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUMzRTVVRQQVVGN0s2QjRQTUVNOEVNR1QwOC4u">Report Issue</a>
         </div>
         
-        <div id="contact" style="margin-top: 40px;">
-            <h2 style="text-align: center; color: #333; margin-bottom: 30px;">📞 Contact Us</h2>
-            
-            <!-- Customer Contact Options -->
-            <div class="emergency-section" style="background: linear-gradient(135deg, #007acc, #0056b3); margin-bottom: 20px;">
-                <h3>👥 For Customers</h3>
-                <p>Need mechanical help or have questions about our services?</p>
-                <div class="emergency-buttons">
-                    <a href="https://forms.office.com/r/sdf0YirK6s" class="emergency-btn">🚨 Emergency Service</a>
-                    <a href="tel:0800769000" class="emergency-btn">📞 Call 0800 769 000</a>
-                    <a href="https://forms.office.com/r/qDtVHgBbJk" class="emergency-btn">💬 Customer Support</a>
+        <!-- LEGAL & COMPLIANCE SECTION -->
+        <div class="section">
+            <div class="legal-section">
+                <h3>🛡️ Legal & Compliance Center</h3>
+                <p>Terms, policies, privacy matters, and legal authority access</p>
+                <div class="legal-buttons">
+                    <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EbMAsktroaFEkKbFZUeYxPgBm1SDkvxru4fVlG360u3i9w?e=1CDNtc" class="legal-btn">📋 End User Terms</a>
+                    <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EVItR9WqSDBHpBgS4t5JFhQBLl0heypp7-CjIRgkV-4ytg?e=bajD4c" class="legal-btn">📋 Supplier Terms</a>
+                    <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EWXiDhEQikFPtsjmoapkdWMBeytvuyMEsmlIchxhPdwyXg?e=YcldRN" class="legal-btn">🔒 Privacy Policy</a>
+                    <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUMzRTVVRQQVVGN0s2QjRQTUVNOEVNR1QwOC4u" class="legal-btn">🚨 Privacy Report</a>
+                    <a href="https://www.eek.nz/mjuris" class="legal-btn">⚖️ Legal Authority</a>
                 </div>
             </div>
-            
-            <!-- Supplier Contact Options -->
-            <div class="emergency-section" style="background: linear-gradient(135deg, #28a745, #1e7e34); margin-bottom: 20px;">
-                <h3>🤝 For Suppliers & Partners</h3>
-                <p>Join our network or manage your existing partnership</p>
-                <div class="emergency-buttons">
-                    <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNE8yV1kxR0ZHQkpVMUNZMDNKUUNUTEpUUS4u" class="emergency-btn">🤝 Supplier Relations</a>
-                    <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EVItR9WqSDBHpBgS4t5JFhQBLl0heypp7-CjIRgkV-4ytg?e=bajD4c" class="emergency-btn">📋 Supplier Terms</a>
-                </div>
+        </div>
+        
+        <!-- UTILITY TOOLS SECTION -->
+        <div class="section">
+            <div class="section-header">
+                <h2>🔧 Utility Tools</h2>
+                <p>Helpful tools and resources for customers and technicians</p>
             </div>
             
-            <!-- Employment -->
-            <div class="emergency-section" style="background: linear-gradient(135deg, #ff6b35, #e55a2b); margin-bottom: 20px;">
-                <h3>💼 Employment & Careers</h3>
-                <p>Join our team as a technician or explore job opportunities</p>
-                <div class="emergency-buttons">
-                    <a href="https://forms.office.com/r/XLdGk4wDYY" class="emergency-btn">📝 Apply to Work</a>
-                    <a href="https://forms.office.com/r/EsHxc7mAb4" class="emergency-btn">👤 Candidate Form</a>
-                    <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNU1UVUNVOEMwMzFSMjBEVlVHRDlIVlBBNC4u&lang=en" class="emergency-btn">💼 Job Opportunities</a>
-                    <a href="https://forms.office.com/r/FNTtRBwQtT" class="emergency-btn">📄 Job Documentation</a>
-                </div>
-            </div>
-            
-            <!-- Administrative & Legal -->
-            <div class="emergency-section" style="background: linear-gradient(135deg, #6f42c1, #5a32a3);">
-                <h3>📋 Administrative & Legal</h3>
-                <p>Privacy concerns, compliance issues, or official documents</p>
-                <div class="emergency-buttons">
-                    <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUMzRTVVRQQVVGN0s2QjRQTUVNOEVNR1QwOC4u" class="emergency-btn">🚨 Privacy Report</a>
-                    <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EWXiDhEQikFPtsjmoapkdWMBeytvuyMEsmlIchxhPdwyXg?e=YcldRN" class="emergency-btn">🔒 Privacy Policy</a>
-                    <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EbMAsktroaFEkKbFZUeYxPgBm1SDkvxru4fVlG360u3i9w?e=1CDNtc" class="emergency-btn">🛡️ General Terms</a>
+            <div class="utility-grid">
+                <div class="utility-card">
+                    <h3>🗺️ Navigation Help</h3>
+                    <p>Find your current location or get directions for our mobile technicians.</p>
+                    <a href="https://www.google.com/maps/search/where+am+I">Open Maps</a>
                 </div>
             </div>
         </div>
@@ -356,7 +422,6 @@
         <div class="footer-nav">
             <a href="https://www.eek.nz">🏠 Homepage</a>
             <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EWXiDhEQikFPtsjmoapkdWMBeytvuyMEsmlIchxhPdwyXg?e=YcldRN">Privacy Policy</a>
-            <a href="#contact">💬 Contact Us</a>
         </div>
     </div>
 </body>
