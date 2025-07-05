@@ -250,22 +250,22 @@ GitHub Pages will automatically serve this for any 404 errors.
     </div>
 
     <script>
-        // REAL redirect database from actual Road & Rescue redirects
-        // Updated with new Eek portal pages and correct supplier-relations URL
+        // REAL redirect database - keeps ALL internal redirects working
         const redirectDatabase = {
             // Application and availability forms
             '/apply': 'https://forms.office.com/r/XLdGk4wDYY',
             '/availability': 'https://forms.office.com/r/jGgFgQUj0N',
             '/candidate': 'https://forms.office.com/r/EsHxc7mAb4',
             
-            // Legal and policy documents (keep existing SharePoint links)
+            // Legal and policy documents
             '/privacy': 'https://roadandrescue.sharepoint.com/:b:/s/rar/EWXiDhEQikFPtsjmoapkdWMBeytvuyMEsmlIchxhPdwyXg?e=YcldRN',
             '/terms': 'https://roadandrescue.sharepoint.com/:b:/s/rar/EbMAsktroaFEkKbFZUeYxPgBm1SDkvxru4fVlG360u3i9w?e=1CDNtc',
             '/terms-of-service': 'https://roadandrescue.sharepoint.com/:b:/s/rar/EbMAsktroaFEkKbFZUeYxPgBm1SDkvxru4fVlG360u3i9w?e=1CDNtc',
             
-            // Supplier forms and pages - UPDATED with correct URLs
+            // Supplier forms and pages
             '/supplier-relations': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNE8yV1kxR0ZHQkpVMUNZMDNKUUNUTEpUUS4u',
             '/supplier-terms': 'https://roadandrescue.sharepoint.com/:b:/s/rar/EVItR9WqSDBHpBgS4t5JFhQBLl0heypp7-CjIRgkV-4ytg?e=bajD4c',
+            '/supplier': 'https://www.eek.nz/supplier',
             
             // Customer support and escalation forms
             '/customer-escalation': 'https://forms.office.com/r/qDtVHgBbJk',
@@ -280,9 +280,11 @@ GitHub Pages will automatically serve this for any 404 errors.
             '/job-sheet': 'https://forms.office.com/r/FNTtRBwQtT',
             '/find-me': 'https://form.jotform.com/251017058434047',
             
-            // Utility redirects
+            // Legal and utility redirects
+            '/mjuris': 'https://www.eek.nz/mjuris',
             '/map': 'https://www.google.com/maps/search/where+am+I',
             '/privacy-report': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUMzRTVVRQQVVGN0s2QjRQTUVNOEVNR1QwOC4u',
+            '/more-options': 'https://www.eek.nz/more-options',
             
             // Case variations (common typos)
             '/Apply': 'https://forms.office.com/r/XLdGk4wDYY',
@@ -335,7 +337,7 @@ GitHub Pages will automatically serve this for any 404 errors.
         }
         
         function getServiceInfo(url, path) {
-            // Customer-friendly explanations for each service - UPDATED with new pages
+            // Customer-friendly explanations for each service
             if (path === '/apply') {
                 return {
                     title: 'Joining Our Team',
@@ -348,12 +350,6 @@ GitHub Pages will automatically serve this for any 404 errors.
                     description: 'Connecting you to our real-time availability system to show when our certified technicians can help you.'
                 };
             }
-            if (path === '/supplier-upload') {
-                return {
-                    title: 'Document Upload Portal',
-                    description: 'Taking you to our secure supplier document upload system for invoices, job sheets, and certificates.'
-                };
-            }
             if (path === '/supplier') {
                 return {
                     title: 'Supplier Partnership Portal',
@@ -364,6 +360,12 @@ GitHub Pages will automatically serve this for any 404 errors.
                 return {
                     title: 'Legal Authority Access',
                     description: 'Accessing MJuris Central Enforcement Authority for contract and compliance matters.'
+                };
+            }
+            if (path === '/more-options') {
+                return {
+                    title: 'Service Directory',
+                    description: 'Taking you to our complete directory of all services, forms, and contact options.'
                 };
             }
             if (path === '/find-me') {
@@ -419,18 +421,14 @@ GitHub Pages will automatically serve this for any 404 errors.
             document.getElementById('loadingContainer').style.display = 'none';
             document.getElementById('errorContainer').classList.add('show');
             
-            // Generate suggestions with Eek branding - UPDATED with new portal pages
+            // Generate public-facing suggestions - only show main pages, not internal forms
             const suggestionsList = document.getElementById('suggestionsList');
             const suggestions = [
                 { url: 'https://www.eek.nz/', title: '🏠 Homepage', desc: 'Main Eek Mobile Mechanical website' },
                 { url: 'tel:0800769000', title: '📞 Call 0800 769 000', desc: 'Speak directly with our dispatch team' },
-                { url: 'https://forms.office.com/r/sdf0YirK6s', title: '🚨 Emergency Service', desc: 'Get mobile mechanical assistance in 30-60 minutes' },
-                { url: 'https://www.eek.nz/supplier', title: '🤝 Supplier Portal', desc: 'Join our network or access supplier resources' },
-                { url: 'https://www.eek.nz/supplier-upload', title: '📁 Upload Documents', desc: 'Submit invoices and supplier documentation' },
-                { url: 'https://www.eek.nz/mjuris', title: '⚖️ Legal Authority', desc: 'Contract enforcement and compliance matters' },
-                { url: 'https://forms.office.com/r/jGgFgQUj0N', title: '📋 Check Availability', desc: 'See when our technicians are available' },
-                { url: 'https://forms.office.com/r/qDtVHgBbJk', title: '💬 Customer Support', desc: 'Get help with your service or account' },
-                { url: 'https://forms.office.com/r/XLdGk4wDYY', title: '📝 Apply to Work', desc: 'Join our team of mobile technicians' }
+                { url: 'https://www.eek.nz/more-options', title: '📋 More Options', desc: 'Complete directory of all services and forms' },
+                { url: 'https://www.eek.nz/supplier', title: '🤝 Supplier Portal', desc: 'Official supplier partnership portal' },
+                { url: 'https://www.eek.nz/mjuris', title: '⚖️ Legal Authority', desc: 'Legal enforcement and compliance matters' }
             ];
             
             suggestionsList.innerHTML = suggestions.map(s => `
