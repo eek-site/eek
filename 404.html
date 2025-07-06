@@ -274,6 +274,9 @@ GitHub Pages will automatically serve this for any 404 errors.
             '/triage': 'https://forms.office.com/r/hLJkX3NeLq',
             '/job': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNU1UVUNVOEMwMzFSMjBEVlVHRDlIVlBBNC4u&lang=en',
             
+            // Insurance and claims
+            '/insurance-form': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUM1kwODkxSlVRTkJBNFM0RlY1NUxSTE8yNi4u',
+            
             // Service and job forms
             '/rescue-me': 'https://forms.office.com/r/sdf0YirK6s',
             '/start': 'https://forms.office.com/r/sdf0YirK6s',
@@ -390,6 +393,12 @@ GitHub Pages will automatically serve this for any 404 errors.
                 return {
                     title: 'Supplier Partnership',
                     description: 'Taking you to our secure supplier portal for business inquiries and partnership opportunities.'
+                };
+            }
+            if (path === '/insurance-form') {
+                return {
+                    title: 'Insurance Liaison & Claims',
+                    description: 'Taking you to our secure insurance claim consent form. We\'ll coordinate directly with your insurance provider for faster processing.'
                 };
             }
             if (path === '/map') {
