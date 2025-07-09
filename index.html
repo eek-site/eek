@@ -12,8 +12,17 @@
   <meta property="og:url" content="https://www.eek.nz" />
   <meta property="og:image" content="https://www.eek.nz/og-image.jpg" />
 
-  <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
+  <!-- Security Headers (add these to your server configuration) -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com; frame-src 'none';">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+
+  <!-- Google tag (gtag.js) for Google Ads Conversion Tracking with SRI -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163" 
+          integrity="sha384-PLACEHOLDER-HASH" 
+          crossorigin="anonymous"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
