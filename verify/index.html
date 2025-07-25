@@ -125,22 +125,35 @@
     }
     .phone-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 15px;
       margin-top: 15px;
     }
     .phone-item {
-      padding: 10px;
+      padding: 15px;
       background: #f8f9fa;
       border-radius: 8px;
       border-left: 3px solid #ff5500;
+      font-size: 1.1em;
     }
     .phone-item a {
       color: #333;
       text-decoration: none;
+      font-weight: 500;
     }
     .phone-item a:hover {
       color: #ff5500;
+    }
+    /* Primary phone numbers highlighted */
+    .primary-phone {
+      background: linear-gradient(135deg, #ff5500, #ff7700) !important;
+      color: white !important;
+      border-left: 3px solid #ffffff !important;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    .primary-phone a {
+      color: white !important;
     }
     .cities-list {
       display: grid;
@@ -219,6 +232,33 @@
       font-weight: bold;
       margin-right: 8px;
     }
+    /* Verification section for Google Ads */
+    .verification-notice {
+      background: #e8f5e8;
+      border: 2px solid #4caf50;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      text-align: center;
+    }
+    .phone-verification {
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 30px 0;
+    }
+    .phone-number-display {
+      font-size: 1.4em;
+      font-weight: bold;
+      color: #ff5500;
+      text-align: center;
+      margin: 10px 0;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 2px dashed #ff5500;
+    }
   </style>
 </head>
 <body>
@@ -231,42 +271,80 @@
     <a class="cta-button" href="tel:+64800769000">📞 Call 0800 769 000</a>
   </header>
 
+  <div class="verification-notice">
+    <h2>✅ Google Ads Verified Business</h2>
+    <p><strong>This page serves as verification for our Google Ads campaigns and phone number authenticity.</strong></p>
+    <p>All phone numbers listed below are verified, active, and directly connected to Eek Mobile Mechanical services.</p>
+  </div>
+
+  <div class="phone-verification">
+    <h2>🔍 Primary Google Ads Phone Numbers</h2>
+    <p><strong>For Google Ads Verification:</strong> The following numbers are used in our advertising campaigns and are verified as legitimate business phone numbers:</p>
+
+```
+<div class="phone-number-display">
+  <a href="tel:+64800447153">+64 800 447 153</a>
+</div>
+<div class="phone-number-display">
+  <a href="tel:+64800769000">+64 800 769 000</a>
+</div>
+<div class="phone-number-display">
+  <a href="tel:+64800454731">+64 800 454 731</a>
+</div>
+```
+
+  </div>
+
   <div class="phone-numbers">
-    <h2>📞 Inbound Numbers</h2>
-    <h3>🚗 Services – New Zealand</h3>
+    <h2>📞 Complete Directory - All Verified Phone Numbers</h2>
+    <h3>🚗 Primary Services – New Zealand</h3>
     <div class="phone-grid">
-      <div class="phone-item"><a href="tel:+64800454731">Jump Start – 0800 454 731</a></div>
-      <div class="phone-item"><a href="tel:+64800454732">Tyre – 0800 454 732</a></div>
-      <div class="phone-item"><a href="tel:+64800454735">Locksmith – 0800 454 735</a></div>
-      <div class="phone-item"><a href="tel:+64800454736">Mechanic – 0800 454 736</a></div>
-      <div class="phone-item"><a href="tel:+64800454738">Fuel Delivery – 0800 454 738</a></div>
-      <div class="phone-item"><a href="tel:+64800448939">Fuel Removal – 0800 448 939</a></div>
-      <div class="phone-item"><a href="tel:+64800707303">Truck Tyre – 0800 707 303</a></div>
-      <div class="phone-item"><a href="tel:+64800447123">Pre-Purchase Inspection - 0800 447 123</a></div>
-      <div class="phone-item"><a href="tel:+64800447153">Google Call Ads - 0800 447 153</a></div>
-      <div class="phone-item"><a href="tel:+64800454704">Customer Support – 0800 454 704</a></div>
-      <div class="phone-item"><a href="tel:+64800454739">Website Feecall NZ – 0800 454 739</a></div>
+      <div class="phone-item primary-phone"><a href="tel:+64800447153">Google Call Ads – +64 800 447 153</a></div>
+      <div class="phone-item primary-phone"><a href="tel:+64800769000">Main Service Line – +64 800 769 000</a></div>
+      <div class="phone-item primary-phone"><a href="tel:+64800454731">Jump Start – +64 800 454 731</a></div>
+      <div class="phone-item"><a href="tel:+64800454732">Tyre Service – +64 800 454 732</a></div>
+      <div class="phone-item"><a href="tel:+64800454735">Locksmith – +64 800 454 735</a></div>
+      <div class="phone-item"><a href="tel:+64800454736">Mechanic – +64 800 454 736</a></div>
+      <div class="phone-item"><a href="tel:+64800454738">Fuel Delivery – +64 800 454 738</a></div>
+      <div class="phone-item"><a href="tel:+64800448939">Fuel Removal – +64 800 448 939</a></div>
+      <div class="phone-item"><a href="tel:+64800707303">Truck Tyre – +64 800 707 303</a></div>
+      <div class="phone-item"><a href="tel:+64800447123">Pre-Purchase Inspection – +64 800 447 123</a></div>
+      <div class="phone-item"><a href="tel:+64800454704">Customer Support – +64 800 454 704</a></div>
+      <div class="phone-item"><a href="tel:+64800454739">Website Calls NZ – +64 800 454 739</a></div>
     </div>
 
-    <h3>🌍 Triage Numbers by Region</h3>
-    <div class="phone-grid">
-      <div class="phone-item"><a href="tel:+611800271076">Triage Australia – 1800 271 076</a></div>
-      <div class="phone-item"><a href="tel:+13237391499">Triage Canada – (323) 739-1499</a></div>
-      <div class="phone-item"><a href="tel:+447537149772">Triage UK – 07537 149772</a></div>
-      <div class="phone-item"><a href="tel:+18882023830">Triage US (Miami English) – (888) 202-3830</a></div>
-      <div class="phone-item"><a href="tel:+18884015518">Triage US (Miami Español) – (888) 401-5518</a></div>
-      <div class="phone-item"><a href="tel:+558001111112">Triage Brazil – 0800 111 1112</a></div>
-      <div class="phone-item"><a href="tel:+5660006066">Triage Chile – 600 006 1066</a></div>
-    </div>
+```
+<h3>🌍 International Triage Numbers</h3>
+<div class="phone-grid">
+  <div class="phone-item"><a href="tel:+611800271076">Australia Triage – +61 1800 271 076</a></div>
+  <div class="phone-item"><a href="tel:+13237391499">Canada Triage – +1 (323) 739-1499</a></div>
+  <div class="phone-item"><a href="tel:+447537149772">UK Triage – +44 7537 149772</a></div>
+  <div class="phone-item"><a href="tel:+18882023830">US Triage (English) – +1 (888) 202-3830</a></div>
+  <div class="phone-item"><a href="tel:+18884015518">US Triage (Español) – +1 (888) 401-5518</a></div>
+  <div class="phone-item"><a href="tel:+558001111112">Brazil Triage – +55 0800 111 1112</a></div>
+  <div class="phone-item"><a href="tel:+5660006066">Chile Triage – +56 600 006 1066</a></div>
+</div>
 
-    <h3>🛟 Support Numbers</h3>
-    <div class="phone-grid">
-      <div class="phone-item"><a href="tel:+611800271076">Australia Support – 1800 271 076</a></div>
-      <div class="phone-item"><a href="tel:+13219368711">US / Canada Support – (321) 936-8711</a></div>
-      <div class="phone-item"><a href="tel:+447537149772">UK / South Africa Support – 07537 149772</a></div>
-      <div class="phone-item"><a href="tel:+50487300394">Honduras Support – 8730-0394</a></div>
-    </div>
+<h3>🛟 Regional Support Numbers</h3>
+<div class="phone-grid">
+  <div class="phone-item"><a href="tel:+611800271076">Australia Support – +61 1800 271 076</a></div>
+  <div class="phone-item"><a href="tel:+13219368711">US/Canada Support – +1 (321) 936-8711</a></div>
+  <div class="phone-item"><a href="tel:+447537149772">UK/South Africa Support – +44 7537 149772</a></div>
+  <div class="phone-item"><a href="tel:+50487300394">Honduras Support – +504 8730-0394</a></div>
+</div>
+```
 
+  </div>
+
+  <div class="verification-notice">
+    <h2>📋 Business Verification Details</h2>
+    <p><strong>Business Name:</strong> Eek Mobile Mechanical</p>
+    <p><strong>Website:</strong> https://www.eek.nz</p>
+    <p><strong>Primary Contact:</strong> +64 800 769 000</p>
+    <p><strong>Google Ads Contact:</strong> +64 800 447 153</p>
+    <p><strong>Business Type:</strong> Mobile Automotive Services</p>
+    <p><strong>Service Areas:</strong> New Zealand, Australia, UK, US, Canada, Brazil, Chile, Honduras</p>
+    <p><strong>Operating Hours:</strong> 24/7 Emergency Roadside Assistance</p>
   </div>
 
   <div class="highlight-box">
@@ -276,43 +354,51 @@
 
   <div class="country-section">
     <h2><span class="flag">🇳🇿</span>New Zealand – Nationwide Coverage</h2>
-    <p>We provide services across all major cities and towns in New Zealand, including:</p>
-    <ul class="cities-list">
-      <li>Auckland</li>
-      <li>Wellington</li>
-      <li>Christchurch</li>
-      <li>Hamilton</li>
-      <li>Tauranga</li>
-      <li>Napier</li>
-      <li>Dunedin</li>
-      <li>Palmerston North</li>
-      <li>Nelson</li>
-      <li>Rotorua</li>
-      <li>New Plymouth</li>
-      <li>Whangārei</li>
-      <li>Invercargill</li>
-      <li>Whanganui</li>
-      <li>Gisborne</li>
-      <li>Timaru</li>
-      <li>Blenheim</li>
-      <li>Taupō</li>
-      <li>Hastings</li>
-      <li>Masterton</li>
-    </ul>
-    <h3>Services Offered:</h3>
-    <ul class="feature-list">
-      <li>Jump Starts</li>
-      <li>Tire Changes</li>
-      <li>Locksmith Services</li>
-      <li>Mechanical Assistance</li>
-      <li>Fuel Delivery and Removal</li>
-      <li>Truck Tire Services</li>
-      <li>Customer Support</li>
-    </ul>
+    <p><strong>Primary Contact: +64 800 769 000</strong></p>
+    <p><strong>Google Ads Line: +64 800 447 153</strong></p>
+    <p><strong>Jump Start Service: +64 800 454 731</strong></p>
+
+```
+<p>We provide services across all major cities and towns in New Zealand, including:</p>
+<ul class="cities-list">
+  <li>Auckland</li>
+  <li>Wellington</li>
+  <li>Christchurch</li>
+  <li>Hamilton</li>
+  <li>Tauranga</li>
+  <li>Napier</li>
+  <li>Dunedin</li>
+  <li>Palmerston North</li>
+  <li>Nelson</li>
+  <li>Rotorua</li>
+  <li>New Plymouth</li>
+  <li>Whangārei</li>
+  <li>Invercargill</li>
+  <li>Whanganui</li>
+  <li>Gisborne</li>
+  <li>Timaru</li>
+  <li>Blenheim</li>
+  <li>Taupō</li>
+  <li>Hastings</li>
+  <li>Masterton</li>
+</ul>
+<h3>Services Offered:</h3>
+<ul class="feature-list">
+  <li>Jump Starts</li>
+  <li>Tire Changes</li>
+  <li>Locksmith Services</li>
+  <li>Mechanical Assistance</li>
+  <li>Fuel Delivery and Removal</li>
+  <li>Truck Tire Services</li>
+  <li>Customer Support</li>
+</ul>
+```
+
   </div>
 
   <div class="country-section">
     <h2><span class="flag">🇦🇺</span>Australia – Extensive Network</h2>
+    <p><strong>Contact: +61 1800 271 076</strong></p>
     <p>Our Australian services span across all states and territories, covering cities such as:</p>
     <ul class="cities-list">
       <li>Sydney</li>
@@ -348,6 +434,7 @@
 
   <div class="country-section">
     <h2><span class="flag">🇬🇧</span>United Kingdom – Comprehensive Coverage</h2>
+    <p><strong>Contact: +44 7537 149772</strong></p>
     <p>We operate throughout the UK, including:</p>
     <ul class="cities-list">
       <li>London</li>
@@ -380,46 +467,38 @@
       <li>Emergency Fuel Delivery</li>
     </ul>
 
-    <h3>🏡 Regional & Smaller Towns</h3>
-    <ul class="cities-list">
-      <li>Milton Keynes</li>
-      <li>Swindon</li>
-      <li>Luton</li>
-      <li>Wolverhampton</li>
-      <li>York</li>
-      <li>Bournemouth</li>
-      <li>Northampton</li>
-      <li>Southend-on-Sea</li>
-      <li>Cambridge</li>
-      <li>Blackpool</li>
-      <li>Ipswich</li>
-      <li>Slough</li>
-      <li>Oxford</li>
-      <li>Stockport</li>
-      <li>Watford</li>
-      <li>Guildford</li>
-      <li>Maidstone</li>
-      <li>Cheltenham</li>
-      <li>Colchester</li>
-      <li>Woking</li>
-    </ul>
-
-    <p>And across every county, including: Greater London, West Midlands, Greater Manchester, Merseyside, West Yorkshire, South Yorkshire, Kent, Surrey, Hampshire, Lancashire, Essex, Sussex, Devon, Dorset, Norfolk, Lincolnshire, Staffordshire, Warwickshire, Leicestershire, Hertfordshire, Buckinghamshire, Cumbria, Wiltshire, Cambridgeshire, Berkshire</p>
-
-    <h3>Services Offered:</h3>
-    <ul class="feature-list">
-      <li>24/7 Emergency Roadside Assistance</li>
-      <li>Vehicle Towing & Recovery</li>
-      <li>Flat Tyre Changes</li>
-      <li>Jump Starts & Battery Boosts</li>
-      <li>Lockout Assistance</li>
-      <li>Emergency Fuel Delivery</li>
-    </ul>
+```
+<h3>🏡 Regional & Smaller Towns</h3>
+<ul class="cities-list">
+  <li>Milton Keynes</li>
+  <li>Swindon</li>
+  <li>Luton</li>
+  <li>Wolverhampton</li>
+  <li>York</li>
+  <li>Bournemouth</li>
+  <li>Northampton</li>
+  <li>Southend-on-Sea</li>
+  <li>Cambridge</li>
+  <li>Blackpool</li>
+  <li>Ipswich</li>
+  <li>Slough</li>
+  <li>Oxford</li>
+  <li>Stockport</li>
+  <li>Watford</li>
+  <li>Guildford</li>
+  <li>Maidstone</li>
+  <li>Cheltenham</li>
+  <li>Colchester</li>
+  <li>Woking</li>
+</ul>
+```
 
   </div>
 
   <div class="country-section">
     <h2><span class="flag">🇺🇸</span>United States – Nationwide Reach</h2>
+    <p><strong>English Support: +1 (888) 202-3830</strong></p>
+    <p><strong>Spanish Support: +1 (888) 401-5518</strong></p>
     <p>Our services extend across the United States, covering major cities and surrounding areas:</p>
     <ul class="cities-list">
       <li>New York City</li>
@@ -455,6 +534,7 @@
 
   <div class="country-section">
     <h2><span class="flag">🇨🇦</span>Canada – Coast-to-Coast Service</h2>
+    <p><strong>Contact: +1 (323) 739-1499</strong></p>
     <p>We provide roadside assistance throughout Canada, including:</p>
     <ul class="cities-list">
       <li>Toronto</li>
@@ -490,6 +570,7 @@
 
   <div class="country-section">
     <h2><span class="flag">🇧🇷</span>Brazil – Major Urban Centers</h2>
+    <p><strong>Contact: +55 0800 111 1112</strong></p>
     <p>Our Brazilian operations cover key cities, including:</p>
     <ul class="cities-list">
       <li>São Paulo</li>
@@ -525,6 +606,7 @@
 
   <div class="country-section">
     <h2><span class="flag">🇨🇱</span>Chile – Comprehensive Urban Coverage</h2>
+    <p><strong>Contact: +56 600 006 1066</strong></p>
     <p>We serve numerous Chilean cities, including:</p>
     <ul class="cities-list">
       <li>Santiago</li>
@@ -560,6 +642,7 @@
 
   <div class="country-section">
     <h2><span class="flag">🇭🇳</span>Honduras – Key Urban Areas</h2>
+    <p><strong>Contact: +504 8730-0394</strong></p>
     <p>Our Honduran services are available in major cities such as:</p>
     <ul class="cities-list">
       <li>Tegucigalpa</li>
@@ -593,77 +676,50 @@
     </ul>
   </div>
 
-  <div class="highlight-box">
-    <h2>🚀 Eek Mobile Mechanical: Leading the Global Roadside Assistance Industry</h2>
-    <p>When it comes to roadside assistance, Eek Mobile Mechanical stands unmatched in scale, service quality, and customer satisfaction. Our expansive network and commitment to excellence have positioned us at the forefront of the industry.</p>
-  </div>
-
-  <div class="country-section">
-    <h2>🌐 Unparalleled Global Coverage</h2>
-    <p>Eek Mobile Mechanical operates across multiple continents, providing 24/7 roadside assistance in countries including:</p>
-    <ul class="feature-list">
-      <li><strong>New Zealand:</strong> Serving cities like Auckland, Wellington, Christchurch, and more.</li>
-      <li><strong>Australia:</strong> Comprehensive coverage from Sydney to Perth and beyond.</li>
-      <li><strong>United Kingdom:</strong> Extensive services across London, Manchester, Birmingham, and other major cities.</li>
-      <li><strong>United States:</strong> Nationwide assistance covering New York, Los Angeles, Chicago, and more.</li>
-      <li><strong>Canada:</strong> Coast-to-coast services from Toronto to Vancouver.</li>
-      <li><strong>Brazil:</strong> Major urban centers including São Paulo, Rio de Janeiro, and Brasília.</li>
-      <li><strong>Chile:</strong> Key cities such as Santiago, Valparaíso, and Concepción.</li>
-      <li><strong>Honduras:</strong> Coverage in Tegucigalpa, San Pedro Sula, and additional regions.</li>
-    </ul>
-    <p>Our strategic presence ensures that no matter where you are, Eek Mobile Mechanical is ready to assist.</p>
-
-    <h3>🛠️ Comprehensive Service Offerings</h3>
-    <p>We provide a wide array of services tailored to meet diverse roadside needs:</p>
-    <ul class="feature-list">
-      <li>Emergency Towing</li>
-      <li>Battery Jump Starts</li>
-      <li>Flat Tire Changes</li>
-      <li>Lockout Assistance</li>
-      <li>Fuel Delivery</li>
-      <li>Mechanical Repairs</li>
-      <li>EV Charging Support</li>
-    </ul>
-    <p>Our trained professionals are equipped to handle emergencies efficiently, minimizing downtime and ensuring safety.</p>
-
-    <h3>📈 Setting Industry Standards</h3>
-    <p>While other companies like AAA, Agero, and Allianz Partners have significant market shares, Eek Mobile Mechanical distinguishes itself through:</p>
-    <ul class="feature-list">
-      <li><strong>Rapid Response Times:</strong> Our average response time outpaces industry standards, ensuring timely assistance.</li>
-      <li><strong>Customer Satisfaction:</strong> High customer retention and satisfaction rates reflect our commitment to quality service.</li>
-      <li><strong>Technological Integration:</strong> Advanced dispatch systems and user-friendly platforms enhance service delivery.</li>
-    </ul>
-    <p>These factors contribute to our reputation as a reliable and efficient roadside assistance provider.</p>
-
-    <h3>🤝 Trusted by Millions</h3>
-    <p>Our dedication to excellence has earned the trust of millions of customers worldwide. We pride ourselves on delivering consistent, high-quality service that meets and exceeds expectations.</p>
-    <p><strong>Experience the Eek Mobile Mechanical difference — where reliability meets excellence.</strong></p>
-
-  </div>
-
   <div class="country-section">
     <h2>🔧 Google Ads API Use</h2>
     <p>Eek Mobile Mechanical uses Google Ads to acquire customers during emergency roadside events across all operating regions. We operate a fully automated advertising platform powered by the Google Ads API. This system dynamically creates and manages call-only campaigns based on regional availability, device type, service demand, and language.</p>
     <p>Our internal tool updates campaigns in real-time to reflect live dispatch coverage, optimize bidding, and monitor conversion flow. API access is essential to our global, high-speed deployment model. This platform is used exclusively by Eek Mobile Mechanical employees and contractors.</p>
+    <p><strong>Primary Google Ads Phone Numbers:</strong></p>
+    <div class="phone-number-display">
+      <a href="tel:+64800447153">+64 800 447 153</a> (Google Call Ads)
+    </div>
+    <div class="phone-number-display">
+      <a href="tel:+64800769000">+64 800 769 000</a> (Main Service)
+    </div>
+    <div class="phone-number-display">
+      <a href="tel:+64800454731">+64 800 454 731</a> (Jump Start)
+    </div>
   </div>
 
   <div class="highlight-box">
     <h2>📞 Contact Us Anytime, Anywhere</h2>
     <p>Our dedicated support lines are available 24/7 to assist you:</p>
     <div class="phone-grid">
-      <div class="phone-item" style="background: rgba(255,255,255,0.2); border-left: 3px solid white;"><a href="tel:+611800271076" style="color: white;">Australia Support: 1800 271 076</a></div>
-      <div class="phone-item" style="background: rgba(255,255,255,0.2); border-left: 3px solid white;"><a href="tel:+13219368711" style="color: white;">US/Canada Support: (321) 936-8711</a></div>
-      <div class="phone-item" style="background: rgba(255,255,255,0.2); border-left: 3px solid white;"><a href="tel:+447537149772" style="color: white;">UK/South Africa Support: 07537 149772</a></div>
-      <div class="phone-item" style="background: rgba(255,255,255,0.2); border-left: 3px solid white;"><a href="tel:+50487300394" style="color: white;">Honduras Support: 8730-0394</a></div>
+      <div class="phone-item" style="background: rgba(255,255,255,0.2); border-left: 3px solid white;"><a href="tel:+64800447153" style="color: white;">Google Ads: +64 800 447 153</a></div>
+      <div class="phone-item" style="background: rgba(255,255,255,0.2); border-left: 3px solid white;"><a href="tel:+64800769000" style="color: white;">Main Line: +64 800 769 000</a></div>
+      <div class="phone-item" style="background: rgba(255,255,255,0.2); border-left: 3px solid white;"><a href="tel:+611800271076" style="color: white;">Australia: +61 1800 271 076</a></div>
+      <div class="phone-item" style="background: rgba(255,255,255,0.2); border-left: 3px solid white;"><a href="tel:+13219368711" style="color: white;">US/Canada: +1 (321) 936-8711</a></div>
+      <div class="phone-item" style="background: rgba(255,255,255,0.2); border-left: 3px solid white;"><a href="tel:+447537149772" style="color: white;">UK: +44 7537 149772</a></div>
+      <div class="phone-item" style="background: rgba(255,255,255,0.2); border-left: 3px solid white;"><a href="tel:+50487300394" style="color: white;">Honduras: +504 8730-0394</a></div>
     </div>
     <p style="margin-top: 20px;"><strong>Experience reliable and prompt roadside assistance with Eek Mobile Mechanical. Your safety is our priority.</strong></p>
-    <p><em>Note: For a complete list of all serviced towns and cities, please refer to our Comprehensive Service Areas page.</em></p>
+    <p><em>All phone numbers on this page are verified and monitored for Google Ads compliance.</em></p>
   </div>
 </div>
 
 <footer>
   <p>&copy; 2025 Eek Mobile Mechanical. Powered by creativity and passion. | 
   <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EePeZL039ZdBisigeixY7lkBMWcEEC4SBcSdN5rDmp_B3w?e=0stgCb" target="_blank">Privacy Statement</a></p>
+
+  <div style="margin-top: 20px; padding: 15px; background: #444; border-radius: 5px;">
+    <h4 style="color: #ff5500; margin: 0 0 10px 0;">Google Ads Verification Statement</h4>
+    <p style="margin: 5px 0; font-size: 0.9em;">Primary Google Ads Phone: +64 800 447 153</p>
+    <p style="margin: 5px 0; font-size: 0.9em;">Main Business Phone: +64 800 769 000</p>
+    <p style="margin: 5px 0; font-size: 0.9em;">Jump Start Service: +64 800 454 731</p>
+    <p style="margin: 5px 0; font-size: 0.9em;">Website: https://www.eek.nz</p>
+    <p style="margin: 5px 0; font-size: 0.9em;">Business: Eek Mobile Mechanical - 24/7 Roadside Assistance</p>
+  </div>
 </footer>
 
 <script>
