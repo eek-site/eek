@@ -124,52 +124,9 @@
       background-color: #e04400 !important;
     }
 
-    /* Mobile Navigation */
-    .mobile-nav-toggle {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 1.5em;
-      cursor: pointer;
-      padding: 10px;
-      color: #333;
-    }
-    
     @media (max-width: 768px) {
-      .nav-container {
-        min-height: 60px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      
-      .mobile-nav-toggle {
-        display: block;
-        position: absolute;
-        right: 20px;
-        top: 15px;
-      }
-      
-      .nav-menu {
+      nav {
         display: none;
-        flex-direction: column;
-        width: 100%;
-        padding-top: 0;
-      }
-      
-      .nav-menu.active {
-        display: flex;
-      }
-      
-      .nav-menu a {
-        width: 100%;
-        text-align: center;
-        padding: 15px;
-        border-bottom: 1px solid #eee;
-      }
-      
-      .nav-container {
-        position: relative;
       }
     }
 
@@ -368,7 +325,6 @@
 <!-- Navigation Menu -->
 <nav>
   <div class="nav-container">
-    <button class="mobile-nav-toggle" onclick="toggleMobileNav()">☰</button>
     <ul class="nav-menu" id="navMenu">
       <li><a href="#home">🏠 Home</a></li>
       <li><a href="#inspections">🧾 Inspections</a></li>
@@ -443,6 +399,12 @@
     <li>📍 Service at your location—home or roadside</li>
   </ul>
   <a class="cta-button" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Call for Battery Help</a>
+</div>
+
+<!-- Success Illustration Break -->
+<div style="background: #ffffff; margin: 40px 20px; padding: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); max-width: 600px; margin-left: auto; margin-right: auto; text-align: center;">
+  <img src="sweet-ride.png" alt="Sweet! Fixed car celebration" style="max-width: 100%; height: auto; border-radius: 8px;" />
+  <p style="color: #666; font-size: 1.1em; margin-top: 15px; margin-bottom: 0;">This is what success looks like with Eek Mobile Mechanical!</p>
 </div>
 
 <div class="services" id="fuel-rescue">
@@ -536,22 +498,6 @@ function trackConversion(eventAction, eventCategory) {
     });
   }
 }
-
-function toggleMobileNav() {
-  const navMenu = document.getElementById('navMenu');
-  navMenu.classList.toggle('active');
-}
-
-// Close mobile menu when clicking on a link
-document.addEventListener('DOMContentLoaded', function() {
-  const navLinks = document.querySelectorAll('.nav-menu a');
-  navLinks.forEach(link => {
-    link.addEventListener('click', function() {
-      const navMenu = document.getElementById('navMenu');
-      navMenu.classList.remove('active');
-    });
-  });
-});
 
 window.addEventListener('load', function() {
   if (typeof gtag !== 'undefined') {
