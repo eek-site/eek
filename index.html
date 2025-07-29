@@ -187,6 +187,7 @@
       background: #ffffff;
       padding: 30px 20px;
       margin: 30px 0;
+      text-align: center; /* Center the image */
     }
     
     .image-breaker img {
@@ -194,6 +195,9 @@
       height: auto;
       border-radius: 12px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin-left: auto;
+      margin-right: auto;
+      display: block; /* Ensure the image is treated as a block element for centering */
     }
     
     footer {
@@ -388,7 +392,9 @@
     <li>💸 $199 fixed flat rate, no surprises</li>
     <li>⏱️ Nationwide dispatch in 30–60 minutes</li>
   </ul>
-  <img src="sweet-ride.png" alt="Sweet! Fixed car celebration" style="max-width: 300px; height: auto; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 20px 0;" />
+  <div class="image-breaker">
+    <img src="sweet-ride.png" alt="Sweet! Fixed car celebration" style="max-width: 300px; height: auto; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
+  </div>
   <a class="cta-button" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')">📞 Book an Inspector Now</a>
 </div>
 
@@ -562,6 +568,3 @@ window.addEventListener('scroll', function() {
   }
 })();
 </script>
-
-</body>
-</html>
