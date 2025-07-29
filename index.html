@@ -13,11 +13,87 @@
   <meta property="og:image" content="https://www.eek.nz/og-image.jpg" />
 
   <!-- Security Headers (add these to your server configuration) -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com; frame-src 'none';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com; frame-src 'none';">
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
   <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+
+  <!-- Reddit Pixel -->
+  <script>
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
+    (window,document);
+    
+    // Helper functions to extract user data if available
+    function getEmailFromForm() {
+      // Check for email in URL parameters (if passed from ads)
+      const urlParams = new URLSearchParams(window.location.search);
+      const emailParam = urlParams.get('email');
+      if (emailParam) return emailParam;
+      
+      // Check for email in any forms on the page
+      const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"], input[id*="email"]');
+      for (let input of emailInputs) {
+        if (input.value && input.value.includes('@')) {
+          return input.value;
+        }
+      }
+      return null;
+    }
+    
+    function getPhoneFromForm() {
+      // Check for phone in URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const phoneParam = urlParams.get('phone');
+      if (phoneParam) return phoneParam;
+      
+      // Check for phone in any forms on the page
+      const phoneInputs = document.querySelectorAll('input[type="tel"], input[name*="phone"], input[id*="phone"]');
+      for (let input of phoneInputs) {
+        if (input.value) {
+          return input.value;
+        }
+      }
+      return null;
+    }
+    
+    function getUserId() {
+      // Check for user ID in URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('uid') || urlParams.get('user_id') || urlParams.get('customer_id');
+    }
+    
+    function getMobileIds() {
+      // Check for mobile advertising IDs in URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      return {
+        idfa: urlParams.get('idfa'), // iOS Identifier for Advertisers
+        aaid: urlParams.get('aaid')  // Android Advertising ID
+      };
+    }
+    
+    // Initialize Reddit Pixel with comprehensive advanced matching
+    const mobileIds = getMobileIds();
+    const initConfig = {};
+    
+    // Only add parameters if they have values (Reddit prefers this approach)
+    const email = getEmailFromForm();
+    const phoneNumber = getPhoneFromForm();
+    const externalId = getUserId();
+    
+    if (email) initConfig.email = email;
+    if (phoneNumber) initConfig.phoneNumber = phoneNumber;
+    if (externalId) initConfig.externalId = externalId;
+    if (mobileIds.idfa) initConfig.idfa = mobileIds.idfa;
+    if (mobileIds.aaid) initConfig.aaid = mobileIds.aaid;
+    
+    // Initialize with match keys if available, otherwise just the pixel ID
+    rdt('init', 'a2_hf16791nsdhx', Object.keys(initConfig).length > 0 ? initConfig : undefined);
+    
+    // Track page visit
+    rdt('track', 'PageVisit');
+  </script>
+  <!-- End Reddit Pixel -->
 
   <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
   <!-- Note: SRI not used for Google scripts due to frequent updates -->
@@ -352,7 +428,7 @@
       <p>Need mechanical help or have questions about our services?</p>
       <div class="contact-buttons">
         <a href="https://forms.office.com/r/sdf0YirK6s" class="contact-btn">🚨 Emergency Service</a>
-        <a href="tel:0800769000" class="contact-btn">📞 Call 0800 769 000</a>
+        <a href="tel:0800769000" class="contact-btn" onclick="trackConversion('more_options_call', 'Contact')">📞 Call 0800 769 000</a>
         <a href="https://forms.office.com/r/qDtVHgBbJk" class="contact-btn">💬 Customer Support</a>
         <a href="https://form.jotform.com/251017058434047" class="contact-btn">📍 Find Me Tool</a>
       </div>
@@ -392,17 +468,65 @@
 <a class="sticky-call" href="tel:0800769000" onclick="trackConversion('sticky_call', 'Contact')" id="stickyCallButton">📞 Call Eek Now</a>
 
 <script>
+// Enhanced tracking function that includes Reddit Pixel with full event parameters
 function trackConversion(eventAction, eventCategory) {
+  // Generate unique conversion ID for deduplication
+  const conversionId = 'eek_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  
+  // Service-specific values (in NZD cents to avoid decimals)
+  const serviceValues = {
+    'inspection_call': 19900, // $199 inspection service
+    'breakdown_call': 28900,  // $289 breakdown service
+    'battery_call': 14900,    // $149 battery service
+    'fuel_drain_call': 39900, // $399 fuel drain service
+    'trailer_call': 28900,    // $289 trailer repair service
+    'header_call': 25000,     // General call - average value (~$250)
+    'sticky_call': 25000,     // General call - average value (~$250)
+    'more_options_call': 25000 // General call - average value (~$250)
+  };
+  
+  const eventValue = serviceValues[eventAction] || 25000; // Default to $250
+  
+  // Google Analytics tracking (existing)
   if (typeof gtag !== 'undefined') {
     gtag('event', eventAction, {
       'event_category': eventCategory,
       'event_label': 'Phone Call Click',
-      'value': 1
+      'value': eventValue / 100 // Convert cents to dollars for GA
     });
     gtag('event', 'conversion', {
       'send_to': 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
     });
   }
+  
+  // Reddit Pixel tracking for phone clicks with full parameters
+  if (typeof rdt !== 'undefined') {
+    rdt('track', 'Lead', {
+      'customEventName': 'Phone_Call_Click',
+      'conversionId': conversionId,
+      'value': eventValue, // Value in cents
+      'currency': 'NZD',
+      'itemCount': 1,
+      'eventSource': eventAction,
+      'eventCategory': eventCategory,
+      'serviceType': getServiceType(eventAction)
+    });
+  }
+}
+
+// Helper function to map event actions to service types
+function getServiceType(eventAction) {
+  const serviceMap = {
+    'inspection_call': 'Pre-Purchase Inspection',
+    'breakdown_call': 'Emergency Breakdown',
+    'battery_call': 'Battery Jump Start',
+    'fuel_drain_call': 'Wrong Fuel Rescue',
+    'trailer_call': 'Trailer Repair',
+    'header_call': 'General Inquiry',
+    'sticky_call': 'General Inquiry',
+    'more_options_call': 'General Inquiry'
+  };
+  return serviceMap[eventAction] || 'General Service';
 }
 
 window.addEventListener('load', function() {
