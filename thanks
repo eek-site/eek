@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Confirmed - Thank You | Eek Mobile Mechanical</title>
+  <meta name="description" content="Payment confirmed! Your mobile mechanic service is being dispatched. We'll contact you within minutes with your technician's details and arrival time." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:title" content="Payment Confirmed - Thank You | Eek Mobile Mechanical" />
+  <meta property="og:description" content="Payment confirmed! Your mobile mechanic service is being dispatched." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.eek.nz/thanks" />
+  <meta property="og:image" content="https://www.eek.nz/sweet-ride.png" />
+
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+
+  <!-- Reddit Pixel -->
+  <script>
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
+    (window,document);
+    
+    rdt('init', 'a2_hf16791nsdhx');
+    rdt('track', 'PageVisit');
+    
+    // Track payment completion
+    rdt('track', 'Purchase', {
+      'customEventName': 'Payment_Completed',
+      'currency': 'NZD',
+      'eventSource': 'thanks_page'
+    });
+  </script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-17084465163');
+    gtag('config', 'G-DQNKF1YLWR');
+    
+    // Track purchase conversion
+    gtag('event', 'purchase', {
+      'transaction_id': Date.now().toString(),
+      'currency': 'NZD',
+      'event_category': 'Payment',
+      'event_label': 'Payment Completed'
+    });
+    
+    gtag('event', 'conversion', {
+      'send_to': 'AW-17084465163/purchase'
+    });
+  </script>
+
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f5f5f5 0%, #e8f5e8 100%);
+      margin: 0;
+      padding: 0;
+      color: #333;
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .success-card {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+      margin: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .success-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #28a745, #20c997, #17a2b8);
+    }
+    
+    .success-icon {
+      font-size: 4em;
+      color: #28a745;
+      margin-bottom: 20px;
+      animation: bounce 1s ease-in-out;
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+    
+    h1 {
+      color: #28a745;
+      font-size: 2.5em;
+      margin: 0 0 10px 0;
+      font-weight: 700;
+    }
+    
+    .subtitle {
+      font-size: 1.3em;
+      color: #666;
+      margin-bottom: 30px;
+      font-weight: 500;
+    }
+    
+    .next-steps {
+      background: #f8f9fa;
+      padding: 30px;
+      border-radius: 15px;
+      margin: 30px 0;
+      border-left: 5px solid #ff5500;
+    }
+    
+    .next-steps h2 {
+      color: #ff5500;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .steps-list {
+      text-align: left;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    
+    .steps-list li {
+      padding: 12px 0;
+      font-size: 1.1em;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    
+    .step-number {
+      background: #ff5500;
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9em;
+      font-weight: bold;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    
+    .contact-info {
+      background: #e3f2fd;
+      padding: 25px;
+      border-radius: 15px;
+      margin: 30px 0;
+      border: 2px solid #2196f3;
+    }
+    
+    .contact-info h3 {
+      color: #1976d2;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+    }
+    
+    .contact-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1em;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .btn-primary {
+      background: #ff5500;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #e64900;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255,85,0,0.3);
+    }
+    
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background: #545b62;
+      transform: translateY(-2px);
+    }
+    
+    .estimated-time {
+      background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px 0;
+      border: 2px solid #ffc107;
+    }
+    
+    .estimated-time .time-display {
+      font-size: 2em;
+      font-weight: bold;
+      color: #856404;
+      margin: 10px 0;
+    }
+    
+    .footer-links {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #dee2e6;
+    }
+    
+    .footer-links a {
+      color: #6c757d;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 0.9em;
+    }
+    
+    .footer-links a:hover {
+      color: #ff5500;
+      text-decoration: underline;
+    }
+    
+    @media (max-width: 768px) {
+      .success-card {
+        padding: 30px 20px;
+        margin: 10px;
+      }
+      
+      h1 {
+        font-size: 2em;
+      }
+      
+      .contact-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .btn {
+        width: 100%;
+        max-width: 250px;
+      }
+    }
+    
+    .loading-animation {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #ff5500;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-left: 10px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="success-card">
+      <div class="success-icon">✅</div>
+      <h1>Payment Confirmed!</h1>
+      <p class="subtitle">Your mobile mechanic is already on the way</p>
+      
+      <div class="estimated-time">
+        <h3>✅ Service Confirmed</h3>
+        <div class="time-display">In Progress</div>
+        <p>Your service request is now active and being processed</p>
+      </div>
+      
+      <div class="next-steps">
+        <h2>📋 Service In Progress</h2>
+        <ol class="steps-list">
+          <li>
+            <span class="step-number">✓</span>
+            <span>Payment confirmed - your service is now active</span>
+          </li>
+          <li>
+            <span class="step-number">📞</span>
+            <span>You'll receive a call/SMS update with technician details shortly</span>
+          </li>
+          <li>
+            <span class="step-number">🔧</span>
+            <span>Service will be completed on-site with professional equipment</span>
+          </li>
+          <li>
+            <span class="step-number">📧</span>
+            <span>You'll receive a service completion report via email</span>
+          </li>
+        </ol>
+      </div>
+      
+      <div class="contact-info">
+        <h3>📞 Need Immediate Assistance?</h3>
+        <p>Our dispatch team is standing by if you need to update your location or have urgent questions</p>
+        <div class="contact-buttons">
+          <a href="tel:0800769000" class="btn btn-primary" onclick="trackCall('thanks_page_call')">📞 Call 0800 769 000</a>
+        </div>
+      </div>
+      
+      <div class="footer-links">
+        <a href="https://www.eek.nz/">← Back to Home</a>
+        <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EbMAsktroaFEkKbFZUeYxPgBm1SDkvxru4fVlG360u3i9w?e=1CDNtc" target="_blank">Terms of Service</a>
+        <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EWXiDhEQikFPtsjmoapkdWMBeytvuyMEsmlIchxhPdwyXg?e=YcldRN" target="_blank">Privacy Policy</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function trackCall(source) {
+      // Google Analytics tracking
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'phone_call', {
+          'event_category': 'Contact',
+          'event_label': source,
+          'value': 1
+        });
+      }
+      
+      // Reddit Pixel tracking
+      if (typeof rdt !== 'undefined') {
+        rdt('track', 'Lead', {
+          'customEventName': 'Post_Payment_Call',
+          'eventSource': source
+        });
+      }
+    }
+    
+    // Track page engagement
+    window.addEventListener('load', function() {
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'page_view', {
+          'page_title': 'Payment Confirmation',
+          'page_location': window.location.href,
+          'event_category': 'Post_Purchase'
+        });
+      }
+    });
+    
+    // Show "In Progress" status
+    function updateEstimatedTime() {
+      const timeDisplay = document.querySelector('.time-display');
+      if (timeDisplay) {
+        timeDisplay.innerHTML = `In Progress<div class="loading-animation"></div>`;
+      }
+    }
+    
+    // Update time display on page load
+    updateEstimatedTime();
+  </script>
+</body>
+</html>
