@@ -274,7 +274,7 @@ GitHub Pages will automatically serve this for any 404 errors.
             '/triage': 'https://forms.office.com/r/hLJkX3NeLq',
             '/job': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNU1UVUNVOEMwMzFSMjBEVlVHRDlIVlBBNC4u&lang=en',
             
-            // Review form (NEW)
+            // Review form
             '/review-form': 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUQVpUTzg4SktURE5PSk1RWkFTTVJPUUhTMC4u',
             
             // Insurance and claims
@@ -285,7 +285,7 @@ GitHub Pages will automatically serve this for any 404 errors.
             '/start': 'https://forms.office.com/r/sdf0YirK6s',
             '/job-sheet': 'https://forms.office.com/r/FNTtRBwQtT',
             '/find-me': 'https://form.jotform.com/251017058434047',
-            '/cc': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUOTk5T0ZQNzFUTFg0TUZMTk01WTlKVk8xMy4u'
+            '/cc': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUOTk5T0ZQNzFUTFg0TUZMTk01WTlKVk8xMy4u',
             
             // Legal and utility redirects
             '/mjuris': 'https://www.eek.nz/mjuris',
@@ -298,7 +298,8 @@ GitHub Pages will automatically serve this for any 404 errors.
             '/APPLY': 'https://forms.office.com/r/XLdGk4wDYY',
             '/Availability': 'https://forms.office.com/r/jGgFgQUj0N',
             '/RESCUE-ME': 'https://forms.office.com/r/sdf0YirK6s',
-            '/Rescue-Me': 'https://forms.office.com/r/sdf0YirK6s'
+            '/Rescue-Me': 'https://forms.office.com/r/sdf0YirK6s',
+            '/CC': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUOTk5T0ZQNzFUTFg0TUZMTk01WTlKVk8xMy4u'
         };
 
         function handleRedirect() {
@@ -409,6 +410,12 @@ GitHub Pages will automatically serve this for any 404 errors.
                 return {
                     title: 'Customer Experience Feedback',
                     description: 'Taking you to our secure feedback form. Your experience matters to us and helps us improve our services.'
+                };
+            }
+            if (path === '/cc') {
+                return {
+                    title: 'Customer Care Form',
+                    description: 'Taking you to our secure customer care form. Our support team will review your request and respond promptly.'
                 };
             }
             if (path === '/map') {
