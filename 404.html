@@ -262,6 +262,9 @@ GitHub Pages will automatically serve this for any 404 errors.
             '/terms': 'https://roadandrescue.sharepoint.com/:b:/s/rar/EbMAsktroaFEkKbFZUeYxPgBm1SDkvxru4fVlG360u3i9w?e=1CDNtc',
             '/terms-of-service': 'https://roadandrescue.sharepoint.com/:b:/s/rar/EbMAsktroaFEkKbFZUeYxPgBm1SDkvxru4fVlG360u3i9w?e=1CDNtc',
             
+            // Private pages (not shown in public suggestions)
+            '/thanks': 'https://www.eek.nz/thanks',
+            
             // Supplier forms and pages
             '/supplier-relations': 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNjZUMFRNN0ZMQldGSDdYM0FYRDRLWEFVOS4u',
             '/supplier-terms': 'https://roadandrescue.sharepoint.com/:b:/s/rar/EVItR9WqSDBHpBgS4t5JFhQBLl0heypp7-CjIRgkV-4ytg?e=bajD4c',
@@ -299,7 +302,9 @@ GitHub Pages will automatically serve this for any 404 errors.
             '/Availability': 'https://forms.office.com/r/jGgFgQUj0N',
             '/RESCUE-ME': 'https://forms.office.com/r/sdf0YirK6s',
             '/Rescue-Me': 'https://forms.office.com/r/sdf0YirK6s',
-            '/CC': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUOTk5T0ZQNzFUTFg0TUZMTk01WTlKVk8xMy4u'
+            '/CC': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUOTk5T0ZQNzFUTFg0TUZMTk01WTlKVk8xMy4u',
+            '/Thanks': 'https://www.eek.nz/thanks',
+            '/THANKS': 'https://www.eek.nz/thanks'
         };
 
         function handleRedirect() {
@@ -424,6 +429,12 @@ GitHub Pages will automatically serve this for any 404 errors.
                     description: 'Opening location services to help our technicians reach you faster. Your privacy and security are protected.'
                 };
             }
+            if (path === '/thanks' || path.toLowerCase() === '/thanks') {
+                return {
+                    title: 'Payment Confirmation',
+                    description: 'Taking you to your secure payment confirmation page. Your service is confirmed and being processed.'
+                };
+            }
             if (url.includes('sharepoint.com')) {
                 return {
                     title: 'Secure Document Access',
@@ -447,7 +458,7 @@ GitHub Pages will automatically serve this for any 404 errors.
             document.getElementById('loadingContainer').style.display = 'none';
             document.getElementById('errorContainer').classList.add('show');
             
-            // Generate public-facing suggestions - only show main pages, not internal forms
+            // Generate public-facing suggestions - only show main pages, not internal forms or private pages
             const suggestionsList = document.getElementById('suggestionsList');
             const suggestions = [
                 { url: 'https://www.eek.nz/', title: '🏠 Homepage', desc: 'Main Eek Mobile Mechanical website' },
