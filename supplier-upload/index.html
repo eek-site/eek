@@ -471,7 +471,7 @@
 // Microsoft Authentication Configuration
 const config = {
   clientId: "23549916-65b7-485c-aca0-55ca600331a2",
-  tenantId: "6ffc6bc-d9ce-458b-8120-d32187c3770d", // Using the tenant ID from your Azure overview
+  tenantId: "eek.onmicrosoft.com", // Using the likely Microsoft tenant domain
   loginHint: "supplier.upload@eek.nz",
   redirectUri: "https://www.eek.nz/supplier-upload",
   // Form URLs
@@ -534,36 +534,23 @@ function configureFormType() {
 }
 
 function checkAuthenticationStatus() {
-  // Check URL parameters for authentication code or errors
-  const urlParams = new URLSearchParams(window.location.search);
+  // Check URL fragment for authentication token
+  const fragment = window.location.hash.substring(1);
+  const params = new URLSearchParams(fragment);
   
   // Check for authentication errors first
-  if (urlParams.has('error')) {
-    const error = urlParams.get('error');
-    const errorDescription = urlParams.get('error_description');
+  if (params.has('error')) {
+    const error = params.get('error');
+    const errorDescription = params.get('error_description');
     
     console.error('Authentication error:', error, errorDescription);
-    
-    if (errorDescription && errorDescription.includes('redirect_uri')) {
-      showErrorInterface('Redirect URI configuration error');
-      return;
-    } else if (errorDescription && errorDescription.includes('response_type')) {
-      showErrorInterface('Authentication flow configuration error');
-      return;
-    } else {
-      showErrorInterface('Authentication error: ' + error);
-      return;
-    }
+    showErrorInterface('Authentication error: ' + error);
+    return;
   }
   
-  // Check for authorization code (successful authentication)
-  if (urlParams.has('code')) {
-    // Authorization code received - exchange for tokens
-    const code = urlParams.get('code');
-    const state = urlParams.get('state');
-    
-    // For this simple use case, we'll just show success
-    // In a production app, you'd exchange the code for tokens
+  // Check for access token (successful authentication)
+  if (params.has('access_token')) {
+    // Token received - show upload interface
     showUploadInterface();
     
     // Clean up URL
@@ -656,25 +643,17 @@ function setupEventListeners() {
 async function initiateAuthentication() {
   const nonce = Date.now().toString();
   
-  // Generate PKCE code verifier and challenge
-  const codeVerifier = generateCodeVerifier();
-  const codeChallenge = await generateCodeChallenge(codeVerifier);
-  
-  // Store code verifier for later use
-  sessionStorage.setItem('code_verifier', codeVerifier);
-  
-  // Microsoft OAuth 2.0 authorization code flow with PKCE
+  // Simple implicit flow - should work without special configuration
   const authUrl = `https://login.microsoftonline.com/${config.tenantId}/oauth2/v2.0/authorize` +
     `?client_id=${encodeURIComponent(config.clientId)}` +
-    `&response_type=code` +
+    `&response_type=token` +
     `&redirect_uri=${encodeURIComponent(config.redirectUri)}` +
+    `&response_mode=fragment` +
     `&scope=openid` +
     `&login_hint=${encodeURIComponent(config.loginHint)}` +
     `&domain_hint=organizations` +
     `&prompt=login` +
-    `&code_challenge=${codeChallenge}` +
-    `&code_challenge_method=S256` +
-    `&state=${nonce}`;
+    `&nonce=${nonce}`;
   
   // Track authentication attempt
   if (typeof gtag !== 'undefined') {
