@@ -653,12 +653,12 @@ function setupEventListeners() {
   });
 }
 
-function initiateAuthentication() {
+async function initiateAuthentication() {
   const nonce = Date.now().toString();
   
   // Generate PKCE code verifier and challenge
   const codeVerifier = generateCodeVerifier();
-  const codeChallenge = generateCodeChallenge(codeVerifier);
+  const codeChallenge = await generateCodeChallenge(codeVerifier);
   
   // Store code verifier for later use
   sessionStorage.setItem('code_verifier', codeVerifier);
@@ -700,10 +700,11 @@ function generateCodeVerifier() {
   return base64URLEncode(array);
 }
 
-function generateCodeChallenge(verifier) {
+async function generateCodeChallenge(verifier) {
   const encoder = new TextEncoder();
   const data = encoder.encode(verifier);
-  return crypto.subtle.digest('SHA-256', data).then(hash => base64URLEncode(new Uint8Array(hash)));
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  return base64URLEncode(new Uint8Array(hash));
 }
 
 function base64URLEncode(buffer) {
