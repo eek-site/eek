@@ -490,6 +490,17 @@ function configureFormType() {
   const urlParams = new URLSearchParams(window.location.search);
   const isPP = urlParams.has('pp');
   
+  // Store the form type in sessionStorage to persist through authentication
+  if (isPP) {
+    sessionStorage.setItem('formType', 'pp');
+  } else if (!sessionStorage.getItem('formType')) {
+    sessionStorage.setItem('formType', 'invoice');
+  }
+  
+  // Get the actual form type (from URL or sessionStorage)
+  const formType = isPP ? 'pp' : sessionStorage.getItem('formType');
+  const isPrePurchase = (formType === 'pp');
+  
   // Get elements
   const invoiceButton = document.getElementById('invoiceUploadButton');
   const ppButton = document.getElementById('ppUploadButton');
@@ -498,7 +509,7 @@ function configureFormType() {
   const invoiceGuidelines = document.getElementById('invoiceGuidelines');
   const ppGuidelines = document.getElementById('ppGuidelines');
   
-  if (isPP) {
+  if (isPrePurchase) {
     // Pre-purchase inspection mode
     invoiceButton.style.display = 'none';
     ppButton.style.display = 'inline-flex';
@@ -583,9 +594,9 @@ function showUploadInterface() {
   // Re-configure the form type after authentication to ensure correct button shows
   configureFormType();
   
-  // Set the upload button links based on form type
-  const urlParams = new URLSearchParams(window.location.search);
-  const isPP = urlParams.has('pp');
+  // Set the upload button links based on stored form type
+  const formType = sessionStorage.getItem('formType');
+  const isPP = (formType === 'pp');
   
   if (isPP) {
     document.getElementById('ppUploadButton').href = config.ppFormUrl;
