@@ -471,7 +471,7 @@
 // Microsoft Authentication Configuration
 const config = {
   clientId: "23549916-65b7-485c-aca0-55ca600331a2",
-  tenantId: "eek.onmicrosoft.com", // Using the likely Microsoft tenant domain
+  tenantId: "61ffc6bc-d9ce-458b-8120-d32187c3770d", // Correct tenant ID with the missing '1'
   loginHint: "supplier.upload@eek.nz",
   redirectUri: "https://www.eek.nz/supplier-upload",
   // Form URLs
@@ -548,8 +548,8 @@ function checkAuthenticationStatus() {
     return;
   }
   
-  // Check for access token (successful authentication)
-  if (params.has('access_token')) {
+  // Check for ID token (successful authentication)
+  if (params.has('id_token')) {
     // Token received - show upload interface
     showUploadInterface();
     
@@ -643,10 +643,10 @@ function setupEventListeners() {
 async function initiateAuthentication() {
   const nonce = Date.now().toString();
   
-  // Simple implicit flow - should work without special configuration
+  // Microsoft OAuth 2.0 implicit flow with ID tokens
   const authUrl = `https://login.microsoftonline.com/${config.tenantId}/oauth2/v2.0/authorize` +
     `?client_id=${encodeURIComponent(config.clientId)}` +
-    `&response_type=token` +
+    `&response_type=id_token` +
     `&redirect_uri=${encodeURIComponent(config.redirectUri)}` +
     `&response_mode=fragment` +
     `&scope=openid` +
