@@ -471,7 +471,7 @@
 // Microsoft Authentication Configuration
 const config = {
   clientId: "23549916-65b7-485c-aca0-55ca600331a2",
-  tenantDomain: "eek.nz",
+  tenantId: "6ffc6bc-d9ce-458b-8120-d32187c3770d", // Using the tenant ID from your Azure overview
   loginHint: "supplier.upload@eek.nz",
   redirectUri: "https://www.eek.nz/supplier-upload",
   // Form URLs
@@ -647,7 +647,7 @@ function initiateAuthentication() {
   const nonce = Date.now().toString();
   
   // Microsoft OAuth 2.0 authentication URL with forced supplier identity
-  const authUrl = `https://login.microsoftonline.com/${config.tenantDomain}/oauth2/v2.0/authorize` +
+  const authUrl = `https://login.microsoftonline.com/${config.tenantId}/oauth2/v2.0/authorize` +
     `?client_id=${encodeURIComponent(config.clientId)}` +
     `&response_type=id_token` +
     `&redirect_uri=${encodeURIComponent(config.redirectUri)}` +
