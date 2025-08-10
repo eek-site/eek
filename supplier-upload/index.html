@@ -227,6 +227,12 @@
       color: #ffc107;
     }
 
+    .status-message.error {
+      background: rgba(220,53,69,0.2);
+      border: 1px solid #dc3545;
+      color: #dc3545;
+    }
+
     /* Guidelines */
     .upload-guidelines {
       background: rgba(255,255,255,0.05);
@@ -363,18 +369,37 @@
       <!-- Upload Button (shown when authenticated) -->
       <div id="uploadContainer" class="hidden">
         <h2>✅ Authentication Successful</h2>
-        <p>You're now authenticated as an Eek supplier. Click below to access the secure document upload form.</p>
+        <p id="uploadDescription">You're now authenticated as an Eek supplier. Click below to access the secure document upload form.</p>
         
-        <div class="status-message info">
+        <div id="uploadInfoMessage" class="status-message info">
           <strong>📋 Ready to Upload:</strong> You can now submit invoices, job sheets, certificates, and other supplier documentation through our secure Microsoft Forms system.
         </div>
         
-        <a id="uploadButton" href="#" class="auth-button upload-button" target="_blank">
-          📁 Open Upload Form
-        </a>
+        <div id="uploadButtons">
+          <!-- Invoice Upload Button (default) -->
+          <a id="invoiceUploadButton" href="#" class="auth-button upload-button" target="_blank">
+            📄 Upload Invoice Documents
+          </a>
+          
+          <!-- Pre-purchase Inspection Button (when ?pp parameter) -->
+          <a id="ppUploadButton" href="#" class="auth-button upload-button" target="_blank" style="background: linear-gradient(135deg, #28a745, #20c997);">
+            🔍 Upload Pre-Purchase Inspection
+          </a>
+        </div>
         
         <div style="margin-top: 20px; font-size: 0.9em; color: #ccc;">
           <p>The form will open in a new tab with your supplier credentials pre-filled</p>
+        </div>
+      </div>
+
+      <!-- Error Message Container -->
+      <div id="errorContainer" class="hidden">
+        <div class="status-message error">
+          <strong>⚠️ Authentication Configuration Issue:</strong><br>
+          The authentication system needs to be configured properly. Please contact IT support at 
+          <a href="tel:0800769000" style="color: #dc3545;">0800 769 000</a> for assistance.
+          <br><br>
+          <small>Error: Redirect URI mismatch in Azure AD application registration</small>
         </div>
       </div>
     </div>
@@ -385,13 +410,26 @@
   <div class="container">
     <div class="upload-guidelines">
       <h4>📋 Upload Guidelines</h4>
-      <ul>
-        <li>All invoices must include job reference numbers when applicable</li>
+      <ul id="generalGuidelines">
         <li>Documents should be clear, legible, and in acceptable formats</li>
         <li>Maximum file size: 10MB per file</li>
-        <li>Supported formats: PDF</li>
-        <li>Include GST details on all invoices (if applicable)</li>
+        <li>Supported formats: PDF, JPG, PNG</li>
         <li>Ensure contact information matches your supplier records</li>
+      </ul>
+      
+      <!-- Invoice-specific guidelines -->
+      <ul id="invoiceGuidelines">
+        <li>All invoices must include job reference numbers when applicable</li>
+        <li>Include GST details on all invoices (if applicable)</li>
+        <li>Include purchase order numbers when provided</li>
+      </ul>
+      
+      <!-- Pre-purchase inspection guidelines -->
+      <ul id="ppGuidelines" class="hidden">
+        <li>Include all required inspection photos and documentation</li>
+        <li>Clearly label each inspection item with reference numbers</li>
+        <li>Include inspection date and inspector details</li>
+        <li>Submit reports within 24 hours of inspection completion</li>
       </ul>
     </div>
     
@@ -404,6 +442,16 @@
         <li>Files are automatically scanned for viruses and malware</li>
         <li>Data is retained according to our privacy policy</li>
         <li>You will receive email confirmation of successful uploads</li>
+      </ul>
+    </div>
+
+    <div class="upload-guidelines">
+      <h4>🔧 Technical Requirements</h4>
+      <ul>
+        <li>Azure AD application must be configured with correct redirect URIs</li>
+        <li>Redirect URI must exactly match: https://www.eek.nz/supplier-upload</li>
+        <li>Application requires proper permissions and tenant configuration</li>
+        <li>Contact IT support if authentication issues persist</li>
       </ul>
     </div>
   </div>
@@ -422,23 +470,90 @@
 <script>
 // Microsoft Authentication Configuration
 const config = {
-  clientId: "2ec61b68-e8d5-45da-b95f-1afadac82547",
-  tenantDomain: "eek.nz", // Update to Eek domain
-  loginHint: "supplier.upload@eek.nz", // Update to Eek email
+  clientId: "23549916-65b7-485c-aca0-55ca600331a2",
+  tenantDomain: "eek.nz",
+  loginHint: "supplier.upload@eek.nz",
   redirectUri: "https://www.eek.nz/supplier-upload",
-  formUrl: "https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFURFAwNUxPNVUxWEpBNDJKWlhZV0tLR0I4VC4u&login_hint=supplier.upload@eek.nz"
+  // Form URLs
+  invoiceFormUrl: "https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFURFAwNUxPNVUxWEpBNDJKWlhZV0tLR0I4VC4u&login_hint=supplier.upload@eek.nz",
+  ppFormUrl: "https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUMTg2OVQ5OFo5U0NYTFNOV09HWktHUjJKSy4u&login_hint=supplier.upload@eek.nz"
 };
 
 // Check authentication status on page load
 document.addEventListener('DOMContentLoaded', function() {
   checkAuthenticationStatus();
   setupEventListeners();
+  configureFormType(); // Configure which form to show based on URL parameters
 });
+
+function configureFormType() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const isPP = urlParams.has('pp');
+  
+  // Get elements
+  const invoiceButton = document.getElementById('invoiceUploadButton');
+  const ppButton = document.getElementById('ppUploadButton');
+  const description = document.getElementById('uploadDescription');
+  const infoMessage = document.getElementById('uploadInfoMessage');
+  const invoiceGuidelines = document.getElementById('invoiceGuidelines');
+  const ppGuidelines = document.getElementById('ppGuidelines');
+  
+  if (isPP) {
+    // Pre-purchase inspection mode
+    invoiceButton.style.display = 'none';
+    ppButton.style.display = 'inline-flex';
+    
+    description.textContent = "You're authenticated for pre-purchase inspection upload. Click below to submit inspection documentation.";
+    infoMessage.innerHTML = '<strong>🔍 Pre-Purchase Inspection:</strong> Upload inspection reports, photos, and documentation through our secure Microsoft Forms system.';
+    
+    // Show PP guidelines, hide invoice guidelines
+    invoiceGuidelines.classList.add('hidden');
+    ppGuidelines.classList.remove('hidden');
+    
+    // Update page title and header
+    document.title = 'Pre-Purchase Inspection Upload | Eek Mobile Mechanical';
+    document.querySelector('.header h1').textContent = '🔍 Pre-Purchase Inspection Upload';
+    document.querySelector('.header .subtitle').textContent = 'Secure Inspection Documentation System';
+  } else {
+    // Default invoice mode
+    invoiceButton.style.display = 'inline-flex';
+    ppButton.style.display = 'none';
+    
+    description.textContent = "You're now authenticated as an Eek supplier. Click below to access the secure document upload form.";
+    infoMessage.innerHTML = '<strong>📋 Ready to Upload:</strong> You can now submit invoices, job sheets, certificates, and other supplier documentation through our secure Microsoft Forms system.';
+    
+    // Show invoice guidelines, hide PP guidelines
+    invoiceGuidelines.classList.remove('hidden');
+    ppGuidelines.classList.add('hidden');
+    
+    // Keep default title and header
+    document.title = 'Supplier Upload Portal | Eek Mobile Mechanical';
+    document.querySelector('.header h1').textContent = '📁 Supplier Upload Portal';
+    document.querySelector('.header .subtitle').textContent = 'Secure Document Submission System';
+  }
+}
 
 function checkAuthenticationStatus() {
   // Check URL fragment for authentication token
   const fragment = window.location.hash.substring(1);
   const params = new URLSearchParams(fragment);
+  
+  // Check for authentication errors first
+  if (params.has('error')) {
+    const error = params.get('error');
+    const errorDescription = params.get('error_description');
+    
+    console.error('Authentication error:', error, errorDescription);
+    
+    // Check specifically for redirect URI mismatch
+    if (errorDescription && errorDescription.includes('redirect_uri')) {
+      showErrorInterface('Redirect URI configuration error');
+      return;
+    } else {
+      showErrorInterface('Authentication error: ' + error);
+      return;
+    }
+  }
   
   if (params.has('id_token')) {
     // ✅ User is authenticated - show upload interface
@@ -460,14 +575,45 @@ function checkAuthenticationStatus() {
 function showLoginInterface() {
   document.getElementById('loginContainer').classList.remove('hidden');
   document.getElementById('uploadContainer').classList.add('hidden');
+  document.getElementById('errorContainer').classList.add('hidden');
 }
 
 function showUploadInterface() {
   document.getElementById('loginContainer').classList.add('hidden');
   document.getElementById('uploadContainer').classList.remove('hidden');
+  document.getElementById('errorContainer').classList.add('hidden');
   
-  // Set the upload button link with login_hint
-  document.getElementById('uploadButton').href = config.formUrl;
+  // Set the upload button links based on form type
+  const urlParams = new URLSearchParams(window.location.search);
+  const isPP = urlParams.has('pp');
+  
+  if (isPP) {
+    document.getElementById('ppUploadButton').href = config.ppFormUrl;
+  } else {
+    document.getElementById('invoiceUploadButton').href = config.invoiceFormUrl;
+  }
+}
+
+function showErrorInterface(errorMessage) {
+  document.getElementById('loginContainer').classList.add('hidden');
+  document.getElementById('uploadContainer').classList.add('hidden');
+  document.getElementById('errorContainer').classList.remove('hidden');
+  
+  // Update error message if needed
+  const errorContainer = document.querySelector('#errorContainer .status-message');
+  if (errorMessage.includes('redirect_uri')) {
+    errorContainer.innerHTML = `
+      <strong>⚠️ Azure AD Configuration Issue:</strong><br>
+      The redirect URI is not properly configured in the Azure AD application registration. 
+      The IT administrator needs to add this exact URL to the application:
+      <br><br>
+      <code style="background: rgba(0,0,0,0.3); padding: 5px; border-radius: 3px;">https://www.eek.nz/supplier-upload</code>
+      <br><br>
+      Please contact IT support at <a href="tel:0800769000" style="color: #dc3545;">0800 769 000</a> for assistance.
+      <br><br>
+      <small>Technical details: ${errorMessage}</small>
+    `;
+  }
 }
 
 function setupEventListeners() {
@@ -476,13 +622,22 @@ function setupEventListeners() {
     initiateAuthentication();
   });
 
-  // Upload button click handler
-  document.getElementById('uploadButton').addEventListener('click', function() {
-    // Track form access
+  // Invoice upload button click handler
+  document.getElementById('invoiceUploadButton').addEventListener('click', function() {
     if (typeof gtag !== 'undefined') {
-      gtag('event', 'supplier_form_access', {
+      gtag('event', 'supplier_invoice_form_access', {
         'event_category': 'Supplier',
-        'event_label': 'Microsoft Forms Upload Access'
+        'event_label': 'Invoice Upload Form Access'
+      });
+    }
+  });
+
+  // Pre-purchase upload button click handler
+  document.getElementById('ppUploadButton').addEventListener('click', function() {
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'supplier_pp_form_access', {
+        'event_category': 'Supplier',
+        'event_label': 'Pre-Purchase Inspection Form Access'
       });
     }
   });
@@ -511,8 +666,13 @@ function initiateAuthentication() {
     });
   }
   
-  // Redirect to Microsoft authentication
-  window.location.href = authUrl;
+  try {
+    // Redirect to Microsoft authentication
+    window.location.href = authUrl;
+  } catch (error) {
+    console.error('Failed to initiate authentication:', error);
+    showErrorInterface('Failed to start authentication process');
+  }
 }
 
 // Track page visits
@@ -526,20 +686,19 @@ window.addEventListener('load', function() {
   }
 });
 
-// Handle authentication errors
+// Handle authentication errors more gracefully
 window.addEventListener('error', function(e) {
-  console.error('Authentication error:', e);
+  console.error('Application error:', e);
   
-  // Show error message to user
-  const errorContainer = document.createElement('div');
-  errorContainer.className = 'status-message warning';
-  errorContainer.innerHTML = `
-    <strong>⚠️ Authentication Issue:</strong> 
-    There was a problem with the authentication process. Please try again or contact support at 
-    <a href="tel:0800769000" style="color: #ffc107;">0800 769 000</a>.
-  `;
-  
-  document.querySelector('.auth-container').appendChild(errorContainer);
+  // Only show error UI if it's auth-related
+  if (e.message && e.message.toLowerCase().includes('auth')) {
+    showErrorInterface('An authentication error occurred');
+  }
+});
+
+// Handle URL hash changes (for Single Page App behavior)
+window.addEventListener('hashchange', function() {
+  checkAuthenticationStatus();
 });
 </script>
 
