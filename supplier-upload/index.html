@@ -580,6 +580,9 @@ function showUploadInterface() {
   document.getElementById('uploadContainer').classList.remove('hidden');
   document.getElementById('errorContainer').classList.add('hidden');
   
+  // Re-configure the form type after authentication to ensure correct button shows
+  configureFormType();
+  
   // Set the upload button links based on form type
   const urlParams = new URLSearchParams(window.location.search);
   const isPP = urlParams.has('pp');
