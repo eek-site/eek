@@ -534,20 +534,21 @@ function configureFormType() {
 }
 
 function checkAuthenticationStatus() {
-  // Check URL fragment for authentication token
-  const fragment = window.location.hash.substring(1);
-  const params = new URLSearchParams(fragment);
+  // Check URL parameters for authentication code or errors
+  const urlParams = new URLSearchParams(window.location.search);
   
   // Check for authentication errors first
-  if (params.has('error')) {
-    const error = params.get('error');
-    const errorDescription = params.get('error_description');
+  if (urlParams.has('error')) {
+    const error = urlParams.get('error');
+    const errorDescription = urlParams.get('error_description');
     
     console.error('Authentication error:', error, errorDescription);
     
-    // Check specifically for redirect URI mismatch
     if (errorDescription && errorDescription.includes('redirect_uri')) {
       showErrorInterface('Redirect URI configuration error');
+      return;
+    } else if (errorDescription && errorDescription.includes('response_type')) {
+      showErrorInterface('Authentication flow configuration error');
       return;
     } else {
       showErrorInterface('Authentication error: ' + error);
@@ -555,9 +556,18 @@ function checkAuthenticationStatus() {
     }
   }
   
-  if (params.has('id_token')) {
-    // ✅ User is authenticated - show upload interface
+  // Check for authorization code (successful authentication)
+  if (urlParams.has('code')) {
+    // Authorization code received - exchange for tokens
+    const code = urlParams.get('code');
+    const state = urlParams.get('state');
+    
+    // For this simple use case, we'll just show success
+    // In a production app, you'd exchange the code for tokens
     showUploadInterface();
+    
+    // Clean up URL
+    window.history.replaceState({}, document.title, window.location.pathname);
     
     // Track successful authentication
     if (typeof gtag !== 'undefined') {
@@ -567,7 +577,7 @@ function checkAuthenticationStatus() {
       });
     }
   } else {
-    // ❌ User not authenticated - show login interface
+    // No authentication yet - show login interface
     showLoginInterface();
   }
 }
@@ -646,17 +656,25 @@ function setupEventListeners() {
 function initiateAuthentication() {
   const nonce = Date.now().toString();
   
-  // Microsoft OAuth 2.0 authentication URL with forced supplier identity
+  // Generate PKCE code verifier and challenge
+  const codeVerifier = generateCodeVerifier();
+  const codeChallenge = generateCodeChallenge(codeVerifier);
+  
+  // Store code verifier for later use
+  sessionStorage.setItem('code_verifier', codeVerifier);
+  
+  // Microsoft OAuth 2.0 authorization code flow with PKCE
   const authUrl = `https://login.microsoftonline.com/${config.tenantId}/oauth2/v2.0/authorize` +
     `?client_id=${encodeURIComponent(config.clientId)}` +
-    `&response_type=id_token` +
+    `&response_type=code` +
     `&redirect_uri=${encodeURIComponent(config.redirectUri)}` +
-    `&response_mode=fragment` +
     `&scope=openid` +
     `&login_hint=${encodeURIComponent(config.loginHint)}` +
-    `&domain_hint=organizations` + // Ensures organizational login
-    `&prompt=login` + // Forces fresh login
-    `&nonce=${nonce}`;
+    `&domain_hint=organizations` +
+    `&prompt=login` +
+    `&code_challenge=${codeChallenge}` +
+    `&code_challenge_method=S256` +
+    `&state=${nonce}`;
   
   // Track authentication attempt
   if (typeof gtag !== 'undefined') {
@@ -673,6 +691,26 @@ function initiateAuthentication() {
     console.error('Failed to initiate authentication:', error);
     showErrorInterface('Failed to start authentication process');
   }
+}
+
+// PKCE helper functions
+function generateCodeVerifier() {
+  const array = new Uint8Array(32);
+  crypto.getRandomValues(array);
+  return base64URLEncode(array);
+}
+
+function generateCodeChallenge(verifier) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(verifier);
+  return crypto.subtle.digest('SHA-256', data).then(hash => base64URLEncode(new Uint8Array(hash)));
+}
+
+function base64URLEncode(buffer) {
+  return btoa(String.fromCharCode.apply(null, buffer))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=/g, '');
 }
 
 // Track page visits
