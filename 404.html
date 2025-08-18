@@ -9,6 +9,16 @@ GitHub Pages will automatically serve this for any 404 errors.
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting... | Eek Mobile Mechanical</title>
+    
+    <!-- Reddit Pixel -->
+    <script>
+        !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
+        (window,document);
+        
+        rdt('init', 'a2_hf16791nsdhx');
+        rdt('track', 'PageVisit');
+    </script>
+    
     <style>
         * {
             margin: 0;
@@ -312,7 +322,7 @@ GitHub Pages will automatically serve this for any 404 errors.
             
             // Check for exact match
             if (redirectDatabase[currentPath]) {
-                performRedirect(redirectDatabase[currentPath]);
+                performRedirect(redirectDatabase[currentPath], currentPath);
                 return;
             }
             
@@ -320,7 +330,7 @@ GitHub Pages will automatically serve this for any 404 errors.
             const lowerPath = currentPath.toLowerCase();
             for (const [key, value] of Object.entries(redirectDatabase)) {
                 if (key.toLowerCase() === lowerPath) {
-                    performRedirect(value);
+                    performRedirect(value, currentPath);
                     return;
                 }
             }
@@ -329,9 +339,14 @@ GitHub Pages will automatically serve this for any 404 errors.
             showErrorPage(currentPath);
         }
         
-        function performRedirect(url) {
+        function performRedirect(url, originalPath) {
+            // Fire Reddit Pixel purchase event for /job path
+            if (originalPath === '/job' || originalPath.toLowerCase() === '/job') {
+                fireRedditPurchaseEvent();
+            }
+            
             // Determine what type of service they're accessing
-            let serviceInfo = getServiceInfo(url, window.location.pathname);
+            let serviceInfo = getServiceInfo(url, originalPath);
             
             document.querySelector('.message').innerHTML = `
                 <strong style="color: #ff5500;">✅ ${serviceInfo.title}</strong><br>
@@ -347,6 +362,33 @@ GitHub Pages will automatically serve this for any 404 errors.
             setTimeout(() => {
                 window.location.href = url;
             }, 1500);
+        }
+        
+        function fireRedditPurchaseEvent() {
+            try {
+                if (typeof rdt !== 'undefined') {
+                    // Track as a purchase/conversion event
+                    rdt('track', 'Purchase', {
+                        'customEventName': 'Job_Form_Access',
+                        'currency': 'NZD',
+                        'eventSource': 'job_redirect',
+                        'transactionId': 'job_' + Date.now(),
+                        'value': 1
+                    });
+                    
+                    // Also track as a Lead event
+                    rdt('track', 'Lead', {
+                        'customEventName': 'Job_Form_Lead',
+                        'eventSource': 'job_redirect'
+                    });
+                    
+                    console.log('Reddit Pixel purchase event fired for /job');
+                } else {
+                    console.warn('Reddit Pixel not loaded when trying to fire purchase event');
+                }
+            } catch (error) {
+                console.error('Error firing Reddit Pixel event:', error);
+            }
         }
         
         function getServiceInfo(url, path) {
@@ -421,6 +463,12 @@ GitHub Pages will automatically serve this for any 404 errors.
                 return {
                     title: 'Customer Care Form',
                     description: 'Taking you to our secure customer care form. Our support team will review your request and respond promptly.'
+                };
+            }
+            if (path === '/job') {
+                return {
+                    title: 'Service Request Form',
+                    description: 'Taking you to our secure job booking form. Our team will process your request and contact you with next steps.'
                 };
             }
             if (path === '/map') {
