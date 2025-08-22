@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mobile Mechanics NZ - 30–60 Minute Response | Eek Mobile Mechanical</title>
-  <meta name="description" content="Eek Mobile Mechanical offers nationwide mobile mechanic services including pre-purchase inspections, wrong fuel rescue, jump starts, trailer and roadside repairs. Target arrival: 30–60 minutes NZ-wide. Call 0800 769 000 now." />
-  <meta name="keywords" content="mobile mechanic, trailer repair NZ, roadside mechanic, jump start service, fuel drain, wrong fuel, pre purchase inspection, emergency mechanic, mobile car repair, NZ mechanics" />
-  <meta property="og:title" content="Mobile Mechanics NZ - 30–60 Minute Response | Eek Mobile Mechanical" />
-  <meta property="og:description" content="Nationwide mobile mechanic service – inspections, trailer repairs, battery help, fuel rescue. 30–60 minute average arrival time. Call 0800 769 000." />
+  <title>Eek Mobile Mechanical - Mobile Mechanic NZ | Pre Purchase Vehicle Inspections | Wrong Fuel Removal</title>
+  <meta name="description" content="Eek Mobile Mechanical - Professional mobile mechanic services across New Zealand. Pre purchase vehicle inspections, wrong fuel removal, petrol and diesel removal, roadside repairs. 30-60 minute response time. Call 0800 769 000." />
+  <meta name="keywords" content="mobile mechanic, mechanic, pre purchase vehicle inspections, wrong fuel removal, petrol and diesel removal, mobile mechanic NZ, roadside mechanic, jump start service, fuel drain, emergency mechanic, mobile car repair, NZ mechanics" />
+  <meta property="og:title" content="Eek Mobile Mechanical - Mobile Mechanic NZ | Pre Purchase Vehicle Inspections" />
+  <meta property="og:description" content="Professional mobile mechanic services across New Zealand. Pre purchase vehicle inspections, wrong fuel removal, emergency repairs. 30-60 minute response. Call 0800 769 000." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.eek.nz" />
   <meta property="og:image" content="https://www.eek.nz/og-image.jpg" />
 
-  <!-- Security Headers (add these to your server configuration) -->
+  <!-- Security Headers -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
@@ -26,12 +26,10 @@
     
     // Helper functions to extract user data if available
     function getEmailFromForm() {
-      // Check for email in URL parameters (if passed from ads)
       const urlParams = new URLSearchParams(window.location.search);
       const emailParam = urlParams.get('email');
       if (emailParam) return emailParam;
       
-      // Check for email in any forms on the page
       const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"], input[id*="email"]');
       for (let input of emailInputs) {
         if (input.value && input.value.includes('@')) {
@@ -42,12 +40,10 @@
     }
     
     function getPhoneFromForm() {
-      // Check for phone in URL parameters
       const urlParams = new URLSearchParams(window.location.search);
       const phoneParam = urlParams.get('phone');
       if (phoneParam) return phoneParam;
       
-      // Check for phone in any forms on the page
       const phoneInputs = document.querySelectorAll('input[type="tel"], input[name*="phone"], input[id*="phone"]');
       for (let input of phoneInputs) {
         if (input.value) {
@@ -58,25 +54,21 @@
     }
     
     function getUserId() {
-      // Check for user ID in URL parameters
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get('uid') || urlParams.get('user_id') || urlParams.get('customer_id');
     }
     
     function getMobileIds() {
-      // Check for mobile advertising IDs in URL parameters
       const urlParams = new URLSearchParams(window.location.search);
       return {
-        idfa: urlParams.get('idfa'), // iOS Identifier for Advertisers
-        aaid: urlParams.get('aaid')  // Android Advertising ID
+        idfa: urlParams.get('idfa'),
+        aaid: urlParams.get('aaid')
       };
     }
     
-    // Initialize Reddit Pixel with comprehensive advanced matching
     const mobileIds = getMobileIds();
     const initConfig = {};
     
-    // Only add parameters if they have values (Reddit prefers this approach)
     const email = getEmailFromForm();
     const phoneNumber = getPhoneFromForm();
     const externalId = getUserId();
@@ -87,26 +79,17 @@
     if (mobileIds.idfa) initConfig.idfa = mobileIds.idfa;
     if (mobileIds.aaid) initConfig.aaid = mobileIds.aaid;
     
-    // Initialize with match keys if available, otherwise just the pixel ID
     rdt('init', 'a2_hf16791nsdhx', Object.keys(initConfig).length > 0 ? initConfig : undefined);
-    
-    // Track page visit
     rdt('track', 'PageVisit');
   </script>
-  <!-- End Reddit Pixel -->
 
   <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
-  <!-- Note: SRI not used for Google scripts due to frequent updates -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'AW-17084465163');
-  </script>
-
-  <!-- Google Analytics tag -->
-  <script>
     gtag('config', 'G-DQNKF1YLWR');
   </script>
 
@@ -115,7 +98,7 @@
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": "Eek Mobile Mechanical",
-    "description": "Mobile mechanics NZ-wide. 30–60 minute response for inspections, battery, trailer repair, diagnostics, fuel drain.",
+    "description": "Mobile mechanic services across New Zealand. Pre purchase vehicle inspections, wrong fuel removal, petrol and diesel removal, emergency roadside repairs.",
     "telephone": "+64800769000",
     "url": "https://www.eek.nz",
     "image": "https://www.eek.nz/brand-image.png",
@@ -127,7 +110,24 @@
       "@type": "Country",
       "name": "New Zealand"
     },
-    "openingHours": "Mo-Su 00:00-23:59"
+    "openingHours": [
+      "Mo 07:00-17:00",
+      "Tu 07:00-17:00", 
+      "We 07:00-17:00",
+      "Th 07:00-17:00",
+      "Fr 07:00-17:00",
+      "Sa 07:00-12:00",
+      "Su 07:00-12:00"
+    ],
+    "serviceType": [
+      "Mobile Mechanic",
+      "Pre Purchase Vehicle Inspections", 
+      "Wrong Fuel Removal",
+      "Petrol and Diesel Removal",
+      "Emergency Roadside Repairs",
+      "Battery Jump Start",
+      "Trailer Repairs"
+    ]
   }
   </script>
 
@@ -145,6 +145,13 @@
       background: #ffffff;
       padding: 20px;
     }
+    .business-name {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #ff5500;
+      margin: 0.3em 0;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
     header img {
       max-width: 300px;
       height: auto;
@@ -152,12 +159,29 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     h1 {
-      font-size: 2em;
+      font-size: 1.8em;
       margin: 0.5em 0 0.2em;
+      color: #333;
     }
     p.tagline {
       font-size: 1.2em;
       color: #666;
+    }
+    .hours-section {
+      background: #e8f4f8;
+      padding: 15px;
+      margin: 20px;
+      border-radius: 8px;
+      border-left: 4px solid #ff5500;
+    }
+    .hours-section h3 {
+      margin: 0 0 10px 0;
+      color: #333;
+    }
+    .hours-text {
+      font-size: 1.1em;
+      color: #555;
+      font-weight: bold;
     }
     .cta-button {
       display: inline-block;
@@ -190,6 +214,40 @@
     }
     .services li {
       padding: 8px 0;
+    }
+    .keywords-highlight {
+      background: linear-gradient(135deg, #ff5500, #ff7733);
+      color: white;
+      padding: 25px;
+      margin: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .keywords-highlight h2 {
+      margin-top: 0;
+      color: white;
+    }
+    .service-keywords {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .keyword-item {
+      background: rgba(255,255,255,0.15);
+      padding: 15px;
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .keyword-item h4 {
+      margin: 0 0 8px 0;
+      font-size: 1.1em;
+    }
+    .keyword-item p {
+      margin: 0;
+      font-size: 0.9em;
+      opacity: 0.9;
     }
     footer {
       font-size: 0.9em;
@@ -321,6 +379,14 @@
         margin: 20px 10px;
         padding: 20px;
       }
+      
+      .service-keywords {
+        grid-template-columns: 1fr;
+      }
+      
+      .business-name {
+        font-size: 2em;
+      }
     }
   </style>
 </head>
@@ -332,7 +398,7 @@
     <p style="font-size: 1.2em; margin-bottom: 1.5em;">Confirm your payment to get help on the way — fast, safe, and secure.</p>
     <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: #333;">
       <input type="checkbox" id="termsCheckbox" style="transform: scale(1.5);" />
-      <span>I agree to the Eek terms of service 
+      <span>I agree to the Eek Mobile Mechanical terms of service 
         <a href="https://eek.nz/terms" target="_blank" style="color: #ff5500; text-decoration: underline;">
           View terms of use
         </a>
@@ -346,88 +412,121 @@
 </section>
 
 <header>
-  <img src="brand-image.png" alt="Eeek! Broken car illustration" />
-  <h1>Eek Mobile Mechanical</h1>
-  <p class="tagline">NZ-Wide Mobile Mechanics • Target Arrival: 30–60 Minutes</p>
+  <img src="brand-image.png" alt="Eek Mobile Mechanical - Professional Mobile Mechanic Services" />
+  <div class="business-name">Eek Mobile Mechanical</div>
+  <h1>Professional Mobile Mechanic Services Across New Zealand</h1>
+  <p class="tagline">Mobile Mechanic • Pre Purchase Vehicle Inspections • Wrong Fuel Removal • Target Arrival: 30–60 Minutes</p>
+  
+  <div class="hours-section">
+    <h3>🕐 Business Hours</h3>
+    <p class="hours-text">Monday - Friday: 7:00 AM - 5:00 PM</p>
+    <p class="hours-text">Saturday - Sunday: 7:00 AM - 12:00 PM</p>
+    <p style="font-size: 0.9em; color: #666; margin: 8px 0 0 0;">Emergency services may be available outside business hours</p>
+  </div>
+  
   <a class="cta-button" href="tel:0800769000" onclick="trackConversion('header_call', 'Contact')">📞 Call 0800 769 000</a>
 </header>
 
+<div class="keywords-highlight">
+  <h2>🔧 Professional Mobile Mechanic Services</h2>
+  <p>Eek Mobile Mechanical provides comprehensive mobile mechanic services across New Zealand</p>
+  <div class="service-keywords">
+    <div class="keyword-item">
+      <h4>Mobile Mechanic</h4>
+      <p>Professional mechanics come to your location anywhere in NZ</p>
+    </div>
+    <div class="keyword-item">
+      <h4>Pre Purchase Vehicle Inspections</h4>
+      <p>45-point certified mechanical inspection before you buy</p>
+    </div>
+    <div class="keyword-item">
+      <h4>Wrong Fuel Removal</h4>
+      <p>Safe petrol and diesel removal from your vehicle</p>
+    </div>
+    <div class="keyword-item">
+      <h4>Petrol and Diesel Removal</h4>
+      <p>Expert fuel drain services to prevent engine damage</p>
+    </div>
+  </div>
+</div>
+
 <div class="services">
-  <h2>Mobile Car Inspections – Target Arrival: 30–60 Minutes</h2>
-  <p>Need peace of mind before buying a car? Our certified inspectors come to you and deliver a full pre‑purchase report on the spot.</p>
+  <h2>Pre Purchase Vehicle Inspections – Target Arrival: 30–60 Minutes</h2>
+  <p>Need peace of mind before buying a car? Our certified mobile mechanic team performs comprehensive pre purchase vehicle inspections at any location across New Zealand.</p>
   <ul>
     <li>🧾 45‑point certified mechanical inspection</li>
     <li>📍 Inspection at seller or dealership location</li>
     <li>💸 $199 fixed flat rate, no surprises</li>
-    <li>⏱️ Nationwide dispatch in 30–60 minutes</li>
+    <li>⏱️ Nationwide mobile mechanic dispatch in 30–60 minutes</li>
   </ul>
-  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')">📞 Book an Inspector Now</a>
+  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')">📞 Book Pre Purchase Inspection</a>
 </div>
 
 <div class="services">
-  <h2>Breakdown? We'll Be There in 30–60 Minutes</h2>
-  <p>Engine won't start? Warning lights? Our mobile tech arrives fast and diagnoses the issue on-site.</p>
+  <h2>Wrong Fuel Removal – Petrol and Diesel Removal Emergency Service</h2>
+  <p>Filled with petrol instead of diesel? Our mobile mechanic specialists provide immediate wrong fuel removal and petrol and diesel removal services. Don't start the engine!</p>
   <ul>
-    <li>🛠️ Fault detection & diagnostic scanning</li>
-    <li>🔍 On-site assessment and minor repairs</li>
-    <li>📍 Anywhere in NZ—city or rural</li>
-    <li>🧰 Techs arrive equipped with full toolkits</li>
-    <li>📞 Real-time communication with support staff</li>
-  </ul>
-  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')">📞 Request Fast Assistance</a>
-</div>
-
-<div class="services">
-  <h2>Flat Battery? Get a Boost in 30–60 Minutes</h2>
-  <p>Dead battery? Our pros come to you and perform a safe, professional jump‑start.</p>
-  <ul>
-    <li>🔋 Compatible with all makes/models</li>
-    <li>⚡ Includes battery voltage & health check</li>
-    <li>🧰 Safe jump‑start equipment & procedures</li>
-    <li>📍 Service at your location—home or roadside</li>
-  </ul>
-  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Call for Battery Help</a>
-</div>
-
-<div class="services">
-  <h2>Wrong Fuel Rescue – Don't Start the Engine</h2>
-  <p>Filled with petrol instead of diesel? Don't panic—we drain it quickly and safely.</p>
-  <ul>
-    <li>⛽ Petrol/diesel mix-ups safely drained on-site</li>
-    <li>🧯 Fully insured fuel‑drain process</li>
+    <li>⛽ Professional petrol and diesel removal on-site</li>
+    <li>🧯 Fully insured wrong fuel removal process</li>
     <li>🛻 No towing needed, saves time & money</li>
-    <li>📍 Trusted NZ‑wide mobile rescue since day one</li>
+    <li>📍 Trusted mobile mechanic wrong fuel rescue NZ‑wide</li>
+    <li>🚨 Emergency petrol and diesel removal service</li>
   </ul>
-  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')">📞 Get Fuel Drain Help</a>
+  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')">📞 Emergency Wrong Fuel Removal</a>
 </div>
 
 <div class="services">
-  <h2>Trailer Repairs – Mobile Roadside & On-Site</h2>
-  <p>Flatbed, box, boat, or equipment trailer broken down? We dispatch a mobile technician to your location within 30–60 minutes — anywhere in NZ — to get your trailer safely back on the road or site.</p>
+  <h2>Mobile Mechanic Emergency Breakdown Service</h2>
+  <p>Engine won't start? Warning lights? Our professional mobile mechanic team arrives fast and diagnoses the issue on-site anywhere in New Zealand.</p>
   <ul>
-    <li>🔧 Emergency roadside fixes — wheels, lights, wiring, couplings</li>
-    <li>🛞 Hub and bearing replacements on-site</li>
+    <li>🛠️ Professional mobile mechanic fault detection & diagnostic scanning</li>
+    <li>🔍 On-site assessment and minor repairs</li>
+    <li>📍 Mobile mechanic coverage anywhere in NZ—city or rural</li>
+    <li>🧰 Mobile mechanics arrive equipped with full professional toolkits</li>
+    <li>📞 Real-time communication with mobile mechanic support staff</li>
+  </ul>
+  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')">📞 Mobile Mechanic Emergency Service</a>
+</div>
+
+<div class="services">
+  <h2>Mobile Mechanic Battery Service – Jump Start in 30–60 Minutes</h2>
+  <p>Dead battery? Our professional mobile mechanic team comes to you and performs a safe, professional jump‑start service.</p>
+  <ul>
+    <li>🔋 Mobile mechanic service compatible with all makes/models</li>
+    <li>⚡ Includes battery voltage & health check by qualified mechanics</li>
+    <li>🧰 Safe jump‑start equipment & professional procedures</li>
+    <li>📍 Mobile mechanic service at your location—home or roadside</li>
+  </ul>
+  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Mobile Mechanic Battery Service</a>
+</div>
+
+<div class="services">
+  <h2>Mobile Mechanic Trailer Repairs – Roadside & On-Site</h2>
+  <p>Flatbed, box, boat, or equipment trailer broken down? Our mobile mechanic specialists dispatch to your location within 30–60 minutes — anywhere in NZ.</p>
+  <ul>
+    <li>🔧 Emergency roadside fixes by mobile mechanics — wheels, lights, wiring, couplings</li>
+    <li>🛞 Hub and bearing replacements on-site by qualified mechanics</li>
     <li>🛠️ Suspension, brakes, drawbar and coupling repairs</li>
     <li>💡 Wiring fault diagnosis & LED light installations</li>
-    <li>🧯 Safety-critical systems serviced at the roadside</li>
-    <li>📍 Fully mobile coverage nationwide — we come to you</li>
-    <li>✔️ WOF-prep and compliance adjustments on-location</li>
+    <li>🧯 Safety-critical systems serviced by mobile mechanics</li>
+    <li>📍 Fully mobile mechanic coverage nationwide</li>
+    <li>✔️ WOF-prep and compliance adjustments by certified mechanics</li>
   </ul>
-  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('trailer_call','Contact')">📞 Call for Trailer Help Now</a>
+  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('trailer_call','Contact')">📞 Mobile Mechanic Trailer Service</a>
 </div>
 
 <div class="more-options-container">
   <div class="more-options-header">
-    <h2>📋 More Services & Support</h2>
-    <p>Looking for something else? We offer comprehensive support for customers, suppliers, employment, and business partnerships.</p>
+    <h2>📋 More Eek Mobile Mechanical Services & Support</h2>
+    <p>Looking for something else? Eek Mobile Mechanical offers comprehensive support for customers, suppliers, employment, and business partnerships.</p>
   </div>
   
   <div class="contact-sections">
     <div class="contact-section customers">
       <h3>👥 For Customers</h3>
-      <p>Need mechanical help or have questions about our services?</p>
+      <p>Need mobile mechanic help or have questions about our services?</p>
       <div class="contact-buttons">
-        <a href="https://forms.office.com/r/sdf0YirK6s" class="contact-btn">🚨 Emergency Service</a>
+        <a href="https://forms.office.com/r/sdf0YirK6s" class="contact-btn">🚨 Emergency Mobile Mechanic Service</a>
         <a href="tel:0800769000" class="contact-btn" onclick="trackConversion('more_options_call', 'Contact')">📞 Call 0800 769 000</a>
         <a href="https://forms.office.com/r/qDtVHgBbJk" class="contact-btn">💬 Customer Support</a>
         <a href="https://form.jotform.com/251017058434047" class="contact-btn">📍 Find Me Tool</a>
@@ -436,7 +535,7 @@
     
     <div class="contact-section suppliers">
       <h3>🤝 For Suppliers & Partners</h3>
-      <p>Join our network or manage your existing partnership</p>
+      <p>Join our mobile mechanic network or manage your existing partnership</p>
       <div class="contact-buttons">
         <a href="https://www.eek.nz/supplier" class="contact-btn">🤝 Official Supplier Portal</a>
         <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNE8yV1kxR0ZHQkpVMUNZMDNKUUNUTEpUUS4u" class="contact-btn">📝 Supplier Relations</a>
@@ -446,7 +545,7 @@
     
     <div class="contact-section admin">
       <h3>📋 Administrative & Legal</h3>
-      <p>Privacy concerns, compliance issues, or official documents</p>
+      <p>Privacy concerns, compliance issues, or official Eek Mobile Mechanical documents</p>
       <div class="contact-buttons">
         <a href="https://www.eek.nz/mjuris" class="contact-btn">⚖️ Legal Authority</a>
         <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUMzRTVVRQQVVGN0s2QjRQTUVNOEVNR1QwOC4u" class="contact-btn">🚨 Privacy Report</a>
@@ -470,41 +569,37 @@
 <script>
 // Enhanced tracking function that includes Reddit Pixel with full event parameters
 function trackConversion(eventAction, eventCategory) {
-  // Generate unique conversion ID for deduplication
   const conversionId = 'eek_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
   
-  // Service-specific values (in NZD cents to avoid decimals)
   const serviceValues = {
-    'inspection_call': 19900, // $199 inspection service
-    'breakdown_call': 28900,  // $289 breakdown service
-    'battery_call': 14900,    // $149 battery service
-    'fuel_drain_call': 39900, // $399 fuel drain service
-    'trailer_call': 28900,    // $289 trailer repair service
-    'header_call': 25000,     // General call - average value (~$250)
-    'sticky_call': 25000,     // General call - average value (~$250)
-    'more_options_call': 25000 // General call - average value (~$250)
+    'inspection_call': 19900,
+    'breakdown_call': 28900,
+    'battery_call': 14900,
+    'fuel_drain_call': 39900,
+    'trailer_call': 28900,
+    'header_call': 25000,
+    'sticky_call': 25000,
+    'more_options_call': 25000
   };
   
-  const eventValue = serviceValues[eventAction] || 25000; // Default to $250
+  const eventValue = serviceValues[eventAction] || 25000;
   
-  // Google Analytics tracking (existing)
   if (typeof gtag !== 'undefined') {
     gtag('event', eventAction, {
       'event_category': eventCategory,
       'event_label': 'Phone Call Click',
-      'value': eventValue / 100 // Convert cents to dollars for GA
+      'value': eventValue / 100
     });
     gtag('event', 'conversion', {
       'send_to': 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
     });
   }
   
-  // Reddit Pixel tracking for phone clicks with full parameters
   if (typeof rdt !== 'undefined') {
     rdt('track', 'Lead', {
       'customEventName': 'Phone_Call_Click',
       'conversionId': conversionId,
-      'value': eventValue, // Value in cents
+      'value': eventValue,
       'currency': 'NZD',
       'itemCount': 1,
       'eventSource': eventAction,
@@ -514,7 +609,6 @@ function trackConversion(eventAction, eventCategory) {
   }
 }
 
-// Helper function to map event actions to service types
 function getServiceType(eventAction) {
   const serviceMap = {
     'inspection_call': 'Pre-Purchase Inspection',
@@ -564,7 +658,7 @@ window.addEventListener('scroll', function() {
   if (token && box && checkbox && button && sticky && stickyCall) {
     box.style.display = 'block';
     sticky.style.display = 'inline-block';
-    stickyCall.style.display = 'none'; // Hide the call button when payment is active
+    stickyCall.style.display = 'none';
 
     sticky.href = '#stripePaymentBlock';
 
