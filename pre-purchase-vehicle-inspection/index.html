@@ -538,7 +538,6 @@ let slotsRemaining = {};
 // Initialize page
 document.addEventListener('DOMContentLoaded', function() {
   generateCalendars();
-  updateAvailabilityStatus();
   
   // Check if user has been here before today
   const lastVisit = localStorage.getItem('eek_last_visit');
@@ -553,6 +552,9 @@ document.addEventListener('DOMContentLoaded', function() {
       Object.keys(slotsRemaining).forEach(key => {
         slotsRemaining[key] = Math.max(1, slotsRemaining[key] - 1);
       });
+    } else {
+      // Fallback if no existing slots
+      generateRandomSlots();
     }
   } else {
     // New visitor or new day - generate random slots
@@ -561,6 +563,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
   localStorage.setItem('eek_last_visit', today);
   localStorage.setItem('eek_slots_today', JSON.stringify(slotsRemaining));
+  
+  // Update availability status AFTER generating slots
+  updateAvailabilityStatus();
 });
 
 function generateRandomSlots() {
