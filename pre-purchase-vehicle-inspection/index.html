@@ -792,7 +792,8 @@ function generateCalendar(month, containerId) {
     dayElement.textContent = day;
     
     // Disable past dates (before today) and Sundays
-    if (dayDate < today || dayDate.getDay() === 0) {
+    // Use getTime() for precise comparison
+    if (dayDate.getTime() < today.getTime() || dayDate.getDay() === 0) {
       dayElement.className += ' past';
     } else {
       dayElement.onclick = () => selectDate(dayDate);
