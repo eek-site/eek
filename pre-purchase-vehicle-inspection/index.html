@@ -697,3 +697,298 @@ document.addEventListener('DOMContentLoaded', function() {
   // Check if user has been here before today
   const lastVisit = localStorage.getItem('eek_last_visit');
   const today = new Date().toDateString();
+  
+  if (lastVisit === today) {
+    // Returning visitor today - reduce slots
+    const existingSlots = localStorage.getItem('eek_slots_today');
+    if (existingSlots) {
+      slotsRemaining = JSON.parse(existingSlots);
+      // Reduce all slots by 1, minimum 1
+      Object.keys(slotsRemaining).forEach(key => {
+        slotsRemaining[key] = Math.max(1, slotsRemaining[key] - 1);
+      });
+    } else {
+      // Fallback if no existing slots
+      generateRandomSlots();
+    }
+  } else {
+    // New visitor or new day - generate random slots
+    generateRandomSlots();
+  }
+  
+  localStorage.setItem('eek_last_visit', today);
+  localStorage.setItem('eek_slots_today', JSON.stringify(slotsRemaining));
+  
+  // Update availability status AFTER generating slots
+  updateAvailabilityStatus();
+});
+
+function generateRandomSlots() {
+  const times = ['7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM'];
+  times.forEach(time => {
+    slotsRemaining[time] = Math.floor(Math.random() * 4) + 1; // 1-4 slots (never 0)
+  });
+}
+
+function updateAvailabilityStatus() {
+  const totalSlotsToday = Object.values(slotsRemaining).reduce((a, b) => a + b, 0);
+  const alertDiv = document.getElementById('availabilityAlert');
+  
+  if (totalSlotsToday <= 6) {
+    alertDiv.style.display = 'block';
+    alertDiv.className = 'availability-alert urgent';
+    alertDiv.innerHTML = `⚠️ High demand today! Only ${totalSlotsToday} inspection slots remaining. Popular times book out quickly.`;
+  } else {
+    alertDiv.style.display = 'block';
+    alertDiv.className = 'availability-alert';
+    alertDiv.innerHTML = `📅 ${totalSlotsToday} inspection slots available today. Book now to secure your preferred time.`;
+  }
+}
+
+function generateCalendars() {
+  const now = new Date();
+  const currentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  
+  document.getElementById('currentMonth').textContent = currentMonth.toLocaleDateString('en-NZ', { month: 'long', year: 'numeric' });
+  document.getElementById('nextMonth').textContent = nextMonth.toLocaleDateString('en-NZ', { month: 'long', year: 'numeric' });
+  
+  generateCalendar(currentMonth, 'currentCalendar');
+  generateCalendar(nextMonth, 'nextCalendar');
+}
+
+function generateCalendar(month, containerId) {
+  const container = document.getElementById(containerId);
+  const now = new Date();
+  const firstDay = new Date(month.getFullYear(), month.getMonth(), 1);
+  const lastDay = new Date(month.getFullYear(), month.getMonth() + 1, 0);
+  
+  // Clear container
+  container.innerHTML = '';
+  
+  // Add day headers
+  const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  dayHeaders.forEach(day => {
+    const header = document.createElement('div');
+    header.className = 'day-header';
+    header.textContent = day;
+    container.appendChild(header);
+  });
+  
+  // Add empty cells for days before the first day of the month
+  for (let i = 0; i < firstDay.getDay(); i++) {
+    const emptyDay = document.createElement('div');
+    emptyDay.className = 'day disabled';
+    container.appendChild(emptyDay);
+  }
+  
+  // Add days of the month
+  for (let day = 1; day <= lastDay.getDate(); day++) {
+    const dayElement = document.createElement('div');
+    const dayDate = new Date(month.getFullYear(), month.getMonth(), day);
+    
+    dayElement.className = 'day';
+    dayElement.textContent = day;
+    
+    // Disable past dates and Sundays
+    if (dayDate < now || dayDate.getDay() === 0) {
+      dayElement.className += ' past';
+    } else {
+      dayElement.onclick = () => selectDate(dayDate);
+    }
+    
+    container.appendChild(dayElement);
+  }
+}
+
+function selectDate(date) {
+  // Remove previous selections
+  document.querySelectorAll('.day.selected').forEach(el => el.classList.remove('selected'));
+  
+  // Add selection to clicked date
+  event.target.classList.add('selected');
+  
+  selectedDate = date;
+  document.getElementById('selectedDateDisplay').textContent = date.toLocaleDateString('en-NZ', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+  
+  generateTimeSlots();
+  document.getElementById('timeSlotContainer').style.display = 'block';
+}
+
+function generateTimeSlots() {
+  const container = document.getElementById('timeSlots');
+  container.innerHTML = '';
+  
+  const times = ['7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM'];
+  
+  times.forEach(time => {
+    const slot = document.createElement('div');
+    slot.className = 'time-slot';
+    
+    const remaining = slotsRemaining[time] || 1;
+    
+    if (remaining <= 2) {
+      slot.classList.add('limited');
+    }
+    
+    slot.innerHTML = `
+      <div>${time}</div>
+      <div class="availability">${remaining} slot${remaining === 1 ? '' : 's'} left</div>
+    `;
+    
+    slot.onclick = () => selectTime(time, slot);
+    container.appendChild(slot);
+  });
+}
+
+function selectTime(time, element) {
+  // Remove previous selections
+  document.querySelectorAll('.time-slot.selected').forEach(el => el.classList.remove('selected'));
+  
+  // Add selection
+  element.classList.add('selected');
+  selectedTime = time;
+  
+  // Start reservation timer (10 minutes)
+  reservationExpiry = new Date(Date.now() + 10 * 60 * 1000);
+  
+  document.getElementById('confirmTimeBtn').disabled = false;
+}
+
+function goToStep1() {
+  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+  document.getElementById('step1').classList.add('active');
+  
+  document.querySelectorAll('.progress-step').forEach(el => {
+    el.classList.remove('active', 'completed');
+  });
+  document.getElementById('step1-progress').classList.add('active');
+}
+
+function goToStep2() {
+  selectedLocation = document.getElementById('locationInput').value.trim();
+  
+  if (!selectedLocation) {
+    alert('Please enter the vehicle location');
+    return;
+  }
+  
+  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+  document.getElementById('step2').classList.add('active');
+  
+  document.getElementById('step1-progress').classList.add('completed');
+  document.getElementById('step1-progress').classList.remove('active');
+  document.getElementById('step2-progress').classList.add('active');
+}
+
+function goToStep3() {
+  if (!selectedDate || !selectedTime) {
+    alert('Please select a date and time');
+    return;
+  }
+  
+  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+  document.getElementById('step3').classList.add('active');
+  
+  document.getElementById('step2-progress').classList.add('completed');
+  document.getElementById('step2-progress').classList.remove('active');
+  document.getElementById('step3-progress').classList.add('active');
+  
+  // Update summary
+  document.getElementById('summaryLocation').textContent = selectedLocation;
+  document.getElementById('summaryDate').textContent = selectedDate.toLocaleDateString('en-NZ', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+  document.getElementById('summaryTime').textContent = selectedTime;
+  
+  // Start countdown timer
+  startReservationTimer();
+  
+  // Enable terms checkbox functionality
+  document.getElementById('termsAgree').onchange = function() {
+    document.getElementById('bookOnlineBtn').disabled = !this.checked;
+  };
+}
+
+function startReservationTimer() {
+  const timerElement = document.getElementById('reservationTimer');
+  
+  function updateTimer() {
+    const now = new Date();
+    const timeLeft = reservationExpiry - now;
+    
+    if (timeLeft <= 0) {
+      timerElement.textContent = 'Expired';
+      timerElement.style.color = '#dc3545';
+      return;
+    }
+    
+    const minutes = Math.floor(timeLeft / 60000);
+    const seconds = Math.floor((timeLeft % 60000) / 1000);
+    
+    timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    
+    if (timeLeft < 2 * 60 * 1000) { // Less than 2 minutes
+      timerElement.style.color = '#dc3545';
+    }
+  }
+  
+  updateTimer();
+  const interval = setInterval(updateTimer, 1000);
+  
+  setTimeout(() => {
+    clearInterval(interval);
+  }, 10 * 60 * 1000);
+}
+
+function bookOnline() {
+  // Track the booking attempt
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'prepurchase_booking_online', {
+      'event_category': 'Booking',
+      'event_label': 'Online Booking Click',
+      'value': 289
+    });
+  }
+  
+  if (typeof rdt !== 'undefined') {
+    rdt('track', 'Lead', {
+      'customEventName': 'Prepurchase_Booking_Online',
+      'value': 28900,
+      'currency': 'NZD'
+    });
+  }
+  
+  // Redirect to booking link
+  window.open('https://www.eek.nz/book-inspection', '_blank');
+}
+
+function trackConversion(eventAction, eventCategory) {
+  if (typeof gtag !== 'undefined') {
+    gtag('event', eventAction, {
+      'event_category': eventCategory,
+      'event_label': 'Phone Call Click',
+      'value': 289
+    });
+    gtag('event', 'conversion', {
+      'send_to': 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
+    });
+  }
+  
+  if (typeof rdt !== 'undefined') {
+    rdt('track', 'Lead', {
+      'customEventName': 'Phone_Call_Click',
+      'value': 28900,
+      'currency': 'NZD',
+      'serviceType': 'Pre-Purchase Inspection'
+    });
+  }
+}
