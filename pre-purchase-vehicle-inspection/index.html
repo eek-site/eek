@@ -12,7 +12,7 @@
   <meta property="og:url" content="https://www.eek.nz/prepurchase-inspection" />
 
   <!-- Security Headers -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net https://widget.reviewability.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: https://app.revu.cloud https://widget.reviewability.com; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://app.revu.cloud https://widget.reviewability.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com https://app.revu.cloud https://widget.reviewability.com;">
 
   <!-- Reddit Pixel -->
   <script>
@@ -472,7 +472,8 @@
 <div class="booking-container">
   <div class="booking-header">
     <h2>🔍 Don't Buy a Lemon! Book Your Pre Purchase Inspection</h2>
-    <p>Professional 45-point certified inspection • $199 fixed rate • Mobile service anywhere in NZ</p>
+    <p>Professional 45-point certified inspection • $199 fixed rate* • Mobile service anywhere in NZ</p>
+    <p style="font-size: 0.8em; color: #666; margin-top: 5px;">*Conditions apply</p>
     <p style="font-size: 0.95em; opacity: 0.9; margin-top: 10px;">Protect yourself from costly hidden problems and mechanical nightmares</p>
     
     <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 8px; margin-top: 15px;">
@@ -628,7 +629,8 @@
      <div style="text-align: center; margin: 20px 0;">
         <button class="button secondary" onclick="goToStep2()">Back to Date Selection</button>
         <br><br>
-        <a href="https://buy.stripe.com/9B68wP1JZaIFauH4B7a7I0Z" id="bookOnlineBtn" class="button" style="font-size: 1.2em; padding: 15px 30px; display: inline-block; text-decoration: none;">
+        <!-- Start disabled (no href yet). Stripe URL stored in data-href -->
+        <a id="bookOnlineBtn" class="button" data-href="https://buy.stripe.com/9B68wP1JZaIFauH4B7a7I0Z" style="font-size: 1.2em; padding: 15px 30px; display: inline-block; text-decoration: none; opacity: 0.6; pointer-events: none;">
           📅 Book Now $289
         </a>
         <br>
@@ -637,9 +639,34 @@
           📞 Call 0800 769 000 - Quote Total: $289
         </a>
       </div>
+
+      <script>
+        (function () {
+          var terms = document.getElementById('termsAgree');
+          var btn = document.getElementById('bookOnlineBtn');
+          if (!terms || !btn) return;
+
+          function setEnabled(on) {
+            if (on) {
+              btn.setAttribute('href', btn.getAttribute('data-href'));
+              btn.style.opacity = '';
+              btn.style.pointerEvents = '';
+            } else {
+              btn.removeAttribute('href');
+              btn.style.opacity = '0.6';
+              btn.style.pointerEvents = 'none';
+            }
+          }
+
+          // start disabled; enable when terms are ticked
+          setEnabled(false);
+          terms.addEventListener('change', function () { setEnabled(terms.checked); }, false);
+        })();
+      </script>
     </div>
   </div>
 </div>
+
 
 
 
