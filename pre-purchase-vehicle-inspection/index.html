@@ -760,6 +760,7 @@ function generateCalendars() {
 function generateCalendar(month, containerId) {
   const container = document.getElementById(containerId);
   const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // Today at midnight
   const firstDay = new Date(month.getFullYear(), month.getMonth(), 1);
   const lastDay = new Date(month.getFullYear(), month.getMonth() + 1, 0);
   
@@ -790,8 +791,8 @@ function generateCalendar(month, containerId) {
     dayElement.className = 'day';
     dayElement.textContent = day;
     
-    // Disable past dates and Sundays
-    if (dayDate < now || dayDate.getDay() === 0) {
+    // Disable past dates (before today) and Sundays
+    if (dayDate < today || dayDate.getDay() === 0) {
       dayElement.className += ' past';
     } else {
       dayElement.onclick = () => selectDate(dayDate);
@@ -825,10 +826,34 @@ function generateTimeSlots() {
   container.innerHTML = '';
   
   const times = ['7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM'];
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const isToday = selectedDate.getTime() === today.getTime();
   
   times.forEach(time => {
     const slot = document.createElement('div');
     slot.className = 'time-slot';
+    
+    // Check if this time slot is within 2 hours from now (only for today)
+    let isWithinTwoHours = false;
+    if (isToday) {
+      // Parse the time string to get hour
+      const timeStr = time.replace(' AM', '').replace(' PM', '');
+      let [hours, minutes] = timeStr.split(':').map(Number);
+      
+      // Convert to 24-hour format
+      if (time.includes('PM') && hours !== 12) {
+        hours += 12;
+      } else if (time.includes('AM') && hours === 12) {
+        hours = 0;
+      }
+      
+      // Create a date object for this time slot today
+      const slotTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes || 0);
+      const twoHoursFromNow = new Date(now.getTime() + (2 * 60 * 60 * 1000));
+      
+      isWithinTwoHours = slotTime < twoHoursFromNow;
+    }
     
     const remaining = slotsRemaining[time] || 1;
     
@@ -836,12 +861,21 @@ function generateTimeSlots() {
       slot.classList.add('limited');
     }
     
-    slot.innerHTML = `
-      <div>${time}</div>
-      <div class="availability">${remaining} slot${remaining === 1 ? '' : 's'} left</div>
-    `;
+    if (isWithinTwoHours) {
+      slot.classList.add('past'); // Reuse the 'past' styling
+      slot.style.cursor = 'not-allowed';
+      slot.innerHTML = `
+        <div>${time}</div>
+        <div class="availability">Too soon</div>
+      `;
+    } else {
+      slot.innerHTML = `
+        <div>${time}</div>
+        <div class="availability">${remaining} slot${remaining === 1 ? '' : 's'} left</div>
+      `;
+      slot.onclick = () => selectTime(time, slot);
+    }
     
-    slot.onclick = () => selectTime(time, slot);
     container.appendChild(slot);
   });
 }
