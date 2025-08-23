@@ -760,9 +760,19 @@ function generateCalendars() {
 function generateCalendar(month, containerId) {
   const container = document.getElementById(containerId);
   const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // Today at midnight
+  
+  // Create today's date more explicitly
+  const todayYear = now.getFullYear();
+  const todayMonth = now.getMonth();
+  const todayDay = now.getDate();
+  const today = new Date(todayYear, todayMonth, todayDay);
+  
   const firstDay = new Date(month.getFullYear(), month.getMonth(), 1);
   const lastDay = new Date(month.getFullYear(), month.getMonth() + 1, 0);
+  
+  console.log('Current time:', now);
+  console.log('Today (midnight):', today);
+  console.log('Today values:', todayYear, todayMonth, todayDay);
   
   // Clear container
   container.innerHTML = '';
@@ -791,8 +801,15 @@ function generateCalendar(month, containerId) {
     dayElement.className = 'day';
     dayElement.textContent = day;
     
+    // Debug logging for the problematic date
+    if (day === 24) {
+      console.log('Day 24 date:', dayDate);
+      console.log('Day 24 < today?', dayDate.getTime() < today.getTime());
+      console.log('Day 24 === today?', dayDate.getTime() === today.getTime());
+      console.log('Day 24 is Sunday?', dayDate.getDay() === 0);
+    }
+    
     // Disable past dates (before today) and Sundays
-    // Use getTime() for precise comparison
     if (dayDate.getTime() < today.getTime() || dayDate.getDay() === 0) {
       dayElement.className += ' past';
     } else {
