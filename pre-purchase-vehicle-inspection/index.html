@@ -770,10 +770,6 @@ function generateCalendar(month, containerId) {
   const firstDay = new Date(month.getFullYear(), month.getMonth(), 1);
   const lastDay = new Date(month.getFullYear(), month.getMonth() + 1, 0);
   
-  console.log('Current time:', now);
-  console.log('Today (midnight):', today);
-  console.log('Today values:', todayYear, todayMonth, todayDay);
-  
   // Clear container
   container.innerHTML = '';
   
@@ -801,16 +797,8 @@ function generateCalendar(month, containerId) {
     dayElement.className = 'day';
     dayElement.textContent = day;
     
-    // Debug logging for the problematic date
-    if (day === 24) {
-      console.log('Day 24 date:', dayDate);
-      console.log('Day 24 < today?', dayDate.getTime() < today.getTime());
-      console.log('Day 24 === today?', dayDate.getTime() === today.getTime());
-      console.log('Day 24 is Sunday?', dayDate.getDay() === 0);
-    }
-    
-    // Disable past dates (before today) and Sundays
-    if (dayDate.getTime() < today.getTime() || dayDate.getDay() === 0) {
+    // Only disable past dates (removed Sunday restriction)
+    if (dayDate.getTime() < today.getTime()) {
       dayElement.className += ' past';
     } else {
       dayElement.onclick = () => selectDate(dayDate);
@@ -843,7 +831,15 @@ function generateTimeSlots() {
   const container = document.getElementById('timeSlots');
   container.innerHTML = '';
   
-  const times = ['7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM'];
+  // Different time slots based on day of week
+  const dayOfWeek = selectedDate.getDay(); // 0 = Sunday, 6 = Saturday
+  const isWeekend = dayOfWeek === 0 || dayOfWeek === 6; // Sunday or Saturday
+  
+  const weekdayTimes = ['7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM'];
+  const weekendTimes = ['7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM'];
+  
+  const times = isWeekend ? weekendTimes : weekdayTimes;
+  
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const isToday = selectedDate.getTime() === today.getTime();
