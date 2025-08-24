@@ -323,7 +323,7 @@
 <body>
 
 <header>
-  <img id="headerImage" src="brand-image.png" alt="Eek Mobile Mechanical" />
+  <img id="headerImage" src="sweet-ride.png" alt="Eek Mobile Mechanical" />
   <div class="business-name">Eek Mobile Mechanical</div>
   <h1 id="headerTitle">Book Your Mobile Mechanic Service</h1>
   <p id="headerSubtitle" style="font-size: 1.1em; color: #666; margin: 10px 0;"></p>
@@ -796,20 +796,20 @@ const serviceConfigs = {
 // Initialize page based on URL parameters
 document.addEventListener('DOMContentLoaded', function() {
   const urlParams = new URLSearchParams(window.location.search);
-  const service = urlParams.get('service') || 'breakdown';
+  const service = urlParams.get('service') || 'jumpstart'; // Changed default from 'breakdown' to 'jumpstart'
   
   loadServiceConfig(service);
 });
 
 function loadServiceConfig(serviceType) {
-  const config = serviceConfigs[serviceType] || serviceConfigs['breakdown'];
+  const config = serviceConfigs[serviceType] || serviceConfigs['jumpstart']; // Changed fallback from 'breakdown' to 'jumpstart'
   
   // Update page metadata
   document.title = `${config.title} - Eek Mobile Mechanical`;
   document.getElementById('pageDescription').content = `Book ${config.title.toLowerCase()} with Eek Mobile Mechanical. ${config.bookingDescription}`;
   
-  // Update header
-  document.getElementById('headerImage').src = config.image;
+  // Update header - use the same image for all services
+  document.getElementById('headerImage').src = "sweet-ride.png";
   document.getElementById('headerImage').alt = config.imageAlt;
   document.getElementById('headerTitle').textContent = config.title;
   document.getElementById('headerSubtitle').textContent = config.subtitle;
