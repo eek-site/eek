@@ -442,66 +442,9 @@
 </div>
 
 <script>
-// Service configuration
+// Service configuration based on actual pricing
 const serviceConfigs = {
-  'breakdown': {
-    title: 'Emergency Breakdown Service',
-    subtitle: 'Engine won\'t start? We\'re on our way!',
-    breadcrumb: 'Emergency Breakdown',
-    bookingTitle: 'Emergency Breakdown Service',
-    bookingDescription: 'Professional mobile mechanic dispatch • Target arrival: 30-60 minutes',
-    step1Title: 'Step 1: Tell us about your breakdown',
-    detailsLabel: 'Describe what happened and any symptoms:',
-    detailsPlaceholder: 'e.g., Engine won\'t start, warning lights, strange noises, etc.',
-    image: 'breakdown-image.png',
-    imageAlt: 'Emergency Breakdown Service',
-    stats: [
-      { number: '30-60', text: 'minute response' },
-      { number: '24/7', text: 'availability' },
-      { number: '100%', text: 'mobile service' },
-      { number: 'No', text: 'towing needed' }
-    ],
-    urgencyOptions: [
-      {
-        id: 'emergency',
-        title: 'Emergency',
-        time: '30-60 minutes',
-        description: 'Stranded, unsafe location, or urgent situation',
-        price: '$289'
-      },
-      {
-        id: 'urgent',
-        title: 'Urgent',
-        time: '2-4 hours',
-        description: 'Need help today, but not stranded',
-        price: '$249'
-      },
-      {
-        id: 'scheduled',
-        title: 'Scheduled',
-        time: 'Next business day',
-        description: 'Can wait until tomorrow',
-        price: '$199'
-      }
-    ],
-    infoContent: `
-      <h4>What We Diagnose:</h4>
-      <ul>
-        <li><strong>Engine won't start</strong> - Battery, starter, alternator issues</li>
-        <li><strong>Warning lights</strong> - Diagnostic scanning and fault detection</li>
-        <li><strong>Strange noises</strong> - Engine, transmission, or suspension problems</li>
-        <li><strong>Overheating</strong> - Cooling system problems</li>
-        <li><strong>Electrical issues</strong> - Lights, charging, ignition problems</li>
-      </ul>
-    `,
-    terms: [
-      'Emergency service includes diagnostic scanning and on-site assessment',
-      'Our mobile mechanic will arrive equipped with professional diagnostic tools',
-      'Payment due upon service completion',
-      'If we can\'t fix it on-site, we\'ll help arrange next steps at no extra charge'
-    ]
-  },
-  'battery': {
+  'jumpstart': {
     title: 'Battery Jump Start Service',
     subtitle: 'Dead battery? We\'ll get you started!',
     breadcrumb: 'Battery Jump Start',
@@ -513,36 +456,23 @@ const serviceConfigs = {
     image: 'battery-image.png',
     imageAlt: 'Battery Jump Start Service',
     stats: [
-      { number: '30-60', text: 'minute arrival' },
+      { number: '$149', text: 'fixed price' },
       { number: '100%', text: 'success rate' },
       { number: 'Free', text: 'battery test' },
       { number: 'All', text: 'makes & models' }
     ],
     urgencyOptions: [
       {
-        id: 'emergency',
-        title: 'Emergency',
+        id: 'standard',
+        title: 'Jump Start Service',
         time: '30-60 minutes',
-        description: 'Stranded and need help right now',
-        price: '$149'
-      },
-      {
-        id: 'urgent',
-        title: 'Urgent',
-        time: '2-4 hours',
-        description: 'Need help today',
-        price: '$129'
-      },
-      {
-        id: 'scheduled',
-        title: 'Scheduled',
-        time: 'Next business day',
-        description: 'Can wait until tomorrow',
-        price: '$99'
+        description: 'Professional jump start with battery health check',
+        price: '$149',
+        stripeLink: 'https://www.eek.nz?token=14A00j9cr7wtgT54B7a7I1l'
       }
     ],
     infoContent: `
-      <h4>Our Battery Service Includes:</h4>
+      <h4>Our Jump Start Service Includes:</h4>
       <ul>
         <li><strong>Professional jump start</strong> using commercial-grade equipment</li>
         <li><strong>Battery voltage test</strong> to check current condition</li>
@@ -553,118 +483,97 @@ const serviceConfigs = {
     `,
     terms: [
       'Service includes professional jump start and battery health assessment',
-      'If battery needs replacement, we can source and install a new one',
+      'Fixed price of $149 - no surprises',
       'Payment due upon service completion',
-      'We guarantee to get your vehicle started or no charge'
+      'We guarantee to get your vehicle started'
     ]
   },
-  'fuel': {
-    title: 'Wrong Fuel Removal Service',
-    subtitle: 'Put petrol in diesel? Don\'t panic - we\'ll fix it!',
-    breadcrumb: 'Wrong Fuel Removal',
-    bookingTitle: 'Wrong Fuel Emergency Service',
-    bookingDescription: 'Professional fuel drain service • Don\'t start the engine!',
-    step1Title: 'Step 1: Tell us about the fuel situation',
-    detailsLabel: 'Important details about what happened:',
-    detailsPlaceholder: 'e.g., How much wrong fuel was added, have you started the engine, what type of vehicle, etc.',
-    image: 'fuel-image.png',
-    imageAlt: 'Wrong Fuel Removal Service',
+  'mechanic': {
+    title: 'Mobile Mechanic Diagnostic Service',
+    subtitle: 'Engine problems? We\'ll diagnose the issue!',
+    breadcrumb: 'Mechanic Diagnostic',
+    bookingTitle: 'Mobile Mechanic Diagnostic Service',
+    bookingDescription: 'Professional mechanical diagnostic • On-site assessment',
+    step1Title: 'Step 1: Tell us about your mechanical problem',
+    detailsLabel: 'Describe the symptoms and any issues:',
+    detailsPlaceholder: 'e.g., Engine won\'t start, warning lights, strange noises, overheating, etc.',
+    image: 'mechanic-image.png',
+    imageAlt: 'Mobile Mechanic Diagnostic Service',
     stats: [
+      { number: '$249', text: 'fixed price' },
+      { number: '30-60', text: 'minute response' },
+      { number: 'Full', text: 'diagnostic scan' },
+      { number: 'Expert', text: 'assessment' }
+    ],
+    urgencyOptions: [
+      {
+        id: 'standard',
+        title: 'Diagnostic Service',
+        time: '30-60 minutes',
+        description: 'Complete diagnostic scan and mechanical assessment',
+        price: '$249',
+        stripeLink: 'https://www.eek.nz?token=eVqfZh88n9EB32f9Vra7I1h'
+      }
+    ],
+    infoContent: `
+      <h4>Our Diagnostic Service Includes:</h4>
+      <ul>
+        <li><strong>Professional diagnostic scanning</strong> of all vehicle systems</li>
+        <li><strong>Mechanical assessment</strong> to identify problems</li>
+        <li><strong>Written report</strong> of findings and recommendations</li>
+        <li><strong>Cost estimate</strong> for any required repairs</li>
+        <li><strong>Expert advice</strong> on next steps</li>
+      </ul>
+    `,
+    terms: [
+      'Service includes comprehensive diagnostic scanning and assessment',
+      'Fixed price of $249 - no surprises',
+      'Written report provided with findings and recommendations',
+      'Payment due upon service completion'
+    ]
+  },
+  'fuel-extraction': {
+    title: 'Wrong Fuel Extraction Service',
+    subtitle: 'Put wrong fuel in? We\'ll extract it safely!',
+    breadcrumb: 'Fuel Extraction',
+    bookingTitle: 'Emergency Fuel Extraction Service',
+    bookingDescription: 'Professional fuel extraction • Don\'t start the engine!',
+    step1Title: 'Step 1: Tell us about the fuel situation',
+    detailsLabel: 'Critical details about what happened:',
+    detailsPlaceholder: 'e.g., How much wrong fuel, have you started engine, petrol in diesel or vice versa, etc.',
+    image: 'fuel-image.png',
+    imageAlt: 'Wrong Fuel Extraction Service',
+    stats: [
+      { number: '$849', text: 'fixed price' },
       { number: '30-60', text: 'minute response' },
       { number: 'No', text: 'engine damage' },
-      { number: 'No', text: 'towing needed' },
       { number: '100%', text: 'insured service' }
     ],
     urgencyOptions: [
       {
-        id: 'emergency',
-        title: 'Emergency',
+        id: 'standard',
+        title: 'Fuel Extraction',
         time: '30-60 minutes',
-        description: 'Haven\'t started engine - immediate help needed',
-        price: '$399'
-      },
-      {
-        id: 'urgent',
-        title: 'Started Engine',
-        time: '2-4 hours',
-        description: 'Started engine with wrong fuel - need immediate help',
-        price: '$599'
+        description: 'Complete fuel system extraction and cleaning',
+        price: '$849',
+        stripeLink: 'https://www.eek.nz?token=9B65kDewLbMJdGT3x3a7I1k'
       }
     ],
     infoContent: `
-      <h4>Critical: DO NOT START THE ENGINE</h4>
+      <h4>CRITICAL: DO NOT START THE ENGINE</h4>
       <ul>
-        <li><strong>If you haven't started it</strong> - we can drain safely with minimal damage</li>
-        <li><strong>If you started it</strong> - we need to flush the entire fuel system</li>
-        <li><strong>Petrol in diesel</strong> causes serious engine damage if driven</li>
-        <li><strong>We come to you</strong> - no need for expensive towing</li>
-        <li><strong>Fully insured</strong> professional fuel removal process</li>
+        <li><strong>Professional extraction</strong> of contaminated fuel</li>
+        <li><strong>Complete system flush</strong> to remove all traces</li>
+        <li><strong>Fresh fuel replacement</strong> with correct fuel type</li>
+        <li><strong>System testing</strong> to ensure safe operation</li>
+        <li><strong>Fully insured service</strong> for your protection</li>
       </ul>
     `,
     terms: [
-      'Emergency fuel removal service - we come to your location',
-      'Price varies based on whether engine was started with wrong fuel',
-      'Complete fuel system drain and replacement with correct fuel',
-      'Service includes testing to ensure no contamination remains',
-      'Fully insured process with professional equipment'
-    ]
-  },
-  'trailer': {
-    title: 'Trailer Repair Service',
-    subtitle: 'Trailer breakdown? We\'ll get you back on the road!',
-    breadcrumb: 'Trailer Repair',
-    bookingTitle: 'Mobile Trailer Repair Service',
-    bookingDescription: 'On-site trailer repairs • All types: boat, box, flatbed, equipment',
-    step1Title: 'Step 1: Tell us about your trailer problem',
-    detailsLabel: 'Describe the trailer and what needs repair:',
-    detailsPlaceholder: 'e.g., Type of trailer, specific problem (wheels, lights, brakes, etc.), size/weight, etc.',
-    image: 'trailer-image.png',
-    imageAlt: 'Trailer Repair Service',
-    stats: [
-      { number: '30-60', text: 'minute arrival' },
-      { number: 'All', text: 'trailer types' },
-      { number: 'WOF', text: 'compliance' },
-      { number: 'On-site', text: 'repairs' }
-    ],
-    urgencyOptions: [
-      {
-        id: 'emergency',
-        title: 'Emergency',
-        time: '30-60 minutes',
-        description: 'Stranded with trailer, blocking traffic, or urgent delivery',
-        price: '$289+'
-      },
-      {
-        id: 'urgent',
-        title: 'Urgent',
-        time: '2-4 hours',
-        description: 'Need repair today',
-        price: '$249+'
-      },
-      {
-        id: 'scheduled',
-        title: 'Scheduled',
-        time: 'Next business day',
-        description: 'Can wait until tomorrow',
-        price: '$199+'
-      }
-    ],
-    infoContent: `
-      <h4>Trailer Services We Provide:</h4>
-      <ul>
-        <li><strong>Wheel & tire issues</strong> - flat repairs, wheel bearing replacement</li>
-        <li><strong>Lighting problems</strong> - wiring faults, LED installations</li>
-        <li><strong>Brake repairs</strong> - electric and hydraulic brake systems</li>
-        <li><strong>Coupling issues</strong> - drawbar and coupling repairs</li>
-        <li><strong>WOF preparation</strong> - ensuring compliance for inspection</li>
-      </ul>
-    `,
-    terms: [
-      'Mobile trailer repair service - we come to your location',
-      'Pricing depends on parts required and complexity of repair',
-      'We service all trailer types: flatbed, box, boat, equipment trailers',
-      'Parts and materials charged separately at cost price',
-      'WOF compliance work available'
+      'Emergency fuel extraction service - we come to your location',
+      'Fixed price of $849 regardless of fuel amount',
+      'Complete system flush and replacement with correct fuel',
+      'Fully insured professional service'
     ]
   },
   'inspection': {
@@ -672,57 +581,214 @@ const serviceConfigs = {
     subtitle: 'Don\'t buy a lemon! Professional inspection service',
     breadcrumb: 'Pre Purchase Inspection',
     bookingTitle: 'Pre Purchase Vehicle Inspection',
-    bookingDescription: '45-point certified inspection • $199 fixed rate • Anywhere in NZ',
+    bookingDescription: 'Comprehensive vehicle inspection • Professional assessment',
     step1Title: 'Step 1: Tell us about the vehicle inspection',
-    detailsLabel: 'Vehicle and seller details:',
-    detailsPlaceholder: 'e.g., Make/model/year, where the vehicle is located, seller type (dealer/private), etc.',
+    detailsLabel: 'Vehicle and location details:',
+    detailsPlaceholder: 'e.g., Make/model/year, where vehicle is located, dealer/private sale, etc.',
     image: 'lemon.png',
-    imageAlt: 'Don\'t Buy a Lemon - Pre Purchase Vehicle Inspection',
+    imageAlt: 'Pre Purchase Vehicle Inspection',
     stats: [
-      { number: '20%', text: 'of vehicles rejected' },
-      { number: '45', text: 'point inspection' },
-      { number: '$199', text: 'fixed rate' },
-      { number: '100%', text: 'mobile service' }
+      { number: '$289', text: 'fixed price' },
+      { number: 'Full', text: 'inspection' },
+      { number: 'Written', text: 'report' },
+      { number: 'Any', text: 'location' }
     ],
     urgencyOptions: [
       {
-        id: 'urgent',
-        title: 'Urgent',
-        time: 'Today',
-        description: 'Vehicle viewing today, need inspection before purchase',
+        id: 'standard',
+        title: 'Vehicle Inspection',
+        time: 'Within 24 hours',
+        description: 'Comprehensive pre-purchase vehicle inspection',
         price: '$289'
-      },
-      {
-        id: 'scheduled',
-        title: 'Scheduled',
-        time: 'Next business day',
-        description: 'Have time to wait for standard service',
-        price: '$199'
-      },
-      {
-        id: 'flexible',
-        title: 'Flexible',
-        time: 'Within 2-3 days',
-        description: 'No rush, can wait for available slot',
-        price: '$199'
       }
     ],
     infoContent: `
-      <h4>Why You Need This Inspection:</h4>
+      <h4>Our Pre-Purchase Inspection Includes:</h4>
       <ul>
-        <li><strong>20% of vehicles</strong> we inspect are rejected due to serious issues</li>
-        <li><strong>40% of used cars</strong> have unaddressed safety recalls</li>
-        <li><strong>25% have electrical problems</strong> that aren't obvious</li>
-        <li><strong>Save thousands</strong> by avoiding vehicles with hidden defects</li>
-        <li><strong>Professional report</strong> gives you negotiating power</li>
+        <li><strong>Comprehensive mechanical assessment</strong> of all major systems</li>
+        <li><strong>Written inspection report</strong> with findings</li>
+        <li><strong>Photos of any issues</strong> discovered during inspection</li>
+        <li><strong>Estimated repair costs</strong> for identified problems</li>
+        <li><strong>Professional recommendation</strong> on whether to purchase</li>
       </ul>
     `,
     terms: [
-      'Comprehensive 45-point mechanical inspection',
-      'Written report provided within 2 hours of inspection',
-      'We inspect at any location - dealer, private seller, anywhere',
-      'Mobile service fee of $90 included in urgent pricing',
-      'Standard rate applies for next business day service'
+      'Comprehensive vehicle inspection at any location',
+      'Fixed price of $289 - no hidden fees',
+      'Detailed written report provided within 24 hours',
+      'Payment due upon completion of inspection'
+    ]
+  },
+  'trailer': {
+    title: 'Trailer Inspection & Repair',
+    subtitle: 'Trailer problems? We\'ll inspect and fix it!',
+    breadcrumb: 'Trailer Service',
+    bookingTitle: 'Trailer Inspection & Minor Repair',
+    bookingDescription: 'Professional trailer inspection • Minor repairs included',
+    step1Title: 'Step 1: Tell us about your trailer',
+    detailsLabel: 'Describe your trailer and any issues:',
+    detailsPlaceholder: 'e.g., Trailer type, size, specific problems with lights/wheels/brakes, etc.',
+    image: 'trailer-image.png',
+    imageAlt: 'Trailer Inspection & Repair Service',
+    stats: [
+      { number: '$289', text: 'fixed price' },
+      { number: 'Full', text: 'inspection' },
+      { number: 'Minor', text: 'repairs included' },
+      { number: 'All', text: 'trailer types' }
+    ],
+    urgencyOptions: [
+      {
+        id: 'standard',
+        title: 'Trailer Service',
+        time: 'Within 24 hours',
+        description: 'Complete inspection with minor repairs included',
+        price: '$289'
+      }
+    ],
+    infoContent: `
+      <h4>Our Trailer Service Includes:</h4>
+      <ul>
+        <li><strong>Complete safety inspection</strong> of all trailer systems</li>
+        <li><strong>Minor repairs included</strong> in the service price</li>
+        <li><strong>Lights and wiring check</strong> - we\'ll fix basic faults</li>
+        <li><strong>Wheel and tire inspection</strong> with minor adjustments</li>
+        <li><strong>WOF preparation</strong> to ensure compliance</li>
+      </ul>
+    `,
+    terms: [
+      'Complete trailer inspection with minor repairs included',
+      'Fixed price of $289 - covers inspection and basic repairs',
+      'Major repairs or parts charged separately',
+      'Service available for all trailer types'
+    ]
+  },
+  'tyre': {
+    title: 'Mobile Tyre Change Service',
+    subtitle: 'Flat tyre? We\'ll change it for you!',
+    breadcrumb: 'Tyre Change',
+    bookingTitle: 'Mobile Tyre Change Service',
+    bookingDescription: 'Professional tyre change • We come to you',
+    step1Title: 'Step 1: Tell us about your tyre situation',
+    detailsLabel: 'Describe the tyre problem:',
+    detailsPlaceholder: 'e.g., Flat tyre, puncture, do you have a spare tyre, location, etc.',
+    image: 'tyre-image.png',
+    imageAlt: 'Mobile Tyre Change Service',
+    stats: [
+      { number: '$169', text: 'fixed price' },
+      { number: '30-60', text: 'minute arrival' },
+      { number: 'Any', text: 'location' },
+      { number: 'Safe', text: 'installation' }
+    ],
+    urgencyOptions: [
+      {
+        id: 'standard',
+        title: 'Tyre Change',
+        time: '30-60 minutes',
+        description: 'Professional tyre change service at your location',
+        price: '$169'
+      }
+    ],
+    infoContent: `
+      <h4>Our Tyre Change Service Includes:</h4>
+      <ul>
+        <li><strong>Professional tyre change</strong> using proper equipment</li>
+        <li><strong>Wheel torque check</strong> to manufacturer specifications</li>
+        <li><strong>Tyre pressure adjustment</strong> to correct levels</li>
+        <li><strong>Visual inspection</strong> of remaining tyres</li>
+        <li><strong>Safe disposal</strong> of damaged tyre if required</li>
+      </ul>
+    `,
+    terms: [
+      'Professional tyre change service at your location',
+      'Fixed price of $169 - you provide the replacement tyre',
+      'Service includes proper torque and pressure adjustment',
+      'Payment due upon completion'
+    ]
+  },
+  'locksmith': {
+    title: 'Vehicle Lockout Service',
+    subtitle: 'Locked out of your car? We\'ll get you back in!',
+    breadcrumb: 'Vehicle Unlock',
+    bookingTitle: 'Emergency Vehicle Lockout Service',
+    bookingDescription: 'Professional vehicle unlock • No damage guarantee',
+    step1Title: 'Step 1: Tell us about your lockout situation',
+    detailsLabel: 'Describe your vehicle and situation:',
+    detailsPlaceholder: 'e.g., Vehicle make/model, keys inside car, electronic locks, etc.',
+    image: 'locksmith-image.png',
+    imageAlt: 'Vehicle Lockout Service',
+    stats: [
+      { number: '$189', text: 'fixed price' },
+      { number: '30-60', text: 'minute arrival' },
+      { number: 'No', text: 'damage guarantee' },
+      { number: 'All', text: 'vehicle types' }
+    ],
+    urgencyOptions: [
+      {
+        id: 'standard',
+        title: 'Vehicle Unlock',
+        time: '30-60 minutes',
+        description: 'Professional vehicle unlock service',
+        price: '$189'
+      }
+    ],
+    infoContent: `
+      <h4>Our Vehicle Unlock Service Includes:</h4>
+      <ul>
+        <li><strong>Professional unlock tools</strong> - no damage to your vehicle</li>
+        <li><strong>All vehicle types</strong> - cars, vans, trucks, SUVs</li>
+        <li><strong>Electronic and manual locks</strong> - we handle both types</li>
+        <li><strong>No damage guarantee</strong> - your vehicle stays pristine</li>
+        <li><strong>Fast response</strong> - we understand you\'re stranded</li>
+      </ul>
+    `,
+    terms: [
+      'Professional vehicle unlock service with no damage guarantee',
+      'Fixed price of $189 regardless of vehicle type',
+      'Service works on all makes and models',
+      'Payment due upon successful unlock'
+    ]
+  },
+  'fuel-delivery': {
+    title: 'Emergency Fuel Delivery',
+    subtitle: 'Run out of fuel? We\'ll bring it to you!',
+    breadcrumb: 'Fuel Delivery',
+    bookingTitle: 'Emergency Fuel Delivery Service',
+    bookingDescription: 'Professional fuel delivery • 20L fresh fuel delivered',
+    step1Title: 'Step 1: Tell us about your fuel situation',
+    detailsLabel: 'Vehicle and fuel details:',
+    detailsPlaceholder: 'e.g., Vehicle type, fuel type needed (petrol/diesel), exact location, etc.',
+    image: 'fuel-delivery-image.png',
+    imageAlt: 'Emergency Fuel Delivery Service',
+    stats: [
+      { number: '$249', text: 'fixed price' },
+      { number: '20L', text: 'fresh fuel' },
+      { number: '30-60', text: 'minute delivery' },
+      { number: 'Petrol', text: '& diesel' }
+    ],
+    urgencyOptions: [
+      {
+        id: 'standard',
+        title: 'Fuel Delivery',
+        time: '30-60 minutes',
+        description: '20L fuel delivery to get you back on the road',
+        price: '$249'
+      }
+    ],
+    infoContent: `
+      <h4>Our Fuel Delivery Service Includes:</h4>
+      <ul>
+        <li><strong>20 litres of fresh fuel</strong> - petrol or diesel</li>
+        <li><strong>Safe fuel transfer</strong> directly to your vehicle</li>
+        <li><strong>Professional equipment</strong> for clean, safe delivery</li>
+        <li><strong>Immediate service</strong> - enough fuel to reach a station</li>
+        <li><strong>All locations</strong> - roadside, home, work, anywhere</li>
+      </ul>
+    `,
+    terms: [
+      'Emergency fuel delivery service - 20L of fresh fuel included',
+      'Fixed price of $249 includes fuel and delivery',
+      'Available for both petrol and diesel vehicles',
+      'Payment due upon fuel delivery'
     ]
   }
 };
