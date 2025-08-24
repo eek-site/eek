@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="pageTitle">Book Service - Eek Mobile Mechanical</title>
+  <meta name="description" id="pageDescription" content="Book your mobile mechanic service with Eek Mobile Mechanical. Professional service across New Zealand." />
+  <meta name="keywords" content="mobile mechanic, book service, emergency mechanic, battery jump start, wrong fuel removal, trailer repair, mobile mechanic NZ" />
+
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://www.googletagmanager.com https://googleads.g.doubleclick.net;">
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-17084465163');
+    gtag('config', 'G-DQNKF1YLWR');
+  </script>
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0 0 80px 0;
+      color: #333;
+      text-align: center;
+    }
+    header {
+      background: #ffffff;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .business-name {
+      font-size: 2.2em;
+      font-weight: bold;
+      color: #ff5500;
+      margin: 0.3em 0;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    header img {
+      max-width: 250px;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      font-size: 1.8em;
+      margin: 0.5em 0 0.2em;
+      color: #333;
+    }
+    .breadcrumb {
+      background: #e8f4f8;
+      padding: 10px 20px;
+      margin: 0;
+      text-align: left;
+      font-size: 0.9em;
+    }
+    .breadcrumb a {
+      color: #ff5500;
+      text-decoration: none;
+    }
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+    .booking-container {
+      max-width: 800px;
+      margin: 20px auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .booking-header {
+      background: linear-gradient(135deg, #ff5500, #ff7733);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    .booking-header h2 {
+      margin: 0 0 10px 0;
+      font-size: 2em;
+    }
+    .booking-header p {
+      margin: 0;
+      font-size: 1.1em;
+      opacity: 0.9;
+    }
+    .service-stats {
+      background: rgba(255,255,255,0.15);
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      display: none;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      text-align: center;
+    }
+    .stat-item {
+      font-size: 0.9em;
+    }
+    .stat-number {
+      font-size: 1.8em;
+      font-weight: bold;
+      display: block;
+    }
+    .progress-bar {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0;
+      padding: 0 20px;
+    }
+    .progress-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+    }
+    .progress-step::before {
+      content: '';
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #ddd;
+      display: block;
+      margin: 0 auto 8px;
+    }
+    .progress-step.active::before {
+      background: #ff5500;
+    }
+    .progress-step.completed::before {
+      background: #28a745;
+    }
+    .progress-step span {
+      font-size: 0.9em;
+      color: #666;
+    }
+    .progress-step.active span {
+      color: #ff5500;
+      font-weight: bold;
+    }
+    .booking-steps {
+      padding: 30px;
+    }
+    .step {
+      display: none;
+      text-align: left;
+    }
+    .step.active {
+      display: block;
+    }
+    .step h3 {
+      color: #ff5500;
+      margin-bottom: 20px;
+      font-size: 1.4em;
+    }
+    .location-input, .details-input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 1.1em;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+    .location-input:focus, .details-input:focus {
+      border-color: #ff5500;
+      outline: none;
+    }
+    .details-input {
+      height: 120px;
+      resize: vertical;
+    }
+    .urgency-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .urgency-option {
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .urgency-option:hover {
+      border-color: #ff5500;
+    }
+    .urgency-option.selected {
+      border-color: #ff5500;
+      background: #fff5f0;
+    }
+    .urgency-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #333;
+    }
+    .urgency-time {
+      color: #ff5500;
+      font-size: 0.9em;
+      margin-bottom: 8px;
+    }
+    .urgency-description {
+      font-size: 0.85em;
+      color: #666;
+    }
+    .reservation-summary {
+      background: #e8f4f8;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .reservation-summary h4 {
+      margin: 0 0 15px 0;
+      color: #333;
+    }
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+      align-items: center;
+    }
+    .summary-item strong {
+      color: #ff5500;
+    }
+    .button {
+      background: #ff5500;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1em;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+      margin: 10px 5px;
+    }
+    .button:hover {
+      background: #e04400;
+      transform: translateY(-1px);
+    }
+    .button.secondary {
+      background: #6c757d;
+    }
+    .button.secondary:hover {
+      background: #545b62;
+    }
+    .button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .terms-section {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: left;
+    }
+    .terms-checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 15px 0;
+    }
+    .terms-checkbox input {
+      margin-top: 4px;
+      transform: scale(1.2);
+    }
+    .terms-text {
+      font-size: 0.95em;
+      line-height: 1.5;
+    }
+    .terms-text a {
+      color: #ff5500;
+      text-decoration: none;
+    }
+    .terms-text a:hover {
+      text-decoration: underline;
+    }
+    .info-box {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+      text-align: left;
+    }
+    .info-box h4 {
+      margin: 0 0 10px 0;
+      color: #856404;
+    }
+    .info-box ul {
+      margin: 0;
+      padding-left: 20px;
+      color: #856404;
+    }
+    @media (max-width: 768px) {
+      .booking-steps {
+        padding: 20px;
+      }
+      .urgency-options {
+        grid-template-columns: 1fr;
+      }
+      .business-name {
+        font-size: 1.8em;
+      }
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img id="headerImage" src="brand-image.png" alt="Eek Mobile Mechanical" />
+  <div class="business-name">Eek Mobile Mechanical</div>
+  <h1 id="headerTitle">Book Your Mobile Mechanic Service</h1>
+  <p id="headerSubtitle" style="font-size: 1.1em; color: #666; margin: 10px 0;"></p>
+</header>
+
+<div class="breadcrumb">
+  <a href="/">Home</a> > <span id="breadcrumbText">Book Service</span>
+</div>
+
+<div class="booking-container">
+  <div class="booking-header">
+    <h2 id="bookingTitle">Book Your Service</h2>
+    <p id="bookingDescription">Professional mobile mechanic service across New Zealand</p>
+    
+    <div class="service-stats" id="serviceStats">
+      <div class="stats-grid" id="statsContent">
+        <!-- Dynamic stats will be inserted here -->
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-step active" id="step1-progress">
+      <span>Details</span>
+    </div>
+    <div class="progress-step" id="step2-progress">
+      <span>Urgency</span>
+    </div>
+    <div class="progress-step" id="step3-progress">
+      <span>Confirm</span>
+    </div>
+  </div>
+
+  <div class="booking-steps">
+    <!-- Step 1: Service Details -->
+    <div class="step active" id="step1">
+      <h3 id="step1Title">Step 1: Service Details</h3>
+      
+      <label for="locationInput" style="display: block; margin-bottom: 8px; font-weight: bold;">Where do you need service?</label>
+      <input type="text" class="location-input" id="locationInput" placeholder="Enter your address, suburb, or region" />
+      
+      <label for="detailsInput" style="display: block; margin-bottom: 8px; margin-top: 15px; font-weight: bold;" id="detailsLabel">Tell us more about your situation:</label>
+      <textarea class="details-input" id="detailsInput" placeholder="Describe the issue or what you need help with..."></textarea>
+      
+      <div class="info-box" id="serviceInfoBox">
+        <!-- Dynamic service information will be inserted here -->
+      </div>
+
+      <div style="text-align: center; margin: 20px 0;">
+        <button class="button" onclick="goToStep2()">Next: Select Urgency</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Urgency Selection -->
+    <div class="step" id="step2">
+      <h3>Step 2: How urgent is your situation?</h3>
+      
+      <div class="urgency-options" id="urgencyOptions">
+        <!-- Dynamic urgency options will be inserted here -->
+      </div>
+
+      <div style="margin: 20px 0;">
+        <button class="button secondary" onclick="goToStep1()">Back</button>
+        <button class="button" id="confirmUrgencyBtn" onclick="goToStep3()" disabled>Confirm Selection</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Confirmation -->
+    <div class="step" id="step3">
+      <h3>Step 3: Confirm your booking request</h3>
+      
+      <div class="reservation-summary">
+        <h4 id="summaryTitle">Your Service Request</h4>
+        <div class="summary-item">
+          <span>Service:</span>
+          <strong id="summaryService"></strong>
+        </div>
+        <div class="summary-item">
+          <span>Location:</span>
+          <strong id="summaryLocation"></strong>
+        </div>
+        <div class="summary-item">
+          <span>Urgency:</span>
+          <strong id="summaryUrgency"></strong>
+        </div>
+        <div class="summary-item">
+          <span>Estimated Price:</span>
+          <strong id="summaryPrice"></strong>
+        </div>
+      </div>
+
+      <div class="terms-section">
+        <h4>Terms and Conditions</h4>
+        <div class="terms-checkbox">
+          <input type="checkbox" id="termsAgree" />
+          <div class="terms-text">
+            I agree to the <a href="https://eek.nz/terms" target="_blank">Eek Mobile Mechanical Terms of Service</a> and understand that:
+            <ul style="margin: 10px 0; padding-left: 20px;" id="termsList">
+              <!-- Dynamic terms will be inserted here -->
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin: 20px 0;">
+        <button class="button secondary" onclick="goToStep2()">Back to Urgency</button>
+        <br><br>
+        <a href="tel:0800769000" class="button" id="callToBookBtn" style="font-size: 1.2em; padding: 15px 30px; background: #28a745;">
+          Call 0800 769 000 to Book
+        </a>
+        <br>
+        <p style="margin: 15px 0; color: #666;">Our team will contact you within the timeframe selected above</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Service configuration
+const serviceConfigs = {
+  'breakdown': {
+    title: 'Emergency Breakdown Service',
+    subtitle: 'Engine won\'t start? We\'re on our way!',
+    breadcrumb: 'Emergency Breakdown',
+    bookingTitle: 'Emergency Breakdown Service',
+    bookingDescription: 'Professional mobile mechanic dispatch • Target arrival: 30-60 minutes',
+    step1Title: 'Step 1: Tell us about your breakdown',
+    detailsLabel: 'Describe what happened and any symptoms:',
+    detailsPlaceholder: 'e.g., Engine won\'t start, warning lights, strange noises, etc.',
+    image: 'breakdown-image.png',
+    imageAlt: 'Emergency Breakdown Service',
+    stats: [
+      { number: '30-60', text: 'minute response' },
+      { number: '24/7', text: 'availability' },
+      { number: '100%', text: 'mobile service' },
+      { number: 'No', text: 'towing needed' }
+    ],
+    urgencyOptions: [
+      {
+        id: 'emergency',
+        title: 'Emergency',
+        time: '30-60 minutes',
+        description: 'Stranded, unsafe location, or urgent situation',
+        price: '$289'
+      },
+      {
+        id: 'urgent',
+        title: 'Urgent',
+        time: '2-4 hours',
+        description: 'Need help today, but not stranded',
+        price: '$249'
+      },
+      {
+        id: 'scheduled',
+        title: 'Scheduled',
+        time: 'Next business day',
+        description: 'Can wait until tomorrow',
+        price: '$199'
+      }
+    ],
+    infoContent: `
+      <h4>What We Diagnose:</h4>
+      <ul>
+        <li><strong>Engine won't start</strong> - Battery, starter, alternator issues</li>
+        <li><strong>Warning lights</strong> - Diagnostic scanning and fault detection</li>
+        <li><strong>Strange noises</strong> - Engine, transmission, or suspension problems</li>
+        <li><strong>Overheating</strong> - Cooling system problems</li>
+        <li><strong>Electrical issues</strong> - Lights, charging, ignition problems</li>
+      </ul>
+    `,
+    terms: [
+      'Emergency service includes diagnostic scanning and on-site assessment',
+      'Our mobile mechanic will arrive equipped with professional diagnostic tools',
+      'Payment due upon service completion',
+      'If we can\'t fix it on-site, we\'ll help arrange next steps at no extra charge'
+    ]
+  },
+  'battery': {
+    title: 'Battery Jump Start Service',
+    subtitle: 'Dead battery? We\'ll get you started!',
+    breadcrumb: 'Battery Jump Start',
+    bookingTitle: 'Battery Jump Start Service',
+    bookingDescription: 'Professional jump start service • Includes battery health check',
+    step1Title: 'Step 1: Tell us about your battery situation',
+    detailsLabel: 'Any additional details about the battery problem:',
+    detailsPlaceholder: 'e.g., Age of battery, if lights were left on, how long it\'s been dead, etc.',
+    image: 'battery-image.png',
+    imageAlt: 'Battery Jump Start Service',
+    stats: [
+      { number: '30-60', text: 'minute arrival' },
+      { number: '100%', text: 'success rate' },
+      { number: 'Free', text: 'battery test' },
+      { number: 'All', text: 'makes & models' }
+    ],
+    urgencyOptions: [
+      {
+        id: 'emergency',
+        title: 'Emergency',
+        time: '30-60 minutes',
+        description: 'Stranded and need help right now',
+        price: '$149'
+      },
+      {
+        id: 'urgent',
+        title: 'Urgent',
+        time: '2-4 hours',
+        description: 'Need help today',
+        price: '$129'
+      },
+      {
+        id: 'scheduled',
+        title: 'Scheduled',
+        time: 'Next business day',
+        description: 'Can wait until tomorrow',
+        price: '$99'
+      }
+    ],
+    infoContent: `
+      <h4>Our Battery Service Includes:</h4>
+      <ul>
+        <li><strong>Professional jump start</strong> using commercial-grade equipment</li>
+        <li><strong>Battery voltage test</strong> to check current condition</li>
+        <li><strong>Charging system check</strong> to ensure alternator is working</li>
+        <li><strong>Battery terminal cleaning</strong> if needed</li>
+        <li><strong>Advice on battery replacement</strong> if required</li>
+      </ul>
+    `,
+    terms: [
+      'Service includes professional jump start and battery health assessment',
+      'If battery needs replacement, we can source and install a new one',
+      'Payment due upon service completion',
+      'We guarantee to get your vehicle started or no charge'
+    ]
+  },
+  'fuel': {
+    title: 'Wrong Fuel Removal Service',
+    subtitle: 'Put petrol in diesel? Don\'t panic - we\'ll fix it!',
+    breadcrumb: 'Wrong Fuel Removal',
+    bookingTitle: 'Wrong Fuel Emergency Service',
+    bookingDescription: 'Professional fuel drain service • Don\'t start the engine!',
+    step1Title: 'Step 1: Tell us about the fuel situation',
+    detailsLabel: 'Important details about what happened:',
+    detailsPlaceholder: 'e.g., How much wrong fuel was added, have you started the engine, what type of vehicle, etc.',
+    image: 'fuel-image.png',
+    imageAlt: 'Wrong Fuel Removal Service',
+    stats: [
+      { number: '30-60', text: 'minute response' },
+      { number: 'No', text: 'engine damage' },
+      { number: 'No', text: 'towing needed' },
+      { number: '100%', text: 'insured service' }
+    ],
+    urgencyOptions: [
+      {
+        id: 'emergency',
+        title: 'Emergency',
+        time: '30-60 minutes',
+        description: 'Haven\'t started engine - immediate help needed',
+        price: '$399'
+      },
+      {
+        id: 'urgent',
+        title: 'Started Engine',
+        time: '2-4 hours',
+        description: 'Started engine with wrong fuel - need immediate help',
+        price: '$599'
+      }
+    ],
+    infoContent: `
+      <h4>Critical: DO NOT START THE ENGINE</h4>
+      <ul>
+        <li><strong>If you haven't started it</strong> - we can drain safely with minimal damage</li>
+        <li><strong>If you started it</strong> - we need to flush the entire fuel system</li>
+        <li><strong>Petrol in diesel</strong> causes serious engine damage if driven</li>
+        <li><strong>We come to you</strong> - no need for expensive towing</li>
+        <li><strong>Fully insured</strong> professional fuel removal process</li>
+      </ul>
+    `,
+    terms: [
+      'Emergency fuel removal service - we come to your location',
+      'Price varies based on whether engine was started with wrong fuel',
+      'Complete fuel system drain and replacement with correct fuel',
+      'Service includes testing to ensure no contamination remains',
+      'Fully insured process with professional equipment'
+    ]
+  },
+  'trailer': {
+    title: 'Trailer Repair Service',
+    subtitle: 'Trailer breakdown? We\'ll get you back on the road!',
+    breadcrumb: 'Trailer Repair',
+    bookingTitle: 'Mobile Trailer Repair Service',
+    bookingDescription: 'On-site trailer repairs • All types: boat, box, flatbed, equipment',
+    step1Title: 'Step 1: Tell us about your trailer problem',
+    detailsLabel: 'Describe the trailer and what needs repair:',
+    detailsPlaceholder: 'e.g., Type of trailer, specific problem (wheels, lights, brakes, etc.), size/weight, etc.',
+    image: 'trailer-image.png',
+    imageAlt: 'Trailer Repair Service',
+    stats: [
+      { number: '30-60', text: 'minute arrival' },
+      { number: 'All', text: 'trailer types' },
+      { number: 'WOF', text: 'compliance' },
+      { number: 'On-site', text: 'repairs' }
+    ],
+    urgencyOptions: [
+      {
+        id: 'emergency',
+        title: 'Emergency',
+        time: '30-60 minutes',
+        description: 'Stranded with trailer, blocking traffic, or urgent delivery',
+        price: '$289+'
+      },
+      {
+        id: 'urgent',
+        title: 'Urgent',
+        time: '2-4 hours',
+        description: 'Need repair today',
+        price: '$249+'
+      },
+      {
+        id: 'scheduled',
+        title: 'Scheduled',
+        time: 'Next business day',
+        description: 'Can wait until tomorrow',
+        price: '$199+'
+      }
+    ],
+    infoContent: `
+      <h4>Trailer Services We Provide:</h4>
+      <ul>
+        <li><strong>Wheel & tire issues</strong> - flat repairs, wheel bearing replacement</li>
+        <li><strong>Lighting problems</strong> - wiring faults, LED installations</li>
+        <li><strong>Brake repairs</strong> - electric and hydraulic brake systems</li>
+        <li><strong>Coupling issues</strong> - drawbar and coupling repairs</li>
+        <li><strong>WOF preparation</strong> - ensuring compliance for inspection</li>
+      </ul>
+    `,
+    terms: [
+      'Mobile trailer repair service - we come to your location',
+      'Pricing depends on parts required and complexity of repair',
+      'We service all trailer types: flatbed, box, boat, equipment trailers',
+      'Parts and materials charged separately at cost price',
+      'WOF compliance work available'
+    ]
+  },
+  'inspection': {
+    title: 'Pre Purchase Vehicle Inspection',
+    subtitle: 'Don\'t buy a lemon! Professional inspection service',
+    breadcrumb: 'Pre Purchase Inspection',
+    bookingTitle: 'Pre Purchase Vehicle Inspection',
+    bookingDescription: '45-point certified inspection • $199 fixed rate • Anywhere in NZ',
+    step1Title: 'Step 1: Tell us about the vehicle inspection',
+    detailsLabel: 'Vehicle and seller details:',
+    detailsPlaceholder: 'e.g., Make/model/year, where the vehicle is located, seller type (dealer/private), etc.',
+    image: 'lemon.png',
+    imageAlt: 'Don\'t Buy a Lemon - Pre Purchase Vehicle Inspection',
+    stats: [
+      { number: '20%', text: 'of vehicles rejected' },
+      { number: '45', text: 'point inspection' },
+      { number: '$199', text: 'fixed rate' },
+      { number: '100%', text: 'mobile service' }
+    ],
+    urgencyOptions: [
+      {
+        id: 'urgent',
+        title: 'Urgent',
+        time: 'Today',
+        description: 'Vehicle viewing today, need inspection before purchase',
+        price: '$289'
+      },
+      {
+        id: 'scheduled',
+        title: 'Scheduled',
+        time: 'Next business day',
+        description: 'Have time to wait for standard service',
+        price: '$199'
+      },
+      {
+        id: 'flexible',
+        title: 'Flexible',
+        time: 'Within 2-3 days',
+        description: 'No rush, can wait for available slot',
+        price: '$199'
+      }
+    ],
+    infoContent: `
+      <h4>Why You Need This Inspection:</h4>
+      <ul>
+        <li><strong>20% of vehicles</strong> we inspect are rejected due to serious issues</li>
+        <li><strong>40% of used cars</strong> have unaddressed safety recalls</li>
+        <li><strong>25% have electrical problems</strong> that aren't obvious</li>
+        <li><strong>Save thousands</strong> by avoiding vehicles with hidden defects</li>
+        <li><strong>Professional report</strong> gives you negotiating power</li>
+      </ul>
+    `,
+    terms: [
+      'Comprehensive 45-point mechanical inspection',
+      'Written report provided within 2 hours of inspection',
+      'We inspect at any location - dealer, private seller, anywhere',
+      'Mobile service fee of $90 included in urgent pricing',
+      'Standard rate applies for next business day service'
+    ]
+  }
+};
+
+// Initialize page based on URL parameters
+document.addEventListener('DOMContentLoaded', function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const service = urlParams.get('service') || 'breakdown';
+  
+  loadServiceConfig(service);
+});
+
+function loadServiceConfig(serviceType) {
+  const config = serviceConfigs[serviceType] || serviceConfigs['breakdown'];
+  
+  // Update page metadata
+  document.title = `${config.title} - Eek Mobile Mechanical`;
+  document.getElementById('pageDescription').content = `Book ${config.title.toLowerCase()} with Eek Mobile Mechanical. ${config.bookingDescription}`;
+  
+  // Update header
+  document.getElementById('headerImage').src = config.image;
+  document.getElementById('headerImage').alt = config.imageAlt;
+  document.getElementById('headerTitle').textContent = config.title;
+  document.getElementById('headerSubtitle').textContent = config.subtitle;
+  
+  // Update breadcrumb
+  document.getElementById('breadcrumbText').textContent = config.breadcrumb;
+  
+  // Update booking header
+  document.getElementById('bookingTitle').textContent = config.bookingTitle;
+  document.getElementById('bookingDescription').textContent = config.bookingDescription;
+  
+  // Update stats
+  if (config.stats) {
+    const statsContainer = document.getElementById('statsContent');
+    statsContainer.innerHTML = config.stats.map(stat => `
+      <div class="stat-item">
+        <span class="stat-number">${stat.number}</span>
+        ${stat.text}
+      </div>
+    `).join('');
+    document.getElementById('serviceStats').style.display = 'block';
+  }
+  
+  // Update step 1
+  document.getElementById('step1Title').textContent = config.step1Title;
+  document.getElementById('detailsLabel').textContent = config.detailsLabel;
+  document.getElementById('detailsInput').placeholder = config.detailsPlaceholder;
+  document.getElementById('serviceInfoBox').innerHTML = config.infoContent;
+  
+  // Update urgency options
+  const urgencyContainer = document.getElementById('urgencyOptions');
+  urgencyContainer.innerHTML = config.urgencyOptions.map(option => `
+    <div class="urgency-option" data-urgency="${option.id}" onclick="selectUrgency('${option.id}', '${option.title}', '${option.time}', '${option.price}', this)">
+      <div class="urgency-title">${option.title}</div>
+      <div class="urgency-time">${option.time}</div>
+      <div class="urgency-description">${option.description}</div>
+      <div style="margin-top: 8px; font-weight: bold; color: #ff5500;">${option.price}</div>
+    </div>
+  `).join('');
+  
+  // Update terms
+  const termsList = document.getElementById('termsList');
+  termsList.innerHTML = config.terms.map(term => `<li>${term}</li>`).join('');
+  
+  // Store service type globally
+  window.currentService = serviceType;
+  window.currentConfig = config;
+}
+
+let selectedUrgency = null;
+let selectedUrgencyDetails = {};
+
+function selectUrgency(urgencyId, title, time, price, element) {
+  // Remove previous selections
+  document.querySelectorAll('.urgency-option.selected').forEach(el => el.classList.remove('selected'));
+  
+  // Add selection to clicked option
+  element.classList.add('selected');
+  
+  selectedUrgency = urgencyId;
+  selectedUrgencyDetails = { title, time, price };
+  
+  document.getElementById('confirmUrgencyBtn').disabled = false;
+}
+
+function goToStep1() {
+  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+  document.getElementById('step1').classList.add('active');
+  
+  document.querySelectorAll('.progress-step').forEach(el => {
+    el.classList.remove('active', 'completed');
+  });
+  document.getElementById('step1-progress').classList.add('active');
+}
+
+function goToStep2() {
+  const location = document.getElementById('locationInput').value.trim();
+  const details = document.getElementById('detailsInput').value.trim();
+  
+  if (!location) {
+    alert('Please enter the service location');
+    return;
+  }
+  
+  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+  document.getElementById('step2').classList.add('active');
+  
+  document.getElementById('step1-progress').classList.add('completed');
+  document.getElementById('step1-progress').classList.remove('active');
+  document.getElementById('step2-progress').classList.add('active');
+}
+
+function goToStep3() {
+  if (!selectedUrgency) {
+    alert('Please select an urgency level');
+    return;
+  }
+  
+  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+  document.getElementById('step3').classList.add('active');
+  
+  document.getElementById('step2-progress').classList.add('completed');
+  document.getElementById('step2-progress').classList.remove('active');
+  document.getElementById('step3-progress').classList.add('active');
+  
+  // Update summary
+  document.getElementById('summaryService').textContent = window.currentConfig.title;
+  document.getElementById('summaryLocation').textContent = document.getElementById('locationInput').value;
+  document.getElementById('summaryUrgency').textContent = `${selectedUrgencyDetails.title} (${selectedUrgencyDetails.time})`;
+  document.getElementById('summaryPrice').textContent = selectedUrgencyDetails.price;
+  
+  // Update call button with price
+  const callBtn = document.getElementById('callToBookBtn');
+  callBtn.textContent = `Call 0800 769 000 - Quote Price: ${selectedUrgencyDetails.price}`;
+  callBtn.onclick = function() {
+    trackConversion(`${window.currentService}_booking_call`, 'Contact');
+  };
+}
+
+function trackConversion(eventAction, eventCategory) {
+  if (typeof gtag !== 'undefined') {
+    gtag('event', eventAction, {
+      'event_category': eventCategory,
+      'event_label': 'Phone Call Click',
+      'service_type': window.currentService
+    });
+    gtag('event', 'conversion', {
+      'send_to': 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
+    });
+  }
+}
+</script>
+
+</body>
+</html>
