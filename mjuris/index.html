@@ -428,7 +428,7 @@
       <a href="#authority">Authority</a>
       <a href="#enforcement">Enforcement Scope</a>
       <a href="#contact">Contact Authority</a>
-      <a href="https://www.eek.nz">← Return to Eek.nz</a>
+      <a href="/">← Return to Eek.nz</a>
     </div>
   </div>
 </nav>
@@ -507,17 +507,17 @@
       
       <div class="contact-item">
         <div class="label">Jurisdictional Policy Reference</div>
-        <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EbMAsktroaFEkKbFZUeYxPgBm1SDkvxru4fVlG360u3i9w?e=1CDNtc" target="_blank">Terms of Service</a>
+        <a href="/terms" target="_blank">Terms of Service</a>
       </div>
       
       <div class="contact-item">
         <div class="label">Supplier Agreement Reference</div>
-        <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EVItR9WqSDBHpBgS4t5JFhQBLl0heypp7-CjIRgkV-4ytg?e=bajD4c" target="_blank">Supplier Terms</a>
+        <a href="/supplier-terms" target="_blank">Supplier Terms</a>
       </div>
       
       <div style="background: rgba(255,0,0,0.1); padding: 20px; margin-top: 30px; border-radius: 8px; border: 1px solid rgba(255,0,0,0.3);">
         <p style="color: #ffcccc; font-size: 0.95em; margin: 0;">
-          <strong>⚠️ IMPORTANT:</strong> This email address is exclusively for legal enforcement matters. Customer service inquiries, routine support requests, or operational questions sent to this address will not receive a response. For customer support, call <a href="tel:0800769000" style="color: #ff5500;">0800 769 000</a> or visit <a href="https://www.eek.nz" style="color: #ff5500;">www.eek.nz</a>.
+          <strong>⚠️ IMPORTANT:</strong> This email address is exclusively for legal enforcement matters. Customer service inquiries, routine support requests, or operational questions sent to this address will not receive a response. For customer support, call <a href="tel:0800769000" style="color: #ff5500;">0800 769 000</a> or visit <a href="/" style="color: #ff5500;">www.eek.nz</a>.
         </p>
       </div>
     </div>
@@ -527,7 +527,7 @@
 <footer class="footer">
   <div class="container">
     <p>&copy; 2025 Eek Mechanical. All rights reserved. | 
-    <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EWXiDhEQikFPtsjmoapkdWMBeytvuyMEsmlIchxhPdwyXg?e=YcldRN">Privacy Statement</a></p>
+    <a href="/privacy">Privacy Statement</a></p>
     <p style="margin-top: 10px; font-size: 0.9em; color: #555;">
       MJuris is the registered legal authority of Eek Mechanical. Operating under New Zealand law with international jurisdiction as applicable.
     </p>
@@ -563,7 +563,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Track document access
-document.querySelectorAll('a[href*="sharepoint.com"]').forEach(function(link) {
+document.querySelectorAll('a[href*="/terms"], a[href*="/supplier-terms"], a[href*="/privacy"]').forEach(function(link) {
   link.addEventListener('click', function() {
     if (typeof gtag !== 'undefined') {
       gtag('event', 'legal_document_access', {
