@@ -425,6 +425,100 @@
       transform: translateY(-1px);
     }
     
+    /* Notification styling */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #ff5500, #e04400);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(255, 85, 0, 0.4);
+      z-index: 1001;
+      transform: translateX(400px);
+      opacity: 0;
+      transition: all 0.4s ease;
+      max-width: 320px;
+      border-left: 4px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .notification.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    
+    .notification.error {
+      background: linear-gradient(135deg, #dc3545, #c82333);
+      box-shadow: 0 8px 32px rgba(220, 53, 69, 0.4);
+    }
+    
+    .notification .notification-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .notification .notification-icon {
+      font-size: 1.5em;
+      flex-shrink: 0;
+    }
+    
+    .notification .notification-text {
+      flex: 1;
+      font-size: 0.95em;
+      line-height: 1.4;
+    }
+    
+    .notification .notification-close {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-size: 1.2em;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.2s ease;
+      flex-shrink: 0;
+    }
+    
+    .notification .notification-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Field highlight animation */
+    .field-error {
+      border-color: #dc3545 !important;
+      box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25) !important;
+      animation: shake 0.5s ease-in-out;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    
+    /* Mobile notification adjustments */
+    @media (max-width: 768px) {
+      .notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        transform: translateY(-100px);
+      }
+      
+      .notification.show {
+        transform: translateY(0);
+      }
+    }
+
     /* Floating Action Buttons */
     .floating-nav {
       position: fixed;
@@ -600,16 +694,7 @@
   <input type="text" class="location-input" id="locationInput" placeholder="Enter address, suburb, or region (e.g. Auckland CBD, Christchurch, Wellington)" />
   <p style="color: #666; margin: 10px 0;">We service all of New Zealand. Our mobile mechanics will come to any location - dealership, private seller, or anywhere else. Don't get stuck with a lemon!</p>
   
-  <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin: 15px 0; text-align: left;">
-    <h4 style="margin: 0 0 10px 0; color: #856404;">⚠️ Why You Need This Inspection:</h4>
-    <ul style="margin: 0; padding-left: 20px; color: #856404;">
-      <li><strong>1 in 5 vehicles</strong> we inspect have serious issues (20% rejection rate)</li>
-      <li><strong>Nearly 40% of used cars</strong> have unaddressed safety recalls</li>
-      <li><strong>Electrical problems</strong> are found in 25% of vehicles inspected</li>
-      <li><strong>39% of buyers overpay</strong> without a professional inspection report</li>
-      <li><strong>Hidden defects</strong> can cost thousands in unexpected repairs</li>
-    </ul>
-  </div>
+
 
   <!-- Step 1 NEXT button -->
   <div style="text-align:center; margin:20px 0;">
@@ -651,6 +736,41 @@
       <span class="btn-icon">📞</span>
       Call 0800 769 000
     </a>
+  </div>
+</div>
+
+<!-- Why You Need This Inspection Section -->
+<div class="booking-container" style="margin-top: 30px;">
+  <div style="background: #fff3cd; border: 2px solid #ffeaa7; border-radius: 12px; padding: 30px; text-align: left;">
+    <h3 style="margin: 0 0 20px 0; color: #856404; font-size: 1.6em; text-align: center;">⚠️ Why You Need This Inspection</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+      <div style="background: rgba(255,255,255,0.6); padding: 15px; border-radius: 8px; border-left: 4px solid #856404;">
+        <strong style="color: #856404; font-size: 1.1em;">1 in 5 vehicles</strong><br>
+        <span style="color: #6c5404;">we inspect have serious issues (20% rejection rate)</span>
+      </div>
+      <div style="background: rgba(255,255,255,0.6); padding: 15px; border-radius: 8px; border-left: 4px solid #856404;">
+        <strong style="color: #856404; font-size: 1.1em;">Nearly 40% of used cars</strong><br>
+        <span style="color: #6c5404;">have unaddressed safety recalls</span>
+      </div>
+      <div style="background: rgba(255,255,255,0.6); padding: 15px; border-radius: 8px; border-left: 4px solid #856404;">
+        <strong style="color: #856404; font-size: 1.1em;">Electrical problems</strong><br>
+        <span style="color: #6c5404;">are found in 25% of vehicles inspected</span>
+      </div>
+      <div style="background: rgba(255,255,255,0.6); padding: 15px; border-radius: 8px; border-left: 4px solid #856404;">
+        <strong style="color: #856404; font-size: 1.1em;">39% of buyers overpay</strong><br>
+        <span style="color: #6c5404;">without a professional inspection report</span>
+      </div>
+      <div style="background: rgba(255,255,255,0.6); padding: 15px; border-radius: 8px; border-left: 4px solid #856404;">
+        <strong style="color: #856404; font-size: 1.1em;">Hidden defects</strong><br>
+        <span style="color: #6c5404;">can cost thousands in unexpected repairs</span>
+      </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #ffeaa7;">
+      <p style="color: #856404; font-size: 1.1em; margin: 0; font-weight: 600;">
+        Don't become another statistic - protect your investment with our comprehensive inspection!
+      </p>
+    </div>
   </div>
 </div> <!-- end of step1 -->
 
@@ -760,28 +880,42 @@
 
       <script>
         (function () {
-          var terms = document.getElementById('termsAgree');
-          var btn = document.getElementById('bookOnlineBtn');
-          if (!terms || !btn) return;
+          // Wait for DOM to be ready
+          setTimeout(() => {
+            var terms = document.getElementById('termsAgree');
+            var btn = document.getElementById('bookOnlineBtn');
+            var floatingBtn = document.getElementById('floatingBookBtn');
+            
+            if (!terms || !btn) return;
 
-          function setEnabled(on) {
-            if (on) {
-              btn.setAttribute('href', btn.getAttribute('data-href'));
-              btn.style.opacity = '';
-              btn.style.pointerEvents = '';
-            } else {
-              btn.removeAttribute('href');
-              btn.style.opacity = '0.6';
-              btn.style.pointerEvents = 'none';
+            function setEnabled(on) {
+              if (on) {
+                btn.setAttribute('href', btn.getAttribute('data-href'));
+                btn.style.opacity = '';
+                btn.style.pointerEvents = '';
+                
+                if (floatingBtn) {
+                  floatingBtn.setAttribute('href', floatingBtn.getAttribute('data-href'));
+                  floatingBtn.style.opacity = '';
+                  floatingBtn.style.pointerEvents = '';
+                }
+              } else {
+                btn.removeAttribute('href');
+                btn.style.opacity = '0.6';
+                btn.style.pointerEvents = 'none';
+                
+                if (floatingBtn) {
+                  floatingBtn.removeAttribute('href');
+                  floatingBtn.style.opacity = '0.6';
+                  floatingBtn.style.pointerEvents = 'none';
+                }
+              }
             }
-          }
 
-          // start disabled; enable when terms are ticked
-          setEnabled(false);
-          terms.addEventListener('change', function () { setEnabled(terms.checked); }, false);
-          
-          // Also sync floating buttons
-          syncBookingButtons();
+            // start disabled; enable when terms are ticked
+            setEnabled(false);
+            terms.addEventListener('change', function () { setEnabled(terms.checked); }, false);
+          }, 100);
         })();
       </script>
     </div>
@@ -887,9 +1021,32 @@ function goToStep1() {
 }
 
 function goToStep2() {
-  const location = document.getElementById('locationInput').value.trim();
+  const locationInput = document.getElementById('locationInput');
+  const location = locationInput.value.trim();
+  
   if (!location) {
-    alert('Please enter the vehicle location');
+    // Highlight the field with error styling
+    locationInput.classList.add('field-error');
+    
+    // Show elegant notification
+    showNotification('📍 Please enter the vehicle location', 'Where should our mobile mechanic meet you? Enter an address, suburb, or region.', 'error');
+    
+    // Smooth scroll to location field
+    locationInput.scrollIntoView({ 
+      behavior: 'smooth', 
+      block: 'center' 
+    });
+    
+    // Focus the field after scroll
+    setTimeout(() => {
+      locationInput.focus();
+    }, 500);
+    
+    // Remove error styling after a few seconds
+    setTimeout(() => {
+      locationInput.classList.remove('field-error');
+    }, 3000);
+    
     return;
   }
   
@@ -902,7 +1059,20 @@ function goToStep2() {
 
 function goToStep3() {
   if (!selectedDate || !selectedTime) {
-    alert('Please select a date and time');
+    showNotification('📅 Please select a date and time', 'Choose your preferred appointment slot from the calendar and available times.', 'error');
+    
+    // Scroll to calendar if date not selected, or time slots if date selected but time not
+    const scrollTarget = !selectedDate ? 
+      document.querySelector('.calendar-container') : 
+      document.getElementById('timeSlotContainer');
+    
+    if (scrollTarget) {
+      scrollTarget.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      });
+    }
+    
     return;
   }
   
@@ -928,8 +1098,15 @@ function updateProgress(step) {
 }
 
 function initializeCalendars() {
-  // Calendar initialization logic would go here
-  console.log('Initializing calendars...');
+  const today = new Date();
+  const currentMonth = today.getMonth();
+  const currentYear = today.getFullYear();
+  const nextMonth = currentMonth === 11 ? 0 : currentMonth + 1;
+  const nextYear = currentMonth === 11 ? currentYear + 1 : currentYear;
+  
+  generateCalendar(currentMonth, currentYear, 'currentCalendar');
+  generateCalendar(nextMonth, nextYear, 'nextCalendar');
+  
   updateFloatingButtons(2);
 }
 
@@ -967,10 +1144,191 @@ function syncBookingButtons() {
   terms.addEventListener('change', function () { setEnabled(terms.checked); }, false);
 }
 
+// Notification system
+function showNotification(title, message, type = 'info') {
+  // Remove any existing notifications
+  const existingNotification = document.querySelector('.notification');
+  if (existingNotification) {
+    existingNotification.remove();
+  }
+  
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  
+  const iconMap = {
+    'error': '⚠️',
+    'success': '✅', 
+    'info': 'ℹ️',
+    'warning': '⚠️'
+  };
+  
+  notification.innerHTML = `
+    <div class="notification-content">
+      <div class="notification-icon">${iconMap[type] || '📋'}</div>
+      <div class="notification-text">
+        <strong>${title}</strong><br>
+        ${message}
+      </div>
+      <button class="notification-close" onclick="hideNotification(this)">&times;</button>
+    </div>
+  `;
+  
+  // Add to page
+  document.body.appendChild(notification);
+  
+  // Trigger animation
+  setTimeout(() => {
+    notification.classList.add('show');
+  }, 100);
+  
+  // Auto-hide after 5 seconds
+  setTimeout(() => {
+    hideNotification(notification);
+  }, 5000);
+}
+
+function hideNotification(element) {
+  const notification = element.closest ? element.closest('.notification') : element;
+  if (notification) {
+    notification.classList.remove('show');
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 400);
+  }
+}
+function generateCalendar(month, year, containerId) {
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
+  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const today = new Date();
+  
+  const container = document.getElementById(containerId);
+  const calendar = container.querySelector('.calendar-grid');
+  const header = container.querySelector('h4');
+  
+  header.textContent = `${monthNames[month]} ${year}`;
+  calendar.innerHTML = '';
+  
+  // Add day headers
+  dayNames.forEach(day => {
+    const dayHeader = document.createElement('div');
+    dayHeader.className = 'day-header';
+    dayHeader.textContent = day;
+    calendar.appendChild(dayHeader);
+  });
+  
+  // Add empty cells for days before month starts
+  for (let i = 0; i < firstDay; i++) {
+    const emptyDay = document.createElement('div');
+    emptyDay.className = 'day disabled';
+    calendar.appendChild(emptyDay);
+  }
+  
+  // Add days of the month
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dayElement = document.createElement('div');
+    dayElement.className = 'day';
+    dayElement.textContent = day;
+    
+    const currentDate = new Date(year, month, day);
+    const isPast = currentDate < today.setHours(0,0,0,0);
+    
+    if (isPast) {
+      dayElement.classList.add('past');
+    } else {
+      dayElement.onclick = () => selectDate(year, month, day);
+    }
+    
+    calendar.appendChild(dayElement);
+  }
+}
+
+function selectDate(year, month, day) {
+  // Remove previous selections
+  document.querySelectorAll('.day.selected').forEach(el => el.classList.remove('selected'));
+  
+  // Mark selected day
+  event.target.classList.add('selected');
+  
+  // Store selected date
+  selectedDate = new Date(year, month, day);
+  
+  // Show time slots
+  showTimeSlots();
+  
+  // Update display
+  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById('selectedDateDisplay').textContent = selectedDate.toLocaleDateString('en-NZ', options);
+}
+
+function showTimeSlots() {
+  const container = document.getElementById('timeSlotContainer');
+  const slotsDiv = document.getElementById('timeSlots');
+  
+  container.style.display = 'block';
+  
+  // Sample time slots (you would get these from your backend)
+  const timeSlots = [
+    { time: '8:00 AM', available: true, limited: false },
+    { time: '9:30 AM', available: true, limited: true },
+    { time: '11:00 AM', available: true, limited: false },
+    { time: '1:00 PM', available: true, limited: false },
+    { time: '2:30 PM', available: true, limited: true },
+    { time: '4:00 PM', available: true, limited: false }
+  ];
+  
+  slotsDiv.innerHTML = '';
+  
+  timeSlots.forEach(slot => {
+    const slotElement = document.createElement('div');
+    slotElement.className = 'time-slot';
+    if (slot.limited) slotElement.classList.add('limited');
+    
+    slotElement.innerHTML = `
+      <div>${slot.time}</div>
+      ${slot.limited ? '<div class="availability">Limited spots</div>' : ''}
+    `;
+    
+    slotElement.onclick = () => selectTimeSlot(slot.time, slotElement);
+    slotsDiv.appendChild(slotElement);
+  });
+}
+
+function selectTimeSlot(time, element) {
+  // Remove previous selections
+  document.querySelectorAll('.time-slot.selected').forEach(el => el.classList.remove('selected'));
+  
+  // Mark selected slot
+  element.classList.add('selected');
+  
+  // Store selected time
+  selectedTime = time;
+  
+  // Enable confirm button
+  const confirmBtn = document.getElementById('confirmTimeBtn');
+  const floatingConfirmBtn = document.getElementById('floatingConfirmTimeBtn');
+  
+  confirmBtn.disabled = false;
+  if (floatingConfirmBtn) {
+    floatingConfirmBtn.disabled = false;
+  }
+}
+
 function updateSummary() {
   const location = document.getElementById('locationInput').value;
   document.getElementById('summaryLocation').textContent = location;
-  document.getElementById('summaryDate').textContent = selectedDate || 'Not selected';
+  
+  if (selectedDate) {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('summaryDate').textContent = selectedDate.toLocaleDateString('en-NZ', options);
+  }
+  
   document.getElementById('summaryTime').textContent = selectedTime || 'Not selected';
 }
 
