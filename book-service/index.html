@@ -418,7 +418,7 @@
       <div class="terms-section">
         <h4>Terms and Conditions</h4>
         <div class="terms-checkbox">
-          <input type="checkbox" id="termsAgree" />
+          <input type="checkbox" id="termsAgree" onchange="toggleBookingButton()" />
           <div class="terms-text">
             I agree to the <a href="https://eek.nz/terms" target="_blank">Eek Mobile Mechanical Terms of Service</a> and understand that:
             <ul style="margin: 10px 0; padding-left: 20px;" id="termsList">
@@ -431,11 +431,11 @@
       <div style="text-align: center; margin: 20px 0;">
         <button class="button secondary" onclick="goToStep2()">Back to Urgency</button>
         <br><br>
-        <a href="tel:0800769000" class="button" id="callToBookBtn" style="font-size: 1.2em; padding: 15px 30px; background: #28a745;">
-          Call 0800 769 000 to Book
+        <a href="#" class="button" id="callToBookBtn" style="font-size: 1.2em; padding: 15px 30px; background: #28a745;" onclick="proceedToPayment()">
+          Book Now & Pay Online
         </a>
         <br>
-        <p style="margin: 15px 0; color: #666;">Our team will contact you within the timeframe selected above</p>
+        <p style="margin: 15px 0; color: #666;">You'll be redirected to secure payment, then our team will contact you</p>
       </div>
     </div>
   </div>
@@ -468,7 +468,7 @@ const serviceConfigs = {
         time: '30-60 minutes',
         description: 'Professional jump start with battery health check',
         price: '$149',
-        stripeLink: 'https://www.eek.nz?token=14A00j9cr7wtgT54B7a7I1l'
+        stripeToken: '14A00j9cr7wtgT54B7a7I1l'
       }
     ],
     infoContent: `
@@ -512,7 +512,7 @@ const serviceConfigs = {
         time: '30-60 minutes',
         description: 'Complete diagnostic scan and mechanical assessment',
         price: '$249',
-        stripeLink: 'https://www.eek.nz?token=eVqfZh88n9EB32f9Vra7I1h'
+        stripeToken: 'eVqfZh88n9EB32f9Vra7I1h'
       }
     ],
     infoContent: `
@@ -556,7 +556,7 @@ const serviceConfigs = {
         time: '30-60 minutes',
         description: 'Complete fuel system extraction and cleaning',
         price: '$849',
-        stripeLink: 'https://www.eek.nz?token=9B65kDewLbMJdGT3x3a7I1k'
+        stripeToken: '9B65kDewLbMJdGT3x3a7I1k'
       }
     ],
     infoContent: `
@@ -921,24 +921,69 @@ function goToStep3() {
   document.getElementById('summaryUrgency').textContent = `${selectedUrgencyDetails.title} (${selectedUrgencyDetails.time})`;
   document.getElementById('summaryPrice').textContent = selectedUrgencyDetails.price;
   
-  // Update call button with price
+  // Update booking button text with price
   const callBtn = document.getElementById('callToBookBtn');
-  callBtn.textContent = `Call 0800 769 000 - Quote Price: ${selectedUrgencyDetails.price}`;
-  callBtn.onclick = function() {
-    trackConversion(`${window.currentService}_booking_call`, 'Contact');
-  };
+  callBtn.textContent = `Book Now & Pay ${selectedUrgencyDetails.price}`;
+}
+
+function proceedToPayment() {
+  const termsChecked = document.getElementById('termsAgree').checked;
+  const location = document.getElementById('locationInput').value.trim();
+  const details = document.getElementById('detailsInput').value.trim();
+  
+  if (!termsChecked) {
+    alert('Please accept the terms and conditions to proceed');
+    return;
+  }
+  
+  if (!location || !selectedUrgency) {
+    alert('Please complete all required fields');
+    return;
+  }
+  
+  // Track the booking attempt
+  trackConversion(`${window.currentService}_booking_payment`, 'Purchase');
+  
+  // Find the selected urgency option and get its stripe token
+  const selectedOption = window.currentConfig.urgencyOptions.find(option => option.id === selectedUrgency);
+  
+  if (selectedOption && selectedOption.stripeToken) {
+    // Build proper Stripe payment link
+    const stripeUrl = `https://buy.stripe.com/${selectedOption.stripeToken}`;
+    
+    // Redirect to Stripe checkout
+    window.location.href = stripeUrl;
+  } else {
+    // Fallback for services without Stripe tokens
+    alert(`Booking confirmed!\n\nService: ${window.currentConfig.title}\nLocation: ${location}\nPrice: ${selectedUrgencyDetails.price}\n\nPlease call 0800 769 000 to complete payment.`);
+  }
 }
 
 function trackConversion(eventAction, eventCategory) {
   if (typeof gtag !== 'undefined') {
     gtag('event', eventAction, {
       'event_category': eventCategory,
-      'event_label': 'Phone Call Click',
+      'event_label': 'Stripe Payment Click',
       'service_type': window.currentService
     });
     gtag('event', 'conversion', {
       'send_to': 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
     });
+  }
+}
+
+function toggleBookingButton() {
+  const termsChecked = document.getElementById('termsAgree').checked;
+  const bookingBtn = document.getElementById('callToBookBtn');
+  
+  if (termsChecked) {
+    bookingBtn.style.opacity = '1';
+    bookingBtn.style.pointerEvents = 'auto';
+    bookingBtn.removeAttribute('disabled');
+  } else {
+    bookingBtn.style.opacity = '0.5';
+    bookingBtn.style.pointerEvents = 'none';
+    bookingBtn.setAttribute('disabled', 'true');
   }
 }
 </script>
