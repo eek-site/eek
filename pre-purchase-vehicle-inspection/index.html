@@ -512,22 +512,27 @@
 
   <div class="booking-steps">
     <!-- Step 1: Location -->
-    <div class="step active" id="step1">
-      <h3>Step 1: Where is the vehicle located?</h3>
-      <input type="text" class="location-input" id="locationInput" placeholder="Enter address, suburb, or region (e.g. Auckland CBD, Christchurch, Wellington)" />
-      <p style="color: #666; margin: 10px 0;">We service all of New Zealand. Our mobile mechanics will come to any location - dealership, private seller, or anywhere else. Don't get stuck with a lemon!</p>
-      
-      <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin: 15px 0; text-align: left;">
-        <h4 style="margin: 0 0 10px 0; color: #856404;">⚠️ Why You Need This Inspection:</h4>
-        <ul style="margin: 0; padding-left: 20px; color: #856404;">
-          <li><strong>1 in 5 vehicles</strong> we inspect have serious issues (20% rejection rate)</li>
-          <li><strong>Nearly 40% of used cars</strong> have unaddressed safety recalls</li>
-          <li><strong>Electrical problems</strong> are found in 25% of vehicles inspected</li>
-          <li><strong>39% of buyers overpay</strong> without a professional inspection report</li>
-          <li><strong>Hidden defects</strong> can cost thousands in unexpected repairs</li>
-        </ul>
-      </div>
-    </div> <!-- end of step1 -->
+<div class="step active" id="step1">
+  <h3>Step 1: Where is the vehicle located?</h3>
+  <input type="text" class="location-input" id="locationInput" placeholder="Enter address, suburb, or region (e.g. Auckland CBD, Christchurch, Wellington)" />
+  <p style="color: #666; margin: 10px 0;">We service all of New Zealand. Our mobile mechanics will come to any location - dealership, private seller, or anywhere else. Don't get stuck with a lemon!</p>
+  
+  <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin: 15px 0; text-align: left;">
+    <h4 style="margin: 0 0 10px 0; color: #856404;">⚠️ Why You Need This Inspection:</h4>
+    <ul style="margin: 0; padding-left: 20px; color: #856404;">
+      <li><strong>1 in 5 vehicles</strong> we inspect have serious issues (20% rejection rate)</li>
+      <li><strong>Nearly 40% of used cars</strong> have unaddressed safety recalls</li>
+      <li><strong>Electrical problems</strong> are found in 25% of vehicles inspected</li>
+      <li><strong>39% of buyers overpay</strong> without a professional inspection report</li>
+      <li><strong>Hidden defects</strong> can cost thousands in unexpected repairs</li>
+    </ul>
+  </div>
+
+  <!-- Step 1 NEXT button -->
+  <div style="text-align:center; margin:20px 0;">
+    <button class="button" onclick="goToStep2()">Next: Select Date & Time</button>
+  </div>
+</div> <!-- end of step1 -->
 
     <!-- Step 2: Date & Time Selection -->
     <div class="step" id="step2">
