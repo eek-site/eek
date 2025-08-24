@@ -259,6 +259,52 @@
       border-radius: 8px;
       border: 2px dashed #ff5500;
     }
+    .quick-forms {
+      background: #f0f9ff;
+      padding: 25px;
+      border-radius: 12px;
+      margin: 30px 0;
+      border: 2px solid #0ea5e9;
+    }
+    .quick-forms h3 {
+      color: #0369a1;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .form-link {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #0369a1;
+      font-size: 1em;
+      transition: all 0.3s ease;
+      border: 1px solid #e0f2fe;
+      display: block;
+      text-align: center;
+      font-weight: 500;
+    }
+    .form-link:hover {
+      background: #0ea5e9;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(14,165,233,0.2);
+    }
+    .primary-form {
+      background: linear-gradient(135deg, #ff5500, #ff7700) !important;
+      color: white !important;
+      border: 1px solid #ff5500 !important;
+    }
+    .primary-form:hover {
+      background: linear-gradient(135deg, #e04400, #e65500) !important;
+      color: white !important;
+    }
   </style>
 </head>
 <body>
@@ -277,22 +323,36 @@
     <p>All phone numbers listed below are verified, active, and directly connected to Eek Mobile Mechanical services.</p>
   </div>
 
+  <div class="quick-forms">
+    <h3>🚀 Quick Service Access</h3>
+    <p>Access our most popular services and forms directly:</p>
+    <div class="form-grid">
+      <a href="https://www.eek.nz/rescue-me" class="form-link primary-form">🆘 Emergency Service</a>
+      <a href="https://www.eek.nz/job" class="form-link primary-form">📋 Book Service</a>
+      <a href="https://www.eek.nz/apply" class="form-link">💼 Join Our Team</a>
+      <a href="https://www.eek.nz/availability" class="form-link">📅 Check Availability</a>
+      <a href="https://www.eek.nz/customer-escalation" class="form-link">📞 Customer Support</a>
+      <a href="https://www.eek.nz/review-form" class="form-link">⭐ Leave Review</a>
+      <a href="https://www.eek.nz/insurance-form" class="form-link">🛡️ Insurance Claims</a>
+      <a href="https://www.eek.nz/supplier" class="form-link">🤝 Supplier Portal</a>
+      <a href="https://www.eek.nz/find-me" class="form-link">📍 Location Services</a>
+      <a href="https://www.eek.nz/more-options" class="form-link">📋 More Services</a>
+    </div>
+  </div>
+
   <div class="phone-verification">
     <h2>🔍 Primary Google Ads Phone Numbers</h2>
     <p><strong>For Google Ads Verification:</strong> The following numbers are used in our advertising campaigns and are verified as legitimate business phone numbers:</p>
 
-```
-<div class="phone-number-display">
-  <a href="tel:+64800447153">+64 800 447 153</a>
-</div>
-<div class="phone-number-display">
-  <a href="tel:+64800769000">+64 800 769 000</a>
-</div>
-<div class="phone-number-display">
-  <a href="tel:+64800454731">+64 800 454 731</a>
-</div>
-```
-
+    <div class="phone-number-display">
+      <a href="tel:+64800447153">+64 800 447 153</a>
+    </div>
+    <div class="phone-number-display">
+      <a href="tel:+64800769000">+64 800 769 000</a>
+    </div>
+    <div class="phone-number-display">
+      <a href="tel:+64800454731">+64 800 454 731</a>
+    </div>
   </div>
 
   <div class="phone-numbers">
@@ -313,27 +373,24 @@
       <div class="phone-item"><a href="tel:+64800454739">Website Calls NZ – +64 800 454 739</a></div>
     </div>
 
-```
-<h3>🌍 International Triage Numbers</h3>
-<div class="phone-grid">
-  <div class="phone-item"><a href="tel:+611800271076">Australia Triage – +61 1800 271 076</a></div>
-  <div class="phone-item"><a href="tel:+13237391499">Canada Triage – +1 (323) 739-1499</a></div>
-  <div class="phone-item"><a href="tel:+447537149772">UK Triage – +44 7537 149772</a></div>
-  <div class="phone-item"><a href="tel:+18882023830">US Triage (English) – +1 (888) 202-3830</a></div>
-  <div class="phone-item"><a href="tel:+18884015518">US Triage (Español) – +1 (888) 401-5518</a></div>
-  <div class="phone-item"><a href="tel:+558001111112">Brazil Triage – +55 0800 111 1112</a></div>
-  <div class="phone-item"><a href="tel:+5660006066">Chile Triage – +56 600 006 1066</a></div>
-</div>
+    <h3>🌍 International Triage Numbers</h3>
+    <div class="phone-grid">
+      <div class="phone-item"><a href="tel:+611800271076">Australia Triage – +61 1800 271 076</a></div>
+      <div class="phone-item"><a href="tel:+13237391499">Canada Triage – +1 (323) 739-1499</a></div>
+      <div class="phone-item"><a href="tel:+447537149772">UK Triage – +44 7537 149772</a></div>
+      <div class="phone-item"><a href="tel:+18882023830">US Triage (English) – +1 (888) 202-3830</a></div>
+      <div class="phone-item"><a href="tel:+18884015518">US Triage (Español) – +1 (888) 401-5518</a></div>
+      <div class="phone-item"><a href="tel:+558001111112">Brazil Triage – +55 0800 111 1112</a></div>
+      <div class="phone-item"><a href="tel:+5660006066">Chile Triage – +56 600 006 1066</a></div>
+    </div>
 
-<h3>🛟 Regional Support Numbers</h3>
-<div class="phone-grid">
-  <div class="phone-item"><a href="tel:+611800271076">Australia Support – +61 1800 271 076</a></div>
-  <div class="phone-item"><a href="tel:+13219368711">US/Canada Support – +1 (321) 936-8711</a></div>
-  <div class="phone-item"><a href="tel:+447537149772">UK/South Africa Support – +44 7537 149772</a></div>
-  <div class="phone-item"><a href="tel:+50487300394">Honduras Support – +504 8730-0394</a></div>
-</div>
-```
-
+    <h3>🛟 Regional Support Numbers</h3>
+    <div class="phone-grid">
+      <div class="phone-item"><a href="tel:+611800271076">Australia Support – +61 1800 271 076</a></div>
+      <div class="phone-item"><a href="tel:+13219368711">US/Canada Support – +1 (321) 936-8711</a></div>
+      <div class="phone-item"><a href="tel:+447537149772">UK/South Africa Support – +44 7537 149772</a></div>
+      <div class="phone-item"><a href="tel:+50487300394">Honduras Support – +504 8730-0394</a></div>
+    </div>
   </div>
 
   <div class="verification-notice">
@@ -358,42 +415,39 @@
     <p><strong>Google Ads Line: +64 800 447 153</strong></p>
     <p><strong>Jump Start Service: +64 800 454 731</strong></p>
 
-```
-<p>We provide services across all major cities and towns in New Zealand, including:</p>
-<ul class="cities-list">
-  <li>Auckland</li>
-  <li>Wellington</li>
-  <li>Christchurch</li>
-  <li>Hamilton</li>
-  <li>Tauranga</li>
-  <li>Napier</li>
-  <li>Dunedin</li>
-  <li>Palmerston North</li>
-  <li>Nelson</li>
-  <li>Rotorua</li>
-  <li>New Plymouth</li>
-  <li>Whangārei</li>
-  <li>Invercargill</li>
-  <li>Whanganui</li>
-  <li>Gisborne</li>
-  <li>Timaru</li>
-  <li>Blenheim</li>
-  <li>Taupō</li>
-  <li>Hastings</li>
-  <li>Masterton</li>
-</ul>
-<h3>Services Offered:</h3>
-<ul class="feature-list">
-  <li>Jump Starts</li>
-  <li>Tire Changes</li>
-  <li>Locksmith Services</li>
-  <li>Mechanical Assistance</li>
-  <li>Fuel Delivery and Removal</li>
-  <li>Truck Tire Services</li>
-  <li>Customer Support</li>
-</ul>
-```
-
+    <p>We provide services across all major cities and towns in New Zealand, including:</p>
+    <ul class="cities-list">
+      <li>Auckland</li>
+      <li>Wellington</li>
+      <li>Christchurch</li>
+      <li>Hamilton</li>
+      <li>Tauranga</li>
+      <li>Napier</li>
+      <li>Dunedin</li>
+      <li>Palmerston North</li>
+      <li>Nelson</li>
+      <li>Rotorua</li>
+      <li>New Plymouth</li>
+      <li>Whangārei</li>
+      <li>Invercargill</li>
+      <li>Whanganui</li>
+      <li>Gisborne</li>
+      <li>Timaru</li>
+      <li>Blenheim</li>
+      <li>Taupō</li>
+      <li>Hastings</li>
+      <li>Masterton</li>
+    </ul>
+    <h3>Services Offered:</h3>
+    <ul class="feature-list">
+      <li>Jump Starts</li>
+      <li>Tire Changes</li>
+      <li>Locksmith Services</li>
+      <li>Mechanical Assistance</li>
+      <li>Fuel Delivery and Removal</li>
+      <li>Truck Tire Services</li>
+      <li>Customer Support</li>
+    </ul>
   </div>
 
   <div class="country-section">
@@ -467,32 +521,29 @@
       <li>Emergency Fuel Delivery</li>
     </ul>
 
-```
-<h3>🏡 Regional & Smaller Towns</h3>
-<ul class="cities-list">
-  <li>Milton Keynes</li>
-  <li>Swindon</li>
-  <li>Luton</li>
-  <li>Wolverhampton</li>
-  <li>York</li>
-  <li>Bournemouth</li>
-  <li>Northampton</li>
-  <li>Southend-on-Sea</li>
-  <li>Cambridge</li>
-  <li>Blackpool</li>
-  <li>Ipswich</li>
-  <li>Slough</li>
-  <li>Oxford</li>
-  <li>Stockport</li>
-  <li>Watford</li>
-  <li>Guildford</li>
-  <li>Maidstone</li>
-  <li>Cheltenham</li>
-  <li>Colchester</li>
-  <li>Woking</li>
-</ul>
-```
-
+    <h3>🏡 Regional & Smaller Towns</h3>
+    <ul class="cities-list">
+      <li>Milton Keynes</li>
+      <li>Swindon</li>
+      <li>Luton</li>
+      <li>Wolverhampton</li>
+      <li>York</li>
+      <li>Bournemouth</li>
+      <li>Northampton</li>
+      <li>Southend-on-Sea</li>
+      <li>Cambridge</li>
+      <li>Blackpool</li>
+      <li>Ipswich</li>
+      <li>Slough</li>
+      <li>Oxford</li>
+      <li>Stockport</li>
+      <li>Watford</li>
+      <li>Guildford</li>
+      <li>Maidstone</li>
+      <li>Cheltenham</li>
+      <li>Colchester</li>
+      <li>Woking</li>
+    </ul>
   </div>
 
   <div class="country-section">
@@ -710,7 +761,7 @@
 
 <footer>
   <p>&copy; 2025 Eek Mobile Mechanical. Powered by creativity and passion. | 
-  <a href="https://roadandrescue.sharepoint.com/:b:/s/rar/EePeZL039ZdBisigeixY7lkBMWcEEC4SBcSdN5rDmp_B3w?e=0stgCb" target="_blank">Privacy Statement</a></p>
+  <a href="https://www.eek.nz/privacy">Privacy Statement</a></p>
 
   <div style="margin-top: 20px; padding: 15px; background: #444; border-radius: 5px;">
     <h4 style="color: #ff5500; margin: 0 0 10px 0;">Google Ads Verification Statement</h4>
@@ -742,6 +793,23 @@ document.addEventListener('DOMContentLoaded', function() {
   phoneLinks.forEach(function(link) {
     link.addEventListener('click', function() {
       trackConversion('phone_call', 'Contact');
+    });
+  });
+});
+
+// Track form link clicks
+document.addEventListener('DOMContentLoaded', function() {
+  const formLinks = document.querySelectorAll('.form-link');
+  formLinks.forEach(function(link) {
+    link.addEventListener('click', function() {
+      const service = this.textContent.trim();
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'form_access', {
+          'event_category': 'Service_Access',
+          'event_label': service,
+          'value': 1
+        });
+      }
     });
   });
 });
