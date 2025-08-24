@@ -150,6 +150,8 @@
     header {
       background: #ffffff;
       padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
     }
     .business-name {
       font-size: 2.5em;
@@ -176,9 +178,10 @@
     .hours-section {
       background: #e8f4f8;
       padding: 15px;
-      margin: 20px;
+      margin: 20px auto;
       border-radius: 8px;
       border-left: 4px solid #ff5500;
+      max-width: 800px;
     }
     .hours-section h3 {
       margin: 0 0 10px 0;
@@ -202,13 +205,11 @@
     }
     .services {
       background: #ffffff;
-      margin: 20px;
+      margin: 20px auto;
       padding: 20px;
       border-radius: 12px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+      max-width: 800px;
     }
     .services h2 {
       color: #222;
@@ -225,9 +226,10 @@
       background: linear-gradient(135deg, #ff5500, #ff7733);
       color: white;
       padding: 25px;
-      margin: 20px;
+      margin: 20px auto;
       border-radius: 12px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 800px;
     }
     .keywords-highlight h2 {
       margin-top: 0;
@@ -255,6 +257,24 @@
       font-size: 0.9em;
       opacity: 0.9;
     }
+    
+    /* RevU widget container styling */
+    .services [data-bid] {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 15px;
+      background: #fafafa;
+      margin-top: 15px;
+    }
+    
+    /* Style the RevU widget content */
+    .services [data-bid] * {
+      max-width: 100% !important;
+      box-sizing: border-box;
+    }
+    
     footer {
       font-size: 0.9em;
       color: #999;
@@ -281,13 +301,11 @@
     /* More Options Section Styles */
     .more-options-container {
       background: #ffffff;
-      margin: 40px 20px 20px;
+      margin: 40px auto 20px;
       padding: 30px;
       border-radius: 12px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
       max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
     }
     
     .more-options-header {
@@ -393,6 +411,14 @@
       .business-name {
         font-size: 2em;
       }
+      
+      header {
+        margin: 0 10px;
+      }
+      
+      .hours-section, .keywords-highlight, .services {
+        margin: 20px 10px;
+      }
     }
   </style>
 </head>
@@ -423,15 +449,15 @@
   <h1>Professional Mobile Mechanic Services Across New Zealand</h1>
   <p class="tagline">Mobile Mechanic • Pre Purchase Vehicle Inspections • Wrong Fuel Removal • Target Arrival: 30–60 Minutes</p>
   
-  <div class="hours-section">
-    <h3>🕐 Business Hours</h3>
-    <p class="hours-text">Monday - Friday: 7:00 AM - 5:00 PM</p>
-    <p class="hours-text">Saturday - Sunday: 7:00 AM - 12:00 PM</p>
-    <p style="font-size: 0.9em; color: #666; margin: 8px 0 0 0;">Emergency services may be available outside business hours</p>
-  </div>
-  
   <a class="cta-button" href="tel:0800769000" onclick="trackConversion('header_call', 'Contact')">📞 Call 0800 769 000</a>
 </header>
+
+<div class="hours-section">
+  <h3>🕐 Business Hours</h3>
+  <p class="hours-text">Monday - Friday: 7:00 AM - 5:00 PM</p>
+  <p class="hours-text">Saturday - Sunday: 7:00 AM - 12:00 PM</p>
+  <p style="font-size: 0.9em; color: #666; margin: 8px 0 0 0;">Emergency services may be available outside business hours</p>
+</div>
 
 <div class="keywords-highlight">
   <h2>🔧 Professional Mobile Mechanic Services</h2>
@@ -470,7 +496,6 @@
     <a class="cta-button" href="https://eek.nz/pre-purchase-vehicle-inspection/" target="_blank">📝 Book Online Now</a>
   </div>
 </div>
-
 
 <div class="services">
   <h2>Wrong Fuel Removal – Petrol and Diesel Removal Emergency Service</h2>
@@ -525,7 +550,7 @@
   <a class="cta-button" href="tel:0800769000" onclick="trackConversion('trailer_call','Contact')">📞 Mobile Mechanic Trailer Service</a>
 </div>
 
-  <!-- Customer Reviews Section -->
+<!-- Customer Reviews Section -->
 <div class="services">
   <h2>⭐ What Customers Say</h2>
   <p>Real, verified reviews from clients across New Zealand.</p>
@@ -535,7 +560,6 @@
     <script src="https://widget.reviewability.com/js/widgetAdv.min.js" async></script>
   </div>
 </div>
-
 
 <div class="more-options-container">
   <div class="more-options-header">
