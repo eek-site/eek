@@ -247,6 +247,13 @@
       border-radius: 8px;
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .keyword-item:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
     }
     .keyword-item h4 {
       margin: 0 0 8px 0;
@@ -463,26 +470,78 @@
   <h2>🔧 Professional Mobile Mechanic Services</h2>
   <p>Eek Mobile Mechanical provides comprehensive mobile mechanic services across New Zealand</p>
   <div class="service-keywords">
-    <div class="keyword-item">
-      <h4>Mobile Mechanic</h4>
-      <p>Professional mechanics come to your location anywhere in NZ</p>
-    </div>
-    <div class="keyword-item">
-      <h4>Pre Purchase Vehicle Inspections</h4>
-      <p>45-point certified mechanical inspection before you buy</p>
-    </div>
-    <div class="keyword-item">
-      <h4>Wrong Fuel Removal</h4>
-      <p>Safe petrol and diesel removal from your vehicle</p>
-    </div>
-    <div class="keyword-item">
-      <h4>Petrol and Diesel Removal</h4>
-      <p>Expert fuel drain services to prevent engine damage</p>
-    </div>
+    <a href="#mobile-mechanic-breakdown" style="text-decoration: none; color: inherit;">
+      <div class="keyword-item">
+        <h4>Emergency Breakdown</h4>
+        <p>Professional mechanics come to your location anywhere in NZ</p>
+      </div>
+    </a>
+    <a href="#battery-jump-start" style="text-decoration: none; color: inherit;">
+      <div class="keyword-item">
+        <h4>Battery Jump Start</h4>
+        <p>Dead battery? We'll get you started in 30-60 minutes</p>
+      </div>
+    </a>
+    <a href="#wrong-fuel-removal" style="text-decoration: none; color: inherit;">
+      <div class="keyword-item">
+        <h4>Wrong Fuel Removal</h4>
+        <p>Safe petrol and diesel removal from your vehicle</p>
+      </div>
+    </a>
+    <a href="#pre-purchase-inspections" style="text-decoration: none; color: inherit;">
+      <div class="keyword-item">
+        <h4>Pre Purchase Inspections</h4>
+        <p>45-point certified mechanical inspection before you buy</p>
+      </div>
+    </a>
+    <a href="#trailer-repairs" style="text-decoration: none; color: inherit;">
+      <div class="keyword-item">
+        <h4>Trailer Repairs</h4>
+        <p>Mobile trailer repair service - roadside & on-site</p>
+      </div>
+    </a>
   </div>
 </div>
 
-<div class="services">
+<div class="services" id="mobile-mechanic-breakdown">
+  <h2>Mobile Mechanic Emergency Breakdown Service</h2>
+  <p>Engine won't start? Warning lights? Our professional mobile mechanic team arrives fast and diagnoses the issue on-site anywhere in New Zealand.</p>
+  <ul>
+    <li>🛠️ Professional mobile mechanic fault detection & diagnostic scanning</li>
+    <li>🔍 On-site assessment and minor repairs</li>
+    <li>📍 Mobile mechanic coverage anywhere in NZ—city or rural</li>
+    <li>🧰 Mobile mechanics arrive equipped with full professional toolkits</li>
+    <li>📞 Real-time communication with mobile mechanic support staff</li>
+  </ul>
+  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')">📞 Mobile Mechanic Emergency Service</a>
+</div>
+
+<div class="services" id="battery-jump-start">
+  <h2>Mobile Mechanic Battery Service – Jump Start in 30–60 Minutes</h2>
+  <p>Dead battery? Our professional mobile mechanic team comes to you and performs a safe, professional jump‑start service.</p>
+  <ul>
+    <li>🔋 Mobile mechanic service compatible with all makes/models</li>
+    <li>⚡ Includes battery voltage & health check by qualified mechanics</li>
+    <li>🧰 Safe jump‑start equipment & professional procedures</li>
+    <li>📍 Mobile mechanic service at your location—home or roadside</li>
+  </ul>
+  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Mobile Mechanic Battery Service</a>
+</div>
+
+<div class="services" id="wrong-fuel-removal">
+  <h2>Wrong Fuel Removal – Petrol and Diesel Removal Emergency Service</h2>
+  <p>Filled with petrol instead of diesel? Our mobile mechanic specialists provide immediate wrong fuel removal and petrol and diesel removal services. Don't start the engine!</p>
+  <ul>
+    <li>⛽ Professional petrol and diesel removal on-site</li>
+    <li>🧯 Fully insured wrong fuel removal process</li>
+    <li>🛻 No towing needed, saves time & money</li>
+    <li>📍 Trusted mobile mechanic wrong fuel rescue NZ‑wide</li>
+    <li>🚨 Emergency petrol and diesel removal service</li>
+  </ul>
+  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')">📞 Emergency Wrong Fuel Removal</a>
+</div>
+
+<div class="services" id="pre-purchase-inspections">
   <h2>Pre Purchase Vehicle Inspections – Target Arrival: 30–60 Minutes</h2>
   <p>Need peace of mind before buying a car? Our certified mobile mechanic team performs comprehensive pre purchase vehicle inspections at any location across New Zealand.</p>
   <ul>
@@ -497,45 +556,7 @@
   </div>
 </div>
 
-<div class="services">
-  <h2>Wrong Fuel Removal – Petrol and Diesel Removal Emergency Service</h2>
-  <p>Filled with petrol instead of diesel? Our mobile mechanic specialists provide immediate wrong fuel removal and petrol and diesel removal services. Don't start the engine!</p>
-  <ul>
-    <li>⛽ Professional petrol and diesel removal on-site</li>
-    <li>🧯 Fully insured wrong fuel removal process</li>
-    <li>🛻 No towing needed, saves time & money</li>
-    <li>📍 Trusted mobile mechanic wrong fuel rescue NZ‑wide</li>
-    <li>🚨 Emergency petrol and diesel removal service</li>
-  </ul>
-  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')">📞 Emergency Wrong Fuel Removal</a>
-</div>
-
-<div class="services">
-  <h2>Mobile Mechanic Emergency Breakdown Service</h2>
-  <p>Engine won't start? Warning lights? Our professional mobile mechanic team arrives fast and diagnoses the issue on-site anywhere in New Zealand.</p>
-  <ul>
-    <li>🛠️ Professional mobile mechanic fault detection & diagnostic scanning</li>
-    <li>🔍 On-site assessment and minor repairs</li>
-    <li>📍 Mobile mechanic coverage anywhere in NZ—city or rural</li>
-    <li>🧰 Mobile mechanics arrive equipped with full professional toolkits</li>
-    <li>📞 Real-time communication with mobile mechanic support staff</li>
-  </ul>
-  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')">📞 Mobile Mechanic Emergency Service</a>
-</div>
-
-<div class="services">
-  <h2>Mobile Mechanic Battery Service – Jump Start in 30–60 Minutes</h2>
-  <p>Dead battery? Our professional mobile mechanic team comes to you and performs a safe, professional jump‑start service.</p>
-  <ul>
-    <li>🔋 Mobile mechanic service compatible with all makes/models</li>
-    <li>⚡ Includes battery voltage & health check by qualified mechanics</li>
-    <li>🧰 Safe jump‑start equipment & professional procedures</li>
-    <li>📍 Mobile mechanic service at your location—home or roadside</li>
-  </ul>
-  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Mobile Mechanic Battery Service</a>
-</div>
-
-<div class="services">
+<div class="services" id="trailer-repairs">
   <h2>Mobile Mechanic Trailer Repairs – Roadside & On-Site</h2>
   <p>Flatbed, box, boat, or equipment trailer broken down? Our mobile mechanic specialists dispatch to your location within 30–60 minutes — anywhere in NZ.</p>
   <ul>
