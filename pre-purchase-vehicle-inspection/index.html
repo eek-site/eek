@@ -425,6 +425,89 @@
       transform: translateY(-1px);
     }
     
+    /* Floating Action Buttons */
+    .floating-nav {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      display: flex;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 15px 20px;
+      border-radius: 50px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .floating-nav:hover {
+      background: rgba(255, 255, 255, 1);
+      transform: translateX(-50%) translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .floating-btn {
+      background: #ff5500;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(255, 85, 0, 0.3);
+    }
+    
+    .floating-btn:hover {
+      background: #e04400;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(255, 85, 0, 0.4);
+    }
+    
+    .floating-btn.secondary {
+      background: #6c757d;
+      box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+    }
+    
+    .floating-btn.secondary:hover {
+      background: #545b62;
+      box-shadow: 0 6px 16px rgba(108, 117, 125, 0.4);
+    }
+    
+    .floating-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: 0 4px 12px rgba(204, 204, 204, 0.3);
+    }
+    
+    .floating-btn .btn-icon {
+      font-size: 1.1em;
+    }
+    
+    /* Hide floating nav on very small screens to avoid overlap */
+    @media (max-width: 480px) {
+      .floating-nav {
+        bottom: 15px;
+        padding: 12px 15px;
+        border-radius: 40px;
+      }
+      
+      .floating-btn {
+        padding: 10px 16px;
+        font-size: 0.9em;
+      }
+    }
+
     footer {
       font-size: 0.9em;
       color: #999;
@@ -531,6 +614,43 @@
   <!-- Step 1 NEXT button -->
   <div style="text-align:center; margin:20px 0;">
     <button class="button" onclick="goToStep2()">Next: Select Date & Time</button>
+  </div>
+</div>
+
+<!-- Floating Navigation -->
+<div class="floating-nav" id="floatingNav" style="display: none;">
+  <!-- Step 1 floating button -->
+  <button class="floating-btn" id="floatingStep1Btn" onclick="goToStep2()" style="display: none;">
+    <span class="btn-icon">📅</span>
+    Next: Select Date & Time
+  </button>
+  
+  <!-- Step 2 floating buttons -->
+  <div id="floatingStep2Btns" style="display: none;">
+    <button class="floating-btn secondary" onclick="goToStep1()">
+      <span class="btn-icon">←</span>
+      Back
+    </button>
+    <button class="floating-btn" id="floatingConfirmTimeBtn" onclick="goToStep3()" disabled>
+      <span class="btn-icon">✓</span>
+      Confirm Selection
+    </button>
+  </div>
+  
+  <!-- Step 3 floating buttons -->
+  <div id="floatingStep3Btns" style="display: none;">
+    <button class="floating-btn secondary" onclick="goToStep2()">
+      <span class="btn-icon">←</span>
+      Back
+    </button>
+    <a id="floatingBookBtn" class="floating-btn" data-href="https://buy.stripe.com/9B68wP1JZaIFauH4B7a7I0Z" style="opacity: 0.6; pointer-events: none; text-decoration: none;">
+      <span class="btn-icon">💳</span>
+      Book Now $289
+    </a>
+    <a href="tel:0800769000" class="floating-btn" onclick="trackConversion('prepurchase_booking_call', 'Contact')" style="background: #28a745;">
+      <span class="btn-icon">📞</span>
+      Call 0800 769 000
+    </a>
   </div>
 </div> <!-- end of step1 -->
 
@@ -659,6 +779,9 @@
           // start disabled; enable when terms are ticked
           setEnabled(false);
           terms.addEventListener('change', function () { setEnabled(terms.checked); }, false);
+          
+          // Also sync floating buttons
+          syncBookingButtons();
         })();
       </script>
     </div>
@@ -713,431 +836,175 @@
       </div>
     </div>
   </div>
-</div><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>More Options | Eek Mobile Mechanical</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f5f5f5;
-            min-height: 100vh;
-            color: #333;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .logo {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .brand-tagline {
-            color: #666;
-            font-size: 1.2em;
-            margin-bottom: 30px;
-        }
-        
-        .description {
-            color: #555;
-            font-size: 1.1em;
-            text-align: center;
-            margin-bottom: 40px;
-            line-height: 1.6;
-        }
-        
-        .section {
-            margin-bottom: 40px;
-        }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        
-        .section-header h2 {
-            color: #333;
-            font-size: 1.8em;
-            margin-bottom: 10px;
-        }
-        
-        .section-header p {
-            color: #666;
-            font-size: 1.1em;
-        }
-        
-        .emergency-section {
-            background: linear-gradient(135deg, #ff5500, #e64a00);
-            color: white;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .emergency-section h2 {
-            font-size: 1.8em;
-            margin-bottom: 15px;
-        }
-        
-        .emergency-section p {
-            font-size: 1.1em;
-            margin-bottom: 25px;
-            opacity: 0.9;
-        }
-        
-        .emergency-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .emergency-btn {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            color: white;
-            text-decoration: none;
-            padding: 15px 25px;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: bold;
-            border: 2px solid rgba(255,255,255,0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .emergency-btn:hover {
-            background: rgba(255,255,255,0.25);
-            border-color: rgba(255,255,255,0.5);
-            transform: translateY(-2px);
-        }
-        
-        .contact-sections {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        
-        .contact-section {
-            padding: 25px;
-            border-radius: 12px;
-            text-align: center;
-        }
-        
-        .contact-section.customers {
-            background: linear-gradient(135deg, #007acc, #0056b3);
-            color: white;
-        }
-        
-        .contact-section.suppliers {
-            background: linear-gradient(135deg, #28a745, #1e7e34);
-            color: white;
-        }
-        
-        .contact-section.employment {
-            background: linear-gradient(135deg, #ff6b35, #e55a2b);
-            color: white;
-        }
-        
-        .contact-section h3 {
-            margin-bottom: 15px;
-            font-size: 1.4em;
-        }
-        
-        .contact-section p {
-            margin-bottom: 20px;
-            opacity: 0.9;
-            font-size: 1em;
-        }
-        
-        .contact-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .contact-btn {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            color: white;
-            text-decoration: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 1em;
-            border: 1px solid rgba(255,255,255,0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .contact-btn:hover {
-            background: rgba(255,255,255,0.25);
-            border-color: rgba(255,255,255,0.5);
-            transform: translateY(-1px);
-        }
-        
-        .legal-section {
-            background: linear-gradient(135deg, #6f42c1, #5a32a3);
-            color: white;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-        }
-        
-        .legal-section h3 {
-            font-size: 1.6em;
-            margin-bottom: 15px;
-        }
-        
-        .legal-section p {
-            font-size: 1.1em;
-            margin-bottom: 25px;
-            opacity: 0.9;
-        }
-        
-        .legal-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        
-        .legal-btn {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            color: white;
-            text-decoration: none;
-            padding: 15px 20px;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: bold;
-            border: 2px solid rgba(255,255,255,0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .legal-btn:hover {
-            background: rgba(255,255,255,0.25);
-            border-color: rgba(255,255,255,0.5);
-            transform: translateY(-2px);
-        }
-        
-        .utility-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        
-        .utility-card {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            border-left: 4px solid #ff5500;
-            text-align: center;
-        }
-        
-        .utility-card:hover {
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-            transform: translateY(-3px);
-        }
-        
-        .utility-card h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-        
-        .utility-card p {
-            color: #666;
-            margin-bottom: 20px;
-            font-size: 0.95em;
-            line-height: 1.5;
-        }
-        
-        .utility-card a {
-            background-color: #ff5500;
-            color: white;
-            text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-size: 1em;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-        
-        .utility-card a:hover {
-            background-color: #e64a00;
-            transform: translateY(-1px);
-        }
-        
-        .footer-nav {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid #eee;
-        }
-        
-        .footer-nav a {
-            color: #666;
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 0.95em;
-        }
-        
-        .footer-nav a:hover {
-            color: #ff5500;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-                margin: 10px;
-            }
-            
-            .logo {
-                font-size: 2em;
-            }
-            
-            .contact-sections {
-                grid-template-columns: 1fr;
-            }
-            
-            .utility-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .emergency-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .emergency-btn {
-                width: 100%;
-                max-width: 280px;
-            }
-            
-            .legal-buttons {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">🔧 Eek Mobile Mechanical</div>
-            <div class="brand-tagline">Complete Service Options & Resources</div>
-            <div class="description">
-                Access our full range of services, forms, applications, and support options. 
-                Everything you need for mobile mechanical assistance, supplier partnerships, and customer support.
-            </div>
-        </div>
-        
-        <!-- EMERGENCY HELP SECTION -->
-        <div class="emergency-section">
-            <h2>🚨 Need Immediate Help?</h2>
-            <p>Get emergency mobile mechanical assistance or speak with our dispatch team</p>
-            <div class="emergency-buttons">
-                <a href="/rescue-me" class="emergency-btn">🚨 Emergency Service</a>
-                <a href="tel:0800769000" class="emergency-btn">📞 Call 0800 769 000</a>
-                <a href="/find-me" class="emergency-btn">📍 Find Me Tool</a>
-            </div>
-        </div>
-        
-        <!-- CONTACT BY AUDIENCE SECTION -->
-        <div class="section">
-            <div class="section-header">
-                <h2>📞 Contact by Purpose</h2>
-                <p>Choose the right contact method based on your needs</p>
-            </div>
-            
-            <div class="contact-sections">
-                <div class="contact-section customers">
-                    <h3>👥 For Customers</h3>
-                    <p>Service requests, support, and assistance</p>
-                    <div class="contact-buttons">
-                        <a href="/rescue-me" class="contact-btn">🚨 Emergency Service</a>
-                        <a href="tel:0800769000" class="contact-btn">📞 Call 0800 769 000</a>
-                        <a href="/customer-escalation" class="contact-btn">💬 Customer Support</a>
-                        <a href="/find-me" class="contact-btn">📍 Find Me Tool</a>
-                    </div>
-                </div>
-                
-                <div class="contact-section suppliers">
-                    <h3>🤝 For Suppliers & Partners</h3>
-                    <p>Business partnerships and supplier relations</p>
-                    <div class="contact-buttons">
-                        <a href="/supplier" class="contact-btn">🤝 Official Supplier Portal</a>
-                        <a href="/supplier-relations" class="contact-btn">📝 Supplier Relations</a>
-                    </div>
-                </div>
-                
-                <div class="contact-section employment">
-                    <h3>💼 Employment & Careers</h3>
-                    <p>Join our team as a mobile technician</p>
-                    <div class="contact-buttons">
-                        <a href="/apply" class="contact-btn">📝 Apply to Work</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- LEGAL & COMPLIANCE SECTION -->
-        <div class="section">
-            <div class="legal-section">
-                <h3>🛡️ Legal & Compliance Center</h3>
-                <p>Terms, policies, privacy matters, and legal authority access</p>
-                <div class="legal-buttons">
-                    <a href="/terms" class="legal-btn">📋 End User Terms</a>
-                    <a href="/supplier-terms" class="legal-btn">📋 Supplier Terms</a>
-                    <a href="/privacy" class="legal-btn">🔒 Privacy Policy</a>
-                    <a href="/privacy-report" class="legal-btn">🚨 Privacy Report</a>
-                    <a href="/mjuris" class="legal-btn">⚖️ Legal Authority</a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- UTILITY TOOLS SECTION -->
-        <div class="section">
-            <div class="section-header">
-                <h2>🔧 Utility Tools</h2>
-                <p>Helpful tools and resources for customers and technicians</p>
-            </div>
-            
-            <div class="utility-grid">
-                <div class="utility-card">
-                    <h3>🗺️ Navigation Help</h3>
-                    <p>Find your current location or get directions for our mobile technicians.</p>
-                    <a href="/map">Open Maps</a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer-nav">
-            <a href="/">🏠 Homepage</a>
-            <a href="/privacy">Privacy Policy</a>
-        </div>
-    </div>
+</div>
+
+<script>
+// Booking functionality would go here
+// This is a placeholder for the interactive booking system
+
+let selectedDate = null;
+let selectedTime = null;
+let bookingTimer = null;
+
+function showFloatingNav() {
+  document.getElementById('floatingNav').style.display = 'flex';
+}
+
+function hideFloatingNav() {
+  document.getElementById('floatingNav').style.display = 'none';
+}
+
+function updateFloatingButtons(step) {
+  // Hide all floating button groups
+  document.getElementById('floatingStep1Btn').style.display = 'none';
+  document.getElementById('floatingStep2Btns').style.display = 'none';
+  document.getElementById('floatingStep3Btns').style.display = 'none';
+  
+  // Show appropriate floating buttons for current step
+  if (step === 1) {
+    document.getElementById('floatingStep1Btn').style.display = 'flex';
+    showFloatingNav();
+  } else if (step === 2) {
+    document.getElementById('floatingStep2Btns').style.display = 'flex';
+    showFloatingNav();
+    // Sync the disabled state with the main button
+    const mainBtn = document.getElementById('confirmTimeBtn');
+    const floatingBtn = document.getElementById('floatingConfirmTimeBtn');
+    floatingBtn.disabled = mainBtn.disabled;
+  } else if (step === 3) {
+    document.getElementById('floatingStep3Btns').style.display = 'flex';
+    showFloatingNav();
+    // Sync terms checkbox state with floating book button
+    syncBookingButtons();
+  }
+}
+
+function goToStep1() {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step1').classList.add('active');
+  updateProgress(1);
+  updateFloatingButtons(1);
+}
+
+function goToStep2() {
+  const location = document.getElementById('locationInput').value.trim();
+  if (!location) {
+    alert('Please enter the vehicle location');
+    return;
+  }
+  
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step2').classList.add('active');
+  updateProgress(2);
+  updateFloatingButtons(2);
+  initializeCalendars();
+}
+
+function goToStep3() {
+  if (!selectedDate || !selectedTime) {
+    alert('Please select a date and time');
+    return;
+  }
+  
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step3').classList.add('active');
+  updateProgress(3);
+  updateFloatingButtons(3);
+  updateSummary();
+  startReservationTimer();
+}
+
+function updateProgress(step) {
+  document.querySelectorAll('.progress-step').forEach(s => s.classList.remove('active', 'completed'));
+  
+  for (let i = 1; i <= step; i++) {
+    const stepElement = document.getElementById(`step${i}-progress`);
+    if (i < step) {
+      stepElement.classList.add('completed');
+    } else if (i === step) {
+      stepElement.classList.add('active');
+    }
+  }
+}
+
+function initializeCalendars() {
+  // Calendar initialization logic would go here
+  console.log('Initializing calendars...');
+  updateFloatingButtons(2);
+}
+
+function syncBookingButtons() {
+  // Sync the terms checkbox state between main and floating book buttons
+  const terms = document.getElementById('termsAgree');
+  const mainBtn = document.getElementById('bookOnlineBtn');
+  const floatingBtn = document.getElementById('floatingBookBtn');
+  
+  if (!terms || !mainBtn || !floatingBtn) return;
+  
+  function setEnabled(on) {
+    // Update main button
+    if (on) {
+      mainBtn.setAttribute('href', mainBtn.getAttribute('data-href'));
+      mainBtn.style.opacity = '';
+      mainBtn.style.pointerEvents = '';
+      
+      floatingBtn.setAttribute('href', floatingBtn.getAttribute('data-href'));
+      floatingBtn.style.opacity = '';
+      floatingBtn.style.pointerEvents = '';
+    } else {
+      mainBtn.removeAttribute('href');
+      mainBtn.style.opacity = '0.6';
+      mainBtn.style.pointerEvents = 'none';
+      
+      floatingBtn.removeAttribute('href');
+      floatingBtn.style.opacity = '0.6';
+      floatingBtn.style.pointerEvents = 'none';
+    }
+  }
+  
+  // Start disabled; enable when terms are ticked
+  setEnabled(false);
+  terms.addEventListener('change', function () { setEnabled(terms.checked); }, false);
+}
+
+function updateSummary() {
+  const location = document.getElementById('locationInput').value;
+  document.getElementById('summaryLocation').textContent = location;
+  document.getElementById('summaryDate').textContent = selectedDate || 'Not selected';
+  document.getElementById('summaryTime').textContent = selectedTime || 'Not selected';
+}
+
+function startReservationTimer() {
+  // 15 minute timer
+  const endTime = new Date().getTime() + (15 * 60 * 1000);
+  
+  bookingTimer = setInterval(() => {
+    const now = new Date().getTime();
+    const distance = endTime - now;
+    
+    if (distance < 0) {
+      clearInterval(bookingTimer);
+      document.getElementById('reservationTimer').innerHTML = 'EXPIRED';
+      return;
+    }
+    
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+    document.getElementById('reservationTimer').innerHTML = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }, 1000);
+}
+
+function trackConversion(event, category) {
+  // Analytics tracking would go here
+  console.log(`Tracking: ${event} in ${category}`);
+}
+
+// Initialize floating buttons on page load
+document.addEventListener('DOMContentLoaded', function() {
+  updateFloatingButtons(1);
+});
+</script>
+
 </body>
 </html>
