@@ -5,30 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title id="pageTitle">Book Service - Eek Mobile Mechanical</title>
   <meta name="description" id="pageDescription" content="Book your mobile mechanic service with Eek Mobile Mechanical. Professional service across New Zealand." />
-  <meta name="keywords" content="mobile mechanic, book service, emergency mechanic, battery jump start, wrong fuel removal, trailer repair, mobile mechanic NZ" />
+  <meta name="keywords" content="mobile mechanic, book service, emergency mechanic, battery jump start, wrong fuel removal, prepurchase inspection, mobile mechanic NZ" />
 
-  <!-- Fixed Content Security Policy -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.google.com https://www.redditstatic.com https://www.googletagmanager.com https://googleads.g.doubleclick.net; frame-src https://www.googletagmanager.com;">
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.google.com https://www.redditstatic.com https://www.googletagmanager.com https://googleads.g.doubleclick.net;">
 
-  <!-- Google Analytics - Fixed to work properly -->
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
   <script>
-    // Initialize dataLayer before GTM loads
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    
-    // Only load GTM if we're on a proper domain (not local file)
-    if (window.location.protocol !== 'file:' && window.location.hostname !== '') {
-      var script = document.createElement('script');
-      script.async = true;
-      script.src = 'https://www.googletagmanager.com/gtag/js?id=AW-17084465163';
-      document.head.appendChild(script);
-      
-      script.onload = function() {
-        gtag('js', new Date());
-        gtag('config', 'AW-17084465163');
-        gtag('config', 'G-DQNKF1YLWR');
-      };
-    }
+    gtag('js', new Date());
+    gtag('config', 'AW-17084465163');
+    gtag('config', 'G-DQNKF1YLWR');
   </script>
 
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -619,7 +608,7 @@
       <div style="text-align: center; margin: 20px 0;">
         <button class="button secondary" onclick="goToStep2()">Back to Selection</button>
         <br><br>
-        <a href="#" class="button" id="callToBookBtn" style="font-size: 1.2em; padding: 15px 30px; background: #28a745;" onclick="proceedToPayment(); return false;">
+        <a href="#" class="button" id="callToBookBtn" style="font-size: 1.2em; padding: 15px 30px; background: #28a745;" onclick="proceedToPayment()">
           Book Now & Pay Online
         </a>
         <br>
@@ -630,7 +619,7 @@
 </div>
 
 <script>
-// Service configuration with correct Stripe URLs based on updated pricing table
+// Service configuration - only the 4 services you want
 const serviceConfigs = {
   'jumpstart': {
     title: 'Battery Jump Start Service',
@@ -675,60 +664,6 @@ const serviceConfigs = {
       'Fixed price of $149 - no surprises',
       'Payment due upon service completion',
       'We guarantee to get your vehicle started'
-    ]
-  },
-  'inspection': {
-    title: 'Pre Purchase Vehicle Inspection',
-    subtitle: 'Comprehensive mechanical inspection before you buy',
-    breadcrumb: 'Pre Purchase Inspection',
-    bookingTitle: 'Pre Purchase Vehicle Inspection',
-    bookingDescription: 'Professional 45-point certified inspection • $289 fixed rate • Mobile service anywhere in NZ',
-    step1Title: 'Step 1: Where is the vehicle located?',
-    step1Label: 'Location',
-    step2Label: 'Date & Time',
-    step2Title: 'Step 2: Select your preferred date and time',
-    detailsLabel: 'Vehicle and inspection details:',
-    detailsPlaceholder: 'e.g., Make/model/year, where vehicle is located, dealer/private sale, any specific concerns, etc.',
-    locationPlaceholder: 'Enter address, suburb, or region (e.g. Auckland CBD, Christchurch, Wellington)',
-    image: 'sweet-ride.png',
-    imageAlt: 'Pre Purchase Vehicle Inspection',
-    useCalendar: true,
-    showReservationTimer: true,
-    stats: [
-      { number: '$289', text: 'fixed rate' },
-      { number: '45-point', text: 'inspection' },
-      { number: '30-60', text: 'minute arrival' },
-      { number: 'Certified', text: 'report' }
-    ],
-    urgencyOptions: [
-      {
-        id: 'standard',
-        title: 'Vehicle Inspection',
-        time: 'Scheduled appointment',
-        description: 'Comprehensive pre-purchase vehicle inspection',
-        price: '$289',
-        stripeUrl: 'https://buy.stripe.com/9B68wP1JZaIFauH4B7a7I0Z'
-      }
-    ],
-    infoContent: `
-      <h4>Our Pre-Purchase Inspection Includes:</h4>
-      <ul>
-        <li><strong>Comprehensive certified mechanical inspection</strong></li>
-        <li><strong>45-point inspection checklist</strong></li>
-        <li><strong>Written inspection report</strong> with findings</li>
-        <li><strong>Photos of any issues</strong> discovered during inspection</li>
-        <li><strong>Professional recommendation</strong> on whether to purchase</li>
-        <li><strong>Fixed flat rate of $289</strong> - no surprises</li>
-      </ul>
-    `,
-    warningContent: '',
-    terms: [
-      'Comprehensive certified mechanical inspection',
-      'Fixed price of $289 - no hidden fees',
-      'Inspection at seller or dealership location',
-      'Written report provided with findings',
-      'Nationwide mobile mechanic dispatch in 30-60 minutes',
-      'Cancellations must be made at least 24 hours in advance'
     ]
   },
   'mechanic': {
@@ -821,180 +756,58 @@ const serviceConfigs = {
       'Fully insured professional service'
     ]
   },
-  'trailer': {
-    title: 'Trailer Inspection & Repair',
-    subtitle: 'Trailer problems? We\'ll inspect and fix it!',
-    breadcrumb: 'Trailer Service',
-    bookingTitle: 'Trailer Inspection & Minor Repair',
-    bookingDescription: 'Professional trailer inspection • Minor repairs included',
-    step1Title: 'Step 1: Tell us about your trailer',
-    detailsLabel: 'Describe your trailer and any issues:',
-    detailsPlaceholder: 'e.g., Trailer type, size, specific problems with lights/wheels/brakes, etc.',
-    image: 'trailer-image.png',
-    imageAlt: 'Trailer Inspection & Repair Service',
-    useCalendar: false,
+  'inspection': {
+    title: 'Pre Purchase Vehicle Inspection',
+    subtitle: 'Comprehensive mechanical inspection before you buy',
+    breadcrumb: 'Pre Purchase Inspection',
+    bookingTitle: 'Pre Purchase Vehicle Inspection',
+    bookingDescription: 'Professional 45-point certified inspection • $289 fixed rate • Mobile service anywhere in NZ',
+    step1Title: 'Step 1: Where is the vehicle located?',
+    step1Label: 'Location',
+    step2Label: 'Date & Time',
+    step2Title: 'Step 2: Select your preferred date and time',
+    detailsLabel: 'Vehicle and inspection details:',
+    detailsPlaceholder: 'e.g., Make/model/year, where vehicle is located, dealer/private sale, any specific concerns, etc.',
+    locationPlaceholder: 'Enter address, suburb, or region (e.g. Auckland CBD, Christchurch, Wellington)',
+    image: 'sweet-ride.png',
+    imageAlt: 'Pre Purchase Vehicle Inspection',
+    useCalendar: true,
+    showReservationTimer: true,
     stats: [
-      { number: '$289', text: 'fixed price' },
-      { number: 'Full', text: 'inspection' },
-      { number: 'Minor', text: 'repairs included' },
-      { number: 'All', text: 'trailer types' }
-    ],
-    urgencyOptions: [
-      {
-        id: 'standard',
-        title: 'Trailer Service',
-        time: 'Within 24 hours',
-        description: 'Complete inspection with minor repairs included',
-        price: '$289'
-      }
-    ],
-    infoContent: `
-      <h4>Our Trailer Service Includes:</h4>
-      <ul>
-        <li><strong>Complete safety inspection</strong> of all trailer systems</li>
-        <li><strong>Minor repairs included</strong> in the service price</li>
-        <li><strong>Lights and wiring check</strong> - we\'ll fix basic faults</li>
-        <li><strong>Wheel and tire inspection</strong> with minor adjustments</li>
-        <li><strong>WOF preparation</strong> to ensure compliance</li>
-      </ul>
-    `,
-    terms: [
-      'Complete trailer inspection with minor repairs included',
-      'Fixed price of $289 - covers inspection and basic repairs',
-      'Major repairs or parts charged separately',
-      'Service available for all trailer types'
-    ]
-  },
-  'tyre': {
-    title: 'Mobile Tyre Change Service',
-    subtitle: 'Flat tyre? We\'ll change it for you!',
-    breadcrumb: 'Tyre Change',
-    bookingTitle: 'Mobile Tyre Change Service',
-    bookingDescription: 'Professional tyre change • We come to you',
-    step1Title: 'Step 1: Tell us about your tyre situation',
-    detailsLabel: 'Describe the tyre problem:',
-    detailsPlaceholder: 'e.g., Flat tyre, puncture, do you have a spare tyre, location, etc.',
-    image: 'tyre-image.png',
-    imageAlt: 'Mobile Tyre Change Service',
-    useCalendar: false,
-    stats: [
-      { number: '$169', text: 'fixed price' },
+      { number: '$289', text: 'fixed rate' },
+      { number: '45-point', text: 'inspection' },
       { number: '30-60', text: 'minute arrival' },
-      { number: 'Any', text: 'location' },
-      { number: 'Safe', text: 'installation' }
+      { number: 'Certified', text: 'report' }
     ],
     urgencyOptions: [
       {
         id: 'standard',
-        title: 'Tyre Change',
-        time: '30-60 minutes',
-        description: 'Professional tyre change service at your location',
-        price: '$169'
+        title: 'Vehicle Inspection',
+        time: 'Scheduled appointment',
+        description: 'Comprehensive pre-purchase vehicle inspection',
+        price: '$289',
+        stripeUrl: 'https://buy.stripe.com/9B68wP1JZaIFauH4B7a7I0Z'
       }
     ],
     infoContent: `
-      <h4>Our Tyre Change Service Includes:</h4>
+      <h4>Our Pre-Purchase Inspection Includes:</h4>
       <ul>
-        <li><strong>Professional tyre change</strong> using proper equipment</li>
-        <li><strong>Wheel torque check</strong> to manufacturer specifications</li>
-        <li><strong>Tyre pressure adjustment</strong> to correct levels</li>
-        <li><strong>Visual inspection</strong> of remaining tyres</li>
-        <li><strong>Safe disposal</strong> of damaged tyre if required</li>
+        <li><strong>Comprehensive certified mechanical inspection</strong></li>
+        <li><strong>45-point inspection checklist</strong></li>
+        <li><strong>Written inspection report</strong> with findings</li>
+        <li><strong>Photos of any issues</strong> discovered during inspection</li>
+        <li><strong>Professional recommendation</strong> on whether to purchase</li>
+        <li><strong>Fixed flat rate of $289</strong> - no surprises</li>
       </ul>
     `,
+    warningContent: '',
     terms: [
-      'Professional tyre change service at your location',
-      'Fixed price of $169 - you provide the replacement tyre',
-      'Service includes proper torque and pressure adjustment',
-      'Payment due upon completion'
-    ]
-  },
-  'locksmith': {
-    title: 'Vehicle Lockout Service',
-    subtitle: 'Locked out of your car? We\'ll get you back in!',
-    breadcrumb: 'Vehicle Unlock',
-    bookingTitle: 'Emergency Vehicle Lockout Service',
-    bookingDescription: 'Professional vehicle unlock • No damage guarantee',
-    step1Title: 'Step 1: Tell us about your lockout situation',
-    detailsLabel: 'Describe your vehicle and situation:',
-    detailsPlaceholder: 'e.g., Vehicle make/model, keys inside car, electronic locks, etc.',
-    image: 'locksmith-image.png',
-    imageAlt: 'Vehicle Lockout Service',
-    useCalendar: false,
-    stats: [
-      { number: '$189', text: 'fixed price' },
-      { number: '30-60', text: 'minute arrival' },
-      { number: 'No', text: 'damage guarantee' },
-      { number: 'All', text: 'vehicle types' }
-    ],
-    urgencyOptions: [
-      {
-        id: 'standard',
-        title: 'Vehicle Unlock',
-        time: '30-60 minutes',
-        description: 'Professional vehicle unlock service',
-        price: '$189'
-      }
-    ],
-    infoContent: `
-      <h4>Our Vehicle Unlock Service Includes:</h4>
-      <ul>
-        <li><strong>Professional unlock tools</strong> - no damage to your vehicle</li>
-        <li><strong>All vehicle types</strong> - cars, vans, trucks, SUVs</li>
-        <li><strong>Electronic and manual locks</strong> - we handle both types</li>
-        <li><strong>No damage guarantee</strong> - your vehicle stays pristine</li>
-        <li><strong>Fast response</strong> - we understand you\'re stranded</li>
-      </ul>
-    `,
-    terms: [
-      'Professional vehicle unlock service with no damage guarantee',
-      'Fixed price of $189 regardless of vehicle type',
-      'Service works on all makes and models',
-      'Payment due upon successful unlock'
-    ]
-  },
-  'fuel-delivery': {
-    title: 'Emergency Fuel Delivery',
-    subtitle: 'Run out of fuel? We\'ll bring it to you!',
-    breadcrumb: 'Fuel Delivery',
-    bookingTitle: 'Emergency Fuel Delivery Service',
-    bookingDescription: 'Professional fuel delivery • 20L fresh fuel delivered',
-    step1Title: 'Step 1: Tell us about your fuel situation',
-    detailsLabel: 'Vehicle and fuel details:',
-    detailsPlaceholder: 'e.g., Vehicle type, fuel type needed (petrol/diesel), exact location, etc.',
-    image: 'fuel-delivery-image.png',
-    imageAlt: 'Emergency Fuel Delivery Service',
-    useCalendar: false,
-    stats: [
-      { number: '$249', text: 'fixed price' },
-      { number: '20L', text: 'fresh fuel' },
-      { number: '30-60', text: 'minute delivery' },
-      { number: 'Petrol', text: '& diesel' }
-    ],
-    urgencyOptions: [
-      {
-        id: 'standard',
-        title: 'Fuel Delivery',
-        time: '30-60 minutes',
-        description: '20L fuel delivery to get you back on the road',
-        price: '$249'
-      }
-    ],
-    infoContent: `
-      <h4>Our Fuel Delivery Service Includes:</h4>
-      <ul>
-        <li><strong>20 litres of fresh fuel</strong> - petrol or diesel</li>
-        <li><strong>Safe fuel transfer</strong> directly to your vehicle</li>
-        <li><strong>Professional equipment</strong> for clean, safe delivery</li>
-        <li><strong>Immediate service</strong> - enough fuel to reach a station</li>
-        <li><strong>All locations</strong> - roadside, home, work, anywhere</li>
-      </ul>
-    `,
-    terms: [
-      'Emergency fuel delivery service - 20L of fresh fuel included',
-      'Fixed price of $249 includes fuel and delivery',
-      'Available for both petrol and diesel vehicles',
-      'Payment due upon fuel delivery'
+      'Comprehensive certified mechanical inspection',
+      'Fixed price of $289 - no hidden fees',
+      'Inspection at seller or dealership location',
+      'Written report provided with findings',
+      'Nationwide mobile mechanic dispatch in 30-60 minutes',
+      'Cancellations must be made at least 24 hours in advance'
     ]
   }
 };
@@ -1485,27 +1298,18 @@ function updateSummary() {
   callBtn.textContent = `Book Now & Pay ${price}`;
 }
 
-// Add the missing toggleBookingButton function
 function toggleBookingButton() {
-  const termsChecked = document.getElementById('termsAgree').checked;
-  const bookingBtn = document.getElementById('callToBookBtn');
-  
-  if (termsChecked) {
-    bookingBtn.style.opacity = '1';
-    bookingBtn.style.pointerEvents = 'auto';
-  } else {
-    bookingBtn.style.opacity = '0.5';
-    bookingBtn.style.pointerEvents = 'none';
-  }
+  // This function is called when terms checkbox changes
+  // You can add logic here if needed
 }
 
-// Add the missing trackConversion function
-function trackConversion(action, category) {
-  // Safe tracking - only if gtag is available
+function trackConversion(event, type) {
+  // Analytics tracking function
   if (typeof gtag !== 'undefined') {
-    gtag('event', action, {
-      'event_category': category,
-      'event_label': window.currentService || 'unknown'
+    gtag('event', 'conversion', {
+      'send_to': 'AW-17084465163/' + event,
+      'value': 1.0,
+      'currency': 'NZD'
     });
   }
 }
@@ -1559,3 +1363,7 @@ function proceedToPayment() {
     alert(`Booking confirmed!\n\nService: ${window.currentConfig.title}\nLocation: ${location}\nPrice: ${price}\n\nPlease call 0800 769 000 to complete payment.`);
   }
 }
+</script>
+
+</body>
+</html>
