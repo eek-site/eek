@@ -915,6 +915,45 @@
             // start disabled; enable when terms are ticked
             setEnabled(false);
             terms.addEventListener('change', function () { setEnabled(terms.checked); }, false);
+            
+            // Add click validation for the booking buttons
+            function validateBooking(event) {
+              if (!terms.checked) {
+                event.preventDefault();
+                
+                // Highlight terms section
+                const termsSection = document.querySelector('.terms-section');
+                termsSection.classList.add('field-error');
+                
+                showNotification('Please accept the terms and conditions', 'You must agree to our Terms of Service before completing your booking.', 'error');
+                
+                // Scroll to terms section
+                termsSection.scrollIntoView({ 
+                  behavior: 'smooth', 
+                  block: 'center' 
+                });
+                
+                // Focus the checkbox
+                setTimeout(() => {
+                  terms.focus();
+                }, 500);
+                
+                // Remove error styling after a few seconds
+                setTimeout(() => {
+                  termsSection.classList.remove('field-error');
+                }, 3000);
+                
+                return false;
+              }
+              return true;
+            }
+            
+            // Add validation to both buttons
+            btn.addEventListener('click', validateBooking, false);
+            if (floatingBtn) {
+              floatingBtn.addEventListener('click', validateBooking, false);
+            }
+            
           }, 100);
         })();
       </script>
@@ -1076,34 +1115,11 @@ function goToStep1() {
 }
 
 function goToStep2() {
-  const locationInput = document.getElementById('locationInput');
-  const location = locationInput.value.trim();
-  
-  if (!location) {
-    // Highlight the field with error styling
-    locationInput.classList.add('field-error');
-    
-    // Show elegant notification
-    showNotification('📍 Please enter the vehicle location', 'Where should our mobile mechanic meet you? Enter an address, suburb, or region.', 'error');
-    
-    // Smooth scroll to location field
-    locationInput.scrollIntoView({ 
-      behavior: 'smooth', 
-      block: 'center' 
-    });
-    
-    // Focus the field after scroll
-    setTimeout(() => {
-      locationInput.focus();
-    }, 500);
-    
-    // Remove error styling after a few seconds
-    setTimeout(() => {
-      locationInput.classList.remove('field-error');
-    }, 3000);
-    
+  if (!validateLocationInput()) {
     return;
   }
+  
+  selectedLocation = document.getElementById('locationInput').value.trim();
   
   document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
   document.getElementById('step2').classList.add('active');
@@ -1113,21 +1129,11 @@ function goToStep2() {
 }
 
 function goToStep3() {
-  if (!selectedDate || !selectedTime) {
-    showNotification('📅 Please select a date and time', 'Choose your preferred appointment slot from the calendar and available times.', 'error');
-    
-    // Scroll to calendar if date not selected, or time slots if date selected but time not
-    const scrollTarget = !selectedDate ? 
-      document.querySelector('.calendar-container') : 
-      document.getElementById('timeSlotContainer');
-    
-    if (scrollTarget) {
-      scrollTarget.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'center' 
-      });
-    }
-    
+  if (!validateDateTimeSelection()) {
+    return;
+  }
+  
+  if (!validateReservationExpiry()) {
     return;
   }
   
@@ -1204,7 +1210,87 @@ function syncBookingButtons() {
   terms.addEventListener('change', function () { setEnabled(terms.checked); }, false);
 }
 
-// Notification system
+// Additional validation functions
+function validateLocationInput() {
+  const locationInput = document.getElementById('locationInput');
+  const location = locationInput.value.trim();
+  
+  // Remove any existing validation styling
+  locationInput.classList.remove('field-error');
+  
+  if (!location) {
+    return false;
+  }
+  
+  // Optional: Check for minimum length
+  if (location.length < 3) {
+    locationInput.classList.add('field-error');
+    showNotification('Location too short', 'Please provide a more specific location (at least 3 characters).', 'error');
+    
+    locationInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => locationInput.focus(), 300);
+    
+    setTimeout(() => locationInput.classList.remove('field-error'), 3000);
+    return false;
+  }
+  
+  return true;
+}
+
+function validateDateTimeSelection() {
+  if (!selectedDate && !selectedTime) {
+    showNotification('Please select date and time', 'Choose a date from the calendar and then select your preferred appointment time.', 'error');
+    
+    const calendarContainer = document.querySelector('.calendar-container');
+    if (calendarContainer) {
+      calendarContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return false;
+  }
+  
+  if (!selectedDate) {
+    showNotification('Please select a date', 'Choose your preferred date from the calendar above.', 'error');
+    
+    const calendarContainer = document.querySelector('.calendar-container');
+    if (calendarContainer) {
+      calendarContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return false;
+  }
+  
+  if (!selectedTime) {
+    showNotification('Please select a time', 'Choose your preferred appointment time from the available slots.', 'error');
+    
+    const timeContainer = document.getElementById('timeSlotContainer');
+    if (timeContainer) {
+      timeContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return false;
+  }
+  
+  return true;
+}
+
+function validateReservationExpiry() {
+  if (reservationExpiry && new Date() > reservationExpiry) {
+    showNotification('Reservation expired', 'Your time slot reservation has expired. Please select a new time slot.', 'error');
+    
+    // Clear expired selection
+    selectedTime = null;
+    document.querySelectorAll('.time-slot.selected').forEach(el => el.classList.remove('selected'));
+    
+    // Disable confirm buttons
+    const confirmBtn = document.getElementById('confirmTimeBtn');
+    const floatingConfirmBtn = document.getElementById('floatingConfirmTimeBtn');
+    if (confirmBtn) confirmBtn.disabled = true;
+    if (floatingConfirmBtn) floatingConfirmBtn.disabled = true;
+    
+    // Go back to step 2
+    goToStep2();
+    return false;
+  }
+  return true;
+}
 function showNotification(title, message, type = 'info') {
   // Remove any existing notifications
   const existingNotification = document.querySelector('.notification');
