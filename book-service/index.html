@@ -990,7 +990,20 @@ const serviceConfigs = {
 
 // Initialize page based on URL parameters
 document.addEventListener('DOMContentLoaded', function() {
-  const urlParams = new URLSearchParams(window.location.search);
+  // Get the full URL and handle both with and without trailing slash
+  const fullUrl = window.location.href;
+  let urlParams;
+  
+  // Check if we have query parameters
+  if (fullUrl.includes('?')) {
+    // Extract everything after the ?
+    const queryString = fullUrl.split('?')[1];
+    urlParams = new URLSearchParams(queryString);
+  } else {
+    // No parameters, use default
+    urlParams = new URLSearchParams();
+  }
+  
   const service = urlParams.get('service') || 'jumpstart';
   
   loadServiceConfig(service);
