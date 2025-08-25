@@ -442,7 +442,7 @@
 </div>
 
 <script>
-// Service configuration based on actual pricing
+// Service configuration with correct Stripe URLs based on updated pricing table
 const serviceConfigs = {
   'jumpstart': {
     title: 'Battery Jump Start Service',
@@ -468,7 +468,7 @@ const serviceConfigs = {
         time: '30-60 minutes',
         description: 'Professional jump start with battery health check',
         price: '$149',
-        stripeToken: '14A00j9cr7wtgT54B7a7I1l'
+        stripeUrl: 'https://www.eek.nz?token=6oUfZh2O34kh0U7aZva7I1m'
       }
     ],
     infoContent: `
@@ -512,7 +512,7 @@ const serviceConfigs = {
         time: '30-60 minutes',
         description: 'Complete diagnostic scan and mechanical assessment',
         price: '$249',
-        stripeToken: 'eVqfZh88n9EB32f9Vra7I1h'
+        stripeUrl: 'https://www.eek.nz?token=eVqfZh88n9EB32f9Vra7I1h'
       }
     ],
     infoContent: `
@@ -556,7 +556,7 @@ const serviceConfigs = {
         time: '30-60 minutes',
         description: 'Complete fuel system extraction and cleaning',
         price: '$849',
-        stripeToken: '9B65kDewLbMJdGT3x3a7I1k'
+        stripeUrl: 'https://www.eek.nz?token=9B65kDewLbMJdGT3x3a7I1k'
       }
     ],
     infoContent: `
@@ -600,6 +600,7 @@ const serviceConfigs = {
         time: 'Within 24 hours',
         description: 'Comprehensive pre-purchase vehicle inspection',
         price: '$289'
+        // No Stripe URL provided in pricing table
       }
     ],
     infoContent: `
@@ -643,6 +644,7 @@ const serviceConfigs = {
         time: 'Within 24 hours',
         description: 'Complete inspection with minor repairs included',
         price: '$289'
+        // No Stripe URL provided in pricing table
       }
     ],
     infoContent: `
@@ -686,6 +688,7 @@ const serviceConfigs = {
         time: '30-60 minutes',
         description: 'Professional tyre change service at your location',
         price: '$169'
+        // No Stripe URL provided in pricing table
       }
     ],
     infoContent: `
@@ -729,6 +732,7 @@ const serviceConfigs = {
         time: '30-60 minutes',
         description: 'Professional vehicle unlock service',
         price: '$189'
+        // No Stripe URL provided in pricing table
       }
     ],
     infoContent: `
@@ -772,6 +776,7 @@ const serviceConfigs = {
         time: '30-60 minutes',
         description: '20L fuel delivery to get you back on the road',
         price: '$249'
+        // No Stripe URL provided in pricing table
       }
     ],
     infoContent: `
@@ -796,13 +801,13 @@ const serviceConfigs = {
 // Initialize page based on URL parameters
 document.addEventListener('DOMContentLoaded', function() {
   const urlParams = new URLSearchParams(window.location.search);
-  const service = urlParams.get('service') || 'jumpstart'; // Changed default from 'breakdown' to 'jumpstart'
+  const service = urlParams.get('service') || 'jumpstart';
   
   loadServiceConfig(service);
 });
 
 function loadServiceConfig(serviceType) {
-  const config = serviceConfigs[serviceType] || serviceConfigs['jumpstart']; // Changed fallback from 'breakdown' to 'jumpstart'
+  const config = serviceConfigs[serviceType] || serviceConfigs['jumpstart'];
   
   // Update page metadata
   document.title = `${config.title} - Eek Mobile Mechanical`;
@@ -944,17 +949,14 @@ function proceedToPayment() {
   // Track the booking attempt
   trackConversion(`${window.currentService}_booking_payment`, 'Purchase');
   
-  // Find the selected urgency option and get its stripe token
+  // Find the selected urgency option and get its stripe URL
   const selectedOption = window.currentConfig.urgencyOptions.find(option => option.id === selectedUrgency);
   
-  if (selectedOption && selectedOption.stripeToken) {
-    // Build proper Stripe payment link
-    const stripeUrl = `https://buy.stripe.com/${selectedOption.stripeToken}`;
-    
-    // Redirect to Stripe checkout
-    window.location.href = stripeUrl;
+  if (selectedOption && selectedOption.stripeUrl) {
+    // Redirect to the correct payment URL
+    window.location.href = selectedOption.stripeUrl;
   } else {
-    // Fallback for services without Stripe tokens
+    // Fallback for services without payment links
     alert(`Booking confirmed!\n\nService: ${window.currentConfig.title}\nLocation: ${location}\nPrice: ${selectedUrgencyDetails.price}\n\nPlease call 0800 769 000 to complete payment.`);
   }
 }
