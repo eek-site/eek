@@ -667,10 +667,10 @@ const serviceConfigs = {
     ]
   },
   'inspection': {
-    title: 'Don\'t Buy a Lemon! Pre Purchase Vehicle Inspection',
-    subtitle: '⚠️ Avoid costly mistakes with our professional vehicle inspection',
-    breadcrumb: 'Don\'t Buy a Lemon - Pre Purchase Inspection',
-    bookingTitle: '🔍 Don\'t Buy a Lemon! Book Your Pre Purchase Inspection',
+    title: 'Pre Purchase Vehicle Inspection',
+    subtitle: 'Comprehensive mechanical inspection before you buy',
+    breadcrumb: 'Pre Purchase Inspection',
+    bookingTitle: 'Pre Purchase Vehicle Inspection',
     bookingDescription: 'Professional 45-point certified inspection • $289 fixed rate • Mobile service anywhere in NZ',
     step1Title: 'Step 1: Where is the vehicle located?',
     step1Label: 'Location',
@@ -679,15 +679,15 @@ const serviceConfigs = {
     detailsLabel: 'Vehicle and inspection details:',
     detailsPlaceholder: 'e.g., Make/model/year, where vehicle is located, dealer/private sale, any specific concerns, etc.',
     locationPlaceholder: 'Enter address, suburb, or region (e.g. Auckland CBD, Christchurch, Wellington)',
-    image: 'lemon.png',
-    imageAlt: 'Don\'t buy a lemon! Eek Mobile Mechanical Pre Purchase Vehicle Inspection',
+    image: 'sweet-ride.png',
+    imageAlt: 'Pre Purchase Vehicle Inspection',
     useCalendar: true,
     showReservationTimer: true,
     stats: [
-      { number: '20%', text: 'of vehicles we inspect are rejected' },
-      { number: '40%', text: 'of used cars have unaddressed recalls' },
-      { number: '25%', text: 'have electrical system problems' },
-      { number: '39%', text: 'people overpay without a report' }
+      { number: '$289', text: 'fixed rate' },
+      { number: '45-point', text: 'inspection' },
+      { number: '30-60', text: 'minute arrival' },
+      { number: 'Certified', text: 'report' }
     ],
     urgencyOptions: [
       {
@@ -702,56 +702,22 @@ const serviceConfigs = {
     infoContent: `
       <h4>Our Pre-Purchase Inspection Includes:</h4>
       <ul>
-        <li><strong>Comprehensive mechanical assessment</strong> of all major systems</li>
+        <li><strong>Comprehensive certified mechanical inspection</strong></li>
+        <li><strong>45-point inspection checklist</strong></li>
         <li><strong>Written inspection report</strong> with findings</li>
         <li><strong>Photos of any issues</strong> discovered during inspection</li>
-        <li><strong>Estimated repair costs</strong> for identified problems</li>
         <li><strong>Professional recommendation</strong> on whether to purchase</li>
+        <li><strong>Fixed flat rate of $289</strong> - no surprises</li>
       </ul>
     `,
-    warningContent: `
-      <div class="inspection-warning">
-        <h3>⚠️ Why You Need This Inspection</h3>
-        <div class="inspection-stat-grid">
-          <div class="inspection-stat">
-            <strong>1 in 5 vehicles</strong><br>
-            <span style="color: #6c5404;">we inspect have serious issues (20% rejection rate)</span>
-          </div>
-          <div class="inspection-stat">
-            <strong>Nearly 40% of used cars</strong><br>
-            <span style="color: #6c5404;">have unaddressed safety recalls</span>
-          </div>
-          <div class="inspection-stat">
-            <strong>Electrical problems</strong><br>
-            <span style="color: #6c5404;">are found in 25% of vehicles inspected</span>
-          </div>
-          <div class="inspection-stat">
-            <strong>39% of buyers overpay</strong><br>
-            <span style="color: #6c5404;">without a professional inspection report</span>
-          </div>
-          <div class="inspection-stat">
-            <strong>Hidden defects</strong><br>
-            <span style="color: #6c5404;">can cost thousands in unexpected repairs</span>
-          </div>
-        </div>
-        <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #ffeaa7;">
-          <p style="color: #856404; font-size: 1.1em; margin: 0; font-weight: 600;">
-            Don't become another statistic - protect your investment with our comprehensive inspection!
-          </p>
-        </div>
-      </div>
-    `,
-    priceBreakdown: {
-      basePrice: '$199',
-      mobileServiceFee: '$90',
-      totalPrice: '$289'
-    },
+    warningContent: '',
     terms: [
-      'Comprehensive vehicle inspection at any location',
-      'Fixed price of $289 - includes everything needed',
-      'Detailed written report provided within 24 hours',
-      'Cancellations must be made at least 24 hours in advance',
-      'Our mobile mechanic will contact you 30 minutes before arrival'
+      'Comprehensive certified mechanical inspection',
+      'Fixed price of $289 - no hidden fees',
+      'Inspection at seller or dealership location',
+      'Written report provided with findings',
+      'Nationwide mobile mechanic dispatch in 30-60 minutes',
+      'Cancellations must be made at least 24 hours in advance'
     ]
   },
   'mechanic': {
@@ -1038,7 +1004,7 @@ function loadServiceConfig(serviceType) {
   document.getElementById('pageDescription').content = `Book ${config.title.toLowerCase()} with Eek Mobile Mechanical. ${config.bookingDescription}`;
   
   // Update header - use sweet-ride.png for all services
-  document.getElementById('headerImage').src = 'sweet-ride.png';
+  document.getElementById('headerImage').src = '/sweet-ride.png';
   document.getElementById('headerImage').alt = config.imageAlt;
   document.getElementById('headerTitle').textContent = config.title;
   document.getElementById('headerSubtitle').textContent = config.subtitle;
