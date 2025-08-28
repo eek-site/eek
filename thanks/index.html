@@ -13,7 +13,7 @@
   <meta property="og:image" content="https://www.eek.nz/sweet-ride.png" />
 
   <!-- Security Headers -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://prod-22.australiasoutheast.logic.azure.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
@@ -26,13 +26,6 @@
     
     rdt('init', 'a2_hf16791nsdhx');
     rdt('track', 'PageVisit');
-    
-    // Track payment completion
-    rdt('track', 'Purchase', {
-      'customEventName': 'Payment_Completed',
-      'currency': 'NZD',
-      'eventSource': 'thanks_page'
-    });
   </script>
 
   <!-- Google tag (gtag.js) -->
@@ -43,18 +36,6 @@
     gtag('js', new Date());
     gtag('config', 'AW-17084465163');
     gtag('config', 'G-DQNKF1YLWR');
-    
-    // Track purchase conversion
-    gtag('event', 'purchase', {
-      'transaction_id': Date.now().toString(),
-      'currency': 'NZD',
-      'event_category': 'Payment',
-      'event_label': 'Payment Completed'
-    });
-    
-    gtag('event', 'conversion', {
-      'send_to': 'AW-17084465163/purchase'
-    });
   </script>
 
   <link rel="icon" type="image/x-icon" href="favicon.ico">
@@ -127,6 +108,43 @@
       color: #666;
       margin-bottom: 30px;
       font-weight: 500;
+    }
+    
+    .booking-details {
+      background: #f0f9ff;
+      padding: 25px;
+      border-radius: 15px;
+      margin: 20px 0;
+      border: 2px solid #0ea5e9;
+      text-align: left;
+    }
+    
+    .booking-details h3 {
+      color: #0369a1;
+      margin-bottom: 15px;
+      font-size: 1.3em;
+      text-align: center;
+    }
+    
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #e0f2fe;
+    }
+    
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+    
+    .detail-label {
+      font-weight: 600;
+      color: #64748b;
+    }
+    
+    .detail-value {
+      color: #0f172a;
+      text-align: right;
     }
     
     .next-steps {
@@ -222,16 +240,6 @@
       box-shadow: 0 4px 12px rgba(255,85,0,0.3);
     }
     
-    .btn-secondary {
-      background: #6c757d;
-      color: white;
-    }
-    
-    .btn-secondary:hover {
-      background: #545b62;
-      transform: translateY(-2px);
-    }
-    
     .estimated-time {
       background: linear-gradient(135deg, #fff3cd, #ffeaa7);
       padding: 20px;
@@ -245,24 +253,6 @@
       font-weight: bold;
       color: #856404;
       margin: 10px 0;
-    }
-    
-    .footer-links {
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px solid #dee2e6;
-    }
-    
-    .footer-links a {
-      color: #6c757d;
-      text-decoration: none;
-      margin: 0 15px;
-      font-size: 0.9em;
-    }
-    
-    .footer-links a:hover {
-      color: #ff5500;
-      text-decoration: underline;
     }
     
     .additional-services {
@@ -304,6 +294,49 @@
       box-shadow: 0 4px 8px rgba(14,165,233,0.2);
     }
     
+    .footer-links {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #dee2e6;
+    }
+    
+    .footer-links a {
+      color: #6c757d;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 0.9em;
+    }
+    
+    .footer-links a:hover {
+      color: #ff5500;
+      text-decoration: underline;
+    }
+    
+    .loading-animation {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #ff5500;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-left: 10px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .processing-indicator {
+      background: #d4edda;
+      color: #155724;
+      padding: 10px;
+      border-radius: 8px;
+      margin: 15px 0;
+      display: none;
+    }
+    
     @media (max-width: 768px) {
       .success-card {
         padding: 30px 20px;
@@ -328,22 +361,6 @@
         grid-template-columns: 1fr;
       }
     }
-    
-    .loading-animation {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #ff5500;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-left: 10px;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
   </style>
 </head>
 <body>
@@ -359,10 +376,22 @@
       <h1>Payment Confirmed!</h1>
       <p class="subtitle">Your mobile mechanic is already on the way</p>
       
+      <div class="processing-indicator" id="processingIndicator">
+        ✓ Booking data sent successfully
+      </div>
+      
+      <!-- Dynamic Booking Details -->
+      <div class="booking-details" id="bookingDetails" style="display: none;">
+        <h3>📋 Your Booking Details</h3>
+        <div id="detailsContent">
+          <!-- Details will be populated by JavaScript -->
+        </div>
+      </div>
+      
       <div class="estimated-time">
         <h3>✅ Service Confirmed</h3>
-        <div class="time-display">In Progress</div>
-        <p>Your service request is now active and being processed</p>
+        <div class="time-display" id="timeDisplay">In Progress<div class="loading-animation"></div></div>
+        <p id="serviceTypeText">Your service request is now active and being processed</p>
       </div>
       
       <div class="next-steps">
@@ -417,6 +446,145 @@
   </div>
 
   <script>
+    // Power Automate webhook URL for confirmed payments
+    // Replace this with your actual Power Automate webhook URL
+    const PAYMENT_CONFIRMED_WEBHOOK_URL = 'https://prod-22.australiasoutheast.logic.azure.com:443/workflows/YOUR_PAYMENT_CONFIRMATION_FLOW_ID/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=YOUR_SIGNATURE';
+    
+    // Extract URL parameters
+    function getUrlParameters() {
+      const params = new URLSearchParams(window.location.search);
+      const data = {};
+      
+      // Extract all parameters
+      for (const [key, value] of params) {
+        data[key] = decodeURIComponent(value);
+      }
+      
+      return data;
+    }
+    
+    // Display booking details
+    function displayBookingDetails(data) {
+      const detailsContainer = document.getElementById('bookingDetails');
+      const detailsContent = document.getElementById('detailsContent');
+      
+      // Check if this is from the new booking system
+      // New system will have specific parameters like name, phone, serviceTitle
+      const isNewBookingSystem = data.name && data.phone && data.serviceTitle;
+      
+      if (!isNewBookingSystem) {
+        // Old system or direct visit - show generic confirmation
+        console.log('Generic payment confirmation - no booking details to display');
+        return;
+      }
+      
+      // Build details HTML
+      let detailsHTML = '';
+      
+      // Customer info
+      if (data.name) {
+        detailsHTML += `<div class="detail-row"><span class="detail-label">Name:</span><span class="detail-value">${data.name}</span></div>`;
+      }
+      if (data.phone) {
+        detailsHTML += `<div class="detail-row"><span class="detail-label">Phone:</span><span class="detail-value">${data.phone}</span></div>`;
+      }
+      if (data.email) {
+        detailsHTML += `<div class="detail-row"><span class="detail-label">Email:</span><span class="detail-value">${data.email}</span></div>`;
+      }
+      
+      // Vehicle info
+      if (data.rego || data.make || data.model) {
+        const vehicleInfo = [];
+        if (data.rego) vehicleInfo.push(data.rego);
+        if (data.year) vehicleInfo.push(data.year);
+        if (data.make) vehicleInfo.push(data.make);
+        if (data.model) vehicleInfo.push(data.model);
+        
+        if (vehicleInfo.length > 0) {
+          detailsHTML += `<div class="detail-row"><span class="detail-label">Vehicle:</span><span class="detail-value">${vehicleInfo.join(' ')}</span></div>`;
+        }
+      }
+      
+      // Service info
+      if (data.serviceTitle) {
+        detailsHTML += `<div class="detail-row"><span class="detail-label">Service:</span><span class="detail-value">${data.serviceTitle}</span></div>`;
+      }
+      if (data.location) {
+        detailsHTML += `<div class="detail-row"><span class="detail-label">Location:</span><span class="detail-value">${data.location}</span></div>`;
+      }
+      
+      // Time info
+      if (data.scheduledDate && data.scheduledDate !== new Date().toISOString().split('T')[0]) {
+        const date = new Date(data.scheduledDate);
+        const formattedDate = date.toLocaleDateString('en-NZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        detailsHTML += `<div class="detail-row"><span class="detail-label">Date:</span><span class="detail-value">${formattedDate}</span></div>`;
+      }
+      if (data.timeWindow) {
+        detailsHTML += `<div class="detail-row"><span class="detail-label">Time:</span><span class="detail-value">${data.timeWindow}</span></div>`;
+      }
+      
+      // Price
+      if (data.price) {
+        detailsHTML += `<div class="detail-row"><span class="detail-label">Amount Paid:</span><span class="detail-value" style="font-weight: bold; color: #28a745;">$${data.price}</span></div>`;
+      }
+      
+      if (detailsHTML) {
+        detailsContent.innerHTML = detailsHTML;
+        detailsContainer.style.display = 'block';
+      }
+      
+      // Update service type text if available
+      if (data.serviceTitle) {
+        document.getElementById('serviceTypeText').textContent = `Your ${data.serviceTitle} is now being processed`;
+      }
+    }
+    
+    // Send data to Power Automate
+    async function sendToPaymentConfirmedFlow(data) {
+      // Only send if this is from the new booking system
+      const isNewBookingSystem = data.name && data.phone && data.serviceTitle;
+      
+      if (!isNewBookingSystem) {
+        console.log('Not from new booking system - skipping Power Automate flow');
+        return;
+      }
+      
+      // Add payment confirmation timestamp
+      data.paymentConfirmedAt = new Date().toISOString();
+      data.paymentStatus = 'confirmed';
+      
+      // Add Stripe session ID if available (Stripe adds this as a parameter)
+      const sessionId = new URLSearchParams(window.location.search).get('session_id');
+      if (sessionId) {
+        data.stripeSessionId = sessionId;
+      }
+      
+      try {
+        const response = await fetch(PAYMENT_CONFIRMED_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+        
+        if (response.ok) {
+          console.log('Payment confirmation sent to Power Automate');
+          // Show success indicator
+          const indicator = document.getElementById('processingIndicator');
+          indicator.style.display = 'block';
+          setTimeout(() => {
+            indicator.style.display = 'none';
+          }, 5000);
+        } else {
+          console.error('Failed to send payment confirmation:', response.status);
+        }
+      } catch (error) {
+        console.error('Error sending payment confirmation:', error);
+        // Don't show error to user - payment is already confirmed
+      }
+    }
+    
     function trackCall(source) {
       // Google Analytics tracking
       if (typeof gtag !== 'undefined') {
@@ -436,24 +604,63 @@
       }
     }
     
-    // Track page engagement
+    // Initialize on page load
     window.addEventListener('load', function() {
+      // Get booking data from URL
+      const bookingData = getUrlParameters();
+      
+      // Check if this is from the new booking system
+      const isNewBookingSystem = bookingData.name && bookingData.phone && bookingData.serviceTitle;
+      
+      // Display booking details (only shows for new system)
+      displayBookingDetails(bookingData);
+      
+      // Send to Power Automate (only for new system)
+      sendToPaymentConfirmedFlow(bookingData);
+      
+      // Track purchase with actual data or generic data
       if (typeof gtag !== 'undefined') {
-        gtag('event', 'page_view', {
-          'page_title': 'Payment Confirmation',
-          'page_location': window.location.href,
-          'event_category': 'Post_Purchase'
-        });
+        const purchaseData = {
+          'transaction_id': bookingData.stripeSessionId || Date.now().toString(),
+          'value': parseFloat(bookingData.price) || 0,
+          'currency': 'NZD',
+          'items': [{
+            'item_name': bookingData.serviceTitle || 'Mobile Mechanic Service',
+            'price': parseFloat(bookingData.price) || 0,
+            'quantity': 1
+          }]
+        };
+        
+        // Only send purchase event with value if we have price data
+        if (bookingData.price || !isNewBookingSystem) {
+          gtag('event', 'purchase', purchaseData);
+          
+          gtag('event', 'conversion', {
+            'send_to': 'AW-17084465163/purchase',
+            'value': parseFloat(bookingData.price) || 0,
+            'currency': 'NZD',
+            'transaction_id': bookingData.stripeSessionId || Date.now().toString()
+          });
+        }
+      }
+      
+      // Track with Reddit Pixel
+      if (typeof rdt !== 'undefined') {
+        const redditData = {
+          'customEventName': 'Payment_Completed',
+          'currency': 'NZD',
+          'eventSource': 'thanks_page'
+        };
+        
+        // Add value and service if available
+        if (isNewBookingSystem) {
+          redditData.value = parseFloat(bookingData.price) || 0;
+          redditData.service = bookingData.service;
+        }
+        
+        rdt('track', 'Purchase', redditData);
       }
     });
-    
-    // Show "In Progress" status
-    function updateEstimatedTime() {
-      const timeDisplay = document.querySelector('.time-display');
-      if (timeDisplay) {
-        timeDisplay.innerHTML = `In Progress<div class="loading-animation"></div>`;
-      }
-    }
     
     // Track service link clicks
     document.querySelectorAll('.service-links a').forEach(link => {
@@ -475,9 +682,6 @@
         }
       });
     });
-    
-    // Update time display on page load
-    updateEstimatedTime();
   </script>
 </body>
 </html>
