@@ -8,7 +8,7 @@
   <meta name="keywords" content="mobile mechanic, book service, emergency mechanic, battery jump start, wrong fuel removal, prepurchase inspection, mobile mechanic NZ" />
 
   <!-- Security Headers -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.google.com https://www.redditstatic.com https://www.googletagmanager.com https://googleads.g.doubleclick.net;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.google.com https://www.redditstatic.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://prod-06.australiasoutheast.logic.azure.com;">
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
@@ -230,49 +230,82 @@
       color: #ccc;
       cursor: not-allowed;
     }
-    .time-slots {
+    
+    /* Time window styles */
+    .time-windows {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
       margin: 20px 0;
     }
-    .time-slot {
-      padding: 12px;
+    .time-window {
       border: 2px solid #ddd;
-      border-radius: 8px;
+      border-radius: 12px;
+      padding: 20px;
       cursor: pointer;
       text-align: center;
-      transition: all 0.2s;
-      position: relative;
+      transition: all 0.3s;
+      background: white;
     }
-    .time-slot:hover {
+    .time-window:hover {
       border-color: #ff5500;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255,85,0,0.15);
     }
-    .time-slot.selected {
-      background: #ff5500;
+    .time-window.selected {
+      background: linear-gradient(135deg, #fff5f0, #ffe5d9);
+      border-color: #ff5500;
+      border-width: 3px;
+    }
+    .time-window-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    .time-window-range {
+      color: #ff5500;
+      font-size: 1.1em;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .time-window-description {
+      font-size: 0.9em;
+      color: #666;
+      line-height: 1.4;
+    }
+    .availability-badge {
+      display: inline-block;
+      background: #28a745;
       color: white;
-      border-color: #ff5500;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85em;
+      margin-top: 10px;
     }
-    .time-slot.limited {
-      border-color: #ff9500;
-      background: #fff8f0;
+    .availability-badge.limited {
+      background: #ff9500;
     }
-    .time-slot .availability {
-      font-size: 0.8em;
-      color: #ff6600;
-      margin-top: 4px;
-    }
-    .availability-alert {
+    
+    .timing-notice {
       background: #fff3cd;
-      border: 1px solid #ffeaa7;
-      border-radius: 8px;
-      padding: 15px;
+      border: 2px solid #ffeaa7;
+      border-radius: 12px;
+      padding: 20px;
       margin: 20px 0;
-      text-align: center;
+      text-align: left;
     }
-    .availability-alert.urgent {
-      background: #f8d7da;
-      border-color: #f5c6cb;
+    .timing-notice h4 {
+      margin: 0 0 10px 0;
+      color: #856404;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .timing-notice p {
+      margin: 8px 0;
+      color: #856404;
+      line-height: 1.5;
     }
     
     .urgency-options {
@@ -310,6 +343,7 @@
       font-size: 0.85em;
       color: #666;
     }
+    
     .reservation-summary {
       background: #e8f4f8;
       border-radius: 8px;
@@ -329,6 +363,7 @@
     .summary-item strong {
       color: #ff5500;
     }
+    
     .button {
       background: #ff5500;
       color: white;
@@ -357,6 +392,20 @@
       cursor: not-allowed;
       transform: none;
     }
+    .button.processing {
+      background: #6c757d;
+      position: relative;
+    }
+    .button.processing::after {
+      content: '...';
+      animation: dots 1.5s steps(3, end) infinite;
+    }
+    @keyframes dots {
+      0%, 20% { content: '.'; }
+      40% { content: '..'; }
+      60%, 100% { content: '...'; }
+    }
+    
     .terms-section {
       background: #f8f9fa;
       border-radius: 8px;
@@ -385,6 +434,7 @@
     .terms-text a:hover {
       text-decoration: underline;
     }
+    
     .info-box {
       background: #fff3cd;
       border: 1px solid #ffeaa7;
@@ -403,35 +453,26 @@
       color: #856404;
     }
     
-    /* Inspection-specific warning box */
-    .inspection-warning {
-      background: #fff3cd;
-      border: 2px solid #ffeaa7;
-      border-radius: 12px;
-      padding: 30px;
-      text-align: left;
-      margin: 30px 0;
+    .contact-info {
+      margin: 15px 0;
     }
-    .inspection-warning h3 {
-      margin: 0 0 20px 0;
-      color: #856404;
-      font-size: 1.6em;
-      text-align: center;
+    .contact-info label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
     }
-    .inspection-stat-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
-    }
-    .inspection-stat {
-      background: rgba(255,255,255,0.6);
-      padding: 15px;
+    .contact-info input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
       border-radius: 8px;
-      border-left: 4px solid #856404;
+      font-size: 1em;
+      margin-bottom: 15px;
+      box-sizing: border-box;
     }
-    .inspection-stat strong {
-      color: #856404;
-      font-size: 1.1em;
+    .contact-info input:focus {
+      border-color: #ff5500;
+      outline: none;
     }
     
     @media (max-width: 768px) {
@@ -448,6 +489,9 @@
         grid-template-columns: repeat(2, 1fr);
       }
       .calendar-container {
+        grid-template-columns: 1fr;
+      }
+      .time-windows {
         grid-template-columns: 1fr;
       }
     }
@@ -483,7 +527,7 @@
       <span id="step1Label">Details</span>
     </div>
     <div class="progress-step" id="step2-progress">
-      <span id="step2Label">Urgency</span>
+      <span id="step2Label">Scheduling</span>
     </div>
     <div class="progress-step" id="step3-progress">
       <span>Confirm</span>
@@ -495,6 +539,52 @@
     <div class="step active" id="step1">
       <h3 id="step1Title">Step 1: Service Details</h3>
       
+      <!-- Customer Information -->
+      <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+        <h4 style="margin: 0 0 15px 0; color: #333;">Your Information</h4>
+        
+        <div class="contact-info">
+          <label for="nameInput">Full Name (required)</label>
+          <input type="text" id="nameInput" placeholder="John Smith" required />
+          
+          <label for="phoneInput">Phone Number (required)</label>
+          <input type="tel" id="phoneInput" placeholder="021 234 5678" required />
+          
+          <label for="emailInput">Email Address (required)</label>
+          <input type="email" id="emailInput" placeholder="your.email@example.com" required />
+        </div>
+      </div>
+      
+      <!-- Vehicle Information -->
+      <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+        <h4 style="margin: 0 0 15px 0; color: #333;">Vehicle Information</h4>
+        
+        <div class="contact-info">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+              <label for="regoInput">Registration Number</label>
+              <input type="text" id="regoInput" placeholder="ABC123" style="text-transform: uppercase;" />
+            </div>
+            <div>
+              <label for="yearInput">Year</label>
+              <input type="text" id="yearInput" placeholder="2018" maxlength="4" />
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+              <label for="makeInput">Make</label>
+              <input type="text" id="makeInput" placeholder="Toyota" />
+            </div>
+            <div>
+              <label for="modelInput">Model</label>
+              <input type="text" id="modelInput" placeholder="Corolla" />
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Location Information -->
       <label for="locationInput" style="display: block; margin-bottom: 8px; font-weight: bold;">Where do you need service?</label>
       <input type="text" class="location-input" id="locationInput" placeholder="Enter your address, suburb, or region" />
       
@@ -504,30 +594,30 @@
       <div class="info-box" id="serviceInfoBox">
         <!-- Dynamic service information will be inserted here -->
       </div>
-      
-      <!-- Dynamic warning for inspection service -->
-      <div id="inspectionWarning" style="display: none;">
-        <!-- Will be populated for inspection service -->
-      </div>
 
       <div style="text-align: center; margin: 20px 0;">
-        <button class="button" id="nextButton" onclick="goToStep2()">Next: Select Urgency</button>
+        <button class="button" id="nextButton" onclick="goToStep2()">Next: Select Time</button>
       </div>
     </div>
 
-    <!-- Step 2: Urgency Selection (or Date/Time for inspection) -->
+    <!-- Step 2: Time Selection -->
     <div class="step" id="step2">
-      <h3 id="step2Title">Step 2: How urgent is your situation?</h3>
+      <h3 id="step2Title">Step 2: When do you need service?</h3>
       
-      <!-- Standard urgency options for most services -->
+      <!-- Timing Notice for all services -->
+      <div class="timing-notice">
+        <h4>⏰ Important Timing Information</h4>
+        <p><strong>Time windows are approximate arrival times.</strong> As a mobile mechanical service, our technicians may occasionally be delayed if a previous job becomes more complex than expected.</p>
+        <p>We'll send you an SMS notification when your technician is on the way with a more accurate arrival time.</p>
+      </div>
+      
+      <!-- Standard urgency options for emergency services -->
       <div class="urgency-options" id="urgencyOptions" style="display: block;">
         <!-- Dynamic urgency options will be inserted here -->
       </div>
       
-      <!-- Calendar view for inspection service -->
+      <!-- Calendar and time windows for inspection service -->
       <div id="calendarSection" style="display: none;">
-        <div id="availabilityAlert" class="availability-alert" style="display: none;"></div>
-        
         <div class="calendar-container">
           <div class="calendar" id="currentCalendar">
             <h4 id="currentMonth"></h4>
@@ -539,21 +629,21 @@
           </div>
         </div>
 
-        <div id="timeSlotContainer" style="display: none;">
-          <h4>Available times for <span id="selectedDateDisplay"></span>:</h4>
-          <div class="time-slots" id="timeSlots"></div>
+        <div id="timeWindowContainer" style="display: none;">
+          <h4 style="margin: 25px 0 15px 0;">Select your preferred time window for <span id="selectedDateDisplay"></span>:</h4>
+          <div class="time-windows" id="timeWindows"></div>
         </div>
       </div>
 
       <div style="margin: 20px 0;">
         <button class="button secondary" onclick="goToStep1()">Back</button>
-        <button class="button" id="confirmUrgencyBtn" onclick="goToStep3()" disabled>Confirm Selection</button>
+        <button class="button" id="confirmTimeBtn" onclick="goToStep3()" disabled>Confirm Time</button>
       </div>
     </div>
 
     <!-- Step 3: Confirmation -->
     <div class="step" id="step3">
-      <h3>Step 3: Confirm your booking request</h3>
+      <h3>Step 3: Review and confirm</h3>
       
       <div class="reservation-summary">
         <h4 id="summaryTitle">Your Service Request</h4>
@@ -565,8 +655,12 @@
           <span>Location:</span>
           <strong id="summaryLocation"></strong>
         </div>
+        <div class="summary-item">
+          <span>Phone:</span>
+          <strong id="summaryPhone"></strong>
+        </div>
         <div class="summary-item" id="urgencyRow">
-          <span>Urgency:</span>
+          <span>Response Time:</span>
           <strong id="summaryUrgency"></strong>
         </div>
         <div class="summary-item" id="dateRow" style="display: none;">
@@ -574,22 +668,21 @@
           <strong id="summaryDate"></strong>
         </div>
         <div class="summary-item" id="timeRow" style="display: none;">
-          <span>Time:</span>
+          <span>Time Window:</span>
           <strong id="summaryTime"></strong>
         </div>
-        <div class="summary-item" id="priceBreakdown" style="display: none;">
-          <!-- Will be populated for inspection service -->
-        </div>
         <div class="summary-item">
-          <span>Estimated Price:</span>
+          <span>Service Fee:</span>
           <strong id="summaryPrice"></strong>
         </div>
-        <div id="reservationTimerSection" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 2px solid #ff5500;">
-          <div class="summary-item">
-            <span style="font-size: 1.1em;">⏰ Reserved Until:</span>
-            <strong style="color: #d63384;" id="reservationTimer"></strong>
-          </div>
-        </div>
+      </div>
+
+      <div class="timing-notice" style="background: #e8f8ff; border-color: #bee5eb;">
+        <h4>📱 What happens next?</h4>
+        <p>1. Click "Generate Payment Link" to create your secure payment link</p>
+        <p>2. Complete payment through Stripe's secure checkout</p>
+        <p>3. Receive SMS confirmation with your booking details</p>
+        <p>4. Get a notification when your technician is on the way</p>
       </div>
 
       <div class="terms-section">
@@ -608,18 +701,18 @@
       <div style="text-align: center; margin: 20px 0;">
         <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
           <button class="button secondary" onclick="goToStep2()">Back to Selection</button>
-          <a href="#" class="button" id="callToBookBtn" style="font-size: 1.2em; padding: 15px 30px; background: #28a745;" onclick="proceedToPayment()">
-            Book Now & Pay Online
-          </a>
+          <button class="button" id="generatePaymentBtn" onclick="generatePaymentLink()" disabled>
+            Generate Payment Link
+          </button>
         </div>
-        <p style="margin: 15px 0; color: #666;">You'll be redirected to secure payment, then our team will contact you</p>
+        <p style="margin: 15px 0; color: #666; font-size: 0.9em;">Secure payment processing powered by Stripe</p>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// Service configuration - only the 4 services you want
+// Service configuration
 const serviceConfigs = {
   'jumpstart': {
     title: 'Battery Jump Start Service',
@@ -630,23 +723,22 @@ const serviceConfigs = {
     step1Title: 'Step 1: Tell us about your battery situation',
     detailsLabel: 'Any additional details about the battery problem:',
     detailsPlaceholder: 'e.g., Age of battery, if lights were left on, how long it\'s been dead, etc.',
-    image: 'battery-image.png',
-    imageAlt: 'Battery Jump Start Service',
     useCalendar: false,
+    serviceCode: 'JUMP',
+    basePrice: 149,
     stats: [
       { number: '$149', text: 'fixed price' },
-      { number: '100%', text: 'success rate' },
+      { number: '30-90', text: 'min arrival' },
       { number: 'Free', text: 'battery test' },
       { number: 'All', text: 'makes & models' }
     ],
     urgencyOptions: [
       {
-        id: 'standard',
-        title: 'Jump Start Service',
-        time: '30-60 minutes',
-        description: 'Professional jump start with battery health check',
-        price: '$149',
-        stripeUrl: 'https://buy.stripe.com/6oUfZh2O34kh0U7aZva7I1m'
+        id: 'emergency',
+        title: 'Emergency Service',
+        time: '30-90 minutes arrival',
+        description: 'Technician dispatched immediately',
+        price: 149
       }
     ],
     infoContent: `
@@ -662,8 +754,8 @@ const serviceConfigs = {
     terms: [
       'Service includes professional jump start and battery health assessment',
       'Fixed price of $149 - no surprises',
-      'Payment due upon service completion',
-      'We guarantee to get your vehicle started'
+      'Arrival times are approximate - we\'ll SMS you when technician is on the way',
+      'Payment required via secure Stripe checkout'
     ]
   },
   'mechanic': {
@@ -675,23 +767,29 @@ const serviceConfigs = {
     step1Title: 'Step 1: Tell us about your mechanical problem',
     detailsLabel: 'Describe the symptoms and any issues:',
     detailsPlaceholder: 'e.g., Engine won\'t start, warning lights, strange noises, overheating, etc.',
-    image: 'mechanic-image.png',
-    imageAlt: 'Mobile Mechanic Diagnostic Service',
     useCalendar: false,
+    serviceCode: 'DIAG',
+    basePrice: 249,
     stats: [
       { number: '$249', text: 'fixed price' },
-      { number: '30-60', text: 'minute response' },
+      { number: '30-90', text: 'min arrival' },
       { number: 'Full', text: 'diagnostic scan' },
       { number: 'Expert', text: 'assessment' }
     ],
     urgencyOptions: [
       {
-        id: 'standard',
-        title: 'Diagnostic Service',
-        time: '30-60 minutes',
-        description: 'Complete diagnostic scan and mechanical assessment',
-        price: '$249',
-        stripeUrl: 'https://buy.stripe.com/eVqfZh88n9EB32f9Vra7I1h'
+        id: 'emergency',
+        title: 'Emergency Diagnostic',
+        time: '30-90 minutes arrival',
+        description: 'Immediate dispatch for urgent issues',
+        price: 249
+      },
+      {
+        id: 'scheduled',
+        title: 'Scheduled Service',
+        time: 'Within 4 hours',
+        description: 'Book for later today',
+        price: 249
       }
     ],
     infoContent: `
@@ -707,8 +805,8 @@ const serviceConfigs = {
     terms: [
       'Service includes comprehensive diagnostic scanning and assessment',
       'Fixed price of $249 - no surprises',
-      'Written report provided with findings and recommendations',
-      'Payment due upon service completion'
+      'Written report provided with findings',
+      'Arrival times are approximate due to the nature of mechanical work'
     ]
   },
   'fuel-extraction': {
@@ -720,23 +818,22 @@ const serviceConfigs = {
     step1Title: 'Step 1: Tell us about the fuel situation',
     detailsLabel: 'Critical details about what happened:',
     detailsPlaceholder: 'e.g., How much wrong fuel, have you started engine, petrol in diesel or vice versa, etc.',
-    image: 'fuel-image.png',
-    imageAlt: 'Wrong Fuel Extraction Service',
     useCalendar: false,
+    serviceCode: 'FUEL',
+    basePrice: 849,
     stats: [
       { number: '$849', text: 'fixed price' },
-      { number: '30-60', text: 'minute response' },
+      { number: '30-90', text: 'min arrival' },
       { number: 'No', text: 'engine damage' },
       { number: '100%', text: 'insured service' }
     ],
     urgencyOptions: [
       {
-        id: 'standard',
-        title: 'Fuel Extraction',
-        time: '30-60 minutes',
-        description: 'Complete fuel system extraction and cleaning',
-        price: '$849',
-        stripeUrl: 'https://buy.stripe.com/9B65kDewLbMJdGT3x3a7I1k'
+        id: 'emergency',
+        title: 'Emergency Extraction',
+        time: '30-90 minutes arrival',
+        description: 'Critical - prevent engine damage',
+        price: 849
       }
     ],
     infoContent: `
@@ -753,7 +850,7 @@ const serviceConfigs = {
       'Emergency fuel extraction service - we come to your location',
       'Fixed price of $849 regardless of fuel amount',
       'Complete system flush and replacement with correct fuel',
-      'Fully insured professional service'
+      'Time-critical service to prevent engine damage'
     ]
   },
   'inspection': {
@@ -761,61 +858,47 @@ const serviceConfigs = {
     subtitle: 'Comprehensive mechanical inspection before you buy',
     breadcrumb: 'Pre Purchase Inspection',
     bookingTitle: 'Pre Purchase Vehicle Inspection',
-    bookingDescription: 'Professional 45-point certified inspection • $289 fixed rate • Mobile service anywhere in NZ',
+    bookingDescription: '45-point certified inspection • Mobile service anywhere in NZ',
     step1Title: 'Step 1: Where is the vehicle located?',
-    step1Label: 'Location',
-    step2Label: 'Date & Time',
-    step2Title: 'Step 2: Select your preferred date and time',
+    step2Title: 'Step 2: Select your preferred date',
     detailsLabel: 'Vehicle and inspection details:',
-    detailsPlaceholder: 'e.g., Make/model/year, where vehicle is located, dealer/private sale, any specific concerns, etc.',
-    locationPlaceholder: 'Enter address, suburb, or region (e.g. Auckland CBD, Christchurch, Wellington)',
-    image: 'sweet-ride.png',
-    imageAlt: 'Pre Purchase Vehicle Inspection',
+    detailsPlaceholder: 'e.g., Make/model/year, dealer or private sale, any specific concerns, etc.',
     useCalendar: true,
-    showReservationTimer: true,
+    serviceCode: 'INSP',
+    basePrice: 289,
     stats: [
       { number: '$289', text: 'fixed rate' },
       { number: '45-point', text: 'inspection' },
-      { number: '30-60', text: 'minute arrival' },
+      { number: 'Morning', text: 'or afternoon' },
       { number: 'Certified', text: 'report' }
-    ],
-    urgencyOptions: [
-      {
-        id: 'standard',
-        title: 'Vehicle Inspection',
-        time: 'Scheduled appointment',
-        description: 'Comprehensive pre-purchase vehicle inspection',
-        price: '$289',
-        stripeUrl: 'https://buy.stripe.com/9B68wP1JZaIFauH4B7a7I0Z'
-      }
     ],
     infoContent: `
       <h4>Our Pre-Purchase Inspection Includes:</h4>
       <ul>
         <li><strong>Comprehensive certified mechanical inspection</strong></li>
         <li><strong>45-point inspection checklist</strong></li>
-        <li><strong>Written inspection report</strong> with findings</li>
-        <li><strong>Professional recommendation</strong> on whether to purchase</li>
+        <li><strong>Written inspection report</strong> with photos</li>
+        <li><strong>Professional recommendation</strong> on purchase decision</li>
         <li><strong>Fixed flat rate of $289</strong> - no surprises</li>
       </ul>
     `,
-    warningContent: '',
     terms: [
       'Comprehensive certified mechanical inspection',
       'Fixed price of $289 - no hidden fees',
-      'Inspection at seller or dealership location',
-      'Written report provided with findings',
-      'Nationwide mobile mechanic dispatch in 30-60 minutes',
-      'Cancellations must be made at least 24 hours in advance'
+      'Time windows are approximate - technician will call en route',
+      'Written report provided within 24 hours',
+      'Cancellations must be made at least 2 hours in advance'
     ]
   }
 };
 
-// Initialize page based on URL parameters
+// Power Automate webhook URL
+const POWER_AUTOMATE_URL = 'https://prod-22.australiasoutheast.logic.azure.com:443/workflows/e902e35b4e574defb0af836b4259602c/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=4DuJt4Ol0Z75ZXD6m4XEtbtGoPlhCnPhor0FsW8ncog';
+
+// Initialize page
 document.addEventListener('DOMContentLoaded', function() {
   const urlParams = new URLSearchParams(window.location.search);
   const service = urlParams.get('service') || 'jumpstart';
-  
   loadServiceConfig(service);
 });
 
@@ -826,9 +909,8 @@ function loadServiceConfig(serviceType) {
   document.title = `${config.title} - Eek Mobile Mechanical`;
   document.getElementById('pageDescription').content = `Book ${config.title.toLowerCase()} with Eek Mobile Mechanical. ${config.bookingDescription}`;
   
-  // Update header - use sweet-ride.png for all services
+  // Update header
   document.getElementById('headerImage').src = '/sweet-ride.png';
-  document.getElementById('headerImage').alt = config.imageAlt;
   document.getElementById('headerTitle').textContent = config.title;
   document.getElementById('headerSubtitle').textContent = config.subtitle;
   
@@ -857,46 +939,9 @@ function loadServiceConfig(serviceType) {
   document.getElementById('detailsInput').placeholder = config.detailsPlaceholder;
   document.getElementById('serviceInfoBox').innerHTML = config.infoContent;
   
-  // Update location placeholder if specified
-  if (config.locationPlaceholder) {
-    document.getElementById('locationInput').placeholder = config.locationPlaceholder;
-  }
-  
-  // Add warning for inspection service
-  if (config.warningContent) {
-    const warningDiv = document.getElementById('inspectionWarning');
-    warningDiv.innerHTML = config.warningContent;
-    warningDiv.style.display = 'block';
-  }
-  
-  // Update progress labels if needed
-  if (config.step1Label) {
-    document.getElementById('step1Label').textContent = config.step1Label;
-  }
-  if (config.step2Label) {
-    document.getElementById('step2Label').textContent = config.step2Label;
-  }
-  
-  // Configure step 2 based on service type
+  // Update step 2 title
   if (config.useCalendar) {
-    // For inspection service - use calendar
-    document.getElementById('step2Title').textContent = config.step2Title || 'Step 2: Select your preferred date and time';
-    document.getElementById('nextButton').textContent = 'Next: Select Date & Time';
-  } else {
-    // For other services - use urgency options
-    document.getElementById('step2Title').textContent = 'Step 2: How urgent is your situation?';
-    document.getElementById('nextButton').textContent = 'Next: Select Urgency';
-    
-    // Update urgency options
-    const urgencyContainer = document.getElementById('urgencyOptions');
-    urgencyContainer.innerHTML = config.urgencyOptions.map(option => `
-      <div class="urgency-option" data-urgency="${option.id}" onclick="selectUrgency('${option.id}', '${option.title}', '${option.time}', '${option.price}', this)">
-        <div class="urgency-title">${option.title}</div>
-        <div class="urgency-time">${option.time}</div>
-        <div class="urgency-description">${option.description}</div>
-        <div style="margin-top: 8px; font-weight: bold; color: #ff5500;">${option.price}</div>
-      </div>
-    `).join('');
+    document.getElementById('step2Title').textContent = config.step2Title;
   }
   
   // Update terms
@@ -908,62 +953,9 @@ function loadServiceConfig(serviceType) {
   window.currentConfig = config;
 }
 
-// Calendar and date/time selection for inspection service
+// Calendar functionality
 let selectedDate = null;
-let selectedTime = null;
-let reservationExpiry = null;
-let slotsRemaining = {};
-let bookingTimer = null;
-
-// Initialize slots on page load
-document.addEventListener('DOMContentLoaded', function() {
-  // Check if user has been here before today
-  const lastVisit = localStorage.getItem('eek_last_visit');
-  const today = new Date().toDateString();
-  
-  if (lastVisit === today) {
-    // Returning visitor today - reduce slots
-    const existingSlots = localStorage.getItem('eek_slots_today');
-    if (existingSlots) {
-      slotsRemaining = JSON.parse(existingSlots);
-      // Reduce all slots by 1, minimum 1
-      Object.keys(slotsRemaining).forEach(key => {
-        slotsRemaining[key] = Math.max(1, slotsRemaining[key] - 1);
-      });
-    } else {
-      // Fallback if no existing slots
-      generateRandomSlots();
-    }
-  } else {
-    // New visitor or new day - generate random slots
-    generateRandomSlots();
-  }
-  
-  localStorage.setItem('eek_last_visit', today);
-  localStorage.setItem('eek_slots_today', JSON.stringify(slotsRemaining));
-});
-
-function generateRandomSlots() {
-  const times = ['7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM'];
-  times.forEach(time => {
-    slotsRemaining[time] = Math.floor(Math.random() * 4) + 1; // 1-4 slots
-  });
-}
-
-function updateAvailabilityStatus() {
-  const totalSlotsToday = Object.values(slotsRemaining).reduce((a, b) => a + b, 0);
-  const alertDiv = document.getElementById('availabilityAlert');
-  
-  if (totalSlotsToday <= 6) {
-    alertDiv.style.display = 'block';
-    alertDiv.className = 'availability-alert urgent';
-    alertDiv.innerHTML = `⚠️ High demand today! Only ${totalSlotsToday} inspection slots remaining. Popular times book out quickly.`;
-  } else {
-    alertDiv.style.display = 'block';
-    alertDiv.className = 'availability-alert';
-    alertDiv.innerHTML = `📅 ${totalSlotsToday} inspection slots available today. Book now to secure your preferred time.`;
-  }
-}
+let selectedTimeWindow = null;
 
 function initializeCalendars() {
   const today = new Date();
@@ -984,6 +976,7 @@ function generateCalendar(month, year, containerId) {
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
   
   const container = document.getElementById(containerId);
   const calendar = container.querySelector('.calendar-grid');
@@ -1000,21 +993,21 @@ function generateCalendar(month, year, containerId) {
     calendar.appendChild(dayHeader);
   });
   
-  // Add empty cells for days before month starts
+  // Add empty cells
   for (let i = 0; i < firstDay; i++) {
     const emptyDay = document.createElement('div');
     emptyDay.className = 'day disabled';
     calendar.appendChild(emptyDay);
   }
   
-  // Add days of the month
+  // Add days
   for (let day = 1; day <= daysInMonth; day++) {
     const dayElement = document.createElement('div');
     dayElement.className = 'day';
     dayElement.textContent = day;
     
     const currentDate = new Date(year, month, day);
-    const isPast = currentDate < today.setHours(0,0,0,0);
+    const isPast = currentDate < today;
     
     if (isPast) {
       dayElement.classList.add('past');
@@ -1027,145 +1020,93 @@ function generateCalendar(month, year, containerId) {
 }
 
 function selectDate(year, month, day, element) {
-  // Remove previous selections
+  // Clear previous selection
   document.querySelectorAll('.day.selected').forEach(el => el.classList.remove('selected'));
   
-  // Mark selected day
+  // Mark selected
   element.classList.add('selected');
   
-  // Store selected date
+  // Store date
   selectedDate = new Date(year, month, day);
   
-  // Reset selected time when changing date
-  selectedTime = null;
-  document.querySelectorAll('.time-slot.selected').forEach(el => el.classList.remove('selected'));
-  document.getElementById('confirmUrgencyBtn').disabled = true;
-  
-  // Show time slots
-  showTimeSlots();
+  // Show time windows
+  showTimeWindows();
   
   // Update display
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   document.getElementById('selectedDateDisplay').textContent = selectedDate.toLocaleDateString('en-NZ', options);
 }
 
-function showTimeSlots() {
-  const container = document.getElementById('timeSlotContainer');
-  const slotsDiv = document.getElementById('timeSlots');
+function showTimeWindows() {
+  const container = document.getElementById('timeWindowContainer');
+  const windowsDiv = document.getElementById('timeWindows');
   
   container.style.display = 'block';
   
-  const dayOfWeek = selectedDate.getDay();
-  const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+  // Reset time selection
+  selectedTimeWindow = null;
+  document.getElementById('confirmTimeBtn').disabled = true;
   
-  const weekdayTimes = ['7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM'];
-  const weekendTimes = ['7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM'];
+  // Generate time windows
+  const isToday = selectedDate.toDateString() === new Date().toDateString();
+  const currentHour = new Date().getHours();
   
-  const times = isWeekend ? weekendTimes : weekdayTimes;
-  
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const isToday = selectedDate.getTime() === today.getTime();
-  
-  slotsDiv.innerHTML = '';
-  
-  times.forEach(time => {
-    const slot = document.createElement('div');
-    slot.className = 'time-slot';
-    
-    // Check if this time slot is within 2 hours from now (only for today)
-    let isWithinTwoHours = false;
-    if (isToday) {
-      // Parse the time string to get hour
-      const timeStr = time.replace(' AM', '').replace(' PM', '');
-      let [hours, minutes] = timeStr.split(':').map(Number);
-      
-      // Convert to 24-hour format
-      if (time.includes('PM') && hours !== 12) {
-        hours += 12;
-      } else if (time.includes('AM') && hours === 12) {
-        hours = 0;
-      }
-      
-      // Create a date object for this time slot today
-      const slotTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes || 0);
-      const twoHoursFromNow = new Date(now.getTime() + (2 * 60 * 60 * 1000));
-      
-      isWithinTwoHours = slotTime < twoHoursFromNow;
+  let windows = [
+    {
+      id: 'morning',
+      title: 'Morning',
+      range: '7:00 AM - 12:00 PM',
+      description: 'Best for inspections at dealerships',
+      available: !isToday || currentHour < 10,
+      slots: Math.floor(Math.random() * 3) + 1
+    },
+    {
+      id: 'afternoon', 
+      title: 'Afternoon',
+      range: '12:00 PM - 5:00 PM',
+      description: 'Ideal for private sellers',
+      available: !isToday || currentHour < 15,
+      slots: Math.floor(Math.random() * 3) + 1
     }
-    
-    const remaining = slotsRemaining[time] || 1;
-    
-    if (remaining <= 2) {
-      slot.classList.add('limited');
-    }
-    
-    if (isWithinTwoHours) {
-      slot.classList.add('past');
-      slot.style.cursor = 'not-allowed';
-      slot.innerHTML = `
-        <div>${time}</div>
-        <div class="availability">Too soon</div>
+  ];
+  
+  windowsDiv.innerHTML = windows.map(window => {
+    if (!window.available) {
+      return `
+        <div class="time-window" style="opacity: 0.5; cursor: not-allowed;">
+          <div class="time-window-title">${window.title}</div>
+          <div class="time-window-range" style="color: #999;">Too late to book</div>
+          <div class="time-window-description">Try tomorrow</div>
+        </div>
       `;
-    } else {
-      slot.innerHTML = `
-        <div>${time}</div>
-        <div class="availability">${remaining} slot${remaining === 1 ? '' : 's'} left</div>
-      `;
-      slot.onclick = () => selectTimeSlot(time, slot);
     }
     
-    slotsDiv.appendChild(slot);
-  });
-  
-  updateAvailabilityStatus();
+    const badgeClass = window.slots <= 1 ? 'limited' : '';
+    const badgeText = window.slots === 1 ? '1 slot left!' : `${window.slots} slots available`;
+    
+    return `
+      <div class="time-window" onclick="selectTimeWindow('${window.id}', '${window.title}', '${window.range}', this)">
+        <div class="time-window-title">${window.title}</div>
+        <div class="time-window-range">${window.range}</div>
+        <div class="time-window-description">${window.description}</div>
+        <span class="availability-badge ${badgeClass}">${badgeText}</span>
+      </div>
+    `;
+  }).join('');
 }
 
-function selectTimeSlot(time, element) {
-  // Remove previous selections
-  document.querySelectorAll('.time-slot.selected').forEach(el => el.classList.remove('selected'));
+function selectTimeWindow(id, title, range, element) {
+  // Clear previous selection
+  document.querySelectorAll('.time-window.selected').forEach(el => el.classList.remove('selected'));
   
-  // Mark selected slot
+  // Mark selected
   element.classList.add('selected');
   
-  // Store selected time
-  selectedTime = time;
-  
-  // Start reservation timer (10 minutes)
-  reservationExpiry = new Date(Date.now() + 10 * 60 * 1000);
+  // Store selection
+  selectedTimeWindow = { id, title, range };
   
   // Enable confirm button
-  document.getElementById('confirmUrgencyBtn').disabled = false;
-}
-
-function startReservationTimer() {
-  const endTime = new Date().getTime() + (10 * 60 * 1000);
-  
-  if (bookingTimer) {
-    clearInterval(bookingTimer);
-  }
-  
-  bookingTimer = setInterval(() => {
-    const now = new Date().getTime();
-    const distance = endTime - now;
-    
-    if (distance < 0) {
-      clearInterval(bookingTimer);
-      document.getElementById('reservationTimer').innerHTML = 'EXPIRED';
-      document.getElementById('reservationTimer').style.color = '#dc3545';
-      return;
-    }
-    
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    
-    const timerElement = document.getElementById('reservationTimer');
-    timerElement.innerHTML = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    
-    if (distance < 2 * 60 * 1000) {
-      timerElement.style.color = '#dc3545';
-    }
-  }, 1000);
+  document.getElementById('confirmTimeBtn').disabled = false;
 }
 
 // Standard urgency selection
@@ -1173,18 +1114,16 @@ let selectedUrgency = null;
 let selectedUrgencyDetails = {};
 
 function selectUrgency(urgencyId, title, time, price, element) {
-  // Remove previous selections
   document.querySelectorAll('.urgency-option.selected').forEach(el => el.classList.remove('selected'));
-  
-  // Add selection to clicked option
   element.classList.add('selected');
   
   selectedUrgency = urgencyId;
   selectedUrgencyDetails = { title, time, price };
   
-  document.getElementById('confirmUrgencyBtn').disabled = false;
+  document.getElementById('confirmTimeBtn').disabled = false;
 }
 
+// Navigation functions
 function goToStep1() {
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step1').classList.add('active');
@@ -1196,10 +1135,50 @@ function goToStep1() {
 }
 
 function goToStep2() {
+  // Get all required fields
+  const name = document.getElementById('nameInput').value.trim();
+  const phone = document.getElementById('phoneInput').value.trim();
+  const email = document.getElementById('emailInput').value.trim();
   const location = document.getElementById('locationInput').value.trim();
+  
+  // Validate required fields
+  if (!name) {
+    alert('Please enter your full name');
+    document.getElementById('nameInput').focus();
+    return;
+  }
+  
+  if (!phone) {
+    alert('Please enter your phone number');
+    document.getElementById('phoneInput').focus();
+    return;
+  }
+  
+  // Basic phone validation
+  const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+  if (!phoneRegex.test(phone) || phone.replace(/\D/g, '').length < 9) {
+    alert('Please enter a valid phone number');
+    document.getElementById('phoneInput').focus();
+    return;
+  }
+  
+  if (!email) {
+    alert('Please enter your email address');
+    document.getElementById('emailInput').focus();
+    return;
+  }
+  
+  // Basic email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    alert('Please enter a valid email address');
+    document.getElementById('emailInput').focus();
+    return;
+  }
   
   if (!location) {
     alert('Please enter the service location');
+    document.getElementById('locationInput').focus();
     return;
   }
   
@@ -1210,7 +1189,7 @@ function goToStep2() {
   document.getElementById('step1-progress').classList.remove('active');
   document.getElementById('step2-progress').classList.add('active');
   
-  // Show appropriate interface based on service type
+  // Show appropriate interface
   if (window.currentConfig.useCalendar) {
     document.getElementById('urgencyOptions').style.display = 'none';
     document.getElementById('calendarSection').style.display = 'block';
@@ -1218,27 +1197,29 @@ function goToStep2() {
   } else {
     document.getElementById('urgencyOptions').style.display = 'block';
     document.getElementById('calendarSection').style.display = 'none';
+    
+    // Generate urgency options
+    const urgencyContainer = document.getElementById('urgencyOptions');
+    urgencyContainer.innerHTML = window.currentConfig.urgencyOptions.map(option => `
+      <div class="urgency-option" onclick="selectUrgency('${option.id}', '${option.title}', '${option.time}', ${option.price}, this)">
+        <div class="urgency-title">${option.title}</div>
+        <div class="urgency-time">${option.time}</div>
+        <div class="urgency-description">${option.description}</div>
+        <div style="margin-top: 8px; font-weight: bold; color: #ff5500;">${option.price}</div>
+      </div>
+    `).join('');
   }
 }
 
 function goToStep3() {
   if (window.currentConfig.useCalendar) {
-    if (!selectedDate || !selectedTime) {
-      alert('Please select both a date and time');
-      return;
-    }
-    
-    // Validate reservation hasn't expired for calendar bookings
-    if (reservationExpiry && new Date() > reservationExpiry) {
-      alert('Your time slot reservation has expired. Please select a new time slot.');
-      selectedTime = null;
-      document.querySelectorAll('.time-slot.selected').forEach(el => el.classList.remove('selected'));
-      document.getElementById('confirmUrgencyBtn').disabled = true;
+    if (!selectedDate || !selectedTimeWindow) {
+      alert('Please select both a date and time window');
       return;
     }
   } else {
     if (!selectedUrgency) {
-      alert('Please select an urgency level');
+      alert('Please select a service time');
       return;
     }
   }
@@ -1251,19 +1232,53 @@ function goToStep3() {
   document.getElementById('step3-progress').classList.add('active');
   
   updateSummary();
-  
-  if (window.currentConfig.showReservationTimer) {
-    document.getElementById('reservationTimerSection').style.display = 'block';
-    startReservationTimer();
-  }
 }
 
 function updateSummary() {
+  // Customer details
+  const name = document.getElementById('nameInput').value;
+  const phone = document.getElementById('phoneInput').value;
+  const email = document.getElementById('emailInput').value;
+  const location = document.getElementById('locationInput').value;
+  
+  // Vehicle details
+  const rego = document.getElementById('regoInput').value;
+  const year = document.getElementById('yearInput').value;
+  const make = document.getElementById('makeInput').value;
+  const model = document.getElementById('modelInput').value;
+  
   document.getElementById('summaryService').textContent = window.currentConfig.title;
-  document.getElementById('summaryLocation').textContent = document.getElementById('locationInput').value;
+  document.getElementById('summaryLocation').textContent = location;
+  document.getElementById('summaryPhone').textContent = phone;
+  
+  // Add vehicle to summary if provided
+  if (rego || (make && model)) {
+    const vehicleInfo = [];
+    if (rego) vehicleInfo.push(rego.toUpperCase());
+    if (year) vehicleInfo.push(year);
+    if (make) vehicleInfo.push(make);
+    if (model) vehicleInfo.push(model);
+    
+    if (vehicleInfo.length > 0) {
+      // Add vehicle row to summary
+      const existingVehicleRow = document.getElementById('vehicleRow');
+      if (!existingVehicleRow) {
+        const vehicleRow = document.createElement('div');
+        vehicleRow.className = 'summary-item';
+        vehicleRow.id = 'vehicleRow';
+        vehicleRow.innerHTML = `
+          <span>Vehicle:</span>
+          <strong id="summaryVehicle">${vehicleInfo.join(' ')}</strong>
+        `;
+        // Insert after phone row
+        document.getElementById('summaryPhone').parentElement.insertAdjacentElement('afterend', vehicleRow);
+      } else {
+        document.getElementById('summaryVehicle').textContent = vehicleInfo.join(' ');
+      }
+    }
+  }
   
   if (window.currentConfig.useCalendar) {
-    // Show date/time rows, hide urgency row
     document.getElementById('urgencyRow').style.display = 'none';
     document.getElementById('dateRow').style.display = 'flex';
     document.getElementById('timeRow').style.display = 'flex';
@@ -1272,94 +1287,206 @@ function updateSummary() {
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
       document.getElementById('summaryDate').textContent = selectedDate.toLocaleDateString('en-NZ', options);
     }
-    document.getElementById('summaryTime').textContent = selectedTime || 'Not selected';
-    
-    // Don't show price breakdown - just the total
-    document.getElementById('priceBreakdown').style.display = 'none';
-    
-    document.getElementById('summaryPrice').textContent = window.currentConfig.urgencyOptions[0].price;
+    document.getElementById('summaryTime').textContent = selectedTimeWindow ? selectedTimeWindow.range : 'Not selected';
+    document.getElementById('summaryPrice').textContent = `${window.currentConfig.basePrice}`;
   } else {
-    // Show urgency row, hide date/time rows
     document.getElementById('urgencyRow').style.display = 'flex';
     document.getElementById('dateRow').style.display = 'none';
     document.getElementById('timeRow').style.display = 'none';
-    document.getElementById('priceBreakdown').style.display = 'none';
     
-    document.getElementById('summaryUrgency').textContent = `${selectedUrgencyDetails.title} (${selectedUrgencyDetails.time})`;
-    document.getElementById('summaryPrice').textContent = selectedUrgencyDetails.price;
+    document.getElementById('summaryUrgency').textContent = selectedUrgencyDetails.time || '';
+    document.getElementById('summaryPrice').textContent = `${selectedUrgencyDetails.price || window.currentConfig.basePrice}`;
   }
-  
-  // Update booking button text with price
-  const callBtn = document.getElementById('callToBookBtn');
-  const price = window.currentConfig.useCalendar ? 
-    window.currentConfig.urgencyOptions[0].price : 
-    selectedUrgencyDetails.price;
-  callBtn.textContent = `Book Now & Pay ${price}`;
 }
 
 function toggleBookingButton() {
-  // This function is called when terms checkbox changes
-  // You can add logic here if needed
-}
-
-function trackConversion(event, type) {
-  // Analytics tracking function
-  if (typeof gtag !== 'undefined') {
-    gtag('event', 'conversion', {
-      'send_to': 'AW-17084465163/' + event,
-      'value': 1.0,
-      'currency': 'NZD'
-    });
-  }
-}
-
-function proceedToPayment() {
   const termsChecked = document.getElementById('termsAgree').checked;
-  const location = document.getElementById('locationInput').value.trim();
+  document.getElementById('generatePaymentBtn').disabled = !termsChecked;
+}
+
+// Function to build redirect URL with all data
+function buildRedirectUrl() {
+  const baseUrl = 'https://www.eek.nz/thanks';
+  const params = new URLSearchParams();
   
-  if (!termsChecked) {
-    alert('Please accept the terms and conditions to proceed');
+  // Customer info
+  params.append('name', document.getElementById('nameInput').value.trim());
+  params.append('phone', document.getElementById('phoneInput').value.trim());
+  params.append('email', document.getElementById('emailInput').value.trim());
+  params.append('location', document.getElementById('locationInput').value.trim());
+  
+  // Vehicle info
+  params.append('rego', document.getElementById('regoInput').value.trim().toUpperCase());
+  params.append('year', document.getElementById('yearInput').value.trim());
+  params.append('make', document.getElementById('makeInput').value.trim());
+  params.append('model', document.getElementById('modelInput').value.trim());
+  
+  // Service info
+  params.append('service', window.currentService);
+  params.append('serviceCode', window.currentConfig.serviceCode);
+  params.append('serviceTitle', window.currentConfig.title);
+  params.append('price', window.currentConfig.basePrice);
+  params.append('details', document.getElementById('detailsInput').value || '');
+  
+  // Time info
+  if (window.currentConfig.useCalendar && selectedDate && selectedTimeWindow) {
+    params.append('scheduledDate', selectedDate.toISOString());
+    params.append('timeWindow', selectedTimeWindow.range);
+    params.append('urgencyLevel', 'Scheduled');
+  } else if (selectedUrgency) {
+    params.append('scheduledDate', new Date().toISOString());
+    params.append('timeWindow', selectedUrgencyDetails.time);
+    params.append('urgencyLevel', selectedUrgency);
+  }
+  
+  // Add booking timestamp
+  params.append('bookingTime', new Date().toISOString());
+  
+  return `${baseUrl}?${params.toString()}`;
+}
+
+async function generatePaymentLink() {
+  const btn = document.getElementById('generatePaymentBtn');
+  
+  if (!document.getElementById('termsAgree').checked) {
+    alert('Please accept the terms and conditions');
     return;
   }
   
-  if (!location) {
-    alert('Please complete all required fields');
-    return;
-  }
+  // Change button to processing state
+  btn.disabled = true;
+  btn.classList.add('processing');
+  btn.textContent = 'Generating Link';
   
-  if (window.currentConfig.useCalendar) {
-    if (!selectedDate || !selectedTime) {
-      alert('Please select both a date and time');
-      return;
+  // Prepare comprehensive booking data
+  const bookingData = {
+    // Core booking details
+    rego: document.getElementById('locationInput').value, // Using location field for rego/address
+    amount: window.currentConfig.basePrice * 100, // Stripe expects amount in cents
+    currency: 'NZD',
+    description: `${window.currentConfig.title} - ${document.getElementById('locationInput').value}`,
+    // Build redirect URL with all customer data as query parameters
+    redirectUrl: buildRedirectUrl(),
+    
+    // Additional customer data for email
+    customerData: {
+      service: window.currentService,
+      serviceCode: window.currentConfig.serviceCode,
+      serviceTitle: window.currentConfig.title,
+      location: document.getElementById('locationInput').value,
+      phone: document.getElementById('phoneInput').value,
+      email: document.getElementById('emailInput').value || 'Not provided',
+      details: document.getElementById('detailsInput').value || 'No additional details',
+      price: `${window.currentConfig.basePrice}`,
+      bookingDateTime: new Date().toLocaleString('en-NZ', { timeZone: 'Pacific/Auckland' }),
+      
+      // Time-specific data
+      scheduledDate: null,
+      scheduledTime: null,
+      urgencyLevel: null
     }
-  } else {
-    if (!selectedUrgency) {
-      alert('Please select an urgency level');
-      return;
-    }
-  }
+  };
   
-  // Track the booking attempt
-  trackConversion(`${window.currentService}_booking_payment`, 'Purchase');
-  
-  // Find the appropriate stripe URL
-  let stripeUrl;
+  // Add time-specific data
   if (window.currentConfig.useCalendar) {
-    stripeUrl = window.currentConfig.urgencyOptions[0].stripeUrl;
+    // For inspection service
+    bookingData.customerData.scheduledDate = selectedDate.toLocaleDateString('en-NZ', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'Pacific/Auckland'
+    });
+    bookingData.customerData.scheduledTime = selectedTimeWindow.range;
+    bookingData.customerData.urgencyLevel = 'Scheduled Inspection';
   } else {
-    const selectedOption = window.currentConfig.urgencyOptions.find(option => option.id === selectedUrgency);
-    stripeUrl = selectedOption ? selectedOption.stripeUrl : null;
+    // For emergency services
+    bookingData.customerData.scheduledDate = 'Today';
+    bookingData.customerData.scheduledTime = selectedUrgencyDetails.time || 'Emergency Response';
+    bookingData.customerData.urgencyLevel = selectedUrgency || 'emergency';
   }
   
-  if (stripeUrl) {
-    // Redirect to the correct payment URL
-    window.location.href = stripeUrl;
+  try {
+    // Call Power Automate flow
+    const response = await fetch(POWER_AUTOMATE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(bookingData)
+    });
+    
+    if (response.ok) {
+      const result = await response.json();
+      
+      if (result.url) {
+        // Success! Show the payment link
+        btn.classList.remove('processing');
+        btn.style.display = 'none';
+        
+        // Create success message with payment link
+        const successDiv = document.createElement('div');
+        successDiv.style.cssText = 'background: #d4edda; border: 2px solid #28a745; padding: 20px; border-radius: 8px; margin-top: 20px;';
+        successDiv.innerHTML = `
+          <h4 style="color: #155724; margin: 0 0 15px 0;">✓ Payment Link Generated Successfully!</h4>
+          <p style="color: #155724; margin: 10px 0;">Your secure payment link is ready:</p>
+          <a href="${result.url}" class="button" style="background: #28a745; font-size: 1.2em; padding: 15px 30px; display: inline-block; margin: 10px 0;">
+            Complete Payment (${window.currentConfig.basePrice})
+          </a>
+          <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
+            After payment, you'll receive an SMS confirmation with your booking details.
+          </p>
+        `;
+        
+        btn.parentElement.appendChild(successDiv);
+        
+        // Optional: Auto-redirect after 3 seconds
+        setTimeout(() => {
+          window.location.href = result.url;
+        }, 3000);
+        
+      } else {
+        throw new Error('No payment URL received');
+      }
+    } else {
+      throw new Error(`Server returned ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error generating payment link:', error);
+    
+    // Reset button
+    btn.disabled = false;
+    btn.classList.remove('processing');
+    btn.textContent = 'Generate Payment Link';
+    
+    // Show error with fallback options
+    alert(`Unable to generate payment link automatically.\n\nPlease try one of these options:\n1. Refresh the page and try again\n2. Call us at 0800 769 000\n3. Use our direct payment page at www.eek.nz/pay`);
+  }
+}
+
+function handleFallbackPayment() {
+  // Use predefined Stripe links as fallback
+  const stripeLinks = {
+    'jumpstart': 'https://buy.stripe.com/6oUfZh2O34kh0U7aZva7I1m',
+    'mechanic': 'https://buy.stripe.com/eVqfZh88n9EB32f9Vra7I1h',
+    'fuel-extraction': 'https://buy.stripe.com/9B65kDewLbMJdGT3x3a7I1k',
+    'inspection': 'https://buy.stripe.com/9B68wP1JZaIFauH4B7a7I0Z'
+  };
+  
+  const link = stripeLinks[window.currentService];
+  if (link) {
+    // Store booking data in session storage for retrieval after payment
+    sessionStorage.setItem('eek_booking', JSON.stringify({
+      service: window.currentService,
+      location: document.getElementById('locationInput').value,
+      phone: document.getElementById('phoneInput').value,
+      details: document.getElementById('detailsInput').value,
+      timestamp: new Date().toISOString()
+    }));
+    
+    window.location.href = link;
   } else {
-    // Fallback for services without payment links
-    const price = window.currentConfig.useCalendar ? 
-      window.currentConfig.urgencyOptions[0].price : 
-      selectedUrgencyDetails.price;
-    alert(`Booking confirmed!\n\nService: ${window.currentConfig.title}\nLocation: ${location}\nPrice: ${price}\n\nPlease call 0800 769 000 to complete payment.`);
+    alert('Payment processing temporarily unavailable. Please call 0800 769 000 to complete your booking.');
   }
 }
 </script>
