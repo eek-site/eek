@@ -452,11 +452,27 @@
     // Extract URL parameters
     function getUrlParameters() {
       const params = new URLSearchParams(window.location.search);
-      const data = {};
       
-      // Extract all parameters
+      // Check for base64 encoded data first
+      const encodedData = params.get('d');
+      if (encodedData) {
+        try {
+          // Decode base64 to JSON string
+          const jsonString = atob(encodedData);
+          // Parse JSON to object
+          return JSON.parse(jsonString);
+        } catch (error) {
+          console.error('Failed to decode booking data:', error);
+          // Fall back to checking individual parameters
+        }
+      }
+      
+      // Fall back to extracting individual parameters (for backwards compatibility)
+      const data = {};
       for (const [key, value] of params) {
-        data[key] = decodeURIComponent(value);
+        if (key !== 'd') {
+          data[key] = decodeURIComponent(value);
+        }
       }
       
       return data;
