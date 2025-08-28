@@ -564,6 +564,40 @@
         return;
       }
       
+      // Convert bookingTime to ISO 8601 format if it exists
+      if (data.bookingTime) {
+        try {
+          // Parse the date string "28/08/2025, 3:49:34 pm"
+          const [datePart, timePart] = data.bookingTime.split(', ');
+          const [day, month, year] = datePart.split('/');
+          
+          // Parse time with AM/PM
+          let [time, period] = timePart.split(' ');
+          let [hours, minutes, seconds] = time.split(':');
+          hours = parseInt(hours);
+          
+          // Convert to 24-hour format
+          if (period === 'pm' && hours !== 12) {
+            hours += 12;
+          } else if (period === 'am' && hours === 12) {
+            hours = 0;
+          }
+          
+          // Create ISO date string
+          const isoDate = new Date(year, month - 1, day, hours, minutes, seconds);
+          data.bookingTimeISO = isoDate.toISOString();
+          
+          // Keep original format for display purposes
+          data.bookingTimeOriginal = data.bookingTime;
+          // Replace bookingTime with ISO format for Power Automate
+          data.bookingTime = isoDate.toISOString();
+        } catch (error) {
+          console.error('Error converting bookingTime to ISO:', error);
+          // If conversion fails, use current time
+          data.bookingTime = new Date().toISOString();
+        }
+      }
+      
       // Add payment confirmation timestamp
       data.paymentConfirmedAt = new Date().toISOString();
       data.paymentStatus = 'confirmed';
