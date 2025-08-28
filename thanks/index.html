@@ -574,6 +574,8 @@
         data.stripeSessionId = sessionId;
       }
       
+      console.log('Sending booking data to Power Automate:', data);
+      
       try {
         const response = await fetch(PAYMENT_CONFIRMED_WEBHOOK_URL, {
           method: 'POST',
@@ -584,19 +586,29 @@
         });
         
         if (response.ok) {
-          console.log('Payment confirmation sent to Power Automate');
+          console.log('Payment confirmation sent successfully to Power Automate');
           // Show success indicator
           const indicator = document.getElementById('processingIndicator');
           indicator.style.display = 'block';
+          indicator.textContent = '✓ Booking data sent successfully';
           setTimeout(() => {
             indicator.style.display = 'none';
           }, 5000);
         } else {
-          console.error('Failed to send payment confirmation:', response.status);
+          console.error('Failed to send payment confirmation. Status:', response.status);
+          console.error('Response:', await response.text());
+          
+          // Still show confirmation to user - payment is successful even if webhook fails
+          const indicator = document.getElementById('processingIndicator');
+          indicator.style.display = 'block';
+          indicator.style.background = '#fff3cd';
+          indicator.style.color = '#856404';
+          indicator.textContent = '⚠ Payment confirmed, but notification delayed. We\'ll process your order shortly.';
         }
       } catch (error) {
         console.error('Error sending payment confirmation:', error);
         // Don't show error to user - payment is already confirmed
+        // The booking data is still visible on the page
       }
     }
     
