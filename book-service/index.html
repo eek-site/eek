@@ -584,6 +584,18 @@
         </div>
       </div>
       
+      <!-- Seller Information - Only for Inspection Service -->
+      <div id="sellerInfoSection" style="background: #e8f4f8; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none;">
+        <h4 style="margin: 0 0 15px 0; color: #333;">Seller Information</h4>
+        <div class="contact-info">
+          <label for="sellerNameInput">Seller Name (required for inspection)</label>
+          <input type="text" id="sellerNameInput" placeholder="Seller's full name or dealership name" />
+          
+          <label for="sellerPhoneInput">Seller Phone Number (required for inspection)</label>
+          <input type="tel" id="sellerPhoneInput" placeholder="021 987 6543" />
+        </div>
+      </div>
+      
       <!-- Location Information -->
       <label for="locationInput" style="display: block; margin-bottom: 8px; font-weight: bold;">Where do you need service?</label>
       <input type="text" class="location-input" id="locationInput" placeholder="Enter your address, suburb, or region" />
@@ -865,9 +877,9 @@ const serviceConfigs = {
     detailsPlaceholder: 'e.g., Make/model/year, dealer or private sale, any specific concerns, etc.',
     useCalendar: true,
     serviceCode: 'INSP',
-    basePrice: 289,  // Changed from 289 to 1 for testing
+    basePrice: 289,
     stats: [
-      { number: '$1', text: 'TEST PRICE' },  // Changed from $289
+      { number: '$289', text: 'fixed rate' },
       { number: '45-point', text: 'inspection' },
       { number: 'Morning', text: 'or afternoon' },
       { number: 'Certified', text: 'report' }
@@ -938,6 +950,13 @@ function loadServiceConfig(serviceType) {
   document.getElementById('detailsLabel').textContent = config.detailsLabel;
   document.getElementById('detailsInput').placeholder = config.detailsPlaceholder;
   document.getElementById('serviceInfoBox').innerHTML = config.infoContent;
+  
+  // Show/hide seller information for inspection service
+  if (serviceType === 'inspection') {
+    document.getElementById('sellerInfoSection').style.display = 'block';
+  } else {
+    document.getElementById('sellerInfoSection').style.display = 'none';
+  }
   
   // Update step 2 title
   if (config.useCalendar) {
@@ -1182,6 +1201,30 @@ function goToStep2() {
     return;
   }
   
+  // For inspection service, also validate seller information
+  if (window.currentService === 'inspection') {
+    const sellerName = document.getElementById('sellerNameInput').value.trim();
+    const sellerPhone = document.getElementById('sellerPhoneInput').value.trim();
+    
+    if (!sellerName) {
+      alert('Please enter the seller\'s name or dealership name');
+      document.getElementById('sellerNameInput').focus();
+      return;
+    }
+    
+    if (!sellerPhone) {
+      alert('Please enter the seller\'s phone number');
+      document.getElementById('sellerPhoneInput').focus();
+      return;
+    }
+    
+    if (!phoneRegex.test(sellerPhone) || sellerPhone.replace(/\D/g, '').length < 9) {
+      alert('Please enter a valid seller phone number');
+      document.getElementById('sellerPhoneInput').focus();
+      return;
+    }
+  }
+  
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step2').classList.add('active');
   
@@ -1288,14 +1331,14 @@ function updateSummary() {
       document.getElementById('summaryDate').textContent = selectedDate.toLocaleDateString('en-NZ', options);
     }
     document.getElementById('summaryTime').textContent = selectedTimeWindow ? selectedTimeWindow.range : 'Not selected';
-    document.getElementById('summaryPrice').textContent = `${window.currentConfig.basePrice}`;
+    document.getElementById('summaryPrice').textContent = `$${window.currentConfig.basePrice}`;
   } else {
     document.getElementById('urgencyRow').style.display = 'flex';
     document.getElementById('dateRow').style.display = 'none';
     document.getElementById('timeRow').style.display = 'none';
     
     document.getElementById('summaryUrgency').textContent = selectedUrgencyDetails.time || '';
-    document.getElementById('summaryPrice').textContent = `${selectedUrgencyDetails.price || window.currentConfig.basePrice}`;
+    document.getElementById('summaryPrice').textContent = `$${selectedUrgencyDetails.price || window.currentConfig.basePrice}`;
   }
 }
 
@@ -1358,26 +1401,66 @@ async function generatePaymentLink() {
   btn.classList.add('processing');
   btn.textContent = 'Generating Link';
   
-  // Prepare comprehensive booking data
+  // Collect all customer and vehicle data
+  const customerName = document.getElementById('nameInput').value.trim();
+  const phone = document.getElementById('phoneInput').value.trim();
+  const email = document.getElementById('emailInput').value.trim();
+  const location = document.getElementById('locationInput').value.trim();
+  
+  // Vehicle data
+  const rego = document.getElementById('regoInput').value.trim().toUpperCase();
+  const year = document.getElementById('yearInput').value.trim();
+  const make = document.getElementById('makeInput').value.trim();
+  const model = document.getElementById('modelInput').value.trim();
+  
+  // Seller data (for inspection service)
+  let sellerName = '';
+  let sellerPhone = '';
+  if (window.currentService === 'inspection') {
+    sellerName = document.getElementById('sellerNameInput').value.trim();
+    sellerPhone = document.getElementById('sellerPhoneInput').value.trim();
+  }
+  
+  // Create vehicle description for Stripe
+  const vehicleDescription = [rego, year, make, model].filter(Boolean).join(' ') || 'Vehicle details not provided';
+  
+  // Prepare comprehensive booking data matching your Power Automate schema
   const bookingData = {
-    // Core booking details
-    rego: document.getElementById('locationInput').value, // Using location field for rego/address
+    // Core fields for Stripe payment
+    rego: rego || 'Not provided',  // Using rego field as expected by your flow
     amount: window.currentConfig.basePrice * 100, // Stripe expects amount in cents
     currency: 'NZD',
-    description: `${window.currentConfig.title} - ${document.getElementById('locationInput').value}`,
-    // Build redirect URL with all customer data as query parameters
+    description: `${window.currentConfig.title} - ${vehicleDescription} - ${location}`,
+    // Build redirect URL with all parameters
     redirectUrl: buildRedirectUrl(),
     
-    // Additional customer data for email
+    // Complete customer data for email and records
     customerData: {
+      // Customer info
+      name: customerName,
+      phone: phone,
+      email: email,
+      location: location,
+      
+      // Vehicle info
+      vehicleRego: rego,
+      vehicleYear: year,
+      vehicleMake: make,
+      vehicleModel: model,
+      vehicleDescription: vehicleDescription,
+      
+      // Seller info (for inspections)
+      sellerName: sellerName,
+      sellerPhone: sellerPhone,
+      
+      // Service info
       service: window.currentService,
       serviceCode: window.currentConfig.serviceCode,
       serviceTitle: window.currentConfig.title,
-      location: document.getElementById('locationInput').value,
-      phone: document.getElementById('phoneInput').value,
-      email: document.getElementById('emailInput').value || 'Not provided',
-      details: document.getElementById('detailsInput').value || 'No additional details',
+      details: document.getElementById('detailsInput').value || 'No additional details provided',
       price: `${window.currentConfig.basePrice}`,
+      
+      // Booking timestamp
       bookingDateTime: new Date().toLocaleString('en-NZ', { timeZone: 'Pacific/Auckland' }),
       
       // Time-specific data
@@ -1434,7 +1517,7 @@ async function generatePaymentLink() {
             Complete Payment (${window.currentConfig.basePrice})
           </a>
           <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
-            After payment, you'll receive an SMS confirmation with your booking details.
+            After payment, you'll receive an SMS confirmation to ${phone} with your booking details.
           </p>
         `;
         
@@ -1461,32 +1544,6 @@ async function generatePaymentLink() {
     
     // Show error with fallback options
     alert(`Unable to generate payment link automatically.\n\nPlease try one of these options:\n1. Refresh the page and try again\n2. Call us at 0800 769 000`);
-  }
-}
-
-function handleFallbackPayment() {
-  // Use predefined Stripe links as fallback
-  const stripeLinks = {
-    'jumpstart': 'https://buy.stripe.com/6oUfZh2O34kh0U7aZva7I1m',
-    'mechanic': 'https://buy.stripe.com/eVqfZh88n9EB32f9Vra7I1h',
-    'fuel-extraction': 'https://buy.stripe.com/9B65kDewLbMJdGT3x3a7I1k',
-    'inspection': 'https://buy.stripe.com/9B68wP1JZaIFauH4B7a7I0Z'
-  };
-  
-  const link = stripeLinks[window.currentService];
-  if (link) {
-    // Store booking data in session storage for retrieval after payment
-    sessionStorage.setItem('eek_booking', JSON.stringify({
-      service: window.currentService,
-      location: document.getElementById('locationInput').value,
-      phone: document.getElementById('phoneInput').value,
-      details: document.getElementById('detailsInput').value,
-      timestamp: new Date().toISOString()
-    }));
-    
-    window.location.href = link;
-  } else {
-    alert('Payment processing temporarily unavailable. Please call 0800 769 000 to complete your booking.');
   }
 }
 </script>
