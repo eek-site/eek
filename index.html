@@ -487,11 +487,21 @@
 
 <!-- Business Closed Banner (hidden by default) -->
 <div id="closedBanner" class="after-hours-banner" style="display: none; background: linear-gradient(135deg, #666, #888);">
-  <h2>🕐 CURRENTLY CLOSED</h2>
-  <p><strong>Business Hours:</strong></p>
-  <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
-  <p>Saturday - Sunday: 7:00 AM - 12:00 PM</p>
-  <p>Please call during business hours or book online for next available service</p>
+  <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
+  <div id="afterHoursMessage">
+    <p><strong>Business Hours:</strong></p>
+    <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
+    <p>Saturday - Sunday: 7:00 AM - 12:00 PM</p>
+    <p>Please call during business hours or book online for next available service</p>
+    <p style="margin-top: 15px;"><a href="#more-options" style="color: white; text-decoration: underline;">Existing customers & suppliers: View support options ↓</a></p>
+  </div>
+  <div id="tempUnavailableMessage" style="display: none;">
+    <p><strong>We're currently experiencing high demand</strong></p>
+    <p>Our mechanics are fully dispatched on emergency calls</p>
+    <p>Please book online for the next available appointment or try calling again shortly</p>
+    <a href="https://www.eek.nz/book-service" class="emergency-btn" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
+    <p style="margin-top: 15px;"><a href="#more-options" style="color: white; text-decoration: underline;">Existing customers & suppliers: Support options below ↓</a></p>
+  </div>
 </div>
 
 <section id="stripePaymentBlock" style="display: none; background-color: #ffffff; padding: 20px; text-align: center; color: #333; border-bottom: 2px solid #ff5500;">
@@ -652,7 +662,7 @@
   </div>
 </div>
 
-<div class="more-options-container">
+<div class="more-options-container" id="more-options">
   <div class="more-options-header">
     <h2>📋 More Eek Mobile Mechanical Services & Support</h2>
     <p>Looking for something else? Eek Mobile Mechanical offers comprehensive support for customers, suppliers, employment, and business partnerships.</p>
@@ -729,14 +739,58 @@ async function checkSystemStatus() {
   return true; // Default to active (phones visible) if check fails
 }
 
+// Function to check if current time is within business hours
+function isWithinBusinessHours() {
+  const now = new Date();
+  const day = now.getDay(); // 0 = Sunday, 6 = Saturday
+  const hour = now.getHours();
+  const minutes = now.getMinutes();
+  const time = hour + minutes / 60;
+  
+  // Monday-Friday: 7:00 AM - 5:00 PM
+  if (day >= 1 && day <= 5) {
+    return time >= 7 && time < 17;
+  }
+  
+  // Saturday-Sunday: 7:00 AM - 12:00 PM
+  if (day === 0 || day === 6) {
+    return time >= 7 && time < 12;
+  }
+  
+  return false;
+}
+
 // Update UI based on system status
 async function updateHoursDisplay() {
   const systemActive = await checkSystemStatus();
+  const duringBusinessHours = isWithinBusinessHours();
   
   // Update closed banner (shows when passive/closed)
   const closedBanner = document.getElementById('closedBanner');
+  const closedTitle = document.getElementById('closedTitle');
+  const afterHoursMessage = document.getElementById('afterHoursMessage');
+  const tempUnavailableMessage = document.getElementById('tempUnavailableMessage');
+  
   if (closedBanner) {
-    closedBanner.style.display = systemActive ? 'none' : 'block';
+    if (!systemActive) {
+      closedBanner.style.display = 'block';
+      
+      if (duringBusinessHours) {
+        // During business hours but phones off - operational reasons
+        closedTitle.innerHTML = '🚧 PHONE LINES BUSY';
+        closedBanner.style.background = 'linear-gradient(135deg, #ff8c00, #ff6b00)';
+        afterHoursMessage.style.display = 'none';
+        tempUnavailableMessage.style.display = 'block';
+      } else {
+        // Outside business hours
+        closedTitle.innerHTML = '🕐 CURRENTLY CLOSED';
+        closedBanner.style.background = 'linear-gradient(135deg, #666, #888)';
+        afterHoursMessage.style.display = 'block';
+        tempUnavailableMessage.style.display = 'none';
+      }
+    } else {
+      closedBanner.style.display = 'none';
+    }
   }
   
   // Update header call button
@@ -747,14 +801,9 @@ async function updateHoursDisplay() {
   
   // Update service buttons
   const normalButtons = document.querySelectorAll('.normal-hours-btn');
-  const onlineOnlyButtons = document.querySelectorAll('.online-only-btn');
   
   normalButtons.forEach(btn => {
     btn.style.display = systemActive ? 'inline-block' : 'none';
-  });
-  
-  onlineOnlyButtons.forEach(btn => {
-    btn.style.display = systemActive ? 'none' : 'inline-block';
   });
   
   // Update sticky buttons
@@ -766,7 +815,18 @@ async function updateHoursDisplay() {
   }
   
   if (stickyClosed) {
-    stickyClosed.style.display = systemActive ? 'none' : 'inline-block';
+    if (!systemActive) {
+      stickyClosed.style.display = 'inline-block';
+      if (duringBusinessHours) {
+        stickyClosed.innerHTML = '📅 Book Online';
+        stickyClosed.style.background = '#ff8c00';
+      } else {
+        stickyClosed.innerHTML = '🕐 View Hours';
+        stickyClosed.style.background = '#666';
+      }
+    } else {
+      stickyClosed.style.display = 'none';
+    }
   }
 }
 
