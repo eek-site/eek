@@ -702,6 +702,7 @@
 </footer>
 
 <a class="sticky-call" href="tel:0800769000" onclick="trackConversion('sticky_call', 'Contact')" id="stickyCallButton">📞 Call Eek Now</a>
+<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" style="display: none; background: #666;">🕐 View Hours</a>
 
 <script>
 // Check system availability status
@@ -756,10 +757,16 @@ async function updateHoursDisplay() {
     btn.style.display = systemActive ? 'none' : 'inline-block';
   });
   
-  // Update sticky call button
+  // Update sticky buttons
   const stickyCall = document.getElementById('stickyCallButton');
+  const stickyClosed = document.getElementById('stickyClosedButton');
+  
   if (stickyCall) {
     stickyCall.style.display = systemActive ? 'inline-block' : 'none';
+  }
+  
+  if (stickyClosed) {
+    stickyClosed.style.display = systemActive ? 'none' : 'inline-block';
   }
 }
 
