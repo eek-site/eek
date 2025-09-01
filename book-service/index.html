@@ -1011,14 +1011,14 @@ const serviceConfigs = {
       <ul>
         <li><strong>Comprehensive certified mechanical inspection</strong></li>
         <li><strong>45-point inspection checklist</strong></li>
-        <li><strong>Written inspection report</strong> with photos</li>
+        <li><strong>Written inspection report</strong></li>
         <li><strong>Professional recommendation</strong> on purchase decision</li>
-        <li><strong>Fixed flat rate of $289</strong> - no surprises</li>
+        <li><strong>Prices from $199</strong> - best rates when you book in advance</li>
       </ul>
     `,
     terms: [
       'Comprehensive certified mechanical inspection',
-      'Fixed price of $289 - no hidden fees',
+      'Dynamic pricing from $199-$399 based on booking timing',
       'Time windows are approximate - technician will call en route',
       'Written report provided within 24 hours',
       'Cancellations must be made at least 2 hours in advance'
@@ -1251,29 +1251,6 @@ function calculateInspectionPrice(date, timeSlot, availableSlots, isSpecialDeal 
     if (timeSlot === 'lunch' && daysUntil <= 7) {
       basePrice += 30;
     }
-  } 
-  // Weekday pricing logic
-  else {
-    // Cascading pricing based on urgency
-    if (daysUntil <= 1) {
-      basePrice = 289;
-    } else if (daysUntil <= 7) {
-      basePrice = 249;
-    } else if (daysUntil <= 14) {
-      basePrice = 229;
-    } else {
-      basePrice = 199;
-    }
-    
-    // Peak time premium for weekdays
-    // Morning (8-10am) or Afternoon (4-6pm) peak times
-    if (timeSlot === 'morning' || (timeSlot === 'afternoon' && daysUntil <= 7)) {
-      basePrice += 20;
-    }
-    // Lunch time peak (11am-2pm) - highest demand
-    if (timeSlot === 'lunch' && daysUntil <= 7) {
-      basePrice += 30;
-    }
   }
   
   // Availability-based adjustment
@@ -1398,16 +1375,13 @@ function showTimeWindows() {
     const badgeClass = window.slots <= 1 ? 'limited' : '';
     const badgeText = window.slots === 1 ? 'Last slot!' : `${window.slots} slots available`;
     
-    // Show original price if discounted
-    const originalPrice = window.price > 250 ? '' : '';
-    
     return `
       <div class="time-window" onclick="selectTimeWindow('${window.id}', '${window.title}', '${window.range}', ${window.price}, this)">
         <div class="time-window-title">${window.title}</div>
         <div class="time-window-range">${window.range}</div>
         <div class="time-window-description">${window.description}</div>
         <div style="margin: 10px 0; font-size: 1.3em; font-weight: bold; color: #ff5500;">
-          ${window.price}
+          $${window.price}
         </div>
         <span class="availability-badge ${badgeClass}">${badgeText}</span>
       </div>
@@ -1573,348 +1547,6 @@ function goToStep2() {
         <div class="urgency-title">${option.title}</div>
         <div class="urgency-time">${option.time}</div>
         <div class="urgency-description">${option.description}</div>
-        <div style="margin-top: 8px; font-weight: bold; color: #ff5500;">$${option.price}</div>
+        <div style="margin-top: 8px; font-weight: bold; color: #ff5500;">${option.price}</div>
       </div>
     `).join('');
-  }
-}
-
-function goToStep3() {
-  if (window.currentConfig.useCalendar) {
-    if (!selectedDate || !selectedTimeWindow) {
-      alert('Please select both a date and time window');
-      return;
-    }
-  } else {
-    if (!selectedUrgency) {
-      alert('Please select a service time');
-      return;
-    }
-  }
-  
-  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-  
-  // For inspection service, go to vehicle type selection
-  if (window.currentService === 'inspection') {
-    document.getElementById('step3').classList.add('active');
-    document.getElementById('step2-progress').classList.add('completed');
-    document.getElementById('step2-progress').classList.remove('active');
-    document.getElementById('step3-progress').classList.add('active');
-    
-    // Pre-select standard vehicle type by default
-    const standardOption = document.querySelector('.vehicle-type-option');
-    if (standardOption && !selectedVehicleType) {
-      selectVehicleType('standard', 0, standardOption);
-    }
-  } else {
-    // For other services, skip to confirmation (now step4)
-    document.getElementById('step4').classList.add('active');
-    document.getElementById('step2-progress').classList.add('completed');
-    document.getElementById('step2-progress').classList.remove('active');
-    document.getElementById('step4-progress').classList.add('active');
-    updateSummary();
-  }
-}
-
-function goToStep4() {
-  if (!selectedVehicleType) {
-    alert('Please select a vehicle type');
-    return;
-  }
-  
-  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-  document.getElementById('step4').classList.add('active');
-  
-  document.getElementById('step3-progress').classList.add('completed');
-  document.getElementById('step3-progress').classList.remove('active');
-  document.getElementById('step4-progress').classList.add('active');
-  
-  updateSummary();
-}
-
-function updateSummary() {
-  // Customer details
-  const name = document.getElementById('nameInput').value;
-  const phone = document.getElementById('phoneInput').value;
-  const email = document.getElementById('emailInput').value;
-  const location = document.getElementById('locationInput').value;
-  
-  // Vehicle details
-  const rego = document.getElementById('regoInput').value;
-  const year = document.getElementById('yearInput').value;
-  const make = document.getElementById('makeInput').value;
-  const model = document.getElementById('modelInput').value;
-  
-  document.getElementById('summaryService').textContent = window.currentConfig.title;
-  document.getElementById('summaryLocation').textContent = location;
-  document.getElementById('summaryPhone').textContent = phone;
-  
-  // Add vehicle to summary if provided
-  if (rego || (make && model)) {
-    const vehicleInfo = [];
-    if (rego) vehicleInfo.push(rego.toUpperCase());
-    if (year) vehicleInfo.push(year);
-    if (make) vehicleInfo.push(make);
-    if (model) vehicleInfo.push(model);
-    
-    if (vehicleInfo.length > 0) {
-      // Add vehicle row to summary
-      const existingVehicleRow = document.getElementById('vehicleRow');
-      if (!existingVehicleRow) {
-        const vehicleRow = document.createElement('div');
-        vehicleRow.className = 'summary-item';
-        vehicleRow.id = 'vehicleRow';
-        vehicleRow.innerHTML = `
-          <span>Vehicle:</span>
-          <strong id="summaryVehicle">${vehicleInfo.join(' ')}</strong>
-        `;
-        // Insert after phone row
-        document.getElementById('summaryPhone').parentElement.insertAdjacentElement('afterend', vehicleRow);
-      } else {
-        document.getElementById('summaryVehicle').textContent = vehicleInfo.join(' ');
-      }
-    }
-  }
-  
-  if (window.currentConfig.useCalendar) {
-    document.getElementById('urgencyRow').style.display = 'none';
-    document.getElementById('dateRow').style.display = 'flex';
-    document.getElementById('timeRow').style.display = 'flex';
-    
-    if (selectedDate) {
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      document.getElementById('summaryDate').textContent = selectedDate.toLocaleDateString('en-NZ', options);
-    }
-    document.getElementById('summaryTime').textContent = selectedTimeWindow ? selectedTimeWindow.range : 'Not selected';
-    // Use dynamic price for inspection service
-    if (window.currentService === 'inspection' && selectedTimeWindow && selectedTimeWindow.price) {
-      document.getElementById('summaryPrice').textContent = `${selectedTimeWindow.price}`;
-    } else {
-      document.getElementById('summaryPrice').textContent = `${window.currentConfig.basePrice}`;
-    }
-  } else {
-    document.getElementById('urgencyRow').style.display = 'flex';
-    document.getElementById('dateRow').style.display = 'none';
-    document.getElementById('timeRow').style.display = 'none';
-    
-    document.getElementById('summaryUrgency').textContent = selectedUrgencyDetails.time || '';
-    document.getElementById('summaryPrice').textContent = `$${selectedUrgencyDetails.price || window.currentConfig.basePrice}`;
-  }
-}
-
-function toggleBookingButton() {
-  const termsChecked = document.getElementById('termsAgree').checked;
-  document.getElementById('generatePaymentBtn').disabled = !termsChecked;
-}
-
-// Function to build redirect URL with all data
-function buildRedirectUrl() {
-  const baseUrl = 'https://www.eek.nz/thanks';
-  const params = new URLSearchParams();
-  
-  // Customer info
-  params.append('name', document.getElementById('nameInput').value.trim());
-  params.append('phone', document.getElementById('phoneInput').value.trim());
-  params.append('email', document.getElementById('emailInput').value.trim());
-  params.append('location', document.getElementById('locationInput').value.trim());
-  
-  // Vehicle info
-  params.append('rego', document.getElementById('regoInput').value.trim().toUpperCase());
-  params.append('year', document.getElementById('yearInput').value.trim());
-  params.append('make', document.getElementById('makeInput').value.trim());
-  params.append('model', document.getElementById('modelInput').value.trim());
-  
-  // Service info
-  params.append('service', window.currentService);
-  params.append('serviceCode', window.currentConfig.serviceCode);
-  params.append('serviceTitle', window.currentConfig.title);
-  params.append('price', window.currentConfig.basePrice);
-  params.append('details', document.getElementById('detailsInput').value || '');
-  
-  // Time info
-  if (window.currentConfig.useCalendar && selectedDate && selectedTimeWindow) {
-    params.append('scheduledDate', selectedDate.toISOString());
-    params.append('timeWindow', selectedTimeWindow.range);
-    params.append('urgencyLevel', 'Scheduled');
-  } else if (selectedUrgency) {
-    params.append('scheduledDate', new Date().toISOString());
-    params.append('timeWindow', selectedUrgencyDetails.time);
-    params.append('urgencyLevel', selectedUrgency);
-  }
-  
-  // Add booking timestamp
-  params.append('bookingTime', new Date().toISOString());
-  
-  return `${baseUrl}?${params.toString()}`;
-}
-
-async function generatePaymentLink() {
-  const btn = document.getElementById('generatePaymentBtn');
-  
-  if (!document.getElementById('termsAgree').checked) {
-    alert('Please accept the terms and conditions');
-    return;
-  }
-  
-  // Change button to processing state
-  btn.disabled = true;
-  btn.classList.add('processing');
-  btn.textContent = 'Generating Link';
-  
-  // Collect all customer and vehicle data
-  const customerName = document.getElementById('nameInput').value.trim();
-  const phone = document.getElementById('phoneInput').value.trim();
-  const email = document.getElementById('emailInput').value.trim();
-  const location = document.getElementById('locationInput').value.trim();
-  
-  // Vehicle data
-  const rego = document.getElementById('regoInput').value.trim().toUpperCase();
-  const year = document.getElementById('yearInput').value.trim();
-  const make = document.getElementById('makeInput').value.trim();
-  const model = document.getElementById('modelInput').value.trim();
-  
-  // Seller data (for inspection service)
-  let sellerName = '';
-  let sellerPhone = '';
-  if (window.currentService === 'inspection') {
-    sellerName = document.getElementById('sellerNameInput').value.trim();
-    sellerPhone = document.getElementById('sellerPhoneInput').value.trim();
-  }
-  
-  // Create vehicle description for Stripe
-  const vehicleDescription = [rego, year, make, model].filter(Boolean).join(' ') || 'Vehicle details not provided';
-  
-  // Determine the actual price to charge
-  let finalPrice = window.currentConfig.basePrice;
-  if (window.currentService === 'inspection' && selectedTimeWindow && selectedTimeWindow.price) {
-    finalPrice = selectedTimeWindow.price + (vehicleTypeAddon || 0);
-  } else if (!window.currentConfig.useCalendar && selectedUrgencyDetails.price) {
-    finalPrice = selectedUrgencyDetails.price;
-  }
-  
-  // Prepare comprehensive booking data matching your Power Automate schema
-  const bookingData = {
-    // Core fields for Stripe payment
-    rego: rego || 'Not provided',  // Using rego field as expected by your flow
-    amount: finalPrice * 100, // Stripe expects amount in cents
-    currency: 'NZD',
-    description: `${window.currentConfig.title} - ${vehicleDescription} - ${location}`,
-    // Build redirect URL with all parameters
-    redirectUrl: buildRedirectUrl(),
-    
-    // Complete customer data for email and records
-    customerData: {
-      // Customer info
-      name: customerName,
-      phone: phone,
-      email: email,
-      location: location,
-      
-      // Vehicle info
-      vehicleRego: rego,
-      vehicleYear: year,
-      vehicleMake: make,
-      vehicleModel: model,
-      vehicleDescription: vehicleDescription,
-      
-      // Seller info (for inspections)
-      sellerName: sellerName,
-      sellerPhone: sellerPhone,
-      
-      // Service info
-      service: window.currentService,
-      serviceCode: window.currentConfig.serviceCode,
-      serviceTitle: window.currentConfig.title,
-      details: document.getElementById('detailsInput').value || 'No additional details provided',
-      price: `${finalPrice}`,
-      
-      // Booking timestamp
-      bookingDateTime: new Date().toLocaleString('en-NZ', { timeZone: 'Pacific/Auckland' }),
-      
-      // Time-specific data
-      scheduledDate: null,
-      scheduledTime: null,
-      urgencyLevel: null
-    }
-  };
-  
-  // Add time-specific data
-  if (window.currentConfig.useCalendar) {
-    // For inspection service
-    bookingData.customerData.scheduledDate = selectedDate.toLocaleDateString('en-NZ', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      timeZone: 'Pacific/Auckland'
-    });
-    bookingData.customerData.scheduledTime = selectedTimeWindow.range;
-    bookingData.customerData.urgencyLevel = 'Scheduled Inspection';
-  } else {
-    // For emergency services
-    bookingData.customerData.scheduledDate = 'Today';
-    bookingData.customerData.scheduledTime = selectedUrgencyDetails.time || 'Emergency Response';
-    bookingData.customerData.urgencyLevel = selectedUrgency || 'emergency';
-  }
-  
-  try {
-    // Call Power Automate flow
-    const response = await fetch(POWER_AUTOMATE_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(bookingData)
-    });
-    
-    if (response.ok) {
-      const result = await response.json();
-      
-      if (result.url) {
-        // Success! Show the payment link
-        btn.classList.remove('processing');
-        btn.style.display = 'none';
-        
-        // Create success message with payment link
-        const successDiv = document.createElement('div');
-        successDiv.style.cssText = 'background: #d4edda; border: 2px solid #28a745; padding: 20px; border-radius: 8px; margin-top: 20px;';
-        successDiv.innerHTML = `
-          <h4 style="color: #155724; margin: 0 0 15px 0;">✓ Payment Link Generated Successfully!</h4>
-          <p style="color: #155724; margin: 10px 0;">Your secure payment link is ready:</p>
-          <a href="${result.url}" class="button" style="background: #28a745; font-size: 1.2em; padding: 15px 30px; display: inline-block; margin: 10px 0;">
-            Complete Payment (${finalPrice})
-          </a>
-          <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
-            After payment, you'll receive an SMS confirmation to ${phone} with your booking details.
-          </p>
-        `;
-        
-        btn.parentElement.appendChild(successDiv);
-        
-        // Optional: Auto-redirect after 3 seconds
-        setTimeout(() => {
-          window.location.href = result.url;
-        }, 3000);
-        
-      } else {
-        throw new Error('No payment URL received');
-      }
-    } else {
-      throw new Error(`Server returned ${response.status}`);
-    }
-  } catch (error) {
-    console.error('Error generating payment link:', error);
-    
-    // Reset button
-    btn.disabled = false;
-    btn.classList.remove('processing');
-    btn.textContent = 'Generate Payment Link';
-    
-    // Show error with fallback options
-    alert(`Unable to generate payment link automatically.\n\nPlease try one of these options:\n1. Refresh the page and try again\n2. Call us at 0800 769 000`);
-  }
-}
-</script>
-
-</body>
-</html>
