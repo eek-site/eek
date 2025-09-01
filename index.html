@@ -17,7 +17,7 @@
   script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net https://widget.reviewability.com;
   style-src 'self' 'unsafe-inline' https://widget.reviewability.com;
   img-src 'self' data: https: https://app.revu.cloud https://widget.reviewability.com;
-  connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://app.revu.cloud https://widget.reviewability.com;
+  connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://app.revu.cloud https://widget.reviewability.com https://www.eek.nz;
   frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com https://app.revu.cloud https://widget.reviewability.com;
   font-src 'self' data:;">
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
@@ -175,6 +175,55 @@
       font-size: 1.2em;
       color: #666;
     }
+    
+    /* After Hours Emergency Banner */
+    .after-hours-banner {
+      background: linear-gradient(135deg, #ff3333, #ff5500);
+      color: white;
+      padding: 20px;
+      margin: 0 auto 20px;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(255,51,51,0.3);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 4px 12px rgba(255,51,51,0.3); }
+      50% { box-shadow: 0 4px 20px rgba(255,51,51,0.5); }
+    }
+    
+    .after-hours-banner h2 {
+      margin: 0 0 10px 0;
+      font-size: 1.6em;
+    }
+    
+    .after-hours-banner p {
+      margin: 10px 0;
+      font-size: 1.1em;
+    }
+    
+    .emergency-btn {
+      display: inline-block;
+      background: rgba(255,255,255,0.25);
+      color: white;
+      padding: 15px 30px;
+      margin: 10px;
+      font-size: 1.3em;
+      border-radius: 8px;
+      text-decoration: none;
+      border: 2px solid white;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    
+    .emergency-btn:hover {
+      background: white;
+      color: #ff3333;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+    
     .hours-section {
       background: #e8f4f8;
       padding: 15px;
@@ -191,6 +240,12 @@
       font-size: 1.1em;
       color: #555;
       font-weight: bold;
+    }
+    .after-hours-text {
+      font-size: 1em;
+      color: #ff3333;
+      font-weight: bold;
+      margin: 10px 0;
     }
     .cta-button {
       display: inline-block;
@@ -431,6 +486,15 @@
 </head>
 <body>
 
+<!-- Business Closed Banner (hidden by default) -->
+<div id="closedBanner" class="after-hours-banner" style="display: none; background: linear-gradient(135deg, #666, #888);">
+  <h2>🕐 CURRENTLY CLOSED</h2>
+  <p><strong>Business Hours:</strong></p>
+  <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
+  <p>Saturday - Sunday: 7:00 AM - 12:00 PM</p>
+  <p>Please call during business hours or book online for next available service</p>
+</div>
+
 <section id="stripePaymentBlock" style="display: none; background-color: #ffffff; padding: 20px; text-align: center; color: #333; border-bottom: 2px solid #ff5500;">
   <div style="background-color: #f5f5f5; padding: 30px; border-radius: 12px; max-width: 700px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
     <h1 style="font-size: 2.2em; margin-bottom: 0.5em;">Secure Roadside Payment</h1>
@@ -459,12 +523,7 @@
   <a class="cta-button" href="tel:0800769000" onclick="trackConversion('header_call', 'Contact')">📞 Call 0800 769 000</a>
 </header>
 
-<div class="hours-section">
-  <h3>🕐 Business Hours</h3>
-  <p class="hours-text">Monday - Friday: 7:00 AM - 5:00 PM</p>
-  <p class="hours-text">Saturday - Sunday: 7:00 AM - 12:00 PM</p>
-  <p style="font-size: 0.9em; color: #666; margin: 8px 0 0 0;">Emergency services may be available outside business hours</p>
-</div>
+
 
 <div class="keywords-highlight">
   <h2>🔧 Professional Mobile Mechanic Services</h2>
@@ -514,7 +573,8 @@
     <li>📞 Real-time communication with mobile mechanic support staff</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')">📞 Call 0800 769 000</a>
+    <a class="cta-button normal-hours-btn" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')">📞 Call 0800 769 000</a>
+    <a class="cta-button online-only-btn" href="https://www.eek.nz/book-service?service=mechanic" style="display: none; background: #28a745;">📅 Book Online</a>
     <a class="cta-button" href="https://www.eek.nz/book-service?service=mechanic" style="background: #28a745;">📅 Book Online</a>
   </div>
 </div>
@@ -529,7 +589,8 @@
     <li>📍 Mobile mechanic service at your location—home or roadside</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Call 0800 769 000</a>
+    <a class="cta-button normal-hours-btn" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Call 0800 769 000</a>
+    <a class="cta-button online-only-btn" href="https://www.eek.nz/book-service?service=jumpstart" style="display: none; background: #28a745;">📅 Book Online</a>
     <a class="cta-button" href="https://www.eek.nz/book-service?service=jumpstart" style="background: #28a745;">📅 Book Online</a>
   </div>
 </div>
@@ -545,7 +606,8 @@
     <li>🚨 Emergency petrol and diesel removal service</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')">📞 Emergency Call 0800 769 000</a>
+    <a class="cta-button normal-hours-btn" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')">📞 Call 0800 769 000</a>
+    <a class="cta-button online-only-btn" href="https://www.eek.nz/book-service?service=fuel-extraction" style="display: none; background: #28a745;">📅 Book Online</a>
     <a class="cta-button" href="https://www.eek.nz/book-service?service=fuel-extraction" style="background: #28a745;">📅 Book Online</a>
   </div>
 </div>
@@ -560,7 +622,8 @@
     <li>⏱️ Nationwide mobile mechanic dispatch in 30–60 minutes</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')">📞 Book by Phone</a>
+    <a class="cta-button normal-hours-btn" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')">📞 Call 0800 769 000</a>
+    <a class="cta-button online-only-btn" href="https://www.eek.nz/book-service?service=inspection" style="display: none; background: #28a745;">📅 Book Online</a>
     <a class="cta-button" href="https://www.eek.nz/book-service?service=inspection" style="background: #28a745;">📅 Book Online</a>
   </div>
 </div>
@@ -578,7 +641,8 @@
     <li>✔️ WOF-prep and compliance adjustments by certified mechanics</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button" href="tel:0800769000" onclick="trackConversion('trailer_call','Contact')">📞 Call 0800 769 000</a>
+    <a class="cta-button normal-hours-btn" href="tel:0800769000" onclick="trackConversion('trailer_call','Contact')">📞 Call 0800 769 000</a>
+    <a class="cta-button online-only-btn" href="https://www.eek.nz/start" style="display: none; background: #28a745;">📅 Book Online</a>
     <a class="cta-button" href="https://www.eek.nz/start" style="background: #28a745;">📅 Book Online</a>
   </div>
 </div>
@@ -646,6 +710,60 @@
 <a class="sticky-call" href="tel:0800769000" onclick="trackConversion('sticky_call', 'Contact')" id="stickyCallButton">📞 Call Eek Now</a>
 
 <script>
+// Check system availability status
+async function checkSystemStatus() {
+  try {
+    // Direct API call to check phone system status
+    // TODO: Consider moving this to a server-side endpoint for better security
+    const response = await fetch("https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/17b1d2990e6f4082a2b0d9c2f1a29025/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=bPyoxJ24kuxJZOyLGAclGaEuH6BHwUTFaGmYOwHofa8", {
+      cache: "no-store"
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      return data.state === 'Active';
+    }
+  } catch (error) {
+    console.error('Error checking system status:', error);
+  }
+  return true; // Default to active (phones visible) if check fails
+}
+
+// Update UI based on system status
+async function updateHoursDisplay() {
+  const systemActive = await checkSystemStatus();
+  
+  // Update closed banner (shows when passive/closed)
+  const closedBanner = document.getElementById('closedBanner');
+  if (closedBanner) {
+    closedBanner.style.display = systemActive ? 'none' : 'block';
+  }
+  
+  // Update header call button
+  const headerButton = document.querySelector('header .cta-button');
+  if (headerButton) {
+    headerButton.style.display = systemActive ? 'inline-block' : 'none';
+  }
+  
+  // Update service buttons
+  const normalButtons = document.querySelectorAll('.normal-hours-btn');
+  const onlineOnlyButtons = document.querySelectorAll('.online-only-btn');
+  
+  normalButtons.forEach(btn => {
+    btn.style.display = systemActive ? 'inline-block' : 'none';
+  });
+  
+  onlineOnlyButtons.forEach(btn => {
+    btn.style.display = systemActive ? 'none' : 'inline-block';
+  });
+  
+  // Update sticky call button
+  const stickyCall = document.getElementById('stickyCallButton');
+  if (stickyCall) {
+    stickyCall.style.display = systemActive ? 'inline-block' : 'none';
+  }
+}
+
 // Enhanced tracking function that includes Reddit Pixel with full event parameters
 function trackConversion(eventAction, eventCategory) {
   const conversionId = 'eek_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -658,7 +776,13 @@ function trackConversion(eventAction, eventCategory) {
     'trailer_call': 28900,
     'header_call': 25000,
     'sticky_call': 25000,
-    'more_options_call': 25000
+    'more_options_call': 25000,
+    'after_hours_emergency': 35000,
+    'breakdown_after_hours': 35000,
+    'battery_after_hours': 20000,
+    'fuel_drain_after_hours': 45000,
+    'inspection_after_hours': 25000,
+    'trailer_after_hours': 35000
   };
   
   const eventValue = serviceValues[eventAction] || 25000;
@@ -697,12 +821,25 @@ function getServiceType(eventAction) {
     'trailer_call': 'Trailer Repair',
     'header_call': 'General Inquiry',
     'sticky_call': 'General Inquiry',
-    'more_options_call': 'General Inquiry'
+    'more_options_call': 'General Inquiry',
+    'after_hours_emergency': 'After Hours Emergency',
+    'breakdown_after_hours': 'After Hours Breakdown',
+    'battery_after_hours': 'After Hours Battery',
+    'fuel_drain_after_hours': 'After Hours Fuel Drain',
+    'inspection_after_hours': 'After Hours Inspection',
+    'trailer_after_hours': 'After Hours Trailer'
   };
   return serviceMap[eventAction] || 'General Service';
 }
 
+// Initialize on page load
 window.addEventListener('load', function() {
+  // Update hours display
+  updateHoursDisplay();
+  
+  // Check status every 5 minutes
+  setInterval(updateHoursDisplay, 5 * 60 * 1000);
+  
   if (typeof gtag !== 'undefined') {
     gtag('event', 'page_view', {
       'page_title': document.title,
