@@ -475,68 +475,6 @@
       outline: none;
     }
     
-    /* Vehicle Type Selection Styles */
-    .vehicle-type-options {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-      margin: 30px 0;
-    }
-    .vehicle-type-option {
-      border: 3px solid #ddd;
-      border-radius: 12px;
-      padding: 25px 20px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.3s ease;
-      position: relative;
-      background: white;
-    }
-    .vehicle-type-option:hover {
-      border-color: #ff5500;
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(255,85,0,0.15);
-    }
-    .vehicle-type-option.selected {
-      border-color: #ff5500;
-      background: linear-gradient(135deg, #fff5f0, #ffe5d9);
-      border-width: 3px;
-    }
-    .vehicle-type-icon {
-      font-size: 3em;
-      margin-bottom: 15px;
-    }
-    .vehicle-type-title {
-      font-size: 1.3em;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 10px;
-    }
-    .vehicle-type-description {
-      color: #666;
-      margin-bottom: 20px;
-      line-height: 1.4;
-    }
-    .vehicle-type-price {
-      font-size: 1.2em;
-      font-weight: bold;
-      padding-top: 15px;
-      border-top: 2px solid #eee;
-    }
-    .special-badge {
-      position: absolute;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: linear-gradient(135deg, #28a745, #20c997);
-      color: white;
-      padding: 5px 20px;
-      border-radius: 20px;
-      font-size: 0.85em;
-      font-weight: bold;
-      box-shadow: 0 2px 8px rgba(40,167,69,0.3);
-    }
-    
     @media (max-width: 768px) {
       .booking-steps {
         padding: 20px;
@@ -592,9 +530,6 @@
       <span id="step2Label">Scheduling</span>
     </div>
     <div class="progress-step" id="step3-progress">
-      <span id="step3Label">Vehicle Type</span>
-    </div>
-    <div class="progress-step" id="step4-progress">
       <span>Confirm</span>
     </div>
   </div>
@@ -646,18 +581,6 @@
               <input type="text" id="modelInput" placeholder="Corolla" />
             </div>
           </div>
-        </div>
-      </div>
-      
-      <!-- Seller Information - Only for Inspection Service -->
-      <div id="sellerInfoSection" style="background: #e8f4f8; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none;">
-        <h4 style="margin: 0 0 15px 0; color: #333;">Seller Information</h4>
-        <div class="contact-info">
-          <label for="sellerNameInput">Seller Name (required for inspection)</label>
-          <input type="text" id="sellerNameInput" placeholder="Seller's full name or dealership name" />
-          
-          <label for="sellerPhoneInput">Seller Phone Number (required for inspection)</label>
-          <input type="tel" id="sellerPhoneInput" placeholder="021 987 6543" />
         </div>
       </div>
       
@@ -714,70 +637,13 @@
 
       <div style="margin: 20px 0;">
         <button class="button secondary" onclick="goToStep1()">Back</button>
-        <button class="button" id="confirmTimeBtn" onclick="goToStep3()" disabled>Continue</button>
+        <button class="button" id="confirmTimeBtn" onclick="goToStep3()" disabled>Confirm Time</button>
       </div>
     </div>
 
-    <!-- Step 3: Vehicle Type Selection -->
+    <!-- Step 3: Confirmation -->
     <div class="step" id="step3">
-      <h3>Step 3: Select Your Vehicle Type</h3>
-      
-      <div class="timing-notice" style="background: #e8f8ff; border-color: #bee5eb;">
-        <h4>🚗 Vehicle Type Inspection Fee</h4>
-        <p>Our inspection service is tailored to different vehicle types. Select your vehicle category below:</p>
-      </div>
-      
-      <div class="vehicle-type-options">
-        <div class="vehicle-type-option" onclick="selectVehicleType('standard', 0, this)">
-          <div class="special-badge">MOST POPULAR</div>
-          <div class="vehicle-type-icon">🚗</div>
-          <div class="vehicle-type-title">Standard Vehicle</div>
-          <div class="vehicle-type-description">
-            Cars, SUVs, Utes under 3500kg<br>
-            <small>Includes most passenger vehicles</small>
-          </div>
-          <div class="vehicle-type-price">
-            <span style="color: #28a745; font-weight: bold;">✓ Included</span>
-            <div style="font-size: 0.9em; color: #666; margin-top: 5px;">No additional fee</div>
-          </div>
-        </div>
-        
-        <div class="vehicle-type-option" onclick="selectVehicleType('commercial', 39, this)">
-          <div class="vehicle-type-icon">🚚</div>
-          <div class="vehicle-type-title">Commercial Vehicle</div>
-          <div class="vehicle-type-description">
-            Vans, Trucks, Heavy vehicles<br>
-            <small>Over 3500kg or commercial use</small>
-          </div>
-          <div class="vehicle-type-price">
-            <span style="color: #ff5500;">+$39</span>
-            <div style="font-size: 0.9em; color: #666; margin-top: 5px;">Additional inspection time required</div>
-          </div>
-        </div>
-        
-        <div class="vehicle-type-option" onclick="selectVehicleType('classic', 129, this)">
-          <div class="vehicle-type-icon">🏆</div>
-          <div class="vehicle-type-title">Classic/Specialty Vehicle</div>
-          <div class="vehicle-type-description">
-            Classic cars, Modified vehicles, Imports<br>
-            <small>Requires specialist knowledge</small>
-          </div>
-          <div class="vehicle-type-price">
-            <span style="color: #ff5500;">+$129</span>
-            <div style="font-size: 0.9em; color: #666; margin-top: 5px;">Specialist inspection expertise</div>
-          </div>
-        </div>
-      </div>
-      
-      <div style="margin: 30px 0; text-align: center;">
-        <button class="button secondary" onclick="goToStep2()">Back to Time Selection</button>
-        <button class="button" id="confirmVehicleBtn" onclick="goToStep4()" disabled>Review Booking</button>
-      </div>
-    </div>
-
-    <!-- Step 4: Confirmation -->
-    <div class="step" id="step4">
-      <h3>Step 4: Review and confirm</h3>
+      <h3>Step 3: Review and confirm</h3>
       
       <div class="reservation-summary">
         <h4 id="summaryTitle">Your Service Request</h4>
@@ -834,7 +700,7 @@
 
       <div style="text-align: center; margin: 20px 0;">
         <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
-          <button class="button secondary" onclick="window.currentService === 'inspection' ? goToStep3Back() : goToStep2()">Back to Selection</button>
+          <button class="button secondary" onclick="goToStep2()">Back to Selection</button>
           <button class="button" id="generatePaymentBtn" onclick="generatePaymentLink()" disabled>
             Generate Payment Link
           </button>
@@ -994,14 +860,14 @@ const serviceConfigs = {
     bookingTitle: 'Pre Purchase Vehicle Inspection',
     bookingDescription: '45-point certified inspection • Mobile service anywhere in NZ',
     step1Title: 'Step 1: Where is the vehicle located?',
-    step2Title: 'Step 2: Select your preferred date and time',
+    step2Title: 'Step 2: Select your preferred date',
     detailsLabel: 'Vehicle and inspection details:',
     detailsPlaceholder: 'e.g., Make/model/year, dealer or private sale, any specific concerns, etc.',
     useCalendar: true,
     serviceCode: 'INSP',
-    basePrice: 289,
+    basePrice: 289,  // Changed from 289 to 1 for testing
     stats: [
-      { number: 'From $199', text: 'flexible pricing' },
+      { number: '$1', text: 'TEST PRICE' },  // Changed from $289
       { number: '45-point', text: 'inspection' },
       { number: 'Morning', text: 'or afternoon' },
       { number: 'Certified', text: 'report' }
@@ -1011,14 +877,14 @@ const serviceConfigs = {
       <ul>
         <li><strong>Comprehensive certified mechanical inspection</strong></li>
         <li><strong>45-point inspection checklist</strong></li>
-        <li><strong>Written inspection report</strong></li>
+        <li><strong>Written inspection report</strong> with photos</li>
         <li><strong>Professional recommendation</strong> on purchase decision</li>
-        <li><strong>Prices from $199</strong> - best rates when you book in advance</li>
+        <li><strong>Fixed flat rate of $289</strong> - no surprises</li>
       </ul>
     `,
     terms: [
       'Comprehensive certified mechanical inspection',
-      'Dynamic pricing from $199-$399 based on booking timing',
+      'Fixed price of $289 - no hidden fees',
       'Time windows are approximate - technician will call en route',
       'Written report provided within 24 hours',
       'Cancellations must be made at least 2 hours in advance'
@@ -1073,25 +939,9 @@ function loadServiceConfig(serviceType) {
   document.getElementById('detailsInput').placeholder = config.detailsPlaceholder;
   document.getElementById('serviceInfoBox').innerHTML = config.infoContent;
   
-  // Show/hide seller information and vehicle type step for inspection service
-  if (serviceType === 'inspection') {
-    document.getElementById('sellerInfoSection').style.display = 'block';
-    document.getElementById('step3-progress').style.display = 'flex';
-    document.getElementById('step3Label').textContent = 'Vehicle Type';
-    // Update step 2 label for inspection
-    document.getElementById('step2Label').textContent = 'Date & Time';
-  } else {
-    document.getElementById('sellerInfoSection').style.display = 'none';
-    document.getElementById('step3-progress').style.display = 'none';
-    // Update step 2 label for other services
-    document.getElementById('step2Label').textContent = 'Scheduling';
-  }
-  
   // Update step 2 title
   if (config.useCalendar) {
     document.getElementById('step2Title').textContent = config.step2Title;
-  } else {
-    document.getElementById('step2Title').textContent = 'Step 2: When do you need service?';
   }
   
   // Update terms
@@ -1101,24 +951,6 @@ function loadServiceConfig(serviceType) {
   // Store service type globally
   window.currentService = serviceType;
   window.currentConfig = config;
-  
-  // Reset any previous selections
-  selectedDate = null;
-  selectedTimeWindow = null;
-  selectedUrgency = null;
-  selectedUrgencyDetails = {};
-  selectedVehicleType = null;
-  vehicleTypeAddon = 0;
-  
-  // Reset form progression
-  document.querySelectorAll('.progress-step').forEach(el => {
-    el.classList.remove('active', 'completed');
-  });
-  document.getElementById('step1-progress').classList.add('active');
-  
-  // Show only step 1
-  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-  document.getElementById('step1').classList.add('active');
 }
 
 // Calendar functionality
@@ -1205,94 +1037,6 @@ function selectDate(year, month, day, element) {
   document.getElementById('selectedDateDisplay').textContent = selectedDate.toLocaleDateString('en-NZ', options);
 }
 
-// Calculate dynamic pricing for inspection service
-function calculateInspectionPrice(date, timeSlot, availableSlots, isSpecialDeal = false, isWeekdaySpecial = false) {
-  const now = new Date();
-  const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
-  const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-  const daysUntil = Math.floor((date - now) / (1000 * 60 * 60 * 24));
-  const currentHour = now.getHours();
-  const currentDayOfWeek = now.getDay();
-  
-  let basePrice = 289;
-  let variance = 9; // ±$9 variance
-  
-  // Weekend pricing logic
-  if (isWeekend) {
-    // Calculate if this is the upcoming Saturday (not Sunday)
-    let daysToSaturday = (6 - currentDayOfWeek + 7) % 7;
-    if (daysToSaturday === 0 && currentHour >= 12) {
-      daysToSaturday = 7; // Roll to next Saturday if it's Saturday afternoon
-    }
-    
-    const isUpcomingSaturday = dayOfWeek === 6 && daysUntil <= daysToSaturday && daysUntil > 0;
-    
-    // Special weekend deal - for upcoming Saturday only
-    if (isSpecialDeal && isUpcomingSaturday) {
-      basePrice = 289;
-    }
-    // Same day weekend
-    else if (daysUntil === 0) {
-      if (currentHour >= 12) {
-        return 399; // Fixed price after 12pm
-      }
-      basePrice = 389;
-    } 
-    // Next day weekend (urgent)
-    else if (daysUntil === 1) {
-      basePrice = 389;
-    }
-    // Other weekend blocks
-    else {
-      basePrice = 349;
-    }
-  } 
-  // Weekday pricing logic
-  else {
-    // Special weekday deal - fixed $249 for one random slot
-    if (isWeekdaySpecial) {
-      return 249; // Fixed special weekday price
-    }
-    
-    // Cascading pricing based on urgency
-    if (daysUntil <= 1) {
-      basePrice = 289;
-    } else if (daysUntil <= 7) {
-      basePrice = 249;
-    } else if (daysUntil <= 14) {
-      basePrice = 229;
-    } else {
-      basePrice = 199;
-    }
-    
-    // Peak time premium for weekdays
-    // Morning (8-10am) or Afternoon (4-6pm) peak times
-    if (timeSlot === 'morning' || (timeSlot === 'afternoon' && daysUntil <= 7)) {
-      basePrice += 20;
-    }
-    // Lunch time peak (11am-2pm) - highest demand
-    if (timeSlot === 'lunch' && daysUntil <= 7) {
-      basePrice += 30;
-    }
-  }
-  
-  // Availability-based adjustment
-  if (availableSlots === 1) {
-    basePrice += 20; // Scarcity premium
-  } else if (availableSlots >= 4) {
-    basePrice -= 10; // Abundance discount
-  }
-  
-  // Apply variance (except for fixed $399 price)
-  if (basePrice !== 399) {
-    const randomVariance = Math.floor(Math.random() * (variance * 2 + 1)) - variance;
-    basePrice += randomVariance;
-  }
-  
-  // Never go below $199
-  return Math.max(199, basePrice);
-}
-
 function showTimeWindows() {
   const container = document.getElementById('timeWindowContainer');
   const windowsDiv = document.getElementById('timeWindows');
@@ -1303,86 +1047,28 @@ function showTimeWindows() {
   selectedTimeWindow = null;
   document.getElementById('confirmTimeBtn').disabled = true;
   
-  // Generate time windows with dynamic pricing
+  // Generate time windows
   const isToday = selectedDate.toDateString() === new Date().toDateString();
   const currentHour = new Date().getHours();
-  const dayOfWeek = selectedDate.getDay();
-  const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
   
-  // Different time slots for weekdays vs weekends
-  let windows = [];
-  
-  if (isWeekend) {
-    windows = [
-      {
-        id: 'morning',
-        title: 'Morning',
-        range: '8:00 AM - 12:00 PM',
-        description: 'Start your weekend right',
-        available: !isToday || currentHour < 10,
-        slots: Math.floor(Math.random() * 4) + 1
-      },
-      {
-        id: 'afternoon',
-        title: 'Afternoon',
-        range: '12:00 PM - 5:00 PM',
-        description: 'Weekend afternoon slot',
-        available: !isToday || currentHour < 15,
-        slots: Math.floor(Math.random() * 3) + 1
-      }
-    ];
-  } else {
-    // Weekday slots with peak times identified
-    windows = [
-      {
-        id: 'earlymorning',
-        title: 'Early Morning',
-        range: '7:00 AM - 9:00 AM',
-        description: 'Beat the rush',
-        available: !isToday || currentHour < 7,
-        slots: Math.floor(Math.random() * 5) + 1
-      },
-      {
-        id: 'morning',
-        title: 'Peak Morning',
-        range: '9:00 AM - 11:00 AM',
-        description: 'High demand time',
-        available: !isToday || currentHour < 9,
-        slots: Math.floor(Math.random() * 2) + 1
-      },
-      {
-        id: 'lunch',
-        title: 'Lunch Time',
-        range: '11:00 AM - 2:00 PM',
-        description: 'Peak lunch hour',
-        available: !isToday || currentHour < 11,
-        slots: Math.floor(Math.random() * 2) + 1
-      },
-      {
-        id: 'afternoon',
-        title: 'Afternoon',
-        range: '2:00 PM - 4:00 PM',
-        description: 'Quieter period',
-        available: !isToday || currentHour < 14,
-        slots: Math.floor(Math.random() * 4) + 2
-      },
-      {
-        id: 'lateafternoon',
-        title: 'Late Afternoon',
-        range: '4:00 PM - 6:00 PM',
-        description: 'End of day rush',
-        available: !isToday || currentHour < 16,
-        slots: Math.floor(Math.random() * 2) + 1
-      }
-    ];
-  }
-  
-  // Calculate price for each window
-  windows.forEach(window => {
-    if (window.available) {
-      window.price = calculateInspectionPrice(selectedDate, window.id, window.slots);
+  let windows = [
+    {
+      id: 'morning',
+      title: 'Morning',
+      range: '7:00 AM - 12:00 PM',
+      description: 'Best for inspections at dealerships',
+      available: !isToday || currentHour < 10,
+      slots: Math.floor(Math.random() * 3) + 1
+    },
+    {
+      id: 'afternoon', 
+      title: 'Afternoon',
+      range: '12:00 PM - 5:00 PM',
+      description: 'Ideal for private sellers',
+      available: !isToday || currentHour < 15,
+      slots: Math.floor(Math.random() * 3) + 1
     }
-  });
+  ];
   
   windowsDiv.innerHTML = windows.map(window => {
     if (!window.available) {
@@ -1396,31 +1082,28 @@ function showTimeWindows() {
     }
     
     const badgeClass = window.slots <= 1 ? 'limited' : '';
-    const badgeText = window.slots === 1 ? 'Last slot!' : `${window.slots} slots available`;
+    const badgeText = window.slots === 1 ? '1 slot left!' : `${window.slots} slots available`;
     
     return `
-      <div class="time-window" onclick="selectTimeWindow('${window.id}', '${window.title}', '${window.range}', ${window.price}, this)">
+      <div class="time-window" onclick="selectTimeWindow('${window.id}', '${window.title}', '${window.range}', this)">
         <div class="time-window-title">${window.title}</div>
         <div class="time-window-range">${window.range}</div>
         <div class="time-window-description">${window.description}</div>
-        <div style="margin: 10px 0; font-size: 1.3em; font-weight: bold; color: #ff5500;">
-          $${window.price}
-        </div>
         <span class="availability-badge ${badgeClass}">${badgeText}</span>
       </div>
     `;
   }).join('');
 }
 
-function selectTimeWindow(id, title, range, price, element) {
+function selectTimeWindow(id, title, range, element) {
   // Clear previous selection
   document.querySelectorAll('.time-window.selected').forEach(el => el.classList.remove('selected'));
   
   // Mark selected
   element.classList.add('selected');
   
-  // Store selection with price
-  selectedTimeWindow = { id, title, range, price };
+  // Store selection
+  selectedTimeWindow = { id, title, range };
   
   // Enable confirm button
   document.getElementById('confirmTimeBtn').disabled = false;
@@ -1430,20 +1113,6 @@ function selectTimeWindow(id, title, range, price, element) {
 let selectedUrgency = null;
 let selectedUrgencyDetails = {};
 
-// Vehicle type selection
-let selectedVehicleType = null;
-let vehicleTypeAddon = 0;
-
-function selectVehicleType(type, addon, element) {
-  document.querySelectorAll('.vehicle-type-option.selected').forEach(el => el.classList.remove('selected'));
-  element.classList.add('selected');
-  
-  selectedVehicleType = type;
-  vehicleTypeAddon = addon;
-  
-  document.getElementById('confirmVehicleBtn').disabled = false;
-}
-
 function selectUrgency(urgencyId, title, time, price, element) {
   document.querySelectorAll('.urgency-option.selected').forEach(el => el.classList.remove('selected'));
   element.classList.add('selected');
@@ -1452,16 +1121,6 @@ function selectUrgency(urgencyId, title, time, price, element) {
   selectedUrgencyDetails = { title, time, price };
   
   document.getElementById('confirmTimeBtn').disabled = false;
-}
-
-function goToStep3Back() {
-  // Navigate back to vehicle type selection from confirmation
-  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-  document.getElementById('step3').classList.add('active');
-  
-  document.getElementById('step4-progress').classList.remove('active', 'completed');
-  document.getElementById('step3-progress').classList.add('active');
-  document.getElementById('step3-progress').classList.remove('completed');
 }
 
 // Navigation functions
@@ -1523,30 +1182,6 @@ function goToStep2() {
     return;
   }
   
-  // For inspection service, also validate seller information
-  if (window.currentService === 'inspection') {
-    const sellerName = document.getElementById('sellerNameInput').value.trim();
-    const sellerPhone = document.getElementById('sellerPhoneInput').value.trim();
-    
-    if (!sellerName) {
-      alert('Please enter the seller\'s name or dealership name');
-      document.getElementById('sellerNameInput').focus();
-      return;
-    }
-    
-    if (!sellerPhone) {
-      alert('Please enter the seller\'s phone number');
-      document.getElementById('sellerPhoneInput').focus();
-      return;
-    }
-    
-    if (!phoneRegex.test(sellerPhone) || sellerPhone.replace(/\D/g, '').length < 9) {
-      alert('Please enter a valid seller phone number');
-      document.getElementById('sellerPhoneInput').focus();
-      return;
-    }
-  }
-  
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step2').classList.add('active');
   
@@ -1573,3 +1208,288 @@ function goToStep2() {
         <div style="margin-top: 8px; font-weight: bold; color: #ff5500;">${option.price}</div>
       </div>
     `).join('');
+  }
+}
+
+function goToStep3() {
+  if (window.currentConfig.useCalendar) {
+    if (!selectedDate || !selectedTimeWindow) {
+      alert('Please select both a date and time window');
+      return;
+    }
+  } else {
+    if (!selectedUrgency) {
+      alert('Please select a service time');
+      return;
+    }
+  }
+  
+  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+  document.getElementById('step3').classList.add('active');
+  
+  document.getElementById('step2-progress').classList.add('completed');
+  document.getElementById('step2-progress').classList.remove('active');
+  document.getElementById('step3-progress').classList.add('active');
+  
+  updateSummary();
+}
+
+function updateSummary() {
+  // Customer details
+  const name = document.getElementById('nameInput').value;
+  const phone = document.getElementById('phoneInput').value;
+  const email = document.getElementById('emailInput').value;
+  const location = document.getElementById('locationInput').value;
+  
+  // Vehicle details
+  const rego = document.getElementById('regoInput').value;
+  const year = document.getElementById('yearInput').value;
+  const make = document.getElementById('makeInput').value;
+  const model = document.getElementById('modelInput').value;
+  
+  document.getElementById('summaryService').textContent = window.currentConfig.title;
+  document.getElementById('summaryLocation').textContent = location;
+  document.getElementById('summaryPhone').textContent = phone;
+  
+  // Add vehicle to summary if provided
+  if (rego || (make && model)) {
+    const vehicleInfo = [];
+    if (rego) vehicleInfo.push(rego.toUpperCase());
+    if (year) vehicleInfo.push(year);
+    if (make) vehicleInfo.push(make);
+    if (model) vehicleInfo.push(model);
+    
+    if (vehicleInfo.length > 0) {
+      // Add vehicle row to summary
+      const existingVehicleRow = document.getElementById('vehicleRow');
+      if (!existingVehicleRow) {
+        const vehicleRow = document.createElement('div');
+        vehicleRow.className = 'summary-item';
+        vehicleRow.id = 'vehicleRow';
+        vehicleRow.innerHTML = `
+          <span>Vehicle:</span>
+          <strong id="summaryVehicle">${vehicleInfo.join(' ')}</strong>
+        `;
+        // Insert after phone row
+        document.getElementById('summaryPhone').parentElement.insertAdjacentElement('afterend', vehicleRow);
+      } else {
+        document.getElementById('summaryVehicle').textContent = vehicleInfo.join(' ');
+      }
+    }
+  }
+  
+  if (window.currentConfig.useCalendar) {
+    document.getElementById('urgencyRow').style.display = 'none';
+    document.getElementById('dateRow').style.display = 'flex';
+    document.getElementById('timeRow').style.display = 'flex';
+    
+    if (selectedDate) {
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('summaryDate').textContent = selectedDate.toLocaleDateString('en-NZ', options);
+    }
+    document.getElementById('summaryTime').textContent = selectedTimeWindow ? selectedTimeWindow.range : 'Not selected';
+    document.getElementById('summaryPrice').textContent = `${window.currentConfig.basePrice}`;
+  } else {
+    document.getElementById('urgencyRow').style.display = 'flex';
+    document.getElementById('dateRow').style.display = 'none';
+    document.getElementById('timeRow').style.display = 'none';
+    
+    document.getElementById('summaryUrgency').textContent = selectedUrgencyDetails.time || '';
+    document.getElementById('summaryPrice').textContent = `${selectedUrgencyDetails.price || window.currentConfig.basePrice}`;
+  }
+}
+
+function toggleBookingButton() {
+  const termsChecked = document.getElementById('termsAgree').checked;
+  document.getElementById('generatePaymentBtn').disabled = !termsChecked;
+}
+
+// Function to build redirect URL with all data
+function buildRedirectUrl() {
+  const baseUrl = 'https://www.eek.nz/thanks';
+  const params = new URLSearchParams();
+  
+  // Customer info
+  params.append('name', document.getElementById('nameInput').value.trim());
+  params.append('phone', document.getElementById('phoneInput').value.trim());
+  params.append('email', document.getElementById('emailInput').value.trim());
+  params.append('location', document.getElementById('locationInput').value.trim());
+  
+  // Vehicle info
+  params.append('rego', document.getElementById('regoInput').value.trim().toUpperCase());
+  params.append('year', document.getElementById('yearInput').value.trim());
+  params.append('make', document.getElementById('makeInput').value.trim());
+  params.append('model', document.getElementById('modelInput').value.trim());
+  
+  // Service info
+  params.append('service', window.currentService);
+  params.append('serviceCode', window.currentConfig.serviceCode);
+  params.append('serviceTitle', window.currentConfig.title);
+  params.append('price', window.currentConfig.basePrice);
+  params.append('details', document.getElementById('detailsInput').value || '');
+  
+  // Time info
+  if (window.currentConfig.useCalendar && selectedDate && selectedTimeWindow) {
+    params.append('scheduledDate', selectedDate.toISOString());
+    params.append('timeWindow', selectedTimeWindow.range);
+    params.append('urgencyLevel', 'Scheduled');
+  } else if (selectedUrgency) {
+    params.append('scheduledDate', new Date().toISOString());
+    params.append('timeWindow', selectedUrgencyDetails.time);
+    params.append('urgencyLevel', selectedUrgency);
+  }
+  
+  // Add booking timestamp
+  params.append('bookingTime', new Date().toISOString());
+  
+  return `${baseUrl}?${params.toString()}`;
+}
+
+async function generatePaymentLink() {
+  const btn = document.getElementById('generatePaymentBtn');
+  
+  if (!document.getElementById('termsAgree').checked) {
+    alert('Please accept the terms and conditions');
+    return;
+  }
+  
+  // Change button to processing state
+  btn.disabled = true;
+  btn.classList.add('processing');
+  btn.textContent = 'Generating Link';
+  
+  // Prepare comprehensive booking data
+  const bookingData = {
+    // Core booking details
+    rego: document.getElementById('locationInput').value, // Using location field for rego/address
+    amount: window.currentConfig.basePrice * 100, // Stripe expects amount in cents
+    currency: 'NZD',
+    description: `${window.currentConfig.title} - ${document.getElementById('locationInput').value}`,
+    // Build redirect URL with all customer data as query parameters
+    redirectUrl: buildRedirectUrl(),
+    
+    // Additional customer data for email
+    customerData: {
+      service: window.currentService,
+      serviceCode: window.currentConfig.serviceCode,
+      serviceTitle: window.currentConfig.title,
+      location: document.getElementById('locationInput').value,
+      phone: document.getElementById('phoneInput').value,
+      email: document.getElementById('emailInput').value || 'Not provided',
+      details: document.getElementById('detailsInput').value || 'No additional details',
+      price: `${window.currentConfig.basePrice}`,
+      bookingDateTime: new Date().toLocaleString('en-NZ', { timeZone: 'Pacific/Auckland' }),
+      
+      // Time-specific data
+      scheduledDate: null,
+      scheduledTime: null,
+      urgencyLevel: null
+    }
+  };
+  
+  // Add time-specific data
+  if (window.currentConfig.useCalendar) {
+    // For inspection service
+    bookingData.customerData.scheduledDate = selectedDate.toLocaleDateString('en-NZ', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'Pacific/Auckland'
+    });
+    bookingData.customerData.scheduledTime = selectedTimeWindow.range;
+    bookingData.customerData.urgencyLevel = 'Scheduled Inspection';
+  } else {
+    // For emergency services
+    bookingData.customerData.scheduledDate = 'Today';
+    bookingData.customerData.scheduledTime = selectedUrgencyDetails.time || 'Emergency Response';
+    bookingData.customerData.urgencyLevel = selectedUrgency || 'emergency';
+  }
+  
+  try {
+    // Call Power Automate flow
+    const response = await fetch(POWER_AUTOMATE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(bookingData)
+    });
+    
+    if (response.ok) {
+      const result = await response.json();
+      
+      if (result.url) {
+        // Success! Show the payment link
+        btn.classList.remove('processing');
+        btn.style.display = 'none';
+        
+        // Create success message with payment link
+        const successDiv = document.createElement('div');
+        successDiv.style.cssText = 'background: #d4edda; border: 2px solid #28a745; padding: 20px; border-radius: 8px; margin-top: 20px;';
+        successDiv.innerHTML = `
+          <h4 style="color: #155724; margin: 0 0 15px 0;">✓ Payment Link Generated Successfully!</h4>
+          <p style="color: #155724; margin: 10px 0;">Your secure payment link is ready:</p>
+          <a href="${result.url}" class="button" style="background: #28a745; font-size: 1.2em; padding: 15px 30px; display: inline-block; margin: 10px 0;">
+            Complete Payment (${window.currentConfig.basePrice})
+          </a>
+          <p style="color: #666; font-size: 0.9em; margin-top: 15px;">
+            After payment, you'll receive an SMS confirmation with your booking details.
+          </p>
+        `;
+        
+        btn.parentElement.appendChild(successDiv);
+        
+        // Optional: Auto-redirect after 3 seconds
+        setTimeout(() => {
+          window.location.href = result.url;
+        }, 3000);
+        
+      } else {
+        throw new Error('No payment URL received');
+      }
+    } else {
+      throw new Error(`Server returned ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error generating payment link:', error);
+    
+    // Reset button
+    btn.disabled = false;
+    btn.classList.remove('processing');
+    btn.textContent = 'Generate Payment Link';
+    
+    // Show error with fallback options
+    alert(`Unable to generate payment link automatically.\n\nPlease try one of these options:\n1. Refresh the page and try again\n2. Call us at 0800 769 000`);
+  }
+}
+
+function handleFallbackPayment() {
+  // Use predefined Stripe links as fallback
+  const stripeLinks = {
+    'jumpstart': 'https://buy.stripe.com/6oUfZh2O34kh0U7aZva7I1m',
+    'mechanic': 'https://buy.stripe.com/eVqfZh88n9EB32f9Vra7I1h',
+    'fuel-extraction': 'https://buy.stripe.com/9B65kDewLbMJdGT3x3a7I1k',
+    'inspection': 'https://buy.stripe.com/9B68wP1JZaIFauH4B7a7I0Z'
+  };
+  
+  const link = stripeLinks[window.currentService];
+  if (link) {
+    // Store booking data in session storage for retrieval after payment
+    sessionStorage.setItem('eek_booking', JSON.stringify({
+      service: window.currentService,
+      location: document.getElementById('locationInput').value,
+      phone: document.getElementById('phoneInput').value,
+      details: document.getElementById('detailsInput').value,
+      timestamp: new Date().toISOString()
+    }));
+    
+    window.location.href = link;
+  } else {
+    alert('Payment processing temporarily unavailable. Please call 0800 769 000 to complete your booking.');
+  }
+}
+</script>
+
+</body>
+</html>
