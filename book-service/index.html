@@ -1073,20 +1073,25 @@ function loadServiceConfig(serviceType) {
   document.getElementById('detailsInput').placeholder = config.detailsPlaceholder;
   document.getElementById('serviceInfoBox').innerHTML = config.infoContent;
   
-  // Show/hide seller information for inspection service
+  // Show/hide seller information and vehicle type step for inspection service
   if (serviceType === 'inspection') {
     document.getElementById('sellerInfoSection').style.display = 'block';
-    document.getElementById('step3-progress').style.display = 'block';
-    document.getElementById('step3Label').style.display = 'block';
+    document.getElementById('step3-progress').style.display = 'flex';
+    document.getElementById('step3Label').textContent = 'Vehicle Type';
+    // Update step 2 label for inspection
+    document.getElementById('step2Label').textContent = 'Date & Time';
   } else {
     document.getElementById('sellerInfoSection').style.display = 'none';
     document.getElementById('step3-progress').style.display = 'none';
-    document.getElementById('step3Label').style.display = 'none';
+    // Update step 2 label for other services
+    document.getElementById('step2Label').textContent = 'Scheduling';
   }
   
   // Update step 2 title
   if (config.useCalendar) {
     document.getElementById('step2Title').textContent = config.step2Title;
+  } else {
+    document.getElementById('step2Title').textContent = 'Step 2: When do you need service?';
   }
   
   // Update terms
@@ -1096,6 +1101,24 @@ function loadServiceConfig(serviceType) {
   // Store service type globally
   window.currentService = serviceType;
   window.currentConfig = config;
+  
+  // Reset any previous selections
+  selectedDate = null;
+  selectedTimeWindow = null;
+  selectedUrgency = null;
+  selectedUrgencyDetails = {};
+  selectedVehicleType = null;
+  vehicleTypeAddon = 0;
+  
+  // Reset form progression
+  document.querySelectorAll('.progress-step').forEach(el => {
+    el.classList.remove('active', 'completed');
+  });
+  document.getElementById('step1-progress').classList.add('active');
+  
+  // Show only step 1
+  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+  document.getElementById('step1').classList.add('active');
 }
 
 // Calendar functionality
