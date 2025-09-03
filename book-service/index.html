@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title id="pageTitle">Book Service - Eek Mobile Mechanical</title>
-  <meta name="description" id="pageDescription" content="Book your mobile mechanic service with Eek Mobile Mechanical. Professional service across New Zealand." />
-  <meta name="keywords" content="mobile mechanic, book service, emergency mechanic, battery jump start, wrong fuel removal, prepurchase inspection, mobile mechanic NZ" />
+  <title>Emergency Mobile Mechanic Services - Eek Mobile Mechanical</title>
+  <meta name="description" content="Book emergency mobile mechanic services with Eek Mobile Mechanical. Battery jump start, fuel extraction, mechanical diagnostics. Professional service across New Zealand." />
+  <meta name="keywords" content="mobile mechanic, emergency mechanic, battery jump start, wrong fuel removal, mobile mechanic NZ" />
 
-  <!-- Security Headers (Stripe + GA allowed) -->
+  <!-- Security Headers -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
-    script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net https://js.stripe.com;
+    script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com;
     style-src 'self' 'unsafe-inline';
     img-src 'self' data: https:;
     frame-src https://js.stripe.com https://hooks.stripe.com;
-    connect-src 'self' https://www.google-analytics.com https://www.google.com https://www.redditstatic.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://prod-35.australiasoutheast.logic.azure.com https://prod-26.australiasoutheast.logic.azure.com https://api.stripe.com;">
+    connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://prod-35.australiasoutheast.logic.azure.com https://api.stripe.com;">
   
-  <!-- Google Analytics (unchanged) -->
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -30,7 +30,6 @@
   <style>
     :root{
       --brand:#ff5500; --brand2:#ff7733; --ok:#28a745; --warn:#ff9500; --muted:#6c757d;
-      --chip:#0b5ed7; --chipbg:#eef7ff; --chipbd:#cfe2ff; --specialbg:#eaffea; --specialbd:#b7f5b7; --special:#1e7e34;
     }
     body{font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;background:#f5f5f5;margin:0;padding:0 0 80px 0;color:#333;text-align:center}
     header{background:#fff;padding:20px;box-shadow:0 2px 4px rgba(0,0,0,.1)}
@@ -41,11 +40,11 @@
     .breadcrumb a{color:var(--brand);text-decoration:none}
     .breadcrumb a:hover{text-decoration:underline}
 
-    .booking-container{max-width:960px;margin:20px auto;background:#fff;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);overflow:hidden}
+    .booking-container{max-width:900px;margin:20px auto;background:#fff;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);overflow:hidden}
     .booking-header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:30px;text-align:center}
     .booking-header h2{margin:0 0 10px 0;font-size:2em}
     .booking-header p{margin:0;font-size:1.1em;opacity:.95}
-    .service-stats{background:rgba(255,255,255,.15);padding:15px;border-radius:8px;margin-top:15px;display:none}
+    .service-stats{background:rgba(255,255,255,.15);padding:15px;border-radius:8px;margin-top:15px}
     .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:15px;text-align:center}
     .stat-item{font-size:.9em}.stat-number{font-size:1.8em;font-weight:700;display:block}
 
@@ -66,65 +65,18 @@
     .location-input:focus,.details-input:focus{border-color:var(--brand);outline:none}
     .details-input{height:120px;resize:vertical}
 
-    /* Calendar */
-    .calendar-container{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
-    .calendar{border:2px solid #ddd;border-radius:8px;padding:15px}
-    .calendar h4{margin:0 0 15px 0;text-align:center}
-    .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
-    .day-header{text-align:center;font-weight:700;padding:8px 4px;font-size:.9em;color:#666}
-    .day{position:relative;text-align:center;padding:10px 4px;cursor:pointer;border-radius:6px;font-size:.95em;transition:all .2s}
-    .day:hover{background:#f0f0f0}
-    .day.disabled,.day.past{color:#ccc;cursor:not-allowed}
-    .day.selected{background:var(--brand);color:#fff}
-    .day .price-chip{position:absolute;right:2px;bottom:2px;font-size:.7em;padding:2px 6px;border-radius:12px;background:var(--chipbg);color:var(--chip);border:1px solid var(--chipbd);font-weight:600}
-    .day.special{outline:2px solid var(--ok);box-shadow:0 0 0 3px rgba(40,167,69,.15)}
-    .day.special .price-chip{background:var(--specialbg);border-color:var(--specialbd);color:var(--special)}
-    .calendar-legend{display:flex;gap:12px;align-items:center;font-size:.9em;color:#555;margin-top:8px}
-    .legend-box{display:inline-block;width:14px;height:14px;border:2px solid var(--ok);border-radius:4px}
-
-    /* Time windows */
-    .time-windows{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px;margin:20px 0}
-    .time-window{border:2px solid #ddd;border-radius:12px;padding:20px;cursor:pointer;text-align:center;transition:all .3s;background:#fff;position:relative}
-    .time-window:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,85,0,.15)}
-    .time-window.selected{background:linear-gradient(135deg,#fff5f0,#ffe5d9);border-color:var(--brand);border-width:3px}
-    .time-window.special-deal{border-color:var(--ok);background:linear-gradient(135deg,#f0fff4,#e8ffed)}
-    .time-window.special-deal:hover{border-color:var(--ok);box-shadow:0 4px 12px rgba(40,167,69,.15)}
-    .time-window.special-deal.selected{background:linear-gradient(135deg,#e8ffed,#d4f8dd);border-color:var(--ok)}
-    .time-window-title{font-size:1.2em;font-weight:700;margin-bottom:8px}
-    .time-window-range{color:var(--brand);font-size:1.05em;margin-bottom:10px;font-weight:600}
-    .time-window.special-deal .time-window-range{color:var(--ok)}
-    .time-window-description{font-size:.95em;color:#666;line-height:1.4}
-    .price-big{margin:10px 0;font-size:1.25em;font-weight:800;color:var(--brand)}
-    .time-window.special-deal .price-big{color:var(--ok)}
-    .availability-badge{display:inline-block;background:var(--ok);color:#fff;padding:4px 12px;border-radius:20px;font-size:.85em;margin-top:10px}
-    .availability-badge.limited{background:var(--warn)}
-    .special-badge{position:absolute;top:-8px;right:-8px;background:var(--ok);color:#fff;padding:4px 8px;border-radius:12px;font-size:.75em;font-weight:700;box-shadow:0 2px 4px rgba(0,0,0,.2)}
-    .hold-timer{margin-top:8px;font-size:.85em;color:#555} .hold-timer[aria-live]{min-height:1em}
-
-    /* Vehicle Types (Inspection) */
-    .vehicle-types{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin:20px 0}
-    .vehicle-type{border:2px solid #ddd;border-radius:12px;padding:20px;cursor:pointer;text-align:center;transition:all .3s;background:#fff;position:relative}
-    .vehicle-type:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,85,0,.15)}
-    .vehicle-type.selected{background:linear-gradient(135deg,#fff5f0,#ffe5d9);border-color:var(--brand);border-width:3px}
-    .vehicle-type.popular{border-color:var(--ok);background:linear-gradient(135deg,#f0fff4,#e8ffed)}
-    .vehicle-type.popular.selected{background:linear-gradient(135deg,#e8ffed,#d4f8dd);border-color:var(--ok)}
-    .popular-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:6px 16px;border-radius:20px;font-size:.8em;font-weight:700}
-    .vehicle-type-title{font-size:1.2em;font-weight:700;margin-bottom:8px}
-    .vehicle-type-subtitle{color:#666;font-size:.95em;margin-bottom:15px}
-    .vehicle-price{font-size:1.3em;font-weight:800;color:var(--brand);margin:10px 0}
-    .vehicle-type.popular .vehicle-price{color:var(--ok)}
-
     .timing-notice{background:#fff3cd;border:2px solid #ffeaa7;border-radius:12px;padding:20px;margin:20px 0;text-align:left}
-    .timing-notice h4{margin:0 0 10px 0;color:#856404;display:flex;align-items:center;gap:8px}
+    .timing-notice h4{margin:0 0 10px 0;color:#856404}
     .timing-notice p{margin:8px 0;color:#856404;line-height:1.5}
 
-    .urgency-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin:20px 0}
-    .urgency-option{border:2px solid #ddd;border-radius:8px;padding:20px;cursor:pointer;text-align:center;transition:all .3s}
-    .urgency-option:hover{border-color:var(--brand)}
-    .urgency-option.selected{border-color:var(--brand);background:#fff5f0}
-    .urgency-title{font-weight:700;margin-bottom:8px}
-    .urgency-time{color:var(--brand);font-size:.95em;margin-bottom:8px}
-    .urgency-description{font-size:.9em;color:#666}
+    .urgency-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;margin:20px 0}
+    .urgency-option{border:2px solid #ddd;border-radius:12px;padding:20px;cursor:pointer;text-align:center;transition:all .3s;background:#fff}
+    .urgency-option:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,85,0,.15)}
+    .urgency-option.selected{border-color:var(--brand);background:linear-gradient(135deg,#fff5f0,#ffe5d9);border-width:3px}
+    .urgency-title{font-weight:700;margin-bottom:8px;font-size:1.1em}
+    .urgency-time{color:var(--brand);font-size:.95em;margin-bottom:8px;font-weight:600}
+    .urgency-description{font-size:.9em;color:#666;margin-bottom:12px}
+    .urgency-price{font-size:1.25em;font-weight:800;color:var(--brand)}
 
     .reservation-summary{background:#e8f4f8;border-radius:8px;padding:20px;margin:20px 0}
     .reservation-summary h4{margin:0 0 15px 0}
@@ -161,9 +113,6 @@
       .urgency-options{grid-template-columns:1fr}
       .business-name{font-size:1.8em}
       .stats-grid{grid-template-columns:repeat(2,1fr)}
-      .calendar-container{grid-template-columns:1fr}
-      .time-windows{grid-template-columns:1fr}
-      .vehicle-types{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -171,32 +120,31 @@
 <header>
   <img id="headerImage" src="/sweet-ride.png" alt="Eek Mobile Mechanical"/>
   <div class="business-name">Eek Mobile Mechanical</div>
-  <h1 id="headerTitle">Book Your Mobile Mechanic Service</h1>
+  <h1 id="headerTitle">Emergency Mobile Mechanic Service</h1>
   <p id="headerSubtitle" style="font-size:1.1em;color:#666;margin:10px 0;"></p>
 </header>
 
 <div class="breadcrumb">
-  <a href="/">Home</a> > <span id="breadcrumbText">Book Service</span>
+  <a href="/">Home</a> > <span id="breadcrumbText">Emergency Service</span>
 </div>
 
 <div class="booking-container">
   <div class="booking-header">
-    <h2 id="bookingTitle">Book Your Service</h2>
+    <h2 id="bookingTitle">Book Your Emergency Service</h2>
     <p id="bookingDescription">Professional mobile mechanic service across New Zealand</p>
-    <div class="service-stats" id="serviceStats">
+    <div class="service-stats">
       <div class="stats-grid" id="statsContent"></div>
     </div>
   </div>
 
-  <div class="progress-bar" id="progressBar">
-    <div class="progress-step active" id="step1-progress"><span id="step1Label">Details</span></div>
-    <div class="progress-step" id="step2-progress"><span id="step2Label">Scheduling</span></div>
-    <div class="progress-step" id="step3-progress"><span id="step3Label">Vehicle</span></div>
-    <div class="progress-step" id="step4-progress"><span id="step4Label">Confirm</span></div>
+  <div class="progress-bar">
+    <div class="progress-step active" id="step1-progress"><span>Details</span></div>
+    <div class="progress-step" id="step2-progress"><span>Scheduling</span></div>
+    <div class="progress-step" id="step3-progress"><span>Confirm</span></div>
   </div>
 
   <div class="booking-steps">
-    <!-- Step 1 -->
+    <!-- Step 1: Service Details -->
     <div class="step active" id="step1">
       <h3 id="step1Title">Step 1: Service Details</h3>
 
@@ -238,17 +186,6 @@
         </div>
       </div>
 
-      <!-- Seller info only for inspection -->
-      <div id="sellerInfoSection" style="background:#e8f4f8;padding:15px;border-radius:8px;margin-bottom:20px;display:none;">
-        <h4 style="margin:0 0 15px 0;color:#333;">Seller Information</h4>
-        <div class="contact-info">
-          <label for="sellerNameInput">Seller Name (required for inspection)</label>
-          <input type="text" id="sellerNameInput" placeholder="Seller's full name or dealership name"/>
-          <label for="sellerPhoneInput">Seller Phone Number (required for inspection)</label>
-          <input type="tel" id="sellerPhoneInput" placeholder="021 987 6543"/>
-        </div>
-      </div>
-
       <label for="locationInput" style="display:block;margin-bottom:8px;font-weight:700;">Where do you need service?</label>
       <input type="text" class="location-input" id="locationInput" placeholder="Enter your address, suburb, or region"/>
 
@@ -258,39 +195,20 @@
       <div class="info-box" id="serviceInfoBox"></div>
 
       <div style="text-align:center;margin:20px 0;">
-        <button class="button" id="nextButton" onclick="goToStep2()">Next: Select Time</button>
+        <button class="button" onclick="goToStep2()">Next: Select Time</button>
       </div>
     </div>
 
-    <!-- Step 2 -->
+    <!-- Step 2: Scheduling -->
     <div class="step" id="step2">
-      <h3 id="step2Title">Step 2: When do you need service?</h3>
+      <h3>Step 2: When do you need service?</h3>
+      
       <div class="timing-notice">
         <h4>⏰ Important Timing Information</h4>
-        <p><strong>Time windows are approximate arrival times.</strong> As a mobile service, a previous job may run long. We’ll text you when your tech is on the way.</p>
+        <p><strong>Time windows are approximate arrival times.</strong> As a mobile service, a previous job may run long. We'll text you when your tech is on the way.</p>
       </div>
 
-      <div class="urgency-options" id="urgencyOptions" style="display:none;"></div>
-
-      <div id="calendarSection" style="display:none;">
-        <div class="calendar-container">
-          <div class="calendar" id="currentCalendar">
-            <h4 id="currentMonth"></h4>
-            <div class="calendar-grid"></div>
-            <div class="calendar-legend"><span class="legend-box"></span> <span>Special price day</span></div>
-          </div>
-          <div class="calendar" id="nextCalendar">
-            <h4 id="nextMonth"></h4>
-            <div class="calendar-grid"></div>
-            <div class="calendar-legend"><span class="legend-box"></span> <span>Special price day</span></div>
-          </div>
-        </div>
-
-        <div id="timeWindowContainer" style="display:none;">
-          <h4 style="margin:25px 0 15px 0;">Select your preferred time window for <span id="selectedDateDisplay"></span>:</h4>
-          <div class="time-windows" id="timeWindows"></div>
-        </div>
-      </div>
+      <div class="urgency-options" id="urgencyOptions"></div>
 
       <div style="margin:20px 0;">
         <button class="button secondary" onclick="goToStep1()">Back</button>
@@ -298,54 +216,16 @@
       </div>
     </div>
 
-    <!-- Step 3 - Vehicle Type (Inspection Only) -->
+    <!-- Step 3: Confirmation -->
     <div class="step" id="step3">
-      <h3>Step 3: Vehicle Type</h3>
-      <p style="color:#666;margin-bottom:25px;">Select your vehicle type for accurate inspection pricing:</p>
-
-      <div class="vehicle-types" id="vehicleTypes">
-        <div class="vehicle-type popular selected" onclick="selectVehicleType('standard', 0, this)" id="standardVehicle">
-          <div class="popular-badge">MOST POPULAR</div>
-          <div class="vehicle-type-title">Standard Vehicle</div>
-          <div class="vehicle-type-subtitle">Cars, SUVs, Utes under 3500kg</div>
-          <div class="vehicle-price">✓ Included</div>
-          <div style="font-size:.95em;color:var(--ok);margin-top:10px;">No additional fee</div>
-        </div>
-
-        <div class="vehicle-type" onclick="selectVehicleType('commercial', 39, this)">
-          <div class="vehicle-type-title">Commercial Vehicle</div>
-          <div class="vehicle-type-subtitle">Vans, trucks, heavy vehicles &gt; 3500kg</div>
-          <div class="vehicle-price">+$39</div>
-          <div style="font-size:.95em;color:#666;margin-top:10px;">Additional inspection time required</div>
-        </div>
-
-        <div class="vehicle-type" onclick="selectVehicleType('specialty', 129, this)">
-          <div class="vehicle-type-title">Classic/Specialty Vehicle</div>
-          <div class="vehicle-type-subtitle">Classics, modified, imports</div>
-          <div class="vehicle-price">+$129</div>
-          <div style="font-size:.95em;color:#666;margin-top:10px;">Specialist inspection expertise</div>
-        </div>
-      </div>
-
-      <div style="margin:20px 0;">
-        <button class="button secondary" onclick="goToStep2()">Back</button>
-        <button class="button" onclick="goToStep4()">Continue to Review</button>
-      </div>
-    </div>
-
-    <!-- Step 4 -->
-    <div class="step" id="step4">
-      <h3>Step 4: Review and confirm</h3>
+      <h3>Step 3: Review and confirm</h3>
 
       <div class="reservation-summary">
-        <h4 id="summaryTitle">Your Service Request</h4>
+        <h4>Your Service Request</h4>
         <div class="summary-item"><span>Service:</span><strong id="summaryService"></strong></div>
         <div class="summary-item"><span>Location:</span><strong id="summaryLocation"></strong></div>
         <div class="summary-item"><span>Phone:</span><strong id="summaryPhone"></strong></div>
-        <div class="summary-item" id="urgencyRow"><span>Response Time:</span><strong id="summaryUrgency"></strong></div>
-        <div class="summary-item" id="dateRow" style="display:none;"><span>Date:</span><strong id="summaryDate"></strong></div>
-        <div class="summary-item" id="timeRow" style="display:none;"><span>Time Window:</span><strong id="summaryTime"></strong></div>
-        <div class="summary-item" id="vehicleRow" style="display:none;"><span>Vehicle Type:</span><strong id="summaryVehicle"></strong></div>
+        <div class="summary-item"><span>Response Time:</span><strong id="summaryUrgency"></strong></div>
         <div class="summary-item"><span>Service Fee:</span><strong id="summaryPrice"></strong></div>
       </div>
 
@@ -370,7 +250,7 @@
 
       <div style="text-align:center;margin:20px 0;">
         <div style="display:flex;justify-content:center;gap:15px;flex-wrap:wrap;">
-          <button class="button secondary" onclick="goToStep3()">Back to Selection</button>
+          <button class="button secondary" onclick="goToStep2()">Back to Selection</button>
           <button class="button" id="generatePaymentBtn" onclick="generatePaymentLink()" disabled>Generate Payment Link</button>
         </div>
         <p style="margin:15px 0;color:#666;font-size:.9em;">Secure payment processing powered by Stripe</p>
@@ -380,9 +260,7 @@
 </div>
 
 <script>
-/* =========================
-   SERVICE CONFIG
-========================= */
+// Service Configurations
 const serviceConfigs = {
   'jumpstart': {
     title:'Battery Jump Start Service',
@@ -393,7 +271,7 @@ const serviceConfigs = {
     step1Title:'Step 1: Tell us about your battery situation',
     detailsLabel:'Any additional details about the battery problem:',
     detailsPlaceholder:"e.g., Age of battery, if lights were left on, how long it's been dead, etc.",
-    useCalendar:false, hasVehicleTypes:false, serviceCode:'JUMP', basePrice:149,
+    serviceCode:'JUMP', basePrice:149,
     stats:[
       {number:'$149',text:'fixed price'},{number:'30–90',text:'min arrival'},
       {number:'Free',text:'battery test'},{number:'All',text:'makes & models'}
@@ -425,8 +303,8 @@ const serviceConfigs = {
     bookingDescription:'Professional mechanical diagnostic • On-site assessment',
     step1Title:'Step 1: Tell us about your mechanical problem',
     detailsLabel:'Describe the symptoms and any issues:',
-    detailsPlaceholder:"e.g., Engine won’t start, warning lights, strange noises, overheating, etc.",
-    useCalendar:false, hasVehicleTypes:false, serviceCode:'DIAG', basePrice:249,
+    detailsPlaceholder:"e.g., Engine won't start, warning lights, strange noises, overheating, etc.",
+    serviceCode:'DIAG', basePrice:249,
     stats:[
       {number:'$249',text:'fixed price'},{number:'30–90',text:'min arrival'},
       {number:'Full',text:'diagnostic scan'},{number:'Expert',text:'assessment'}
@@ -460,7 +338,7 @@ const serviceConfigs = {
     step1Title:'Step 1: Tell us about the fuel situation',
     detailsLabel:'Critical details about what happened:',
     detailsPlaceholder:'e.g., How much wrong fuel, have you started engine, petrol in diesel or vice versa, etc.',
-    useCalendar:false, hasVehicleTypes:false, serviceCode:'FUEL', basePrice:849,
+    serviceCode:'FUEL', basePrice:849,
     stats:[
       {number:'$849',text:'fixed price'},{number:'30–90',text:'min arrival'},
       {number:'No',text:'engine damage'},{number:'100%',text:'insured service'}
@@ -483,115 +361,46 @@ const serviceConfigs = {
       'Complete system flush and replacement with correct fuel',
       'Time-critical service to prevent engine damage'
     ]
-  },
-  'inspection': {
-    title:'Pre Purchase Vehicle Inspection',
-    subtitle:'Comprehensive mechanical inspection before you buy',
-    breadcrumb:'Pre Purchase Inspection',
-    bookingTitle:'Pre Purchase Vehicle Inspection',
-    bookingDescription:'45-point certified inspection • Mobile service anywhere in NZ',
-    step1Title:'Step 1: Where is the vehicle located?',
-    step2Title:'Step 2: Select your preferred date and time',
-    detailsLabel:'Vehicle and inspection details:',
-    detailsPlaceholder:'e.g., Make/model/year, dealer or private sale, any specific concerns, etc.',
-    useCalendar:true, hasVehicleTypes:true, serviceCode:'INSP', basePrice:289,
-    stats:[
-      {number:'From',text:'$199'},
-      {number:'45-point',text:'inspection'},
-      {number:'Morning',text:'or afternoon'},
-      {number:'Certified',text:'report'}
-    ],
-    infoContent:`
-      <h4>Our Pre-Purchase Inspection Includes:</h4>
-      <ul>
-        <li><strong>Comprehensive certified mechanical inspection</strong></li>
-        <li><strong>45-point inspection checklist</strong></li>
-        <li><strong>Written inspection report</strong> with photos</li>
-        <li><strong>Professional recommendation</strong> on purchase decision</li>
-        <li><strong>Dynamic pricing:</strong> Earlier bookings are cheaper. Look for the highlighted <strong>special price days</strong>!</li>
-      </ul>`,
-    terms:[
-      'Comprehensive certified mechanical inspection',
-      'Dynamic pricing - earlier bookings cost less',
-      'Time windows are approximate - technician will call en route',
-      'Written report provided within 24 hours',
-      'Cancellations must be made at least 2 hours in advance'
-    ]
   }
 };
 
-/* =========================
-   GLOBALS & INIT
-========================= */
+// Globals
 const POWER_AUTOMATE_URL = 'https://prod-35.australiasoutheast.logic.azure.com:443/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=PqXBWWjhoQG9vOCbPXcgc6sD7c43yJKV8kiftsdxoM8';
-
-let selectedDate = null;
-let selectedTimeWindow = null;
 let selectedUrgency = null;
 let selectedUrgencyDetails = {};
-let selectedVehicleType = 'standard';
-let vehicleTypeAddon = 0;
 
-let guaranteedSpecials = [];  // [{dateISO, price, kind}]
-const ALLOWED_PRICES = [199, 229, 249, 289, 329, 349, 389]; // full list you provided
-const REVISIT_WINDOW_HOURS = 48;
-const REVISIT_KEY = 'eek_price_seen_v1';
-let holdInterval = null;
-
+// Initialize
 document.addEventListener('DOMContentLoaded', function(){
   const urlParams = new URLSearchParams(window.location.search);
-  const service = urlParams.get('service') || 'inspection'; // default to inspection to show calendar
+  const service = urlParams.get('service') || 'jumpstart';
   loadServiceConfig(service);
 });
 
-/* =========================
-   LOAD SERVICE
-========================= */
 function loadServiceConfig(serviceType){
-  const config = serviceConfigs[serviceType] || serviceConfigs['inspection'];
+  const config = serviceConfigs[serviceType] || serviceConfigs['jumpstart'];
+  
   document.title = `${config.title} - Eek Mobile Mechanical`;
-  document.getElementById('pageDescription').content = `Book ${config.title.toLowerCase()} with Eek Mobile Mechanical. ${config.bookingDescription}`;
-  document.getElementById('headerImage').src = '/sweet-ride.png';
   document.getElementById('headerTitle').textContent = config.title;
   document.getElementById('headerSubtitle').textContent = config.subtitle;
   document.getElementById('breadcrumbText').textContent = config.breadcrumb;
   document.getElementById('bookingTitle').textContent = config.bookingTitle;
   document.getElementById('bookingDescription').textContent = config.bookingDescription;
-
-  if (config.stats){
-    const statsContainer = document.getElementById('statsContent');
-    statsContainer.innerHTML = config.stats.map(stat => `<div class="stat-item"><span class="stat-number">${stat.number}</span>${stat.text}</div>`).join('');
-    document.getElementById('serviceStats').style.display = 'block';
-  }
-
   document.getElementById('step1Title').textContent = config.step1Title;
   document.getElementById('detailsLabel').textContent = config.detailsLabel;
   document.getElementById('detailsInput').placeholder = config.detailsPlaceholder;
   document.getElementById('serviceInfoBox').innerHTML = config.infoContent;
 
-  // Progress labels
-  document.getElementById('step1Label').textContent = 'Details';
-  document.getElementById('step2Label').textContent = 'Scheduling';
-  document.getElementById('step3Label').textContent = config.hasVehicleTypes ? 'Vehicle' : 'Confirm';
-  document.getElementById('step4Label').textContent = 'Confirm';
+  const statsContainer = document.getElementById('statsContent');
+  statsContainer.innerHTML = config.stats.map(stat => 
+    `<div class="stat-item"><span class="stat-number">${stat.number}</span>${stat.text}</div>`
+  ).join('');
 
-  // Show/hide vehicle step
-  document.getElementById('step3-progress').style.display = config.hasVehicleTypes ? 'block' : 'none';
-  document.getElementById('step4-progress').style.display = config.hasVehicleTypes ? 'block' : 'none';
-
-  // Seller info only for inspection
-  document.getElementById('sellerInfoSection').style.display = (serviceType === 'inspection') ? 'block' : 'none';
-  document.getElementById('step2Title').textContent = config.useCalendar ? config.step2Title : 'Step 2: When do you need service?';
-
-  // Terms
   const termsList = document.getElementById('termsList');
   termsList.innerHTML = config.terms.map(term => `<li>${term}</li>`).join('');
 
-  // reset globals
-  selectedDate = null; selectedTimeWindow = null; selectedUrgency = null; selectedUrgencyDetails = {};
-  selectedVehicleType = 'standard'; vehicleTypeAddon = 0;
-
-  // Reset progress UI
+  // Reset progress
+  selectedUrgency = null;
+  selectedUrgencyDetails = {};
   document.querySelectorAll('.progress-step').forEach(el => el.classList.remove('active','completed'));
   document.getElementById('step1-progress').classList.add('active');
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
@@ -601,9 +410,6 @@ function loadServiceConfig(serviceType){
   window.currentConfig = config;
 }
 
-/* =========================
-   VALIDATION + NAV
-========================= */
 function goToStep1(){
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step1').classList.add('active');
@@ -612,7 +418,6 @@ function goToStep1(){
 }
 
 function goToStep2(){
-  // Validate
   const name = document.getElementById('nameInput').value.trim();
   const phone = document.getElementById('phoneInput').value.trim();
   const email = document.getElementById('emailInput').value.trim();
@@ -621,44 +426,35 @@ function goToStep2(){
   if (!name){ alert('Please enter your full name'); document.getElementById('nameInput').focus(); return; }
   if (!phone){ alert('Please enter your phone number'); document.getElementById('phoneInput').focus(); return; }
   const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-  if (!phoneRegex.test(phone) || phone.replace(/\D/g,'').length < 9){ alert('Please enter a valid phone number'); document.getElementById('phoneInput').focus(); return; }
+  if (!phoneRegex.test(phone) || phone.replace(/\D/g,'').length < 9){ 
+    alert('Please enter a valid phone number'); 
+    document.getElementById('phoneInput').focus(); 
+    return; 
+  }
   if (!email){ alert('Please enter your email address'); document.getElementById('emailInput').focus(); return; }
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)){ alert('Please enter a valid email address'); document.getElementById('emailInput').focus(); return; }
+  if (!emailRegex.test(email)){ 
+    alert('Please enter a valid email address'); 
+    document.getElementById('emailInput').focus(); 
+    return; 
+  }
   if (!location){ alert('Please enter the service location'); document.getElementById('locationInput').focus(); return; }
 
-  if (window.currentService === 'inspection'){
-    const sellerName = document.getElementById('sellerNameInput').value.trim();
-    const sellerPhone = document.getElementById('sellerPhoneInput').value.trim();
-    if (!sellerName){ alert("Please enter the seller's name or dealership name"); document.getElementById('sellerNameInput').focus(); return; }
-    if (!sellerPhone){ alert("Please enter the seller's phone number"); document.getElementById('sellerPhoneInput').focus(); return; }
-    if (!phoneRegex.test(sellerPhone) || sellerPhone.replace(/\D/g,'').length < 9){ alert('Please enter a valid seller phone number'); document.getElementById('sellerPhoneInput').focus(); return; }
-  }
-
-  // Proceed
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step2').classList.add('active');
   document.getElementById('step1-progress').classList.add('completed');
   document.getElementById('step1-progress').classList.remove('active');
   document.getElementById('step2-progress').classList.add('active');
 
-  // Setup step 2 content
-  if (window.currentConfig.useCalendar){
-    document.getElementById('urgencyOptions').style.display = 'none';
-    document.getElementById('calendarSection').style.display = 'block';
-    initializeCalendars();
-  } else {
-    document.getElementById('urgencyOptions').style.display = 'block';
-    document.getElementById('calendarSection').style.display = 'none';
-    const urgencyContainer = document.getElementById('urgencyOptions');
-    urgencyContainer.innerHTML = window.currentConfig.urgencyOptions.map(o => `
-      <div class="urgency-option" onclick="selectUrgency('${o.id}','${o.title}','${o.time}',${o.price},this)">
-        <div class="urgency-title">${o.title}</div>
-        <div class="urgency-time">${o.time}</div>
-        <div class="urgency-description">${o.description}</div>
-        <div style="margin-top:8px;font-weight:800;color:var(--brand);">$${o.price}</div>
-      </div>`).join('');
-  }
+  // Setup urgency options
+  const urgencyContainer = document.getElementById('urgencyOptions');
+  urgencyContainer.innerHTML = window.currentConfig.urgencyOptions.map(o => `
+    <div class="urgency-option" onclick="selectUrgency('${o.id}','${o.title}','${o.time}',${o.price},this)">
+      <div class="urgency-title">${o.title}</div>
+      <div class="urgency-time">${o.time}</div>
+      <div class="urgency-description">${o.description}</div>
+      <div class="urgency-price">$${o.price}</div>
+    </div>`).join('');
 }
 
 function selectUrgency(id, title, time, price, el){
@@ -670,282 +466,20 @@ function selectUrgency(id, title, time, price, el){
 }
 
 function goToStep3(){
-  // stop any running hold timers when leaving step 2
-  if (holdInterval) { clearInterval(holdInterval); holdInterval = null; }
-
-  if (window.currentConfig.useCalendar){
-    if (!selectedDate || !selectedTimeWindow){ alert('Please select both a date and a time window'); return; }
-  } else {
-    if (!selectedUrgency){ alert('Please select a service time'); return; }
+  if (!selectedUrgency){ 
+    alert('Please select a service time'); 
+    return; 
   }
 
-  const targetStep = window.currentConfig.hasVehicleTypes ? 'step3' : 'step4';
-  const targetProgress = window.currentConfig.hasVehicleTypes ? 'step3-progress' : 'step4-progress';
-
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-  document.getElementById(targetStep).classList.add('active');
+  document.getElementById('step3').classList.add('active');
   document.getElementById('step2-progress').classList.add('completed');
   document.getElementById('step2-progress').classList.remove('active');
-  document.getElementById(targetProgress).classList.add('active');
-
-  if (!window.currentConfig.hasVehicleTypes) updateSummary();
-}
-
-function goToStep4(){
-  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-  document.getElementById('step4').classList.add('active');
-  document.getElementById('step3-progress').classList.add('completed');
-  document.getElementById('step3-progress').classList.remove('active');
-  document.getElementById('step4-progress').classList.add('active');
+  document.getElementById('step3-progress').classList.add('active');
+  
   updateSummary();
 }
 
-/* =========================
-   CASCADING PRICING LOGIC
-========================= */
-function isWeekendDate(d){ const W=d.getDay(); return W===0||W===6; }
-function daysUntilFromToday(date){
-  const today = new Date(); today.setHours(0,0,0,0);
-  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  return Math.floor((d - today)/(1000*60*60*24));
-}
-
-// Your exact cascade: urgent == 289 weekday / 349 weekend; cheapest far out == 199 weekday / 289 weekend
-function baseCascadePrice(date){
-  const d = Math.max(0, daysUntilFromToday(date));
-  const weekend = isWeekendDate(date);
-  if (!weekend){
-    if (d <= 1) return 289;   // today/next-day
-    if (d <= 3) return 249;   // 2-3 days
-    if (d <= 6) return 229;   // 4-6 days
-    return 199;               // 7+ (incl 10+)
-  } else {
-    if (d <= 1) return 349;   // today/next-day
-    if (d <= 3) return 329;   // 2-3 days
-    return 289;               // 4+ (incl 10+)
-  }
-}
-
-/* Guaranteed specials (within 7 days from tomorrow) */
-function ensureGuaranteedSpecials(){
-  guaranteedSpecials = [];
-  const today = new Date(); today.setHours(0,0,0,0);
-  const candidates = [];
-  for (let i=1;i<=7;i++){ const d=new Date(today); d.setDate(today.getDate()+i); candidates.push(d); }
-
-  const weekdays = candidates.filter(d=>!isWeekendDate(d));
-  if (weekdays.length){ const w = weekdays[0]; guaranteedSpecials.push({dateISO:isoDay(w),price:199,kind:'weekday'}); }
-
-  const weekends = candidates.filter(d=>isWeekendDate(d));
-  if (weekends.length){ const w = weekends[0]; guaranteedSpecials.push({dateISO:isoDay(w),price:289,kind:'weekend'}); }
-}
-function isoDay(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()).toISOString().slice(0,10); }
-function getGuaranteedSpecialFor(date){
-  const iso = isoDay(date);
-  return guaranteedSpecials.find(s => s.dateISO===iso) || null;
-}
-
-/* Revisit logic: one step drop within 48h, never below weekday 199 / weekend 289 or below guaranteed special */
-function getRevisitMap(){ try{ return JSON.parse(localStorage.getItem(REVISIT_KEY)||'{}'); }catch{ return {}; } }
-function setRevisitMap(map){ localStorage.setItem(REVISIT_KEY, JSON.stringify(map)); }
-function recordPriceView(date, slotId, price){
-  const key = `${isoDay(date)}|${slotId}`; const map = getRevisitMap();
-  map[key] = {price, ts: Date.now()}; setRevisitMap(map);
-}
-function applyRevisitDrop(date, slotId, computedPrice){
-  const key = `${isoDay(date)}|${slotId}`; const map = getRevisitMap(); const rec = map[key];
-  if (!rec) return computedPrice;
-  const hours = (Date.now() - rec.ts) / 36e5;
-  if (hours > REVISIT_WINDOW_HOURS) return computedPrice;
-
-  const idx = ALLOWED_PRICES.indexOf(computedPrice);
-  if (idx <= 0) return computedPrice;
-
-  const floor = isWeekendDate(date) ? 289 : 199;
-  const lower = ALLOWED_PRICES[idx - 1];
-  return Math.max(lower, floor);
-}
-
-/* Single source: date price (per-day, uniform across slots) */
-function getInspectionPriceForDate(date, slotId){
-  let price = baseCascadePrice(date);
-  const special = getGuaranteedSpecialFor(date);
-  if (special) price = Math.min(price, special.price);
-
-  const dropped = applyRevisitDrop(date, slotId, price);
-
-  // Never under special
-  if (special) price = Math.max(dropped, special.price);
-  else price = dropped;
-
-  return price;
-}
-
-/* =========================
-   CALENDAR / WINDOWS
-========================= */
-function initializeCalendars(){
-  ensureGuaranteedSpecials();
-  const today = new Date();
-  const cm = today.getMonth(), cy = today.getFullYear();
-  const nm = cm===11 ? 0 : cm+1, ny = cm===11 ? cy+1 : cy;
-  generateCalendar(cm, cy, 'currentCalendar');
-  generateCalendar(nm, ny, 'nextCalendar');
-}
-
-function generateCalendar(month, year, containerId){
-  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-  const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  const firstDay = new Date(year,month,1).getDay();
-  const daysInMonth = new Date(year,month+1,0).getDate();
-  const today = new Date(); today.setHours(0,0,0,0);
-
-  const container = document.getElementById(containerId);
-  const grid = container.querySelector('.calendar-grid');
-  const header = container.querySelector('h4');
-
-  header.textContent = `${monthNames[month]} ${year}`;
-  grid.innerHTML = '';
-
-  dayNames.forEach(d => { const el = document.createElement('div'); el.className='day-header'; el.textContent=d; grid.appendChild(el); });
-  for (let i=0;i<firstDay;i++){ const empty=document.createElement('div'); empty.className='day disabled'; grid.appendChild(empty); }
-
-  for (let day=1; day<=daysInMonth; day++){
-    const d = new Date(year,month,day);
-    const el = document.createElement('div'); el.className='day'; el.textContent=day;
-
-    if (d < today){ el.classList.add('past'); grid.appendChild(el); continue; }
-
-    const price = getInspectionPriceForDate(d,'day');
-    const chip = document.createElement('div'); chip.className='price-chip'; chip.textContent = `$${price}`; el.appendChild(chip);
-    if (getGuaranteedSpecialFor(d)) el.classList.add('special');
-
-    el.onclick = () => selectDate(year,month,day,el);
-    grid.appendChild(el);
-  }
-}
-
-function selectDate(year, month, day, element){
-  document.querySelectorAll('.day.selected').forEach(el => el.classList.remove('selected'));
-  element.classList.add('selected');
-  selectedDate = new Date(year,month,day);
-  showTimeWindows();
-
-  const opts = {weekday:'long',year:'numeric',month:'long',day:'numeric'};
-  document.getElementById('selectedDateDisplay').textContent = selectedDate.toLocaleDateString('en-NZ', opts);
-}
-
-function showTimeWindows(){
-  const container = document.getElementById('timeWindowContainer');
-  const windowsDiv = document.getElementById('timeWindows');
-  container.style.display = 'block';
-  selectedTimeWindow = null;
-  document.getElementById('confirmTimeBtn').disabled = true;
-
-  const today = new Date();
-  const isToday = selectedDate.toDateString() === today.toDateString();
-  const h = today.getHours();
-  const weekend = isWeekendDate(selectedDate);
-
-  const windows = weekend ? [
-    {id:'morning', title:'Morning', range:'8:00 AM - 12:00 PM', available: !isToday || h<10},
-    {id:'afternoon', title:'Afternoon', range:'12:00 PM - 5:00 PM', available: !isToday || h<15}
-  ] : [
-    {id:'morning', title:'Morning', range:'8:00 AM - 12:00 PM', available: !isToday || h<10},
-    {id:'midday', title:'Midday', range:'11:00 AM - 2:00 PM', available: !isToday || h<13},
-    {id:'afternoon', title:'Afternoon', range:'1:00 PM - 5:00 PM', available: !isToday || h<16}
-  ];
-
-  // Uniform per-day price
-  const dayPrice = getInspectionPriceForDate(selectedDate,'day');
-  const special = getGuaranteedSpecialFor(selectedDate);
-
-  // Scarcity
-  windows.forEach(w=>{
-    const d = Math.max(0,daysUntilFromToday(selectedDate));
-    const maxSlots = d<=1 ? 3 : d<=3 ? 5 : 8;
-    w.slots = w.available ? Math.max(1, Math.floor(Math.random()*maxSlots) || 1) : 0;
-    // apply revisit drop per slot (display badge if applied)
-    const maybeDropped = applyRevisitDrop(selectedDate, w.id, dayPrice);
-    // never go below guaranteed special floor
-    w.price = special ? Math.max(maybeDropped, special.price) : maybeDropped;
-  });
-
-  windowsDiv.innerHTML = windows.map(w=>{
-    if (!w.available){
-      return `<div class="time-window" style="opacity:.5;cursor:not-allowed;">
-        <div class="time-window-title">${w.title}</div>
-        <div class="time-window-range" style="color:#999;">Too late to book</div>
-        <div class="time-window-description">Try another window</div>
-      </div>`;
-    }
-    const cls = special ? 'time-window special-deal' : 'time-window';
-    const badge = w.slots <= 5 ? `<span class="availability-badge ${w.slots<=1?'limited':''}">
-      ${w.slots===1 ? 'Only 1 left' : 'Only ' + w.slots + ' left'}
-    </span>` : '';
-
-    const revisitApplied = (w.price < dayPrice);
-    const revisitTag = revisitApplied ? `<div class="special-badge">Returning visitor discount</div>` : '';
-
-    return `<div class="${cls}" data-slot="${w.id}"
-              onclick="selectTimeWindow('${w.id}','${w.title}','${w.range}',${w.price},this)">
-      ${special ? '<div class="special-badge">💰 Special rate</div>' : '' }
-      ${revisitTag}
-      <div class="time-window-title">${w.title}</div>
-      <div class="time-window-range">${w.range}</div>
-      <div class="time-window-description">Flexible arrival window</div>
-      <div class="price-big">$${w.price}</div>
-      ${badge}
-      <div class="hold-timer" aria-live="polite"></div>
-    </div>`;
-  }).join('');
-
-  // Correct the Step 2 Continue handler based on whether step 3 exists
-  const confirmBtn = document.getElementById('confirmTimeBtn');
-  if (window.currentConfig.hasVehicleTypes) confirmBtn.onclick = goToStep3;
-  else confirmBtn.onclick = directToConfirm;
-}
-
-function selectTimeWindow(id,title,range,price,element){
-  document.querySelectorAll('.time-window.selected').forEach(el => el.classList.remove('selected'));
-  element.classList.add('selected');
-  selectedTimeWindow = {id,title,range,price};
-  document.getElementById('confirmTimeBtn').disabled = false;
-
-  // record view for revisit logic
-  recordPriceView(selectedDate, id, price);
-
-  // 10-minute hold countdown
-  const end = Date.now() + 10*60*1000;
-  const timerEl = element.querySelector('.hold-timer');
-  clearInterval(holdInterval);
-  holdInterval = setInterval(()=>{
-    const left = Math.max(0, end - Date.now());
-    const m = Math.floor(left/60000);
-    const s = Math.floor((left%60000)/1000);
-    timerEl.textContent = left>0 ? `Reserved for ${m}:${String(s).padStart(2,'0')}` : 'Hold expired';
-    if (left<=0){
-      clearInterval(holdInterval);
-      element.classList.remove('selected');
-      selectedTimeWindow = null;
-      document.getElementById('confirmTimeBtn').disabled = true;
-    }
-  }, 250);
-}
-
-/* =========================
-   VEHICLE TYPES
-========================= */
-function selectVehicleType(type, addon, el){
-  document.querySelectorAll('.vehicle-type.selected').forEach(x=>x.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedVehicleType = type;
-  vehicleTypeAddon = addon;
-}
-
-/* =========================
-   SUMMARY
-========================= */
 function updateSummary(){
   const phone = document.getElementById('phoneInput').value;
   const location = document.getElementById('locationInput').value;
@@ -953,46 +487,10 @@ function updateSummary(){
   document.getElementById('summaryService').textContent = window.currentConfig.title;
   document.getElementById('summaryLocation').textContent = location;
   document.getElementById('summaryPhone').textContent = phone;
-
-  if (window.currentConfig.useCalendar){
-    document.getElementById('urgencyRow').style.display='none';
-    document.getElementById('dateRow').style.display='flex';
-    document.getElementById('timeRow').style.display='flex';
-
-    if (selectedDate){
-      const opts = {weekday:'long',year:'numeric',month:'long',day:'numeric'};
-      document.getElementById('summaryDate').textContent = selectedDate.toLocaleDateString('en-NZ', opts);
-    }
-    document.getElementById('summaryTime').textContent = selectedTimeWindow ? selectedTimeWindow.range : 'Not selected';
-
-    let total = selectedTimeWindow ? selectedTimeWindow.price : window.currentConfig.basePrice;
-    if (window.currentConfig.hasVehicleTypes){
-      total += vehicleTypeAddon;
-      document.getElementById('vehicleRow').style.display='flex';
-      const names = {
-        'standard': 'Standard Vehicle',
-        'commercial': 'Commercial Vehicle (+$39)',
-        'specialty': 'Classic/Specialty (+$129)'
-      };
-      document.getElementById('summaryVehicle').textContent = names[selectedVehicleType];
-    } else {
-      document.getElementById('vehicleRow').style.display='none';
-    }
-    document.getElementById('summaryPrice').textContent = `$${total}`;
-  } else {
-    document.getElementById('urgencyRow').style.display='flex';
-    document.getElementById('dateRow').style.display='none';
-    document.getElementById('timeRow').style.display='none';
-    document.getElementById('vehicleRow').style.display='none';
-
-    document.getElementById('summaryUrgency').textContent = selectedUrgencyDetails.time || '';
-    document.getElementById('summaryPrice').textContent = `$${selectedUrgencyDetails.price || window.currentConfig.basePrice}`;
-  }
+  document.getElementById('summaryUrgency').textContent = selectedUrgencyDetails.time || '';
+  document.getElementById('summaryPrice').textContent = `$${selectedUrgencyDetails.price || window.currentConfig.basePrice}`;
 }
 
-/* =========================
-   PAYMENT + REDIRECT
-========================= */
 function toggleBookingButton(){
   document.getElementById('generatePaymentBtn').disabled = !document.getElementById('termsAgree').checked;
 }
@@ -1012,30 +510,26 @@ function buildRedirectUrl(){
   params.append('service', window.currentService);
   params.append('serviceCode', window.currentConfig.serviceCode);
   params.append('serviceTitle', window.currentConfig.title);
-
-  let total = window.currentConfig.useCalendar && selectedTimeWindow ? selectedTimeWindow.price : (selectedUrgencyDetails.price || window.currentConfig.basePrice);
-  if (window.currentConfig.hasVehicleTypes){ total += vehicleTypeAddon; params.append('vehicleType', selectedVehicleType); params.append('vehicleAddon', vehicleTypeAddon); }
-  params.append('price', total);
+  params.append('price', selectedUrgencyDetails.price || window.currentConfig.basePrice);
   params.append('details', document.getElementById('detailsInput').value || '');
-
-  if (window.currentConfig.useCalendar && selectedDate && selectedTimeWindow){
-    params.append('scheduledDate', selectedDate.toISOString());
-    params.append('timeWindow', selectedTimeWindow.range);
-    params.append('urgencyLevel', 'Scheduled');
-  } else if (selectedUrgency){
-    params.append('scheduledDate', new Date().toISOString());
-    params.append('timeWindow', selectedUrgencyDetails.time);
-    params.append('urgencyLevel', selectedUrgency);
-  }
+  params.append('scheduledDate', new Date().toISOString());
+  params.append('timeWindow', selectedUrgencyDetails.time);
+  params.append('urgencyLevel', selectedUrgency);
   params.append('bookingTime', new Date().toISOString());
+  
   return `${baseUrl}?${params.toString()}`;
 }
 
 async function generatePaymentLink(){
   const btn = document.getElementById('generatePaymentBtn');
-  if (!document.getElementById('termsAgree').checked){ alert('Please accept the terms and conditions'); return; }
+  if (!document.getElementById('termsAgree').checked){ 
+    alert('Please accept the terms and conditions'); 
+    return; 
+  }
 
-  btn.disabled = true; btn.classList.add('processing'); btn.textContent='Generating Link';
+  btn.disabled = true; 
+  btn.classList.add('processing'); 
+  btn.textContent='Generating Link';
 
   const customerName = document.getElementById('nameInput').value.trim();
   const phone = document.getElementById('phoneInput').value.trim();
@@ -1047,8 +541,7 @@ async function generatePaymentLink(){
   const model = document.getElementById('modelInput').value.trim();
   const vehicleDescription = [rego,year,make,model].filter(Boolean).join(' ') || 'Vehicle details not provided';
 
-  let total = window.currentConfig.useCalendar && selectedTimeWindow ? selectedTimeWindow.price : (selectedUrgencyDetails.price || window.currentConfig.basePrice);
-  if (window.currentConfig.hasVehicleTypes) total += vehicleTypeAddon;
+  const total = selectedUrgencyDetails.price || window.currentConfig.basePrice;
 
   const bookingData = {
     rego: rego || 'Not provided',
@@ -1059,27 +552,30 @@ async function generatePaymentLink(){
     customerData: {
       name: customerName, phone, email, location,
       vehicleRego: rego, vehicleYear: year, vehicleMake: make, vehicleModel: model, vehicleDescription,
-      sellerName: window.currentService==='inspection' ? (document.getElementById('sellerNameInput').value.trim()) : '',
-      sellerPhone: window.currentService==='inspection' ? (document.getElementById('sellerPhoneInput').value.trim()) : '',
-      service: window.currentService, serviceCode: window.currentConfig.serviceCode, serviceTitle: window.currentConfig.title,
+      service: window.currentService, 
+      serviceCode: window.currentConfig.serviceCode, 
+      serviceTitle: window.currentConfig.title,
       details: document.getElementById('detailsInput').value || 'No additional details provided',
       price: `${total}`,
-      vehicleType: window.currentConfig.hasVehicleTypes ? selectedVehicleType : '',
-      vehicleAddon: window.currentConfig.hasVehicleTypes ? vehicleTypeAddon : 0,
       bookingDateTime: new Date().toLocaleString('en-NZ',{timeZone:'Pacific/Auckland'}),
-      scheduledDate: window.currentConfig.useCalendar && selectedDate ?
-        selectedDate.toLocaleDateString('en-NZ',{weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'Pacific/Auckland'}) : 'Today',
-      scheduledTime: window.currentConfig.useCalendar && selectedTimeWindow ? selectedTimeWindow.range : (selectedUrgencyDetails.time || 'Emergency Response'),
-      urgencyLevel: window.currentConfig.useCalendar ? 'Scheduled' : (selectedUrgency || 'emergency')
+      scheduledDate: 'Today',
+      scheduledTime: selectedUrgencyDetails.time || 'Emergency Response',
+      urgencyLevel: selectedUrgency || 'emergency'
     }
   };
 
   try{
-    const response = await fetch(POWER_AUTOMATE_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(bookingData) });
+    const response = await fetch(POWER_AUTOMATE_URL,{ 
+      method:'POST', 
+      headers:{'Content-Type':'application/json'}, 
+      body:JSON.stringify(bookingData) 
+    });
+    
     if (response.ok){
       const result = await response.json();
       if (result.url){
-        btn.classList.remove('processing'); btn.style.display='none';
+        btn.classList.remove('processing'); 
+        btn.style.display='none';
         const successDiv = document.createElement('div');
         successDiv.style.cssText='background:#d4edda;border:2px solid #28a745;padding:20px;border-radius:8px;margin-top:20px;';
         successDiv.innerHTML = `
@@ -1091,27 +587,19 @@ async function generatePaymentLink(){
           <p style="color:#666;font-size:.9em;margin-top:15px;">After payment, you'll receive an SMS confirmation to ${phone} with your booking details.</p>`;
         btn.parentElement.appendChild(successDiv);
         setTimeout(()=>{ window.location.href = result.url; },3000);
-      } else { throw new Error('No payment URL received'); }
+      } else { 
+        throw new Error('No payment URL received'); 
+      }
     } else {
       throw new Error('Server returned '+response.status);
     }
   }catch(err){
     console.error('Error generating payment link:', err);
-    btn.disabled=false; btn.classList.remove('processing'); btn.textContent='Generate Payment Link';
+    btn.disabled=false; 
+    btn.classList.remove('processing'); 
+    btn.textContent='Generate Payment Link';
     alert('Unable to generate payment link automatically.\n\nPlease try one of these options:\n1. Refresh the page and try again\n2. Call us at 0800 769 000');
   }
-}
-
-/* =========================
-   DIRECT CONFIRM (non-inspection)
-========================= */
-function directToConfirm(){
-  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-  document.getElementById('step4').classList.add('active');
-  document.getElementById('step2-progress').classList.add('completed');
-  document.getElementById('step2-progress').classList.remove('active');
-  document.getElementById('step3-progress').classList.add('active');
-  updateSummary();
 }
 </script>
 </body>
