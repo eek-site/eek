@@ -152,11 +152,11 @@
         <h4 style="margin:0 0 15px 0;color:#333;">Your Information</h4>
         <div class="contact-info">
           <label for="nameInput">Full Name (required)</label>
-          <input type="text" id="nameInput" placeholder="John Smith" required/>
+          <input type="text" id="nameInput" placeholder="John Smith" required autocomplete="name"/>
           <label for="phoneInput">Phone Number (required)</label>
-          <input type="tel" id="phoneInput" placeholder="021 234 5678" required/>
+          <input type="tel" id="phoneInput" placeholder="021 234 5678" required inputmode="tel" autocomplete="tel"/>
           <label for="emailInput">Email Address (required)</label>
-          <input type="email" id="emailInput" placeholder="your.email@example.com" required/>
+          <input type="email" id="emailInput" placeholder="your.email@example.com" required autocomplete="email"/>
         </div>
       </div>
 
@@ -165,29 +165,29 @@
         <div class="contact-info">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
             <div>
-              <label for="regoInput">Registration Number</label>
-              <input type="text" id="regoInput" placeholder="ABC123" style="text-transform:uppercase;"/>
+              <label for="regoInput">Registration Number (required)</label>
+              <input type="text" id="regoInput" placeholder="ABC123" style="text-transform:uppercase;" required autocapitalize="characters" spellcheck="false"/>
             </div>
             <div>
-              <label for="yearInput">Year</label>
-              <input type="text" id="yearInput" placeholder="2018" maxlength="4"/>
+              <label for="yearInput">Year (required)</label>
+              <input type="text" id="yearInput" placeholder="2018" maxlength="4" required pattern="\\d{4}" inputmode="numeric"/>
             </div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
             <div>
-              <label for="makeInput">Make</label>
-              <input type="text" id="makeInput" placeholder="Toyota"/>
+              <label for="makeInput">Make (required)</label>
+              <input type="text" id="makeInput" placeholder="Toyota" required/>
             </div>
             <div>
-              <label for="modelInput">Model</label>
-              <input type="text" id="modelInput" placeholder="Corolla"/>
+              <label for="modelInput">Model (required)</label>
+              <input type="text" id="modelInput" placeholder="Corolla" required/>
             </div>
           </div>
         </div>
       </div>
 
       <label for="locationInput" style="display:block;margin-bottom:8px;font-weight:700;">Where do you need service?</label>
-      <input type="text" class="location-input" id="locationInput" placeholder="Enter your address, suburb, or region"/>
+      <input type="text" class="location-input" id="locationInput" placeholder="Enter your address, suburb, or region" required autocomplete="street-address"/>
 
       <label for="detailsInput" style="display:block;margin-bottom:8px;margin-top:15px;font-weight:700;" id="detailsLabel">Tell us more about your situation:</label>
       <textarea class="details-input" id="detailsInput" placeholder="Describe the issue or what you need help with..."></textarea>
@@ -369,6 +369,11 @@ const POWER_AUTOMATE_URL = 'https://prod-35.australiasoutheast.logic.azure.com:4
 let selectedUrgency = null;
 let selectedUrgencyDetails = {};
 
+// Normalization helpers
+function sanitizePhone(val){ return (val || '').replace(/\D/g,''); }
+function sanitizeRego(val){ return (val || '').toUpperCase().replace(/\s+/g,''); }
+function sanitizeText(val){ return (val || '').trim().replace(/\s+/g,' '); }
+
 // Initialize
 document.addEventListener('DOMContentLoaded', function(){
   const urlParams = new URLSearchParams(window.location.search);
@@ -423,22 +428,37 @@ function goToStep2(){
   const email = document.getElementById('emailInput').value.trim();
   const location = document.getElementById('locationInput').value.trim();
 
+  // NEW: vehicle fields validation (to stop skipping them)
+  const regoRaw = document.getElementById('regoInput').value;
+  const yearRaw = document.getElementById('yearInput').value;
+  const makeRaw = document.getElementById('makeInput').value;
+  const modelRaw = document.getElementById('modelInput').value;
+
+  const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const yearDigits = yearRaw.replace(/\D/g,'');
+  const regoSan = sanitizeRego(regoRaw);
+
   if (!name){ alert('Please enter your full name'); document.getElementById('nameInput').focus(); return; }
   if (!phone){ alert('Please enter your phone number'); document.getElementById('phoneInput').focus(); return; }
-  const phoneRegex = /^[\d\s\-\+\(\)]+$/;
   if (!phoneRegex.test(phone) || phone.replace(/\D/g,'').length < 9){ 
-    alert('Please enter a valid phone number'); 
+    alert('Please enter a valid phone number (at least 9 digits)'); 
     document.getElementById('phoneInput').focus(); 
     return; 
   }
   if (!email){ alert('Please enter your email address'); document.getElementById('emailInput').focus(); return; }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)){ 
     alert('Please enter a valid email address'); 
     document.getElementById('emailInput').focus(); 
     return; 
   }
   if (!location){ alert('Please enter the service location'); document.getElementById('locationInput').focus(); return; }
+
+  // Require vehicle info for all emergency services (incl. jump start)
+  if (!regoSan){ alert('Please enter the vehicle registration (rego)'); document.getElementById('regoInput').focus(); return; }
+  if (yearDigits.length !== 4){ alert('Please enter a 4-digit vehicle year'); document.getElementById('yearInput').focus(); return; }
+  if (!makeRaw.trim()){ alert('Please enter the vehicle make'); document.getElementById('makeInput').focus(); return; }
+  if (!modelRaw.trim()){ alert('Please enter the vehicle model'); document.getElementById('modelInput').focus(); return; }
 
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step2').classList.add('active');
@@ -486,7 +506,7 @@ function updateSummary(){
 
   document.getElementById('summaryService').textContent = window.currentConfig.title;
   document.getElementById('summaryLocation').textContent = location;
-  document.getElementById('summaryPhone').textContent = phone;
+  document.getElementById('summaryPhone').textContent = sanitizePhone(phone); // display normalized digits
   document.getElementById('summaryUrgency').textContent = selectedUrgencyDetails.time || '';
   document.getElementById('summaryPrice').textContent = `$${selectedUrgencyDetails.price || window.currentConfig.basePrice}`;
 }
@@ -499,22 +519,32 @@ function buildRedirectUrl(){
   const baseUrl = 'https://www.eek.nz/thanks';
   const params = new URLSearchParams();
 
-  params.append('name', document.getElementById('nameInput').value.trim());
-  params.append('phone', document.getElementById('phoneInput').value.trim());
-  params.append('email', document.getElementById('emailInput').value.trim());
-  params.append('location', document.getElementById('locationInput').value.trim());
-  params.append('rego', (document.getElementById('regoInput').value.trim()||'').toUpperCase());
-  params.append('year', document.getElementById('yearInput').value.trim());
-  params.append('make', document.getElementById('makeInput').value.trim());
-  params.append('model', document.getElementById('modelInput').value.trim());
+  // Use sanitized values for consistent downstream matching
+  const name = sanitizeText(document.getElementById('nameInput').value);
+  const phone = sanitizePhone(document.getElementById('phoneInput').value);
+  const email = document.getElementById('emailInput').value.trim();
+  const location = sanitizeText(document.getElementById('locationInput').value);
+  const rego = sanitizeRego(document.getElementById('regoInput').value);
+  const year = document.getElementById('yearInput').value.trim();
+  const make = sanitizeText(document.getElementById('makeInput').value);
+  const model = sanitizeText(document.getElementById('modelInput').value);
+
+  params.append('name', name);
+  params.append('phone', phone);
+  params.append('email', email);
+  params.append('location', location);
+  params.append('rego', rego);
+  params.append('year', year);
+  params.append('make', make);
+  params.append('model', model);
   params.append('service', window.currentService);
   params.append('serviceCode', window.currentConfig.serviceCode);
   params.append('serviceTitle', window.currentConfig.title);
   params.append('price', selectedUrgencyDetails.price || window.currentConfig.basePrice);
   params.append('details', document.getElementById('detailsInput').value || '');
   params.append('scheduledDate', new Date().toISOString());
-  params.append('timeWindow', selectedUrgencyDetails.time);
-  params.append('urgencyLevel', selectedUrgency);
+  params.append('timeWindow', selectedUrgencyDetails.time || '');
+  params.append('urgencyLevel', selectedUrgency || '');
   params.append('bookingTime', new Date().toISOString());
   
   return `${baseUrl}?${params.toString()}`;
@@ -531,14 +561,15 @@ async function generatePaymentLink(){
   btn.classList.add('processing'); 
   btn.textContent='Generating Link';
 
-  const customerName = document.getElementById('nameInput').value.trim();
-  const phone = document.getElementById('phoneInput').value.trim();
+  // Sanitize for payload
+  const customerName = sanitizeText(document.getElementById('nameInput').value);
+  const phone = sanitizePhone(document.getElementById('phoneInput').value);
   const email = document.getElementById('emailInput').value.trim();
-  const location = document.getElementById('locationInput').value.trim();
-  const rego = (document.getElementById('regoInput').value.trim()||'').toUpperCase();
+  const location = sanitizeText(document.getElementById('locationInput').value);
+  const rego = sanitizeRego(document.getElementById('regoInput').value);
   const year = document.getElementById('yearInput').value.trim();
-  const make = document.getElementById('makeInput').value.trim();
-  const model = document.getElementById('modelInput').value.trim();
+  const make = sanitizeText(document.getElementById('makeInput').value);
+  const model = sanitizeText(document.getElementById('modelInput').value);
   const vehicleDescription = [rego,year,make,model].filter(Boolean).join(' ') || 'Vehicle details not provided';
 
   const total = selectedUrgencyDetails.price || window.currentConfig.basePrice;
