@@ -33,7 +33,6 @@
     :root{
       --brand:#ff5500; --brand2:#ff7733; --ok:#28a745; --warn:#ff9500; --muted:#6c757d;
       --chip:#0b5ed7; --chipbg:#eef7ff; --chipbd:#cfe2ff; 
-      --specialbg:#eaffea; --specialbd:#b7f5b7; --special:#1e7e34;
     }
     body{font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;background:#f5f5f5;margin:0;padding:0 0 80px 0;color:#333;text-align:center}
     header{background:#fff;padding:20px;box-shadow:0 2px 4px rgba(0,0,0,.1)}
@@ -79,40 +78,18 @@
     .day.disabled,.day.past{color:#ccc;cursor:not-allowed}
     .day.selected{background:var(--brand);color:#fff}
     .day .price-chip{position:absolute;right:2px;bottom:2px;font-size:.7em;padding:2px 6px;border-radius:12px;background:var(--chipbg);color:var(--chip);border:1px solid var(--chipbd);font-weight:600}
-    .day.special{outline:2px solid var(--ok);box-shadow:0 0 0 3px rgba(40,167,69,.15)}
-    .day.special .price-chip{background:var(--specialbg);border-color:var(--specialbd);color:var(--special)}
-    .calendar-legend{display:flex;gap:12px;align-items:center;font-size:.9em;color:#555;margin-top:8px}
-    .legend-box{display:inline-block;width:14px;height:14px;border:2px solid var(--ok);border-radius:4px}
 
     .time-windows{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px;margin:20px 0}
     .time-window{border:2px solid #ddd;border-radius:12px;padding:20px;cursor:pointer;text-align:center;transition:all .3s;background:#fff;position:relative}
     .time-window:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,85,0,.15)}
     .time-window.selected{background:linear-gradient(135deg,#fff5f0,#ffe5d9);border-color:var(--brand);border-width:3px}
-    .time-window.special-deal{border-color:var(--ok);background:linear-gradient(135deg,#f0fff4,#e8ffed)}
-    .time-window.special-deal:hover{border-color:var(--ok);box-shadow:0 4px 12px rgba(40,167,69,.15)}
-    .time-window.special-deal.selected{background:linear-gradient(135deg,#e8ffed,#d4f8dd);border-color:var(--ok)}
+    .time-window.priority{border-color:var(--ok);background:linear-gradient(135deg,#f0fff4,#e8ffed)}
+    .time-window.priority .time-window-range{color:var(--ok)}
     .time-window-title{font-size:1.2em;font-weight:700;margin-bottom:8px}
     .time-window-range{color:var(--brand);font-size:1.05em;margin-bottom:10px;font-weight:600}
-    .time-window.special-deal .time-window-range{color:var(--ok)}
     .time-window-description{font-size:.95em;color:#666;line-height:1.4}
     .price-big{margin:10px 0;font-size:1.25em;font-weight:800;color:var(--brand)}
-    .time-window.special-deal .price-big{color:var(--ok)}
-    .availability-badge{display:inline-block;background:var(--ok);color:#fff;padding:4px 12px;border-radius:20px;font-size:.85em;margin-top:10px}
-    .availability-badge.limited{background:var(--warn)}
-    .special-badge{position:absolute;top:-8px;right:-8px;background:var(--ok);color:#fff;padding:4px 8px;border-radius:12px;font-size:.75em;font-weight:700;box-shadow:0 2px 4px rgba(0,0,0,.2)}
-    .hold-timer{margin-top:8px;font-size:.85em;color:#555} .hold-timer[aria-live]{min-height:1em}
-
-    .vehicle-types{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin:20px 0}
-    .vehicle-type{border:2px solid #ddd;border-radius:12px;padding:20px;cursor:pointer;text-align:center;transition:all .3s;background:#fff;position:relative}
-    .vehicle-type:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,85,0,.15)}
-    .vehicle-type.selected{background:linear-gradient(135deg,#fff5f0,#ffe5d9);border-color:var(--brand);border-width:3px}
-    .vehicle-type.popular{border-color:var(--ok);background:linear-gradient(135deg,#f0fff4,#e8ffed)}
-    .vehicle-type.popular.selected{background:linear-gradient(135deg,#e8ffed,#d4f8dd);border-color:var(--ok)}
-    .popular-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:6px 16px;border-radius:20px;font-size:.8em;font-weight:700}
-    .vehicle-type-title{font-size:1.2em;font-weight:700;margin-bottom:8px}
-    .vehicle-type-subtitle{color:#666;font-size:.95em;margin-bottom:15px}
-    .vehicle-price{font-size:1.3em;font-weight:800;color:var(--brand);margin:10px 0}
-    .vehicle-type.popular .vehicle-price{color:var(--ok)}
+    .time-window.priority .price-big{color:var(--ok)}
 
     .timing-notice{background:#fff3cd;border:2px solid #ffeaa7;border-radius:12px;padding:20px;margin:20px 0;text-align:left}
     .timing-notice h4{margin:0 0 10px 0;color:#856404;display:flex;align-items:center;gap:8px}
@@ -139,10 +116,6 @@
     .terms-text a{color:var(--brand);text-decoration:none}
     .terms-text a:hover{text-decoration:underline}
 
-    .info-box{background:#fff3cd;border:1px solid #ffeaa7;border-radius:8px;padding:15px;margin:15px 0;text-align:left}
-    .info-box h4{margin:0 0 10px 0;color:#856404}
-    .info-box ul{margin:0;padding-left:20px;color:#856404}
-
     .contact-info{margin:15px 0}
     .contact-info label{display:block;margin-bottom:8px;font-weight:700}
     .contact-info input{width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:1em;margin-bottom:15px;box-sizing:border-box}
@@ -165,7 +138,6 @@
       .stats-grid{grid-template-columns:repeat(2,1fr)}
       .calendar-container{grid-template-columns:1fr}
       .time-windows{grid-template-columns:1fr}
-      .vehicle-types{grid-template-columns:1fr}
       .notification{top:10px;right:10px;left:10px;max-width:none;transform:translateY(-100px)}
       .notification.show{transform:translateY(0)}
     }
@@ -205,10 +177,10 @@
   </div>
 
   <div class="booking-steps">
-    <!-- Step 1: Details -->
+    <!-- Step 1: Details (unchanged) -->
     <div class="step active" id="step1">
       <h3>Step 1: Where is the vehicle located?</h3>
-      
+      <!-- (form content preserved from your version) -->
       <div style="background:#fff3cd;border:2px solid #ffeaa7;border-radius:12px;padding:20px;margin-bottom:20px;text-align:left;">
         <h4 style="margin:0 0 10px 0;color:#856404;">Why You Need This Inspection</h4>
         <ul style="margin:0;padding-left:20px;color:#856404;">
@@ -275,14 +247,14 @@
 
       <p style="color:#666;margin:10px 0;">We service all of New Zealand. Our mobile mechanics will come to any location - dealership, private seller, or anywhere else.</p>
 
-      <div class="info-box">
+      <div class="info-box" style="text-align:left;background:#fff3cd;border:1px solid #ffeaa7;border-radius:8px;padding:15px;margin:15px 0;">
         <h4>Our Pre-Purchase Inspection Includes:</h4>
         <ul>
           <li><strong>Comprehensive certified mechanical inspection</strong></li>
           <li><strong>45-point inspection checklist</strong></li>
           <li><strong>Written inspection report</strong> with photos</li>
           <li><strong>Professional recommendation</strong> on purchase decision</li>
-          <li><strong>Dynamic pricing:</strong> Earlier bookings are cheaper. Look for the highlighted <strong>special price days</strong>!</li>
+          <li><strong>Clear, simple pricing</strong>: Weekdays Standard <strong>$199</strong> / Priority <strong>$289</strong>; Weekends Standard <strong>$289</strong> / Priority <strong>$389</strong></li>
         </ul>
       </div>
 
@@ -297,19 +269,18 @@
       
       <div class="timing-notice">
         <h4>Important Timing Information</h4>
-        <p><strong>Time windows are approximate arrival times.</strong> As a mobile service, a previous job may run long. We'll text you when your tech is on the way.</p>
+        <p><strong>Each standard slot is a 30–90 minute arrival window.</strong> As a mobile service, a previous job may run long. We'll text you when your tech is on the way.</p>
+        <p><strong>Priority Today</strong> is available only while we're open: Mon–Fri 7:00–17:00, Sat–Sun 7:00–12:00.</p>
       </div>
 
       <div class="calendar-container">
         <div class="calendar" id="currentCalendar">
           <h4 id="currentMonth"></h4>
           <div class="calendar-grid"></div>
-          <div class="calendar-legend"><span class="legend-box"></span> <span>Special price day</span></div>
         </div>
         <div class="calendar" id="nextCalendar">
           <h4 id="nextMonth"></h4>
           <div class="calendar-grid"></div>
-          <div class="calendar-legend"><span class="legend-box"></span> <span>Special price day</span></div>
         </div>
       </div>
 
@@ -330,22 +301,22 @@
       <p style="color:#666;margin-bottom:25px;">Select your vehicle type for accurate inspection pricing:</p>
 
       <div class="vehicle-types">
-        <div class="vehicle-type popular selected" onclick="selectVehicleType('standard', 0, this)">
-          <div class="popular-badge">MOST POPULAR</div>
+        <div class="vehicle-type popular selected" onclick="selectVehicleType('standard', 0, this)" style="border:2px solid #ddd;border-radius:12px;padding:20px;cursor:pointer;">
+          <div class="popular-badge" style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#28a745;color:#fff;padding:6px 16px;border-radius:20px;font-size:.8em;font-weight:700">MOST POPULAR</div>
           <div class="vehicle-type-title">Standard Vehicle</div>
           <div class="vehicle-type-subtitle">Cars, SUVs, Utes under 3500kg</div>
           <div class="vehicle-price">Included</div>
-          <div style="font-size:.95em;color:var(--ok);margin-top:10px;">No additional fee</div>
+          <div style="font-size:.95em;color:#28a745;margin-top:10px;">No additional fee</div>
         </div>
 
-        <div class="vehicle-type" onclick="selectVehicleType('commercial', 39, this)">
+        <div class="vehicle-type" onclick="selectVehicleType('commercial', 39, this)" style="border:2px solid #ddd;border-radius:12px;padding:20px;cursor:pointer;">
           <div class="vehicle-type-title">Commercial Vehicle</div>
           <div class="vehicle-type-subtitle">Vans, trucks, heavy vehicles > 3500kg</div>
           <div class="vehicle-price">+$39</div>
           <div style="font-size:.95em;color:#666;margin-top:10px;">Additional inspection time required</div>
         </div>
 
-        <div class="vehicle-type" onclick="selectVehicleType('specialty', 129, this)">
+        <div class="vehicle-type" onclick="selectVehicleType('specialty', 129, this)" style="border:2px solid #ddd;border-radius:12px;padding:20px;cursor:pointer;">
           <div class="vehicle-type-title">Classic/Specialty Vehicle</div>
           <div class="vehicle-type-subtitle">Classics, modified, imports</div>
           <div class="vehicle-price">+$129</div>
@@ -390,8 +361,9 @@
             I agree to the <a href="https://eek.nz/terms" target="_blank">Eek Mobile Mechanical Terms of Service</a> and understand that:
             <ul style="margin:10px 0;padding-left:20px;">
               <li>Comprehensive certified mechanical inspection</li>
-              <li>Dynamic pricing - earlier bookings cost less</li>
-              <li>Time windows are approximate - technician will call en route</li>
+              <li>Fixed pricing: Weekdays Standard $199 / Priority $289; Weekends Standard $289 / Priority $389</li>
+              <li>Standard windows are 30–90 min arrival</li>
+              <li>Priority Today is only available while we are open</li>
               <li>Written report provided within 24 hours</li>
               <li>Cancellations must be made at least 2 hours in advance</li>
             </ul>
@@ -418,11 +390,34 @@ let selectedTimeWindow = null;
 let selectedVehicleType = 'standard';
 let vehicleTypeAddon = 0;
 
-let guaranteedSpecials = [];
-const ALLOWED_PRICES = [199, 229, 249, 289, 329, 349, 389];
-const REVISIT_WINDOW_HOURS = 48;
-const REVISIT_KEY = 'eek_price_seen_v1';
-let holdInterval = null;
+// Fixed pricing
+const PRICING = {
+  weekday: { standard: 199, priority: 289 },
+  weekend: { standard: 289, priority: 389 }
+};
+
+// Opening hours
+function getOpenClose(date){
+  const isWeekend = (date.getDay()===0 || date.getDay()===6);
+  const open = new Date(date); open.setHours(7,0,0,0);
+  const close = new Date(date);
+  if (isWeekend){ close.setHours(12,0,0,0); } else { close.setHours(17,0,0,0); }
+  return {open, close, isWeekend};
+}
+
+function isToday(date){
+  const now = new Date();
+  return date.getFullYear()===now.getFullYear() && date.getMonth()===now.getMonth() && date.getDate()===now.getDate();
+}
+
+function withinOpenHoursNow(date){
+  if (!isToday(date)) return false;
+  const {open, close} = getOpenClose(date);
+  const now = new Date();
+  return now >= open && now < close;
+}
+
+function isWeekendDate(d){ return d.getDay()===0 || d.getDay()===6; }
 
 function goToStep1(){
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
@@ -441,35 +436,15 @@ function goToStep2(){
 
   if (!name){ showNotification('Missing Name', 'Please enter your full name', 'error'); document.getElementById('nameInput').focus(); return; }
   if (!phone){ showNotification('Missing Phone', 'Please enter your phone number', 'error'); document.getElementById('phoneInput').focus(); return; }
-  const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-  if (!phoneRegex.test(phone) || phone.replace(/\D/g,'').length < 9){ 
-    showNotification('Invalid Phone', 'Please enter a valid phone number', 'error'); 
-    document.getElementById('phoneInput').focus(); 
-    return; 
-  }
+  const phoneRegex = /^[\\d\\s\\-\\+\\(\\)]+$/;
+  if (!phoneRegex.test(phone) || phone.replace(/\\D/g,'').length < 9){ showNotification('Invalid Phone', 'Please enter a valid phone number', 'error'); document.getElementById('phoneInput').focus(); return; }
   if (!email){ showNotification('Missing Email', 'Please enter your email address', 'error'); document.getElementById('emailInput').focus(); return; }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)){ 
-    showNotification('Invalid Email', 'Please enter a valid email address', 'error'); 
-    document.getElementById('emailInput').focus(); 
-    return; 
-  }
+  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+  if (!emailRegex.test(email)){ showNotification('Invalid Email', 'Please enter a valid email address', 'error'); document.getElementById('emailInput').focus(); return; }
   if (!location){ showNotification('Missing Location', 'Please enter the vehicle location', 'error'); document.getElementById('locationInput').focus(); return; }
-  if (!sellerName){ 
-    showNotification('Missing Seller Name', "Please enter the seller's name or dealership name", 'error'); 
-    document.getElementById('sellerNameInput').focus(); 
-    return; 
-  }
-  if (!sellerPhone){ 
-    showNotification('Missing Seller Phone', "Please enter the seller's phone number", 'error'); 
-    document.getElementById('sellerPhoneInput').focus(); 
-    return; 
-  }
-  if (!phoneRegex.test(sellerPhone) || sellerPhone.replace(/\D/g,'').length < 9){ 
-    showNotification('Invalid Seller Phone', 'Please enter a valid seller phone number', 'error'); 
-    document.getElementById('sellerPhoneInput').focus(); 
-    return; 
-  }
+  if (!sellerName){ showNotification('Missing Seller Name', "Please enter the seller's name or dealership name", 'error'); document.getElementById('sellerNameInput').focus(); return; }
+  if (!sellerPhone){ showNotification('Missing Seller Phone', "Please enter the seller's phone number", 'error'); document.getElementById('sellerPhoneInput').focus(); return; }
+  if (!phoneRegex.test(sellerPhone) || sellerPhone.replace(/\\D/g,'').length < 9){ showNotification('Invalid Seller Phone', 'Please enter a valid seller phone number', 'error'); document.getElementById('sellerPhoneInput').focus(); return; }
 
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step2').classList.add('active');
@@ -481,12 +456,7 @@ function goToStep2(){
 }
 
 function goToStep3(){
-  if (holdInterval) { clearInterval(holdInterval); holdInterval = null; }
-  if (!selectedDate || !selectedTimeWindow){ 
-    showNotification('Selection Required', 'Please select both a date and a time window', 'error'); 
-    return; 
-  }
-  
+  if (!selectedDate || !selectedTimeWindow){ showNotification('Selection Required', 'Please select both a date and a time window', 'error'); return; }
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step3').classList.add('active');
   document.getElementById('step2-progress').classList.add('completed');
@@ -503,130 +473,13 @@ function goToStep4(){
   updateSummary();
 }
 
-function isWeekendDate(d){ 
-  const W=d.getDay(); 
-  return W===0||W===6; 
-}
-
-function daysUntilFromToday(date){
-  const today = new Date(); 
-  today.setHours(0,0,0,0);
-  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  return Math.floor((d - today)/(1000*60*60*24));
-}
-
-function baseCascadePrice(date){
-  const d = Math.max(0, daysUntilFromToday(date));
-  const weekend = isWeekendDate(date);
-  if (!weekend){
-    if (d <= 1) return 289;
-    if (d <= 3) return 249;
-    if (d <= 6) return 229;
-    return 199;
-  } else {
-    if (d <= 1) return 349;
-    if (d <= 3) return 329;
-    return 289;
-  }
-}
-
-function ensureGuaranteedSpecials(){
-  guaranteedSpecials = [];
-  const today = new Date(); 
-  today.setHours(0,0,0,0);
-  const candidates = [];
-  for (let i=1;i<=7;i++){ 
-    const d=new Date(today); 
-    d.setDate(today.getDate()+i); 
-    candidates.push(d); 
-  }
-
-  const weekdays = candidates.filter(d=>!isWeekendDate(d));
-  if (weekdays.length){ 
-    const w = weekdays[0]; 
-    guaranteedSpecials.push({dateISO:isoDay(w),price:199,kind:'weekday'}); 
-  }
-
-  const weekends = candidates.filter(d=>isWeekendDate(d));
-  if (weekends.length){ 
-    const w = weekends[0]; 
-    guaranteedSpecials.push({dateISO:isoDay(w),price:289,kind:'weekend'}); 
-  }
-}
-
-function isoDay(d){ 
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate()).toISOString().slice(0,10); 
-}
-
-function getGuaranteedSpecialFor(date){
-  const iso = isoDay(date);
-  return guaranteedSpecials.find(s => s.dateISO===iso) || null;
-}
-
-function getRevisitMap(){ 
-  try{ 
-    return JSON.parse(localStorage.getItem(REVISIT_KEY)||'{}'); 
-  }catch{ 
-    return {}; 
-  } 
-}
-
-function setRevisitMap(map){ 
-  localStorage.setItem(REVISIT_KEY, JSON.stringify(map)); 
-}
-
-function recordPriceView(date, slotId, price){
-  const key = `${isoDay(date)}|${slotId}`; 
-  const map = getRevisitMap();
-  map[key] = {price, ts: Date.now()}; 
-  setRevisitMap(map);
-}
-
-function applyRevisitDrop(date, slotId, computedPrice){
-  const key = `${isoDay(date)}|${slotId}`; 
-  const map = getRevisitMap(); 
-  const rec = map[key];
-  if (!rec) return computedPrice;
-  const hours = (Date.now() - rec.ts) / 36e5;
-  if (hours > REVISIT_WINDOW_HOURS) return computedPrice;
-
-  const idx = ALLOWED_PRICES.indexOf(computedPrice);
-  if (idx <= 0) return computedPrice;
-
-  const floor = isWeekendDate(date) ? 289 : 199;
-  const lower = ALLOWED_PRICES[idx - 1];
-  return Math.max(lower, floor);
-}
-
-function getInspectionPriceForDate(date, slotId){
-  let price = baseCascadePrice(date);
-  const special = getGuaranteedSpecialFor(date);
-  if (special) price = Math.min(price, special.price);
-
-  const dropped = applyRevisitDrop(date, slotId, price);
-
-  if (special) price = Math.max(dropped, special.price);
-  else price = dropped;
-
-  return price;
-}
-
-function initializeCalendars(){
-  ensureGuaranteedSpecials();
-  const today = new Date();
-  const cm = today.getMonth(), cy = today.getFullYear();
-  const nm = cm===11 ? 0 : cm+1, ny = cm===11 ? cy+1 : cy;
-  generateCalendar(cm, cy, 'currentCalendar');
-  generateCalendar(nm, ny, 'nextCalendar');
-}
-
+// Calendar with lowest-price chips
 function generateCalendar(month, year, containerId){
   const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
   const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
   const firstDay = new Date(year,month,1).getDay();
   const daysInMonth = new Date(year,month+1,0).getDate();
-  const today = new Date(); 
-  today.setHours(0,0,0,0);
+  const today = new Date(); today.setHours(0,0,0,0);
 
   const container = document.getElementById(containerId);
   const grid = container.querySelector('.calendar-grid');
@@ -635,42 +488,29 @@ function generateCalendar(month, year, containerId){
   header.textContent = `${monthNames[month]} ${year}`;
   grid.innerHTML = '';
 
-  dayNames.forEach(d => { 
-    const el = document.createElement('div'); 
-    el.className='day-header'; 
-    el.textContent=d; 
-    grid.appendChild(el); 
-  });
-  
-  for (let i=0;i<firstDay;i++){ 
-    const empty=document.createElement('div'); 
-    empty.className='day disabled'; 
-    grid.appendChild(empty); 
-  }
+  dayNames.forEach(d => { const el = document.createElement('div'); el.className='day-header'; el.textContent=d; grid.appendChild(el); });
+  for (let i=0;i<firstDay;i++){ const empty=document.createElement('div'); empty.className='day disabled'; grid.appendChild(empty); }
 
   for (let day=1; day<=daysInMonth; day++){
     const d = new Date(year,month,day);
-    const el = document.createElement('div'); 
-    el.className='day'; 
-    el.textContent=day;
+    const el = document.createElement('div'); el.className='day'; el.textContent=day;
 
-    if (d < today){ 
-      el.classList.add('past'); 
-      grid.appendChild(el); 
-      continue; 
-    }
+    if (d < today){ el.classList.add('past'); grid.appendChild(el); continue; }
 
-    const price = getInspectionPriceForDate(d,'day');
-    const chip = document.createElement('div'); 
-    chip.className='price-chip'; 
-    chip.textContent = `$${price}`; 
-    el.appendChild(chip);
-    
-    if (getGuaranteedSpecialFor(d)) el.classList.add('special');
+    const lowest = isWeekendDate(d) ? PRICING.weekend.standard : PRICING.weekday.standard;
+    const chip = document.createElement('div'); chip.className='price-chip'; chip.textContent = `$${lowest}`; el.appendChild(chip);
 
     el.onclick = () => selectDate(year,month,day,el);
     grid.appendChild(el);
   }
+}
+
+function initializeCalendars(){
+  const today = new Date();
+  const cm = today.getMonth(), cy = today.getFullYear();
+  const nm = cm===11 ? 0 : cm+1, ny = cm===11 ? cy+1 : cy;
+  generateCalendar(cm, cy, 'currentCalendar');
+  generateCalendar(nm, ny, 'nextCalendar');
 }
 
 function selectDate(year, month, day, element){
@@ -683,6 +523,7 @@ function selectDate(year, month, day, element){
   document.getElementById('selectedDateDisplay').textContent = selectedDate.toLocaleDateString('en-NZ', opts);
 }
 
+// Build time windows
 function showTimeWindows(){
   const container = document.getElementById('timeWindowContainer');
   const windowsDiv = document.getElementById('timeWindows');
@@ -690,59 +531,44 @@ function showTimeWindows(){
   selectedTimeWindow = null;
   document.getElementById('confirmTimeBtn').disabled = true;
 
-  const today = new Date();
-  const isToday = selectedDate.toDateString() === today.toDateString();
-  const h = today.getHours();
-  const weekend = isWeekendDate(selectedDate);
+  const {isWeekend} = getOpenClose(selectedDate);
+  const priceStd = isWeekend ? PRICING.weekend.standard : PRICING.weekday.standard;
+  const pricePri = isWeekend ? PRICING.weekend.priority : PRICING.weekday.priority;
 
-  const windows = weekend ? [
-    {id:'morning', title:'Morning', range:'8:00 AM - 12:00 PM', available: !isToday || h<10},
-    {id:'afternoon', title:'Afternoon', range:'12:00 PM - 5:00 PM', available: !isToday || h<15}
-  ] : [
-    {id:'morning', title:'Morning', range:'8:00 AM - 12:00 PM', available: !isToday || h<10},
-    {id:'midday', title:'Midday', range:'11:00 AM - 2:00 PM', available: !isToday || h<13},
-    {id:'afternoon', title:'Afternoon', range:'1:00 PM - 5:00 PM', available: !isToday || h<16}
-  ];
+  // Standard slots
+  const slots = [];
+  if (isWeekend){
+    slots.push({id:'wknd-am', title:'Morning', range:'7:00 AM – 9:00 AM (30–90 min arrival)', price:priceStd, css:''});
+    slots.push({id:'wknd-late', title:'Late Morning', range:'9:00 AM – 12:00 PM (30–90 min arrival)', price:priceStd, css:''});
+  } else {
+    slots.push({id:'wd-am', title:'Morning', range:'7:00 AM – 10:00 AM (30–90 min arrival)', price:priceStd, css:''});
+    slots.push({id:'wd-mid', title:'Midday', range:'10:00 AM – 1:00 PM (30–90 min arrival)', price:priceStd, css:''});
+    slots.push({id:'wd-pm', title:'Afternoon', range:'2:00 PM – 5:00 PM (30–90 min arrival)', price:priceStd, css:''});
+  }
 
-  const dayPrice = getInspectionPriceForDate(selectedDate,'day');
-  const special = getGuaranteedSpecialFor(selectedDate);
+  // Priority Today (dynamic) — only when selected date is today and within open hours
+  if (withinOpenHoursNow(selectedDate)){
+    const now = new Date();
+    const {close} = getOpenClose(selectedDate);
+    const end = new Date(Math.min(now.getTime() + 90*60*1000, close.getTime()));
+    const fmt = d => d.toLocaleTimeString('en-NZ',{hour:'numeric',minute:'2-digit'});
+    slots.unshift({
+      id:'priority-now',
+      title:'Priority Today (arrives within 30–90 min)',
+      range:`${fmt(now)} – ${fmt(end)}`,
+      price: pricePri,
+      css:'priority'
+    });
+  }
 
-  windows.forEach(w=>{
-    const d = Math.max(0,daysUntilFromToday(selectedDate));
-    const maxSlots = d<=1 ? 3 : d<=3 ? 5 : 8;
-    w.slots = w.available ? Math.max(1, Math.floor(Math.random()*maxSlots) || 1) : 0;
-    const maybeDropped = applyRevisitDrop(selectedDate, w.id, dayPrice);
-    w.price = special ? Math.max(maybeDropped, special.price) : maybeDropped;
-  });
-
-  windowsDiv.innerHTML = windows.map(w=>{
-    if (!w.available){
-      return `<div class="time-window" style="opacity:.5;cursor:not-allowed;">
-        <div class="time-window-title">${w.title}</div>
-        <div class="time-window-range" style="color:#999;">Too late to book</div>
-        <div class="time-window-description">Try another window</div>
-      </div>`;
-    }
-    const cls = special ? 'time-window special-deal' : 'time-window';
-    const badge = w.slots <= 5 ? `<span class="availability-badge ${w.slots<=1?'limited':''}">
-      ${w.slots===1 ? 'Only 1 left' : 'Only ' + w.slots + ' left'}
-    </span>` : '';
-
-    const revisitApplied = (w.price < dayPrice);
-    const revisitTag = revisitApplied ? `<div class="special-badge">Returning visitor discount</div>` : '';
-
-    return `<div class="${cls}" data-slot="${w.id}"
-              onclick="selectTimeWindow('${w.id}','${w.title}','${w.range}',${w.price},this)">
-      ${special ? '<div class="special-badge">Special rate</div>' : '' }
-      ${revisitTag}
+  windowsDiv.innerHTML = slots.map(w => `
+    <div class="time-window ${w.css}" data-slot="${w.id}" onclick="selectTimeWindow('${w.id}','${w.title}','${w.range}',${w.price},this)">
       <div class="time-window-title">${w.title}</div>
       <div class="time-window-range">${w.range}</div>
-      <div class="time-window-description">Flexible arrival window</div>
+      <div class="time-window-description">${w.css==='priority' ? 'Fastest arrival window (today only while we’re open)' : 'Standard arrival window'}</div>
       <div class="price-big">$${w.price}</div>
-      ${badge}
-      <div class="hold-timer" aria-live="polite"></div>
-    </div>`;
-  }).join('');
+    </div>
+  `).join('');
 }
 
 function selectTimeWindow(id,title,range,price,element){
@@ -750,24 +576,6 @@ function selectTimeWindow(id,title,range,price,element){
   element.classList.add('selected');
   selectedTimeWindow = {id,title,range,price};
   document.getElementById('confirmTimeBtn').disabled = false;
-
-  recordPriceView(selectedDate, id, price);
-
-  const end = Date.now() + 10*60*1000;
-  const timerEl = element.querySelector('.hold-timer');
-  clearInterval(holdInterval);
-  holdInterval = setInterval(()=>{
-    const left = Math.max(0, end - Date.now());
-    const m = Math.floor(left/60000);
-    const s = Math.floor((left%60000)/1000);
-    timerEl.textContent = left>0 ? `Reserved for ${m}:${String(s).padStart(2,'0')}` : 'Hold expired';
-    if (left<=0){
-      clearInterval(holdInterval);
-      element.classList.remove('selected');
-      selectedTimeWindow = null;
-      document.getElementById('confirmTimeBtn').disabled = true;
-    }
-  }, 250);
 }
 
 function selectVehicleType(type, addon, el){
@@ -790,7 +598,7 @@ function updateSummary(){
   }
   document.getElementById('summaryTime').textContent = selectedTimeWindow ? selectedTimeWindow.range : 'Not selected';
 
-  let total = selectedTimeWindow ? selectedTimeWindow.price : 289;
+  let total = selectedTimeWindow ? selectedTimeWindow.price : (isWeekendDate(selectedDate||new Date()) ? PRICING.weekend.standard : PRICING.weekday.standard);
   total += vehicleTypeAddon;
   
   const names = {
@@ -822,14 +630,14 @@ function buildRedirectUrl(){
   params.append('serviceCode', 'INSP');
   params.append('serviceTitle', 'Pre Purchase Vehicle Inspection');
 
-  let total = selectedTimeWindow ? selectedTimeWindow.price : 289;
+  let total = selectedTimeWindow ? selectedTimeWindow.price : (isWeekendDate(selectedDate||new Date()) ? PRICING.weekend.standard : PRICING.weekday.standard);
   total += vehicleTypeAddon;
   params.append('price', total);
   params.append('vehicleType', selectedVehicleType);
   params.append('vehicleAddon', vehicleTypeAddon);
   params.append('details', document.getElementById('detailsInput').value || '');
-  params.append('scheduledDate', selectedDate.toISOString());
-  params.append('timeWindow', selectedTimeWindow.range);
+  params.append('scheduledDate', selectedDate ? selectedDate.toISOString() : '');
+  params.append('timeWindow', selectedTimeWindow ? selectedTimeWindow.range : '');
   params.append('urgencyLevel', 'Scheduled');
   params.append('bookingTime', new Date().toISOString());
   
@@ -838,14 +646,9 @@ function buildRedirectUrl(){
 
 async function generatePaymentLink(){
   const btn = document.getElementById('generatePaymentBtn');
-  if (!document.getElementById('termsAgree').checked){ 
-    showNotification('Terms Required', 'Please accept the terms and conditions', 'error'); 
-    return; 
-  }
+  if (!document.getElementById('termsAgree').checked){ showNotification('Terms Required', 'Please accept the terms and conditions', 'error'); return; }
 
-  btn.disabled = true; 
-  btn.classList.add('processing'); 
-  btn.textContent='Generating Link';
+  btn.disabled = true; btn.classList.add('processing'); btn.textContent='Generating Link';
 
   const customerName = document.getElementById('nameInput').value.trim();
   const phone = document.getElementById('phoneInput').value.trim();
@@ -859,7 +662,7 @@ async function generatePaymentLink(){
   const sellerName = document.getElementById('sellerNameInput').value.trim();
   const sellerPhone = document.getElementById('sellerPhoneInput').value.trim();
 
-  let total = selectedTimeWindow ? selectedTimeWindow.price : 289;
+  let total = selectedTimeWindow ? selectedTimeWindow.price : (isWeekendDate(selectedDate||new Date()) ? PRICING.weekend.standard : PRICING.weekday.standard);
   total += vehicleTypeAddon;
 
   const bookingData = {
@@ -880,98 +683,55 @@ async function generatePaymentLink(){
       vehicleType: selectedVehicleType,
       vehicleAddon: vehicleTypeAddon,
       bookingDateTime: new Date().toLocaleString('en-NZ',{timeZone:'Pacific/Auckland'}),
-      scheduledDate: selectedDate.toLocaleDateString('en-NZ',{weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'Pacific/Auckland'}),
-      scheduledTime: selectedTimeWindow.range,
+      scheduledDate: selectedDate ? selectedDate.toLocaleDateString('en-NZ',{weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'Pacific/Auckland'}) : '',
+      scheduledTime: selectedTimeWindow ? selectedTimeWindow.range : '',
       urgencyLevel: 'Scheduled'
     }
   };
 
   try{
-    const response = await fetch(POWER_AUTOMATE_URL,{ 
-      method:'POST', 
-      headers:{'Content-Type':'application/json'}, 
-      body:JSON.stringify(bookingData) 
-    });
-    
+    const response = await fetch(POWER_AUTOMATE_URL,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(bookingData) });
     if (response.ok){
       const result = await response.json();
       if (result.url){
-        btn.classList.remove('processing'); 
-        btn.style.display='none';
+        btn.classList.remove('processing'); btn.style.display='none';
         const successDiv = document.createElement('div');
         successDiv.style.cssText='background:#d4edda;border:2px solid #28a745;padding:20px;border-radius:8px;margin-top:20px;';
         successDiv.innerHTML = `
           <h4 style="color:#155724;margin:0 0 15px 0;">Payment Link Generated Successfully!</h4>
           <p style="color:#155724;margin:10px 0;">Your secure payment link is ready:</p>
-          <a href="${result.url}" class="button" style="background:#28a745;font-size:1.2em;padding:15px 30px;display:inline-block;margin:10px 0;">
-            Complete Payment ($${total})
+          <a href="\${result.url}" class="button" style="background:#28a745;font-size:1.2em;padding:15px 30px;display:inline-block;margin:10px 0;">
+            Complete Payment ($\${total})
           </a>
-          <p style="color:#666;font-size:.9em;margin-top:15px;">After payment, you'll receive an SMS confirmation to ${phone} with your booking details.</p>`;
+          <p style="color:#666;font-size:.9em;margin-top:15px;">After payment, you'll receive an SMS confirmation to \${phone} with your booking details.</p>`;
         btn.parentElement.appendChild(successDiv);
         setTimeout(()=>{ window.location.href = result.url; },3000);
-      } else { 
-        throw new Error('No payment URL received'); 
-      }
-    } else {
-      throw new Error('Server returned '+response.status);
-    }
+      } else { throw new Error('No payment URL received'); }
+    } else { throw new Error('Server returned '+response.status); }
   }catch(err){
     console.error('Error generating payment link:', err);
-    btn.disabled=false; 
-    btn.classList.remove('processing'); 
-    btn.textContent='Generate Payment Link';
+    btn.disabled=false; btn.classList.remove('processing'); btn.textContent='Generate Payment Link';
     showNotification('Connection Error', 'Unable to generate payment link. Please call 0800 769 000', 'error');
   }
 }
 
 function showNotification(title, message, type = 'info') {
-  const existingNotification = document.querySelector('.notification');
-  if (existingNotification) {
-    existingNotification.remove();
-  }
-  
-  const notification = document.createElement('div');
-  notification.className = `notification ${type}`;
-  
-  const iconMap = {
-    'error': '⚠',
-    'success': '✓', 
-    'info': 'ℹ',
-    'warning': '⚠'
-  };
-  
+  const existingNotification = document.querySelector('.notification'); if (existingNotification) existingNotification.remove();
+  const notification = document.createElement('div'); notification.className = `notification ${type}`;
+  const iconMap = { 'error': '⚠', 'success': '✓', 'info': 'ℹ', 'warning': '⚠' };
   notification.innerHTML = `
     <div class="notification-content">
-      <div class="notification-icon">${iconMap[type] || '📋'}</div>
-      <div class="notification-text">
-        <strong>${title}</strong><br>
-        ${message}
-      </div>
+      <div class="notification-icon">\${iconMap[type] || '📋'}</div>
+      <div class="notification-text"><strong>\${title}</strong><br>\${message}</div>
       <button class="notification-close" onclick="hideNotification(this)">&times;</button>
-    </div>
-  `;
-  
+    </div>`;
   document.body.appendChild(notification);
-  
-  setTimeout(() => {
-    notification.classList.add('show');
-  }, 100);
-  
-  setTimeout(() => {
-    hideNotification(notification);
-  }, 5000);
+  setTimeout(() => { notification.classList.add('show'); }, 100);
+  setTimeout(() => { hideNotification(notification); }, 5000);
 }
-
 function hideNotification(element) {
-  const notification = element.closest ? element.closest('.notification') : element;
-  if (notification) {
-    notification.classList.remove('show');
-    setTimeout(() => {
-      if (notification.parentNode) {
-        notification.parentNode.removeChild(notification);
-      }
-    }, 400);
-  }
+  const n = element.closest ? element.closest('.notification') : element;
+  if (n) { n.classList.remove('show'); setTimeout(() => { if (n.parentNode) n.parentNode.removeChild(n); }, 400); }
 }
 </script>
 </body>
