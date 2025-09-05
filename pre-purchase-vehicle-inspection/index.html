@@ -87,6 +87,9 @@
     .day.disabled,.day.past{color:#ccc;cursor:not-allowed}
     .day.selected{background:var(--brand);color:#fff}
     .day .price-chip{position:absolute;right:2px;bottom:2px;font-size:.7em;padding:2px 6px;border-radius:12px;background:var(--chipbg);color:var(--chip);border:1px solid var(--chipbd);font-weight:600}
+    
+    /* add this anywhere after the .day .price-chip rule */
+    .day .price-chip{ display:none !important; }
 
     .time-windows{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px;margin:20px 0}
     .time-window{border:2px solid #ddd;border-radius:12px;padding:20px;cursor:pointer;text-align:center;transition:all .3s;background:#fff;position:relative}
@@ -505,9 +508,6 @@ function generateCalendar(month, year, containerId){
     const el = document.createElement('div'); el.className='day'; el.textContent=day;
 
     if (d < today){ el.classList.add('past'); grid.appendChild(el); continue; }
-
-    const lowest = isWeekendDate(d) ? PRICING.weekend.standard : PRICING.weekday.standard;
-    const chip = document.createElement('div'); chip.className='price-chip'; chip.textContent = `$${lowest}`; el.appendChild(chip);
 
     el.onclick = () => selectDate(year,month,day,el);
     grid.appendChild(el);
