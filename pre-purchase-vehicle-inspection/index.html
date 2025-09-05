@@ -8,7 +8,16 @@
   <meta name="keywords" content="pre purchase inspection, vehicle inspection, mobile mechanic, car inspection NZ, don't buy a lemon" />
 
   <!-- Security Headers -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://prod-35.australiasoutheast.logic.azure.com https://prod-26.australiasoutheast.logic.azure.com;">
+  <meta http-equiv="Content-Security-Policy"
+  content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net;
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data: https:;
+    connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://prod-35.australiasoutheast.logic.azure.com https://prod-26.australiasoutheast.logic.azure.com;
+    frame-src 'self' https://www.googletagmanager.com https://www.google.com;
+  ">
+
 
   <!-- Reddit Pixel -->
   <script>
@@ -715,24 +724,64 @@ async function generatePaymentLink(){
   }
 }
 
+<script>
 function showNotification(title, message, type = 'info') {
-  const existingNotification = document.querySelector('.notification'); if (existingNotification) existingNotification.remove();
-  const notification = document.createElement('div'); notification.className = `notification ${type}`;
-  const iconMap = { 'error': '⚠', 'success': '✓', 'info': 'ℹ', 'warning': '⚠' };
-  notification.innerHTML = `
-    <div class="notification-content">
-      <div class="notification-icon">\${iconMap[type] || '📋'}</div>
-      <div class="notification-text"><strong>\${title}</strong><br>\${message}</div>
-      <button class="notification-close" onclick="hideNotification(this)">&times;</button>
-    </div>`;
-  document.body.appendChild(notification);
-  setTimeout(() => { notification.classList.add('show'); }, 100);
-  setTimeout(() => { hideNotification(notification); }, 5000);
+  // Remove any existing notification
+  const existing = document.querySelector('.notification');
+  if (existing) existing.remove();
+
+  const iconMap = { error: '⚠', success: '✓', info: 'ℹ', warning: '⚠' };
+  const wrap = document.createElement('div');
+  wrap.className = 'notification ' + (type || 'info');
+
+  // Build structure without innerHTML (safer + avoids template issues)
+  const content = document.createElement('div');
+  content.className = 'notification-content';
+
+  const icon = document.createElement('div');
+  icon.className = 'notification-icon';
+  icon.textContent = iconMap[type] || '📋';
+
+  const text = document.createElement('div');
+  text.className = 'notification-text';
+
+  const strong = document.createElement('strong');
+  strong.textContent = title || '';
+
+  const br = document.createElement('br');
+  const p = document.createTextNode(message || '');
+
+  const close = document.createElement('button');
+  close.className = 'notification-close';
+  close.type = 'button';
+  close.setAttribute('aria-label', 'Close notification');
+  close.textContent = '×';
+  close.addEventListener('click', () => hideNotification(wrap));
+
+  text.appendChild(strong);
+  text.appendChild(br);
+  text.appendChild(p);
+
+  content.appendChild(icon);
+  content.appendChild(text);
+  content.appendChild(close);
+
+  wrap.appendChild(content);
+  document.body.appendChild(wrap);
+
+  // Animate in
+  setTimeout(() => { wrap.classList.add('show'); }, 100);
+
+  // Auto-hide
+  setTimeout(() => { hideNotification(wrap); }, 5000);
 }
-function hideNotification(element) {
-  const n = element.closest ? element.closest('.notification') : element;
-  if (n) { n.classList.remove('show'); setTimeout(() => { if (n.parentNode) n.parentNode.removeChild(n); }, 400); }
+
+function hideNotification(node) {
+  const el = node && node.classList ? node : node.closest && node.closest('.notification');
+  const target = el || document.querySelector('.notification');
+  if (!target) return;
+  target.classList.remove('show');
+  setTimeout(() => { if (target.parentNode) target.parentNode.removeChild(target); }, 400);
 }
 </script>
-</body>
-</html>
+
