@@ -240,11 +240,11 @@
         <h4 style="margin:0 0 15px 0;color:#333;">Your Information</h4>
         <div class="contact-info">
           <label for="nameInput">Full Name (required)</label>
-          <input type="text" id="nameInput" placeholder="John Smith" required/>
+          <input type="text" id="nameInput" placeholder="John Smith" required autocomplete="name"/>
           <label for="phoneInput">Phone Number (required)</label>
-          <input type="tel" id="phoneInput" placeholder="021 234 5678" required/>
+          <input type="tel" id="phoneInput" placeholder="021 234 5678" required inputmode="tel" autocomplete="tel"/>
           <label for="emailInput">Email Address (required)</label>
-          <input type="email" id="emailInput" placeholder="your.email@example.com" required/>
+          <input type="email" id="emailInput" placeholder="your.email@example.com" required autocomplete="email"/>
         </div>
       </div>
 
@@ -254,17 +254,17 @@
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
             <div>
               <label for="regoInput">Registration Number</label>
-              <input type="text" id="regoInput" placeholder="ABC123" style="text-transform:uppercase;"/>
+              <input type="text" id="regoInput" placeholder="ABC123" style="text-transform:uppercase;" autocapitalize="characters" spellcheck="false"/>
             </div>
             <div>
               <label for="yearInput">Year</label>
-              <input type="text" id="yearInput" placeholder="2018" maxlength="4"/>
+              <input type="text" id="yearInput" placeholder="2018" maxlength="4" pattern="\\d{4}" inputmode="numeric"/>
             </div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
             <div>
               <label for="makeInput">Make</label>
-              <input type="text" id="makeInput" placeholder="Toyota"/>
+              <input type="text" id="makeInput" placeholder="Toyota" autocomplete="organization"/>
             </div>
             <div>
               <label for="modelInput">Model</label>
@@ -278,14 +278,14 @@
         <h4 style="margin:0 0 15px 0;color:#333;">Seller Information</h4>
         <div class="contact-info">
           <label for="sellerNameInput">Seller Name (required for inspection)</label>
-          <input type="text" id="sellerNameInput" placeholder="Seller's full name or dealership name"/>
+          <input type="text" id="sellerNameInput" placeholder="Seller's full name or dealership name" required/>
           <label for="sellerPhoneInput">Seller Phone Number (required for inspection)</label>
-          <input type="tel" id="sellerPhoneInput" placeholder="021 987 6543"/>
+          <input type="tel" id="sellerPhoneInput" placeholder="021 987 6543" required inputmode="tel" autocomplete="tel"/>
         </div>
       </div>
 
       <label for="locationInput" style="display:block;margin-bottom:8px;font-weight:700;">Where is the vehicle located?</label>
-      <input type="text" class="location-input" id="locationInput" placeholder="Enter address, suburb, or region (e.g. Auckland CBD, Christchurch, Wellington)"/>
+      <input type="text" class="location-input" id="locationInput" placeholder="Enter address, suburb, or region (e.g. Auckland CBD, Christchurch, Wellington)" required/>
 
       <label for="detailsInput" style="display:block;margin-bottom:8px;margin-top:15px;font-weight:700;">Vehicle and inspection details:</label>
       <textarea class="details-input" id="detailsInput" placeholder="e.g., Make/model/year, dealer or private sale, any specific concerns, etc."></textarea>
@@ -335,7 +335,7 @@
         <div class="time-windows" id="timeWindows"></div>
       </div>
 
-      <div style="margin:20px 0;">
+      <div style="margin:20px 0%;">
         <button class="button secondary" onclick="goToStep1()">Back</button>
         <button class="button" id="confirmTimeBtn" onclick="goToStep3()" disabled>Continue</button>
       </div>
@@ -437,6 +437,11 @@ const PRICING = {
   weekday: { standard: 199, priority: 289 },
   weekend: { standard: 289, priority: 389 }
 };
+
+// Helpers: normalization
+function sanitizePhone(val){ return (val || '').replace(/\D/g,''); }
+function sanitizeRego(val){ return (val || '').toUpperCase().replace(/\s+/g,''); }
+function sanitizeText(val){ return (val || '').trim().replace(/\s+/g,' '); }
 
 // Hours (priority is allowed until 5pm every day)
 function getOpenClose(date){
@@ -654,14 +659,24 @@ function buildRedirectUrl(){
   const baseUrl = 'https://www.eek.nz/thanks';
   const params = new URLSearchParams();
 
-  params.append('name', document.getElementById('nameInput').value.trim());
-  params.append('phone', document.getElementById('phoneInput').value.trim());
-  params.append('email', document.getElementById('emailInput').value.trim());
-  params.append('location', document.getElementById('locationInput').value.trim());
-  params.append('rego', (document.getElementById('regoInput').value.trim()||'').toUpperCase());
-  params.append('year', document.getElementById('yearInput').value.trim());
-  params.append('make', document.getElementById('makeInput').value.trim());
-  params.append('model', document.getElementById('modelInput').value.trim());
+  // Use sanitized values for reliable downstream matching
+  const name = sanitizeText(document.getElementById('nameInput').value);
+  const phone = sanitizePhone(document.getElementById('phoneInput').value);
+  const email = document.getElementById('emailInput').value.trim();
+  const location = sanitizeText(document.getElementById('locationInput').value);
+  const rego = sanitizeRego(document.getElementById('regoInput').value);
+  const year = document.getElementById('yearInput').value.trim();
+  const make = sanitizeText(document.getElementById('makeInput').value);
+  const model = sanitizeText(document.getElementById('modelInput').value);
+
+  params.append('name', name);
+  params.append('phone', phone);
+  params.append('email', email);
+  params.append('location', location);
+  params.append('rego', rego);
+  params.append('year', year);
+  params.append('make', make);
+  params.append('model', model);
   params.append('service', 'inspection');
   params.append('serviceCode', 'INSP');
   params.append('serviceTitle', 'Pre Purchase Vehicle Inspection');
@@ -686,17 +701,18 @@ async function generatePaymentLink(){
 
   btn.disabled = true; btn.classList.add('processing'); btn.textContent='Generating Link';
 
-  const customerName = document.getElementById('nameInput').value.trim();
-  const phone = document.getElementById('phoneInput').value.trim();
+  // Sanitize for payload
+  const customerName = sanitizeText(document.getElementById('nameInput').value);
+  const phone = sanitizePhone(document.getElementById('phoneInput').value);
   const email = document.getElementById('emailInput').value.trim();
-  const location = document.getElementById('locationInput').value.trim();
-  const rego = (document.getElementById('regoInput').value.trim()||'').toUpperCase();
+  const location = sanitizeText(document.getElementById('locationInput').value);
+  const rego = sanitizeRego(document.getElementById('regoInput').value);
   const year = document.getElementById('yearInput').value.trim();
-  const make = document.getElementById('makeInput').value.trim();
-  const model = document.getElementById('modelInput').value.trim();
+  const make = sanitizeText(document.getElementById('makeInput').value);
+  const model = sanitizeText(document.getElementById('modelInput').value);
   const vehicleDescription = [rego,year,make,model].filter(Boolean).join(' ') || 'Vehicle details not provided';
-  const sellerName = document.getElementById('sellerNameInput').value.trim();
-  const sellerPhone = document.getElementById('sellerPhoneInput').value.trim();
+  const sellerName = sanitizeText(document.getElementById('sellerNameInput').value);
+  const sellerPhone = sanitizePhone(document.getElementById('sellerPhoneInput').value);
 
   let total = selectedTimeWindow ? selectedTimeWindow.price : (isWeekendDate(selectedDate||new Date()) ? PRICING.weekend.standard : PRICING.weekday.standard);
   total += vehicleTypeAddon;
