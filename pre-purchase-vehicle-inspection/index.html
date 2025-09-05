@@ -445,10 +445,10 @@ function goToStep2(){
 
   if (!name){ showNotification('Missing Name', 'Please enter your full name', 'error'); document.getElementById('nameInput').focus(); return; }
   if (!phone){ showNotification('Missing Phone', 'Please enter your phone number', 'error'); document.getElementById('phoneInput').focus(); return; }
-  const phoneRegex = /^[\\d\\s\\-\\+\\(\\)]+$/;
+  const phoneRegex = /^[\d\s\-\+\(\)]+$/;
   if (!phoneRegex.test(phone) || phone.replace(/\\D/g,'').length < 9){ showNotification('Invalid Phone', 'Please enter a valid phone number', 'error'); document.getElementById('phoneInput').focus(); return; }
   if (!email){ showNotification('Missing Email', 'Please enter your email address', 'error'); document.getElementById('emailInput').focus(); return; }
-  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)){ showNotification('Invalid Email', 'Please enter a valid email address', 'error'); document.getElementById('emailInput').focus(); return; }
   if (!location){ showNotification('Missing Location', 'Please enter the vehicle location', 'error'); document.getElementById('locationInput').focus(); return; }
   if (!sellerName){ showNotification('Missing Seller Name', "Please enter the seller's name or dealership name", 'error'); document.getElementById('sellerNameInput').focus(); return; }
@@ -707,12 +707,12 @@ async function generatePaymentLink(){
         const successDiv = document.createElement('div');
         successDiv.style.cssText='background:#d4edda;border:2px solid #28a745;padding:20px;border-radius:8px;margin-top:20px;';
         successDiv.innerHTML = `
-          <h4 style="color:#155724;margin:0 0 15px 0;">Payment Link Generated Successfully!</h4>
-          <p style="color:#155724;margin:10px 0;">Your secure payment link is ready:</p>
-          <a href="\${result.url}" class="button" style="background:#28a745;font-size:1.2em;padding:15px 30px;display:inline-block;margin:10px 0;">
-            Complete Payment ($\${total})
-          </a>
-          <p style="color:#666;font-size:.9em;margin-top:15px;">After payment, you'll receive an SMS confirmation to \${phone} with your booking details.</p>`;
+  <h4 style="color:#155724;margin:0 0 15px 0;">Payment Link Generated Successfully!</h4>
+  <p style="color:#155724;margin:10px 0;">Your secure payment link is ready:</p>
+  <a href="${result.url}" class="button" style="background:#28a745;font-size:1.2em;padding:15px 30px;display:inline-block;margin:10px 0;">
+    Complete Payment ($${total})
+  </a>
+  <p style="color:#666;font-size:.9em;margin-top:15px;">After payment, you'll receive an SMS confirmation to ${phone} with your booking details.</p>`;
         btn.parentElement.appendChild(successDiv);
         setTimeout(()=>{ window.location.href = result.url; },3000);
       } else { throw new Error('No payment URL received'); }
@@ -724,7 +724,6 @@ async function generatePaymentLink(){
   }
 }
 
-<script>
 function showNotification(title, message, type = 'info') {
   // Remove any existing notification
   const existing = document.querySelector('.notification');
