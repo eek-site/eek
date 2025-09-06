@@ -366,7 +366,7 @@
         </div>
       </div>
 
-      <div style="margin:20px 0;">
+      <div style="margin:20px 0%;">
         <button class="button secondary" onclick="goToStep2()">Back</button>
         <button class="button" onclick="goToStep4()">Continue to Review</button>
       </div>
@@ -425,6 +425,47 @@
 </div>
 
 <script>
+// --- NZ timezone helpers (force all “wall-clock” logic to Pacific/Auckland) ---
+const NZ_TZ = 'Pacific/Auckland';
+
+function nowNZ() {
+  const parts = new Intl.DateTimeFormat('en-NZ', {
+    timeZone: NZ_TZ, hour12: false,
+    year:'numeric', month:'2-digit', day:'2-digit',
+    hour:'2-digit', minute:'2-digit', second:'2-digit'
+  }).formatToParts(new Date());
+  const get = t => parts.find(p => p.type === t).value;
+  return new Date(`${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}:${get('second')}`);
+}
+
+function nzDate(y, m /*0-11*/, d, hh=0, mm=0, ss=0) {
+  const base = nowNZ();
+  const dt = new Date(base);
+  dt.setFullYear(y, m, d);
+  dt.setHours(hh, mm, ss, 0);
+  return dt;
+}
+
+function isTodayNZ(d) {
+  if (!d) return false;
+  const n = nowNZ();
+  return d.getFullYear()===n.getFullYear() && d.getMonth()===n.getMonth() && d.getDate()===n.getDate();
+}
+function isWeekendNZ(d){ const g=d.getDay(); return g===0 || g===6; }
+
+function getOpenCloseNZ(d){
+  const open = new Date(d); open.setHours(7,0,0,0);
+  const close = new Date(d); close.setHours(17,0,0,0);
+  return { open, close, isWeekend: isWeekendNZ(d) };
+}
+
+function fmtTimeNZ(d){
+  return d.toLocaleTimeString('en-NZ', { timeZone: NZ_TZ, hour:'numeric', minute:'2-digit' });
+}
+function fmtDateNZ(d){
+  return d.toLocaleDateString('en-NZ', { timeZone: NZ_TZ, weekday:'long', year:'numeric', month:'long', day:'numeric' });
+}
+
 const POWER_AUTOMATE_URL = 'https://prod-35.australiasoutheast.logic.azure.com:443/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=PqXBWWjhoQG9vOCbPXcgc6sD7c43yJKV8kiftsdxoM8';
 
 let selectedDate = null;
@@ -443,8 +484,12 @@ function sanitizePhone(val){ return (val || '').replace(/\D/g,''); }
 function sanitizeRego(val){ return (val || '').toUpperCase().replace(/\s+/g,''); }
 function sanitizeText(val){ return (val || '').trim().replace(/\s+/g,' '); }
 
-// Hours (priority is allowed until 5pm every day)
+// Legacy weekend helper (left for compatibility; not used after NZ swap)
+function isWeekendDate(d){ return d ? (d.getDay()===0 || d.getDay()===6) : false; }
+
+// Hours (priority is allowed until 5pm every day) — now NZ-aware
 function getOpenClose(date){
+  // kept for compatibility but unused after swap
   const open = new Date(date); open.setHours(7,0,0,0);
   const close = new Date(date); close.setHours(17,0,0,0);
   const isWeekend = (date.getDay()===0 || date.getDay()===6);
@@ -452,11 +497,12 @@ function getOpenClose(date){
 }
 
 function isToday(date){
+  // kept for compatibility but unused after swap
   if(!date) return false;
   const now = new Date();
   return date.getFullYear()===now.getFullYear() && date.getMonth()===now.getMonth() && date.getDate()===now.getDate();
 }
-function isWeekendDate(d){ return d ? (d.getDay()===0 || d.getDay()===6) : false; }
+function isWeekendDateCompat(d){ return isWeekendDate(d); }
 
 function goToStep1(){
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
@@ -516,9 +562,9 @@ function goToStep4(){
 function generateCalendar(month, year, containerId){
   const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
   const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  const firstDay = new Date(year,month,1).getDay();
+  const firstDay = new Date(year,month,1).getDay(); // month grid alignment ok in any tz
   const daysInMonth = new Date(year,month+1,0).getDate();
-  const today = new Date(); today.setHours(0,0,0,0);
+  const today = nowNZ(); today.setHours(0,0,0,0);
 
   const container = document.getElementById(containerId);
   const grid = container.querySelector('.calendar-grid');
@@ -531,7 +577,7 @@ function generateCalendar(month, year, containerId){
   for (let i=0;i<firstDay;i++){ const empty=document.createElement('div'); empty.className='day disabled'; grid.appendChild(empty); }
 
   for (let day=1; day<=daysInMonth; day++){
-    const d = new Date(year,month,day);
+    const d = nzDate(year,month,day);
     const el = document.createElement('div'); el.className='day'; el.textContent=day;
     if (d < today){ el.classList.add('past'); grid.appendChild(el); continue; }
     el.onclick = () => selectDate(year,month,day,el);
@@ -540,7 +586,7 @@ function generateCalendar(month, year, containerId){
 }
 
 function initializeCalendars(){
-  const today = new Date();
+  const today = nowNZ();
   const cm = today.getMonth(), cy = today.getFullYear();
   const nm = cm===11 ? 0 : cm+1, ny = cm===11 ? cy+1 : cy;
   generateCalendar(cm, cy, 'currentCalendar');
@@ -550,13 +596,12 @@ function initializeCalendars(){
 function selectDate(year, month, day, element){
   document.querySelectorAll('.day.selected').forEach(el => el.classList.remove('selected'));
   element.classList.add('selected');
-  selectedDate = new Date(year,month,day);
+  selectedDate = nzDate(year,month,day);
   showTimeWindows();
-  const opts = {weekday:'long',year:'numeric',month:'long',day:'numeric'};
-  document.getElementById('selectedDateDisplay').textContent = selectedDate.toLocaleDateString('en-NZ', opts);
+  document.getElementById('selectedDateDisplay').textContent = fmtDateNZ(selectedDate);
 }
 
-/* Time windows per rules */
+/* Time windows per rules (NZ-time aware) */
 function showTimeWindows(){
   const container = document.getElementById('timeWindowContainer');
   const windowsDiv = document.getElementById('timeWindows');
@@ -564,15 +609,15 @@ function showTimeWindows(){
   selectedTimeWindow = null;
   document.getElementById('confirmTimeBtn').disabled = true;
 
-  const {open, close, isWeekend} = getOpenClose(selectedDate);
-  const fmt = d => d.toLocaleTimeString('en-NZ',{hour:'numeric',minute:'2-digit'});
+  const {open, close, isWeekend} = getOpenCloseNZ(selectedDate);
+  const fmt = fmtTimeNZ;
 
   const slots = [];
-  const todayFlag = isToday(selectedDate);
+  const todayFlag = isTodayNZ(selectedDate);
 
   if (todayFlag){
     // Show ONLY priority today, up to 5pm
-    const now = new Date();
+    const now = nowNZ();
     if (now < close){
       const start = new Date(Math.max(now.getTime(), open.getTime()));
       const end = new Date(Math.min(start.getTime() + 90*60*1000, close.getTime()));
@@ -634,12 +679,12 @@ function updateSummary(){
   document.getElementById('summaryPhone').textContent = phone;
 
   if (selectedDate){
-    const opts = {weekday:'long',year:'numeric',month:'long',day:'numeric'};
-    document.getElementById('summaryDate').textContent = selectedDate.toLocaleDateString('en-NZ', opts);
+    document.getElementById('summaryDate').textContent = fmtDateNZ(selectedDate);
   }
   document.getElementById('summaryTime').textContent = selectedTimeWindow ? selectedTimeWindow.range : 'Not selected';
 
-  let total = selectedTimeWindow ? selectedTimeWindow.price : (isWeekendDate(selectedDate||new Date()) ? PRICING.weekend.standard : PRICING.weekday.standard);
+  let total = selectedTimeWindow ? selectedTimeWindow.price
+    : (isWeekendNZ(selectedDate || nowNZ()) ? PRICING.weekend.standard : PRICING.weekday.standard);
   total += vehicleTypeAddon;
   
   const names = {
@@ -681,16 +726,18 @@ function buildRedirectUrl(){
   params.append('serviceCode', 'INSP');
   params.append('serviceTitle', 'Pre Purchase Vehicle Inspection');
 
-  let total = selectedTimeWindow ? selectedTimeWindow.price : (isWeekendDate(selectedDate||new Date()) ? PRICING.weekend.standard : PRICING.weekday.standard);
+  let total = selectedTimeWindow ? selectedTimeWindow.price
+    : (isWeekendNZ(selectedDate || nowNZ()) ? PRICING.weekend.standard : PRICING.weekday.standard);
   total += vehicleTypeAddon;
   params.append('price', total);
   params.append('vehicleType', selectedVehicleType);
   params.append('vehicleAddon', vehicleTypeAddon);
   params.append('details', document.getElementById('detailsInput').value || '');
-  params.append('scheduledDate', selectedDate ? selectedDate.toISOString() : '');
+  params.append('scheduledDate', selectedDate ? fmtDateNZ(selectedDate) : '');
+  params.append('scheduledDateNZ', selectedDate ? selectedDate.toLocaleString('sv-SE', { timeZone: NZ_TZ, hour12: false }) : ''); // e.g. "2025-09-07 14:30:00"
   params.append('timeWindow', selectedTimeWindow ? selectedTimeWindow.range : '');
-  params.append('urgencyLevel', isToday(selectedDate) ? 'Priority Today' : 'Scheduled');
-  params.append('bookingTime', new Date().toISOString());
+  params.append('urgencyLevel', isTodayNZ(selectedDate) ? 'Priority Today' : 'Scheduled');
+  params.append('bookingTime', new Date().toISOString()); // keep UTC ISO for machine-readability
   
   return `${baseUrl}?${params.toString()}`;
 }
@@ -714,7 +761,8 @@ async function generatePaymentLink(){
   const sellerName = sanitizeText(document.getElementById('sellerNameInput').value);
   const sellerPhone = sanitizePhone(document.getElementById('sellerPhoneInput').value);
 
-  let total = selectedTimeWindow ? selectedTimeWindow.price : (isWeekendDate(selectedDate||new Date()) ? PRICING.weekend.standard : PRICING.weekday.standard);
+  let total = selectedTimeWindow ? selectedTimeWindow.price
+    : (isWeekendNZ(selectedDate || nowNZ()) ? PRICING.weekend.standard : PRICING.weekday.standard);
   total += vehicleTypeAddon;
 
   const bookingData = {
@@ -734,10 +782,10 @@ async function generatePaymentLink(){
       price: `${total}`,
       vehicleType: selectedVehicleType,
       vehicleAddon: vehicleTypeAddon,
-      bookingDateTime: new Date().toLocaleString('en-NZ',{timeZone:'Pacific/Auckland'}),
-      scheduledDate: selectedDate ? selectedDate.toLocaleDateString('en-NZ',{weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'Pacific/Auckland'}) : '',
+      bookingDateTime: nowNZ().toLocaleString('en-NZ', { timeZone: NZ_TZ }),
+      scheduledDate: selectedDate ? fmtDateNZ(selectedDate) : '',
       scheduledTime: selectedTimeWindow ? selectedTimeWindow.range : '',
-      urgencyLevel: isToday(selectedDate) ? 'Priority Today' : 'Scheduled'
+      urgencyLevel: isTodayNZ(selectedDate) ? 'Priority Today' : 'Scheduled'
     }
   };
 
