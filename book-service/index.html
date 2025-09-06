@@ -15,12 +15,12 @@
     img-src 'self' data: https:;
     frame-src https://js.stripe.com https://hooks.stripe.com;
     connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://prod-35.australiasoutheast.logic.azure.com https://api.stripe.com;">
-  
+
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);} 
+    function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'AW-17084465163');
     gtag('config', 'G-DQNKF1YLWR');
@@ -78,6 +78,16 @@
     .urgency-description{font-size:.9em;color:#666;margin-bottom:12px}
     .urgency-price{font-size:1.25em;font-weight:800;color:var(--brand)}
 
+    /* Voltage selector */
+    .voltage-wrap{background:#f8f9fa;border:2px solid #e9ecef;border-radius:12px;padding:16px;margin:16px 0}
+    .voltage-title{font-weight:800;margin-bottom:10px}
+    .voltage-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+    .voltage-card{border:2px solid #ddd;border-radius:12px;padding:14px;cursor:pointer;background:#fff;transition:all .2s}
+    .voltage-card:hover{border-color:var(--brand);transform:translateY(-1px)}
+    .voltage-card.selected{border-color:var(--brand);background:linear-gradient(135deg,#fff5f0,#ffe5d9)}
+    .voltage-label{font-weight:700}
+    .voltage-price{color:var(--brand);font-weight:800;margin-top:6px}
+
     .reservation-summary{background:#e8f4f8;border-radius:8px;padding:20px;margin:20px 0}
     .reservation-summary h4{margin:0 0 15px 0}
     .summary-item{display:flex;justify-content:space-between;margin:8px 0;align-items:center}
@@ -111,6 +121,7 @@
     @media (max-width: 768px) {
       .booking-steps{padding:20px}
       .urgency-options{grid-template-columns:1fr}
+      .voltage-grid{grid-template-columns:1fr}
       .business-name{font-size:1.8em}
       .stats-grid{grid-template-columns:repeat(2,1fr)}
     }
@@ -186,6 +197,12 @@
         </div>
       </div>
 
+      <!-- Voltage selector (only for jump starts) -->
+      <div id="voltageSelector" class="voltage-wrap" style="display:none;">
+        <div class="voltage-title">Select battery voltage (required for jump starts)</div>
+        <div class="voltage-grid" id="voltageGrid"></div>
+      </div>
+
       <label for="locationInput" style="display:block;margin-bottom:8px;font-weight:700;">Where do you need service?</label>
       <input type="text" class="location-input" id="locationInput" placeholder="Enter your address, suburb, or region" required autocomplete="street-address"/>
 
@@ -202,7 +219,7 @@
     <!-- Step 2: Scheduling -->
     <div class="step" id="step2">
       <h3>Step 2: When do you need service?</h3>
-      
+
       <div class="timing-notice">
         <h4>⏰ Important Timing Information</h4>
         <p><strong>Time windows are approximate arrival times.</strong> As a mobile service, a previous job may run long. We'll text you when your tech is on the way.</p>
@@ -225,6 +242,7 @@
         <div class="summary-item"><span>Service:</span><strong id="summaryService"></strong></div>
         <div class="summary-item"><span>Location:</span><strong id="summaryLocation"></strong></div>
         <div class="summary-item"><span>Phone:</span><strong id="summaryPhone"></strong></div>
+        <div class="summary-item" id="summaryVoltageRow" style="display:none;"><span>Battery Voltage:</span><strong id="summaryVoltage"></strong></div>
         <div class="summary-item"><span>Response Time:</span><strong id="summaryUrgency"></strong></div>
         <div class="summary-item"><span>Service Fee:</span><strong id="summaryPrice"></strong></div>
       </div>
@@ -260,6 +278,20 @@
 </div>
 
 <script>
+// --- NZ timezone helpers (force all “wall-clock” logic to Pacific/Auckland) ---
+const NZ_TZ = 'Pacific/Auckland';
+function nowNZ(){
+  const parts = new Intl.DateTimeFormat('en-NZ',{
+    timeZone:NZ_TZ,hour12:false,year:'numeric',month:'2-digit',day:'2-digit',
+    hour:'2-digit',minute:'2-digit',second:'2-digit'
+  }).formatToParts(new Date());
+  const get=t=>parts.find(p=>p.type===t).value;
+  return new Date(`${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}:${get('second')}`);
+}
+function fmtDateNZ(d){
+  return d.toLocaleDateString('en-NZ',{timeZone:NZ_TZ,weekday:'long',year:'numeric',month:'long',day:'numeric'});
+}
+
 // Service Configurations
 const serviceConfigs = {
   'jumpstart': {
@@ -271,13 +303,21 @@ const serviceConfigs = {
     step1Title:'Step 1: Tell us about your battery situation',
     detailsLabel:'Any additional details about the battery problem:',
     detailsPlaceholder:"e.g., Age of battery, if lights were left on, how long it's been dead, etc.",
-    serviceCode:'JUMP', basePrice:149,
+    serviceCode:'JUMP',
+    basePrice:149, // default shown before selection
+    // NEW: voltage options (required)
+    voltages: [
+      { id:'12v', label:'12V (cars, SUVs, utes)', price:149 },
+      { id:'24v', label:'24V (trucks, buses)',   price:229 }
+    ],
     stats:[
-      {number:'$149',text:'fixed price'},{number:'30–90',text:'min arrival'},
-      {number:'Free',text:'battery test'},{number:'All',text:'makes & models'}
+      {number:'$149–$229',text:'fixed price'},
+      {number:'30–90',text:'min arrival'},
+      {number:'Free',text:'battery test'},
+      {number:'All',text:'makes & models'}
     ],
     urgencyOptions:[
-      {id:'emergency',title:'Emergency Service',time:'30–90 minutes arrival',description:'Technician dispatched immediately',price:149}
+      {id:'emergency',title:'Emergency Service',time:'30–90 minutes arrival',description:'Technician dispatched immediately'}
     ],
     infoContent:`
       <h4>Our Jump Start Service Includes:</h4>
@@ -290,7 +330,7 @@ const serviceConfigs = {
       </ul>`,
     terms:[
       'Service includes professional jump start and battery health assessment',
-      'Fixed price of $149 - no surprises',
+      'Fixed price of $149 (12V) or $229 (24V)',
       'Arrival times are approximate - we will SMS you when the technician is on the way',
       'Payment required via secure Stripe checkout'
     ]
@@ -368,6 +408,8 @@ const serviceConfigs = {
 const POWER_AUTOMATE_URL = 'https://prod-35.australiasoutheast.logic.azure.com:443/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=PqXBWWjhoQG9vOCbPXcgc6sD7c43yJKV8kiftsdxoM8';
 let selectedUrgency = null;
 let selectedUrgencyDetails = {};
+let selectedVoltageId = null;
+let selectedVoltagePrice = null;
 
 // Normalization helpers
 function sanitizePhone(val){ return (val || '').replace(/\D/g,''); }
@@ -383,7 +425,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 function loadServiceConfig(serviceType){
   const config = serviceConfigs[serviceType] || serviceConfigs['jumpstart'];
-  
+
   document.title = `${config.title} - Eek Mobile Mechanical`;
   document.getElementById('headerTitle').textContent = config.title;
   document.getElementById('headerSubtitle').textContent = config.subtitle;
@@ -396,12 +438,30 @@ function loadServiceConfig(serviceType){
   document.getElementById('serviceInfoBox').innerHTML = config.infoContent;
 
   const statsContainer = document.getElementById('statsContent');
-  statsContainer.innerHTML = config.stats.map(stat => 
+  statsContainer.innerHTML = config.stats.map(stat =>
     `<div class="stat-item"><span class="stat-number">${stat.number}</span>${stat.text}</div>`
   ).join('');
 
   const termsList = document.getElementById('termsList');
   termsList.innerHTML = config.terms.map(term => `<li>${term}</li>`).join('');
+
+  // Voltage UI (jumpstart only)
+  const vWrap = document.getElementById('voltageSelector');
+  const vGrid = document.getElementById('voltageGrid');
+  if (config.voltages){
+    vWrap.style.display = 'block';
+    vGrid.innerHTML = config.voltages.map(v => `
+      <div class="voltage-card" data-id="${v.id}" onclick="selectVoltage('${v.id}', ${v.price}, this)">
+        <div class="voltage-label">${v.label}</div>
+        <div class="voltage-price">$${v.price}</div>
+      </div>
+    `).join('');
+  } else {
+    vWrap.style.display = 'none';
+    vGrid.innerHTML = '';
+  }
+  selectedVoltageId = null;
+  selectedVoltagePrice = null;
 
   // Reset progress
   selectedUrgency = null;
@@ -413,6 +473,13 @@ function loadServiceConfig(serviceType){
 
   window.currentService = serviceType;
   window.currentConfig = config;
+}
+
+function selectVoltage(id, price, el){
+  document.querySelectorAll('.voltage-card.selected').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedVoltageId = id;
+  selectedVoltagePrice = price;
 }
 
 function goToStep1(){
@@ -428,7 +495,7 @@ function goToStep2(){
   const email = document.getElementById('emailInput').value.trim();
   const location = document.getElementById('locationInput').value.trim();
 
-  // NEW: vehicle fields validation (to stop skipping them)
+  // vehicle fields
   const regoRaw = document.getElementById('regoInput').value;
   const yearRaw = document.getElementById('yearInput').value;
   const makeRaw = document.getElementById('makeInput').value;
@@ -441,24 +508,28 @@ function goToStep2(){
 
   if (!name){ alert('Please enter your full name'); document.getElementById('nameInput').focus(); return; }
   if (!phone){ alert('Please enter your phone number'); document.getElementById('phoneInput').focus(); return; }
-  if (!phoneRegex.test(phone) || phone.replace(/\D/g,'').length < 9){ 
-    alert('Please enter a valid phone number (at least 9 digits)'); 
-    document.getElementById('phoneInput').focus(); 
-    return; 
+  if (!phoneRegex.test(phone) || phone.replace(/\D/g,'').length < 9){
+    alert('Please enter a valid phone number (at least 9 digits)');
+    document.getElementById('phoneInput').focus();
+    return;
   }
   if (!email){ alert('Please enter your email address'); document.getElementById('emailInput').focus(); return; }
-  if (!emailRegex.test(email)){ 
-    alert('Please enter a valid email address'); 
-    document.getElementById('emailInput').focus(); 
-    return; 
+  if (!emailRegex.test(email)){
+    alert('Please enter a valid email address');
+    document.getElementById('emailInput').focus();
+    return;
   }
   if (!location){ alert('Please enter the service location'); document.getElementById('locationInput').focus(); return; }
-
-  // Require vehicle info for all emergency services (incl. jump start)
   if (!regoSan){ alert('Please enter the vehicle registration (rego)'); document.getElementById('regoInput').focus(); return; }
   if (yearDigits.length !== 4){ alert('Please enter a 4-digit vehicle year'); document.getElementById('yearInput').focus(); return; }
   if (!makeRaw.trim()){ alert('Please enter the vehicle make'); document.getElementById('makeInput').focus(); return; }
   if (!modelRaw.trim()){ alert('Please enter the vehicle model'); document.getElementById('modelInput').focus(); return; }
+
+  // Require voltage selection for jumpstart
+  if (window.currentService === 'jumpstart' && !selectedVoltageId){
+    alert('Please select the battery voltage (12V or 24V) for jump start');
+    return;
+  }
 
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step2').classList.add('active');
@@ -468,27 +539,37 @@ function goToStep2(){
 
   // Setup urgency options
   const urgencyContainer = document.getElementById('urgencyOptions');
-  urgencyContainer.innerHTML = window.currentConfig.urgencyOptions.map(o => `
-    <div class="urgency-option" onclick="selectUrgency('${o.id}','${o.title}','${o.time}',${o.price},this)">
-      <div class="urgency-title">${o.title}</div>
-      <div class="urgency-time">${o.time}</div>
-      <div class="urgency-description">${o.description}</div>
-      <div class="urgency-price">$${o.price}</div>
-    </div>`).join('');
+  urgencyContainer.innerHTML = window.currentConfig.urgencyOptions.map(o => {
+    const displayPrice = (window.currentService==='jumpstart')
+      ? (selectedVoltagePrice ?? window.currentConfig.basePrice)
+      : (o.price ?? window.currentConfig.basePrice);
+    return `
+      <div class="urgency-option" onclick="selectUrgency('${o.id}','${o.title}','${o.time}',${displayPrice},this)">
+        <div class="urgency-title">${o.title}</div>
+        <div class="urgency-time">${o.time}</div>
+        <div class="urgency-description">${o.description}</div>
+        <div class="urgency-price">$${displayPrice}</div>
+      </div>`;
+  }).join('');
 }
 
 function selectUrgency(id, title, time, price, el){
   document.querySelectorAll('.urgency-option.selected').forEach(x => x.classList.remove('selected'));
   el.classList.add('selected');
   selectedUrgency = id;
-  selectedUrgencyDetails = {title,time,price};
+  // For jumpstart, lock price to selected voltage price
+  selectedUrgencyDetails = {
+    title,
+    time,
+    price: (window.currentService==='jumpstart') ? (selectedVoltagePrice ?? price) : price
+  };
   document.getElementById('confirmTimeBtn').disabled = false;
 }
 
 function goToStep3(){
-  if (!selectedUrgency){ 
-    alert('Please select a service time'); 
-    return; 
+  if (!selectedUrgency){
+    alert('Please select a service time');
+    return;
   }
 
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
@@ -496,8 +577,15 @@ function goToStep3(){
   document.getElementById('step2-progress').classList.add('completed');
   document.getElementById('step2-progress').classList.remove('active');
   document.getElementById('step3-progress').classList.add('active');
-  
+
   updateSummary();
+}
+
+function getTotalPrice(){
+  if (window.currentService==='jumpstart'){
+    return selectedVoltagePrice ?? window.currentConfig.basePrice;
+  }
+  return selectedUrgencyDetails.price || window.currentConfig.basePrice;
 }
 
 function updateSummary(){
@@ -506,9 +594,19 @@ function updateSummary(){
 
   document.getElementById('summaryService').textContent = window.currentConfig.title;
   document.getElementById('summaryLocation').textContent = location;
-  document.getElementById('summaryPhone').textContent = sanitizePhone(phone); // display normalized digits
+  document.getElementById('summaryPhone').textContent = sanitizePhone(phone);
   document.getElementById('summaryUrgency').textContent = selectedUrgencyDetails.time || '';
-  document.getElementById('summaryPrice').textContent = `$${selectedUrgencyDetails.price || window.currentConfig.basePrice}`;
+
+  // Voltage row visibility
+  const voltageRow = document.getElementById('summaryVoltageRow');
+  if (window.currentService==='jumpstart' && selectedVoltageId){
+    voltageRow.style.display = '';
+    document.getElementById('summaryVoltage').textContent = (selectedVoltageId==='12v'?'12V':'24V');
+  } else {
+    voltageRow.style.display = 'none';
+  }
+
+  document.getElementById('summaryPrice').textContent = `$${getTotalPrice()}`;
 }
 
 function toggleBookingButton(){
@@ -540,25 +638,30 @@ function buildRedirectUrl(){
   params.append('service', window.currentService);
   params.append('serviceCode', window.currentConfig.serviceCode);
   params.append('serviceTitle', window.currentConfig.title);
-  params.append('price', selectedUrgencyDetails.price || window.currentConfig.basePrice);
+  params.append('price', getTotalPrice());
   params.append('details', document.getElementById('detailsInput').value || '');
-  params.append('scheduledDate', new Date().toISOString());
+  // NZ-aware timestamps for human/machine
+  params.append('scheduledDate', fmtDateNZ(nowNZ()));
+  params.append('scheduledDateNZ', nowNZ().toLocaleString('sv-SE',{ timeZone:NZ_TZ, hour12:false })); // e.g. 2025-09-07 14:30:00
   params.append('timeWindow', selectedUrgencyDetails.time || '');
   params.append('urgencyLevel', selectedUrgency || '');
-  params.append('bookingTime', new Date().toISOString());
-  
+  params.append('bookingTime', new Date().toISOString()); // keep a UTC ISO too
+  if (window.currentService==='jumpstart'){
+    params.append('batteryVoltage', selectedVoltageId || '');
+  }
+
   return `${baseUrl}?${params.toString()}`;
 }
 
 async function generatePaymentLink(){
   const btn = document.getElementById('generatePaymentBtn');
-  if (!document.getElementById('termsAgree').checked){ 
-    alert('Please accept the terms and conditions'); 
-    return; 
+  if (!document.getElementById('termsAgree').checked){
+    alert('Please accept the terms and conditions');
+    return;
   }
 
-  btn.disabled = true; 
-  btn.classList.add('processing'); 
+  btn.disabled = true;
+  btn.classList.add('processing');
   btn.textContent='Generating Link';
 
   // Sanitize for payload
@@ -572,7 +675,7 @@ async function generatePaymentLink(){
   const model = sanitizeText(document.getElementById('modelInput').value);
   const vehicleDescription = [rego,year,make,model].filter(Boolean).join(' ') || 'Vehicle details not provided';
 
-  const total = selectedUrgencyDetails.price || window.currentConfig.basePrice;
+  const total = getTotalPrice();
 
   const bookingData = {
     rego: rego || 'Not provided',
@@ -583,29 +686,30 @@ async function generatePaymentLink(){
     customerData: {
       name: customerName, phone, email, location,
       vehicleRego: rego, vehicleYear: year, vehicleMake: make, vehicleModel: model, vehicleDescription,
-      service: window.currentService, 
-      serviceCode: window.currentConfig.serviceCode, 
+      service: window.currentService,
+      serviceCode: window.currentConfig.serviceCode,
       serviceTitle: window.currentConfig.title,
       details: document.getElementById('detailsInput').value || 'No additional details provided',
       price: `${total}`,
-      bookingDateTime: new Date().toLocaleString('en-NZ',{timeZone:'Pacific/Auckland'}),
-      scheduledDate: 'Today',
-      scheduledTime: selectedUrgencyDetails.time || 'Emergency Response',
-      urgencyLevel: selectedUrgency || 'emergency'
+      bookingDateTime: nowNZ().toLocaleString('en-NZ',{ timeZone:NZ_TZ }),
+      scheduledDate: fmtDateNZ(nowNZ()),
+      scheduledTime: selectedUrgencyDetails.time || (window.currentService==='jumpstart' ? 'Emergency Response' : ''),
+      urgencyLevel: selectedUrgency || 'emergency',
+      ...(window.currentService==='jumpstart' ? { batteryVoltage: (selectedVoltageId==='12v'?'12V':'24V') } : {})
     }
   };
 
   try{
-    const response = await fetch(POWER_AUTOMATE_URL,{ 
-      method:'POST', 
-      headers:{'Content-Type':'application/json'}, 
-      body:JSON.stringify(bookingData) 
+    const response = await fetch(POWER_AUTOMATE_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(bookingData)
     });
-    
+
     if (response.ok){
       const result = await response.json();
       if (result.url){
-        btn.classList.remove('processing'); 
+        btn.classList.remove('processing');
         btn.style.display='none';
         const successDiv = document.createElement('div');
         successDiv.style.cssText='background:#d4edda;border:2px solid #28a745;padding:20px;border-radius:8px;margin-top:20px;';
@@ -618,16 +722,16 @@ async function generatePaymentLink(){
           <p style="color:#666;font-size:.9em;margin-top:15px;">After payment, you'll receive an SMS confirmation to ${phone} with your booking details.</p>`;
         btn.parentElement.appendChild(successDiv);
         setTimeout(()=>{ window.location.href = result.url; },3000);
-      } else { 
-        throw new Error('No payment URL received'); 
+      } else {
+        throw new Error('No payment URL received');
       }
     } else {
       throw new Error('Server returned '+response.status);
     }
   }catch(err){
     console.error('Error generating payment link:', err);
-    btn.disabled=false; 
-    btn.classList.remove('processing'); 
+    btn.disabled=false;
+    btn.classList.remove('processing');
     btn.textContent='Generate Payment Link';
     alert('Unable to generate payment link automatically.\n\nPlease try one of these options:\n1. Refresh the page and try again\n2. Call us at 0800 769 000');
   }
