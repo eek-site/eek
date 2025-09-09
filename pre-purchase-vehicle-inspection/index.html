@@ -102,7 +102,7 @@
     .price-big{margin:10px 0;font-size:1.25em;font-weight:800;color:var(--brand)}
     .time-window.priority .price-big{color:var(--ok)}
 
-    /* Vehicle picker — restored and kept outside media so it works on desktop */
+    /* Vehicle picker */
     .vehicle-types{
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
@@ -299,7 +299,7 @@
           <li><strong>45-point inspection checklist</strong></li>
           <li><strong>Written inspection report</strong> with photos</li>
           <li><strong>Professional recommendation</strong> on purchase decision</li>
-          <li><strong>Clear, simple pricing</strong>: Weekdays Standard <strong>$199</strong> / Priority <strong>$289</strong>; Weekends Standard <strong>$289</strong> / Priority <strong>$389</strong></li>
+          <li><strong>Clear, simple pricing</strong>: Weekdays <strong>$289</strong> (with a limited <strong>$199</strong> economy slot 3+ weeks out); Weekends <strong>$329</strong></li>
         </ul>
       </div>
 
@@ -313,10 +313,10 @@
       <h3>Step 2: Select your preferred date and time</h3>
 
       <div class="timing-notice">
-        <h4>Important Timing Information</h4>
-        <p><strong>Priority Today</strong> is available every day from <strong>7:00 AM – 5:00 PM</strong> and arrives within <strong>60–90 minutes</strong>.</p>
-        <p>For <strong>future days</strong>: Weekdays have 4 standard windows (7–9, 9–12, 12–3, 3–5). Weekends have 2 standard windows (7–9, 9–12).</p>
-        <p>Standard arrival windows are 30–90 minutes.</p>
+        <h4>Timing Information</h4>
+        <p><strong>Weekdays (Mon–Fri):</strong> 10:00 AM – 4:00 PM with <strong>90-minute windows</strong> (10:00–11:30, 12:00–1:30, 2:00–3:30). Standard price: <strong>$289</strong>.</p>
+        <p><strong>Limited $199 Economy</strong> slot appears on weekdays <em>3+ weeks in advance</em> at <strong>2:00–3:30 PM</strong>, subject to availability.</p>
+        <p><strong>Weekends (Sat–Sun):</strong> 10:00 AM – 12:00 PM; single <strong>90-minute</strong> window (10:00–11:30). Price: <strong>$329</strong>.</p>
       </div>
 
       <div class="calendar-container">
@@ -403,9 +403,8 @@
             I agree to the <a href="https://eek.nz/terms" target="_blank">Eek Mobile Mechanical Terms of Service</a> and understand that:
             <ul style="margin:10px 0;padding-left:20px;">
               <li>Comprehensive certified mechanical inspection</li>
-              <li>Fixed pricing: Weekdays Standard $199 / Priority $289; Weekends Standard $289 / Priority $389</li>
-              <li>Standard windows are 30–90 min arrival</li>
-              <li>Priority Today is available 7:00–17:00 daily</li>
+              <li>Fixed pricing: Weekdays $289 (limited $199 economy slot may apply 3+ weeks out); Weekends $329</li>
+              <li>All arrival windows are 90 minutes within the published hours</li>
               <li>Written report provided within 24 hours</li>
               <li>Cancellations must be made at least 2 hours in advance</li>
             </ul>
@@ -453,12 +452,6 @@ function isTodayNZ(d) {
 }
 function isWeekendNZ(d){ const g=d.getDay(); return g===0 || g===6; }
 
-function getOpenCloseNZ(d){
-  const open = new Date(d); open.setHours(7,0,0,0);
-  const close = new Date(d); close.setHours(17,0,0,0);
-  return { open, close, isWeekend: isWeekendNZ(d) };
-}
-
 function fmtTimeNZ(d){
   return d.toLocaleTimeString('en-NZ', { timeZone: NZ_TZ, hour:'numeric', minute:'2-digit' });
 }
@@ -475,8 +468,8 @@ let vehicleTypeAddon = 0;
 
 // Pricing
 const PRICING = {
-  weekday: { standard: 199, priority: 289 },
-  weekend: { standard: 289, priority: 389 }
+  weekday: { standard: 289, economy: 199 },
+  weekend: { standard: 329 }
 };
 
 // Helpers: normalization
@@ -484,26 +477,7 @@ function sanitizePhone(val){ return (val || '').replace(/\D/g,''); }
 function sanitizeRego(val){ return (val || '').toUpperCase().replace(/\s+/g,''); }
 function sanitizeText(val){ return (val || '').trim().replace(/\s+/g,' '); }
 
-// Legacy weekend helper (left for compatibility; not used after NZ swap)
-function isWeekendDate(d){ return d ? (d.getDay()===0 || d.getDay()===6) : false; }
-
-// Hours (priority is allowed until 5pm every day) — now NZ-aware
-function getOpenClose(date){
-  // kept for compatibility but unused after swap
-  const open = new Date(date); open.setHours(7,0,0,0);
-  const close = new Date(date); close.setHours(17,0,0,0);
-  const isWeekend = (date.getDay()===0 || date.getDay()===6);
-  return {open, close, isWeekend};
-}
-
-function isToday(date){
-  // kept for compatibility but unused after swap
-  if(!date) return false;
-  const now = new Date();
-  return date.getFullYear()===now.getFullYear() && date.getMonth()===now.getMonth() && date.getDate()===now.getDate();
-}
-function isWeekendDateCompat(d){ return isWeekendDate(d); }
-
+// Navigation
 function goToStep1(){
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step1').classList.add('active');
@@ -562,7 +536,7 @@ function goToStep4(){
 function generateCalendar(month, year, containerId){
   const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
   const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  const firstDay = new Date(year,month,1).getDay(); // month grid alignment ok in any tz
+  const firstDay = new Date(year,month,1).getDay();
   const daysInMonth = new Date(year,month+1,0).getDate();
   const today = nowNZ(); today.setHours(0,0,0,0);
 
@@ -601,48 +575,45 @@ function selectDate(year, month, day, element){
   document.getElementById('selectedDateDisplay').textContent = fmtDateNZ(selectedDate);
 }
 
-/* Time windows per rules (NZ-time aware) */
+/* Time windows per rules (NZ-time aware)
+   Weekdays: 10–11:30, 12–1:30, 2–3:30 (all 90 min)
+   Weekends: 10–11:30 (single 90 min)
+   $199 Economy: only if weekday and selectedDate >= today + 21 days, only for 2–3:30 window
+*/
 function showTimeWindows(){
   const container = document.getElementById('timeWindowContainer');
   const windowsDiv = document.getElementById('timeWindows');
   container.style.display = 'block';
   selectedTimeWindow = null;
-  document.getElementById('confirmTimeBtn').disabled = true;
+  document.getElementById('confirmTimeBtn').disabled = false; // enable after slot click
 
-  const {open, close, isWeekend} = getOpenCloseNZ(selectedDate);
-  const fmt = fmtTimeNZ;
-
+  const isWeekend = isWeekendNZ(selectedDate);
   const slots = [];
-  const todayFlag = isTodayNZ(selectedDate);
+  const today = nowNZ();
+  const threeWeeksMs = 21 * 24 * 60 * 60 * 1000;
+  const isEconomyEligible = (!isWeekend) && (selectedDate.getTime() - today.getTime() >= threeWeeksMs);
 
-  if (todayFlag){
-    // Show ONLY priority today, up to 5pm
-    const now = nowNZ();
-    if (now < close){
-      const start = new Date(Math.max(now.getTime(), open.getTime()));
-      const end = new Date(Math.min(start.getTime() + 90*60*1000, close.getTime()));
-      const price = isWeekend ? PRICING.weekend.priority : PRICING.weekday.priority;
-      slots.push({
-        id:'priority-now',
-        title:'Priority Today (arrives within 60–90 min)',
-        range:`${fmt(start)} – ${fmt(end)}`,
-        desc:'Fastest arrival today',
-        price, css:'priority'
-      });
-    }
+  if (isWeekend){
+    // Weekend: single 90-min window at $329
+    slots.push({
+      id:'we-10-1130',
+      title:'Standard',
+      range:'10:00 AM – 11:30 AM (90-minute arrival window)',
+      desc:'Weekend standard window',
+      price: PRICING.weekend.standard,
+      css:''
+    });
   } else {
-    // Future days: Standard only
-    if (isWeekend){
-      // Sat/Sun: 2 windows (7–9, 9–12)
-      slots.push({id:'wknd-early', title:'Standard', range:'7:00 AM – 9:00 AM (30–90 min arrival)', desc:'Weekend standard window', price:PRICING.weekend.standard, css:''});
-      slots.push({id:'wknd-late',  title:'Standard', range:'9:00 AM – 12:00 PM (30–90 min arrival)', desc:'Weekend standard window', price:PRICING.weekend.standard, css:''});
+    // Weekday: three 90-min windows at $289
+    const weekdayPrice = PRICING.weekday.standard;
+    slots.push({id:'wd-10-1130', title:'Standard', range:'10:00 AM – 11:30 AM (90-minute arrival window)', desc:'Weekday standard window', price:weekdayPrice, css:''});
+    slots.push({id:'wd-12-130',  title:'Standard', range:'12:00 PM – 1:30 PM (90-minute arrival window)', desc:'Weekday standard window', price:weekdayPrice, css:''});
+
+    // 2–3:30 PM slot: either $289 or economy $199 if 3+ weeks out
+    if (isEconomyEligible){
+      slots.push({id:'wd-2-330-econ', title:'Economy (Limited)', range:'2:00 PM – 3:30 PM (90-minute arrival window)', desc:'Limited advance slot — 3+ weeks out', price:PRICING.weekday.economy, css:'priority'});
     } else {
-      // Mon–Fri: 4 windows (7–9, 9–12, 12–3, 3–5)
-      const w = PRICING.weekday.standard;
-      slots.push({id:'wd-1', title:'Standard', range:'7:00 AM – 9:00 AM (30–90 min arrival)',  desc:'Weekday standard window', price:w, css:''});
-      slots.push({id:'wd-2', title:'Standard', range:'9:00 AM – 12:00 PM (30–90 min arrival)', desc:'Weekday standard window', price:w, css:''});
-      slots.push({id:'wd-3', title:'Standard', range:'12:00 PM – 3:00 PM (30–90 min arrival)', desc:'Weekday standard window', price:w, css:''});
-      slots.push({id:'wd-4', title:'Standard', range:'3:00 PM – 5:00 PM (30–90 min arrival)',  desc:'Weekday standard window', price:w, css:''});
+      slots.push({id:'wd-2-330', title:'Standard', range:'2:00 PM – 3:30 PM (90-minute arrival window)', desc:'Weekday standard window', price:weekdayPrice, css:''});
     }
   }
 
@@ -661,7 +632,6 @@ function selectTimeWindow(id,title,range,price,element){
   document.querySelectorAll('.time-window.selected').forEach(el => el.classList.remove('selected'));
   element.classList.add('selected');
   selectedTimeWindow = {id,title,range,price};
-  document.getElementById('confirmTimeBtn').disabled = false;
 }
 
 function selectVehicleType(type, addon, el){
@@ -683,9 +653,14 @@ function updateSummary(){
   }
   document.getElementById('summaryTime').textContent = selectedTimeWindow ? selectedTimeWindow.range : 'Not selected';
 
-  let total = selectedTimeWindow ? selectedTimeWindow.price
-    : (isWeekendNZ(selectedDate || nowNZ()) ? PRICING.weekend.standard : PRICING.weekday.standard);
-  total += vehicleTypeAddon;
+  let base = 0;
+  if (selectedTimeWindow){
+    base = selectedTimeWindow.price;
+  } else {
+    // default if somehow no selection — use weekday or weekend standard
+    base = isWeekendNZ(selectedDate || nowNZ()) ? PRICING.weekend.standard : PRICING.weekday.standard;
+  }
+  const total = base + vehicleTypeAddon;
   
   const names = {
     'standard': 'Standard Vehicle',
@@ -704,7 +679,6 @@ function buildRedirectUrl(){
   const baseUrl = 'https://www.eek.nz/thanks';
   const params = new URLSearchParams();
 
-  // Use sanitized values for reliable downstream matching
   const name = sanitizeText(document.getElementById('nameInput').value);
   const phone = sanitizePhone(document.getElementById('phoneInput').value);
   const email = document.getElementById('emailInput').value.trim();
@@ -726,18 +700,19 @@ function buildRedirectUrl(){
   params.append('serviceCode', 'INSP');
   params.append('serviceTitle', 'Pre Purchase Vehicle Inspection');
 
-  let total = selectedTimeWindow ? selectedTimeWindow.price
+  let base = selectedTimeWindow ? selectedTimeWindow.price
     : (isWeekendNZ(selectedDate || nowNZ()) ? PRICING.weekend.standard : PRICING.weekday.standard);
-  total += vehicleTypeAddon;
+  const total = base + vehicleTypeAddon;
+
   params.append('price', total);
   params.append('vehicleType', selectedVehicleType);
   params.append('vehicleAddon', vehicleTypeAddon);
   params.append('details', document.getElementById('detailsInput').value || '');
   params.append('scheduledDate', selectedDate ? fmtDateNZ(selectedDate) : '');
-  params.append('scheduledDateNZ', selectedDate ? selectedDate.toLocaleString('sv-SE', { timeZone: NZ_TZ, hour12: false }) : ''); // e.g. "2025-09-07 14:30:00"
+  params.append('scheduledDateNZ', selectedDate ? selectedDate.toLocaleString('sv-SE', { timeZone: NZ_TZ, hour12: false }) : '');
   params.append('timeWindow', selectedTimeWindow ? selectedTimeWindow.range : '');
-  params.append('urgencyLevel', isTodayNZ(selectedDate) ? 'Priority Today' : 'Scheduled');
-  params.append('bookingTime', new Date().toISOString()); // keep UTC ISO for machine-readability
+  params.append('urgencyLevel', 'Scheduled');
+  params.append('bookingTime', new Date().toISOString());
   
   return `${baseUrl}?${params.toString()}`;
 }
@@ -748,7 +723,6 @@ async function generatePaymentLink(){
 
   btn.disabled = true; btn.classList.add('processing'); btn.textContent='Generating Link';
 
-  // Sanitize for payload
   const customerName = sanitizeText(document.getElementById('nameInput').value);
   const phone = sanitizePhone(document.getElementById('phoneInput').value);
   const email = document.getElementById('emailInput').value.trim();
@@ -761,9 +735,9 @@ async function generatePaymentLink(){
   const sellerName = sanitizeText(document.getElementById('sellerNameInput').value);
   const sellerPhone = sanitizePhone(document.getElementById('sellerPhoneInput').value);
 
-  let total = selectedTimeWindow ? selectedTimeWindow.price
+  let base = selectedTimeWindow ? selectedTimeWindow.price
     : (isWeekendNZ(selectedDate || nowNZ()) ? PRICING.weekend.standard : PRICING.weekday.standard);
-  total += vehicleTypeAddon;
+  const total = base + vehicleTypeAddon;
 
   const bookingData = {
     rego: rego || 'Not provided',
@@ -785,7 +759,7 @@ async function generatePaymentLink(){
       bookingDateTime: nowNZ().toLocaleString('en-NZ', { timeZone: NZ_TZ }),
       scheduledDate: selectedDate ? fmtDateNZ(selectedDate) : '',
       scheduledTime: selectedTimeWindow ? selectedTimeWindow.range : '',
-      urgencyLevel: isTodayNZ(selectedDate) ? 'Priority Today' : 'Scheduled'
+      urgencyLevel: 'Scheduled'
     }
   };
 
