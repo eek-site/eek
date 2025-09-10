@@ -485,8 +485,11 @@ const INITIAL_BOOKING_URL = 'https://prod-26.australiasoutheast.logic.azure.com:
 
 // Function to send initial booking data to Power Automate
 async function sendInitialBookingData() {
+  console.log('📤 === INITIAL BOOKING DATA WEBHOOK === 📤');
+  
   // Skip for WINZ service as it has its own flow
   if (window.currentConfig.isWinz) {
+    console.log('⏭️ Skipping initial booking webhook for WINZ service');
     return;
   }
   
@@ -546,9 +549,11 @@ async function sendInitialBookingData() {
   // Store session ID for later use
   if (!window.sessionId) {
     window.sessionId = initialData.sessionId;
+    console.log('🔑 New session ID created:', window.sessionId);
   }
   
-  console.log('Sending initial booking data with ALL fields:', initialData);
+  console.log('📋 Initial booking data prepared:', initialData);
+  console.log('🌐 Sending to webhook:', INITIAL_BOOKING_URL);
   
   try {
     const response = await fetch(INITIAL_BOOKING_URL, {
@@ -557,18 +562,27 @@ async function sendInitialBookingData() {
       body: JSON.stringify(initialData)
     });
     
+    console.log('📡 Webhook response status:', response.status);
+    
     if (response.ok) {
-      console.log('Initial booking data sent successfully');
-      // Log the actual data sent for debugging
-      console.log('Data sent:', JSON.stringify(initialData, null, 2));
+      console.log('✅ Initial booking data sent successfully!');
+      console.log('📊 Customer captured:', {
+        name: customerName,
+        phone: phone,
+        email: email,
+        service: window.currentService
+      });
     } else {
-      console.error('Failed to send initial booking data:', response.status);
+      console.error('❌ Failed to send initial booking data');
+      console.error('Status:', response.status);
       const responseText = await response.text();
-      console.error('Response:', responseText);
+      console.error('Response:', responseText || '(empty)');
     }
   } catch (err) {
-    console.error('Error sending initial booking data:', err);
+    console.error('❌ Error sending initial booking data:', err);
+    console.error('Details:', err.message);
     // Don't block the user flow if this fails
+    console.log('⚠️ Continuing despite webhook error...');
   }
 }
 
@@ -587,13 +601,24 @@ function sanitizeText(val){ return (val || '').trim().replace(/\s+/g,' '); }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function(){
+  console.log('🚀 === BOOKING FORM INITIALIZED === 🚀');
   const urlParams = new URLSearchParams(window.location.search);
   const service = urlParams.get('service') || 'jumpstart';
+  console.log('📌 Service requested:', service);
+  console.log('🌐 Current URL:', window.location.href);
   loadServiceConfig(service);
 });
 
 function loadServiceConfig(serviceType){
   const config = serviceConfigs[serviceType] || serviceConfigs['jumpstart'];
+  
+  console.log('⚙️ === SERVICE CONFIGURATION LOADED === ⚙️');
+  console.log('📦 Service:', config.title);
+  console.log('💵 Base price:', config.basePrice);
+  console.log('🏷️ Service code:', config.serviceCode);
+  if (config.isWinz) {
+    console.log('🟣 WINZ service mode enabled');
+  }
 
   document.title = `${config.title} - Eek Mobile Mechanical`;
   document.getElementById('headerTitle').textContent = config.title;
@@ -707,11 +732,19 @@ function goToStep1(){
 }
 
 async function goToStep2(){
+  console.log('📝 === STEP 1 → STEP 2 TRANSITION === 📝');
+  
   const name = document.getElementById('nameInput').value.trim();
   const phone = document.getElementById('phoneInput').value.trim();
   const email = document.getElementById('emailInput').value.trim();
   const location = document.getElementById('locationInput').value.trim();
   const details = document.getElementById('detailsInput').value.trim();
+
+  console.log('🔍 Validating form data...');
+  console.log('👤 Customer:', name);
+  console.log('📱 Phone:', phone);
+  console.log('📧 Email:', email);
+  console.log('📍 Location:', location);
 
   // vehicle fields
   const regoRaw = document.getElementById('regoInput').value;
@@ -810,9 +843,29 @@ async function goToStep2(){
         body: JSON.stringify(pricingData)
       });
 
+      console.log('📊 Pricing API Response Status:', response.status);
+      console.log('📊 Response Headers:', response.headers.get('content-type'));
+      
       if (response.ok) {
-        const result = await response.json();
-        calculatedPrice = result.price || window.currentConfig.basePrice;
+        // Check if response has content
+        const responseText = await response.text();
+        console.log('📊 Raw response from pricing API:', responseText || '(empty response)');
+        
+        if (responseText) {
+          try {
+            const result = JSON.parse(responseText);
+            console.log('✅ Parsed pricing response:', result);
+            calculatedPrice = result.price || window.currentConfig.basePrice;
+            console.log('💰 Final calculated price:', calculatedPrice);
+          } catch (parseError) {
+            console.log('⚠️ Response is not JSON, using default price');
+            calculatedPrice = window.currentConfig.basePrice;
+          }
+        } else {
+          console.log('ℹ️ Pricing API returned empty response (data received successfully)');
+          console.log('💰 Using default price:', window.currentConfig.basePrice);
+          calculatedPrice = window.currentConfig.basePrice;
+        }
         
         // Update voltage prices if jumpstart
         if (window.currentService === 'jumpstart' && window.currentConfig.voltages) {
@@ -893,8 +946,11 @@ function selectUrgency(id, title, time, price, el){
 
 // Function to send scheduling update to Power Automate
 async function sendSchedulingUpdate() {
+  console.log('⏰ === SCHEDULING UPDATE WEBHOOK === ⏰');
+  
   // Skip for WINZ service
   if (window.currentConfig.isWinz) {
+    console.log('⏭️ Skipping scheduling webhook for WINZ service');
     return;
   }
   
@@ -944,7 +1000,10 @@ async function sendSchedulingUpdate() {
     formVersion: '2.0'
   };
   
-  console.log('Sending scheduling update with ALL fields:', updateData);
+  console.log('📋 Scheduling update data prepared');
+  console.log('🕐 Selected time:', selectedUrgencyDetails.time);
+  console.log('💰 Price:', calculatedPrice || window.currentConfig.basePrice);
+  console.log('🌐 Sending to webhook:', INITIAL_BOOKING_URL);
   
   try {
     const response = await fetch(INITIAL_BOOKING_URL, {
@@ -953,22 +1012,32 @@ async function sendSchedulingUpdate() {
       body: JSON.stringify(updateData)
     });
     
+    console.log('📡 Webhook response status:', response.status);
+    
     if (response.ok) {
-      console.log('Scheduling update sent successfully');
-      console.log('Data sent:', JSON.stringify(updateData, null, 2));
+      console.log('✅ Scheduling update sent successfully!');
+      console.log('📊 Step 2 completed for session:', window.sessionId);
     } else {
-      console.error('Failed to send scheduling update:', response.status);
+      console.error('❌ Failed to send scheduling update');
+      console.error('Status:', response.status);
     }
   } catch (err) {
-    console.error('Error sending scheduling update:', err);
+    console.error('❌ Error sending scheduling update:', err);
+    console.error('Details:', err.message);
   }
 }
 
 async function goToStep3(){
+  console.log('⏰ === STEP 2 → STEP 3 TRANSITION === ⏰');
+  
   if (!selectedUrgency){
+    console.log('⚠️ No time selected, blocking transition');
     alert('Please select a service time');
     return;
   }
+  
+  console.log('✅ Time selected:', selectedUrgencyDetails.time);
+  console.log('📊 Moving to confirmation step');
 
   // Send scheduling update for non-WINZ services
   if (!window.currentConfig.isWinz) {
@@ -1163,6 +1232,8 @@ async function generatePaymentLink(){
   
   // Send final update for non-WINZ services before payment
   if (!window.currentConfig.isWinz) {
+    console.log('💳 === FINAL UPDATE BEFORE PAYMENT === 💳');
+    
     const finalUpdateData = {
       // Session tracking
       sessionId: window.sessionId || `session_${Date.now()}`,
@@ -1212,7 +1283,10 @@ async function generatePaymentLink(){
       formVersion: '2.0'
     };
     
-    console.log('Sending final booking update with ALL fields:', finalUpdateData);
+    console.log('📋 Final update data prepared');
+    console.log('💰 Final price:', getTotalPrice());
+    console.log('🔑 Session ID:', window.sessionId);
+    console.log('🌐 Sending to webhook:', INITIAL_BOOKING_URL);
     
     try {
       await fetch(INITIAL_BOOKING_URL, {
@@ -1220,10 +1294,11 @@ async function generatePaymentLink(){
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(finalUpdateData)
       });
-      console.log('Final booking update sent');
-      console.log('Data sent:', JSON.stringify(finalUpdateData, null, 2));
+      console.log('✅ Final booking update sent successfully!');
+      console.log('📊 Customer journey tracked from start to payment');
     } catch (err) {
-      console.error('Error sending final update:', err);
+      console.error('❌ Error sending final update:', err);
+      console.log('⚠️ Continuing to payment generation...');
     }
   }
   
