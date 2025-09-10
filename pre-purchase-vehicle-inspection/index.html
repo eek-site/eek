@@ -14,7 +14,7 @@
       script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net;
       style-src 'self' 'unsafe-inline';
       img-src 'self' data: https:;
-      connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://prod-35.australiasoutheast.logic.azure.com https://prod-26.australiasoutheast.logic.azure.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com;
+      connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com;
       frame-src 'self' https://www.googletagmanager.com https://www.google.com;
     ">
 
@@ -87,15 +87,20 @@
     .day:hover{background:#f0f0f0}
     .day.disabled,.day.past{color:#ccc;cursor:not-allowed}
     .day.selected{background:var(--brand);color:#fff}
+    /* Remove any date price chips entirely */
+    .day .price-chip{display:none!important}
 
     .time-windows{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px;margin:20px 0}
     .time-window{border:2px solid #ddd;border-radius:12px;padding:20px;cursor:pointer;text-align:center;transition:all .3s;background:#fff}
     .time-window:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,85,0,.15)}
     .time-window.selected{background:linear-gradient(135deg,#fff5f0,#ffe5d9);border-color:var(--brand);border-width:3px}
+    .time-window.priority{border-color:var(--ok);background:linear-gradient(135deg,#f0fff4,#e8ffed)}
+    .time-window.priority .time-window-range{color:var(--ok)}
     .time-window-title{font-size:1.2em;font-weight:700;margin-bottom:8px}
     .time-window-range{color:var(--brand);font-size:1.05em;margin-bottom:10px;font-weight:600}
     .time-window-description{font-size:.95em;color:#666;line-height:1.4}
     .price-big{margin:10px 0;font-size:1.25em;font-weight:800;color:var(--brand)}
+    .time-window.priority .price-big{color:var(--ok)}
     .price-big.calculating{color:var(--muted);font-size:1em}
 
     /* Vehicle picker */
@@ -465,9 +470,14 @@ function fmtDateNZ(d){
   return d.toLocaleDateString('en-NZ', { timeZone: NZ_TZ, weekday:'long', year:'numeric', month:'long', day:'numeric' });
 }
 
-const POWER_AUTOMATE_URL = 'https://prod-35.australiasoutheast.logic.azure.com:443/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=PqXBWWjhoQG9vOCbPXcgc6sD7c43yJKV8kiftsdxoM8';
-const PRICING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
+// UPDATED: Correct webhook URL for Stripe payment generation
+const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
+
+// Webhook for tracking customer progress through the form
 const INITIAL_BOOKING_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
+
+// If you need separate pricing API, use this (currently same as tracking)
+const PRICING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
 
 let selectedDate = null;
 let selectedTimeWindow = null;
