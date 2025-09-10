@@ -1246,9 +1246,41 @@ async function generatePaymentLink(){
       body:JSON.stringify(bookingData)
     });
 
+    console.log('💳 Stripe API Response Status:', response.status);
+    console.log('💳 Response Headers:', response.headers.get('content-type'));
+
     if (response.ok){
-      const result = await response.json();
-      if (result.url){
+      // Check if response has content
+      const responseText = await response.text();
+      console.log('💳 Raw response from Stripe API:', responseText || '(empty response)');
+      
+      let result = null;
+      if (responseText) {
+        try {
+          result = JSON.parse(responseText);
+          console.log('✅ Parsed Stripe response:', result);
+        } catch (parseError) {
+          console.log('⚠️ Response is not JSON, checking headers for payment URL...');
+          // Check if URL is in headers (some Power Automate flows return URL in Location header)
+          const locationHeader = response.headers.get('location');
+          if (locationHeader && locationHeader.includes('stripe.com')) {
+            result = { url: locationHeader };
+            console.log('✅ Found Stripe URL in Location header:', locationHeader);
+          }
+        }
+      } else {
+        // Empty response - check headers for URL
+        const locationHeader = response.headers.get('location');
+        if (locationHeader && locationHeader.includes('stripe.com')) {
+          result = { url: locationHeader };
+          console.log('✅ Found Stripe URL in Location header:', locationHeader);
+        } else {
+          // If truly empty with no URL, show error
+          throw new Error('Payment link generated but URL not returned. Please contact support.');
+        }
+      }
+      
+      if (result && result.url){
         btn.classList.remove('processing');
         btn.style.display='none';
         const successDiv = document.createElement('div');
@@ -1263,7 +1295,7 @@ async function generatePaymentLink(){
         btn.parentElement.appendChild(successDiv);
         setTimeout(()=>{ window.location.href = result.url; },3000);
       } else {
-        throw new Error('No payment URL received');
+        throw new Error('No payment URL received in response');
       }
     } else {
       throw new Error('Server returned '+response.status);
