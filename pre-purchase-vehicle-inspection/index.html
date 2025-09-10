@@ -555,6 +555,9 @@ async function sendInitialBookingData() {
     console.log('📡 Webhook response status:', response.status);
     
     if (response.ok) {
+      // Check if there's a response body
+      const responseText = await response.text();
+      console.log('📡 Response body:', responseText || '(empty - success)');
       console.log('✅ Initial booking data sent successfully!');
       console.log('📊 Customer captured for inspection:', {
         name: customerName,
@@ -565,6 +568,8 @@ async function sendInitialBookingData() {
     } else {
       console.error('❌ Failed to send initial booking data');
       console.error('Status:', response.status);
+      const errorText = await response.text();
+      console.error('Error response:', errorText);
     }
   } catch (err) {
     console.error('❌ Error sending initial booking data:', err);
@@ -636,14 +641,40 @@ async function goToStep2(){
   
   try {
     const pricingData = {
+      // Customer information - INCLUDE ALL FIELDS
+      name: sanitizeText(name),
+      phone: sanitizePhone(phone),
+      email: email,
+      
+      // Service and location
       service: 'inspection',
+      serviceCode: 'INSP',
+      serviceTitle: 'Pre Purchase Vehicle Inspection',
       location: location,
       vehicleType: 'car',
       details: `${make} ${model} ${year}`.trim() || '',
+      
+      // Vehicle information - both naming conventions
       rego: sanitizeRego(rego),
       year: year,
       make: make,
-      model: model
+      model: model,
+      vehicleRego: sanitizeRego(rego),
+      vehicleYear: year,
+      vehicleMake: make,
+      vehicleModel: model,
+      
+      // Seller information
+      sellerName: sellerName,
+      sellerPhone: sellerPhone,
+      
+      // Session tracking
+      sessionId: sessionId || `session_${Date.now()}`,
+      timestamp: new Date().toISOString(),
+      
+      // Source tracking
+      source: 'inspection_booking_form',
+      formVersion: '2.0'
     };
 
     console.log('📋 Pricing request data:', pricingData);
@@ -810,6 +841,8 @@ async function goToStep3(){
 
 // Function to send vehicle type update to Power Automate
 async function sendVehicleTypeUpdate() {
+  console.log('🚗 === VEHICLE TYPE UPDATE WEBHOOK === 🚗');
+  
   const updateData = {
     // Session tracking
     sessionId: sessionId || `session_${Date.now()}`,
@@ -866,7 +899,11 @@ async function sendVehicleTypeUpdate() {
     formVersion: '2.0'
   };
   
-  console.log('Sending vehicle type update with ALL fields:', updateData);
+  console.log('📋 Vehicle type update data prepared');
+  console.log('🚗 Selected vehicle type:', selectedVehicleType);
+  console.log('💰 Vehicle addon:', vehicleTypeAddon);
+  console.log('🔑 Session ID:', sessionId);
+  console.log('🌐 Sending to webhook:', INITIAL_BOOKING_URL);
   
   try {
     const response = await fetch(INITIAL_BOOKING_URL, {
@@ -875,14 +912,18 @@ async function sendVehicleTypeUpdate() {
       body: JSON.stringify(updateData)
     });
     
+    console.log('📡 Webhook response status:', response.status);
+    
     if (response.ok) {
-      console.log('Vehicle type update sent successfully');
-      console.log('Data sent:', JSON.stringify(updateData, null, 2));
+      console.log('✅ Vehicle type update sent successfully!');
+      console.log('📊 Step 3 completed for session:', sessionId);
     } else {
-      console.error('Failed to send vehicle type update:', response.status);
+      console.error('❌ Failed to send vehicle type update');
+      console.error('Status:', response.status);
     }
   } catch (err) {
-    console.error('Error sending vehicle type update:', err);
+    console.error('❌ Error sending vehicle type update:', err);
+    console.error('Details:', err.message);
   }
 }
 
