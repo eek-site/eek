@@ -669,8 +669,6 @@ async function goToStep2(){
           console.log('✅ Parsed pricing response:', result);
           // Use the returned price if available, otherwise use base pricing
           if (result.price) {
-          // Use the returned price if available, otherwise use base pricing
-          if (result.price) {
             calculatedPrice = result.price;
             console.log('💰 API returned price:', calculatedPrice);
           } else {
