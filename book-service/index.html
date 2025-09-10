@@ -14,7 +14,7 @@
     style-src 'self' 'unsafe-inline';
     img-src 'self' data: https:;
     frame-src https://js.stripe.com https://hooks.stripe.com;
-    connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://prod-35.australiasoutheast.logic.azure.com https://api.stripe.com;">
+    connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://prod-35.australiasoutheast.logic.azure.com https://api.stripe.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com;">
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
@@ -29,7 +29,7 @@
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <style>
     :root{
-      --brand:#ff5500; --brand2:#ff7733; --ok:#28a745; --warn:#ff9500; --muted:#6c757d;
+      --brand:#ff5500; --brand2:#ff7733; --ok:#28a745; --warn:#ff9500; --muted:#6c757d; --purple:#6f42c1;
     }
     body{font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;background:#f5f5f5;margin:0;padding:0 0 80px 0;color:#333;text-align:center}
     header{background:#fff;padding:20px;box-shadow:0 2px 4px rgba(0,0,0,.1)}
@@ -42,6 +42,7 @@
 
     .booking-container{max-width:900px;margin:20px auto;background:#fff;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);overflow:hidden}
     .booking-header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:30px;text-align:center}
+    .booking-header.winz{background:linear-gradient(135deg,var(--purple),#5a32a3)}
     .booking-header h2{margin:0 0 10px 0;font-size:2em}
     .booking-header p{margin:0;font-size:1.1em;opacity:.95}
     .service-stats{background:rgba(255,255,255,.15);padding:15px;border-radius:8px;margin-top:15px}
@@ -60,6 +61,19 @@
     .step{display:none;text-align:left}
     .step.active{display:block}
     .step h3{color:var(--brand);margin-bottom:20px;font-size:1.4em}
+    
+    /* WINZ specific step title */
+    .step.winz-step h3{background:#f0f0f0;padding:15px;border-radius:8px;color:#333;font-weight:600}
+
+    /* Emergency type selector for WINZ */
+    .emergency-selector{margin:20px 0}
+    .emergency-selector label{font-weight:700;font-size:1.05em;display:block;margin-bottom:15px;color:#333}
+    .emergency-selector label .required{color:#ff0000}
+    .emergency-option{display:flex;align-items:center;padding:15px;border:2px solid #e0e0e0;border-radius:8px;margin-bottom:10px;cursor:pointer;transition:all .2s;background:#fff}
+    .emergency-option:hover{border-color:var(--purple);background:#f9f5ff}
+    .emergency-option input[type="radio"]{width:20px;height:20px;margin-right:15px;cursor:pointer}
+    .emergency-option.selected{border-color:var(--purple);background:#f9f5ff;border-width:3px}
+    .emergency-label{font-size:1.05em;color:#333}
 
     .location-input,.details-input{width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:1.05em;margin-bottom:20px;box-sizing:border-box}
     .location-input:focus,.details-input:focus{border-color:var(--brand);outline:none}
@@ -77,6 +91,7 @@
     .urgency-time{color:var(--brand);font-size:.95em;margin-bottom:8px;font-weight:600}
     .urgency-description{font-size:.9em;color:#666;margin-bottom:12px}
     .urgency-price{font-size:1.25em;font-weight:800;color:var(--brand)}
+    .urgency-price.calculating{color:var(--muted);font-size:1em}
 
     /* Voltage selector */
     .voltage-wrap{background:#f8f9fa;border:2px solid #e9ecef;border-radius:12px;padding:16px;margin:16px 0}
@@ -97,6 +112,8 @@
     .button:hover{background:#e04400;transform:translateY(-1px)}
     .button.secondary{background:var(--muted)}
     .button.secondary:hover{background:#545b62}
+    .button.winz{background:var(--purple)}
+    .button.winz:hover{background:#5a32a3}
     .button:disabled{background:#ccc;cursor:not-allowed;transform:none}
     .button.processing{background:var(--muted);position:relative}
     .button.processing::after{content:'...';animation:dots 1.5s steps(3,end) infinite}
@@ -140,7 +157,7 @@
 </div>
 
 <div class="booking-container">
-  <div class="booking-header">
+  <div class="booking-header" id="bookingHeader">
     <h2 id="bookingTitle">Book Your Emergency Service</h2>
     <p id="bookingDescription">Professional mobile mechanic service across New Zealand</p>
     <div class="service-stats">
@@ -150,7 +167,7 @@
 
   <div class="progress-bar">
     <div class="progress-step active" id="step1-progress"><span>Details</span></div>
-    <div class="progress-step" id="step2-progress"><span>Scheduling</span></div>
+    <div class="progress-step" id="step2-progress"><span id="step2Label">Scheduling</span></div>
     <div class="progress-step" id="step3-progress"><span>Confirm</span></div>
   </div>
 
@@ -158,6 +175,12 @@
     <!-- Step 1: Service Details -->
     <div class="step active" id="step1">
       <h3 id="step1Title">Step 1: Service Details</h3>
+
+      <!-- Emergency type selector for WINZ only -->
+      <div id="emergencySelector" class="emergency-selector" style="display:none;">
+        <label>1. What is your emergency? <span class="required">*</span></label>
+        <div id="emergencyOptions"></div>
+      </div>
 
       <div style="background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:20px;">
         <h4 style="margin:0 0 15px 0;color:#333;">Your Information</h4>
@@ -212,15 +235,15 @@
       <div class="info-box" id="serviceInfoBox"></div>
 
       <div style="text-align:center;margin:20px 0;">
-        <button class="button" onclick="goToStep2()">Next: Select Time</button>
+        <button class="button" id="nextBtn" onclick="goToStep2()">Next: Select Time</button>
       </div>
     </div>
 
-    <!-- Step 2: Scheduling -->
+    <!-- Step 2: Scheduling (or Quote for WINZ) -->
     <div class="step" id="step2">
-      <h3>Step 2: When do you need service?</h3>
+      <h3 id="step2Title">Step 2: When do you need service?</h3>
 
-      <div class="timing-notice">
+      <div class="timing-notice" id="timingNotice">
         <h4>⏰ Important Timing Information</h4>
         <p><strong>Time windows are approximate arrival times.</strong> As a mobile service, a previous job may run long. We'll text you when your tech is on the way.</p>
       </div>
@@ -235,19 +258,20 @@
 
     <!-- Step 3: Confirmation -->
     <div class="step" id="step3">
-      <h3>Step 3: Review and confirm</h3>
+      <h3 id="step3Title">Step 3: Review and confirm</h3>
 
       <div class="reservation-summary">
         <h4>Your Service Request</h4>
         <div class="summary-item"><span>Service:</span><strong id="summaryService"></strong></div>
+        <div class="summary-item" id="summaryEmergencyRow" style="display:none;"><span>Emergency Type:</span><strong id="summaryEmergency"></strong></div>
         <div class="summary-item"><span>Location:</span><strong id="summaryLocation"></strong></div>
         <div class="summary-item"><span>Phone:</span><strong id="summaryPhone"></strong></div>
         <div class="summary-item" id="summaryVoltageRow" style="display:none;"><span>Battery Voltage:</span><strong id="summaryVoltage"></strong></div>
-        <div class="summary-item"><span>Response Time:</span><strong id="summaryUrgency"></strong></div>
-        <div class="summary-item"><span>Service Fee:</span><strong id="summaryPrice"></strong></div>
+        <div class="summary-item" id="summaryUrgencyRow"><span>Response Time:</span><strong id="summaryUrgency"></strong></div>
+        <div class="summary-item" id="summaryPriceRow"><span>Service Fee:</span><strong id="summaryPrice"></strong></div>
       </div>
 
-      <div class="timing-notice" style="background:#e8f8ff;border-color:#bee5eb;">
+      <div class="timing-notice" id="nextStepsBox" style="background:#e8f8ff;border-color:#bee5eb;">
         <h4>📱 What happens next?</h4>
         <p>1. Click "Generate Payment Link" to create your secure payment link</p>
         <p>2. Complete payment through Stripe's secure checkout</p>
@@ -271,14 +295,14 @@
           <button class="button secondary" onclick="goToStep2()">Back to Selection</button>
           <button class="button" id="generatePaymentBtn" onclick="generatePaymentLink()" disabled>Generate Payment Link</button>
         </div>
-        <p style="margin:15px 0;color:#666;font-size:.9em;">Secure payment processing powered by Stripe</p>
+        <p style="margin:15px 0;color:#666;font-size:.9em;" id="paymentNote">Secure payment processing powered by Stripe</p>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// --- NZ timezone helpers (force all “wall-clock” logic to Pacific/Auckland) ---
+// --- NZ timezone helpers (force all "wall-clock" logic to Pacific/Auckland) ---
 const NZ_TZ = 'Pacific/Auckland';
 function nowNZ(){
   const parts = new Intl.DateTimeFormat('en-NZ',{
@@ -304,20 +328,19 @@ const serviceConfigs = {
     detailsLabel:'Any additional details about the battery problem:',
     detailsPlaceholder:"e.g., Age of battery, if lights were left on, how long it's been dead, etc.",
     serviceCode:'JUMP',
-    basePrice:149, // default shown before selection
-    // NEW: voltage options (required)
+    basePrice:149,
     voltages: [
       { id:'12v', label:'12V (cars, SUVs, utes)', price:149 },
       { id:'24v', label:'24V (trucks, buses)',   price:229 }
     ],
     stats:[
-      {number:'$149–$229',text:'fixed price'},
       {number:'30–90',text:'min arrival'},
       {number:'Free',text:'battery test'},
-      {number:'All',text:'makes & models'}
+      {number:'All',text:'makes & models'},
+      {number:'Insured',text:'service'}
     ],
     urgencyOptions:[
-      {id:'emergency',title:'Emergency Service',time:'30–90 minutes arrival',description:'Technician dispatched immediately'}
+      {id:'emergency',title:'Emergency Service',time:'30–90 minutes arrival',description:'Technician dispatched immediately',hidePrice:true}
     ],
     infoContent:`
       <h4>Our Jump Start Service Includes:</h4>
@@ -330,7 +353,7 @@ const serviceConfigs = {
       </ul>`,
     terms:[
       'Service includes professional jump start and battery health assessment',
-      'Fixed price of $149 (12V) or $229 (24V)',
+      'Price calculated based on your vehicle type',
       'Arrival times are approximate - we will SMS you when the technician is on the way',
       'Payment required via secure Stripe checkout'
     ]
@@ -344,14 +367,17 @@ const serviceConfigs = {
     step1Title:'Step 1: Tell us about your mechanical problem',
     detailsLabel:'Describe the symptoms and any issues:',
     detailsPlaceholder:"e.g., Engine won't start, warning lights, strange noises, overheating, etc.",
-    serviceCode:'DIAG', basePrice:249,
+    serviceCode:'DIAG',
+    basePrice:249,
     stats:[
-      {number:'$249',text:'fixed price'},{number:'30–90',text:'min arrival'},
-      {number:'Full',text:'diagnostic scan'},{number:'Expert',text:'assessment'}
+      {number:'30–90',text:'min arrival'},
+      {number:'Full',text:'diagnostic scan'},
+      {number:'Expert',text:'assessment'},
+      {number:'Written',text:'report'}
     ],
     urgencyOptions:[
-      {id:'emergency',title:'Emergency Diagnostic',time:'30–90 minutes arrival',description:'Immediate dispatch for urgent issues',price:249},
-      {id:'scheduled',title:'Scheduled Service',time:'Within 4 hours',description:'Book for later today',price:249}
+      {id:'emergency',title:'Emergency Diagnostic',time:'30–90 minutes arrival',description:'Immediate dispatch for urgent issues',hidePrice:true},
+      {id:'scheduled',title:'Scheduled Service',time:'Within 4 hours',description:'Book for later today',hidePrice:true}
     ],
     infoContent:`
       <h4>Our Diagnostic Service Includes:</h4>
@@ -364,7 +390,7 @@ const serviceConfigs = {
       </ul>`,
     terms:[
       'Service includes comprehensive diagnostic scanning and assessment',
-      'Fixed price of $249 - no surprises',
+      'Price calculated based on your requirements',
       'Written report provided with findings',
       'Arrival times are approximate due to the nature of mechanical work'
     ]
@@ -378,13 +404,16 @@ const serviceConfigs = {
     step1Title:'Step 1: Tell us about the fuel situation',
     detailsLabel:'Critical details about what happened:',
     detailsPlaceholder:'e.g., How much wrong fuel, have you started engine, petrol in diesel or vice versa, etc.',
-    serviceCode:'FUEL', basePrice:849,
+    serviceCode:'FUEL',
+    basePrice:849,
     stats:[
-      {number:'$849',text:'fixed price'},{number:'30–90',text:'min arrival'},
-      {number:'No',text:'engine damage'},{number:'100%',text:'insured service'}
+      {number:'30–90',text:'min arrival'},
+      {number:'No',text:'engine damage'},
+      {number:'100%',text:'insured service'},
+      {number:'Complete',text:'system flush'}
     ],
     urgencyOptions:[
-      {id:'emergency',title:'Emergency Extraction',time:'30–90 minutes arrival',description:'Critical - prevent engine damage',price:849}
+      {id:'emergency',title:'Emergency Extraction',time:'30–90 minutes arrival',description:'Critical - prevent engine damage',hidePrice:true}
     ],
     infoContent:`
       <h4>CRITICAL: DO NOT START THE ENGINE</h4>
@@ -397,19 +426,69 @@ const serviceConfigs = {
       </ul>`,
     terms:[
       'Emergency fuel extraction service - we come to your location',
-      'Fixed price of $849 regardless of fuel amount',
+      'Price calculated based on fuel amount and vehicle type',
       'Complete system flush and replacement with correct fuel',
       'Time-critical service to prevent engine damage'
+    ]
+  },
+  'winz': {
+    title:'WINZ Vehicle Repair Quote',
+    subtitle:'Get an instant quote for Work and Income assistance',
+    breadcrumb:'WINZ Quote',
+    bookingTitle:'WINZ Vehicle Repair Quote',
+    bookingDescription:'Approved WINZ supplier • Instant quotes for vehicle repairs',
+    step1Title:'Start Here.',
+    step2Title:'Step 2: Generate Your WINZ Quote',
+    detailsLabel:'2. Describe the problem in detail:',
+    detailsPlaceholder:'Please provide as much detail as possible about the issue...',
+    serviceCode:'WINZ',
+    basePrice:0,
+    hidePrice:true,
+    isWinz:true,
+    stats:[
+      {number:'WINZ',text:'approved supplier'},
+      {number:'Instant',text:'quote generation'},
+      {number:'Up to $400',text:'assistance available'},
+      {number:'1-2 days',text:'approval time'}
+    ],
+    emergencyTypes: [
+      {id:'battery',label:'Flat Battery',description:'Battery won\'t start, needs jump start or replacement'},
+      {id:'mechanical',label:'Mechanical Breakdown',description:'Engine problems, won\'t start, warning lights'},
+      {id:'misfuel',label:'Misfuel',description:'Wrong fuel in tank (petrol in diesel or vice versa)'}
+    ],
+    urgencyOptions:[
+      {id:'standard',title:'WINZ Quote Generation',time:'Instant digital quote',description:'Submit to Work and Income for approval',hidePrice:true}
+    ],
+    infoContent:`
+      <h4>How This Works:</h4>
+      <ul>
+        <li><strong>Select your emergency type</strong> from the options above</li>
+        <li><strong>Provide vehicle and contact details</strong></li>
+        <li><strong>Describe the problem</strong> in as much detail as possible</li>
+        <li><strong>Receive instant quote</strong> to submit to WINZ</li>
+        <li><strong>Take quote to WINZ</strong> or upload to MyMSD</li>
+      </ul>`,
+    terms:[
+      'Quote valid for 30 days from generation',
+      'Subject to WINZ approval and eligibility criteria',
+      'Service provided after WINZ approval confirmed',
+      'Mobile service - we come to your location'
     ]
   }
 };
 
 // Globals
 const POWER_AUTOMATE_URL = 'https://prod-35.australiasoutheast.logic.azure.com:443/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=PqXBWWjhoQG9vOCbPXcgc6sD7c43yJKV8kiftsdxoM8';
+const PRICING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
+const WINZ_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95fc801df59b4250a48919ace91c0276/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mFpTX4gPrz1u1DbdfF3YqHBnAsW3pnAAj-GWXWvBYYc';
+
 let selectedUrgency = null;
 let selectedUrgencyDetails = {};
 let selectedVoltageId = null;
 let selectedVoltagePrice = null;
+let selectedEmergencyType = null;
+let calculatedPrice = null;
+let winzQuoteGenerated = false;
 
 // Normalization helpers
 function sanitizePhone(val){ return (val || '').replace(/\D/g,''); }
@@ -437,35 +516,76 @@ function loadServiceConfig(serviceType){
   document.getElementById('detailsInput').placeholder = config.detailsPlaceholder;
   document.getElementById('serviceInfoBox').innerHTML = config.infoContent;
 
+  // Update header color for WINZ
+  const bookingHeader = document.getElementById('bookingHeader');
+  if (config.isWinz) {
+    bookingHeader.classList.add('winz');
+    document.getElementById('step1').classList.add('winz-step');
+  } else {
+    bookingHeader.classList.remove('winz');
+    document.getElementById('step1').classList.remove('winz-step');
+  }
+
+  // Stats container
   const statsContainer = document.getElementById('statsContent');
   statsContainer.innerHTML = config.stats.map(stat =>
     `<div class="stat-item"><span class="stat-number">${stat.number}</span>${stat.text}</div>`
   ).join('');
 
+  // Terms list
   const termsList = document.getElementById('termsList');
   termsList.innerHTML = config.terms.map(term => `<li>${term}</li>`).join('');
+
+  // Emergency selector for WINZ
+  const emergencySelector = document.getElementById('emergencySelector');
+  const emergencyOptions = document.getElementById('emergencyOptions');
+  if (config.isWinz && config.emergencyTypes) {
+    emergencySelector.style.display = 'block';
+    emergencyOptions.innerHTML = config.emergencyTypes.map(e => `
+      <div class="emergency-option" onclick="selectEmergencyType('${e.id}', this)">
+        <input type="radio" name="emergencyType" value="${e.id}" id="emergency_${e.id}">
+        <label for="emergency_${e.id}" class="emergency-label">${e.label}</label>
+      </div>
+    `).join('');
+  } else {
+    emergencySelector.style.display = 'none';
+  }
 
   // Voltage UI (jumpstart only)
   const vWrap = document.getElementById('voltageSelector');
   const vGrid = document.getElementById('voltageGrid');
-  if (config.voltages){
+  if (config.voltages && !config.isWinz){
     vWrap.style.display = 'block';
     vGrid.innerHTML = config.voltages.map(v => `
       <div class="voltage-card" data-id="${v.id}" onclick="selectVoltage('${v.id}', ${v.price}, this)">
         <div class="voltage-label">${v.label}</div>
-        <div class="voltage-price">$${v.price}</div>
+        <div class="voltage-price">Calculating...</div>
       </div>
     `).join('');
   } else {
     vWrap.style.display = 'none';
     vGrid.innerHTML = '';
   }
+
+  // Update button text for WINZ
+  if (config.isWinz) {
+    document.getElementById('nextBtn').textContent = 'Get Quote';
+    document.getElementById('nextBtn').classList.add('winz');
+    document.getElementById('step2Label').textContent = 'Quote';
+  } else {
+    document.getElementById('nextBtn').textContent = 'Next: Select Time';
+    document.getElementById('nextBtn').classList.remove('winz');
+    document.getElementById('step2Label').textContent = 'Scheduling';
+  }
+
+  // Reset state
   selectedVoltageId = null;
   selectedVoltagePrice = null;
-
-  // Reset progress
+  selectedEmergencyType = null;
   selectedUrgency = null;
   selectedUrgencyDetails = {};
+  calculatedPrice = null;
+  winzQuoteGenerated = false;
   document.querySelectorAll('.progress-step').forEach(el => el.classList.remove('active','completed'));
   document.getElementById('step1-progress').classList.add('active');
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
@@ -473,6 +593,13 @@ function loadServiceConfig(serviceType){
 
   window.currentService = serviceType;
   window.currentConfig = config;
+}
+
+function selectEmergencyType(id, el){
+  document.querySelectorAll('.emergency-option').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input[type="radio"]').checked = true;
+  selectedEmergencyType = id;
 }
 
 function selectVoltage(id, price, el){
@@ -489,11 +616,12 @@ function goToStep1(){
   document.getElementById('step1-progress').classList.add('active');
 }
 
-function goToStep2(){
+async function goToStep2(){
   const name = document.getElementById('nameInput').value.trim();
   const phone = document.getElementById('phoneInput').value.trim();
   const email = document.getElementById('emailInput').value.trim();
   const location = document.getElementById('locationInput').value.trim();
+  const details = document.getElementById('detailsInput').value.trim();
 
   // vehicle fields
   const regoRaw = document.getElementById('regoInput').value;
@@ -506,6 +634,7 @@ function goToStep2(){
   const yearDigits = yearRaw.replace(/\D/g,'');
   const regoSan = sanitizeRego(regoRaw);
 
+  // Validation
   if (!name){ alert('Please enter your full name'); document.getElementById('nameInput').focus(); return; }
   if (!phone){ alert('Please enter your phone number'); document.getElementById('phoneInput').focus(); return; }
   if (!phoneRegex.test(phone) || phone.replace(/\D/g,'').length < 9){
@@ -525,51 +654,180 @@ function goToStep2(){
   if (!makeRaw.trim()){ alert('Please enter the vehicle make'); document.getElementById('makeInput').focus(); return; }
   if (!modelRaw.trim()){ alert('Please enter the vehicle model'); document.getElementById('modelInput').focus(); return; }
 
-  // Require voltage selection for jumpstart
-  if (window.currentService === 'jumpstart' && !selectedVoltageId){
-    alert('Please select the battery voltage (12V or 24V) for jump start');
-    return;
+  // WINZ-specific validation
+  if (window.currentConfig.isWinz) {
+    if (!selectedEmergencyType) {
+      alert('Please select an emergency type');
+      return;
+    }
+    if (!details) {
+      alert('Please describe the problem in detail');
+      document.getElementById('detailsInput').focus();
+      return;
+    }
   }
 
+  // For non-WINZ services, fetch pricing first
+  if (!window.currentConfig.isWinz) {
+    const btn = document.getElementById('nextBtn');
+    btn.disabled = true;
+    btn.textContent = 'Calculating price...';
+    
+    try {
+      const pricingData = {
+        service: window.currentService,
+        location: location,
+        vehicleType: selectedVoltageId === '24v' ? 'truck' : 'car',
+        details: details || '',
+        rego: regoSan,
+        year: yearRaw,
+        make: makeRaw.trim(),
+        model: modelRaw.trim()
+      };
+
+      const response = await fetch(PRICING_API_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(pricingData)
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        calculatedPrice = result.price || window.currentConfig.basePrice;
+        
+        // Update voltage prices if jumpstart
+        if (window.currentService === 'jumpstart' && window.currentConfig.voltages) {
+          document.querySelectorAll('.voltage-card').forEach(card => {
+            const isV24 = card.dataset.id === '24v';
+            const price = isV24 ? Math.round(calculatedPrice * 1.5) : calculatedPrice;
+            card.querySelector('.voltage-price').textContent = `$${price}`;
+            if (card.dataset.id === selectedVoltageId) {
+              selectedVoltagePrice = price;
+            }
+          });
+        }
+      }
+    } catch (err) {
+      console.error('Pricing API error:', err);
+      calculatedPrice = window.currentConfig.basePrice;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Next: Select Time';
+    }
+  }
+
+  // Move to step 2
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step2').classList.add('active');
   document.getElementById('step1-progress').classList.add('completed');
   document.getElementById('step1-progress').classList.remove('active');
   document.getElementById('step2-progress').classList.add('active');
 
+  // Setup step 2 content
+  if (window.currentConfig.isWinz) {
+    document.getElementById('step2Title').textContent = window.currentConfig.step2Title || 'Step 2: Generate Your WINZ Quote';
+    document.getElementById('timingNotice').style.display = 'none';
+    document.getElementById('confirmTimeBtn').textContent = 'Generate Quote';
+    document.getElementById('confirmTimeBtn').classList.add('winz');
+  } else {
+    document.getElementById('step2Title').textContent = 'Step 2: When do you need service?';
+    document.getElementById('timingNotice').style.display = 'block';
+    document.getElementById('confirmTimeBtn').textContent = 'Continue';
+    document.getElementById('confirmTimeBtn').classList.remove('winz');
+  }
+
   // Setup urgency options
   const urgencyContainer = document.getElementById('urgencyOptions');
   urgencyContainer.innerHTML = window.currentConfig.urgencyOptions.map(o => {
-    const displayPrice = (window.currentService==='jumpstart')
-      ? (selectedVoltagePrice ?? window.currentConfig.basePrice)
-      : (o.price ?? window.currentConfig.basePrice);
+    const displayPrice = calculatedPrice || window.currentConfig.basePrice;
+    const priceHtml = (o.hidePrice || window.currentConfig.hidePrice) 
+      ? '<div class="urgency-price calculating">Price in quote</div>'
+      : `<div class="urgency-price">$${displayPrice}</div>`;
+    
     return `
       <div class="urgency-option" onclick="selectUrgency('${o.id}','${o.title}','${o.time}',${displayPrice},this)">
         <div class="urgency-title">${o.title}</div>
         <div class="urgency-time">${o.time}</div>
         <div class="urgency-description">${o.description}</div>
-        <div class="urgency-price">$${displayPrice}</div>
+        ${priceHtml}
       </div>`;
   }).join('');
+
+  // Auto-select for single option
+  if (window.currentConfig.urgencyOptions.length === 1) {
+    const firstOption = window.currentConfig.urgencyOptions[0];
+    selectUrgency(firstOption.id, firstOption.title, firstOption.time, calculatedPrice || 0, urgencyContainer.querySelector('.urgency-option'));
+  }
 }
 
 function selectUrgency(id, title, time, price, el){
   document.querySelectorAll('.urgency-option.selected').forEach(x => x.classList.remove('selected'));
   el.classList.add('selected');
   selectedUrgency = id;
-  // For jumpstart, lock price to selected voltage price
   selectedUrgencyDetails = {
     title,
     time,
-    price: (window.currentService==='jumpstart') ? (selectedVoltagePrice ?? price) : price
+    price: calculatedPrice || price
   };
   document.getElementById('confirmTimeBtn').disabled = false;
 }
 
-function goToStep3(){
+async function goToStep3(){
   if (!selectedUrgency){
     alert('Please select a service time');
     return;
+  }
+
+  // For WINZ, generate quote first
+  if (window.currentConfig.isWinz && !winzQuoteGenerated) {
+    const btn = document.getElementById('confirmTimeBtn');
+    btn.disabled = true;
+    btn.classList.add('processing');
+    btn.textContent = 'Generating Quote';
+
+    const quoteData = {
+      emergencyType: selectedEmergencyType,
+      name: sanitizeText(document.getElementById('nameInput').value),
+      phone: sanitizePhone(document.getElementById('phoneInput').value),
+      email: document.getElementById('emailInput').value.trim(),
+      location: sanitizeText(document.getElementById('locationInput').value),
+      rego: sanitizeRego(document.getElementById('regoInput').value),
+      year: document.getElementById('yearInput').value.trim(),
+      make: sanitizeText(document.getElementById('makeInput').value),
+      model: sanitizeText(document.getElementById('modelInput').value),
+      details: document.getElementById('detailsInput').value || '',
+      requestDate: new Date().toISOString()
+    };
+
+    try {
+      const response = await fetch(WINZ_API_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(quoteData)
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        calculatedPrice = result.quoteAmount || 299;
+        winzQuoteGenerated = true;
+        
+        // Store quote reference if provided
+        if (result.quoteReference) {
+          window.winzQuoteReference = result.quoteReference;
+        }
+      }
+    } catch (err) {
+      console.error('WINZ API error:', err);
+      alert('Unable to generate WINZ quote. Please try again or call 0800 769 000');
+      btn.disabled = false;
+      btn.classList.remove('processing');
+      btn.textContent = 'Generate Quote';
+      return;
+    } finally {
+      btn.disabled = false;
+      btn.classList.remove('processing');
+      btn.textContent = 'Generate Quote';
+    }
   }
 
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
@@ -582,10 +840,13 @@ function goToStep3(){
 }
 
 function getTotalPrice(){
-  if (window.currentService==='jumpstart'){
-    return selectedVoltagePrice ?? window.currentConfig.basePrice;
+  if (window.currentConfig.isWinz) {
+    return calculatedPrice || 0;
   }
-  return selectedUrgencyDetails.price || window.currentConfig.basePrice;
+  if (window.currentService === 'jumpstart' && selectedVoltagePrice) {
+    return selectedVoltagePrice;
+  }
+  return calculatedPrice || selectedUrgencyDetails.price || window.currentConfig.basePrice;
 }
 
 function updateSummary(){
@@ -595,18 +856,51 @@ function updateSummary(){
   document.getElementById('summaryService').textContent = window.currentConfig.title;
   document.getElementById('summaryLocation').textContent = location;
   document.getElementById('summaryPhone').textContent = sanitizePhone(phone);
-  document.getElementById('summaryUrgency').textContent = selectedUrgencyDetails.time || '';
+  
+  // Emergency type row for WINZ
+  const emergencyRow = document.getElementById('summaryEmergencyRow');
+  if (window.currentConfig.isWinz && selectedEmergencyType) {
+    emergencyRow.style.display = '';
+    const emergencyLabel = window.currentConfig.emergencyTypes.find(e => e.id === selectedEmergencyType)?.label || '';
+    document.getElementById('summaryEmergency').textContent = emergencyLabel;
+  } else {
+    emergencyRow.style.display = 'none';
+  }
 
-  // Voltage row visibility
+  // Voltage row
   const voltageRow = document.getElementById('summaryVoltageRow');
-  if (window.currentService==='jumpstart' && selectedVoltageId){
+  if (window.currentService === 'jumpstart' && selectedVoltageId && !window.currentConfig.isWinz){
     voltageRow.style.display = '';
-    document.getElementById('summaryVoltage').textContent = (selectedVoltageId==='12v'?'12V':'24V');
+    document.getElementById('summaryVoltage').textContent = (selectedVoltageId === '12v' ? '12V' : '24V');
   } else {
     voltageRow.style.display = 'none';
   }
 
-  document.getElementById('summaryPrice').textContent = `$${getTotalPrice()}`;
+  // Update urgency and price display
+  if (window.currentConfig.isWinz) {
+    document.getElementById('summaryUrgencyRow').style.display = 'none';
+    document.getElementById('summaryPrice').textContent = `$${getTotalPrice()} (quote for WINZ)`;
+    
+    // Update next steps for WINZ
+    document.getElementById('nextStepsBox').innerHTML = `
+      <h4>📋 Your WINZ Quote is Ready!</h4>
+      <p><strong>Quote Amount: $${getTotalPrice()}</strong></p>
+      ${window.winzQuoteReference ? `<p>Quote Reference: ${window.winzQuoteReference}</p>` : ''}
+      <p>1. Download or print your quote</p>
+      <p>2. Take it to your local WINZ office or upload to MyMSD</p>
+      <p>3. WINZ will process within 1-2 business days</p>
+      <p>4. Once approved, we'll contact you to arrange service</p>
+    `;
+    
+    // Update button for WINZ
+    document.getElementById('generatePaymentBtn').textContent = 'Download WINZ Quote';
+    document.getElementById('generatePaymentBtn').classList.add('winz');
+    document.getElementById('paymentNote').textContent = 'Quote will be emailed and available for download';
+  } else {
+    document.getElementById('summaryUrgencyRow').style.display = '';
+    document.getElementById('summaryUrgency').textContent = selectedUrgencyDetails.time || '';
+    document.getElementById('summaryPrice').textContent = `$${getTotalPrice()}`;
+  }
 }
 
 function toggleBookingButton(){
@@ -614,10 +908,9 @@ function toggleBookingButton(){
 }
 
 function buildRedirectUrl(){
-  const baseUrl = 'https://www.eek.nz/thanks';
+  const baseUrl = window.currentConfig.isWinz ? 'https://www.eek.nz/winz-quote-success' : 'https://www.eek.nz/thanks';
   const params = new URLSearchParams();
 
-  // Use sanitized values for consistent downstream matching
   const name = sanitizeText(document.getElementById('nameInput').value);
   const phone = sanitizePhone(document.getElementById('phoneInput').value);
   const email = document.getElementById('emailInput').value.trim();
@@ -640,13 +933,20 @@ function buildRedirectUrl(){
   params.append('serviceTitle', window.currentConfig.title);
   params.append('price', getTotalPrice());
   params.append('details', document.getElementById('detailsInput').value || '');
-  // NZ-aware timestamps for human/machine
   params.append('scheduledDate', fmtDateNZ(nowNZ()));
-  params.append('scheduledDateNZ', nowNZ().toLocaleString('sv-SE',{ timeZone:NZ_TZ, hour12:false })); // e.g. 2025-09-07 14:30:00
+  params.append('scheduledDateNZ', nowNZ().toLocaleString('sv-SE',{ timeZone:NZ_TZ, hour12:false }));
   params.append('timeWindow', selectedUrgencyDetails.time || '');
   params.append('urgencyLevel', selectedUrgency || '');
-  params.append('bookingTime', new Date().toISOString()); // keep a UTC ISO too
-  if (window.currentService==='jumpstart'){
+  params.append('bookingTime', new Date().toISOString());
+  
+  if (window.currentConfig.isWinz) {
+    params.append('emergencyType', selectedEmergencyType || '');
+    if (window.winzQuoteReference) {
+      params.append('quoteReference', window.winzQuoteReference);
+    }
+  }
+  
+  if (window.currentService === 'jumpstart' && !window.currentConfig.isWinz){
     params.append('batteryVoltage', selectedVoltageId || '');
   }
 
@@ -662,9 +962,19 @@ async function generatePaymentLink(){
 
   btn.disabled = true;
   btn.classList.add('processing');
-  btn.textContent='Generating Link';
+  
+  if (window.currentConfig.isWinz) {
+    btn.textContent = 'Preparing Quote';
+    
+    // For WINZ, redirect to success page with quote details
+    setTimeout(() => {
+      window.location.href = buildRedirectUrl();
+    }, 1500);
+    return;
+  }
+  
+  btn.textContent = 'Generating Link';
 
-  // Sanitize for payload
   const customerName = sanitizeText(document.getElementById('nameInput').value);
   const phone = sanitizePhone(document.getElementById('phoneInput').value);
   const email = document.getElementById('emailInput').value.trim();
@@ -693,9 +1003,9 @@ async function generatePaymentLink(){
       price: `${total}`,
       bookingDateTime: nowNZ().toLocaleString('en-NZ',{ timeZone:NZ_TZ }),
       scheduledDate: fmtDateNZ(nowNZ()),
-      scheduledTime: selectedUrgencyDetails.time || (window.currentService==='jumpstart' ? 'Emergency Response' : ''),
+      scheduledTime: selectedUrgencyDetails.time || '',
       urgencyLevel: selectedUrgency || 'emergency',
-      ...(window.currentService==='jumpstart' ? { batteryVoltage: (selectedVoltageId==='12v'?'12V':'24V') } : {})
+      ...(window.currentService === 'jumpstart' ? { batteryVoltage: (selectedVoltageId === '12v' ? '12V' : '24V') } : {})
     }
   };
 
