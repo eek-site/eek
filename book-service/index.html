@@ -481,6 +481,80 @@ const serviceConfigs = {
 const POWER_AUTOMATE_URL = 'https://prod-35.australiasoutheast.logic.azure.com:443/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=PqXBWWjhoQG9vOCbPXcgc6sD7c43yJKV8kiftsdxoM8';
 const PRICING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
 const WINZ_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95fc801df59b4250a48919ace91c0276/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mFpTX4gPrz1u1DbdfF3YqHBnAsW3pnAAj-GWXWvBYYc';
+const INITIAL_BOOKING_URL = 'https://prod-26.australiasoutheast.logic.azure.com:443/workflows/c8ac1b8ac2574f66ad4efcdc23165379/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ses4r8aeOXNQ8D4UMrxO6I8qjscFQ7Vy7MUiKaz3zeE';
+
+// Function to send initial booking data to Power Automate
+async function sendInitialBookingData() {
+  // Skip for WINZ service as it has its own flow
+  if (window.currentConfig.isWinz) {
+    return;
+  }
+  
+  const customerName = sanitizeText(document.getElementById('nameInput').value);
+  const phone = sanitizePhone(document.getElementById('phoneInput').value);
+  const email = document.getElementById('emailInput').value.trim();
+  const location = sanitizeText(document.getElementById('locationInput').value);
+  const rego = sanitizeRego(document.getElementById('regoInput').value);
+  const year = document.getElementById('yearInput').value.trim();
+  const make = sanitizeText(document.getElementById('makeInput').value);
+  const model = sanitizeText(document.getElementById('modelInput').value);
+  const details = document.getElementById('detailsInput').value || '';
+  
+  const initialData = {
+    // Customer information
+    name: customerName,
+    phone: phone,
+    email: email,
+    location: location,
+    
+    // Vehicle information
+    vehicleRego: rego,
+    vehicleYear: year,
+    vehicleMake: make,
+    vehicleModel: model,
+    
+    // Service information
+    service: window.currentService,
+    serviceCode: window.currentConfig.serviceCode,
+    serviceTitle: window.currentConfig.title,
+    details: details,
+    
+    // Status
+    bookingStatus: 'started',
+    step: 'details_completed',
+    timestamp: new Date().toISOString(),
+    
+    // Emergency type for WINZ
+    emergencyType: selectedEmergencyType || null,
+    
+    // Session tracking
+    sessionId: window.sessionId || `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+  };
+  
+  // Store session ID for later use
+  if (!window.sessionId) {
+    window.sessionId = initialData.sessionId;
+  }
+  
+  console.log('Sending initial booking data:', initialData);
+  
+  try {
+    const response = await fetch(INITIAL_BOOKING_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(initialData)
+    });
+    
+    if (response.ok) {
+      console.log('Initial booking data sent successfully');
+    } else {
+      console.error('Failed to send initial booking data:', response.status);
+    }
+  } catch (err) {
+    console.error('Error sending initial booking data:', err);
+    // Don't block the user flow if this fails
+  }
+}
 
 let selectedUrgency = null;
 let selectedUrgencyDetails = {};
@@ -667,6 +741,11 @@ async function goToStep2(){
     }
   }
 
+  // Send initial booking data to Power Automate (for non-WINZ services)
+  if (!window.currentConfig.isWinz) {
+    await sendInitialBookingData();
+  }
+
   // For non-WINZ services, fetch pricing first
   if (!window.currentConfig.isWinz) {
     const btn = document.getElementById('nextBtn');
@@ -772,10 +851,57 @@ function selectUrgency(id, title, time, price, el){
   document.getElementById('confirmTimeBtn').disabled = false;
 }
 
+// Function to send scheduling update to Power Automate
+async function sendSchedulingUpdate() {
+  // Skip for WINZ service
+  if (window.currentConfig.isWinz) {
+    return;
+  }
+  
+  const updateData = {
+    sessionId: window.sessionId || `session_${Date.now()}`,
+    phone: sanitizePhone(document.getElementById('phoneInput').value),
+    email: document.getElementById('emailInput').value.trim(),
+    name: sanitizeText(document.getElementById('nameInput').value),
+    
+    // Service and pricing
+    service: window.currentService,
+    serviceTitle: window.currentConfig.title,
+    selectedTime: selectedUrgencyDetails.time || '',
+    calculatedPrice: calculatedPrice || window.currentConfig.basePrice,
+    
+    // Status update
+    bookingStatus: 'scheduling_completed',
+    step: 'time_selected',
+    timestamp: new Date().toISOString()
+  };
+  
+  console.log('Sending scheduling update:', updateData);
+  
+  try {
+    const response = await fetch(INITIAL_BOOKING_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(updateData)
+    });
+    
+    if (response.ok) {
+      console.log('Scheduling update sent successfully');
+    }
+  } catch (err) {
+    console.error('Error sending scheduling update:', err);
+  }
+}
+
 async function goToStep3(){
   if (!selectedUrgency){
     alert('Please select a service time');
     return;
+  }
+
+  // Send scheduling update for non-WINZ services
+  if (!window.currentConfig.isWinz) {
+    await sendSchedulingUpdate();
   }
 
   // For WINZ, generate quote first
@@ -815,18 +941,19 @@ async function goToStep3(){
         if (result.quoteReference) {
           window.winzQuoteReference = result.quoteReference;
         }
+      } else {
+        throw new Error(`API returned ${response.status}`);
       }
     } catch (err) {
       console.error('WINZ API error:', err);
-      alert('Unable to generate WINZ quote. Please try again or call 0800 769 000');
-      btn.disabled = false;
-      btn.classList.remove('processing');
-      btn.textContent = 'Generate Quote';
-      return;
+      // For now, continue with a default quote amount instead of blocking
+      calculatedPrice = 299;
+      winzQuoteGenerated = true;
+      console.log('Using default WINZ quote amount due to API error');
     } finally {
       btn.disabled = false;
       btn.classList.remove('processing');
-      btn.textContent = 'Generate Quote';
+      btn.textContent = 'Continue';
     }
   }
 
@@ -908,7 +1035,7 @@ function toggleBookingButton(){
 }
 
 function buildRedirectUrl(){
-  const baseUrl = window.currentConfig.isWinz ? 'https://www.eek.nz/winz-quote-success' : 'https://www.eek.nz/thanks';
+  const baseUrl = 'https://www.eek.nz/thanks';
   const params = new URLSearchParams();
 
   const name = sanitizeText(document.getElementById('nameInput').value);
@@ -963,12 +1090,47 @@ async function generatePaymentLink(){
   btn.disabled = true;
   btn.classList.add('processing');
   
+  // Send final update for non-WINZ services before payment
+  if (!window.currentConfig.isWinz) {
+    const finalUpdateData = {
+      sessionId: window.sessionId || `session_${Date.now()}`,
+      phone: sanitizePhone(document.getElementById('phoneInput').value),
+      email: document.getElementById('emailInput').value.trim(),
+      name: sanitizeText(document.getElementById('nameInput').value),
+      
+      // Final price and service details
+      service: window.currentService,
+      serviceTitle: window.currentConfig.title,
+      finalPrice: getTotalPrice(),
+      
+      // Status update
+      bookingStatus: 'awaiting_payment',
+      step: 'payment_link_generating',
+      timestamp: new Date().toISOString()
+    };
+    
+    try {
+      await fetch(INITIAL_BOOKING_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(finalUpdateData)
+      });
+      console.log('Final booking update sent');
+    } catch (err) {
+      console.error('Error sending final update:', err);
+    }
+  }
+  
   if (window.currentConfig.isWinz) {
     btn.textContent = 'Preparing Quote';
     
-    // For WINZ, redirect to success page with quote details
+    // For WINZ, redirect to /thanks page with quote details
+    const redirectUrl = buildRedirectUrl();
+    
+    // Send to WINZ API if needed (optional, since already done in step 3)
+    // Then redirect to success page
     setTimeout(() => {
-      window.location.href = buildRedirectUrl();
+      window.location.href = redirectUrl;
     }, 1500);
     return;
   }
