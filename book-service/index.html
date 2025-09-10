@@ -1044,13 +1044,8 @@ async function goToStep3(){
     await sendSchedulingUpdate();
   }
 
-  // For WINZ, generate quote first
-  if (window.currentConfig.isWinz && !winzQuoteGenerated) {
-    const btn = document.getElementById('confirmTimeBtn');
-    btn.disabled = true;
-    btn.classList.add('processing');
-    btn.textContent = 'Generating Quote';
-
+  // For WINZ, just calculate the price but DON'T send to API yet
+  if (window.currentConfig.isWinz) {
     // Determine price based on emergency type - FIXED PRICES
     let quotePrice = 299; // default
     if (selectedEmergencyType === 'battery') {
@@ -1061,54 +1056,11 @@ async function goToStep3(){
       quotePrice = 849; // Fuel extraction price
     }
 
-    console.log('💰 WINZ Quote Price:', quotePrice);
+    console.log('💰 WINZ Quote Price calculated:', quotePrice);
     console.log('🚨 Emergency Type:', selectedEmergencyType);
-
-    const quoteData = {
-      emergencyType: selectedEmergencyType,
-      name: sanitizeText(document.getElementById('nameInput').value),
-      phone: sanitizePhone(document.getElementById('phoneInput').value),
-      email: document.getElementById('emailInput').value.trim(),
-      location: sanitizeText(document.getElementById('locationInput').value),
-      rego: sanitizeRego(document.getElementById('regoInput').value),
-      year: document.getElementById('yearInput').value.trim(),
-      make: sanitizeText(document.getElementById('makeInput').value),
-      model: sanitizeText(document.getElementById('modelInput').value),
-      details: document.getElementById('detailsInput').value || '',
-      requestDate: new Date().toISOString(),
-      quoteAmount: quotePrice
-    };
-
-    try {
-      const response = await fetch(WINZ_API_URL, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(quoteData)
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        calculatedPrice = result.quoteAmount || quotePrice;
-        winzQuoteGenerated = true;
-        
-        // Store quote reference if provided
-        if (result.quoteReference) {
-          window.winzQuoteReference = result.quoteReference;
-        }
-      } else {
-        throw new Error(`API returned ${response.status}`);
-      }
-    } catch (err) {
-      console.error('WINZ API error:', err);
-      // Use the calculated price based on emergency type
-      calculatedPrice = quotePrice;
-      winzQuoteGenerated = true;
-      console.log('Using calculated WINZ quote amount due to API error:', quotePrice);
-    } finally {
-      btn.disabled = false;
-      btn.classList.remove('processing');
-      btn.textContent = 'Continue';
-    }
+    
+    // Just set the price, don't call API yet
+    calculatedPrice = quotePrice;
   }
 
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
@@ -1244,6 +1196,72 @@ async function generatePaymentLink(){
   btn.disabled = true;
   btn.classList.add('processing');
   
+  // For WINZ, send the quote API call NOW after terms are accepted
+  if (window.currentConfig.isWinz) {
+    btn.textContent = 'Generating Quote';
+    
+    // Get the already calculated price
+    const quotePrice = calculatedPrice;
+    
+    console.log('📋 === WINZ QUOTE GENERATION (AFTER TERMS) === 📋');
+    console.log('💰 Quote Price:', quotePrice);
+    console.log('🚨 Emergency Type:', selectedEmergencyType);
+    console.log('✅ Terms accepted, sending to WINZ API');
+    
+    const quoteData = {
+      emergencyType: selectedEmergencyType,
+      name: sanitizeText(document.getElementById('nameInput').value),
+      phone: sanitizePhone(document.getElementById('phoneInput').value),
+      email: document.getElementById('emailInput').value.trim(),
+      location: sanitizeText(document.getElementById('locationInput').value),
+      rego: sanitizeRego(document.getElementById('regoInput').value),
+      year: document.getElementById('yearInput').value.trim(),
+      make: sanitizeText(document.getElementById('makeInput').value),
+      model: sanitizeText(document.getElementById('modelInput').value),
+      details: document.getElementById('detailsInput').value || '',
+      requestDate: new Date().toISOString(),
+      quoteAmount: quotePrice
+    };
+
+    try {
+      const response = await fetch(WINZ_API_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(quoteData)
+      });
+
+      console.log('📡 WINZ API Response Status:', response.status);
+      
+      if (response.ok) {
+        try {
+          const responseText = await response.text();
+          if (responseText) {
+            const result = JSON.parse(responseText);
+            if (result.quoteReference) {
+              window.winzQuoteReference = result.quoteReference;
+              console.log('✅ Quote reference received:', result.quoteReference);
+            }
+          }
+        } catch (parseError) {
+          console.log('ℹ️ WINZ API returned empty response (quote sent successfully)');
+        }
+      }
+    } catch (err) {
+      console.error('WINZ API error:', err);
+      console.log('⚠️ Continuing with quote generation despite API error');
+    }
+    
+    btn.textContent = 'Preparing Quote';
+    
+    // Redirect to /thanks page with quote details
+    const redirectUrl = buildRedirectUrl();
+    
+    setTimeout(() => {
+      window.location.href = redirectUrl;
+    }, 1500);
+    return;
+  }
+  
   // Send final update for non-WINZ services before payment
   if (!window.currentConfig.isWinz) {
     console.log('💳 === FINAL UPDATE BEFORE PAYMENT === 💳');
@@ -1314,20 +1332,6 @@ async function generatePaymentLink(){
       console.error('❌ Error sending final update:', err);
       console.log('⚠️ Continuing to payment generation...');
     }
-  }
-  
-  if (window.currentConfig.isWinz) {
-    btn.textContent = 'Preparing Quote';
-    
-    // For WINZ, redirect to /thanks page with quote details
-    const redirectUrl = buildRedirectUrl();
-    
-    // Send to WINZ API if needed (optional, since already done in step 3)
-    // Then redirect to success page
-    setTimeout(() => {
-      window.location.href = redirectUrl;
-    }, 1500);
-    return;
   }
   
   btn.textContent = 'Generating Link';
