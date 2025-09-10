@@ -424,6 +424,12 @@
 </div>
 
 <script>
+console.log('🚀 === PRE-PURCHASE INSPECTION FORM LOADED === 🚀');
+console.log('📌 Service: Pre-Purchase Vehicle Inspection');
+console.log('💵 Base pricing - Weekday: $199, Weekend: $289');
+console.log('🌐 Current URL:', window.location.href);
+console.log('📅 Loading date/time selector...');
+
 // --- NZ timezone helpers (force all "wall-clock" logic to Pacific/Auckland) ---
 const NZ_TZ = 'Pacific/Auckland';
 
@@ -461,12 +467,111 @@ function fmtDateNZ(d){
 
 const POWER_AUTOMATE_URL = 'https://prod-35.australiasoutheast.logic.azure.com:443/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=PqXBWWjhoQG9vOCbPXcgc6sD7c43yJKV8kiftsdxoM8';
 const PRICING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
+const INITIAL_BOOKING_URL = 'https://prod-26.australiasoutheast.logic.azure.com:443/workflows/c8ac1b8ac2574f66ad4efcdc23165379/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ses4r8aeOXNQ8D4UMrxO6I8qjscFQ7Vy7MUiKaz3zeE';
 
 let selectedDate = null;
 let selectedTimeWindow = null;
 let selectedVehicleType = 'standard';
 let vehicleTypeAddon = 0;
 let calculatedPrice = null;
+let sessionId = null;
+
+// Function to send initial booking data to Power Automate
+async function sendInitialBookingData() {
+  console.log('📤 === INITIAL INSPECTION BOOKING DATA WEBHOOK === 📤');
+  
+  const customerName = sanitizeText(document.getElementById('nameInput').value);
+  const phone = sanitizePhone(document.getElementById('phoneInput').value);
+  const email = document.getElementById('emailInput').value.trim();
+  const location = sanitizeText(document.getElementById('locationInput').value);
+  const rego = sanitizeRego(document.getElementById('regoInput').value);
+  const year = document.getElementById('yearInput').value.trim();
+  const make = sanitizeText(document.getElementById('makeInput').value);
+  const model = sanitizeText(document.getElementById('modelInput').value);
+  const details = document.getElementById('detailsInput').value || '';
+  const sellerName = sanitizeText(document.getElementById('sellerNameInput').value);
+  const sellerPhone = sanitizePhone(document.getElementById('sellerPhoneInput').value);
+  
+  const initialData = {
+    // Customer information - ALL FIELDS
+    name: customerName,
+    phone: phone,
+    email: email,
+    location: location,
+    
+    // Vehicle information - ALL FIELDS
+    vehicleRego: rego,
+    rego: rego,  // Include both formats
+    vehicleYear: year,
+    year: year,  // Include both formats
+    vehicleMake: make,
+    make: make,  // Include both formats
+    vehicleModel: model,
+    model: model,  // Include both formats
+    vehicleType: 'car',
+    
+    // Seller information
+    sellerName: sellerName,
+    sellerPhone: sellerPhone,
+    
+    // Service information
+    service: 'inspection',
+    serviceCode: 'INSP',
+    serviceTitle: 'Pre Purchase Vehicle Inspection',
+    details: details,
+    
+    // Status tracking
+    bookingStatus: 'started',
+    step: 'details_completed',
+    timestamp: new Date().toISOString(),
+    
+    // Session tracking
+    sessionId: sessionId || `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    
+    // Source tracking
+    source: 'inspection_booking_form',
+    formVersion: '2.0'
+  };
+  
+  // Store session ID for later use
+  if (!sessionId) {
+    sessionId = initialData.sessionId;
+    console.log('🔑 New session ID created:', sessionId);
+  }
+  
+  console.log('📋 Initial inspection data prepared:', initialData);
+  console.log('👤 Customer:', customerName, '|', phone, '|', email);
+  console.log('🚗 Vehicle:', rego, year, make, model);
+  console.log('👥 Seller:', sellerName, '|', sellerPhone);
+  console.log('🌐 Sending to webhook:', INITIAL_BOOKING_URL);
+  
+  try {
+    const response = await fetch(INITIAL_BOOKING_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(initialData)
+    });
+    
+    console.log('📡 Webhook response status:', response.status);
+    
+    if (response.ok) {
+      console.log('✅ Initial booking data sent successfully!');
+      console.log('📊 Customer captured for inspection:', {
+        name: customerName,
+        phone: phone,
+        email: email,
+        seller: sellerName
+      });
+    } else {
+      console.error('❌ Failed to send initial booking data');
+      console.error('Status:', response.status);
+    }
+  } catch (err) {
+    console.error('❌ Error sending initial booking data:', err);
+    console.error('Details:', err.message);
+    console.log('⚠️ Continuing despite webhook error...');
+  }
+}
 
 // Base pricing
 const BASE_PRICING = {
@@ -488,6 +593,8 @@ function goToStep1(){
 }
 
 async function goToStep2(){
+  console.log('📝 === STEP 1 → STEP 2 TRANSITION === 📝');
+  
   const name = document.getElementById('nameInput').value.trim();
   const phone = document.getElementById('phoneInput').value.trim();
   const email = document.getElementById('emailInput').value.trim();
@@ -498,6 +605,12 @@ async function goToStep2(){
   const year = document.getElementById('yearInput').value.trim();
   const make = document.getElementById('makeInput').value.trim();
   const model = document.getElementById('modelInput').value.trim();
+
+  console.log('🔍 Validating form data...');
+  console.log('👤 Buyer:', name, '|', phone, '|', email);
+  console.log('👥 Seller:', sellerName, '|', sellerPhone);
+  console.log('🚗 Vehicle:', rego, year, make, model);
+  console.log('📍 Location:', location);
 
   if (!name){ showNotification('Missing Name', 'Please enter your full name', 'error'); document.getElementById('nameInput').focus(); return; }
   if (!phone){ showNotification('Missing Phone', 'Please enter your phone number', 'error'); document.getElementById('phoneInput').focus(); return; }
@@ -511,10 +624,15 @@ async function goToStep2(){
   if (!sellerPhone){ showNotification('Missing Seller Phone', "Please enter the seller's phone number", 'error'); document.getElementById('sellerPhoneInput').focus(); return; }
   if (!phoneRegex.test(sellerPhone) || sellerPhone.replace(/\D/g,'').length < 9){ showNotification('Invalid Seller Phone', 'Please enter a valid seller phone number', 'error'); document.getElementById('sellerPhoneInput').focus(); return; }
 
+  // Send initial booking data to Power Automate
+  await sendInitialBookingData();
+
   // Fetch pricing from API
   const btn = document.getElementById('nextBtn');
   btn.disabled = true;
   btn.textContent = 'Calculating price...';
+  
+  console.log('📊 === PRICING API CALL === 📊');
   
   try {
     const pricingData = {
@@ -528,24 +646,55 @@ async function goToStep2(){
       model: model
     };
 
+    console.log('📋 Pricing request data:', pricingData);
+    console.log('🌐 Sending to:', PRICING_API_URL);
+
     const response = await fetch(PRICING_API_URL, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(pricingData)
     });
 
+    console.log('📡 Pricing API response status:', response.status);
+    console.log('📡 Response headers:', response.headers.get('content-type'));
+
     if (response.ok) {
-      const result = await response.json();
-      // Use the returned price if available, otherwise use base pricing
-      if (result.price) {
-        calculatedPrice = result.price;
+      // Check if response has content
+      const responseText = await response.text();
+      console.log('📊 Raw response from pricing API:', responseText || '(empty response)');
+      
+      if (responseText) {
+        try {
+          const result = JSON.parse(responseText);
+          console.log('✅ Parsed pricing response:', result);
+          // Use the returned price if available, otherwise use base pricing
+          if (result.price) {
+          // Use the returned price if available, otherwise use base pricing
+          if (result.price) {
+            calculatedPrice = result.price;
+            console.log('💰 API returned price:', calculatedPrice);
+          } else {
+            console.log('⚠️ No price in response, using base pricing');
+          }
+        } catch (parseError) {
+          console.log('⚠️ Response is not JSON, using default prices');
+          console.log('Parse error:', parseError.message);
+        }
+      } else {
+        console.log('ℹ️ Pricing API returned empty response (data received successfully)');
+        console.log('💰 Using base pricing - Weekday: $199, Weekend: $289');
       }
+    } else {
+      console.error('❌ Pricing API returned error status:', response.status);
     }
   } catch (err) {
-    console.error('Pricing API error:', err);
+    console.error('❌ Pricing API network error:', err);
+    console.error('Details:', err.message);
+    console.log('💰 Falling back to base pricing');
   } finally {
     btn.disabled = false;
     btn.textContent = 'Next: Select Time';
+    console.log('✅ Proceeding to step 2 - Date/Time selection');
   }
 
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
@@ -557,8 +706,103 @@ async function goToStep2(){
   initializeCalendars();
 }
 
-function goToStep3(){
-  if (!selectedDate || !selectedTimeWindow){ showNotification('Selection Required', 'Please select a date and time', 'error'); return; }
+// Function to send scheduling update to Power Automate
+async function sendSchedulingUpdate() {
+  console.log('⏰ === SCHEDULING UPDATE WEBHOOK === ⏰');
+  
+  const updateData = {
+    // Session tracking
+    sessionId: sessionId || `session_${Date.now()}`,
+    
+    // Customer information - ALL FIELDS (re-send everything)
+    name: sanitizeText(document.getElementById('nameInput').value),
+    phone: sanitizePhone(document.getElementById('phoneInput').value),
+    email: document.getElementById('emailInput').value.trim(),
+    location: sanitizeText(document.getElementById('locationInput').value),
+    
+    // Vehicle information - ALL FIELDS
+    vehicleRego: sanitizeRego(document.getElementById('regoInput').value),
+    rego: sanitizeRego(document.getElementById('regoInput').value),
+    vehicleYear: document.getElementById('yearInput').value.trim(),
+    year: document.getElementById('yearInput').value.trim(),
+    vehicleMake: sanitizeText(document.getElementById('makeInput').value),
+    make: sanitizeText(document.getElementById('makeInput').value),
+    vehicleModel: sanitizeText(document.getElementById('modelInput').value),
+    model: sanitizeText(document.getElementById('modelInput').value),
+    vehicleType: 'car',
+    
+    // Seller information
+    sellerName: sanitizeText(document.getElementById('sellerNameInput').value),
+    sellerPhone: sanitizePhone(document.getElementById('sellerPhoneInput').value),
+    
+    // Service and pricing
+    service: 'inspection',
+    serviceCode: 'INSP',
+    serviceTitle: 'Pre Purchase Vehicle Inspection',
+    details: document.getElementById('detailsInput').value || '',
+    
+    // Scheduling details
+    scheduledDate: selectedDate ? fmtDateNZ(selectedDate) : '',
+    scheduledDateISO: selectedDate ? selectedDate.toISOString() : '',
+    timeWindow: selectedTimeWindow ? selectedTimeWindow.range : '',
+    timeWindowId: selectedTimeWindow ? selectedTimeWindow.id : '',
+    calculatedPrice: calculatedPrice || (isWeekendNZ(selectedDate || nowNZ()) ? BASE_PRICING.weekend : BASE_PRICING.weekday),
+    
+    // Status update
+    bookingStatus: 'scheduling_completed',
+    step: 'date_time_selected',
+    timestamp: new Date().toISOString(),
+    
+    // Source tracking
+    source: 'inspection_booking_form',
+    formVersion: '2.0'
+  };
+  
+  console.log('📋 Scheduling update data prepared');
+  console.log('📅 Selected date:', selectedDate ? fmtDateNZ(selectedDate) : 'Not selected');
+  console.log('🕐 Selected time:', selectedTimeWindow ? selectedTimeWindow.range : 'Not selected');
+  console.log('💰 Price:', updateData.calculatedPrice);
+  console.log('🔑 Session ID:', sessionId);
+  console.log('🌐 Sending to webhook:', INITIAL_BOOKING_URL);
+  
+  try {
+    const response = await fetch(INITIAL_BOOKING_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(updateData)
+    });
+    
+    console.log('📡 Webhook response status:', response.status);
+    
+    if (response.ok) {
+      console.log('✅ Scheduling update sent successfully!');
+      console.log('📊 Step 2 completed for session:', sessionId);
+    } else {
+      console.error('❌ Failed to send scheduling update');
+      console.error('Status:', response.status);
+    }
+  } catch (err) {
+    console.error('❌ Error sending scheduling update:', err);
+    console.error('Details:', err.message);
+  }
+}
+
+async function goToStep3(){
+  console.log('📅 === STEP 2 → STEP 3 TRANSITION === 📅');
+  
+  if (!selectedDate || !selectedTimeWindow){ 
+    console.log('⚠️ Missing date or time selection');
+    showNotification('Selection Required', 'Please select a date and time', 'error'); 
+    return; 
+  }
+  
+  console.log('✅ Date selected:', fmtDateNZ(selectedDate));
+  console.log('✅ Time selected:', selectedTimeWindow.range);
+  console.log('📊 Moving to vehicle type selection');
+  
+  // Send scheduling update to Power Automate
+  await sendSchedulingUpdate();
+  
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step3').classList.add('active');
   document.getElementById('step2-progress').classList.add('completed');
@@ -566,7 +810,88 @@ function goToStep3(){
   document.getElementById('step3-progress').classList.add('active');
 }
 
-function goToStep4(){
+// Function to send vehicle type update to Power Automate
+async function sendVehicleTypeUpdate() {
+  const updateData = {
+    // Session tracking
+    sessionId: sessionId || `session_${Date.now()}`,
+    
+    // Customer information - ALL FIELDS (re-send everything)
+    name: sanitizeText(document.getElementById('nameInput').value),
+    phone: sanitizePhone(document.getElementById('phoneInput').value),
+    email: document.getElementById('emailInput').value.trim(),
+    location: sanitizeText(document.getElementById('locationInput').value),
+    
+    // Vehicle information - ALL FIELDS
+    vehicleRego: sanitizeRego(document.getElementById('regoInput').value),
+    rego: sanitizeRego(document.getElementById('regoInput').value),
+    vehicleYear: document.getElementById('yearInput').value.trim(),
+    year: document.getElementById('yearInput').value.trim(),
+    vehicleMake: sanitizeText(document.getElementById('makeInput').value),
+    make: sanitizeText(document.getElementById('makeInput').value),
+    vehicleModel: sanitizeText(document.getElementById('modelInput').value),
+    model: sanitizeText(document.getElementById('modelInput').value),
+    vehicleType: selectedVehicleType,
+    
+    // Seller information
+    sellerName: sanitizeText(document.getElementById('sellerNameInput').value),
+    sellerPhone: sanitizePhone(document.getElementById('sellerPhoneInput').value),
+    
+    // Service and pricing
+    service: 'inspection',
+    serviceCode: 'INSP',
+    serviceTitle: 'Pre Purchase Vehicle Inspection',
+    details: document.getElementById('detailsInput').value || '',
+    
+    // Vehicle type selection
+    selectedVehicleType: selectedVehicleType,
+    vehicleTypeAddon: vehicleTypeAddon,
+    
+    // Scheduling details
+    scheduledDate: selectedDate ? fmtDateNZ(selectedDate) : '',
+    scheduledDateISO: selectedDate ? selectedDate.toISOString() : '',
+    timeWindow: selectedTimeWindow ? selectedTimeWindow.range : '',
+    timeWindowId: selectedTimeWindow ? selectedTimeWindow.id : '',
+    
+    // Pricing
+    basePrice: calculatedPrice || (isWeekendNZ(selectedDate || nowNZ()) ? BASE_PRICING.weekend : BASE_PRICING.weekday),
+    vehicleAddonPrice: vehicleTypeAddon,
+    totalPrice: (calculatedPrice || (isWeekendNZ(selectedDate || nowNZ()) ? BASE_PRICING.weekend : BASE_PRICING.weekday)) + vehicleTypeAddon,
+    
+    // Status update
+    bookingStatus: 'vehicle_type_selected',
+    step: 'vehicle_type_completed',
+    timestamp: new Date().toISOString(),
+    
+    // Source tracking
+    source: 'inspection_booking_form',
+    formVersion: '2.0'
+  };
+  
+  console.log('Sending vehicle type update with ALL fields:', updateData);
+  
+  try {
+    const response = await fetch(INITIAL_BOOKING_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(updateData)
+    });
+    
+    if (response.ok) {
+      console.log('Vehicle type update sent successfully');
+      console.log('Data sent:', JSON.stringify(updateData, null, 2));
+    } else {
+      console.error('Failed to send vehicle type update:', response.status);
+    }
+  } catch (err) {
+    console.error('Error sending vehicle type update:', err);
+  }
+}
+
+async function goToStep4(){
+  // Send vehicle type update to Power Automate
+  await sendVehicleTypeUpdate();
+  
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step4').classList.add('active');
   document.getElementById('step3-progress').classList.add('completed');
@@ -750,9 +1075,16 @@ function buildRedirectUrl(){
 }
 
 async function generatePaymentLink(){
+  console.log('💳 === PAYMENT LINK GENERATION === 💳');
+  
   const btn = document.getElementById('generatePaymentBtn');
-  if (!document.getElementById('termsAgree').checked){ showNotification('Terms Required', 'Please accept the terms and conditions', 'error'); return; }
+  if (!document.getElementById('termsAgree').checked){ 
+    console.log('⚠️ Terms not accepted, blocking payment generation');
+    showNotification('Terms Required', 'Please accept the terms and conditions', 'error'); 
+    return; 
+  }
 
+  console.log('✅ Terms accepted, preparing payment link');
   btn.disabled = true; btn.classList.add('processing'); btn.textContent='Generating Link';
 
   const customerName = sanitizeText(document.getElementById('nameInput').value);
@@ -770,6 +1102,94 @@ async function generatePaymentLink(){
   let base = selectedTimeWindow ? selectedTimeWindow.price
     : (calculatedPrice || (isWeekendNZ(selectedDate || nowNZ()) ? BASE_PRICING.weekend : BASE_PRICING.weekday));
   const total = base + vehicleTypeAddon;
+  
+  console.log('💰 Price calculation:');
+  console.log('  Base price:', base);
+  console.log('  Vehicle addon:', vehicleTypeAddon);
+  console.log('  Total:', total);
+  console.log('👤 Customer:', customerName, '|', phone);
+  console.log('🚗 Vehicle:', vehicleDescription);
+  console.log('👥 Seller:', sellerName);
+
+  // Send final update to Power Automate before payment
+  console.log('📤 === FINAL UPDATE BEFORE PAYMENT === 📤');
+  const finalUpdateData = {
+    // Session tracking
+    sessionId: sessionId || `session_${Date.now()}`,
+    
+    // Customer information - ALL FIELDS
+    name: customerName,
+    phone: phone,
+    email: email,
+    location: location,
+    
+    // Vehicle information - ALL FIELDS
+    vehicleRego: rego,
+    rego: rego,
+    vehicleYear: year,
+    year: year,
+    vehicleMake: make,
+    make: make,
+    vehicleModel: model,
+    model: model,
+    vehicleType: selectedVehicleType,
+    vehicleDescription: vehicleDescription,
+    
+    // Seller information
+    sellerName: sellerName,
+    sellerPhone: sellerPhone,
+    
+    // Service details
+    service: 'inspection',
+    serviceCode: 'INSP',
+    serviceTitle: 'Pre Purchase Vehicle Inspection',
+    details: document.getElementById('detailsInput').value || '',
+    
+    // Final pricing
+    basePrice: base,
+    vehicleTypeAddon: vehicleTypeAddon,
+    finalPrice: total,
+    
+    // Scheduling details
+    scheduledDate: selectedDate ? fmtDateNZ(selectedDate) : '',
+    scheduledDateISO: selectedDate ? selectedDate.toISOString() : '',
+    timeWindow: selectedTimeWindow ? selectedTimeWindow.range : '',
+    
+    // Status update
+    bookingStatus: 'awaiting_payment',
+    step: 'payment_link_generating',
+    timestamp: new Date().toISOString(),
+    
+    // Source tracking
+    source: 'inspection_booking_form',
+    formVersion: '2.0'
+  };
+  
+  console.log('📋 Final update data prepared');
+  console.log('💰 Final price:', total);
+  console.log('🔑 Session ID:', sessionId);
+  console.log('🌐 Sending final update to:', INITIAL_BOOKING_URL);
+  
+  try {
+    const response = await fetch(INITIAL_BOOKING_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(finalUpdateData)
+    });
+    console.log('📡 Final update response status:', response.status);
+    if (response.ok) {
+      console.log('✅ Final booking update sent successfully!');
+      console.log('📊 Customer journey tracked from start to payment');
+    } else {
+      console.error('❌ Failed to send final update, status:', response.status);
+    }
+  } catch (err) {
+    console.error('❌ Error sending final update:', err);
+    console.error('Details:', err.message);
+    console.log('⚠️ Continuing to payment generation despite error...');
+  }
+
+  console.log('💳 === GENERATING STRIPE PAYMENT LINK === 💳');
 
   const bookingData = {
     rego: rego || 'Not provided',
