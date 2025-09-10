@@ -790,6 +790,7 @@ window.addEventListener('scroll', function() {
   }
 });
 
+// FIXED TOKEN PAYMENT FUNCTIONALITY
 (function () {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('token');
@@ -799,11 +800,29 @@ window.addEventListener('scroll', function() {
   const button = document.getElementById('payNowButton');
   const sticky = document.getElementById('stripePaymentSticky');
   const stickyCall = document.getElementById('stickyCallButton');
+  const stickyClosedButton = document.getElementById('stickyClosedButton');
 
   if (token && box && checkbox && button && sticky && stickyCall) {
+    // Show payment UI
     box.style.display = 'block';
     sticky.style.display = 'inline-block';
+    
+    // CRITICAL FIX: Hide ALL call-related buttons when payment token is present
     stickyCall.style.display = 'none';
+    if (stickyClosedButton) {
+      stickyClosedButton.style.display = 'none';
+    }
+    
+    // Also hide header call button and service call buttons
+    const headerButton = document.querySelector('header .cta-button');
+    if (headerButton) {
+      headerButton.style.display = 'none';
+    }
+    
+    const normalButtons = document.querySelectorAll('.normal-hours-btn');
+    normalButtons.forEach(btn => {
+      btn.style.display = 'none';
+    });
 
     sticky.href = '#stripePaymentBlock';
 
