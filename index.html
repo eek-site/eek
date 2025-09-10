@@ -624,6 +624,7 @@ async function updateHoursDisplay() {
   
   if (hasPaymentToken) {
     // Payment mode is active - only update banners, not buttons
+    // Keep header phone number visible for customer support during payment
     const closedBanner = document.getElementById('closedBanner');
     if (closedBanner) {
       closedBanner.style.display = 'none'; // Hide any banners in payment mode
@@ -826,11 +827,8 @@ window.addEventListener('scroll', function() {
       stickyClosedButton.style.display = 'none';
     }
     
-    // Also hide header call button and service call buttons
-    const headerButton = document.querySelector('header .cta-button');
-    if (headerButton) {
-      headerButton.style.display = 'none';
-    }
+    // Keep header call button visible - customers may need to call during payment
+    // Only hide the service section call buttons
     
     const normalButtons = document.querySelectorAll('.normal-hours-btn');
     normalButtons.forEach(btn => {
