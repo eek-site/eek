@@ -770,15 +770,39 @@ async function goToStep2(){
     
     try {
       const pricingData = {
+        // Customer information - INCLUDE ALL FIELDS
+        name: sanitizeText(name),
+        phone: sanitizePhone(phone),
+        email: email,
+        
+        // Service and location
         service: window.currentService,
+        serviceCode: window.currentConfig.serviceCode,
+        serviceTitle: window.currentConfig.title,
         location: location,
         vehicleType: selectedVoltageId === '24v' ? 'truck' : 'car',
         details: details || '',
+        
+        // Vehicle information - both naming conventions
         rego: regoSan,
         year: yearRaw,
         make: makeRaw.trim(),
-        model: modelRaw.trim()
+        model: modelRaw.trim(),
+        vehicleRego: regoSan,
+        vehicleYear: yearRaw,
+        vehicleMake: makeRaw.trim(),
+        vehicleModel: modelRaw.trim(),
+        
+        // Session tracking
+        sessionId: window.sessionId || `session_${Date.now()}`,
+        timestamp: new Date().toISOString(),
+        
+        // Source tracking
+        source: 'booking_form',
+        formVersion: '2.0'
       };
+
+      console.log('Sending to pricing API with full customer data:', pricingData);
 
       const response = await fetch(PRICING_API_URL, {
         method: 'POST',
