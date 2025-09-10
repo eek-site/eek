@@ -618,6 +618,19 @@ function isWithinBusinessHours() {
 
 // Update UI based on system status
 async function updateHoursDisplay() {
+  // CHECK IF PAYMENT TOKEN EXISTS - IF SO, DON'T MODIFY BUTTON VISIBILITY
+  const urlParams = new URLSearchParams(window.location.search);
+  const hasPaymentToken = urlParams.get('token');
+  
+  if (hasPaymentToken) {
+    // Payment mode is active - only update banners, not buttons
+    const closedBanner = document.getElementById('closedBanner');
+    if (closedBanner) {
+      closedBanner.style.display = 'none'; // Hide any banners in payment mode
+    }
+    return; // Exit early - don't modify any button visibility
+  }
+  
   const systemActive = await checkSystemStatus();
   const duringBusinessHours = isWithinBusinessHours();
   
