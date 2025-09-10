@@ -1051,6 +1051,19 @@ async function goToStep3(){
     btn.classList.add('processing');
     btn.textContent = 'Generating Quote';
 
+    // Determine price based on emergency type - FIXED PRICES
+    let quotePrice = 299; // default
+    if (selectedEmergencyType === 'battery') {
+      quotePrice = 149; // Jump start price
+    } else if (selectedEmergencyType === 'mechanical') {
+      quotePrice = 249; // Mechanical diagnostic price
+    } else if (selectedEmergencyType === 'misfuel') {
+      quotePrice = 849; // Fuel extraction price
+    }
+
+    console.log('💰 WINZ Quote Price:', quotePrice);
+    console.log('🚨 Emergency Type:', selectedEmergencyType);
+
     const quoteData = {
       emergencyType: selectedEmergencyType,
       name: sanitizeText(document.getElementById('nameInput').value),
@@ -1062,7 +1075,8 @@ async function goToStep3(){
       make: sanitizeText(document.getElementById('makeInput').value),
       model: sanitizeText(document.getElementById('modelInput').value),
       details: document.getElementById('detailsInput').value || '',
-      requestDate: new Date().toISOString()
+      requestDate: new Date().toISOString(),
+      quoteAmount: quotePrice
     };
 
     try {
@@ -1074,7 +1088,7 @@ async function goToStep3(){
 
       if (response.ok) {
         const result = await response.json();
-        calculatedPrice = result.quoteAmount || 299;
+        calculatedPrice = result.quoteAmount || quotePrice;
         winzQuoteGenerated = true;
         
         // Store quote reference if provided
@@ -1086,10 +1100,10 @@ async function goToStep3(){
       }
     } catch (err) {
       console.error('WINZ API error:', err);
-      // For now, continue with a default quote amount instead of blocking
-      calculatedPrice = 299;
+      // Use the calculated price based on emergency type
+      calculatedPrice = quotePrice;
       winzQuoteGenerated = true;
-      console.log('Using default WINZ quote amount due to API error');
+      console.log('Using calculated WINZ quote amount due to API error:', quotePrice);
     } finally {
       btn.disabled = false;
       btn.classList.remove('processing');
