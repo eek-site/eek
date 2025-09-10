@@ -479,7 +479,7 @@ const serviceConfigs = {
 
 // Globals
 // UPDATED: New Power Automate URL for Stripe payment link generation
-const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c8ac1b8ac2574f66ad4efcdc23165379/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kg6bffZKUQzUVR7jzpdTRaeudIa_T99V1hpzb_VlXPk';
+const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
 
 // For non-WINZ pre-sale notifications and pricing
 const PRICING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
@@ -1246,41 +1246,9 @@ async function generatePaymentLink(){
       body:JSON.stringify(bookingData)
     });
 
-    console.log('💳 Stripe API Response Status:', response.status);
-    console.log('💳 Response Headers:', response.headers.get('content-type'));
-
     if (response.ok){
-      // Check if response has content
-      const responseText = await response.text();
-      console.log('💳 Raw response from Stripe API:', responseText || '(empty response)');
-      
-      let result = null;
-      if (responseText) {
-        try {
-          result = JSON.parse(responseText);
-          console.log('✅ Parsed Stripe response:', result);
-        } catch (parseError) {
-          console.log('⚠️ Response is not JSON, checking headers for payment URL...');
-          // Check if URL is in headers (some Power Automate flows return URL in Location header)
-          const locationHeader = response.headers.get('location');
-          if (locationHeader && locationHeader.includes('stripe.com')) {
-            result = { url: locationHeader };
-            console.log('✅ Found Stripe URL in Location header:', locationHeader);
-          }
-        }
-      } else {
-        // Empty response - check headers for URL
-        const locationHeader = response.headers.get('location');
-        if (locationHeader && locationHeader.includes('stripe.com')) {
-          result = { url: locationHeader };
-          console.log('✅ Found Stripe URL in Location header:', locationHeader);
-        } else {
-          // If truly empty with no URL, show error
-          throw new Error('Payment link generated but URL not returned. Please contact support.');
-        }
-      }
-      
-      if (result && result.url){
+      const result = await response.json();
+      if (result.url){
         btn.classList.remove('processing');
         btn.style.display='none';
         const successDiv = document.createElement('div');
@@ -1295,7 +1263,7 @@ async function generatePaymentLink(){
         btn.parentElement.appendChild(successDiv);
         setTimeout(()=>{ window.location.href = result.url; },3000);
       } else {
-        throw new Error('No payment URL received in response');
+        throw new Error('No payment URL received');
       }
     } else {
       throw new Error('Server returned '+response.status);
