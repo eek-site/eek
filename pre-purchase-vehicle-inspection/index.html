@@ -696,6 +696,7 @@ async function sendSchedulingUpdate() {
     timeWindow: selectedTimeWindow ? selectedTimeWindow.range : '',
     timeWindowId: selectedTimeWindow ? selectedTimeWindow.id : '',
     calculatedPrice: calculatedPrice || (isWeekendNZ(selectedDate || nowNZ()) ? BASE_PRICING.weekend : BASE_PRICING.weekday),
+    price: calculatedPrice || (isWeekendNZ(selectedDate || nowNZ()) ? BASE_PRICING.weekend : BASE_PRICING.weekday),  // Add for Power Automate compatibility
     
     // Status update
     bookingStatus: 'scheduling_completed',
@@ -813,6 +814,7 @@ async function sendVehicleTypeUpdate() {
     basePrice: calculatedPrice || (isWeekendNZ(selectedDate || nowNZ()) ? BASE_PRICING.weekend : BASE_PRICING.weekday),
     vehicleAddonPrice: vehicleTypeAddon,
     totalPrice: (calculatedPrice || (isWeekendNZ(selectedDate || nowNZ()) ? BASE_PRICING.weekend : BASE_PRICING.weekday)) + vehicleTypeAddon,
+    price: (calculatedPrice || (isWeekendNZ(selectedDate || nowNZ()) ? BASE_PRICING.weekend : BASE_PRICING.weekday)) + vehicleTypeAddon,  // Add for Power Automate compatibility
     
     // Status update
     bookingStatus: 'vehicle_type_selected',
@@ -1118,6 +1120,7 @@ async function generatePaymentLink(){
     basePrice: base,
     vehicleTypeAddon: vehicleTypeAddon,
     finalPrice: total,
+    price: total,  // Add for Power Automate compatibility
     
     // Scheduling details
     scheduledDate: selectedDate ? fmtDateNZ(selectedDate) : '',
