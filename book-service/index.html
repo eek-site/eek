@@ -636,27 +636,39 @@ async function sendBookingUpdate(status) {
   }
   
   try {
-    if (window.currentConfig.isWinz && status === BOOKING_STATUS.WINZ_QUOTE_SENT) {
-      // Send to WINZ API
-      const response = await fetch(WINZ_API_URL, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
-      });
-      console.log(`%c✅ WINZ API Response: ${response.status}`, `color: ${STATUS_COLORS[status]}`);
-      return response;
-    } else if (!window.currentConfig.isWinz) {
-      // Send to pricing API for regular bookings
-      const response = await fetch(PRICING_API_URL, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
-      });
-      console.log(`%c✅ Pricing API Response: ${response.status}`, `color: ${STATUS_COLORS[status]}`);
-      return response;
-    }
+    // ALL status notifications go to the unified pricing API endpoint
+    const response = await fetch(PRICING_API_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    console.log(`%c✅ Unified API Response: ${response.status}`, `color: ${STATUS_COLORS[status]}`);
+    return response;
   } catch (err) {
     console.error(`%c❌ Error sending ${status} update:`, `color: #dc3545`, err);
+  }
+}
+
+// === SEPARATE WINZ QUOTE GENERATION ===
+// Sends final quote generation request to dedicated WINZ endpoint
+async function generateWinzQuote() {
+  const data = buildBookingData(BOOKING_STATUS.WINZ_QUOTE_SENT);
+  
+  console.log('📋 === WINZ QUOTE GENERATION === 📋');
+  console.log('🎯 Sending to dedicated WINZ quote endpoint');
+  console.log('💰 Quote data:', data);
+  
+  try {
+    const response = await fetch(WINZ_API_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    console.log(`✅ WINZ Quote API Response: ${response.status}`);
+    return response;
+  } catch (err) {
+    console.error('❌ Error generating WINZ quote:', err);
+    throw err;
   }
 }
 
@@ -1130,19 +1142,27 @@ async function generatePaymentLink(){
   // Send terms accepted status
   await sendBookingUpdate(BOOKING_STATUS.TERMS_ACCEPTED);
   
-  // For WINZ, send the quote API call NOW after terms are accepted
+  // For WINZ, send status notification first, then generate quote
   if (window.currentConfig.isWinz) {
     btn.textContent = 'Generating Quote';
     
-    console.log('📋 === WINZ QUOTE GENERATION (AFTER TERMS) === 📋');
+    console.log('📋 === WINZ QUOTE PROCESS === 📋');
     console.log('💰 Quote Price:', calculatedPrice);
     console.log('🚨 Emergency Type:', selectedEmergencyType);
-    console.log('✅ Terms accepted, sending to WINZ API');
+    console.log('✅ Terms accepted, processing WINZ quote');
     
     try {
+      // First: Send status notification to unified endpoint
+      console.log('📡 Step 1: Sending status notification to unified endpoint');
       await sendBookingUpdate(BOOKING_STATUS.WINZ_QUOTE_SENT);
+      
+      // Second: Generate actual quote via dedicated WINZ endpoint
+      console.log('📄 Step 2: Generating quote via dedicated WINZ endpoint');
+      await generateWinzQuote();
+      
+      console.log('✅ WINZ quote process completed successfully');
     } catch (err) {
-      console.error('WINZ API error:', err);
+      console.error('WINZ quote process error:', err);
       console.log('⚠️ Continuing with quote generation despite API error');
     }
     
