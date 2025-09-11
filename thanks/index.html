@@ -13,7 +13,7 @@
   <meta property="og:image" content="https://www.eek.nz/sweet-ride.png" />
 
   <!-- Security Headers -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://prod-22.australiasoutheast.logic.azure.com https://prod-26.australiasoutheast.logic.azure.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://prod-22.australiasoutheast.logic.azure.com https://prod-26.australiasoutheast.logic.azure.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
@@ -515,15 +515,31 @@
 
   <script>
     // Power Automate webhook URL for confirmed payments
-    const PAYMENT_CONFIRMED_WEBHOOK_URL = 'https://prod-26.australiasoutheast.logic.azure.com:443/workflows/c8ac1b8ac2574f66ad4efcdc23165379/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ses4r8aeOXNQ8D4UMrxO6I8qjscFQ7Vy7MUiKaz3zeE';
+    const PAYMENT_CONFIRMED_WEBHOOK_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c8ac1b8ac2574f66ad4efcdc23165379/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kg6bffZKUQzUVR7jzpdTRaeudIa_T99V1hpzb_VlXPk';
     
     // Extract URL parameters
     function getUrlParameters() {
       const params = new URLSearchParams(window.location.search);
+      
+      // Check for base64 encoded data first
+      const encodedData = params.get('d');
+      if (encodedData) {
+        try {
+          const jsonString = atob(encodedData);
+          return JSON.parse(jsonString);
+        } catch (error) {
+          console.error('Failed to decode booking data:', error);
+        }
+      }
+      
+      // Fall back to extracting individual parameters
       const data = {};
       for (const [key, value] of params) {
-        data[key] = decodeURIComponent(value);
+        if (key !== 'd') {
+          data[key] = decodeURIComponent(value);
+        }
       }
+      
       return data;
     }
     
