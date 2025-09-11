@@ -316,6 +316,38 @@ function fmtDateNZ(d){
   return d.toLocaleDateString('en-NZ',{timeZone:NZ_TZ,weekday:'long',year:'numeric',month:'long',day:'numeric'});
 }
 
+// === BOOKING STATUS CONSTANTS ===
+// Standardized booking status values for consistent tracking
+const BOOKING_STATUS = {
+  INITIAL: 'booking_started',           // Form loaded, user started entering details
+  DETAILS_COMPLETE: 'details_complete', // Step 1 completed, moving to step 2
+  TIME_SELECTED: 'time_selected',       // Step 2 completed, moving to step 3
+  TERMS_ACCEPTED: 'terms_accepted',     // Step 3, terms accepted, about to generate payment/quote
+  PAYMENT_PENDING: 'payment_pending',   // Payment link generated, awaiting payment
+  WINZ_QUOTE_SENT: 'winz_quote_sent'    // WINZ quote generated and sent
+};
+
+// === COLOR CODING SYSTEM ===
+// Visual status indicators for tracking customer journey progression
+const STATUS_COLORS = {
+  'booking_started': '#007bff',     // Blue - Initial engagement
+  'details_complete': '#28a745',    // Green - Progress made
+  'time_selected': '#fd7e14',       // Orange - Getting close
+  'terms_accepted': '#6f42c1',      // Purple - Ready to commit
+  'payment_pending': '#dc3545',     // Red - Critical action needed
+  'winz_quote_sent': '#20c997'      // Teal - Quote delivered
+};
+
+// Human-readable status descriptions
+const STATUS_DESCRIPTIONS = {
+  'booking_started': 'Customer started booking form',
+  'details_complete': 'Customer completed contact and vehicle details',
+  'time_selected': 'Customer selected service timing',
+  'terms_accepted': 'Customer accepted terms and conditions',
+  'payment_pending': 'Payment link generated, awaiting customer payment',
+  'winz_quote_sent': 'WINZ quote generated and sent to customer'
+};
+
 // Service Configurations
 const serviceConfigs = {
   'jumpstart': {
@@ -500,6 +532,104 @@ function sanitizePhone(val){ return (val || '').replace(/\D/g,''); }
 function sanitizeRego(val){ return (val || '').toUpperCase().replace(/\s+/g,''); }
 function sanitizeText(val){ return (val || '').trim().replace(/\s+/g,' '); }
 
+// === CONSISTENT DATA BUILDER ===
+// Builds consistent data structure for all API calls
+function buildBookingData(status) {
+  const baseData = {
+    // Session and tracking
+    sessionId: window.sessionId,
+    bookingStatus: status,
+    statusColor: STATUS_COLORS[status] || '#6c757d',
+    statusDescription: STATUS_DESCRIPTIONS[status] || 'Unknown status',
+    timestamp: new Date().toISOString(),
+    
+    // Customer information
+    name: sanitizeText(document.getElementById('nameInput').value),
+    phone: sanitizePhone(document.getElementById('phoneInput').value),
+    email: document.getElementById('emailInput').value.trim(),
+    location: sanitizeText(document.getElementById('locationInput').value),
+    details: document.getElementById('detailsInput').value || '',
+    
+    // Vehicle information
+    rego: sanitizeRego(document.getElementById('regoInput').value),
+    vehicleRego: sanitizeRego(document.getElementById('regoInput').value),
+    year: document.getElementById('yearInput').value.trim(),
+    vehicleYear: document.getElementById('yearInput').value.trim(),
+    make: sanitizeText(document.getElementById('makeInput').value),
+    vehicleMake: sanitizeText(document.getElementById('makeInput').value),
+    model: sanitizeText(document.getElementById('modelInput').value),
+    vehicleModel: sanitizeText(document.getElementById('modelInput').value),
+    vehicleType: selectedVoltageId === '24v' ? 'truck' : 'car',
+    
+    // Service information
+    service: window.currentService,
+    serviceCode: window.currentConfig.serviceCode,
+    serviceTitle: window.currentConfig.title,
+    
+    // Source tracking
+    source: 'booking_form',
+    formVersion: '2.0'
+  };
+
+  // Add service-specific data based on status
+  if (status === BOOKING_STATUS.TIME_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.PAYMENT_PENDING) {
+    baseData.selectedTime = selectedUrgencyDetails.time || '';
+    baseData.selectedUrgency = selectedUrgency;
+    baseData.urgencyTitle = selectedUrgencyDetails.title || '';
+    baseData.calculatedPrice = calculatedPrice || window.currentConfig.basePrice;
+    baseData.finalPrice = getTotalPrice();
+  }
+
+  // Add voltage for jumpstart services
+  if (window.currentService === 'jumpstart' && selectedVoltageId) {
+    baseData.selectedVoltage = selectedVoltageId;
+    baseData.batteryVoltage = selectedVoltageId === '12v' ? '12V' : '24V';
+  }
+
+  // Add emergency type for WINZ
+  if (window.currentConfig.isWinz && selectedEmergencyType) {
+    baseData.emergencyType = selectedEmergencyType;
+  }
+
+  return baseData;
+}
+
+// === CONSISTENT API CALLER ===
+// Sends booking data to appropriate API with consistent structure
+async function sendBookingUpdate(status) {
+  const data = buildBookingData(status);
+  
+  // Enhanced console logging with color coding
+  console.log(`%c📡 BOOKING STATUS UPDATE: ${status.toUpperCase()}`, `color: ${STATUS_COLORS[status]}; font-weight: bold; font-size: 14px;`);
+  console.log(`%c${STATUS_DESCRIPTIONS[status]}`, `color: ${STATUS_COLORS[status]}; font-style: italic;`);
+  console.log('📊 Complete booking data:', data);
+  console.log(`🎨 Status Color: ${STATUS_COLORS[status]}`);
+  
+  try {
+    if (window.currentConfig.isWinz && status === BOOKING_STATUS.WINZ_QUOTE_SENT) {
+      // Send to WINZ API
+      const response = await fetch(WINZ_API_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+      console.log(`%c✅ WINZ API Response: ${response.status}`, `color: ${STATUS_COLORS[status]}`);
+      return response;
+    } else if (!window.currentConfig.isWinz) {
+      // Send to pricing API for regular bookings
+      const response = await fetch(PRICING_API_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+      console.log(`%c✅ Pricing API Response: ${response.status}`, `color: ${STATUS_COLORS[status]}`);
+      return response;
+    }
+  } catch (err) {
+    console.error(`%c❌ Error sending ${status} update:`, `color: #dc3545`, err);
+  }
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', function(){
   console.log('🚀 === BOOKING FORM INITIALIZED === 🚀');
@@ -508,6 +638,10 @@ document.addEventListener('DOMContentLoaded', function(){
   console.log('📌 Service requested:', service);
   console.log('🌐 Current URL:', window.location.href);
   loadServiceConfig(service);
+  
+  // Send initial status
+  window.sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  sendBookingUpdate(BOOKING_STATUS.INITIAL);
 });
 
 function loadServiceConfig(serviceType){
@@ -609,7 +743,6 @@ function loadServiceConfig(serviceType){
 
   window.currentService = serviceType;
   window.currentConfig = config;
-  window.sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }
 
 function selectEmergencyType(id, el){
@@ -699,51 +832,9 @@ async function goToStep2(){
     btn.textContent = 'Calculating price...';
     
     try {
-      const pricingData = {
-        // Customer information
-        name: sanitizeText(name),
-        phone: sanitizePhone(phone),
-        email: email,
-        
-        // Service and location
-        service: window.currentService,
-        serviceCode: window.currentConfig.serviceCode,
-        serviceTitle: window.currentConfig.title,
-        location: location,
-        vehicleType: selectedVoltageId === '24v' ? 'truck' : 'car',
-        details: details || '',
-        
-        // Vehicle information
-        rego: regoSan,
-        year: yearRaw,
-        make: makeRaw.trim(),
-        model: modelRaw.trim(),
-        vehicleRego: regoSan,
-        vehicleYear: yearRaw,
-        vehicleMake: makeRaw.trim(),
-        vehicleModel: modelRaw.trim(),
-        
-        // Session tracking
-        sessionId: window.sessionId,
-        timestamp: new Date().toISOString(),
-        step: 'details_completed',
-        
-        // Source tracking
-        source: 'booking_form',
-        formVersion: '2.0'
-      };
-
-      console.log('💰 Calling pricing API with customer data:', pricingData);
-
-      const response = await fetch(PRICING_API_URL, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(pricingData)
-      });
-
-      console.log('📊 Pricing API Response Status:', response.status);
+      const response = await sendBookingUpdate(BOOKING_STATUS.DETAILS_COMPLETE);
       
-      if (response.ok) {
+      if (response && response.ok) {
         const responseText = await response.text();
         console.log('📊 Raw response from pricing API:', responseText || '(empty response)');
         
@@ -852,68 +943,8 @@ async function goToStep3(){
   console.log('✅ Time selected:', selectedUrgencyDetails.time);
   console.log('📊 Moving to confirmation step');
 
-  // Send scheduling update for non-WINZ services
-  if (!window.currentConfig.isWinz) {
-    try {
-      const updateData = {
-        // Session tracking
-        sessionId: window.sessionId,
-        
-        // Customer information
-        name: sanitizeText(document.getElementById('nameInput').value),
-        phone: sanitizePhone(document.getElementById('phoneInput').value),
-        email: document.getElementById('emailInput').value.trim(),
-        location: sanitizeText(document.getElementById('locationInput').value),
-        
-        // Vehicle information
-        vehicleRego: sanitizeRego(document.getElementById('regoInput').value),
-        rego: sanitizeRego(document.getElementById('regoInput').value),
-        vehicleYear: document.getElementById('yearInput').value.trim(),
-        year: document.getElementById('yearInput').value.trim(),
-        vehicleMake: sanitizeText(document.getElementById('makeInput').value),
-        make: sanitizeText(document.getElementById('makeInput').value),
-        vehicleModel: sanitizeText(document.getElementById('modelInput').value),
-        model: sanitizeText(document.getElementById('modelInput').value),
-        vehicleType: selectedVoltageId === '24v' ? 'truck' : 'car',
-        
-        // Service details
-        service: window.currentService,
-        serviceCode: window.currentConfig.serviceCode,
-        serviceTitle: window.currentConfig.title,
-        details: document.getElementById('detailsInput').value || '',
-        
-        // Scheduling details
-        selectedTime: selectedUrgencyDetails.time || '',
-        selectedUrgency: selectedUrgency,
-        urgencyTitle: selectedUrgencyDetails.title || '',
-        calculatedPrice: calculatedPrice || window.currentConfig.basePrice,
-        
-        // For jumpstart - voltage selection
-        selectedVoltage: selectedVoltageId || null,
-        
-        // Status update
-        bookingStatus: 'scheduling_completed',
-        step: 'time_selected',
-        timestamp: new Date().toISOString(),
-        
-        // Source tracking
-        source: 'booking_form',
-        formVersion: '2.0'
-      };
-      
-      console.log('📋 Sending scheduling update to pricing API');
-      
-      await fetch(PRICING_API_URL, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(updateData)
-      });
-      
-      console.log('✅ Scheduling update sent');
-    } catch (err) {
-      console.error('❌ Error sending scheduling update:', err);
-    }
-  }
+  // Send time selection update
+  await sendBookingUpdate(BOOKING_STATUS.TIME_SELECTED);
 
   // For WINZ, calculate the price but DON'T send to API yet
   if (window.currentConfig.isWinz) {
@@ -1066,55 +1097,20 @@ async function generatePaymentLink(){
   btn.disabled = true;
   btn.classList.add('processing');
   
+  // Send terms accepted status
+  await sendBookingUpdate(BOOKING_STATUS.TERMS_ACCEPTED);
+  
   // For WINZ, send the quote API call NOW after terms are accepted
   if (window.currentConfig.isWinz) {
     btn.textContent = 'Generating Quote';
     
-    const quotePrice = calculatedPrice;
-    
     console.log('📋 === WINZ QUOTE GENERATION (AFTER TERMS) === 📋');
-    console.log('💰 Quote Price:', quotePrice);
+    console.log('💰 Quote Price:', calculatedPrice);
     console.log('🚨 Emergency Type:', selectedEmergencyType);
     console.log('✅ Terms accepted, sending to WINZ API');
     
-    const quoteData = {
-      emergencyType: selectedEmergencyType,
-      name: sanitizeText(document.getElementById('nameInput').value),
-      phone: sanitizePhone(document.getElementById('phoneInput').value),
-      email: document.getElementById('emailInput').value.trim(),
-      location: sanitizeText(document.getElementById('locationInput').value),
-      rego: sanitizeRego(document.getElementById('regoInput').value),
-      year: document.getElementById('yearInput').value.trim(),
-      make: sanitizeText(document.getElementById('makeInput').value),
-      model: sanitizeText(document.getElementById('modelInput').value),
-      details: document.getElementById('detailsInput').value || '',
-      requestDate: new Date().toISOString(),
-      quoteAmount: quotePrice
-    };
-
     try {
-      const response = await fetch(WINZ_API_URL, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(quoteData)
-      });
-
-      console.log('📡 WINZ API Response Status:', response.status);
-      
-      if (response.ok) {
-        try {
-          const responseText = await response.text();
-          if (responseText) {
-            const result = JSON.parse(responseText);
-            if (result.quoteReference) {
-              window.winzQuoteReference = result.quoteReference;
-              console.log('✅ Quote reference received:', result.quoteReference);
-            }
-          }
-        } catch (parseError) {
-          console.log('ℹ️ WINZ API returned empty response (quote sent successfully)');
-        }
-      }
+      await sendBookingUpdate(BOOKING_STATUS.WINZ_QUOTE_SENT);
     } catch (err) {
       console.error('WINZ API error:', err);
       console.log('⚠️ Continuing with quote generation despite API error');
@@ -1132,76 +1128,7 @@ async function generatePaymentLink(){
   }
   
   // Send final update for non-WINZ services before payment
-  if (!window.currentConfig.isWinz) {
-    console.log('💳 === FINAL UPDATE BEFORE PAYMENT === 💳');
-    
-    const finalUpdateData = {
-      // Session tracking
-      sessionId: window.sessionId,
-      
-      // Customer information
-      name: sanitizeText(document.getElementById('nameInput').value),
-      phone: sanitizePhone(document.getElementById('phoneInput').value),
-      email: document.getElementById('emailInput').value.trim(),
-      location: sanitizeText(document.getElementById('locationInput').value),
-      
-      // Vehicle information
-      vehicleRego: sanitizeRego(document.getElementById('regoInput').value),
-      rego: sanitizeRego(document.getElementById('regoInput').value),
-      vehicleYear: document.getElementById('yearInput').value.trim(),
-      year: document.getElementById('yearInput').value.trim(),
-      vehicleMake: sanitizeText(document.getElementById('makeInput').value),
-      make: sanitizeText(document.getElementById('makeInput').value),
-      vehicleModel: sanitizeText(document.getElementById('modelInput').value),
-      model: sanitizeText(document.getElementById('modelInput').value),
-      vehicleType: selectedVoltageId === '24v' ? 'truck' : 'car',
-      
-      // Service details
-      service: window.currentService,
-      serviceCode: window.currentConfig.serviceCode,
-      serviceTitle: window.currentConfig.title,
-      details: document.getElementById('detailsInput').value || '',
-      
-      // Final price and service details
-      finalPrice: getTotalPrice(),
-      calculatedPrice: calculatedPrice || window.currentConfig.basePrice,
-      
-      // Scheduling details
-      selectedTime: selectedUrgencyDetails.time || '',
-      selectedUrgency: selectedUrgency,
-      urgencyTitle: selectedUrgencyDetails.title || '',
-      
-      // For jumpstart - voltage selection
-      selectedVoltage: selectedVoltageId || null,
-      
-      // Status update
-      bookingStatus: 'awaiting_payment',
-      step: 'payment_link_generating',
-      timestamp: new Date().toISOString(),
-      
-      // Source tracking
-      source: 'booking_form',
-      formVersion: '2.0'
-    };
-    
-    console.log('📋 Final update data prepared');
-    console.log('💰 Final price:', getTotalPrice());
-    console.log('🔑 Session ID:', window.sessionId);
-    console.log('🌐 Sending to pricing API:', PRICING_API_URL);
-    
-    try {
-      await fetch(PRICING_API_URL, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(finalUpdateData)
-      });
-      console.log('✅ Final booking update sent successfully!');
-      console.log('📊 Customer journey tracked from start to payment');
-    } catch (err) {
-      console.error('❌ Error sending final update:', err);
-      console.log('⚠️ Continuing to payment generation...');
-    }
-  }
+  await sendBookingUpdate(BOOKING_STATUS.PAYMENT_PENDING);
   
   btn.textContent = 'Generating Link';
 
