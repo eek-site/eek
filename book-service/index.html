@@ -586,9 +586,30 @@ function buildBookingData(status) {
     baseData.batteryVoltage = selectedVoltageId === '12v' ? '12V' : '24V';
   }
 
-  // Add emergency type for WINZ
+  // Add emergency type and pricing for WINZ
   if (window.currentConfig.isWinz && selectedEmergencyType) {
     baseData.emergencyType = selectedEmergencyType;
+    
+    // Add WINZ-specific pricing fields when quote is being generated
+    if (status === BOOKING_STATUS.TIME_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.WINZ_QUOTE_SENT) {
+      baseData.quoteAmount = calculatedPrice || getTotalPrice();
+      baseData.calculatedPrice = calculatedPrice || getTotalPrice();
+      baseData.finalPrice = calculatedPrice || getTotalPrice();
+      baseData.price = calculatedPrice || getTotalPrice(); // For Power Automate compatibility
+      
+      // Generate quote reference if not exists
+      if (!window.winzQuoteReference) {
+        window.winzQuoteReference = `WINZ-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
+      }
+      baseData.quoteReference = window.winzQuoteReference;
+      
+      // Add specific emergency type details
+      const emergencyConfig = window.currentConfig.emergencyTypes.find(e => e.id === selectedEmergencyType);
+      if (emergencyConfig) {
+        baseData.emergencyLabel = emergencyConfig.label;
+        baseData.emergencyDescription = emergencyConfig.description;
+      }
+    }
   }
 
   return baseData;
@@ -604,6 +625,15 @@ async function sendBookingUpdate(status) {
   console.log(`%c${STATUS_DESCRIPTIONS[status]}`, `color: ${STATUS_COLORS[status]}; font-style: italic;`);
   console.log('📊 Complete booking data:', data);
   console.log(`🎨 Status Color: ${STATUS_COLORS[status]}`);
+  
+  // Log WINZ-specific data
+  if (window.currentConfig.isWinz && (status === BOOKING_STATUS.WINZ_QUOTE_SENT || status === BOOKING_STATUS.TIME_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED)) {
+    console.log('💰 WINZ Quote Data:');
+    console.log('  - Quote Amount:', data.quoteAmount);
+    console.log('  - Quote Reference:', data.quoteReference);
+    console.log('  - Emergency Type:', data.emergencyType);
+    console.log('  - Emergency Label:', data.emergencyLabel);
+  }
   
   try {
     if (window.currentConfig.isWinz && status === BOOKING_STATUS.WINZ_QUOTE_SENT) {
