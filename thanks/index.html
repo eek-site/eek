@@ -606,42 +606,89 @@
   <script>
     // Enhanced data collection system
     console.log('🚀 === THANKS PAGE INITIALIZED === 🚀');
-    console.log('📊 Collecting all possible data points from URL and storage');
+    console.log('📊 Using SharePoint-based data retrieval');
 
-    // Power Automate webhook URL for confirmed payments
+    // Power Automate URLs
     const PAYMENT_CONFIRMED_WEBHOOK_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c8ac1b8ac2574f66ad4efcdc23165379/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kg6bffZKUQzUVR7jzpdTRaeudIa_T99V1hpzb_VlXPk';
+    const SHAREPOINT_LOOKUP_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c35b9414a0be42f88182ae7e6e409f1d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2ztt24wScLuAfifD0pjzovseRDKXBAEtCQtScGMgPqQ';
     
     // Global data object to store all collected information
     let bookingData = {};
     
-    // Extract URL parameters with comprehensive data collection
+    // Fetch booking data from SharePoint using booking ID
+    async function fetchBookingData(bookingId) {
+      console.log('🔍 === FETCHING BOOKING DATA FROM SHAREPOINT === 🔍');
+      console.log('📋 Booking ID:', bookingId);
+      
+      try {
+        const response = await fetch(SHAREPOINT_LOOKUP_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            bookingId: bookingId
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log('📊 SharePoint lookup response:', result);
+        
+        if (result.success && result.bookingData) {
+          // Decode the base64 booking data
+          const jsonString = atob(result.bookingData);
+          console.log('📊 Decoded JSON string:', jsonString);
+          const decodedData = JSON.parse(jsonString);
+          console.log('✅ Successfully decoded booking data:', decodedData);
+          
+          // Add SharePoint metadata
+          decodedData.sharepointId = bookingId;
+          decodedData.sharepointStatus = result.status;
+          decodedData.retrievedAt = new Date().toISOString();
+          
+          return decodedData;
+        } else {
+          console.error('❌ Invalid response from SharePoint lookup');
+          return null;
+        }
+      } catch (error) {
+        console.error('❌ Error fetching booking data:', error);
+        return null;
+      }
+    }
+    
+    // Fallback: Extract URL parameters for backward compatibility
     function getUrlParameters() {
       const params = new URLSearchParams(window.location.search);
       const data = {};
       
-      console.log('🔍 === EXTRACTING URL PARAMETERS === 🔍');
+      console.log('🔍 === FALLBACK: EXTRACTING URL PARAMETERS === 🔍');
       console.log('📄 Raw URL:', window.location.href);
       console.log('🔗 Search params:', window.location.search);
       
-      // Check for base64 encoded data first (from Power Automate)
+      // Check for base64 encoded data (legacy support)
       const encodedData = params.get('d');
       if (encodedData) {
-        console.log('📦 Found base64 encoded data:', encodedData);
+        console.log('📦 Found legacy base64 encoded data:', encodedData);
         try {
           const jsonString = atob(encodedData);
           console.log('📊 Decoded JSON string:', jsonString);
           const decodedData = JSON.parse(jsonString);
-          console.log('✅ Successfully decoded data:', decodedData);
+          console.log('✅ Successfully decoded legacy data:', decodedData);
           Object.assign(data, decodedData);
         } catch (error) {
-          console.error('❌ Failed to decode booking data:', error);
+          console.error('❌ Failed to decode legacy booking data:', error);
         }
       }
       
       // Extract all individual parameters
       console.log('📋 Extracting individual URL parameters...');
       for (const [key, value] of params) {
-        if (key !== 'd') {
+        if (key !== 'd' && key !== 'bookingId') {
           const decodedValue = decodeURIComponent(value);
           data[key] = decodedValue;
           console.log(`   ${key}: ${decodedValue}`);
@@ -671,7 +718,7 @@
         console.log('⚠️ No local storage data found or parse error:', error);
       }
       
-      console.log('📊 Final collected data:', data);
+      console.log('📊 Final fallback data:', data);
       return data;
     }
     
@@ -998,11 +1045,25 @@
     }
     
     // Initialize everything on page load
-    window.addEventListener('load', function() {
+    window.addEventListener('load', async function() {
       console.log('🚀 === PAGE LOAD INITIALIZATION === 🚀');
       
-      // Get all available booking data
-      bookingData = getUrlParameters();
+      // Check for booking ID first (new SharePoint approach)
+      const urlParams = new URLSearchParams(window.location.search);
+      const bookingId = urlParams.get('bookingId');
+      
+      if (bookingId) {
+        console.log('📋 Found booking ID, fetching from SharePoint:', bookingId);
+        bookingData = await fetchBookingData(bookingId);
+        
+        if (!bookingData) {
+          console.log('⚠️ SharePoint lookup failed, falling back to URL parameters');
+          bookingData = getUrlParameters();
+        }
+      } else {
+        console.log('📋 No booking ID found, using fallback methods');
+        bookingData = getUrlParameters();
+      }
       
       console.log('📊 Final consolidated booking data:', bookingData);
       
