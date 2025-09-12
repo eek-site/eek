@@ -821,9 +821,9 @@
       }
       
       // Customer Information
-      addDetail('Name', data.name);
-      addDetail('Phone', data.phone);
-      addDetail('Email', data.email);
+      addDetail('Name', data.name || data.customerName);
+      addDetail('Phone', data.phone || data.customerPhone);
+      addDetail('Email', data.email || data.customerEmail);
       
       // Service Information
       addDetail('Service', data.serviceTitle || data.service);
@@ -903,10 +903,13 @@
       }
       
       // Only send if this looks like new booking system data
-      if (!data.name || !data.phone) {
+      if (!(data.name || data.customerName) || !(data.phone || data.customerPhone)) {
         console.log('⚠️ Missing required data - skipping Power Automate flow');
         console.log('   Required: name, phone');
-        console.log('   Available:', { name: data.name, phone: data.phone });
+        console.log('   Available:', { 
+          name: data.name || data.customerName, 
+          phone: data.phone || data.customerPhone 
+        });
         return;
       }
       
