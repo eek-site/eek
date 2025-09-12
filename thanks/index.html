@@ -66,7 +66,7 @@
       padding: 40px;
       border-radius: 20px;
       box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-      max-width: 600px;
+      max-width: 700px;
       width: 100%;
       margin: 20px;
       position: relative;
@@ -131,6 +131,11 @@
       text-align: left;
     }
     
+    .booking-details.winz {
+      background: #f8f4ff;
+      border-color: #6f42c1;
+    }
+    
     .booking-details h3 {
       color: #0369a1;
       margin-bottom: 15px;
@@ -138,11 +143,16 @@
       text-align: center;
     }
     
+    .booking-details.winz h3 {
+      color: #6f42c1;
+    }
+    
     .detail-row {
       display: flex;
       justify-content: space-between;
       padding: 8px 0;
       border-bottom: 1px solid #e0f2fe;
+      align-items: flex-start;
     }
     
     .detail-row:last-child {
@@ -152,11 +162,15 @@
     .detail-label {
       font-weight: 600;
       color: #64748b;
+      flex-shrink: 0;
+      min-width: 120px;
     }
     
     .detail-value {
       color: #0f172a;
       text-align: right;
+      flex: 1;
+      word-break: break-word;
     }
     
     .next-steps {
@@ -167,6 +181,10 @@
       border-left: 5px solid #ff5500;
     }
     
+    .next-steps.winz {
+      border-left-color: #6f42c1;
+    }
+    
     .next-steps h2 {
       color: #ff5500;
       font-size: 1.5em;
@@ -175,6 +193,10 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
+    }
+    
+    .next-steps.winz h2 {
+      color: #6f42c1;
     }
     
     .steps-list {
@@ -207,6 +229,10 @@
       margin-top: 2px;
     }
     
+    .next-steps.winz .step-number {
+      background: #6f42c1;
+    }
+    
     .contact-info {
       background: #e3f2fd;
       padding: 25px;
@@ -215,10 +241,19 @@
       border: 2px solid #2196f3;
     }
     
+    .contact-info.winz {
+      background: #f0f4ff;
+      border-color: #6f42c1;
+    }
+    
     .contact-info h3 {
       color: #1976d2;
       margin-bottom: 15px;
       font-size: 1.3em;
+    }
+    
+    .contact-info.winz h3 {
+      color: #6f42c1;
     }
     
     .contact-buttons {
@@ -360,6 +395,35 @@
       display: none;
     }
     
+    .debug-panel {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 20px 0;
+      font-family: monospace;
+      font-size: 0.9em;
+      text-align: left;
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+    }
+    
+    .debug-toggle {
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8em;
+      margin: 10px 0;
+    }
+    
+    .debug-toggle:hover {
+      background: #545b62;
+    }
+    
     @media (max-width: 768px) {
       .success-card {
         padding: 30px 20px;
@@ -383,6 +447,19 @@
       .service-links {
         grid-template-columns: 1fr;
       }
+      
+      .detail-row {
+        flex-direction: column;
+        gap: 4px;
+      }
+      
+      .detail-label {
+        min-width: unset;
+      }
+      
+      .detail-value {
+        text-align: left;
+      }
     }
   </style>
 </head>
@@ -403,41 +480,62 @@
         ✓ Booking data sent successfully
       </div>
       
-      <!-- WINZ Quote Success Section (hidden by default) -->
-      <div id="winzSection" style="display: none;">
-        <div style="background: linear-gradient(135deg, #f0f9ff, #e0f2fe); padding: 25px; border-radius: 15px; margin: 20px 0; border: 2px solid #6f42c1;">
-          <h3 style="color: #6f42c1; margin-bottom: 15px;">📋 Your WINZ Quote Has Been Generated!</h3>
-          <div style="text-align: left; color: #333;">
-            <p style="margin: 10px 0;"><strong>✅ Quote successfully created and sent to your email</strong></p>
-            <p style="margin: 10px 0;">Quote Amount: <strong style="color: #6f42c1; font-size: 1.2em;" id="winzQuoteAmount">$299</strong></p>
-            <p style="margin: 10px 0;" id="winzReferenceRow">Reference: <span id="winzQuoteReference" style="font-family: monospace; background: #f0f0f0; padding: 2px 8px; border-radius: 4px;">-</span></p>
-          </div>
+      <!-- Debug Panel -->
+      <button class="debug-toggle" onclick="toggleDebugPanel()">Show Debug Info</button>
+      <div class="debug-panel" id="debugPanel">
+        <h4>Received Data (for debugging):</h4>
+        <pre id="debugContent">Loading...</pre>
+      </div>
+      
+      <!-- Comprehensive Booking Details -->
+      <div class="booking-details" id="bookingDetails">
+        <h3>📋 Your Booking Details</h3>
+        <div id="detailsContent">
+          <!-- Details will be populated by JavaScript -->
         </div>
-        
-        <div style="background: #fff3cd; padding: 20px; border-radius: 12px; margin: 20px 0; border: 2px solid #ffc107; text-align: left;">
-          <h4 style="color: #856404; margin: 0 0 15px 0;">📱 What Happens Next:</h4>
-          <ol style="margin: 0; padding-left: 20px; color: #856404;">
-            <li style="margin: 8px 0;"><strong>Check your email</strong> - Your quote has been sent to <span id="winzEmailAddress" style="font-weight: bold;">your email</span></li>
-            <li style="margin: 8px 0;"><strong>Check your phone</strong> - You'll receive an SMS to <span id="winzPhoneNumber" style="font-weight: bold;">your phone</span></li>
-            <li style="margin: 8px 0;"><strong>Take to WINZ</strong> - Present the quote at your local Work and Income office or upload to MyMSD</li>
-            <li style="margin: 8px 0;"><strong>Approval</strong> - WINZ typically processes within 1-2 business days</li>
-            <li style="margin: 8px 0;"><strong>Service</strong> - Once approved, call us on 0800 769 000 to arrange your vehicle repair</li>
+      </div>
+      
+      <!-- WINZ Quote Success Section -->
+      <div id="winzSection" style="display: none;">
+        <div class="next-steps winz">
+          <h2>📋 WINZ Quote Generated!</h2>
+          <ol class="steps-list">
+            <li>
+              <span class="step-number">✓</span>
+              <span>Your quote has been generated and sent to your email</span>
+            </li>
+            <li>
+              <span class="step-number">📱</span>
+              <span>Check your phone for SMS confirmation</span>
+            </li>
+            <li>
+              <span class="step-number">🏢</span>
+              <span>Present quote at WINZ office or upload to MyMSD</span>
+            </li>
+            <li>
+              <span class="step-number">⏳</span>
+              <span>WINZ processes within 1-2 business days</span>
+            </li>
+            <li>
+              <span class="step-number">🔧</span>
+              <span>Once approved, call us to arrange service</span>
+            </li>
           </ol>
         </div>
         
-        <div style="background: #e8f4f8; padding: 20px; border-radius: 12px; margin: 20px 0; border-left: 5px solid #0ea5e9; text-align: left;">
-          <h4 style="color: #0369a1; margin: 0 0 10px 0;">ℹ️ Important Information:</h4>
-          <ul style="margin: 0; padding-left: 20px; color: #333;">
-            <li style="margin: 8px 0;">Your quote is valid for <strong>30 days</strong> from today</li>
+        <div style="background: #fff3cd; padding: 20px; border-radius: 12px; margin: 20px 0; border: 2px solid #ffc107; text-align: left;">
+          <h4 style="color: #856404; margin: 0 0 15px 0;">📋 Important Information:</h4>
+          <ul style="margin: 0; padding-left: 20px; color: #856404;">
+            <li style="margin: 8px 0;">Your quote is valid for <strong>30 days</strong></li>
+            <li style="margin: 8px 0;">WINZ can provide up to <strong>$400</strong> for urgent vehicle repairs</li>
             <li style="margin: 8px 0;">You don't need to be on a benefit to receive assistance</li>
-            <li style="margin: 8px 0;">WINZ can provide up to $400 for urgent vehicle repairs</li>
-            <li style="margin: 8px 0;">If you need help with the WINZ process, call them on <strong>0800 559 009</strong></li>
+            <li style="margin: 8px 0;">Keep your quote reference number for WINZ</li>
           </ul>
         </div>
         
-        <div class="contact-info">
+        <div class="contact-info winz">
           <h3>📞 Need Help?</h3>
-          <p>If you haven't received your quote or need assistance with the WINZ process</p>
+          <p>If you need assistance with the WINZ process or haven't received your quote</p>
           <div class="contact-buttons">
             <a href="tel:0800769000" class="btn btn-winz" onclick="trackCall('winz_quote_help')">📞 Call Eek: 0800 769 000</a>
             <a href="tel:0800559009" class="btn btn-primary" onclick="trackCall('winz_help')">📞 Call WINZ: 0800 559 009</a>
@@ -445,16 +543,8 @@
         </div>
       </div>
       
-      <!-- Regular Payment Success Section (hidden by default) -->
+      <!-- Regular Payment Success Section -->
       <div id="paymentSection" style="display: none;">
-        <!-- Dynamic Booking Details -->
-        <div class="booking-details" id="bookingDetails" style="display: none;">
-          <h3>📋 Your Booking Details</h3>
-          <div id="detailsContent">
-            <!-- Details will be populated by JavaScript -->
-          </div>
-        </div>
-        
         <div class="estimated-time">
           <h3>✅ Service Confirmed</h3>
           <div class="time-display" id="timeDisplay">In Progress<div class="loading-animation"></div></div>
@@ -514,51 +604,127 @@
   </div>
 
   <script>
+    // Enhanced data collection system
+    console.log('🚀 === THANKS PAGE INITIALIZED === 🚀');
+    console.log('📊 Collecting all possible data points from URL and storage');
+
     // Power Automate webhook URL for confirmed payments
     const PAYMENT_CONFIRMED_WEBHOOK_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c8ac1b8ac2574f66ad4efcdc23165379/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kg6bffZKUQzUVR7jzpdTRaeudIa_T99V1hpzb_VlXPk';
     
-    // Extract URL parameters
+    // Global data object to store all collected information
+    let bookingData = {};
+    
+    // Extract URL parameters with comprehensive data collection
     function getUrlParameters() {
       const params = new URLSearchParams(window.location.search);
+      const data = {};
       
-      // Check for base64 encoded data first
+      console.log('🔍 === EXTRACTING URL PARAMETERS === 🔍');
+      console.log('📄 Raw URL:', window.location.href);
+      console.log('🔗 Search params:', window.location.search);
+      
+      // Check for base64 encoded data first (from Power Automate)
       const encodedData = params.get('d');
       if (encodedData) {
+        console.log('📦 Found base64 encoded data:', encodedData);
         try {
           const jsonString = atob(encodedData);
-          return JSON.parse(jsonString);
+          console.log('📊 Decoded JSON string:', jsonString);
+          const decodedData = JSON.parse(jsonString);
+          console.log('✅ Successfully decoded data:', decodedData);
+          Object.assign(data, decodedData);
         } catch (error) {
-          console.error('Failed to decode booking data:', error);
+          console.error('❌ Failed to decode booking data:', error);
         }
       }
       
-      // Fall back to extracting individual parameters
-      const data = {};
+      // Extract all individual parameters
+      console.log('📋 Extracting individual URL parameters...');
       for (const [key, value] of params) {
         if (key !== 'd') {
-          data[key] = decodeURIComponent(value);
+          const decodedValue = decodeURIComponent(value);
+          data[key] = decodedValue;
+          console.log(`   ${key}: ${decodedValue}`);
         }
       }
       
+      // Check for data in sessionStorage or localStorage
+      try {
+        const sessionData = sessionStorage.getItem('eekBookingData');
+        if (sessionData) {
+          console.log('💾 Found data in sessionStorage:', sessionData);
+          const parsedSessionData = JSON.parse(sessionData);
+          Object.assign(data, parsedSessionData);
+        }
+      } catch (error) {
+        console.log('⚠️ No session data found or parse error:', error);
+      }
+      
+      try {
+        const localData = localStorage.getItem('eekBookingData');
+        if (localData) {
+          console.log('💾 Found data in localStorage:', localData);
+          const parsedLocalData = JSON.parse(localData);
+          Object.assign(data, parsedLocalData);
+        }
+      } catch (error) {
+        console.log('⚠️ No local storage data found or parse error:', error);
+      }
+      
+      console.log('📊 Final collected data:', data);
       return data;
     }
     
-    // Check if this is a WINZ quote
+    // Comprehensive WINZ detection
     function isWinzQuote(data) {
-      return data.service === 'winz' || data.serviceCode === 'WINZ' || data.emergencyType;
+      const winzIndicators = [
+        data.service === 'winz',
+        data.serviceCode === 'WINZ',
+        data.emergencyType,
+        data.quoteReference && data.quoteReference.includes('WINZ'),
+        data.serviceTitle && data.serviceTitle.toLowerCase().includes('winz'),
+        data.isWinz === true,
+        data.isWinz === 'true'
+      ];
+      
+      const isWinz = winzIndicators.some(indicator => indicator);
+      console.log('🟣 WINZ detection check:', {
+        indicators: winzIndicators,
+        result: isWinz,
+        data: {
+          service: data.service,
+          serviceCode: data.serviceCode,
+          emergencyType: data.emergencyType,
+          quoteReference: data.quoteReference,
+          serviceTitle: data.serviceTitle,
+          isWinz: data.isWinz
+        }
+      });
+      
+      return isWinz;
     }
     
-    // Display appropriate content based on service type
+    // Display content based on service type
     function displayContent(data) {
+      console.log('🎨 === DISPLAYING CONTENT === 🎨');
+      
       const isWinz = isWinzQuote(data);
+      console.log('📋 Service type determined:', isWinz ? 'WINZ Quote' : 'Regular Payment');
+      
       const successCard = document.getElementById('successCard');
       const successIcon = document.getElementById('successIcon');
       const mainTitle = document.getElementById('mainTitle');
       const mainSubtitle = document.getElementById('mainSubtitle');
       const winzSection = document.getElementById('winzSection');
       const paymentSection = document.getElementById('paymentSection');
+      const bookingDetails = document.getElementById('bookingDetails');
+      
+      // Always show booking details
+      displayBookingDetails(data);
       
       if (isWinz) {
+        console.log('🟣 Configuring WINZ display...');
+        
         // WINZ Quote Display
         successCard.classList.add('winz');
         successIcon.classList.add('winz');
@@ -566,22 +732,7 @@
         mainTitle.classList.add('winz');
         mainTitle.textContent = 'WINZ Quote Generated!';
         mainSubtitle.textContent = 'Your quote has been sent to your email and phone';
-        
-        // Update WINZ specific details
-        if (data.price) {
-          document.getElementById('winzQuoteAmount').textContent = `$${data.price}`;
-        }
-        if (data.quoteReference) {
-          document.getElementById('winzQuoteReference').textContent = data.quoteReference;
-        } else {
-          document.getElementById('winzReferenceRow').style.display = 'none';
-        }
-        if (data.email) {
-          document.getElementById('winzEmailAddress').textContent = data.email;
-        }
-        if (data.phone) {
-          document.getElementById('winzPhoneNumber').textContent = data.phone;
-        }
+        bookingDetails.classList.add('winz');
         
         winzSection.style.display = 'block';
         paymentSection.style.display = 'none';
@@ -589,95 +740,135 @@
         // Update page title
         document.title = 'WINZ Quote Generated - Eek Mobile Mechanical';
       } else {
+        console.log('💳 Configuring regular payment display...');
+        
         // Regular Payment Success Display
         winzSection.style.display = 'none';
         paymentSection.style.display = 'block';
         
-        // Display booking details if available
-        if (data.name && data.phone) {
-          displayBookingDetails(data);
+        // Update service type text if available
+        if (data.serviceTitle) {
+          document.getElementById('serviceTypeText').textContent = `Your ${data.serviceTitle} is now being processed`;
         }
       }
     }
     
-    // Display booking details
+    // Comprehensive booking details display
     function displayBookingDetails(data) {
+      console.log('📋 === DISPLAYING BOOKING DETAILS === 📋');
+      console.log('📊 Available data for display:', data);
+      
       const detailsContainer = document.getElementById('bookingDetails');
       const detailsContent = document.getElementById('detailsContent');
       
-      if (!data.name || !data.phone) {
-        return;
-      }
-      
       let detailsHTML = '';
       
-      // Customer info
-      if (data.name) {
-        detailsHTML += `<div class="detail-row"><span class="detail-label">Name:</span><span class="detail-value">${data.name}</span></div>`;
-      }
-      if (data.phone) {
-        detailsHTML += `<div class="detail-row"><span class="detail-label">Phone:</span><span class="detail-value">${data.phone}</span></div>`;
-      }
-      if (data.email) {
-        detailsHTML += `<div class="detail-row"><span class="detail-label">Email:</span><span class="detail-value">${data.email}</span></div>`;
-      }
-      
-      // Vehicle info
-      if (data.rego || data.make || data.model) {
-        const vehicleInfo = [];
-        if (data.rego) vehicleInfo.push(data.rego);
-        if (data.year) vehicleInfo.push(data.year);
-        if (data.make) vehicleInfo.push(data.make);
-        if (data.model) vehicleInfo.push(data.model);
-        
-        if (vehicleInfo.length > 0) {
-          detailsHTML += `<div class="detail-row"><span class="detail-label">Vehicle:</span><span class="detail-value">${vehicleInfo.join(' ')}</span></div>`;
+      // Helper function to add detail row
+      function addDetail(label, value, condition = true) {
+        if (condition && value && value !== 'undefined' && value !== '') {
+          detailsHTML += `<div class="detail-row"><span class="detail-label">${label}:</span><span class="detail-value">${value}</span></div>`;
+          console.log(`   ✅ Added ${label}: ${value}`);
+        } else {
+          console.log(`   ❌ Skipped ${label}: ${value || 'empty/undefined'}`);
         }
       }
       
-      // Service info
-      if (data.serviceTitle) {
-        detailsHTML += `<div class="detail-row"><span class="detail-label">Service:</span><span class="detail-value">${data.serviceTitle}</span></div>`;
-      }
-      if (data.location) {
-        detailsHTML += `<div class="detail-row"><span class="detail-label">Location:</span><span class="detail-value">${data.location}</span></div>`;
+      // Customer Information
+      addDetail('Name', data.name);
+      addDetail('Phone', data.phone);
+      addDetail('Email', data.email);
+      
+      // Service Information
+      addDetail('Service', data.serviceTitle || data.service);
+      addDetail('Service Code', data.serviceCode);
+      addDetail('Location', data.location);
+      
+      // Vehicle Information
+      if (data.rego || data.vehicleRego) {
+        addDetail('Registration', data.rego || data.vehicleRego);
       }
       
-      // Price
-      if (data.price && !isWinzQuote(data)) {
-        detailsHTML += `<div class="detail-row"><span class="detail-label">Amount Paid:</span><span class="detail-value" style="font-weight: bold; color: #28a745;">$${data.price}</span></div>`;
+      // Build vehicle description
+      const vehicleInfo = [];
+      if (data.year || data.vehicleYear) vehicleInfo.push(data.year || data.vehicleYear);
+      if (data.make || data.vehicleMake) vehicleInfo.push(data.make || data.vehicleMake);
+      if (data.model || data.vehicleModel) vehicleInfo.push(data.model || data.vehicleModel);
+      
+      if (vehicleInfo.length > 0) {
+        addDetail('Vehicle', vehicleInfo.join(' '));
       }
+      
+      // Battery voltage for jump starts
+      addDetail('Battery Type', data.batteryVoltage || data.selectedVoltage);
+      
+      // Vehicle type for inspections
+      addDetail('Vehicle Type', data.vehicleType);
+      addDetail('Vehicle Addon', data.vehicleAddon ? `$${data.vehicleAddon}` : '');
+      
+      // WINZ-specific information
+      if (isWinzQuote(data)) {
+        addDetail('Emergency Type', data.emergencyType);
+        addDetail('Quote Reference', data.quoteReference);
+        addDetail('Quote Amount', data.price ? `$${data.price}` : '');
+      }
+      
+      // Seller information (for inspections)
+      addDetail('Seller Name', data.sellerName);
+      addDetail('Seller Phone', data.sellerPhone);
+      
+      // Scheduling Information
+      addDetail('Scheduled Date', data.scheduledDate);
+      addDetail('Time Window', data.timeWindow || data.selectedTime);
+      addDetail('Urgency Level', data.urgencyLevel || data.selectedUrgency);
+      
+      // Pricing Information (for non-WINZ services)
+      if (!isWinzQuote(data) && data.price) {
+        addDetail('Amount Paid', `$${data.price}`, true);
+      }
+      
+      // Additional Details
+      addDetail('Details', data.details);
+      addDetail('Booking Time', data.bookingTime);
+      
+      // Meta Information
+      addDetail('Session ID', data.sessionId);
+      addDetail('Source', data.source);
+      addDetail('Form Version', data.formVersion);
       
       if (detailsHTML) {
         detailsContent.innerHTML = detailsHTML;
         detailsContainer.style.display = 'block';
-      }
-      
-      // Update service type text if available
-      if (data.serviceTitle) {
-        document.getElementById('serviceTypeText').textContent = `Your ${data.serviceTitle} is now being processed`;
+        console.log('✅ Booking details populated successfully');
+      } else {
+        console.log('⚠️ No booking details to display');
+        detailsContainer.style.display = 'none';
       }
     }
     
     // Send data to Power Automate (only for regular payments, not WINZ)
     async function sendToPaymentConfirmedFlow(data) {
+      console.log('💳 === PAYMENT CONFIRMATION FLOW === 💳');
+      
       // Skip for WINZ quotes
       if (isWinzQuote(data)) {
-        console.log('WINZ quote - skipping payment confirmation flow');
+        console.log('🟣 WINZ quote detected - skipping payment confirmation flow');
         return;
       }
       
-      // Only send if this is from the new booking system
-      if (!data.name || !data.phone || !data.serviceTitle) {
-        console.log('Not from new booking system - skipping Power Automate flow');
+      // Only send if this looks like new booking system data
+      if (!data.name || !data.phone) {
+        console.log('⚠️ Missing required data - skipping Power Automate flow');
+        console.log('   Required: name, phone');
+        console.log('   Available:', { name: data.name, phone: data.phone });
         return;
       }
       
       // Add payment confirmation timestamp
       data.paymentConfirmedAt = new Date().toISOString();
       data.paymentStatus = 'confirmed';
+      data.pageLoadedAt = new Date().toISOString();
       
-      console.log('Sending booking data to Power Automate:', data);
+      console.log('📤 Sending enhanced booking data to Power Automate:', data);
       
       try {
         const response = await fetch(PAYMENT_CONFIRMED_WEBHOOK_URL, {
@@ -689,22 +880,45 @@
         });
         
         if (response.ok) {
-          console.log('Payment confirmation sent successfully to Power Automate');
+          console.log('✅ Payment confirmation sent successfully to Power Automate');
           const indicator = document.getElementById('processingIndicator');
           indicator.style.display = 'block';
-          indicator.textContent = '✓ Booking data sent successfully';
+          indicator.textContent = '✅ Booking data sent successfully';
           setTimeout(() => {
             indicator.style.display = 'none';
           }, 5000);
         } else {
-          console.error('Failed to send payment confirmation. Status:', response.status);
+          console.error('❌ Failed to send payment confirmation. Status:', response.status);
+          const responseText = await response.text();
+          console.error('Response:', responseText);
         }
       } catch (error) {
-        console.error('Error sending payment confirmation:', error);
+        console.error('❌ Error sending payment confirmation:', error);
       }
     }
     
+    // Debug panel functions
+    function toggleDebugPanel() {
+      const panel = document.getElementById('debugPanel');
+      const button = document.querySelector('.debug-toggle');
+      
+      if (panel.style.display === 'none' || panel.style.display === '') {
+        panel.style.display = 'block';
+        button.textContent = 'Hide Debug Info';
+        
+        // Update debug content
+        const debugContent = document.getElementById('debugContent');
+        debugContent.textContent = JSON.stringify(bookingData, null, 2);
+      } else {
+        panel.style.display = 'none';
+        button.textContent = 'Show Debug Info';
+      }
+    }
+    
+    // Enhanced tracking
     function trackCall(source) {
+      console.log('📞 Tracking call:', source);
+      
       if (typeof gtag !== 'undefined') {
         gtag('event', 'phone_call', {
           'event_category': 'Contact',
@@ -721,58 +935,96 @@
       }
     }
     
-    // Initialize on page load
-    window.addEventListener('load', function() {
-      // Get booking data from URL
-      const bookingData = getUrlParameters();
+    // Enhanced conversion tracking
+    function trackConversion(data) {
+      console.log('📊 === CONVERSION TRACKING === 📊');
       
-      // Display appropriate content
-      displayContent(bookingData);
+      const isWinz = isWinzQuote(data);
+      const price = parseFloat(data.price) || 0;
       
-      // Send to Power Automate (only for payments, not WINZ)
-      if (!isWinzQuote(bookingData)) {
-        sendToPaymentConfirmedFlow(bookingData);
-      }
+      console.log('Tracking data:', {
+        isWinz,
+        price,
+        serviceTitle: data.serviceTitle,
+        service: data.service
+      });
       
-      // Track appropriate conversion
+      // Google Analytics tracking
       if (typeof gtag !== 'undefined') {
-        if (isWinzQuote(bookingData)) {
+        if (isWinz) {
+          console.log('📊 Tracking WINZ lead generation');
           gtag('event', 'generate_lead', {
             'currency': 'NZD',
-            'value': parseFloat(bookingData.price) || 299,
-            'lead_source': 'WINZ Quote'
+            'value': price || 299,
+            'lead_source': 'WINZ Quote',
+            'service_type': data.emergencyType || 'unknown'
           });
-        } else if (bookingData.price) {
+        } else if (price > 0) {
+          console.log('📊 Tracking purchase conversion');
           gtag('event', 'purchase', {
-            'transaction_id': Date.now().toString(),
-            'value': parseFloat(bookingData.price) || 0,
+            'transaction_id': data.sessionId || Date.now().toString(),
+            'value': price,
             'currency': 'NZD',
             'items': [{
-              'item_name': bookingData.serviceTitle || 'Mobile Mechanic Service',
-              'price': parseFloat(bookingData.price) || 0,
-              'quantity': 1
+              'item_name': data.serviceTitle || 'Mobile Mechanic Service',
+              'price': price,
+              'quantity': 1,
+              'item_category': data.service || 'service'
             }]
           });
         }
       }
       
-      // Track with Reddit Pixel
+      // Reddit Pixel tracking
       if (typeof rdt !== 'undefined') {
-        if (isWinzQuote(bookingData)) {
+        if (isWinz) {
+          console.log('📊 Tracking WINZ lead with Reddit');
           rdt('track', 'Lead', {
             'customEventName': 'WINZ_Quote_Generated',
             'currency': 'NZD',
-            'value': parseFloat(bookingData.price) || 299,
+            'value': price || 299,
             'eventSource': 'winz_quote_success'
           });
-        } else {
+        } else if (price > 0) {
+          console.log('📊 Tracking purchase with Reddit');
           rdt('track', 'Purchase', {
             'customEventName': 'Payment_Completed',
             'currency': 'NZD',
-            'value': parseFloat(bookingData.price) || 0,
+            'value': price,
             'eventSource': 'thanks_page'
           });
         }
+      }
+    }
+    
+    // Initialize everything on page load
+    window.addEventListener('load', function() {
+      console.log('🚀 === PAGE LOAD INITIALIZATION === 🚀');
+      
+      // Get all available booking data
+      bookingData = getUrlParameters();
+      
+      console.log('📊 Final consolidated booking data:', bookingData);
+      
+      // Display appropriate content
+      displayContent(bookingData);
+      
+      // Send to Power Automate (only for payments, not WINZ)
+      sendToPaymentConfirmedFlow(bookingData);
+      
+      // Track conversions
+      trackConversion(bookingData);
+      
+      console.log('✅ Thanks page initialization completed');
+    });
+    
+    // Store data in session storage for debugging
+    window.addEventListener('load', function() {
+      try {
+        sessionStorage.setItem('lastThanksPageData', JSON.stringify(bookingData));
+        console.log('💾 Stored thanks page data in session storage');
+      } catch (error) {
+        console.log('⚠️ Could not store data in session storage:', error);
       }
     });
   </script>
