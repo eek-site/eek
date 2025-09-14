@@ -1128,9 +1128,14 @@ window.addEventListener('scroll', function() {
     }
 
     function postFirstVisit() {
-      if (alreadySentThisTab()) return;
+      if (alreadySentThisTab()) {
+        console.log('First visit already sent this tab session');
+        return;
+      }
 
       const gclid = getGCLIDForFirstVisit(); // Enhanced: Include GCLID
+      
+      console.log('Preparing first visit webhook with GCLID:', gclid);
 
       const payload = {
         eventType: "session_started",
@@ -1159,23 +1164,43 @@ window.addEventListener('scroll', function() {
         }
       };
 
+      console.log('Sending first visit payload:', payload);
+
       fetch(FIRST_VISIT_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
         keepalive: true,
         cache: "no-store"
-      }).then(() => {
-        console.log('First visit tracked with GCLID:', gclid);
-      }).catch(() => { /* swallow errors; analytics shouldn't block UX */ });
-
-      markSentOncePerTab();
+      }).then(response => {
+        console.log('First visit webhook response:', response.status, response.statusText);
+        if (response.ok) {
+          console.log('First visit tracked successfully with GCLID:', gclid);
+          markSentOncePerTab();
+        } else {
+          console.error('First visit webhook failed:', response.status);
+        }
+      }).catch(error => {
+        console.error('First visit webhook error:', error);
+      });
     }
 
+    // Multiple trigger points to ensure the webhook fires
+    function initFirstVisit() {
+      // Add small delay to ensure all other scripts are loaded
+      setTimeout(postFirstVisit, 100);
+    }
+
+    // Try multiple event listeners to catch the page load
     if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", postFirstVisit);
+      document.addEventListener("DOMContentLoaded", initFirstVisit);
+      window.addEventListener("load", initFirstVisit);
+    } else if (document.readyState === "interactive") {
+      document.addEventListener("DOMContentLoaded", initFirstVisit);
+      window.addEventListener("load", initFirstVisit);
     } else {
-      postFirstVisit();
+      // Document already loaded
+      initFirstVisit();
     }
   })();
 </script>
