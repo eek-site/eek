@@ -571,6 +571,100 @@ font-src 'self' data:;">
 <a class="sticky-call" href="#closedBanner" id="stickyClosedButton" style="display: none; background: #666;">🕐 View Hours</a>
 
 <script>
+// IMMEDIATE FIRST VISIT TRACKING - NO DEPENDENCIES
+(function() {
+  const FIRST_VISIT_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
+  
+  console.log('🔥 FIRST VISIT SCRIPT EXECUTING IMMEDIATELY');
+  
+  // Check if already sent this session
+  if (sessionStorage.getItem("eek_first_visit_sent") === "1") {
+    console.log('❌ First visit already sent this session');
+    return;
+  }
+  
+  // Get or create session ID
+  let sessionId = localStorage.getItem("eek_session_id");
+  if (!sessionId) {
+    sessionId = "session_" + Date.now() + "_" + Math.random().toString(36).slice(2, 11);
+    localStorage.setItem("eek_session_id", sessionId);
+    console.log('✅ Created new session ID:', sessionId);
+  } else {
+    console.log('✅ Using existing session ID:', sessionId);
+  }
+  
+  // Get GCLID
+  const urlParams = new URLSearchParams(location.search);
+  let gclid = urlParams.get("gclid");
+  if (gclid) {
+    localStorage.setItem("eek_gclid", gclid);
+    localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
+    console.log('✅ GCLID captured and stored:', gclid);
+  } else {
+    gclid = localStorage.getItem("eek_gclid");
+    console.log('📋 Using stored GCLID:', gclid);
+  }
+  
+  // Build payload
+  const payload = {
+    eventType: "session_started",
+    timestamp: new Date().toISOString(),
+    sessionId: sessionId,
+    gclid: gclid,
+    site: {
+      domain: location.hostname,
+      url: location.href,
+      path: location.pathname,
+      query: location.search ? location.search.slice(1) : "",
+      title: document.title,
+      referrer: document.referrer || null
+    },
+    utm: {
+      source: urlParams.get("utm_source") || null,
+      medium: urlParams.get("utm_medium") || null,
+      campaign: urlParams.get("utm_campaign") || null,
+      term: urlParams.get("utm_term") || null,
+      content: urlParams.get("utm_content") || null,
+      gclid: gclid,
+      msclkid: urlParams.get("msclkid") || null,
+      fbclid: urlParams.get("fbclid") || null,
+      rdtclid: urlParams.get("rdtclid") || null
+    },
+    device: {
+      userAgent: navigator.userAgent,
+      platform: navigator.platform || null,
+      language: navigator.language || null,
+      mobile: /Mobi|Android/i.test(navigator.userAgent),
+      screen: {
+        width: (window.screen && window.screen.width) || null,
+        height: (window.screen && window.screen.height) || null,
+        pixelRatio: window.devicePixelRatio || 1
+      }
+    }
+  };
+  
+  console.log('🚀 SENDING FIRST VISIT WEBHOOK NOW:', payload);
+  
+  // Send webhook immediately
+  fetch(FIRST_VISIT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+    keepalive: true,
+    cache: "no-store"
+  }).then(response => {
+    console.log('✅ FIRST VISIT WEBHOOK SUCCESS:', response.status, response.statusText);
+    if (response.ok) {
+      sessionStorage.setItem("eek_first_visit_sent", "1");
+      console.log('✅ Marked as sent for this session');
+    } else {
+      console.error('❌ FIRST VISIT WEBHOOK FAILED:', response.status);
+    }
+  }).catch(error => {
+    console.error('❌ FIRST VISIT WEBHOOK ERROR:', error);
+  });
+})();
+
 // Dynamic phone number based on traffic source
 function getDisplayPhoneNumber() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -1072,137 +1166,6 @@ window.addEventListener('scroll', function() {
     });
   }
 })();
-</script>
-
-<script>
-  // === ENHANCED FIRST VISIT WEBHOOK WITH GCLID ===
-  (function () {
-    const FIRST_VISIT_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
-
-    // Create or reuse a sessionId (shared across pages/tabs for this browser)
-    function getOrCreateSessionId() {
-      let sid = localStorage.getItem("eek_session_id");
-      if (!sid) {
-        sid = "session_" + Date.now() + "_" + Math.random().toString(36).slice(2, 11);
-        localStorage.setItem("eek_session_id", sid);
-      }
-      return sid;
-    }
-
-    function markSentOncePerTab() {
-      sessionStorage.setItem("eek_first_visit_sent", "1");
-    }
-    function alreadySentThisTab() {
-      return sessionStorage.getItem("eek_first_visit_sent") === "1";
-    }
-
-    function getUTM() {
-      const q = new URLSearchParams(location.search);
-      return {
-        source: q.get("utm_source") || null,
-        medium: q.get("utm_medium") || null,
-        campaign: q.get("utm_campaign") || null,
-        term: q.get("utm_term") || null,
-        content: q.get("utm_content") || null,
-        gclid: q.get("gclid") || null,
-        msclkid: q.get("msclkid") || null,
-        fbclid: q.get("fbclid") || null,
-        rdtclid: q.get("rdtclid") || null
-      };
-    }
-
-    // Enhanced: Get GCLID for first visit tracking
-    function getGCLIDForFirstVisit() {
-      const urlParams = new URLSearchParams(location.search);
-      let gclid = urlParams.get("gclid");
-      
-      if (gclid) {
-        // Store for later use
-        localStorage.setItem("eek_gclid", gclid);
-        localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
-        return gclid;
-      }
-      
-      // Check if we have a stored GCLID
-      return localStorage.getItem("eek_gclid") || null;
-    }
-
-    function postFirstVisit() {
-      if (alreadySentThisTab()) {
-        console.log('First visit already sent this tab session');
-        return;
-      }
-
-      const gclid = getGCLIDForFirstVisit(); // Enhanced: Include GCLID
-      
-      console.log('Preparing first visit webhook with GCLID:', gclid);
-
-      const payload = {
-        eventType: "session_started",
-        timestamp: new Date().toISOString(),
-        sessionId: getOrCreateSessionId(),
-        gclid: gclid, // Enhanced: Include GCLID in first visit tracking
-        site: {
-          domain: location.hostname,
-          url: location.href,
-          path: location.pathname,
-          query: location.search ? location.search.slice(1) : "",
-          title: document.title,
-          referrer: document.referrer || null
-        },
-        utm: getUTM(),
-        device: {
-          userAgent: navigator.userAgent,
-          platform: navigator.platform || null,
-          language: navigator.language || null,
-          mobile: /Mobi|Android/i.test(navigator.userAgent),
-          screen: {
-            width: window.screen && window.screen.width || null,
-            height: window.screen && window.screen.height || null,
-            pixelRatio: window.devicePixelRatio || 1
-          }
-        }
-      };
-
-      console.log('Sending first visit payload:', payload);
-
-      fetch(FIRST_VISIT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        keepalive: true,
-        cache: "no-store"
-      }).then(response => {
-        console.log('First visit webhook response:', response.status, response.statusText);
-        if (response.ok) {
-          console.log('First visit tracked successfully with GCLID:', gclid);
-          markSentOncePerTab();
-        } else {
-          console.error('First visit webhook failed:', response.status);
-        }
-      }).catch(error => {
-        console.error('First visit webhook error:', error);
-      });
-    }
-
-    // Multiple trigger points to ensure the webhook fires
-    function initFirstVisit() {
-      // Add small delay to ensure all other scripts are loaded
-      setTimeout(postFirstVisit, 100);
-    }
-
-    // Try multiple event listeners to catch the page load
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", initFirstVisit);
-      window.addEventListener("load", initFirstVisit);
-    } else if (document.readyState === "interactive") {
-      document.addEventListener("DOMContentLoaded", initFirstVisit);
-      window.addEventListener("load", initFirstVisit);
-    } else {
-      // Document already loaded
-      initFirstVisit();
-    }
-  })();
 </script>
 
 </body>
