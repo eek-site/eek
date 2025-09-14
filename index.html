@@ -422,7 +422,7 @@ font-src 'self' data:;">
   <div class="business-name">Eek Mobile Mechanical</div>
   <h1>Mobile Mechanics NZ - 30-60 Minute Response</h1>
   <p class="tagline">Mobile Mechanic • Pre Purchase Inspections • Wrong Fuel Removal • Emergency Roadside Repairs • 30–60 Min Response</p>
-  <a class="cta-button" href="tel:0800769000" onclick="trackConversion('header_call', 'Contact')">📞 Call 0800 769 000</a>
+  <a class="cta-button phone-link" href="tel:0800769000" onclick="trackConversion('header_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
 </header>
 
 <div class="keywords-highlight" id="service-selection">
@@ -474,7 +474,7 @@ font-src 'self' data:;">
     <li>⏱️ Target arrival: 30–60 minutes nationwide</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')">📞 Call 0800 769 000</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
     <a class="cta-button after-hours-btn" href="https://www.eek.nz/book-service?service=mechanic" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
@@ -489,7 +489,7 @@ font-src 'self' data:;">
     <li>📍 Mobile mechanic service at your location—home or roadside</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Call 0800 769 000</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
     <a class="cta-button after-hours-btn" href="https://www.eek.nz/book-service?service=jumpstart" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
@@ -506,7 +506,7 @@ font-src 'self' data:;">
     <li>⏱️ Target arrival: 30–60 minutes nationwide</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')">📞 Call 0800 769 000</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
     <a class="cta-button after-hours-btn" href="https://www.eek.nz/book-service?service=fuel-extraction" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
@@ -523,7 +523,7 @@ font-src 'self' data:;">
     <li>✅ Written report with price recommendation & upcoming cost estimates</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')">📞 Call 0800 769 000</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
     <a class="cta-button after-hours-btn" href="https://www.eek.nz/pre-purchase-vehicle-inspection/" style="background: #28a745; display: none;">📅 Book Online & Save</a>
   </div>
 </div>
@@ -567,10 +567,51 @@ font-src 'self' data:;">
   <a href="https://www.eek.nz/more-options" style="color: #666; text-decoration: underline;">More Options</a>
 </footer>
 
-<a class="sticky-call" href="tel:0800769000" onclick="trackConversion('sticky_call', 'Contact')" id="stickyCallButton">📞 Call Eek Now</a>
+<a class="sticky-call phone-link" href="tel:0800769000" onclick="trackConversion('sticky_call', 'Contact')" id="stickyCallButton">📞 Call <span class="phone-display">Eek Now</span></a>
 <a class="sticky-call" href="#closedBanner" id="stickyClosedButton" style="display: none; background: #666;">🕐 View Hours</a>
 
 <script>
+// Dynamic phone number based on traffic source
+function getDisplayPhoneNumber() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const gclid = urlParams.get('gclid');
+  
+  // If traffic comes from Google Ads, show tracking number
+  if (gclid) {
+    return {
+      tel: 'tel:0800447153',
+      display: '0800 447 153'
+    };
+  }
+  
+  // Default number for all other traffic
+  return {
+    tel: 'tel:0800769000', 
+    display: '0800 769 000'
+  };
+}
+
+// Update all phone numbers on page load
+function updatePhoneNumbers() {
+  const phoneData = getDisplayPhoneNumber();
+  
+  // Update all tel: links
+  document.querySelectorAll('.phone-link').forEach(link => {
+    link.href = phoneData.tel;
+  });
+  
+  // Update displayed phone numbers in spans
+  document.querySelectorAll('.phone-display').forEach(span => {
+    if (span.textContent.includes('769 000') || span.textContent.includes('769000') || span.textContent === 'Eek Now') {
+      if (span.textContent === 'Eek Now') {
+        span.textContent = 'Eek Now'; // Keep this unchanged
+      } else {
+        span.textContent = phoneData.display;
+      }
+    }
+  });
+}
+
 // Check system availability status
 async function checkSystemStatus() {
   try {
@@ -917,6 +958,7 @@ function getServiceType(eventAction) {
 
 // Initialize on page load
 window.addEventListener('load', function() {
+  updatePhoneNumbers(); // Apply dynamic phone numbers first
   updateHoursDisplay();
   setInterval(updateHoursDisplay, 5 * 60 * 1000);
   
