@@ -423,6 +423,9 @@ font-src 'self' data:;">
   <h1>Mobile Mechanics NZ - 30-60 Minute Response</h1>
   <p class="tagline">Mobile Mechanic • Pre Purchase Inspections • Wrong Fuel Removal • Emergency Roadside Repairs • 30–60 Min Response</p>
   <a class="cta-button" href="tel:0800769000" onclick="trackConversion('header_call', 'Contact')">📞 Call 0800 769 000</a>
+  
+  <!-- DEBUG: Test button to verify Power Automate connection -->
+  <button onclick="testWebhook()" style="background: red; color: white; padding: 10px; margin: 10px;">TEST WEBHOOK</button>
 </header>
 
 <div class="keywords-highlight" id="service-selection">
@@ -702,6 +705,47 @@ async function updateHoursDisplay() {
 /* === CALL-CLICK WEBHOOK === */
 (function(){
   const CALL_CLICK_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/659e20267a7740aea22340e2f63e12fd/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sa4qKODOby6WgW80SBuxvUxmRljASZfVTYTA-6vgPzo";
+
+  // DEBUG: Test function to verify Power Automate connection
+  window.testWebhook = function() {
+    console.log("Testing webhook connection...");
+    
+    // Method 1: Try GET with URL parameters
+    fetch(CALL_CLICK_URL + "&testEvent=true&timestamp=" + new Date().toISOString(), {
+      method: "GET",
+      mode: "no-cors"
+    }).then(() => {
+      console.log("GET test webhook sent (no-cors mode)");
+    }).catch(err => {
+      console.log("GET test webhook error:", err);
+    });
+    
+    // Method 2: Try POST with JSON (matching your Power Automate config)
+    fetch(CALL_CLICK_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        testEvent: true,
+        timestamp: new Date().toISOString(),
+        eventType: "test_call_click",
+        sessionId: "test_session_123"
+      }),
+      mode: "no-cors"
+    }).then(() => {
+      console.log("POST test webhook sent");
+    }).catch(err => {
+      console.log("POST test webhook error:", err);
+    });
+    
+    // Method 3: Image beacon test
+    const img = new Image();
+    img.src = CALL_CLICK_URL + "&testEvent=image&timestamp=" + new Date().toISOString();
+    img.onload = img.onerror = () => {
+      console.log("Image beacon test completed");
+    };
+  };
 
   function getOrCreateSessionId(){
     let sid = localStorage.getItem("eek_session_id");
