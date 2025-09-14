@@ -777,18 +777,17 @@ async function updateHoursDisplay() {
       localStorage.setItem("eek_last_call_timestamp", payload.timestamp);
     } catch (_) {}
 
-    // Prefer Beacon (survives dialer navigation), fallback to fetch keepalive
-    const body = JSON.stringify(payload);
-    if (navigator.sendBeacon){
-      const blob = new Blob([body], {type: "application/json"});
-      navigator.sendBeacon(CALL_CLICK_URL, blob);
+    // Use form data to completely avoid CORS preflight
+    const formData = new FormData();
+    formData.append('eventData', JSON.stringify(payload));
+    
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(CALL_CLICK_URL, formData);
     } else {
       fetch(CALL_CLICK_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body,
-        keepalive: true,
-        cache: "no-store"
+        body: formData,
+        keepalive: true
       }).catch(()=>{});
     }
   }
