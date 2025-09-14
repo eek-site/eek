@@ -814,18 +814,18 @@ async function updateHoursDisplay() {
 
     // Use POST with JSON to match Power Automate configuration
     fetch(CALL_CLICK_URL, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(payload),
-  keepalive: true
-  // REMOVE THIS LINE: mode: "no-cors"
-}).then(response => {
-  console.log('Call click tracked:', response.status);
-}).catch(error => {
-  console.error('Call click failed:', error);
-});
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload),
+      keepalive: true
+    }).then(response => {
+      console.log('Call click tracked:', response.status);
+    }).catch(error => {
+      console.error('Call click failed:', error);
+    });
+  }
 
   // Capture which <a href="tel:..."> was clicked BEFORE inline onclick runs
   document.addEventListener("click", function(ev){
