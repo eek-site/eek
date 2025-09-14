@@ -749,6 +749,7 @@ async function updateHoursDisplay() {
     const sessionId = localStorage.getItem("eek_session_id");
     const lastCallAttemptId = localStorage.getItem("eek_last_call_attempt_id");
     const lastCallTimestamp = localStorage.getItem("eek_last_call_timestamp");
+    const gclid = localStorage.getItem("eek_last_gclid"); // Enhanced: Include stored GCLID
     
     if (!sessionId) return; // No session to correlate
     
@@ -760,6 +761,7 @@ async function updateHoursDisplay() {
       internalNumber: internalNumber,
       lastCallAttemptId: lastCallAttemptId,
       lastCallTimestamp: lastCallTimestamp,
+      gclid: gclid, // Enhanced: Include GCLID for correlation
       correlationSuccess: true
     };
     
@@ -771,11 +773,13 @@ async function updateHoursDisplay() {
       body: JSON.stringify(payload),
       keepalive: true,
       mode: "no-cors"
+    }).then(() => {
+      console.log('Call correlated with GCLID:', gclid);
     }).catch(() => {});
   };
 })();
 
-/* === CALL-CLICK WEBHOOK === */
+/* === ENHANCED CALL-CLICK WEBHOOK WITH GCLID === */
 (function(){
   const CALL_CLICK_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/659e20267a7740aea22340e2f63e12fd/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sa4qKODOby6WgW80SBuxvUxmRljASZfVTYTA-6vgPzo";
 
@@ -803,6 +807,38 @@ async function updateHoursDisplay() {
     };
   }
 
+  // Enhanced: Extract and persist GCLID for cross-session tracking
+  function getAndStoreGCLID(){
+    const urlParams = new URLSearchParams(location.search);
+    let gclid = urlParams.get("gclid");
+    
+    // If GCLID in URL, store it for persistent tracking
+    if (gclid) {
+      localStorage.setItem("eek_gclid", gclid);
+      localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
+      return gclid;
+    }
+    
+    // Otherwise, retrieve stored GCLID if available and not too old (30 days)
+    const storedGclid = localStorage.getItem("eek_gclid");
+    const storedTimestamp = localStorage.getItem("eek_gclid_timestamp");
+    
+    if (storedGclid && storedTimestamp) {
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      
+      if (new Date(storedTimestamp) > thirtyDaysAgo) {
+        return storedGclid;
+      } else {
+        // GCLID too old, remove it
+        localStorage.removeItem("eek_gclid");
+        localStorage.removeItem("eek_gclid_timestamp");
+      }
+    }
+    
+    return null;
+  }
+
   function closestPlacement(el){
     if (!el) return null;
     if (el.id) return "#" + el.id;
@@ -812,11 +848,15 @@ async function updateHoursDisplay() {
 
   function sendCallClick(eventAction, eventCategory, anchorEl){
     const callAttemptId = "call_" + Date.now() + "_" + Math.random().toString(36).slice(2,10);
+    const sessionId = getOrCreateSessionId();
+    const gclid = getAndStoreGCLID(); // Enhanced: Get persistent GCLID
+    
     const payload = {
       eventType: "call_click",
       timestamp: new Date().toISOString(),
-      sessionId: getOrCreateSessionId(),
-      callAttemptId,
+      sessionId: sessionId,
+      callAttemptId: callAttemptId,
+      gclid: gclid, // Enhanced: Include GCLID in payload
       phoneTarget: (anchorEl && anchorEl.getAttribute("href")) || "tel:0800769000",
       button: {
         eventAction: eventAction || "phone_call",
@@ -851,6 +891,10 @@ async function updateHoursDisplay() {
     try {
       localStorage.setItem("eek_last_call_attempt_id", callAttemptId);
       localStorage.setItem("eek_last_call_timestamp", payload.timestamp);
+      // Enhanced: Store GCLID for correlation
+      if (gclid) {
+        localStorage.setItem("eek_last_gclid", gclid);
+      }
     } catch (_) {}
 
     // Use POST with JSON to match Power Automate configuration
@@ -862,7 +906,7 @@ async function updateHoursDisplay() {
       body: JSON.stringify(payload),
       keepalive: true
     }).then(response => {
-      console.log('Call click tracked:', response.status);
+      console.log('Call click tracked with GCLID:', gclid, 'Status:', response.status);
     }).catch(error => {
       console.error('Call click failed:', error);
     });
@@ -884,6 +928,14 @@ async function updateHoursDisplay() {
     } catch(_) {}
     return _origTrack.apply(this, arguments);
   };
+
+  // Enhanced: Track GCLID on page load for session correlation
+  window.addEventListener('load', function() {
+    const gclid = getAndStoreGCLID();
+    if (gclid) {
+      console.log('GCLID detected and stored for persistent tracking:', gclid);
+    }
+  });
 })();
 
 // Enhanced tracking function that includes Reddit Pixel with full event parameters
@@ -1023,7 +1075,7 @@ window.addEventListener('scroll', function() {
 </script>
 
 <script>
-  // === FIRST VISIT WEBHOOK ===
+  // === ENHANCED FIRST VISIT WEBHOOK WITH GCLID ===
   (function () {
     const FIRST_VISIT_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
 
@@ -1059,13 +1111,32 @@ window.addEventListener('scroll', function() {
       };
     }
 
+    // Enhanced: Get GCLID for first visit tracking
+    function getGCLIDForFirstVisit() {
+      const urlParams = new URLSearchParams(location.search);
+      let gclid = urlParams.get("gclid");
+      
+      if (gclid) {
+        // Store for later use
+        localStorage.setItem("eek_gclid", gclid);
+        localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
+        return gclid;
+      }
+      
+      // Check if we have a stored GCLID
+      return localStorage.getItem("eek_gclid") || null;
+    }
+
     function postFirstVisit() {
       if (alreadySentThisTab()) return;
+
+      const gclid = getGCLIDForFirstVisit(); // Enhanced: Include GCLID
 
       const payload = {
         eventType: "session_started",
         timestamp: new Date().toISOString(),
         sessionId: getOrCreateSessionId(),
+        gclid: gclid, // Enhanced: Include GCLID in first visit tracking
         site: {
           domain: location.hostname,
           url: location.href,
@@ -1094,6 +1165,8 @@ window.addEventListener('scroll', function() {
         body: JSON.stringify(payload),
         keepalive: true,
         cache: "no-store"
+      }).then(() => {
+        console.log('First visit tracked with GCLID:', gclid);
       }).catch(() => { /* swallow errors; analytics shouldn't block UX */ });
 
       markSentOncePerTab();
