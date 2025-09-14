@@ -735,6 +735,7 @@ async function updateHoursDisplay() {
   }
 
   function sendCallClick(eventAction, eventCategory, anchorEl){
+    console.log("CALL-CLICK WEBHOOK TRIGGERED:", eventAction, eventCategory);
     const callAttemptId = "call_" + Date.now() + "_" + Math.random().toString(36).slice(2,10);
     const payload = {
       eventType: "call_click",
@@ -797,8 +798,13 @@ async function updateHoursDisplay() {
     
     // Use image beacon technique (no CORS issues)
     const img = new Image();
-    img.src = `${CALL_CLICK_URL}&${params.toString()}`;
-    img.onerror = img.onload = () => img.src = '';
+    const fullUrl = `${CALL_CLICK_URL}&${params.toString()}`;
+    console.log("CALL-CLICK WEBHOOK URL:", fullUrl);
+    img.src = fullUrl;
+    img.onerror = img.onload = () => {
+      console.log("CALL-CLICK WEBHOOK REQUEST COMPLETED");
+      img.src = '';
+    };
   }
 
   // Capture which <a href="tel:..."> was clicked BEFORE inline onclick runs
