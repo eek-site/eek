@@ -821,29 +821,16 @@ async function updateHoursDisplay() {
       localStorage.setItem("eek_last_call_timestamp", payload.timestamp);
     } catch (_) {}
 
-    // Use simple GET request with URL parameters to avoid Power Automate changes
-    const params = new URLSearchParams({
-      eventType: 'call_click',
-      timestamp: payload.timestamp,
-      sessionId: payload.sessionId,
-      callAttemptId: payload.callAttemptId,
-      phoneTarget: payload.phoneTarget,
-      eventAction: payload.button.eventAction,
-      eventCategory: payload.button.eventCategory,
-      serviceType: payload.button.serviceType || '',
-      placement: payload.button.placement || '',
-      domain: payload.site.domain,
-      url: payload.site.url,
-      utm_source: payload.utm.source || '',
-      utm_campaign: payload.utm.campaign || '',
-      mobile: payload.device.mobile
-    });
-    
-    // Use image beacon technique (no CORS issues)
-    const img = new Image();
-    const fullUrl = `${CALL_CLICK_URL}&${params.toString()}`;
-    img.src = fullUrl;
-    img.onerror = img.onload = () => img.src = '';
+    // Use POST with JSON to match Power Automate configuration
+    fetch(CALL_CLICK_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload),
+      keepalive: true,
+      mode: "no-cors"
+    }).catch(() => {});
   }
 
   // Capture which <a href="tel:..."> was clicked BEFORE inline onclick runs
