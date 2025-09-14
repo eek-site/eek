@@ -699,6 +699,41 @@ async function updateHoursDisplay() {
   }
 }
 
+/* === INCOMING CALL CORRELATION WEBHOOK === */
+(function(){
+  const INCOMING_CALL_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/659e20267a7740aea22340e2f63e12fd/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sa4qKODOby6WgW80SBuxvUxmRljASZfVTYTA-6vgPzo";
+  
+  // Expose global function for PBX to call
+  window.correlateIncomingCall = function(callerID, internalNumber) {
+    const sessionId = localStorage.getItem("eek_session_id");
+    const lastCallAttemptId = localStorage.getItem("eek_last_call_attempt_id");
+    const lastCallTimestamp = localStorage.getItem("eek_last_call_timestamp");
+    
+    if (!sessionId) return; // No session to correlate
+    
+    const payload = {
+      eventType: "incoming_call_correlation",
+      timestamp: new Date().toISOString(),
+      sessionId: sessionId,
+      callerID: callerID,
+      internalNumber: internalNumber,
+      lastCallAttemptId: lastCallAttemptId,
+      lastCallTimestamp: lastCallTimestamp,
+      correlationSuccess: true
+    };
+    
+    fetch(INCOMING_CALL_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload),
+      keepalive: true,
+      mode: "no-cors"
+    }).catch(() => {});
+  };
+})();
+
 /* === CALL-CLICK WEBHOOK === */
 (function(){
   const CALL_CLICK_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/659e20267a7740aea22340e2f63e12fd/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sa4qKODOby6WgW80SBuxvUxmRljASZfVTYTA-6vgPzo";
