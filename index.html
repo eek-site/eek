@@ -1020,13 +1020,28 @@ window.addEventListener('scroll', function() {
         }
       };
 
-      fetch(FIRST_VISIT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        keepalive: true,
-        cache: "no-store"
-      }).catch(() => { /* swallow errors; analytics shouldn't block UX */ });
+      // Use GET request with URL parameters to avoid CORS issues
+      const params = new URLSearchParams({
+        eventType: 'session_started',
+        timestamp: payload.timestamp,
+        sessionId: payload.sessionId,
+        domain: payload.site.domain,
+        url: payload.site.url,
+        path: payload.site.path,
+        title: payload.site.title,
+        referrer: payload.site.referrer || '',
+        utm_source: payload.utm.source || '',
+        utm_medium: payload.utm.medium || '',
+        utm_campaign: payload.utm.campaign || '',
+        utm_gclid: payload.utm.gclid || '',
+        mobile: payload.device.mobile,
+        userAgent: payload.device.userAgent
+      });
+      
+      // Use image beacon technique (no CORS issues)
+      const img = new Image();
+      img.src = `${FIRST_VISIT_URL}&${params.toString()}`;
+      img.onerror = img.onload = () => img.src = '';
 
       markSentOncePerTab();
     }
