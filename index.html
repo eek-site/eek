@@ -777,19 +777,28 @@ async function updateHoursDisplay() {
       localStorage.setItem("eek_last_call_timestamp", payload.timestamp);
     } catch (_) {}
 
-    // Use form data to completely avoid CORS preflight
-    const formData = new FormData();
-    formData.append('eventData', JSON.stringify(payload));
+    // Use simple GET request with URL parameters to avoid Power Automate changes
+    const params = new URLSearchParams({
+      eventType: 'call_click',
+      timestamp: payload.timestamp,
+      sessionId: payload.sessionId,
+      callAttemptId: payload.callAttemptId,
+      phoneTarget: payload.phoneTarget,
+      eventAction: payload.button.eventAction,
+      eventCategory: payload.button.eventCategory,
+      serviceType: payload.button.serviceType || '',
+      placement: payload.button.placement || '',
+      domain: payload.site.domain,
+      url: payload.site.url,
+      utm_source: payload.utm.source || '',
+      utm_campaign: payload.utm.campaign || '',
+      mobile: payload.device.mobile
+    });
     
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon(CALL_CLICK_URL, formData);
-    } else {
-      fetch(CALL_CLICK_URL, {
-        method: "POST",
-        body: formData,
-        keepalive: true
-      }).catch(()=>{});
-    }
+    // Use image beacon technique (no CORS issues)
+    const img = new Image();
+    img.src = `${CALL_CLICK_URL}&${params.toString()}`;
+    img.onerror = img.onload = () => img.src = '';
   }
 
   // Capture which <a href="tel:..."> was clicked BEFORE inline onclick runs
