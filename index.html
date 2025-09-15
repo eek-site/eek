@@ -451,31 +451,31 @@ font-src 'self' data:;">
   <h2>🔧 Professional Mobile Mechanic Services</h2>
   <p>Eek Mobile Mechanical providing comprehensive mobile mechanic services across New Zealand</p>
   <div class="service-keywords">
-    <a href="#mobile-mechanic-breakdown" style="text-decoration: none; color: inherit;">
+    <a href="#mobile-mechanic-breakdown" class="service-link" data-service="mechanic" style="text-decoration: none; color: inherit;">
       <div class="keyword-item">
         <h4>Emergency Breakdown</h4>
         <p>Professional mechanics arrive in 30-60 minutes anywhere in NZ</p>
       </div>
     </a>
-    <a href="#battery-jump-start" style="text-decoration: none; color: inherit;">
+    <a href="#battery-jump-start" class="service-link" data-service="jumpstart" style="text-decoration: none; color: inherit;">
       <div class="keyword-item">
         <h4>Battery Jump Start</h4>
         <p>Dead battery? We'll get you started in 30-60 minutes</p>
       </div>
     </a>
-    <a href="#wrong-fuel-removal" style="text-decoration: none; color: inherit;">
+    <a href="#wrong-fuel-removal" class="service-link" data-service="fuel-extraction" style="text-decoration: none; color: inherit;">
       <div class="keyword-item">
         <h4>Wrong Fuel Removal</h4>
         <p>Emergency fuel rescue service - 30-60 minute response</p>
       </div>
     </a>
-    <a href="#pre-purchase-inspections" style="text-decoration: none; color: inherit;">
+    <a href="#pre-purchase-inspections" class="service-link" data-service="inspection" style="text-decoration: none; color: inherit;">
       <div class="keyword-item">
         <h4>Pre Purchase Inspections</h4>
         <p>45-point certified inspection - 30-60 minute arrival</p>
       </div>
     </a>
-    <a href="#winz-assistance" style="text-decoration: none; color: inherit;">
+    <a href="#winz-assistance" class="service-link" data-service="winz" style="text-decoration: none; color: inherit;">
       <div class="keyword-item" style="background: rgba(255,255,255,0.25); border: 2px solid white;">
         <h4>⭐ WINZ Approved Quotes</h4>
         <p>Get instant quotes for Work and Income vehicle repair assistance</p>
@@ -497,7 +497,7 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn" href="https://www.eek.nz/book-service?service=mechanic" style="background: #28a745; display: none;">📅 Book Online</a>
+    <a class="cta-button after-hours-btn service-link" data-service="mechanic" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
 
@@ -512,7 +512,7 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn" href="https://www.eek.nz/book-service?service=jumpstart" style="background: #28a745; display: none;">📅 Book Online</a>
+    <a class="cta-button after-hours-btn service-link" data-service="jumpstart" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
 
@@ -529,7 +529,7 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn" href="https://www.eek.nz/book-service?service=fuel-extraction" style="background: #28a745; display: none;">📅 Book Online</a>
+    <a class="cta-button after-hours-btn service-link" data-service="fuel-extraction" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
 
@@ -546,7 +546,7 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn" href="https://www.eek.nz/pre-purchase-vehicle-inspection/" style="background: #28a745; display: none;">📅 Book Online & Save</a>
+    <a class="cta-button after-hours-btn service-link" data-service="inspection" style="background: #28a745; display: none;">📅 Book Online & Save</a>
   </div>
 </div>
 
@@ -563,7 +563,7 @@ font-src 'self' data:;">
     <li>📍 Mobile service - we come to you anywhere in NZ</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button" href="https://www.eek.nz/book-service?service=winz" onclick="trackConversion('winz_main_button', 'WINZ')" style="background: #6f42c1;">💳 Get WINZ Quote Now</a>
+    <a class="cta-button service-link" data-service="winz" onclick="trackConversion('winz_main_button', 'WINZ')" style="background: #6f42c1;">💳 Get WINZ Quote Now</a>
   </div>
   <p style="text-align: center; margin-top: 15px; color: #666; font-size: 0.9em;">
     Not sure if you qualify? Contact WINZ on 0800 559 009 or visit workandincome.govt.nz
@@ -705,6 +705,73 @@ function getDisplayPhoneNumber() {
     tel: 'tel:0800769000', 
     display: '0800 769 000'
   };
+}
+
+// Build tracking parameters for service URLs
+function buildTrackingParams() {
+  const params = new URLSearchParams();
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  // Preserve GCLID if present
+  const gclid = urlParams.get('gclid');
+  if (gclid) {
+    params.set('gclid', gclid);
+  }
+  
+  // Preserve UTM parameters
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+    const value = urlParams.get(param);
+    if (value) {
+      params.set(param, value);
+    }
+  });
+  
+  // Add session ID for tracking continuity
+  const sessionId = localStorage.getItem("eek_session_id");
+  if (sessionId) {
+    params.set('session_id', sessionId);
+  }
+  
+  return params.toString();
+}
+
+// Update service links with tracking parameters
+function updateServiceLinks() {
+  const trackingParams = buildTrackingParams();
+  
+  document.querySelectorAll('.service-link').forEach(link => {
+    const service = link.dataset.service;
+    if (service) {
+      const baseUrl = `/book-service?service=${service}`;
+      const fullUrl = trackingParams ? `${baseUrl}&${trackingParams}` : baseUrl;
+      
+      // Convert to actual href for booking links
+      if (link.classList.contains('after-hours-btn') || link.closest('#winz-assistance') || link.getAttribute('href') === '#service-selection') {
+        link.href = fullUrl;
+      } else {
+        // For main service selection cards, keep the hash but store the booking URL
+        link.dataset.bookingUrl = fullUrl;
+      }
+    }
+  });
+  
+  console.log('🔗 Service links updated with tracking parameters:', trackingParams);
+}
+
+// Handle service selection card clicks
+function handleServiceSelection() {
+  document.querySelectorAll('.service-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+      const bookingUrl = this.dataset.bookingUrl;
+      
+      // Only redirect to booking for service cards (not already direct booking links)
+      if (bookingUrl && this.getAttribute('href').startsWith('#')) {
+        e.preventDefault();
+        console.log('🎯 Redirecting to booking page:', bookingUrl);
+        window.location.href = bookingUrl;
+      }
+    });
+  });
 }
 
 // Update all phone numbers on page load
@@ -1209,6 +1276,8 @@ window.addEventListener('load', function() {
   console.log('🚀 Page loaded - initializing...');
   
   updatePhoneNumbers(); // Apply dynamic phone numbers first
+  updateServiceLinks(); // Add tracking parameters to booking links
+  handleServiceSelection(); // Set up click handlers for service cards
   updateHoursDisplay(); // Initial check
   
   // Set up periodic checks every 5 minutes
