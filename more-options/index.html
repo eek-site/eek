@@ -4,6 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>More Options | Eek Mobile Mechanical</title>
+    <meta name="description" content="Complete service options and resources for Eek Mobile Mechanical. Emergency services, customer support, supplier partnerships, and employment opportunities." />
+    <meta name="keywords" content="mobile mechanic options, emergency service, customer support, supplier partnerships, eek mechanical services" />
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+
+    <!-- Reddit Pixel -->
+    <script>
+        !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
+        (window,document);
+        rdt('init', 'a2_hf16791nsdhx');
+        rdt('track', 'PageVisit');
+    </script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'AW-17084465163');
+        gtag('config', 'G-DQNKF1YLWR');
+    </script>
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
     <style>
         * {
             margin: 0;
@@ -293,6 +322,20 @@
         .footer-nav a:hover {
             color: #ff5500;
         }
+
+        /* Debug styles - remove in production */
+        .debug-info {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            font-size: 12px;
+            border-radius: 5px;
+            z-index: 9999;
+            display: none; /* Change to 'block' to enable debugging */
+        }
         
         @media (max-width: 768px) {
             .container {
@@ -329,6 +372,14 @@
     </style>
 </head>
 <body>
+    <!-- Debug Info Panel -->
+    <div class="debug-info" id="debugInfo">
+        <div>Page: More Options</div>
+        <div>Session ID: <span id="debugSessionId">Loading...</span></div>
+        <div>GCLID: <span id="debugGclid">None</span></div>
+        <div>Source: <span id="debugSource">Direct</span></div>
+    </div>
+
     <div class="container">
         <div class="header">
             <div class="logo">🔧 Eek Mobile Mechanical</div>
@@ -344,9 +395,9 @@
             <h2>🚨 Need Immediate Help?</h2>
             <p>Get emergency mobile mechanical assistance or speak with our dispatch team</p>
             <div class="emergency-buttons">
-                <a href="/rescue-me" class="emergency-btn">🚨 Emergency Service</a>
-                <a href="tel:0800769000" class="emergency-btn">📞 Call 0800 769 000</a>
-                <a href="/find-me" class="emergency-btn">📍 Find Me Tool</a>
+                <a href="/rescue-me" class="emergency-btn" data-track="emergency_rescue" onclick="trackInteraction(this)">🚨 Emergency Service</a>
+                <a href="tel:0800769000" class="emergency-btn phone-link" data-track="more_options_call" onclick="trackInteraction(this)">📞 Call 0800 769 000</a>
+                <a href="/find-me" class="emergency-btn" data-track="find_me_tool" onclick="trackInteraction(this)">📍 Find Me Tool</a>
             </div>
         </div>
         
@@ -362,10 +413,10 @@
                     <h3>👥 For Customers</h3>
                     <p>Service requests, support, and assistance</p>
                     <div class="contact-buttons">
-                        <a href="/rescue-me" class="contact-btn">🚨 Emergency Service</a>
-                        <a href="tel:0800769000" class="contact-btn">📞 Call 0800 769 000</a>
-                        <a href="/customer-escalation" class="contact-btn">💬 Customer Support</a>
-                        <a href="/find-me" class="contact-btn">📍 Find Me Tool</a>
+                        <a href="/rescue-me" class="contact-btn" data-track="customer_emergency" onclick="trackInteraction(this)">🚨 Emergency Service</a>
+                        <a href="tel:0800769000" class="contact-btn phone-link" data-track="customer_call" onclick="trackInteraction(this)">📞 Call 0800 769 000</a>
+                        <a href="/customer-escalation" class="contact-btn" data-track="customer_support" onclick="trackInteraction(this)">💬 Customer Support</a>
+                        <a href="/find-me" class="contact-btn" data-track="customer_find_me" onclick="trackInteraction(this)">📍 Find Me Tool</a>
                     </div>
                 </div>
                 
@@ -373,8 +424,8 @@
                     <h3>🤝 For Suppliers & Partners</h3>
                     <p>Business partnerships and supplier relations</p>
                     <div class="contact-buttons">
-                        <a href="/supplier" class="contact-btn">🤝 Official Supplier Portal</a>
-                        <a href="/supplier-relations" class="contact-btn">📝 Supplier Relations</a>
+                        <a href="/supplier" class="contact-btn" data-track="supplier_portal" onclick="trackInteraction(this)">🤝 Official Supplier Portal</a>
+                        <a href="/supplier-relations" class="contact-btn" data-track="supplier_relations" onclick="trackInteraction(this)">📝 Supplier Relations</a>
                     </div>
                 </div>
                 
@@ -382,7 +433,7 @@
                     <h3>💼 Employment & Careers</h3>
                     <p>Join our team as a mobile technician</p>
                     <div class="contact-buttons">
-                        <a href="/apply" class="contact-btn">📝 Apply to Work</a>
+                        <a href="/apply" class="contact-btn" data-track="employment_apply" onclick="trackInteraction(this)">📝 Apply to Work</a>
                     </div>
                 </div>
             </div>
@@ -394,11 +445,11 @@
                 <h3>🛡️ Legal & Compliance Center</h3>
                 <p>Terms, policies, privacy matters, and legal authority access</p>
                 <div class="legal-buttons">
-                    <a href="/terms" class="legal-btn">📋 End User Terms</a>
-                    <a href="/supplier-terms" class="legal-btn">📋 Supplier Terms</a>
-                    <a href="/privacy" class="legal-btn">🔒 Privacy Policy</a>
-                    <a href="/privacy-report" class="legal-btn">🚨 Privacy Report</a>
-                    <a href="/mjuris" class="legal-btn">⚖️ Legal Authority</a>
+                    <a href="/terms" class="legal-btn" data-track="legal_terms" onclick="trackInteraction(this)">📋 End User Terms</a>
+                    <a href="/supplier-terms" class="legal-btn" data-track="legal_supplier_terms" onclick="trackInteraction(this)">📋 Supplier Terms</a>
+                    <a href="/privacy" class="legal-btn" data-track="legal_privacy" onclick="trackInteraction(this)">🔒 Privacy Policy</a>
+                    <a href="/privacy-report" class="legal-btn" data-track="legal_privacy_report" onclick="trackInteraction(this)">🚨 Privacy Report</a>
+                    <a href="/mjuris" class="legal-btn" data-track="legal_authority" onclick="trackInteraction(this)">⚖️ Legal Authority</a>
                 </div>
             </div>
         </div>
@@ -414,15 +465,371 @@
                 <div class="utility-card">
                     <h3>🗺️ Navigation Help</h3>
                     <p>Find your current location or get directions for our mobile technicians.</p>
-                    <a href="/map">Open Maps</a>
+                    <a href="/map" data-track="utility_maps" onclick="trackInteraction(this)">Open Maps</a>
                 </div>
             </div>
         </div>
         
         <div class="footer-nav">
-            <a href="/">🏠 Homepage</a>
-            <a href="/privacy">Privacy Policy</a>
+            <a href="/" data-track="footer_home" onclick="trackInteraction(this)">🏠 Homepage</a>
+            <a href="/privacy" data-track="footer_privacy" onclick="trackInteraction(this)">Privacy Policy</a>
         </div>
     </div>
+
+    <script>
+        // === INITIALIZATION AND TRACKING ===
+        console.log('🚀 === MORE OPTIONS PAGE INITIALIZED === 🚀');
+
+        // API Endpoint for tracking interactions
+        const TRACKING_API_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
+
+        let sessionId = null;
+        let gclid = null;
+        let utmData = {};
+
+        // === SESSION AND TRACKING DATA MANAGEMENT ===
+        function initializeTracking() {
+            console.log('📊 Initializing tracking system...');
+            
+            // Get or create session ID
+            sessionId = getOrCreateSessionId();
+            
+            // Capture GCLID from URL or localStorage
+            gclid = getGCLID();
+            
+            // Capture UTM parameters
+            utmData = getUTMData();
+            
+            // Update debug display
+            updateDebugInfo();
+            
+            // Send page view event
+            sendPageViewEvent();
+            
+            console.log('✅ Tracking system initialized');
+            console.log('📊 Session ID:', sessionId);
+            console.log('📊 GCLID:', gclid || 'None');
+            console.log('📊 UTM Data:', utmData);
+        }
+
+        function getOrCreateSessionId() {
+            let sid = localStorage.getItem("eek_session_id");
+            
+            if (!sid) {
+                // Try to get from URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                sid = urlParams.get('session_id');
+                
+                if (sid) {
+                    localStorage.setItem("eek_session_id", sid);
+                    console.log('🔄 Session ID restored from URL');
+                } else {
+                    // Create new session ID
+                    sid = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                    localStorage.setItem("eek_session_id", sid);
+                    console.log('🆕 New session ID created');
+                }
+            } else {
+                console.log('✅ Existing session ID found');
+            }
+            
+            return sid;
+        }
+
+        function getGCLID() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let gclidValue = urlParams.get('gclid');
+            
+            // If GCLID in URL, store it
+            if (gclidValue) {
+                localStorage.setItem("eek_gclid", gclidValue);
+                localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
+                console.log('✅ GCLID captured from URL:', gclidValue);
+                return gclidValue;
+            }
+            
+            // Otherwise, try to get stored GCLID
+            const storedGclid = localStorage.getItem("eek_gclid");
+            const storedTimestamp = localStorage.getItem("eek_gclid_timestamp");
+            
+            if (storedGclid && storedTimestamp) {
+                const thirtyDaysAgo = new Date();
+                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                
+                if (new Date(storedTimestamp) > thirtyDaysAgo) {
+                    console.log('📋 Using stored GCLID:', storedGclid);
+                    return storedGclid;
+                } else {
+                    // GCLID expired
+                    localStorage.removeItem("eek_gclid");
+                    localStorage.removeItem("eek_gclid_timestamp");
+                    console.log('⚠️ GCLID expired and removed');
+                }
+            }
+            
+            return null;
+        }
+
+        function getUTMData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const utm = {};
+            const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+            
+            // Check URL parameters
+            utmParams.forEach(param => {
+                const value = urlParams.get(param);
+                if (value) {
+                    utm[param] = value;
+                    // Store for future use
+                    localStorage.setItem(`eek_${param}`, value);
+                }
+            });
+            
+            // Fill in from localStorage if not in URL
+            utmParams.forEach(param => {
+                if (!utm[param]) {
+                    const stored = localStorage.getItem(`eek_${param}`);
+                    if (stored) {
+                        utm[param] = stored;
+                    }
+                }
+            });
+            
+            return utm;
+        }
+
+        function updateDebugInfo() {
+            const sessionIdEl = document.getElementById('debugSessionId');
+            const gclidEl = document.getElementById('debugGclid');
+            const sourceEl = document.getElementById('debugSource');
+            
+            if (sessionIdEl) sessionIdEl.textContent = sessionId ? sessionId.substring(0, 20) + '...' : 'None';
+            if (gclidEl) gclidEl.textContent = gclid || 'None';
+            if (sourceEl) sourceEl.textContent = utmData.utm_source || 'Direct';
+        }
+
+        // === EVENT TRACKING ===
+        function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
+            return {
+                eventType: eventType,
+                eventAction: eventAction,
+                timestamp: new Date().toISOString(),
+                sessionId: sessionId,
+                gclid: gclid,
+                
+                // Page context
+                page: {
+                    title: document.title,
+                    url: window.location.href,
+                    path: window.location.pathname,
+                    referrer: document.referrer || null
+                },
+                
+                // UTM tracking
+                utm: utmData,
+                
+                // Device info
+                device: {
+                    userAgent: navigator.userAgent,
+                    platform: navigator.platform || null,
+                    language: navigator.language || null,
+                    mobile: /Mobi|Android/i.test(navigator.userAgent),
+                    screen: {
+                        width: window.screen ? window.screen.width : null,
+                        height: window.screen ? window.screen.height : null,
+                        pixelRatio: window.devicePixelRatio || 1
+                    }
+                },
+                
+                // Source tracking
+                source: 'more_options_page',
+                formVersion: '2.0',
+                
+                // Additional data
+                ...additionalData
+            };
+        }
+
+        async function sendTrackingEvent(payload) {
+            try {
+                const response = await fetch(TRACKING_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload),
+                    keepalive: true
+                });
+                
+                console.log(`📡 Tracking event sent: ${payload.eventAction} (Status: ${response.status})`);
+                return response.ok;
+            } catch (error) {
+                console.error('❌ Tracking event failed:', error);
+                return false;
+            }
+        }
+
+        function sendPageViewEvent() {
+            const payload = buildTrackingPayload('page_view', 'more_options_view', {
+                pageType: 'more_options',
+                loadTime: Date.now() - performance.navigationStart
+            });
+            
+            sendTrackingEvent(payload);
+        }
+
+        // === INTERACTION TRACKING ===
+        function trackInteraction(element) {
+            const trackingAction = element.dataset.track;
+            const linkUrl = element.href;
+            const linkText = element.textContent.trim();
+            
+            console.log('👆 Interaction tracked:', trackingAction);
+            
+            // Build event payload
+            const payload = buildTrackingPayload('user_interaction', trackingAction, {
+                element: {
+                    tag: element.tagName.toLowerCase(),
+                    text: linkText,
+                    href: linkUrl,
+                    className: element.className
+                },
+                interactionType: element.href && element.href.startsWith('tel:') ? 'phone_call' : 'link_click'
+            });
+            
+            // Send tracking event
+            sendTrackingEvent(payload);
+            
+            // Analytics tracking
+            if (typeof gtag !== 'undefined') {
+                gtag('event', trackingAction, {
+                    event_category: 'More Options Interaction',
+                    event_label: linkText,
+                    value: getEventValue(trackingAction)
+                });
+                
+                // Track phone calls as conversions
+                if (trackingAction.includes('call')) {
+                    gtag('event', 'conversion', {
+                        send_to: 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
+                    });
+                }
+            }
+            
+            // Reddit Pixel tracking
+            if (typeof rdt !== 'undefined') {
+                const eventValue = getEventValue(trackingAction);
+                rdt('track', 'Lead', {
+                    customEventName: trackingAction,
+                    conversionId: `more_options_${Date.now()}`,
+                    value: eventValue,
+                    currency: 'NZD',
+                    eventSource: 'more_options_page',
+                    gclid: gclid
+                });
+            }
+        }
+
+        function getEventValue(action) {
+            const valueMap = {
+                'more_options_call': 25000,
+                'customer_call': 25000,
+                'emergency_rescue': 35000,
+                'customer_emergency': 35000,
+                'find_me_tool': 15000,
+                'customer_find_me': 15000,
+                'customer_support': 10000,
+                'supplier_portal': 5000,
+                'supplier_relations': 5000,
+                'employment_apply': 8000,
+                'utility_maps': 5000
+            };
+            
+            return (valueMap[action] || 5000) / 100; // Convert to dollars
+        }
+
+        // === PHONE NUMBER DYNAMIC DISPLAY ===
+        function updatePhoneNumbers() {
+            // Check if traffic comes from Google Ads
+            const showTrackingNumber = !!gclid;
+            
+            const phoneData = showTrackingNumber ? 
+                { tel: 'tel:0800447153', display: '0800 447 153' } :
+                { tel: 'tel:0800769000', display: '0800 769 000' };
+            
+            // Update all phone links
+            document.querySelectorAll('.phone-link').forEach(link => {
+                link.href = phoneData.tel;
+                // Update display text if it contains phone number
+                if (link.textContent.includes('0800')) {
+                    link.textContent = link.textContent.replace(/0800 \d{3} \d{3}/, phoneData.display);
+                }
+            });
+            
+            console.log('📞 Phone numbers updated:', phoneData.display);
+        }
+
+        // === SCROLL TRACKING ===
+        let scrollTracked = false;
+        function trackScroll() {
+            if (!scrollTracked && window.scrollY > document.body.scrollHeight * 0.5) {
+                scrollTracked = true;
+                
+                const payload = buildTrackingPayload('user_engagement', 'scroll_50_percent', {
+                    scrollDepth: '50%',
+                    pageHeight: document.body.scrollHeight
+                });
+                
+                sendTrackingEvent(payload);
+                
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'scroll', {
+                        event_category: 'Engagement',
+                        event_label: 'Scrolled 50% of more options page'
+                    });
+                }
+            }
+        }
+
+        // === INITIALIZATION ===
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 More Options page loaded');
+            
+            // Initialize tracking
+            initializeTracking();
+            
+            // Update phone numbers based on traffic source
+            updatePhoneNumbers();
+            
+            // Set up scroll tracking
+            window.addEventListener('scroll', trackScroll);
+            
+            // Track initial page engagement
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'page_view', {
+                    page_title: document.title,
+                    page_location: window.location.href,
+                    gclid: gclid
+                });
+            }
+            
+            console.log('✅ More Options page initialization complete');
+        });
+
+        // === TIME ON PAGE TRACKING ===
+        let startTime = Date.now();
+        window.addEventListener('beforeunload', function() {
+            const timeOnPage = Date.now() - startTime;
+            const payload = buildTrackingPayload('user_engagement', 'time_on_page', {
+                timeOnPage: timeOnPage,
+                timeOnPageSeconds: Math.round(timeOnPage / 1000)
+            });
+            
+            sendTrackingEvent(payload);
+        });
+
+        // Enable debug panel for testing (uncomment to show)
+        // document.getElementById('debugInfo').style.display = 'block';
+    </script>
 </body>
 </html>
