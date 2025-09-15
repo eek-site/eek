@@ -377,9 +377,31 @@ font-src 'self' data:;">
         margin: 20px 10px;
       }
     }
+
+    /* Debug styles - remove in production */
+    .debug-info {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 10px;
+      font-size: 12px;
+      border-radius: 5px;
+      z-index: 9999;
+      display: none; /* Change to 'block' to enable debugging */
+    }
   </style>
 </head>
 <body>
+
+<!-- Debug Info Panel -->
+<div class="debug-info" id="debugInfo">
+  <div>System Status: <span id="debugSystemStatus">Checking...</span></div>
+  <div>Business Hours: <span id="debugBusinessHours">Checking...</span></div>
+  <div>Current Time: <span id="debugCurrentTime"></span></div>
+  <div>Payment Token: <span id="debugPaymentToken">No</span></div>
+</div>
 
 <!-- Business Closed Banner (hidden by default) -->
 <div id="closedBanner" class="after-hours-banner" style="display: none; background: linear-gradient(135deg, #666, #888);">
@@ -706,26 +728,52 @@ function updatePhoneNumbers() {
   });
 }
 
-// Check system availability status
+// FIXED: Check system availability status with better error handling
 async function checkSystemStatus() {
+  const debugSystemStatus = document.getElementById('debugSystemStatus');
+  
   try {
+    console.log('🔄 Checking system status...');
+    
     const response = await fetch("https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/17b1d2990e6f4082a2b0d9c2f1a29025/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=bPyoxJ24kuxJZOyLGAclGaEuH6BHwUTFaGmYOwHofa8", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({}),
-      cache: "no-store"
+      cache: "no-store",
+      timeout: 10000 // 10 second timeout
     });
     
     if (response.ok) {
       const data = await response.json();
-      return data.state === 'Active';
+      const isActive = data.state === 'Active';
+      console.log('✅ System status check successful:', isActive ? 'ACTIVE' : 'INACTIVE');
+      
+      if (debugSystemStatus) {
+        debugSystemStatus.textContent = isActive ? 'ACTIVE' : 'INACTIVE';
+        debugSystemStatus.style.color = isActive ? '#0f0' : '#f00';
+      }
+      
+      return isActive;
+    } else {
+      console.warn('⚠️ System status API returned non-OK status:', response.status);
+      if (debugSystemStatus) {
+        debugSystemStatus.textContent = `ERROR (${response.status})`;
+        debugSystemStatus.style.color = '#ff0';
+      }
     }
   } catch (error) {
-    console.error('Error checking system status:', error);
+    console.error('❌ Error checking system status:', error);
+    if (debugSystemStatus) {
+      debugSystemStatus.textContent = 'ERROR (Network)';
+      debugSystemStatus.style.color = '#f00';
+    }
   }
-  return true; // Default to active (phones visible) if check fails
+  
+  // Default to active (phones visible) if check fails
+  console.log('🔄 Defaulting to ACTIVE due to API failure');
+  return true;
 }
 
 // Function to check if current time is within business hours
@@ -736,102 +784,156 @@ function isWithinBusinessHours() {
   const minutes = now.getMinutes();
   const time = hour + minutes / 60;
   
+  let isOpen = false;
+  
   // Monday-Friday: 7:00 AM - 5:00 PM
   if (day >= 1 && day <= 5) {
-    return time >= 7 && time < 17;
+    isOpen = time >= 7 && time < 17;
   }
   
   // Saturday-Sunday: 7:00 AM - 12:00 PM
   if (day === 0 || day === 6) {
-    return time >= 7 && time < 12;
+    isOpen = time >= 7 && time < 12;
   }
   
-  return false;
+  // Update debug info
+  const debugBusinessHours = document.getElementById('debugBusinessHours');
+  const debugCurrentTime = document.getElementById('debugCurrentTime');
+  
+  if (debugBusinessHours) {
+    debugBusinessHours.textContent = isOpen ? 'OPEN' : 'CLOSED';
+    debugBusinessHours.style.color = isOpen ? '#0f0' : '#f00';
+  }
+  
+  if (debugCurrentTime) {
+    debugCurrentTime.textContent = now.toLocaleString();
+  }
+  
+  console.log('🕒 Business hours check:', isOpen ? 'OPEN' : 'CLOSED', `(${now.toLocaleString()})`);
+  
+  return isOpen;
 }
 
-// Update UI based on system status
+// FIXED: Update UI based on system status with proper logic
 async function updateHoursDisplay() {
-  // CHECK IF PAYMENT TOKEN EXISTS - IF SO, DON'T MODIFY BUTTON VISIBILITY
+  console.log('🔄 Starting updateHoursDisplay...');
+  
+  // Check if payment token exists
   const urlParams = new URLSearchParams(window.location.search);
   const hasPaymentToken = urlParams.get('token');
   
-  if (hasPaymentToken) {
-    const closedBanner = document.getElementById('closedBanner');
-    if (closedBanner) {
-      closedBanner.style.display = 'none';
-    }
-    return;
+  // Update debug info
+  const debugPaymentToken = document.getElementById('debugPaymentToken');
+  if (debugPaymentToken) {
+    debugPaymentToken.textContent = hasPaymentToken ? 'YES' : 'NO';
   }
   
+  // FIXED: Don't return early for payment tokens - still need to check system status
   const systemActive = await checkSystemStatus();
   const duringBusinessHours = isWithinBusinessHours();
   
-  // Update closed banner (shows when passive/closed)
+  console.log('📊 Status Summary:', {
+    systemActive,
+    duringBusinessHours,
+    hasPaymentToken: !!hasPaymentToken
+  });
+  
+  // If payment token exists, hide closed banner but continue with other logic
   const closedBanner = document.getElementById('closedBanner');
   const closedTitle = document.getElementById('closedTitle');
   const afterHoursMessage = document.getElementById('afterHoursMessage');
   const tempUnavailableMessage = document.getElementById('tempUnavailableMessage');
   
-  if (closedBanner) {
-    if (!systemActive) {
-      closedBanner.style.display = 'block';
-      
-      if (duringBusinessHours) {
-        closedTitle.innerHTML = '🚧 PHONE LINES BUSY';
-        closedBanner.style.background = 'linear-gradient(135deg, #ff8c00, #ff6b00)';
-        afterHoursMessage.style.display = 'none';
-        tempUnavailableMessage.style.display = 'block';
-      } else {
-        closedTitle.innerHTML = '🕐 CURRENTLY CLOSED';
-        closedBanner.style.background = 'linear-gradient(135deg, #666, #888)';
-        afterHoursMessage.style.display = 'block';
-        tempUnavailableMessage.style.display = 'none';
-      }
-    } else {
+  if (hasPaymentToken) {
+    // Hide closed banner for payment flow
+    if (closedBanner) {
       closedBanner.style.display = 'none';
+    }
+    console.log('💳 Payment token detected - hiding closed banner');
+  } else {
+    // Normal banner logic
+    if (closedBanner) {
+      if (!systemActive) {
+        closedBanner.style.display = 'block';
+        
+        if (duringBusinessHours) {
+          closedTitle.innerHTML = '🚧 PHONE LINES BUSY';
+          closedBanner.style.background = 'linear-gradient(135deg, #ff8c00, #ff6b00)';
+          afterHoursMessage.style.display = 'none';
+          tempUnavailableMessage.style.display = 'block';
+          console.log('🚧 Showing "BUSY" banner (system inactive during business hours)');
+        } else {
+          closedTitle.innerHTML = '🕐 CURRENTLY CLOSED';
+          closedBanner.style.background = 'linear-gradient(135deg, #666, #888)';
+          afterHoursMessage.style.display = 'block';
+          tempUnavailableMessage.style.display = 'none';
+          console.log('🕐 Showing "CLOSED" banner (system inactive outside business hours)');
+        }
+      } else {
+        closedBanner.style.display = 'none';
+        console.log('✅ Hiding banner (system active)');
+      }
     }
   }
   
-  // Update header call button
+  // FIXED: Update header call button (hide if system inactive AND no payment token)
   const headerButton = document.querySelector('header .cta-button');
   if (headerButton) {
-    headerButton.style.display = systemActive ? 'inline-block' : 'none';
+    const shouldShow = systemActive || hasPaymentToken;
+    headerButton.style.display = shouldShow ? 'inline-block' : 'none';
+    console.log('📞 Header button:', shouldShow ? 'VISIBLE' : 'HIDDEN');
   }
   
-  // Update service buttons
+  // FIXED: Update service buttons
   const normalButtons = document.querySelectorAll('.normal-hours-btn');
   const afterHoursButtons = document.querySelectorAll('.after-hours-btn');
   
+  // Show normal buttons if system is active OR payment token exists
+  const showNormalButtons = systemActive || hasPaymentToken;
+  const showAfterHoursButtons = !systemActive && !hasPaymentToken;
+  
   normalButtons.forEach(btn => {
-    btn.style.display = systemActive ? 'inline-block' : 'none';
+    btn.style.display = showNormalButtons ? 'inline-block' : 'none';
   });
   
   afterHoursButtons.forEach(btn => {
-    btn.style.display = !systemActive ? 'inline-block' : 'none';
+    btn.style.display = showAfterHoursButtons ? 'inline-block' : 'none';
   });
   
-  // Update sticky buttons
+  console.log('🔘 Service buttons - Normal:', showNormalButtons ? 'VISIBLE' : 'HIDDEN', 
+              'After-hours:', showAfterHoursButtons ? 'VISIBLE' : 'HIDDEN');
+  
+  // FIXED: Update sticky buttons
   const stickyCall = document.getElementById('stickyCallButton');
   const stickyClosed = document.getElementById('stickyClosedButton');
   
   if (stickyCall) {
-    stickyCall.style.display = systemActive ? 'inline-block' : 'none';
+    const shouldShowSticky = systemActive || hasPaymentToken;
+    stickyCall.style.display = shouldShowSticky ? 'inline-block' : 'none';
+    console.log('📱 Sticky call button:', shouldShowSticky ? 'VISIBLE' : 'HIDDEN');
   }
   
   if (stickyClosed) {
-    if (!systemActive) {
+    if (!systemActive && !hasPaymentToken) {
       stickyClosed.style.display = 'inline-block';
       if (duringBusinessHours) {
         stickyClosed.innerHTML = '📅 Book Online';
         stickyClosed.style.background = '#ff8c00';
+        stickyClosed.href = '#service-selection';
       } else {
         stickyClosed.innerHTML = '🕐 View Hours';
         stickyClosed.style.background = '#666';
+        stickyClosed.href = '#closedBanner';
       }
+      console.log('🔲 Sticky closed button: VISIBLE (' + 
+                  (duringBusinessHours ? 'Book Online' : 'View Hours') + ')');
     } else {
       stickyClosed.style.display = 'none';
+      console.log('🔲 Sticky closed button: HIDDEN');
     }
   }
+  
+  console.log('✅ updateHoursDisplay completed');
 }
 
 /* === INCOMING CALL CORRELATION WEBHOOK === */
@@ -1104,8 +1206,12 @@ function getServiceType(eventAction) {
 
 // Initialize on page load
 window.addEventListener('load', function() {
+  console.log('🚀 Page loaded - initializing...');
+  
   updatePhoneNumbers(); // Apply dynamic phone numbers first
-  updateHoursDisplay();
+  updateHoursDisplay(); // Initial check
+  
+  // Set up periodic checks every 5 minutes
   setInterval(updateHoursDisplay, 5 * 60 * 1000);
   
   if (typeof gtag !== 'undefined') {
@@ -1114,6 +1220,8 @@ window.addEventListener('load', function() {
       'page_location': window.location.href
     });
   }
+  
+  console.log('✅ Initialization complete');
 });
 
 let scrollTracked = false;
@@ -1142,14 +1250,18 @@ window.addEventListener('scroll', function() {
   const stickyClosedButton = document.getElementById('stickyClosedButton');
 
   if (token && box && checkbox && button && sticky && stickyCall) {
+    console.log('💳 Payment token detected, setting up payment UI');
+    
     box.style.display = 'block';
     sticky.style.display = 'inline-block';
     
+    // Hide other sticky buttons when payment is active
     stickyCall.style.display = 'none';
     if (stickyClosedButton) {
       stickyClosedButton.style.display = 'none';
     }
     
+    // Hide normal service buttons to force payment flow
     const normalButtons = document.querySelectorAll('.normal-hours-btn');
     normalButtons.forEach(btn => {
       btn.style.display = 'none';
@@ -1164,8 +1276,14 @@ window.addEventListener('scroll', function() {
     button.addEventListener('click', () => {
       window.location.href = `https://buy.stripe.com/${token}`;
     });
+    
+    console.log('💳 Payment UI setup complete');
   }
 })();
+
+// Enable debug panel for testing (remove in production)
+// Uncomment the next line to show debug info
+// document.querySelector('.debug-info').style.display = 'block';
 </script>
 
 </body>
