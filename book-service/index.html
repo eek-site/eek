@@ -506,6 +506,43 @@ const serviceConfigs = {
       'Service provided after WINZ approval confirmed',
       'Mobile service - we come to your location'
     ]
+  },
+  'inspection': {
+    title:'Pre Purchase Vehicle Inspections',
+    subtitle:'Get a professional vehicle inspection before you buy',
+    breadcrumb:'Pre Purchase Inspection',
+    bookingTitle:'Pre Purchase Vehicle Inspections',
+    bookingDescription:'Comprehensive 45-point inspection • Professional report',
+    step1Title:'Step 1: Tell us about the vehicle you want inspected',
+    detailsLabel:'Additional details about the vehicle or inspection requirements:',
+    detailsPlaceholder:'e.g., Any specific concerns, where to meet, seller details, etc.',
+    serviceCode:'INSP',
+    basePrice:199,
+    stats:[
+      {number:'45-point',text:'inspection'},
+      {number:'Written',text:'report'},
+      {number:'Same day',text:'service'},
+      {number:'All',text:'vehicle types'}
+    ],
+    urgencyOptions:[
+      {id:'emergency',title:'Same Day Inspection',time:'Within 4 hours',description:'Urgent inspection for immediate purchase decision',hidePrice:true},
+      {id:'scheduled',title:'Scheduled Inspection',time:'Next business day',description:'Book ahead and save money',hidePrice:true}
+    ],
+    infoContent:`
+      <h4>Our Pre-Purchase Inspection Includes:</h4>
+      <ul>
+        <li><strong>Comprehensive 45-point check</strong> of all major systems</li>
+        <li><strong>Engine diagnostics</strong> and performance assessment</li>
+        <li><strong>Brake, suspension and steering</strong> inspection</li>
+        <li><strong>Written report</strong> with photos and recommendations</li>
+        <li><strong>Purchase advice</strong> and estimated repair costs</li>
+      </ul>`,
+    terms:[
+      'Comprehensive 45-point mechanical inspection',
+      'Written report with photos and recommendations', 
+      'Service performed at vehicle location',
+      'Report delivered within 24 hours'
+    ]
   }
 };
 
@@ -535,6 +572,8 @@ function sanitizeText(val){ return (val || '').trim().replace(/\s+/g,' '); }
 // === CONSISTENT DATA BUILDER ===
 // Builds consistent data structure for all API calls
 function buildBookingData(status) {
+  const urlParams = new URLSearchParams(window.location.search);
+  
   const baseData = {
     // Session and tracking
     sessionId: window.sessionId,
@@ -566,9 +605,20 @@ function buildBookingData(status) {
     serviceCode: window.currentConfig.serviceCode,
     serviceTitle: window.currentConfig.title,
     
-    // Source tracking
+    // Source tracking - Enhanced with persistent GCLID
     source: 'booking_form',
-    formVersion: '2.0'
+    formVersion: '2.0',
+    gclid: localStorage.getItem("eek_gclid") || urlParams.get('gclid') || null,
+    
+    // UTM tracking from URL or storage
+    utm: {
+      source: urlParams.get('utm_source') || localStorage.getItem("eek_utm_source") || null,
+      medium: urlParams.get('utm_medium') || localStorage.getItem("eek_utm_medium") || null,
+      campaign: urlParams.get('utm_campaign') || localStorage.getItem("eek_utm_campaign") || null,
+      term: urlParams.get('utm_term') || localStorage.getItem("eek_utm_term") || null,
+      content: urlParams.get('utm_content') || localStorage.getItem("eek_utm_content") || null,
+      gclid: localStorage.getItem("eek_gclid") || urlParams.get('gclid') || null
+    }
   };
 
   // Add service-specific data based on status
@@ -611,6 +661,12 @@ function buildBookingData(status) {
       }
     }
   }
+
+  console.log('📊 GCLID tracking data:', {
+    fromURL: urlParams.get('gclid'),
+    fromStorage: localStorage.getItem("eek_gclid"),
+    final: baseData.gclid
+  });
 
   return baseData;
 }
@@ -672,17 +728,55 @@ async function generateWinzQuote() {
   }
 }
 
-// Initialize
+// Initialize - ENHANCED with URL parameter capture
 document.addEventListener('DOMContentLoaded', function(){
   console.log('🚀 === BOOKING FORM INITIALIZED === 🚀');
   const urlParams = new URLSearchParams(window.location.search);
   const service = urlParams.get('service') || 'jumpstart';
+  const gclid = urlParams.get('gclid');
+  const sessionId = urlParams.get('session_id');
+  
   console.log('📌 Service requested:', service);
   console.log('🌐 Current URL:', window.location.href);
+  console.log('📍 GCLID from URL:', gclid || 'None');
+  console.log('🔗 Session ID from URL:', sessionId || 'None');
+  
+  // Store GCLID if present in URL (this ensures persistence across pages)
+  if (gclid) {
+    localStorage.setItem("eek_gclid", gclid);
+    localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
+    console.log('✅ GCLID stored for tracking:', gclid);
+  } else {
+    // Check if we have a stored GCLID from main page visit
+    const storedGclid = localStorage.getItem("eek_gclid");
+    if (storedGclid) {
+      console.log('📋 Using stored GCLID from previous page visit:', storedGclid);
+    }
+  }
+  
+  // Use provided session ID or create new one
+  if (sessionId) {
+    window.sessionId = sessionId;
+    localStorage.setItem("eek_session_id", sessionId);
+    console.log('✅ Using session ID from main page:', sessionId);
+  } else {
+    window.sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem("eek_session_id", window.sessionId);
+    console.log('✅ Created new session ID:', window.sessionId);
+  }
+  
+  // Store UTM parameters for tracking continuity
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+    const value = urlParams.get(param);
+    if (value) {
+      localStorage.setItem(`eek_${param}`, value);
+      console.log(`📊 UTM parameter stored: ${param} = ${value}`);
+    }
+  });
+  
   loadServiceConfig(service);
   
-  // Send initial status
-  window.sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  // Send initial status with enhanced data
   sendBookingUpdate(BOOKING_STATUS.INITIAL);
 });
 
@@ -1086,6 +1180,7 @@ function toggleBookingButton(){
 function buildRedirectUrl(){
   const baseUrl = 'https://www.eek.nz/thanks';
   const params = new URLSearchParams();
+  const urlParams = new URLSearchParams(window.location.search);
 
   const name = sanitizeText(document.getElementById('nameInput').value);
   const phone = sanitizePhone(document.getElementById('phoneInput').value);
@@ -1114,6 +1209,15 @@ function buildRedirectUrl(){
   params.append('timeWindow', selectedUrgencyDetails.time || '');
   params.append('urgencyLevel', selectedUrgency || '');
   params.append('bookingTime', new Date().toISOString());
+  
+  // Enhanced: Include GCLID and session tracking in redirect
+  const gclid = localStorage.getItem("eek_gclid") || urlParams.get('gclid');
+  if (gclid) {
+    params.append('gclid', gclid);
+  }
+  if (window.sessionId) {
+    params.append('session_id', window.sessionId);
+  }
   
   if (window.currentConfig.isWinz) {
     params.append('emergencyType', selectedEmergencyType || '');
@@ -1212,6 +1316,9 @@ async function generatePaymentLink(){
       scheduledDate: fmtDateNZ(nowNZ()),
       scheduledTime: selectedUrgencyDetails.time || '',
       urgencyLevel: selectedUrgency || 'emergency',
+      // Enhanced: Include GCLID in payment data for complete tracking
+      gclid: localStorage.getItem("eek_gclid"),
+      sessionId: window.sessionId,
       ...(window.currentService === 'jumpstart' ? { batteryVoltage: (selectedVoltageId === '12v' ? '12V' : '24V') } : {})
     }
   };
