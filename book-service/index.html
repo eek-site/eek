@@ -437,31 +437,36 @@ const serviceConfigs = {
     detailsLabel:'Critical details about what happened:',
     detailsPlaceholder:'e.g., How much wrong fuel, have you started engine, petrol in diesel or vice versa, etc.',
     serviceCode:'FUEL',
-    basePrice:849,
+    basePrice:399,
     stats:[
       {number:'30–90',text:'min arrival'},
-      {number:'No',text:'engine damage'},
+      {number:'Mobile',text:'extraction first'},
       {number:'100%',text:'insured service'},
       {number:'Complete',text:'system flush'}
     ],
     urgencyOptions:[
-      {id:'emergency',title:'Emergency Extraction',time:'30–90 minutes arrival',description:'Critical - prevent engine damage',hidePrice:true}
+      {id:'mobile',title:'Mobile Extraction Service',time:'30–90 minutes arrival',description:'On-site fuel extraction and system flush - suitable for many cases',price:399},
+      {id:'workshop',title:'Workshop Service',time:'Vehicle collection + workshop completion',description:'Complete workshop extraction with comprehensive system service',price:849}
     ],
     infoContent:`
       <h4>CRITICAL: DO NOT START THE ENGINE</h4>
       <ul>
-        <li><strong>Professional extraction</strong> of contaminated fuel</li>
-        <li><strong>Complete system flush</strong> to remove all traces</li>
+        <li><strong>Mobile Service ($399):</strong> On-site extraction suitable for many misfuel situations</li>
+        <li><strong>Workshop Service ($849):</strong> Complete workshop service for complex cases</li>
+        <li><strong>Professional assessment</strong> will determine the best approach for your situation</li>
+        <li><strong>Complete system flush</strong> to remove all contaminated fuel</li>
         <li><strong>Fresh fuel replacement</strong> with correct fuel type</li>
-        <li><strong>System testing</strong> to ensure safe operation</li>
         <li><strong>Fully insured service</strong> for your protection</li>
       </ul>`,
-    terms:[
-      'Emergency fuel extraction service - we come to your location',
-      'Price calculated based on fuel amount and vehicle type',
-      'Complete system flush and replacement with correct fuel',
-      'Time-critical service to prevent engine damage'
-    ]
+    terms:{
+      mobile:[
+        'In some cases, transfer to workshop may be necessary. Towing costs not included in service price. Additional fees may apply.'
+      ],
+      workshop:[
+        'Towing costs not included in service price',
+        'Additional fees may apply for complex extraction requirements'
+      ]
+    }
   },
   'winz': {
     title:'WINZ Vehicle Repair Quote',
@@ -628,6 +633,13 @@ function buildBookingData(status) {
     baseData.urgencyTitle = selectedUrgencyDetails.title || '';
     baseData.calculatedPrice = calculatedPrice || window.currentConfig.basePrice;
     baseData.finalPrice = getTotalPrice();
+    
+    // Add accepted terms for fuel-extraction service
+    if (window.currentService === 'fuel-extraction' && window.currentConfig.terms && !Array.isArray(window.currentConfig.terms)) {
+      const acceptedTerms = window.currentConfig.terms[selectedUrgency] || [];
+      baseData.acceptedTerms = acceptedTerms;
+      baseData.serviceLevel = selectedUrgency; // mobile or workshop
+    }
   }
 
   // Add voltage for jumpstart services
@@ -818,9 +830,17 @@ function loadServiceConfig(serviceType){
     `<div class="stat-item"><span class="stat-number">${stat.number}</span>${stat.text}</div>`
   ).join('');
 
-  // Terms list
+  // Terms list - handle both array and conditional object formats
   const termsList = document.getElementById('termsList');
-  termsList.innerHTML = config.terms.map(term => `<li>${term}</li>`).join('');
+  if (config.terms) {
+    if (Array.isArray(config.terms)) {
+      // Standard array format for other services
+      termsList.innerHTML = config.terms.map(term => `<li>${term}</li>`).join('');
+    } else {
+      // Conditional format for fuel-extraction
+      termsList.innerHTML = ''; // Will be populated when urgency is selected
+    }
+  }
 
   // Emergency selector for WINZ
   const emergencySelector = document.getElementById('emergencySelector');
@@ -1034,13 +1054,22 @@ async function goToStep2(){
   // Setup urgency options
   const urgencyContainer = document.getElementById('urgencyOptions');
   urgencyContainer.innerHTML = window.currentConfig.urgencyOptions.map(o => {
-    const displayPrice = calculatedPrice || window.currentConfig.basePrice;
-    const priceHtml = (o.hidePrice || window.currentConfig.hidePrice) 
-      ? '<div class="urgency-price calculating">Price in quote</div>'
-      : `<div class="urgency-price">$${displayPrice}</div>`;
+    let displayPrice, priceHtml;
+    
+    if (window.currentService === 'fuel-extraction') {
+      // For fuel-extraction, use the fixed price from the option
+      displayPrice = o.price;
+      priceHtml = `<div class="urgency-price">$${displayPrice}</div>`;
+    } else {
+      // For other services, use calculated price or fallback
+      displayPrice = calculatedPrice || window.currentConfig.basePrice;
+      priceHtml = (o.hidePrice || window.currentConfig.hidePrice) 
+        ? '<div class="urgency-price calculating">Price in quote</div>'
+        : `<div class="urgency-price">$${displayPrice}</div>`;
+    }
     
     return `
-      <div class="urgency-option" onclick="selectUrgency('${o.id}','${o.title}','${o.time}',${displayPrice},this)">
+      <div class="urgency-option" onclick="selectUrgency('${o.id}','${o.title}','${o.time}',${o.price || displayPrice},this)">
         <div class="urgency-title">${o.title}</div>
         <div class="urgency-time">${o.time}</div>
         <div class="urgency-description">${o.description}</div>
@@ -1064,6 +1093,14 @@ function selectUrgency(id, title, time, price, el){
     time,
     price: calculatedPrice || price
   };
+  
+  // Update terms for fuel-extraction service based on selection
+  if (window.currentService === 'fuel-extraction' && window.currentConfig.terms && !Array.isArray(window.currentConfig.terms)) {
+    const termsList = document.getElementById('termsList');
+    const termsForSelection = window.currentConfig.terms[id] || [];
+    termsList.innerHTML = termsForSelection.map(term => `<li>${term}</li>`).join('');
+  }
+  
   document.getElementById('confirmTimeBtn').disabled = false;
 }
 
@@ -1115,6 +1152,11 @@ function getTotalPrice(){
   }
   if (window.currentService === 'jumpstart' && selectedVoltagePrice) {
     return selectedVoltagePrice;
+  }
+  if (window.currentService === 'fuel-extraction' && selectedUrgency) {
+    // For fuel-extraction, price depends on selected urgency option
+    const selectedOption = window.currentConfig.urgencyOptions.find(opt => opt.id === selectedUrgency);
+    return selectedOption ? selectedOption.price : window.currentConfig.basePrice;
   }
   return calculatedPrice || selectedUrgencyDetails.price || window.currentConfig.basePrice;
 }
