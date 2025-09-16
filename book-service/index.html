@@ -445,18 +445,18 @@ const serviceConfigs = {
       {number:'Complete',text:'system flush'}
     ],
     urgencyOptions:[
-      {id:'mobile',title:'Mobile Extraction Service',time:'30–90 minutes arrival',description:'On-site fuel extraction and system flush - suitable for many cases',price:399},
+      {id:'mobile',title:'Mobile Extraction Service',time:'30–90 minutes arrival',description:'On-site fuel extraction and system flush',price:399},
       {id:'workshop',title:'Workshop Service',time:'Vehicle collection + workshop completion',description:'Complete workshop extraction with comprehensive system service',price:849}
     ],
     infoContent:`
       <h4>CRITICAL: DO NOT START THE ENGINE</h4>
       <ul>
-        <li><strong>Mobile Service ($399):</strong> On-site extraction suitable for many misfuel situations</li>
-        <li><strong>Workshop Service ($849):</strong> Complete workshop service for complex cases</li>
-        <li><strong>Professional assessment</strong> will determine the best approach for your situation</li>
-        <li><strong>Complete system flush</strong> to remove all contaminated fuel</li>
+        <li><strong>Professional extraction</strong> of contaminated fuel</li>
+        <li><strong>Complete system flush</strong> to remove all traces</li>
         <li><strong>Fresh fuel replacement</strong> with correct fuel type</li>
+        <li><strong>System testing</strong> to ensure safe operation</li>
         <li><strong>Fully insured service</strong> for your protection</li>
+        <li><strong>Professional assessment</strong> will determine the best approach for your situation</li>
       </ul>`,
     terms:{
       mobile:[
@@ -1057,24 +1057,33 @@ async function goToStep2(){
     let displayPrice, priceHtml;
     
     if (window.currentService === 'fuel-extraction') {
-      // For fuel-extraction, use the fixed price from the option
+      // For fuel-extraction, show price in the button title and hide separate price display
       displayPrice = o.price;
-      priceHtml = `<div class="urgency-price">$${displayPrice}</div>`;
+      priceHtml = `<div class="urgency-price" style="display:none;">$${displayPrice}</div>`;
+      const titleWithPrice = `${o.title} - $${displayPrice}`;
+      
+      return `
+        <div class="urgency-option" onclick="selectUrgency('${o.id}','${o.title}','${o.time}',${o.price || displayPrice},this)">
+          <div class="urgency-title">${titleWithPrice}</div>
+          <div class="urgency-time">${o.time}</div>
+          <div class="urgency-description">${o.description}</div>
+          ${priceHtml}
+        </div>`;
     } else {
       // For other services, use calculated price or fallback
       displayPrice = calculatedPrice || window.currentConfig.basePrice;
       priceHtml = (o.hidePrice || window.currentConfig.hidePrice) 
         ? '<div class="urgency-price calculating">Price in quote</div>'
         : `<div class="urgency-price">$${displayPrice}</div>`;
+      
+      return `
+        <div class="urgency-option" onclick="selectUrgency('${o.id}','${o.title}','${o.time}',${o.price || displayPrice},this)">
+          <div class="urgency-title">${o.title}</div>
+          <div class="urgency-time">${o.time}</div>
+          <div class="urgency-description">${o.description}</div>
+          ${priceHtml}
+        </div>`;
     }
-    
-    return `
-      <div class="urgency-option" onclick="selectUrgency('${o.id}','${o.title}','${o.time}',${o.price || displayPrice},this)">
-        <div class="urgency-title">${o.title}</div>
-        <div class="urgency-time">${o.time}</div>
-        <div class="urgency-description">${o.description}</div>
-        ${priceHtml}
-      </div>`;
   }).join('');
 
   // Auto-select for single option
