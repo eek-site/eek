@@ -348,7 +348,7 @@ const STATUS_DESCRIPTIONS = {
   'winz_quote_sent': 'WINZ quote generated and sent to customer'
 };
 
-// Service Configurations
+// Service Configurations - REMOVED INSPECTION SERVICE
 const serviceConfigs = {
   'jumpstart': {
     title:'Battery Jump Start Service',
@@ -511,43 +511,6 @@ const serviceConfigs = {
       'Service provided after WINZ approval confirmed',
       'Mobile service - we come to your location'
     ]
-  },
-  'inspection': {
-    title:'Pre Purchase Vehicle Inspections',
-    subtitle:'Get a professional vehicle inspection before you buy',
-    breadcrumb:'Pre Purchase Inspection',
-    bookingTitle:'Pre Purchase Vehicle Inspections',
-    bookingDescription:'Comprehensive 45-point inspection • Professional report',
-    step1Title:'Step 1: Tell us about the vehicle you want inspected',
-    detailsLabel:'Additional details about the vehicle or inspection requirements:',
-    detailsPlaceholder:'e.g., Any specific concerns, where to meet, seller details, etc.',
-    serviceCode:'INSP',
-    basePrice:199,
-    stats:[
-      {number:'45-point',text:'inspection'},
-      {number:'Written',text:'report'},
-      {number:'Same day',text:'service'},
-      {number:'All',text:'vehicle types'}
-    ],
-    urgencyOptions:[
-      {id:'emergency',title:'Same Day Inspection',time:'Within 4 hours',description:'Urgent inspection for immediate purchase decision',hidePrice:true},
-      {id:'scheduled',title:'Scheduled Inspection',time:'Next business day',description:'Book ahead and save money',hidePrice:true}
-    ],
-    infoContent:`
-      <h4>Our Pre-Purchase Inspection Includes:</h4>
-      <ul>
-        <li><strong>Comprehensive 45-point check</strong> of all major systems</li>
-        <li><strong>Engine diagnostics</strong> and performance assessment</li>
-        <li><strong>Brake, suspension and steering</strong> inspection</li>
-        <li><strong>Written report</strong> with photos and recommendations</li>
-        <li><strong>Purchase advice</strong> and estimated repair costs</li>
-      </ul>`,
-    terms:[
-      'Comprehensive 45-point mechanical inspection',
-      'Written report with photos and recommendations', 
-      'Service performed at vehicle location',
-      'Report delivered within 24 hours'
-    ]
   }
 };
 
@@ -569,9 +532,9 @@ let selectedEmergencyType = null;
 let calculatedPrice = null;
 let winzQuoteGenerated = false;
 
-// Normalization helpers
+// Normalization helpers - UPDATED to fix rego sanitization
 function sanitizePhone(val){ return (val || '').replace(/\D/g,''); }
-function sanitizeRego(val){ return (val || '').toUpperCase().replace(/\s+/g,''); }
+function sanitizeRego(val){ return (val || '').toUpperCase().replace(/[^A-Z0-9]/g,''); }
 function sanitizeText(val){ return (val || '').trim().replace(/\s+/g,' '); }
 
 // === CONSISTENT DATA BUILDER ===
@@ -740,13 +703,37 @@ async function generateWinzQuote() {
   }
 }
 
-// Initialize - ENHANCED with URL parameter capture
+// Initialize - ENHANCED with URL parameter capture and inspection redirect
 document.addEventListener('DOMContentLoaded', function(){
   console.log('🚀 === BOOKING FORM INITIALIZED === 🚀');
   const urlParams = new URLSearchParams(window.location.search);
   const service = urlParams.get('service') || 'jumpstart';
   const gclid = urlParams.get('gclid');
   const sessionId = urlParams.get('session_id');
+  
+  // Redirect inspection service to new dedicated page
+  if (service === 'inspection') {
+    console.log('🔄 Redirecting inspection service to dedicated page');
+    let redirectUrl = 'https://eek.nz/pre-purchase-vehicle-inspection/';
+    
+    // Preserve tracking parameters in redirect
+    const redirectParams = new URLSearchParams();
+    if (gclid) redirectParams.append('gclid', gclid);
+    if (sessionId) redirectParams.append('session_id', sessionId);
+    
+    // Preserve UTM parameters
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+      const value = urlParams.get(param);
+      if (value) redirectParams.append(param, value);
+    });
+    
+    if (redirectParams.toString()) {
+      redirectUrl += '?' + redirectParams.toString();
+    }
+    
+    window.location.href = redirectUrl;
+    return;
+  }
   
   console.log('📌 Service requested:', service);
   console.log('🌐 Current URL:', window.location.href);
