@@ -13,14 +13,6 @@
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
 
-    <!-- Reddit Pixel -->
-    <script>
-        !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
-        (window,document);
-        rdt('init', 'a2_hf16791nsdhx');
-        rdt('track', 'PageVisit');
-    </script>
-
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
     <script>
@@ -491,23 +483,19 @@
     <script src="/eek-master-config.js"></script>
     
     <script>
-        // More Options page specific functionality
+        // More Options page - master config handles all functionality
         console.log('📄 More Options page loaded with master config integration');
         
-        // All tracking and functionality is now handled by the master config
-        // The master config will automatically:
-        // - Track page views
-        // - Set up click tracking for all data-track elements
-        // - Handle phone number updates
-        // - Manage banner visibility
-        // - Set up sticky button behavior
-        // - Handle payment UI
-        // - Set up scroll and time tracking
-        
-        // Page-specific initialization (optional)
-        window.addEventListener('load', function() {
-            console.log('✅ More Options page fully integrated with master config');
-        });
+        // No page-specific JavaScript needed - master config handles:
+        // ✅ Page view tracking
+        // ✅ Click tracking for all data-track elements  
+        // ✅ Phone number updates
+        // ✅ Banner visibility management
+        // ✅ Sticky button behavior
+        // ✅ Payment UI handling
+        // ✅ Scroll and time tracking
+        // ✅ First visit tracking
+        // ✅ Conversion tracking
     </script>
 </body>
 </html>
