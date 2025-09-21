@@ -152,6 +152,19 @@ function injectMasterStyles() {
     document.head.appendChild(style);
 }
 
+// === REDDIT PIXEL INITIALIZATION ===
+function initializeRedditPixel() {
+    if (window.rdt) return; // Already initialized
+    
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
+    (window,document);
+    
+    window.rdt('init', 'a2_hf16791nsdhx');
+    window.rdt('track', 'PageVisit');
+    
+    console.log('📊 Reddit Pixel initialized and page visit tracked');
+}
+
 // === CONFIGURATION ===
 const EEK_CONFIG = {
     // API Endpoints
@@ -984,6 +997,9 @@ function initializePage() {
     
     // Inject critical CSS styles first
     injectMasterStyles();
+    
+    // Initialize tracking pixels
+    initializeRedditPixel();
     
     // Initialize state
     EEK_STATE.sessionId = getOrCreateSessionId();
