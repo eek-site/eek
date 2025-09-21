@@ -691,6 +691,12 @@ function buildTrackingParams() {
   const params = new URLSearchParams();
   const urlParams = new URLSearchParams(window.location.search);
   
+  // Preserve payment token if present
+  const token = urlParams.get('token');
+  if (token) {
+    params.set('token', token);
+  }
+  
   // Preserve GCLID if present
   const gclid = urlParams.get('gclid');
   if (gclid) {
