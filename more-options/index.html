@@ -45,7 +45,7 @@
             background-color: #f5f5f5;
             min-height: 100vh;
             color: #333;
-            padding: 20px;
+            padding: 20px 20px 80px 20px;
         }
         
         .container {
@@ -344,25 +344,83 @@
         .after-hours-banner h2 {
             margin: 0 0 10px 0;
             font-size: 1.6em;
+            text-align: center;
         }
 
         .after-hours-banner p {
             margin: 10px 0;
             font-size: 1.1em;
+            text-align: center;
         }
 
-        /* Debug styles - remove in production */
-        .debug-info {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            background: rgba(0,0,0,0.8);
+        /* Payment Banner */
+        #paymentBanner {
+            display: none;
+            background: linear-gradient(135deg, #28a745, #20a142);
             color: white;
-            padding: 10px;
-            font-size: 12px;
-            border-radius: 5px;
-            z-index: 9999;
-            display: none; /* Change to 'block' to enable debugging */
+            padding: 20px;
+            margin: 0 auto 20px;
+            max-width: 900px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(40,167,69,0.3);
+            text-align: center;
+        }
+
+        #paymentBanner h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.6em;
+        }
+
+        #paymentBanner p {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+
+        #paymentBannerButton {
+            display: inline-block;
+            background: rgba(255,255,255,0.25);
+            color: white;
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 1.3em;
+            border-radius: 8px;
+            text-decoration: none;
+            border: 2px solid white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        #paymentBannerButton:hover {
+            background: white;
+            color: #28a745;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        /* Sticky Call Button */
+        .sticky-call {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background-color: #ff5500;
+            color: white;
+            font-size: 1.1em;
+            padding: 14px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-decoration: none;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .sticky-call:hover {
+            background-color: #e64a00;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .emergency-btn[style*="background: rgba(40,167,69,0.25)"] {
+            background: rgba(40,167,69,0.25) !important;
         }
         
         @media (max-width: 768px) {
@@ -400,17 +458,6 @@
     </style>
 </head>
 <body>
-    <!-- Debug Info Panel -->
-    <div class="debug-info" id="debugInfo">
-        <div>Page: More Options</div>
-        <div>System Status: <span id="debugSystemStatus">Checking...</span></div>
-        <div>Business Hours: <span id="debugBusinessHours">Checking...</span></div>
-        <div>Session ID: <span id="debugSessionId">Loading...</span></div>
-        <div>GCLID: <span id="debugGclid">None</span></div>
-        <div>Phone Preference: <span id="debugPhonePreference">Default</span></div>
-        <div>Source: <span id="debugSource">Direct</span></div>
-    </div>
-
     <!-- Business Closed Banner (hidden by default) -->
     <div id="closedBanner" class="after-hours-banner" style="background: linear-gradient(135deg, #666, #888);">
         <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
@@ -428,12 +475,10 @@
     </div>
 
     <!-- Payment Banner for Token Users -->
-    <div id="paymentBanner" style="display: none; background: linear-gradient(135deg, #28a745, #20a142); color: white; padding: 20px; margin: 0 auto 20px; max-width: 900px; border-radius: 12px; box-shadow: 0 4px 12px rgba(40,167,69,0.3); text-align: center;">
-        <h2 style="margin: 0 0 10px 0; font-size: 1.6em;">💳 Ready to Complete Payment</h2>
-        <p style="margin: 10px 0; font-size: 1.1em;">Your roadside assistance payment is ready to process</p>
-        <a href="#" id="paymentBannerButton" style="display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 15px 30px; margin: 10px; font-size: 1.3em; border-radius: 8px; text-decoration: none; border: 2px solid white; font-weight: bold; transition: all 0.3s ease;">
-            💳 Complete Payment
-        </a>
+    <div id="paymentBanner">
+        <h2>💳 Ready to Complete Payment</h2>
+        <p>Your roadside assistance payment is ready to process</p>
+        <a href="#" id="paymentBannerButton">💳 Complete Payment</a>
     </div>
 
     <div class="container">
@@ -451,10 +496,10 @@
             <h2>🚨 Need Immediate Help?</h2>
             <p>Get emergency mobile mechanical assistance or speak with our dispatch team</p>
             <div class="emergency-buttons">
-                <a href="/rescue-me" class="emergency-btn normal-hours-btn" data-track="emergency_rescue" onclick="trackInteraction(this)">🚨 Emergency Service</a>
-                <a href="tel:0800769000" class="emergency-btn phone-link normal-hours-btn" data-track="more_options_call" onclick="trackInteraction(this)">📞 Call <span class="phone-display">0800 769 000</span></a>
-                <a href="/find-me" class="emergency-btn normal-hours-btn" data-track="find_me_tool" onclick="trackInteraction(this)">📍 Find Me Tool</a>
-                <a href="/book-service" class="emergency-btn after-hours-btn" data-track="book_online_after_hours" onclick="trackInteraction(this)" style="background: rgba(40,167,69,0.25); display: none;">📅 Book Online Service</a>
+                <a href="/rescue-me" class="emergency-btn normal-hours-btn" data-track="emergency_rescue">🚨 Emergency Service</a>
+                <a href="tel:0800769000" class="emergency-btn phone-link normal-hours-btn" data-track="more_options_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+                <a href="/find-me" class="emergency-btn normal-hours-btn" data-track="find_me_tool">📍 Find Me Tool</a>
+                <a href="/book-service" class="emergency-btn after-hours-btn" data-track="book_online_after_hours" style="background: rgba(40,167,69,0.25); display: none;">📅 Book Online Service</a>
             </div>
         </div>
         
@@ -470,11 +515,11 @@
                     <h3>👥 For Customers</h3>
                     <p>Service requests, support, and assistance</p>
                     <div class="contact-buttons">
-                        <a href="/rescue-me" class="contact-btn normal-hours-btn" data-track="customer_emergency" onclick="trackInteraction(this)">🚨 Emergency Service</a>
-                        <a href="tel:0800769000" class="contact-btn phone-link normal-hours-btn" data-track="customer_call" onclick="trackInteraction(this)">📞 Call <span class="phone-display">0800 769 000</span></a>
-                        <a href="/customer-escalation" class="contact-btn normal-hours-btn" data-track="customer_support" onclick="trackInteraction(this)">💬 Customer Support</a>
-                        <a href="/find-me" class="contact-btn normal-hours-btn" data-track="customer_find_me" onclick="trackInteraction(this)">📍 Find Me Tool</a>
-                        <a href="/book-service" class="contact-btn after-hours-btn" data-track="customer_book_online" onclick="trackInteraction(this)" style="display: none;">📅 Book Online Service</a>
+                        <a href="/rescue-me" class="contact-btn normal-hours-btn" data-track="customer_emergency">🚨 Emergency Service</a>
+                        <a href="tel:0800769000" class="contact-btn phone-link normal-hours-btn" data-track="customer_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+                        <a href="/customer-escalation" class="contact-btn normal-hours-btn" data-track="customer_support">💬 Customer Support</a>
+                        <a href="/find-me" class="contact-btn normal-hours-btn" data-track="customer_find_me">📍 Find Me Tool</a>
+                        <a href="/book-service" class="contact-btn after-hours-btn" data-track="customer_book_online" style="display: none;">📅 Book Online Service</a>
                     </div>
                 </div>
                 
@@ -482,8 +527,8 @@
                     <h3>🤝 For Suppliers & Partners</h3>
                     <p>Business partnerships and supplier relations</p>
                     <div class="contact-buttons">
-                        <a href="/supplier" class="contact-btn" data-track="supplier_portal" onclick="trackInteraction(this)">🤝 Official Supplier Portal</a>
-                        <a href="/supplier-relations" class="contact-btn" data-track="supplier_relations" onclick="trackInteraction(this)">📝 Supplier Relations</a>
+                        <a href="/supplier" class="contact-btn" data-track="supplier_portal">🤝 Official Supplier Portal</a>
+                        <a href="/supplier-relations" class="contact-btn" data-track="supplier_relations">📝 Supplier Relations</a>
                     </div>
                 </div>
                 
@@ -491,7 +536,7 @@
                     <h3>💼 Employment & Careers</h3>
                     <p>Join our team as a mobile technician</p>
                     <div class="contact-buttons">
-                        <a href="/apply" class="contact-btn" data-track="employment_apply" onclick="trackInteraction(this)">📝 Apply to Work</a>
+                        <a href="/apply" class="contact-btn" data-track="employment_apply">📝 Apply to Work</a>
                     </div>
                 </div>
             </div>
@@ -503,11 +548,11 @@
                 <h3>🛡️ Legal & Compliance Center</h3>
                 <p>Terms, policies, privacy matters, and legal authority access</p>
                 <div class="legal-buttons">
-                    <a href="/terms" class="legal-btn" data-track="legal_terms" onclick="trackInteraction(this)">📋 End User Terms</a>
-                    <a href="/supplier-terms" class="legal-btn" data-track="legal_supplier_terms" onclick="trackInteraction(this)">📋 Supplier Terms</a>
-                    <a href="/privacy" class="legal-btn" data-track="legal_privacy" onclick="trackInteraction(this)">🔒 Privacy Policy</a>
-                    <a href="/privacy-report" class="legal-btn" data-track="legal_privacy_report" onclick="trackInteraction(this)">🚨 Privacy Report</a>
-                    <a href="/mjuris" class="legal-btn" data-track="legal_authority" onclick="trackInteraction(this)">⚖️ Legal Authority</a>
+                    <a href="/terms" class="legal-btn" data-track="legal_terms">📋 End User Terms</a>
+                    <a href="/supplier-terms" class="legal-btn" data-track="legal_supplier_terms">📋 Supplier Terms</a>
+                    <a href="/privacy" class="legal-btn" data-track="legal_privacy">🔒 Privacy Policy</a>
+                    <a href="/privacy-report" class="legal-btn" data-track="legal_privacy_report">🚨 Privacy Report</a>
+                    <a href="/mjuris" class="legal-btn" data-track="legal_authority">⚖️ Legal Authority</a>
                 </div>
             </div>
         </div>
@@ -523,462 +568,62 @@
                 <div class="utility-card">
                     <h3>🗺️ Navigation Help</h3>
                     <p>Find your current location or get directions for our mobile technicians.</p>
-                    <a href="/map" data-track="utility_maps" onclick="trackInteraction(this)">Open Maps</a>
+                    <a href="/map" data-track="utility_maps">Open Maps</a>
                 </div>
             </div>
         </div>
         
         <div class="footer-nav">
-            <a href="/" data-track="footer_home" onclick="trackInteraction(this)">🏠 Homepage</a>
-            <a href="/privacy" data-track="footer_privacy" onclick="trackInteraction(this)">Privacy Policy</a>
+            <a href="/" data-track="footer_home">🏠 Homepage</a>
+            <a href="/privacy" data-track="footer_privacy">Privacy Policy</a>
         </div>
     </div>
 
+    <!-- Sticky Call Button -->
+    <a class="sticky-call phone-link" href="tel:0800769000" id="stickyCallButton">📞 Call <span class="phone-display">Eek Now</span></a>
+    <a class="sticky-call" href="#closedBanner" id="stickyClosedButton" style="display: none; background: #666;">🕐 View Hours</a>
+
+    <!-- Load Master Configuration -->
+    <script src="/eek-master-config.js"></script>
+    
     <script>
-        // === INITIALIZATION AND TRACKING ===
-        console.log('🚀 === MORE OPTIONS PAGE INITIALIZED === 🚀');
-
-        // API Endpoints
-        const TRACKING_API_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
-        const SYSTEM_STATUS_API_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/17b1d2990e6f4082a2b0d9c2f1a29025/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=bPyoxJ24kuxJZOyLGAclGaEuH6BHwUTFaGmYOwHofa8";
-
-        let sessionId = null;
-        let gclid = null;
-        let utmData = {};
-        let hasPaymentToken = false;
-
-        // === SYSTEM STATUS AND BUSINESS HOURS ===
-        async function checkSystemStatus() {
-            const debugSystemStatus = document.getElementById('debugSystemStatus');
-            
-            try {
-                console.log('🔄 Checking system status...');
-                
-                const response = await fetch(SYSTEM_STATUS_API_URL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({}),
-                    cache: "no-store",
-                    timeout: 10000
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    const isActive = data.state === 'Active';
-                    console.log('✅ System status check successful:', isActive ? 'ACTIVE' : 'INACTIVE');
-                    
-                    if (debugSystemStatus) {
-                        debugSystemStatus.textContent = isActive ? 'ACTIVE' : 'INACTIVE';
-                        debugSystemStatus.style.color = isActive ? '#0f0' : '#f00';
-                    }
-                    
-                    return isActive;
-                } else {
-                    console.warn('⚠️ System status API returned non-OK status:', response.status);
-                    if (debugSystemStatus) {
-                        debugSystemStatus.textContent = `ERROR (${response.status})`;
-                        debugSystemStatus.style.color = '#ff0';
-                    }
-                }
-            } catch (error) {
-                console.error('❌ Error checking system status:', error);
-                if (debugSystemStatus) {
-                    debugSystemStatus.textContent = 'ERROR (Network)';
-                    debugSystemStatus.style.color = '#f00';
+        // More Options specific functionality
+        console.log('📄 More Options page loaded with master config');
+        
+        // Track page view
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'page_view', {
+                page_title: document.title,
+                page_location: window.location.href,
+                gclid: EEK_STATE.gclid
+            });
+        }
+        
+        // Scroll tracking
+        let scrollTracked = false;
+        window.addEventListener('scroll', function() {
+            if (!scrollTracked && window.scrollY > document.body.scrollHeight * 0.5) {
+                scrollTracked = true;
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'scroll', {
+                        event_category: 'Engagement',
+                        event_label: 'Scrolled 50% of more options page'
+                    });
                 }
             }
-            
-            // Default to active if check fails
-            console.log('🔄 Defaulting to ACTIVE due to API failure');
-            return true;
-        }
+        });
 
-        function isWithinBusinessHours() {
-            // Get current time in New Zealand (Pacific/Auckland timezone)
-            const nzTime = new Date().toLocaleString("en-US", {timeZone: "Pacific/Auckland"});
-            const now = new Date(nzTime);
-            const day = now.getDay(); // 0 = Sunday, 6 = Saturday
-            const hour = now.getHours();
-            const minutes = now.getMinutes();
-            const time = hour + minutes / 60;
-            
-            let isOpen = false;
-            
-            // Monday-Friday: 7:00 AM - 5:00 PM (NZ time)
-            if (day >= 1 && day <= 5) {
-                isOpen = time >= 7 && time < 17;
-            }
-            
-            // Saturday-Sunday: 7:00 AM - 12:00 PM (NZ time)
-            if (day === 0 || day === 6) {
-                isOpen = time >= 7 && time < 12;
-            }
-            
-            // Update debug info
-            const debugBusinessHours = document.getElementById('debugBusinessHours');
-            
-            if (debugBusinessHours) {
-                debugBusinessHours.textContent = isOpen ? 'OPEN' : 'CLOSED';
-                debugBusinessHours.style.color = isOpen ? '#0f0' : '#f00';
-            }
-            
-            console.log('🕒 Business hours check:', isOpen ? 'OPEN' : 'CLOSED', `(${now.toLocaleString()} NZ Time)`);
-            
-            return isOpen;
-        }
-
-        async function updateHoursDisplay() {
-            console.log('🔄 Starting updateHoursDisplay for More Options...');
-            
-            // Check if payment token or gclid exists in CURRENT URL (priority)
-            const urlParams = new URLSearchParams(window.location.search);
-            hasPaymentToken = !!urlParams.get('token');
-            const currentGclid = urlParams.get('gclid');
-            
-            // Use current URL GCLID if present, otherwise use stored session GCLID
-            const effectiveGclid = currentGclid || gclid;
-            
-            console.log('🔍 URL Analysis:', {
-                hasTokenInURL: hasPaymentToken,
-                hasGclidInURL: !!currentGclid,
-                hasStoredGclid: !!gclid,
-                effectiveGclid: !!effectiveGclid
-            });
-            
-            // For gclid or token users, always treat as system active (open for business)
-            let systemActive;
-            if (effectiveGclid || hasPaymentToken) {
-                systemActive = true;
-                console.log('🎯 GCLID or Token detected - forcing system active (always open)');
-            } else {
-                systemActive = await checkSystemStatus();
-            }
-            
-            const duringBusinessHours = isWithinBusinessHours();
-            
-            console.log('📊 Status Summary:', {
-                systemActive,
-                duringBusinessHours,
-                hasPaymentToken,
-                hasGclid: !!effectiveGclid
-            });
-            
-            // Banner logic - hide for payment token or gclid users
-            const closedBanner = document.getElementById('closedBanner');
-            const closedTitle = document.getElementById('closedTitle');
-            const afterHoursMessage = document.getElementById('afterHoursMessage');
-            const tempUnavailableMessage = document.getElementById('tempUnavailableMessage');
-            
-            if (hasPaymentToken || effectiveGclid) {
-                // Hide closed banner for payment flow or gclid traffic
-                if (closedBanner) {
-                    closedBanner.style.display = 'none';
-                }
-                console.log('💳🎯 Payment token or GCLID detected - hiding closed banner');
-            } else {
-                // Normal banner logic for direct visitors
-                if (closedBanner) {
-                    if (!systemActive) {
-                        closedBanner.style.display = 'block';
-                        
-                        if (duringBusinessHours) {
-                            closedTitle.innerHTML = '🚧 PHONE LINES BUSY';
-                            closedBanner.style.background = 'linear-gradient(135deg, #ff8c00, #ff6b00)';
-                            afterHoursMessage.style.display = 'none';
-                            tempUnavailableMessage.style.display = 'block';
-                            console.log('🚧 Showing "BUSY" banner');
-                        } else {
-                            closedTitle.innerHTML = '🕐 CURRENTLY CLOSED';
-                            closedBanner.style.background = 'linear-gradient(135deg, #666, #888)';
-                            afterHoursMessage.style.display = 'block';
-                            tempUnavailableMessage.style.display = 'none';
-                            console.log('🕐 Showing "CLOSED" banner');
-                        }
-                    } else {
-                        closedBanner.style.display = 'none';
-                        console.log('✅ Hiding banner (system active)');
-                    }
-                }
-            }
-            
-            // Update buttons based on system status
-            const normalButtons = document.querySelectorAll('.normal-hours-btn');
-            const afterHoursButtons = document.querySelectorAll('.after-hours-btn');
-            
-            const showNormalButtons = systemActive;
-            const showAfterHoursButtons = !systemActive;
-            
-            normalButtons.forEach(btn => {
-                btn.style.display = showNormalButtons ? 'inline-block' : 'none';
-            });
-            
-            afterHoursButtons.forEach(btn => {
-                btn.style.display = showAfterHoursButtons ? 'inline-block' : 'none';
-            });
-            
-            console.log('🔘 Buttons - Normal:', showNormalButtons ? 'VISIBLE' : 'HIDDEN', 
-                        'After-hours:', showAfterHoursButtons ? 'VISIBLE' : 'HIDDEN');
-            
-            console.log('✅ updateHoursDisplay completed');
-        }
-
-        // === SESSION AND TRACKING DATA MANAGEMENT ===
-        function initializeTracking() {
-            console.log('📊 Initializing tracking system...');
-            
-            // Get or create session ID
-            sessionId = getOrCreateSessionId();
-            
-            // Capture GCLID from URL or localStorage
-            gclid = getGCLID();
-            
-            // Capture UTM parameters
-            utmData = getUTMData();
-            
-            // Update debug display
-            updateDebugInfo();
-            
-            // Send page view event
-            sendPageViewEvent();
-            
-            console.log('✅ Tracking system initialized');
-            console.log('📊 Session ID:', sessionId);
-            console.log('📊 GCLID:', gclid || 'None');
-            console.log('📊 UTM Data:', utmData);
-        }
-
-        function getOrCreateSessionId() {
-            let sid = localStorage.getItem("eek_session_id");
-            
-            if (!sid) {
-                // Try to get from URL parameters
-                const urlParams = new URLSearchParams(window.location.search);
-                sid = urlParams.get('session_id');
-                
-                if (sid) {
-                    localStorage.setItem("eek_session_id", sid);
-                    console.log('🔄 Session ID restored from URL');
-                } else {
-                    // Create new session ID
-                    sid = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-                    localStorage.setItem("eek_session_id", sid);
-                    console.log('🆕 New session ID created');
-                }
-            } else {
-                console.log('✅ Existing session ID found');
-            }
-            
-            return sid;
-        }
-
-        function getGCLID() {
-            const urlParams = new URLSearchParams(window.location.search);
-            let gclidValue = urlParams.get('gclid');
-            
-            // If GCLID in URL, store it
-            if (gclidValue) {
-                localStorage.setItem("eek_gclid", gclidValue);
-                localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
-                // Store phone preference for GCLID users
-                localStorage.setItem("eek_phone_preference", "tracking");
-                console.log('✅ GCLID captured from URL:', gclidValue);
-                return gclidValue;
-            }
-            
-            // Otherwise, try to get stored GCLID
-            const storedGclid = localStorage.getItem("eek_gclid");
-            const storedTimestamp = localStorage.getItem("eek_gclid_timestamp");
-            
-            if (storedGclid && storedTimestamp) {
-                const thirtyDaysAgo = new Date();
-                thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-                
-                if (new Date(storedTimestamp) > thirtyDaysAgo) {
-                    console.log('📋 Using stored GCLID:', storedGclid);
-                    return storedGclid;
-                } else {
-                    // GCLID expired
-                    localStorage.removeItem("eek_gclid");
-                    localStorage.removeItem("eek_gclid_timestamp");
-                    localStorage.removeItem("eek_phone_preference");
-                    console.log('⚠️ GCLID expired and removed');
-                }
-            }
-            
-            return null;
-        }
-
-        function getUTMData() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const utm = {};
-            const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
-            
-            // Check URL parameters
-            utmParams.forEach(param => {
-                const value = urlParams.get(param);
-                if (value) {
-                    utm[param] = value;
-                    // Store for future use
-                    localStorage.setItem(`eek_${param}`, value);
-                }
-            });
-            
-            // Fill in from localStorage if not in URL
-            utmParams.forEach(param => {
-                if (!utm[param]) {
-                    const stored = localStorage.getItem(`eek_${param}`);
-                    if (stored) {
-                        utm[param] = stored;
-                    }
-                }
-            });
-            
-            return utm;
-        }
-
-        function updateDebugInfo() {
-            const sessionIdEl = document.getElementById('debugSessionId');
-            const gclidEl = document.getElementById('debugGclid');
-            const sourceEl = document.getElementById('debugSource');
-            const phonePreferenceEl = document.getElementById('debugPhonePreference');
-            
-            if (sessionIdEl) sessionIdEl.textContent = sessionId ? sessionId.substring(0, 20) + '...' : 'None';
-            if (gclidEl) gclidEl.textContent = gclid || 'None';
-            if (sourceEl) sourceEl.textContent = utmData.utm_source || 'Direct';
-            if (phonePreferenceEl) {
-                const preference = localStorage.getItem('eek_phone_preference') || 'default';
-                phonePreferenceEl.textContent = preference;
-            }
-        }
-
-        // === PHONE NUMBER DYNAMIC DISPLAY ===
-        function updatePhoneNumbers() {
-            // Check if traffic comes from Google Ads or stored preference
-            let showTrackingNumber = !!gclid;
-            
-            // Also check if user came from a GCLID session (stored preference)
-            const storedPhonePreference = localStorage.getItem('eek_phone_preference');
-            if (storedPhonePreference === 'tracking') {
-                showTrackingNumber = true;
-            }
-            
-            const phoneData = showTrackingNumber ? 
-                { tel: 'tel:0800447153', display: '0800 447 153' } :
-                { tel: 'tel:0800769000', display: '0800 769 000' };
-            
-            // Update all phone links
-            document.querySelectorAll('.phone-link').forEach(link => {
-                link.href = phoneData.tel;
-            });
-            
-            // Update phone display text
-            document.querySelectorAll('.phone-display').forEach(span => {
-                span.textContent = phoneData.display;
-            });
-            
-            console.log('📞 Phone numbers updated:', phoneData.display);
-        }
-
-        // === EVENT TRACKING ===
-        function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
-            return {
-                eventType: eventType,
-                eventAction: eventAction,
-                timestamp: new Date().toISOString(),
-                sessionId: sessionId,
-                gclid: gclid,
-                
-                // Page context
-                page: {
-                    title: document.title,
-                    url: window.location.href,
-                    path: window.location.pathname,
-                    referrer: document.referrer || null
-                },
-                
-                // UTM tracking
-                utm: utmData,
-                
-                // Device info
-                device: {
-                    userAgent: navigator.userAgent,
-                    platform: navigator.platform || null,
-                    language: navigator.language || null,
-                    mobile: /Mobi|Android/i.test(navigator.userAgent),
-                    screen: {
-                        width: window.screen ? window.screen.width : null,
-                        height: window.screen ? window.screen.height : null,
-                        pixelRatio: window.devicePixelRatio || 1
-                    }
-                },
-                
-                // Source tracking
-                source: 'more_options_page',
-                formVersion: '2.1',
-                
-                // Additional data
-                ...additionalData
-            };
-        }
-
-        async function sendTrackingEvent(payload) {
-            try {
-                const response = await fetch(TRACKING_API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload),
-                    keepalive: true
-                });
-                
-                console.log(`📡 Tracking event sent: ${payload.eventAction} (Status: ${response.status})`);
-                return response.ok;
-            } catch (error) {
-                console.error('❌ Tracking event failed:', error);
-                return false;
-            }
-        }
-
-        function sendPageViewEvent() {
-            const payload = buildTrackingPayload('page_view', 'more_options_view', {
-                pageType: 'more_options',
-                loadTime: Date.now() - performance.navigationStart
-            });
-            
-            sendTrackingEvent(payload);
-        }
-
-        // === INTERACTION TRACKING ===
+        // Simple tracking function for interactions
         function trackInteraction(element) {
             const trackingAction = element.dataset.track;
-            const linkUrl = element.href;
             const linkText = element.textContent.trim();
             
             console.log('👆 Interaction tracked:', trackingAction);
             
-            // Build event payload
-            const payload = buildTrackingPayload('user_interaction', trackingAction, {
-                element: {
-                    tag: element.tagName.toLowerCase(),
-                    text: linkText,
-                    href: linkUrl,
-                    className: element.className
-                },
-                interactionType: element.href && element.href.startsWith('tel:') ? 'phone_call' : 'link_click'
-            });
-            
-            // Send tracking event
-            sendTrackingEvent(payload);
-            
-            // Analytics tracking
             if (typeof gtag !== 'undefined') {
                 gtag('event', trackingAction, {
                     event_category: 'More Options Interaction',
-                    event_label: linkText,
-                    value: getEventValue(trackingAction)
+                    event_label: linkText
                 });
                 
                 // Track phone calls as conversions
@@ -988,129 +633,14 @@
                     });
                 }
             }
-            
-            // Reddit Pixel tracking
-            if (typeof rdt !== 'undefined') {
-                const eventValue = getEventValue(trackingAction);
-                rdt('track', 'Lead', {
-                    customEventName: trackingAction,
-                    conversionId: `more_options_${Date.now()}`,
-                    value: eventValue,
-                    currency: 'NZD',
-                    eventSource: 'more_options_page',
-                    gclid: gclid
-                });
-            }
         }
 
-        function getEventValue(action) {
-            const valueMap = {
-                'more_options_call': 25000,
-                'customer_call': 25000,
-                'emergency_rescue': 35000,
-                'customer_emergency': 35000,
-                'find_me_tool': 15000,
-                'customer_find_me': 15000,
-                'customer_support': 10000,
-                'supplier_portal': 5000,
-                'supplier_relations': 5000,
-                'employment_apply': 8000,
-                'utility_maps': 5000,
-                'book_online_after_hours': 20000,
-                'customer_book_online': 20000
-            };
-            
-            return (valueMap[action] || 5000) / 100; // Convert to dollars
-        }
-
-        // === SCROLL TRACKING ===
-        let scrollTracked = false;
-        function trackScroll() {
-            if (!scrollTracked && window.scrollY > document.body.scrollHeight * 0.5) {
-                scrollTracked = true;
-                
-                const payload = buildTrackingPayload('user_engagement', 'scroll_50_percent', {
-                    scrollDepth: '50%',
-                    pageHeight: document.body.scrollHeight
-                });
-                
-                sendTrackingEvent(payload);
-                
-                if (typeof gtag !== 'undefined') {
-                    gtag('event', 'scroll', {
-                        event_category: 'Engagement',
-                        event_label: 'Scrolled 50% of more options page'
-                    });
-                }
-            }
-        }
-
-        // === INITIALIZATION ===
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('📄 More Options page loaded');
-            
-            // Initialize tracking
-            initializeTracking();
-            
-            // Update phone numbers based on traffic source
-            updatePhoneNumbers();
-            
-            // Check for payment token and show payment banner
-            const urlParams = new URLSearchParams(window.location.search);
-            const paymentToken = urlParams.get('token');
-            
-            if (paymentToken) {
-                console.log('💳 Payment token detected, showing payment banner');
-                const paymentBanner = document.getElementById('paymentBanner');
-                const paymentButton = document.getElementById('paymentBannerButton');
-                
-                if (paymentBanner) {
-                    paymentBanner.style.display = 'block';
-                }
-                
-                if (paymentButton) {
-                    paymentButton.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        window.location.href = `https://buy.stripe.com/${paymentToken}`;
-                    });
-                }
-            }
-            
-            // Update business hours display
-            updateHoursDisplay();
-            
-            // Set up periodic system status checks
-            setInterval(updateHoursDisplay, 5 * 60 * 1000); // Every 5 minutes
-            
-            // Set up scroll tracking
-            window.addEventListener('scroll', trackScroll);
-            
-            // Track initial page engagement
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'page_view', {
-                    page_title: document.title,
-                    page_location: window.location.href,
-                    gclid: gclid
-                });
-            }
-            
-            console.log('✅ More Options page initialization complete');
-        });
-
-        // === TIME ON PAGE TRACKING ===
-        let startTime = Date.now();
-        window.addEventListener('beforeunload', function() {
-            const timeOnPage = Date.now() - startTime;
-            const payload = buildTrackingPayload('user_engagement', 'time_on_page', {
-                timeOnPage: timeOnPage,
-                timeOnPageSeconds: Math.round(timeOnPage / 1000)
+        // Add click handlers to trackable elements
+        document.querySelectorAll('[data-track]').forEach(element => {
+            element.addEventListener('click', function() {
+                trackInteraction(this);
             });
-            
-            sendTrackingEvent(payload);
         });
-
-        // Enable debug panel for testing (uncomment to show)
-        // document.getElementById('debugInfo').style.display = 'block';
     </script>
 </body>
 </html>
