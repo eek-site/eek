@@ -563,7 +563,7 @@ font-src 'self' data:;">
 <footer>
   &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
   <a href="https://www.eek.nz/privacy" target="_blank" style="color: #666; text-decoration: underline;">Privacy Policy</a> | 
-  <a href="https://www.eek.nz/more-options" style="color: #666; text-decoration: underline;">More Options</a>
+  <a href="/more-options" class="more-options-link" style="color: #666; text-decoration: underline;">More Options</a>
 </footer>
 
 <a class="sticky-call phone-link" href="tel:0800769000" onclick="trackConversion('sticky_call', 'Contact')" id="stickyCallButton">📞 Call <span class="phone-display">Eek Now</span></a>
@@ -669,8 +669,9 @@ function getDisplayPhoneNumber() {
   const urlParams = new URLSearchParams(window.location.search);
   const gclid = urlParams.get('gclid');
   
-  // If traffic comes from Google Ads, show tracking number
+  // If traffic comes from Google Ads, show tracking number and store preference
   if (gclid) {
+    localStorage.setItem('eek_phone_preference', 'tracking');
     return {
       tel: 'tel:0800447153',
       display: '0800 447 153'
@@ -678,6 +679,7 @@ function getDisplayPhoneNumber() {
   }
   
   // Default number for all other traffic
+  localStorage.setItem('eek_phone_preference', 'default');
   return {
     tel: 'tel:0800769000', 
     display: '0800 769 000'
@@ -731,6 +733,15 @@ function updateServiceLinks() {
       }
     }
   });
+  
+  // Update More Options link with tracking parameters
+  const moreOptionsLink = document.querySelector('.more-options-link, a[href*="more-options"]');
+  if (moreOptionsLink) {
+    const baseUrl = '/more-options';
+    const fullUrl = trackingParams ? `${baseUrl}?${trackingParams}` : baseUrl;
+    moreOptionsLink.href = fullUrl;
+    console.log('🔗 More Options link updated:', fullUrl);
+  }
   
   console.log('🔗 Service links updated with tracking parameters:', trackingParams);
 }
