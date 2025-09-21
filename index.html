@@ -980,18 +980,16 @@ async function updateHoursDisplay() {
   const stickyClosed = document.getElementById('stickyClosedButton');
   
   if (stickyCall) {
-    // For token users, hide the sticky call button completely
-    // For gclid users, show it normally based on system status
-    // For direct users, show it based on system status
-    let shouldShowSticky;
+    // For token users, ALWAYS hide the sticky call button
     if (hasPaymentToken) {
-      shouldShowSticky = false; // Never show for payment token users
+      stickyCall.style.display = 'none';
+      console.log('📱 Sticky call button: HIDDEN (payment token detected)');
     } else {
-      shouldShowSticky = systemActive; // Show for gclid users and direct users when system is active
+      // For non-token users, show based on system status
+      const shouldShowSticky = systemActive;
+      stickyCall.style.display = shouldShowSticky ? 'inline-block' : 'none';
+      console.log('📱 Sticky call button:', shouldShowSticky ? 'VISIBLE' : 'HIDDEN');
     }
-    
-    stickyCall.style.display = shouldShowSticky ? 'inline-block' : 'none';
-    console.log('📱 Sticky call button:', shouldShowSticky ? 'VISIBLE' : 'HIDDEN');
   }
   
   if (stickyClosed) {
