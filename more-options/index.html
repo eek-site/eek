@@ -323,102 +323,6 @@
             color: #ff5500;
         }
 
-        /* Business Hours Banner */
-        .after-hours-banner {
-            background: linear-gradient(135deg, #ff3333, #ff5500);
-            color: white;
-            padding: 20px;
-            margin: 0 auto 20px;
-            max-width: 900px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(255,51,51,0.3);
-            animation: pulse 2s infinite;
-            display: none;
-        }
-
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 4px 12px rgba(255,51,51,0.3); }
-            50% { box-shadow: 0 4px 20px rgba(255,51,51,0.5); }
-        }
-
-        .after-hours-banner h2 {
-            margin: 0 0 10px 0;
-            font-size: 1.6em;
-            text-align: center;
-        }
-
-        .after-hours-banner p {
-            margin: 10px 0;
-            font-size: 1.1em;
-            text-align: center;
-        }
-
-        /* Payment Banner */
-        #paymentBanner {
-            display: none;
-            background: linear-gradient(135deg, #28a745, #20a142);
-            color: white;
-            padding: 20px;
-            margin: 0 auto 20px;
-            max-width: 900px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(40,167,69,0.3);
-            text-align: center;
-        }
-
-        #paymentBanner h2 {
-            margin: 0 0 10px 0;
-            font-size: 1.6em;
-        }
-
-        #paymentBanner p {
-            margin: 10px 0;
-            font-size: 1.1em;
-        }
-
-        #paymentBannerButton {
-            display: inline-block;
-            background: rgba(255,255,255,0.25);
-            color: white;
-            padding: 15px 30px;
-            margin: 10px;
-            font-size: 1.3em;
-            border-radius: 8px;
-            text-decoration: none;
-            border: 2px solid white;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        #paymentBannerButton:hover {
-            background: white;
-            color: #28a745;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-        }
-
-        /* Sticky Call Button */
-        .sticky-call {
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            background-color: #ff5500;
-            color: white;
-            font-size: 1.1em;
-            padding: 14px 20px;
-            border-radius: 50px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            text-decoration: none;
-            z-index: 999;
-            transition: all 0.3s ease;
-        }
-
-        .sticky-call:hover {
-            background-color: #e64a00;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-        }
-
         .emergency-btn[style*="background: rgba(40,167,69,0.25)"] {
             background: rgba(40,167,69,0.25) !important;
         }
@@ -587,59 +491,22 @@
     <script src="/eek-master-config.js"></script>
     
     <script>
-        // More Options specific functionality
-        console.log('📄 More Options page loaded with master config');
+        // More Options page specific functionality
+        console.log('📄 More Options page loaded with master config integration');
         
-        // Track page view
-        if (typeof gtag !== 'undefined') {
-            gtag('event', 'page_view', {
-                page_title: document.title,
-                page_location: window.location.href,
-                gclid: EEK_STATE.gclid
-            });
-        }
+        // All tracking and functionality is now handled by the master config
+        // The master config will automatically:
+        // - Track page views
+        // - Set up click tracking for all data-track elements
+        // - Handle phone number updates
+        // - Manage banner visibility
+        // - Set up sticky button behavior
+        // - Handle payment UI
+        // - Set up scroll and time tracking
         
-        // Scroll tracking
-        let scrollTracked = false;
-        window.addEventListener('scroll', function() {
-            if (!scrollTracked && window.scrollY > document.body.scrollHeight * 0.5) {
-                scrollTracked = true;
-                if (typeof gtag !== 'undefined') {
-                    gtag('event', 'scroll', {
-                        event_category: 'Engagement',
-                        event_label: 'Scrolled 50% of more options page'
-                    });
-                }
-            }
-        });
-
-        // Simple tracking function for interactions
-        function trackInteraction(element) {
-            const trackingAction = element.dataset.track;
-            const linkText = element.textContent.trim();
-            
-            console.log('👆 Interaction tracked:', trackingAction);
-            
-            if (typeof gtag !== 'undefined') {
-                gtag('event', trackingAction, {
-                    event_category: 'More Options Interaction',
-                    event_label: linkText
-                });
-                
-                // Track phone calls as conversions
-                if (trackingAction.includes('call')) {
-                    gtag('event', 'conversion', {
-                        send_to: 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
-                    });
-                }
-            }
-        }
-
-        // Add click handlers to trackable elements
-        document.querySelectorAll('[data-track]').forEach(element => {
-            element.addEventListener('click', function() {
-                trackInteraction(this);
-            });
+        // Page-specific initialization (optional)
+        window.addEventListener('load', function() {
+            console.log('✅ More Options page fully integrated with master config');
         });
     </script>
 </body>
