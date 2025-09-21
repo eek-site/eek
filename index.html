@@ -475,12 +475,7 @@ font-src 'self' data:;">
         <p>45-point certified inspection - 30-60 minute arrival</p>
       </div>
     </a>
-    <a href="#winz-assistance" class="service-link" data-service="winz" style="text-decoration: none; color: inherit;">
-      <div class="keyword-item" style="background: rgba(255,255,255,0.25); border: 2px solid white;">
-        <h4>⭐ WINZ Approved Quotes</h4>
-        <p>Get instant quotes for Work and Income vehicle repair assistance</p>
-      </div>
-    </a>
+
   </div>
 </div>
 
@@ -550,25 +545,7 @@ font-src 'self' data:;">
   </div>
 </div>
 
-<!-- WINZ Assistance Section - Simplified service style -->
-<div class="services" id="winz-assistance">
-  <h2>WINZ Vehicle Repair Assistance – Get Your Quote in Minutes</h2>
-  <p>Eek Mobile Mechanical is a WINZ approved supplier. If you're receiving Work and Income support or facing financial hardship, we can help you access assistance for essential vehicle repairs.</p>
-  <ul>
-    <li>💳 WINZ approved supplier for vehicle repairs</li>
-    <li>🔧 Emergency repairs & WOF-related fixes covered</li>
-    <li>💰 Assistance up to $400 for urgent repairs</li>
-    <li>📋 Instant WINZ-compliant quotes online 24/7</li>
-    <li>⚡ Quick 1-2 day approval process</li>
-    <li>📍 Mobile service - we come to you anywhere in NZ</li>
-  </ul>
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button service-link" data-service="winz" onclick="trackConversion('winz_main_button', 'WINZ')" style="background: #6f42c1;">💳 Get WINZ Quote Now</a>
-  </div>
-  <p style="text-align: center; margin-top: 15px; color: #666; font-size: 0.9em;">
-    Not sure if you qualify? Contact WINZ on 0800 559 009 or visit workandincome.govt.nz
-  </p>
-</div>
+
 
 <!-- Customer Reviews Section -->
 <div class="services">
@@ -885,9 +862,10 @@ function isWithinBusinessHours() {
 async function updateHoursDisplay() {
   console.log('🔄 Starting updateHoursDisplay...');
   
-  // Check if payment token exists
+  // Check if payment token or gclid exists
   const urlParams = new URLSearchParams(window.location.search);
   const hasPaymentToken = urlParams.get('token');
+  const hasGclid = urlParams.get('gclid');
   
   // Update debug info
   const debugPaymentToken = document.getElementById('debugPaymentToken');
@@ -895,30 +873,38 @@ async function updateHoursDisplay() {
     debugPaymentToken.textContent = hasPaymentToken ? 'YES' : 'NO';
   }
   
-  // FIXED: Don't return early for payment tokens - still need to check system status
-  const systemActive = await checkSystemStatus();
+  // For gclid or token users, always treat as system active (open for business)
+  let systemActive;
+  if (hasGclid || hasPaymentToken) {
+    systemActive = true;
+    console.log('🎯 GCLID or Token detected - forcing system active (always open)');
+  } else {
+    systemActive = await checkSystemStatus();
+  }
+  
   const duringBusinessHours = isWithinBusinessHours();
   
   console.log('📊 Status Summary:', {
     systemActive,
     duringBusinessHours,
-    hasPaymentToken: !!hasPaymentToken
+    hasPaymentToken: !!hasPaymentToken,
+    hasGclid: !!hasGclid
   });
   
-  // If payment token exists, hide closed banner but continue with other logic
+  // Banner logic - hide for payment token or gclid users
   const closedBanner = document.getElementById('closedBanner');
   const closedTitle = document.getElementById('closedTitle');
   const afterHoursMessage = document.getElementById('afterHoursMessage');
   const tempUnavailableMessage = document.getElementById('tempUnavailableMessage');
   
-  if (hasPaymentToken) {
-    // Hide closed banner for payment flow
+  if (hasPaymentToken || hasGclid) {
+    // Hide closed banner for payment flow or gclid traffic
     if (closedBanner) {
       closedBanner.style.display = 'none';
     }
-    console.log('💳 Payment token detected - hiding closed banner');
+    console.log('💳🎯 Payment token or GCLID detected - hiding closed banner');
   } else {
-    // Normal banner logic
+    // Normal banner logic for direct visitors
     if (closedBanner) {
       if (!systemActive) {
         closedBanner.style.display = 'block';
@@ -943,21 +929,21 @@ async function updateHoursDisplay() {
     }
   }
   
-  // FIXED: Update header call button (hide if system inactive AND no payment token)
+  // Update header call button (hide if system inactive AND no payment token AND no gclid)
   const headerButton = document.querySelector('header .cta-button');
   if (headerButton) {
-    const shouldShow = systemActive || hasPaymentToken;
+    const shouldShow = systemActive;
     headerButton.style.display = shouldShow ? 'inline-block' : 'none';
     console.log('📞 Header button:', shouldShow ? 'VISIBLE' : 'HIDDEN');
   }
   
-  // FIXED: Update service buttons
+  // Update service buttons
   const normalButtons = document.querySelectorAll('.normal-hours-btn');
   const afterHoursButtons = document.querySelectorAll('.after-hours-btn');
   
-  // Show normal buttons if system is active OR payment token exists
-  const showNormalButtons = systemActive || hasPaymentToken;
-  const showAfterHoursButtons = !systemActive && !hasPaymentToken;
+  // Show normal buttons if system is active (which includes gclid/token users)
+  const showNormalButtons = systemActive;
+  const showAfterHoursButtons = !systemActive;
   
   normalButtons.forEach(btn => {
     btn.style.display = showNormalButtons ? 'inline-block' : 'none';
@@ -970,18 +956,28 @@ async function updateHoursDisplay() {
   console.log('🔘 Service buttons - Normal:', showNormalButtons ? 'VISIBLE' : 'HIDDEN', 
               'After-hours:', showAfterHoursButtons ? 'VISIBLE' : 'HIDDEN');
   
-  // FIXED: Update sticky buttons
+  // Update sticky buttons
   const stickyCall = document.getElementById('stickyCallButton');
   const stickyClosed = document.getElementById('stickyClosedButton');
   
   if (stickyCall) {
-    const shouldShowSticky = systemActive || hasPaymentToken;
+    // For token users, hide the sticky call button completely
+    // For gclid users, show it normally based on system status
+    // For direct users, show it based on system status
+    let shouldShowSticky;
+    if (hasPaymentToken) {
+      shouldShowSticky = false; // Never show for payment token users
+    } else {
+      shouldShowSticky = systemActive; // Show for gclid users and direct users when system is active
+    }
+    
     stickyCall.style.display = shouldShowSticky ? 'inline-block' : 'none';
     console.log('📱 Sticky call button:', shouldShowSticky ? 'VISIBLE' : 'HIDDEN');
   }
   
   if (stickyClosed) {
-    if (!systemActive && !hasPaymentToken) {
+    // Only show closed button for direct visitors when system is inactive
+    if (!systemActive && !hasPaymentToken && !hasGclid) {
       stickyClosed.style.display = 'inline-block';
       if (duringBusinessHours) {
         stickyClosed.innerHTML = '📅 Book Online';
@@ -1185,7 +1181,7 @@ async function updateHoursDisplay() {
   const _origTrack = window.trackConversion || function(){};
   window.trackConversion = function(eventAction, eventCategory){
     try {
-      if (eventAction && !/winz/i.test(eventAction) && /call/i.test(eventAction)){
+      if (eventAction && /call/i.test(eventAction)){
         sendCallClick(eventAction, eventCategory, window.__eek_last_tel_anchor || null);
       }
     } catch(_) {}
@@ -1217,9 +1213,7 @@ function trackConversion(eventAction, eventCategory) {
     'breakdown_after_hours': 35000,
     'battery_after_hours': 20000,
     'fuel_drain_after_hours': 45000,
-    'inspection_after_hours': 25000,
-    'winz_quote_click': 15000,
-    'winz_main_button': 20000
+    'inspection_after_hours': 25000
   };
   
   const eventValue = serviceValues[eventAction] || 25000;
@@ -1227,19 +1221,17 @@ function trackConversion(eventAction, eventCategory) {
   if (typeof gtag !== 'undefined') {
     gtag('event', eventAction, {
       'event_category': eventCategory,
-      'event_label': eventAction.includes('winz') ? 'WINZ Quote Click' : 'Phone Call Click',
+      'event_label': 'Phone Call Click',
       'value': eventValue / 100
     });
-    if (!eventAction.includes('winz')) {
-      gtag('event', 'conversion', {
-        'send_to': 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
-      });
-    }
+    gtag('event', 'conversion', {
+      'send_to': 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
+    });
   }
   
   if (typeof rdt !== 'undefined') {
     rdt('track', 'Lead', {
-      'customEventName': eventAction.includes('winz') ? 'WINZ_Quote_Request' : 'Phone_Call_Click',
+      'customEventName': 'Phone_Call_Click',
       'conversionId': conversionId,
       'value': eventValue,
       'currency': 'NZD',
@@ -1264,9 +1256,7 @@ function getServiceType(eventAction) {
     'breakdown_after_hours': 'After Hours Breakdown',
     'battery_after_hours': 'After Hours Battery',
     'fuel_drain_after_hours': 'After Hours Fuel Drain',
-    'inspection_after_hours': 'After Hours Inspection',
-    'winz_quote_click': 'WINZ Quote Request',
-    'winz_main_button': 'WINZ Main Quote Request'
+    'inspection_after_hours': 'After Hours Inspection'
   };
   return serviceMap[eventAction] || 'General Service';
 }
@@ -1318,14 +1308,16 @@ window.addEventListener('scroll', function() {
   const stickyCall = document.getElementById('stickyCallButton');
   const stickyClosedButton = document.getElementById('stickyClosedButton');
 
-  if (token && box && checkbox && button && sticky && stickyCall) {
+  if (token && box && checkbox && button && sticky) {
     console.log('💳 Payment token detected, setting up payment UI');
     
     box.style.display = 'block';
     sticky.style.display = 'inline-block';
     
-    // Hide other sticky buttons when payment is active
-    stickyCall.style.display = 'none';
+    // Hide sticky call button for payment token users
+    if (stickyCall) {
+      stickyCall.style.display = 'none';
+    }
     if (stickyClosedButton) {
       stickyClosedButton.style.display = 'none';
     }
