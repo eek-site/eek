@@ -160,9 +160,9 @@ function initializeRedditPixel() {
     (window,document);
     
     window.rdt('init', 'a2_hf16791nsdhx');
-    window.rdt('track', 'PageVisit');
+    // Note: PageVisit tracking moved to trackPageView() function to prevent duplicates
     
-    console.log('📊 Reddit Pixel initialized and page visit tracked');
+    console.log('📊 Reddit Pixel initialized (PageVisit will be tracked by trackPageView)');
 }
 
 // === CONFIGURATION ===
@@ -404,19 +404,38 @@ function trackInteraction(element) {
 }
 
 function trackPageView() {
+    const firstVisitSent = localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.firstVisitSent);
+    const isFirstVisit = !firstVisitSent;
+    
     const payload = buildTrackingPayload('page_view', 'page_loaded', {
         pageType: window.location.pathname.includes('more-options') ? 'more_options' : 'main',
-        loadTime: Date.now() - performance.navigationStart
+        loadTime: Date.now() - performance.navigationStart,
+        // Include first visit data in the same payload
+        isFirstVisit: isFirstVisit,
+        landingPage: isFirstVisit ? window.location.href : null
     });
     
     sendTrackingEvent(payload);
     
+    // Mark first visit as sent if this was a first visit
+    if (isFirstVisit) {
+        localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.firstVisitSent, new Date().toISOString());
+        console.log('🆕 First visit data included in page view tracking');
+    }
+    
+    // Google Analytics page view tracking
     if (typeof gtag !== 'undefined') {
         gtag('event', 'page_view', {
             'page_title': document.title,
             'page_location': window.location.href,
             'gclid': EEK_STATE.gclid
         });
+    }
+    
+    // Reddit Pixel page visit tracking
+    if (typeof rdt !== 'undefined') {
+        rdt('track', 'PageVisit');
+        console.log('📊 Reddit Pixel PageVisit tracked');
     }
 }
 
@@ -1007,8 +1026,7 @@ function initializePage() {
     EEK_STATE.utmData = getUTMData();
     EEK_STATE.hasPaymentToken = hasPaymentToken();
     
-    // Send first visit tracking
-    sendFirstVisitTracking();
+    // Note: First visit tracking is now handled within trackPageView() to prevent duplicates
     
     // Update UI
     updateUIState();
@@ -1018,7 +1036,7 @@ function initializePage() {
     setupScrollTracking();
     setupTimeTracking();
     addClickTrackingToElements();
-    trackPageView();
+    trackPageView(); // This now handles both page view AND first visit in one call
     
     // Set up periodic checks
     setInterval(updateUIState, 5 * 60 * 1000); // Every 5 minutes
