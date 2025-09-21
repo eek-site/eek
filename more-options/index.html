@@ -427,6 +427,15 @@
         </div>
     </div>
 
+    <!-- Payment Banner for Token Users -->
+    <div id="paymentBanner" style="display: none; background: linear-gradient(135deg, #28a745, #20a142); color: white; padding: 20px; margin: 0 auto 20px; max-width: 900px; border-radius: 12px; box-shadow: 0 4px 12px rgba(40,167,69,0.3); text-align: center;">
+        <h2 style="margin: 0 0 10px 0; font-size: 1.6em;">💳 Ready to Complete Payment</h2>
+        <p style="margin: 10px 0; font-size: 1.1em;">Your roadside assistance payment is ready to process</p>
+        <a href="#" id="paymentBannerButton" style="display: inline-block; background: rgba(255,255,255,0.25); color: white; padding: 15px 30px; margin: 10px; font-size: 1.3em; border-radius: 8px; text-decoration: none; border: 2px solid white; font-weight: bold; transition: all 0.3s ease;">
+            💳 Complete Payment
+        </a>
+    </div>
+
     <div class="container">
         <div class="header">
             <div class="logo">🔧 Eek Mobile Mechanical</div>
@@ -623,13 +632,24 @@
         async function updateHoursDisplay() {
             console.log('🔄 Starting updateHoursDisplay for More Options...');
             
-            // Check if payment token or gclid exists
+            // Check if payment token or gclid exists in CURRENT URL (priority)
             const urlParams = new URLSearchParams(window.location.search);
             hasPaymentToken = !!urlParams.get('token');
+            const currentGclid = urlParams.get('gclid');
+            
+            // Use current URL GCLID if present, otherwise use stored session GCLID
+            const effectiveGclid = currentGclid || gclid;
+            
+            console.log('🔍 URL Analysis:', {
+                hasTokenInURL: hasPaymentToken,
+                hasGclidInURL: !!currentGclid,
+                hasStoredGclid: !!gclid,
+                effectiveGclid: !!effectiveGclid
+            });
             
             // For gclid or token users, always treat as system active (open for business)
             let systemActive;
-            if (gclid || hasPaymentToken) {
+            if (effectiveGclid || hasPaymentToken) {
                 systemActive = true;
                 console.log('🎯 GCLID or Token detected - forcing system active (always open)');
             } else {
@@ -642,7 +662,7 @@
                 systemActive,
                 duringBusinessHours,
                 hasPaymentToken,
-                hasGclid: !!gclid
+                hasGclid: !!effectiveGclid
             });
             
             // Banner logic - hide for payment token or gclid users
@@ -651,7 +671,7 @@
             const afterHoursMessage = document.getElementById('afterHoursMessage');
             const tempUnavailableMessage = document.getElementById('tempUnavailableMessage');
             
-            if (hasPaymentToken || gclid) {
+            if (hasPaymentToken || effectiveGclid) {
                 // Hide closed banner for payment flow or gclid traffic
                 if (closedBanner) {
                     closedBanner.style.display = 'none';
@@ -1034,6 +1054,27 @@
             
             // Update phone numbers based on traffic source
             updatePhoneNumbers();
+            
+            // Check for payment token and show payment banner
+            const urlParams = new URLSearchParams(window.location.search);
+            const paymentToken = urlParams.get('token');
+            
+            if (paymentToken) {
+                console.log('💳 Payment token detected, showing payment banner');
+                const paymentBanner = document.getElementById('paymentBanner');
+                const paymentButton = document.getElementById('paymentBannerButton');
+                
+                if (paymentBanner) {
+                    paymentBanner.style.display = 'block';
+                }
+                
+                if (paymentButton) {
+                    paymentButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        window.location.href = `https://buy.stripe.com/${paymentToken}`;
+                    });
+                }
+            }
             
             // Update business hours display
             updateHoursDisplay();
