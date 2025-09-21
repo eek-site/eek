@@ -820,9 +820,11 @@ async function checkSystemStatus() {
   return true;
 }
 
-// Function to check if current time is within business hours
+// Function to check if current time is within business hours (NZ time)
 function isWithinBusinessHours() {
-  const now = new Date();
+  // Get current time in New Zealand (Pacific/Auckland timezone)
+  const nzTime = new Date().toLocaleString("en-US", {timeZone: "Pacific/Auckland"});
+  const now = new Date(nzTime);
   const day = now.getDay(); // 0 = Sunday, 6 = Saturday
   const hour = now.getHours();
   const minutes = now.getMinutes();
@@ -830,12 +832,12 @@ function isWithinBusinessHours() {
   
   let isOpen = false;
   
-  // Monday-Friday: 7:00 AM - 5:00 PM
+  // Monday-Friday: 7:00 AM - 5:00 PM (NZ time)
   if (day >= 1 && day <= 5) {
     isOpen = time >= 7 && time < 17;
   }
   
-  // Saturday-Sunday: 7:00 AM - 12:00 PM
+  // Saturday-Sunday: 7:00 AM - 12:00 PM (NZ time)
   if (day === 0 || day === 6) {
     isOpen = time >= 7 && time < 12;
   }
@@ -850,10 +852,10 @@ function isWithinBusinessHours() {
   }
   
   if (debugCurrentTime) {
-    debugCurrentTime.textContent = now.toLocaleString();
+    debugCurrentTime.textContent = now.toLocaleString() + ' (NZ Time)';
   }
   
-  console.log('🕒 Business hours check:', isOpen ? 'OPEN' : 'CLOSED', `(${now.toLocaleString()})`);
+  console.log('🕒 Business hours check:', isOpen ? 'OPEN' : 'CLOSED', `(${now.toLocaleString()} NZ Time)`);
   
   return isOpen;
 }
