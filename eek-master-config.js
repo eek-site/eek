@@ -4,6 +4,154 @@
  * Include this file on every page to ensure consistency
  */
 
+// === INJECT CRITICAL CSS STYLES ===
+function injectMasterStyles() {
+    if (document.getElementById('eek-master-styles')) return; // Already injected
+    
+    const style = document.createElement('style');
+    style.id = 'eek-master-styles';
+    style.textContent = `
+        /* Sticky Call Button */
+        .sticky-call {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            background-color: #ff5500;
+            color: white;
+            font-size: 1.1em;
+            padding: 14px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-decoration: none;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+        
+        .sticky-call:hover {
+            background-color: #e64a00;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .sticky-payment {
+            position: fixed;
+            bottom: 15px;
+            right: 150px;
+            background-color: #28a745;
+            color: white;
+            font-size: 1.1em;
+            padding: 14px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            text-decoration: none;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+        
+        .sticky-payment:hover {
+            background-color: #20a142;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* Payment Banner */
+        .payment-banner {
+            display: none;
+            background: linear-gradient(135deg, #28a745, #20a142);
+            color: white;
+            padding: 20px;
+            margin: 0 auto 20px;
+            max-width: 800px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(40,167,69,0.3);
+            text-align: center;
+        }
+        
+        .payment-banner h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.6em;
+        }
+        
+        .payment-banner p {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        
+        .payment-banner-button {
+            display: inline-block;
+            background: rgba(255,255,255,0.25);
+            color: white;
+            padding: 15px 30px;
+            margin: 10px;
+            font-size: 1.3em;
+            border-radius: 8px;
+            text-decoration: none;
+            border: 2px solid white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-banner-button:hover {
+            background: white;
+            color: #28a745;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            text-decoration: none;
+        }
+        
+        /* Business Hours Banner */
+        .after-hours-banner {
+            background: linear-gradient(135deg, #ff3333, #ff5500);
+            color: white;
+            padding: 20px;
+            margin: 0 auto 20px;
+            max-width: 800px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(255,51,51,0.3);
+            animation: eek-pulse 2s infinite;
+            display: none;
+            text-align: center;
+        }
+        
+        @keyframes eek-pulse {
+            0%, 100% { box-shadow: 0 4px 12px rgba(255,51,51,0.3); }
+            50% { box-shadow: 0 4px 20px rgba(255,51,51,0.5); }
+        }
+        
+        .after-hours-banner h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.6em;
+        }
+        
+        .after-hours-banner p {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .sticky-call {
+                font-size: 1em;
+                padding: 12px 18px;
+                bottom: 10px;
+                right: 10px;
+            }
+            
+            .sticky-payment {
+                font-size: 1em;
+                padding: 12px 18px;
+                bottom: 10px;
+                right: 120px;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
 // === CONFIGURATION ===
 const EEK_CONFIG = {
     // API Endpoints
@@ -36,6 +184,56 @@ const EEK_CONFIG = {
         gclidTimestamp: "eek_gclid_timestamp",
         phonePreference: "eek_phone_preference",
         firstVisitSent: "eek_first_visit_sent"
+    },
+    
+    // Service Values for tracking (in cents)
+    SERVICE_VALUES: {
+        'inspection_call': 19900,
+        'breakdown_call': 28900,
+        'battery_call': 14900,
+        'fuel_drain_call': 39900,
+        'header_call': 25000,
+        'sticky_call': 25000,
+        'more_options_call': 25000,
+        'customer_call': 25000,
+        'emergency_rescue': 35000,
+        'customer_emergency': 35000,
+        'find_me_tool': 15000,
+        'customer_find_me': 15000,
+        'customer_support': 10000,
+        'supplier_portal': 5000,
+        'supplier_relations': 5000,
+        'employment_apply': 8000,
+        'utility_maps': 5000,
+        'book_online_after_hours': 20000,
+        'customer_book_online': 20000,
+        'after_hours_emergency': 35000,
+        'breakdown_after_hours': 35000,
+        'battery_after_hours': 20000,
+        'fuel_drain_after_hours': 45000,
+        'inspection_after_hours': 25000
+    },
+    
+    // Service Type Mapping
+    SERVICE_TYPES: {
+        'inspection_call': 'Pre-Purchase Inspection',
+        'breakdown_call': 'Emergency Breakdown',
+        'battery_call': 'Battery Jump Start',
+        'fuel_drain_call': 'Wrong Fuel Rescue',
+        'header_call': 'General Inquiry',
+        'sticky_call': 'General Inquiry',
+        'more_options_call': 'General Inquiry',
+        'customer_call': 'General Inquiry',
+        'emergency_rescue': 'Emergency Service',
+        'customer_emergency': 'Emergency Service',
+        'find_me_tool': 'Location Service',
+        'customer_find_me': 'Location Service',
+        'customer_support': 'Customer Support',
+        'after_hours_emergency': 'After Hours Emergency',
+        'breakdown_after_hours': 'After Hours Breakdown',
+        'battery_after_hours': 'After Hours Battery',
+        'fuel_drain_after_hours': 'After Hours Fuel Drain',
+        'inspection_after_hours': 'After Hours Inspection'
     }
 };
 
@@ -49,27 +247,245 @@ let EEK_STATE = {
     duringBusinessHours: false
 };
 
+// === TRACKING AND ANALYTICS ===
+function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
+    return {
+        eventType: eventType,
+        eventAction: eventAction,
+        timestamp: new Date().toISOString(),
+        sessionId: EEK_STATE.sessionId,
+        gclid: EEK_STATE.gclid,
+        
+        // Page context
+        page: {
+            title: document.title,
+            url: window.location.href,
+            path: window.location.pathname,
+            referrer: document.referrer || null
+        },
+        
+        // UTM tracking
+        utm: EEK_STATE.utmData,
+        
+        // Device info
+        device: {
+            userAgent: navigator.userAgent,
+            platform: navigator.platform || null,
+            language: navigator.language || null,
+            mobile: /Mobi|Android/i.test(navigator.userAgent),
+            screen: {
+                width: window.screen ? window.screen.width : null,
+                height: window.screen ? window.screen.height : null,
+                pixelRatio: window.devicePixelRatio || 1
+            }
+        },
+        
+        // Source tracking
+        source: window.location.pathname.includes('more-options') ? 'more_options_page' : 'main_page',
+        formVersion: '2.1',
+        
+        // Additional data
+        ...additionalData
+    };
+}
+
+async function sendTrackingEvent(payload) {
+    try {
+        const response = await fetch(EEK_CONFIG.TRACKING_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload),
+            keepalive: true
+        });
+        
+        console.log(`📡 Tracking event sent: ${payload.eventAction} (Status: ${response.status})`);
+        return response.ok;
+    } catch (error) {
+        console.error('❌ Tracking event failed:', error);
+        return false;
+    }
+}
+
+function trackConversion(eventAction, eventCategory = 'Contact') {
+    const conversionId = 'eek_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    const eventValue = EEK_CONFIG.SERVICE_VALUES[eventAction] || 25000;
+    const serviceType = EEK_CONFIG.SERVICE_TYPES[eventAction] || 'General Service';
+    
+    console.log('🎯 Conversion tracked:', eventAction, 'Value:', eventValue);
+    
+    // Google Analytics tracking
+    if (typeof gtag !== 'undefined') {
+        gtag('event', eventAction, {
+            'event_category': eventCategory,
+            'event_label': serviceType,
+            'value': eventValue / 100, // Convert to dollars
+            'gclid': EEK_STATE.gclid
+        });
+        
+        // Track phone calls as conversions
+        if (eventAction.includes('call')) {
+            gtag('event', 'conversion', {
+                'send_to': 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
+            });
+        }
+    }
+    
+    // Reddit Pixel tracking
+    if (typeof rdt !== 'undefined') {
+        rdt('track', 'Lead', {
+            'customEventName': eventAction,
+            'conversionId': conversionId,
+            'value': eventValue,
+            'currency': 'NZD',
+            'itemCount': 1,
+            'eventSource': window.location.pathname.includes('more-options') ? 'more_options_page' : 'main_page',
+            'eventCategory': eventCategory,
+            'serviceType': serviceType,
+            'gclid': EEK_STATE.gclid
+        });
+    }
+    
+    // Send to our tracking API
+    const payload = buildTrackingPayload('conversion', eventAction, {
+        conversionId: conversionId,
+        eventValue: eventValue,
+        serviceType: serviceType,
+        eventCategory: eventCategory
+    });
+    
+    sendTrackingEvent(payload);
+}
+
+function trackInteraction(element) {
+    const trackingAction = element.dataset.track;
+    const linkUrl = element.href;
+    const linkText = element.textContent.trim();
+    
+    if (!trackingAction) {
+        console.warn('⚠️ Element missing data-track attribute');
+        return;
+    }
+    
+    console.log('👆 Interaction tracked:', trackingAction);
+    
+    // Build event payload
+    const payload = buildTrackingPayload('user_interaction', trackingAction, {
+        element: {
+            tag: element.tagName.toLowerCase(),
+            text: linkText,
+            href: linkUrl,
+            className: element.className
+        },
+        interactionType: element.href && element.href.startsWith('tel:') ? 'phone_call' : 'link_click'
+    });
+    
+    // Send tracking event
+    sendTrackingEvent(payload);
+    
+    // If it's a phone call, track as conversion
+    if (trackingAction.includes('call') || (element.href && element.href.startsWith('tel:'))) {
+        trackConversion(trackingAction, 'Contact');
+    }
+}
+
+function trackPageView() {
+    const payload = buildTrackingPayload('page_view', 'page_loaded', {
+        pageType: window.location.pathname.includes('more-options') ? 'more_options' : 'main',
+        loadTime: Date.now() - performance.navigationStart
+    });
+    
+    sendTrackingEvent(payload);
+    
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'page_view', {
+            'page_title': document.title,
+            'page_location': window.location.href,
+            'gclid': EEK_STATE.gclid
+        });
+    }
+}
+
+async function sendFirstVisitTracking() {
+    const firstVisitSent = localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.firstVisitSent);
+    
+    if (!firstVisitSent) {
+        const payload = buildTrackingPayload('first_visit', 'new_visitor', {
+            isFirstVisit: true,
+            landingPage: window.location.href
+        });
+        
+        const success = await sendTrackingEvent(payload);
+        if (success) {
+            localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.firstVisitSent, new Date().toISOString());
+            console.log('🆕 First visit tracked');
+        }
+    }
+}
+
+// Set up scroll tracking
+function setupScrollTracking() {
+    let scrollTracked = false;
+    
+    window.addEventListener('scroll', function() {
+        if (!scrollTracked && window.scrollY > document.body.scrollHeight * 0.5) {
+            scrollTracked = true;
+            
+            const payload = buildTrackingPayload('user_engagement', 'scroll_50_percent', {
+                scrollDepth: '50%',
+                pageHeight: document.body.scrollHeight
+            });
+            
+            sendTrackingEvent(payload);
+            
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'scroll', {
+                    'event_category': 'Engagement',
+                    'event_label': 'Scrolled 50% of page'
+                });
+            }
+        }
+    });
+}
+
+// Set up time on page tracking
+function setupTimeTracking() {
+    const startTime = Date.now();
+    
+    window.addEventListener('beforeunload', function() {
+        const timeOnPage = Date.now() - startTime;
+        const payload = buildTrackingPayload('user_engagement', 'time_on_page', {
+            timeOnPage: timeOnPage,
+            timeOnPageSeconds: Math.round(timeOnPage / 1000)
+        });
+        
+        sendTrackingEvent(payload);
+    });
+}
+
 // === PHONE NUMBER MANAGEMENT ===
 function getDisplayPhoneNumber() {
     const urlParams = new URLSearchParams(window.location.search);
     const currentGclid = urlParams.get('gclid');
     
-    // PRIORITY 1: Current URL GCLID
+    // PRIORITY 1: Current URL GCLID (always takes precedence)
     if (currentGclid) {
         localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.phonePreference, 'tracking');
+        console.log('📞 Using tracking number (current URL GCLID):', currentGclid);
         return EEK_CONFIG.PHONE_NUMBERS.tracking;
     }
     
-    // PRIORITY 2: Stored GCLID or preference
+    // PRIORITY 2: Check if there's a valid stored GCLID
     const storedGclid = localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.gclid);
-    const storedPreference = localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.phonePreference);
-    
-    if (storedGclid && isGCLIDValid() || storedPreference === 'tracking') {
+    if (storedGclid && isGCLIDValid()) {
+        console.log('📞 Using tracking number (stored valid GCLID):', storedGclid);
         return EEK_CONFIG.PHONE_NUMBERS.tracking;
     }
     
-    // PRIORITY 3: Default
+    // PRIORITY 3: Default number for all other cases
     localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.phonePreference, 'default');
+    console.log('📞 Using default number (no valid GCLID)');
     return EEK_CONFIG.PHONE_NUMBERS.default;
 }
 
@@ -81,15 +497,21 @@ function updatePhoneNumbers() {
         link.href = phoneData.tel;
     });
     
-    // Update phone display text
+    // Update phone display text - preserve special text like "Eek Now"
     document.querySelectorAll('.phone-display').forEach(span => {
-        if (span.textContent === 'Eek Now') {
+        if (span.textContent === 'Eek Now' || span.textContent.includes('Eek')) {
             return; // Keep sticky button text unchanged
         }
         span.textContent = phoneData.display;
     });
     
-    console.log('📞 Phone numbers updated:', phoneData.display);
+    console.log('📞 Phone numbers updated to:', phoneData.display);
+    
+    // Update debug info if present
+    const debugPhoneEl = document.getElementById('debugPhonePreference');
+    if (debugPhoneEl) {
+        debugPhoneEl.textContent = phoneData === EEK_CONFIG.PHONE_NUMBERS.tracking ? 'tracking' : 'default';
+    }
 }
 
 // === GCLID MANAGEMENT ===
@@ -107,23 +529,23 @@ function getGCLID() {
     const urlParams = new URLSearchParams(window.location.search);
     let gclidValue = urlParams.get('gclid');
     
-    // If GCLID in URL, store it
+    // PRIORITY 1: If GCLID in current URL, use it and store it
     if (gclidValue) {
         localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.gclid, gclidValue);
         localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.gclidTimestamp, new Date().toISOString());
         localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.phonePreference, "tracking");
-        console.log('✅ GCLID captured from URL:', gclidValue);
+        console.log('✅ GCLID captured from current URL:', gclidValue);
         return gclidValue;
     }
     
-    // Otherwise, try to get stored GCLID
+    // PRIORITY 2: Try to get stored GCLID (only if still valid)
     const storedGclid = localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.gclid);
     
     if (storedGclid && isGCLIDValid()) {
-        console.log('📋 Using stored GCLID:', storedGclid);
+        console.log('📋 Using stored valid GCLID:', storedGclid);
         return storedGclid;
     } else if (storedGclid) {
-        // GCLID expired
+        // GCLID expired - clean it up
         localStorage.removeItem(EEK_CONFIG.STORAGE_KEYS.gclid);
         localStorage.removeItem(EEK_CONFIG.STORAGE_KEYS.gclidTimestamp);
         localStorage.removeItem(EEK_CONFIG.STORAGE_KEYS.phonePreference);
@@ -295,12 +717,21 @@ function getUTMData() {
 async function updateUIState() {
     console.log('🔄 Starting master UI state update...');
     
-    // Update global state
+    // Update global state - check current URL parameters FIRST
     const urlParams = new URLSearchParams(window.location.search);
     EEK_STATE.hasPaymentToken = hasPaymentToken();
-    EEK_STATE.gclid = getGCLID();
+    
+    // Get current URL GCLID (priority) and stored GCLID (fallback)
     const currentGclid = urlParams.get('gclid');
+    EEK_STATE.gclid = getGCLID(); // This now properly handles current URL vs stored
     const effectiveGclid = currentGclid || EEK_STATE.gclid;
+    
+    console.log('🔍 URL Parameter Check:', {
+        currentUrlGclid: currentGclid,
+        storedGclid: EEK_STATE.gclid,
+        effectiveGclid: effectiveGclid,
+        hasPaymentToken: EEK_STATE.hasPaymentToken
+    });
     
     // System status logic
     if (effectiveGclid || EEK_STATE.hasPaymentToken) {
@@ -319,7 +750,7 @@ async function updateUIState() {
         hasGclid: !!effectiveGclid
     });
     
-    // Update phone numbers
+    // Update phone numbers FIRST (before other UI elements)
     updatePhoneNumbers();
     
     // Update banners and buttons
@@ -505,20 +936,54 @@ function updateServiceLinks() {
     });
     
     // Update More Options link
-    const moreOptionsLink = document.querySelector('.more-options-link, a[href*="more-options"]');
-    if (moreOptionsLink) {
+    const moreOptionsLinks = document.querySelectorAll('.more-options-link, a[href*="more-options"], a[href="/more-options"]');
+    moreOptionsLinks.forEach(link => {
         const baseUrl = '/more-options';
         const fullUrl = trackingParams ? `${baseUrl}?${trackingParams}` : baseUrl;
-        moreOptionsLink.href = fullUrl;
+        link.href = fullUrl;
         console.log('🔗 More Options link updated:', fullUrl);
-    }
+    });
+    
+    // Update all internal navigation links to preserve tracking
+    document.querySelectorAll('a[href^="/"], a[href^="./"], a[href^="../"]').forEach(link => {
+        if (link.classList.contains('no-tracking')) return; // Skip if explicitly marked
+        
+        const currentHref = link.getAttribute('href');
+        if (currentHref && !currentHref.includes('?') && trackingParams) {
+            link.href = `${currentHref}?${trackingParams}`;
+        } else if (currentHref && currentHref.includes('?') && trackingParams) {
+            link.href = `${currentHref}&${trackingParams}`;
+        }
+    });
     
     console.log('🔗 Service links updated with tracking parameters:', trackingParams);
+}
+
+function addClickTrackingToElements() {
+    // Add tracking to all elements with data-track attributes
+    document.querySelectorAll('[data-track]').forEach(element => {
+        element.addEventListener('click', function() {
+            trackInteraction(this);
+        });
+    });
+    
+    // Add tracking to all phone links
+    document.querySelectorAll('a[href^="tel:"]').forEach(element => {
+        if (!element.dataset.track) {
+            element.dataset.track = 'phone_call';
+        }
+        element.addEventListener('click', function() {
+            trackInteraction(this);
+        });
+    });
 }
 
 // === INITIALIZATION ===
 function initializePage() {
     console.log('🚀 Initializing Eek Mobile Mechanical page...');
+    
+    // Inject critical CSS styles first
+    injectMasterStyles();
     
     // Initialize state
     EEK_STATE.sessionId = getOrCreateSessionId();
@@ -526,14 +991,29 @@ function initializePage() {
     EEK_STATE.utmData = getUTMData();
     EEK_STATE.hasPaymentToken = hasPaymentToken();
     
+    // Send first visit tracking
+    sendFirstVisitTracking();
+    
     // Update UI
     updateUIState();
     updateServiceLinks();
+    
+    // Set up tracking
+    setupScrollTracking();
+    setupTimeTracking();
+    addClickTrackingToElements();
+    trackPageView();
     
     // Set up periodic checks
     setInterval(updateUIState, 5 * 60 * 1000); // Every 5 minutes
     
     console.log('✅ Page initialization complete');
+    console.log('📊 Final State:', {
+        sessionId: EEK_STATE.sessionId,
+        gclid: EEK_STATE.gclid,
+        hasPaymentToken: EEK_STATE.hasPaymentToken,
+        phoneNumber: getDisplayPhoneNumber().display
+    });
 }
 
 // === AUTO-INITIALIZE ON DOM CONTENT LOADED ===
@@ -549,3 +1029,5 @@ window.EEK_STATE = EEK_STATE;
 window.updateUIState = updateUIState;
 window.updatePhoneNumbers = updatePhoneNumbers;
 window.buildTrackingParams = buildTrackingParams;
+window.trackConversion = trackConversion;
+window.trackInteraction = trackInteraction;
