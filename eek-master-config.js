@@ -407,12 +407,14 @@ function trackPageView() {
     const firstVisitSent = localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.firstVisitSent);
     const isFirstVisit = !firstVisitSent;
     
-    const payload = buildTrackingPayload('page_view', 'page_loaded', {
+    // Single unified event with all tracking data
+    const payload = buildTrackingPayload('page_visit', 'page_loaded', {
         pageType: window.location.pathname.includes('more-options') ? 'more_options' : 'main',
         loadTime: Date.now() - performance.navigationStart,
-        // Include first visit data in the same payload
         isFirstVisit: isFirstVisit,
-        landingPage: isFirstVisit ? window.location.href : null
+        landingPage: isFirstVisit ? window.location.href : null,
+        visitType: isFirstVisit ? 'first_visit' : 'return_visit',
+        timestamp: new Date().toISOString()
     });
     
     sendTrackingEvent(payload);
@@ -420,7 +422,7 @@ function trackPageView() {
     // Mark first visit as sent if this was a first visit
     if (isFirstVisit) {
         localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.firstVisitSent, new Date().toISOString());
-        console.log('🆕 First visit data included in page view tracking');
+        console.log('🆕 First visit data included in unified page visit event');
     }
     
     // Google Analytics page view tracking
@@ -436,23 +438,6 @@ function trackPageView() {
     if (typeof rdt !== 'undefined') {
         rdt('track', 'PageVisit');
         console.log('📊 Reddit Pixel PageVisit tracked');
-    }
-}
-
-async function sendFirstVisitTracking() {
-    const firstVisitSent = localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.firstVisitSent);
-    
-    if (!firstVisitSent) {
-        const payload = buildTrackingPayload('first_visit', 'new_visitor', {
-            isFirstVisit: true,
-            landingPage: window.location.href
-        });
-        
-        const success = await sendTrackingEvent(payload);
-        if (success) {
-            localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.firstVisitSent, new Date().toISOString());
-            console.log('🆕 First visit tracked');
-        }
     }
 }
 
@@ -1026,8 +1011,6 @@ function initializePage() {
     EEK_STATE.utmData = getUTMData();
     EEK_STATE.hasPaymentToken = hasPaymentToken();
     
-    // Note: First visit tracking is now handled within trackPageView() to prevent duplicates
-    
     // Update UI
     updateUIState();
     updateServiceLinks();
@@ -1036,7 +1019,7 @@ function initializePage() {
     setupScrollTracking();
     setupTimeTracking();
     addClickTrackingToElements();
-    trackPageView(); // This now handles both page view AND first visit in one call
+    trackPageView(); // Single unified event handles both page view AND first visit
     
     // Set up periodic checks
     setInterval(updateUIState, 5 * 60 * 1000); // Every 5 minutes
