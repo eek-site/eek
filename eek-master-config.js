@@ -892,13 +892,6 @@ function updatePaymentUI() {
         // Set up payment functionality
         setupPaymentHandlers(paymentToken);
         console.log('💳 Payment UI configured for token:', paymentToken);
-        
-        // Hide the Stripe payment block on pages other than main
-        const stripePaymentBlock = document.getElementById('stripePaymentBlock');
-        if (stripePaymentBlock && window.location.pathname !== '/') {
-            stripePaymentBlock.style.display = 'none';
-            console.log('💳 Hiding Stripe payment block on non-main page');
-        }
     }
 }
 
