@@ -462,6 +462,13 @@ function setupScrollTracking() {
                     'event_label': 'Scrolled 50% of page'
                 });
             }
+            
+            if (typeof rdt !== 'undefined') {
+                rdt('track', 'ViewContent', {
+                    'customEventName': 'scroll_50_percent',
+                    'eventCategory': 'Engagement'
+                });
+            }
         }
     });
 }
@@ -485,6 +492,7 @@ function setupTimeTracking() {
 function getDisplayPhoneNumber() {
     const urlParams = new URLSearchParams(window.location.search);
     const currentGclid = urlParams.get('gclid');
+    const currentToken = urlParams.get('token');
     
     // PRIORITY 1: Current URL GCLID (always takes precedence)
     if (currentGclid) {
@@ -493,16 +501,23 @@ function getDisplayPhoneNumber() {
         return EEK_CONFIG.PHONE_NUMBERS.tracking;
     }
     
-    // PRIORITY 2: Check if there's a valid stored GCLID
+    // PRIORITY 2: Payment token users get tracking number
+    if (currentToken) {
+        localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.phonePreference, 'tracking');
+        console.log('📞 Using tracking number (payment token):', currentToken);
+        return EEK_CONFIG.PHONE_NUMBERS.tracking;
+    }
+    
+    // PRIORITY 3: Check if there's a valid stored GCLID
     const storedGclid = localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.gclid);
     if (storedGclid && isGCLIDValid()) {
         console.log('📞 Using tracking number (stored valid GCLID):', storedGclid);
         return EEK_CONFIG.PHONE_NUMBERS.tracking;
     }
     
-    // PRIORITY 3: Default number for all other cases
+    // PRIORITY 4: Default number for all other cases
     localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.phonePreference, 'default');
-    console.log('📞 Using default number (no valid GCLID)');
+    console.log('📞 Using default number (no valid GCLID or token)');
     return EEK_CONFIG.PHONE_NUMBERS.default;
 }
 
@@ -840,15 +855,24 @@ function updateButtons() {
     const showNormalButtons = EEK_STATE.systemActive;
     const showAfterHoursButtons = !EEK_STATE.systemActive;
     
-    normalButtons.forEach(btn => {
+    console.log('🔘 Found buttons:', {
+        normalButtons: normalButtons.length,
+        afterHoursButtons: afterHoursButtons.length,
+        showNormal: showNormalButtons,
+        showAfterHours: showAfterHoursButtons
+    });
+    
+    normalButtons.forEach((btn, index) => {
         btn.style.display = showNormalButtons ? 'inline-block' : 'none';
+        console.log(`  Normal button ${index}: ${showNormalButtons ? 'VISIBLE' : 'HIDDEN'}`);
     });
     
-    afterHoursButtons.forEach(btn => {
+    afterHoursButtons.forEach((btn, index) => {
         btn.style.display = showAfterHoursButtons ? 'inline-block' : 'none';
+        console.log(`  After-hours button ${index}: ${showAfterHoursButtons ? 'VISIBLE' : 'HIDDEN'}`);
     });
     
-    console.log('🔘 Buttons - Normal:', showNormalButtons ? 'VISIBLE' : 'HIDDEN', 
+    console.log('🔘 Button update complete - Normal:', showNormalButtons ? 'VISIBLE' : 'HIDDEN', 
                 'After-hours:', showAfterHoursButtons ? 'VISIBLE' : 'HIDDEN');
 }
 
@@ -1002,6 +1026,9 @@ function initializePage() {
     // Inject critical CSS styles first
     injectMasterStyles();
     
+    // Create dynamic elements that may not exist on the page
+    initializeDynamicElements();
+    
     // Initialize tracking pixels
     initializeRedditPixel();
     
@@ -1019,6 +1046,10 @@ function initializePage() {
     setupScrollTracking();
     setupTimeTracking();
     addClickTrackingToElements();
+    
+    // Set up service selection handlers (for main page)
+    handleServiceSelection();
+    
     trackPageView(); // Single unified event handles both page view AND first visit
     
     // Set up periodic checks
@@ -1040,6 +1071,205 @@ if (document.readyState === 'loading') {
     initializePage();
 }
 
+// === SERVICE SELECTION HANDLERS ===
+function handleServiceSelection() {
+    document.querySelectorAll('.service-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const bookingUrl = this.dataset.bookingUrl;
+            const service = this.dataset.service;
+            
+            // Track the service interaction
+            if (service) {
+                trackInteraction(this);
+            }
+            
+            // Only redirect to booking for service cards (not already direct booking links)
+            if (bookingUrl && this.getAttribute('href').startsWith('#')) {
+                e.preventDefault();
+                console.log('🎯 Redirecting to booking page:', bookingUrl);
+                window.location.href = bookingUrl;
+            }
+        });
+    });
+}
+
+// === DYNAMIC ELEMENT CREATION ===
+function createClosedBanner() {
+    if (document.getElementById('closedBanner')) return; // Already exists
+    
+    const banner = document.createElement('div');
+    banner.id = 'closedBanner';
+    banner.className = 'after-hours-banner';
+    banner.style.display = 'none';
+    banner.style.background = 'linear-gradient(135deg, #666, #888)';
+    
+    banner.innerHTML = `
+        <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
+        <div id="afterHoursMessage">
+            <p><strong>Business Hours:</strong></p>
+            <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
+            <p>Saturday - Sunday: 7:00 AM - 12:00 PM</p>
+            <p>Please call during business hours or book online for next available service</p>
+        </div>
+        <div id="tempUnavailableMessage" style="display: none;">
+            <p><strong>We're currently experiencing high demand</strong></p>
+            <p>Our mechanics are fully dispatched on emergency calls</p>
+            <p>Please book online for the next available appointment or try calling again shortly</p>
+            <a href="#service-selection" class="emergency-btn" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
+        </div>
+    `;
+    
+    // Insert at top of body
+    document.body.insertBefore(banner, document.body.firstChild);
+    console.log('📋 Closed banner created dynamically');
+}
+
+function createPaymentBanner() {
+    if (document.getElementById('paymentBanner')) return; // Already exists
+    
+    const banner = document.createElement('div');
+    banner.id = 'paymentBanner';
+    banner.className = 'payment-banner';
+    banner.style.display = 'none';
+    
+    banner.innerHTML = `
+        <h2>💳 Complete Your Payment</h2>
+        <p>Your service request is confirmed. Please complete payment to proceed.</p>
+        <a href="#" id="paymentBannerButton" class="payment-banner-button">Pay Now</a>
+    `;
+    
+    // Insert at top of body
+    document.body.insertBefore(banner, document.body.firstChild);
+    console.log('💳 Payment banner created dynamically');
+}
+
+function createStripePaymentBlock() {
+    if (document.getElementById('stripePaymentBlock')) return; // Already exists
+    
+    const block = document.createElement('section');
+    block.id = 'stripePaymentBlock';
+    block.style.cssText = 'display: none; background-color: #ffffff; padding: 20px; text-align: center; color: #333; border-bottom: 2px solid #ff5500;';
+    
+    block.innerHTML = `
+        <div style="background-color: #f5f5f5; padding: 30px; border-radius: 12px; max-width: 700px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+            <h1 style="font-size: 2.2em; margin-bottom: 0.5em;">Secure Roadside Payment</h1>
+            <p style="font-size: 1.2em; margin-bottom: 1.5em;">Confirm your payment to get help on the way — fast, safe, and secure.</p>
+            <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: #333;">
+                <input type="checkbox" id="termsCheckbox" style="transform: scale(1.5);" />
+                <span>I agree to the Eek Mobile Mechanical terms of service 
+                    <a href="https://www.eek.nz/terms" target="_blank" style="color: #ff5500; text-decoration: underline;">
+                        View terms of use
+                    </a>
+                </span>
+            </label>
+            <br><br>
+            <button id="payNowButton" style="display: none; background-color: #ff5500; color: white; padding: 14px 32px; font-size: 1.2em; border: none; border-radius: 8px; cursor: pointer;">
+                Pay Now
+            </button>
+        </div>
+    `;
+    
+    // Insert at top of body
+    document.body.insertBefore(block, document.body.firstChild);
+    console.log('💳 Stripe payment block created dynamically');
+}
+
+function createStickyButtons() {
+    // Create sticky call button if it doesn't exist
+    if (!document.getElementById('stickyCallButton')) {
+        const callButton = document.createElement('a');
+        callButton.className = 'sticky-call phone-link';
+        callButton.href = 'tel:0800769000';
+        callButton.id = 'stickyCallButton';
+        callButton.setAttribute('data-track', 'sticky_call');
+        callButton.innerHTML = '📞 Call <span class="phone-display">Eek Now</span>';
+        document.body.appendChild(callButton);
+        console.log('📱 Sticky call button created dynamically');
+    }
+    
+    // Create sticky closed button if it doesn't exist
+    if (!document.getElementById('stickyClosedButton')) {
+        const closedButton = document.createElement('a');
+        closedButton.className = 'sticky-call';
+        closedButton.href = '#closedBanner';
+        closedButton.id = 'stickyClosedButton';
+        closedButton.style.cssText = 'display: none; background: #666;';
+        closedButton.innerHTML = '🕐 View Hours';
+        document.body.appendChild(closedButton);
+        console.log('📱 Sticky closed button created dynamically');
+    }
+    
+    // Create sticky payment button if it doesn't exist
+    if (!document.getElementById('stripePaymentSticky')) {
+        const paymentButton = document.createElement('a');
+        paymentButton.className = 'sticky-payment';
+        paymentButton.href = '#';
+        paymentButton.id = 'stripePaymentSticky';
+        paymentButton.style.display = 'none';
+        paymentButton.innerHTML = '💳 Make Payment';
+        document.body.appendChild(paymentButton);
+        console.log('💳 Sticky payment button created dynamically');
+    }
+}
+
+// === INITIALIZE ALL DYNAMIC ELEMENTS ===
+function initializeDynamicElements() {
+    console.log('🎬 Creating dynamic elements...');
+    createClosedBanner();
+    createPaymentBanner();
+    createStripePaymentBlock();
+    createStickyButtons();
+    console.log('✅ All dynamic elements initialized');
+}
+
+// === HELPER FUNCTIONS ===
+function getServiceType(eventAction) {
+    return EEK_CONFIG.SERVICE_TYPES[eventAction] || 'General Service';
+}
+
+// === BACKWARDS COMPATIBILITY WRAPPER ===
+// This ensures any existing onclick handlers in HTML still work
+window.trackConversionCompat = function(eventAction, eventCategory = 'Contact') {
+    // Call the main tracking function that's already defined above
+    const conversionId = 'eek_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    const eventValue = EEK_CONFIG.SERVICE_VALUES[eventAction] || 25000;
+    const serviceType = EEK_CONFIG.SERVICE_TYPES[eventAction] || 'General Service';
+    
+    console.log('🎯 Conversion tracked (compat):', eventAction, 'Value:', eventValue);
+    
+    // Google Analytics tracking
+    if (typeof gtag !== 'undefined') {
+        gtag('event', eventAction, {
+            'event_category': eventCategory,
+            'event_label': serviceType,
+            'value': eventValue / 100, // Convert to dollars
+            'gclid': EEK_STATE.gclid
+        });
+        
+        // Track phone calls as conversions
+        if (eventAction.includes('call')) {
+            gtag('event', 'conversion', {
+                'send_to': 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
+            });
+        }
+    }
+    
+    // Reddit Pixel tracking
+    if (typeof rdt !== 'undefined') {
+        rdt('track', 'Lead', {
+            'customEventName': eventAction,
+            'conversionId': conversionId,
+            'value': eventValue,
+            'currency': 'NZD',
+            'itemCount': 1,
+            'eventSource': window.location.pathname.includes('more-options') ? 'more_options_page' : 'main_page',
+            'eventCategory': eventCategory,
+            'serviceType': serviceType,
+            'gclid': EEK_STATE.gclid
+        });
+    }
+};
+
 // === EXPORT FOR GLOBAL ACCESS ===
 window.EEK_CONFIG = EEK_CONFIG;
 window.EEK_STATE = EEK_STATE;
@@ -1047,4 +1277,12 @@ window.updateUIState = updateUIState;
 window.updatePhoneNumbers = updatePhoneNumbers;
 window.buildTrackingParams = buildTrackingParams;
 window.trackConversion = trackConversion;
+window.trackConversionCompat = trackConversionCompat;
 window.trackInteraction = trackInteraction;
+window.handleServiceSelection = handleServiceSelection;
+window.getServiceType = getServiceType;
+window.initializeDynamicElements = initializeDynamicElements;
+window.createClosedBanner = createClosedBanner;
+window.createPaymentBanner = createPaymentBanner;
+window.createStripePaymentBlock = createStripePaymentBlock;
+window.createStickyButtons = createStickyButtons;
