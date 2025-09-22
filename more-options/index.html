@@ -139,6 +139,8 @@
             background: rgba(255,255,255,0.25);
             border-color: rgba(255,255,255,0.5);
             transform: translateY(-2px);
+            color: white;
+            text-decoration: none;
         }
         
         .contact-sections {
@@ -201,6 +203,8 @@
             background: rgba(255,255,255,0.25);
             border-color: rgba(255,255,255,0.5);
             transform: translateY(-1px);
+            color: white;
+            text-decoration: none;
         }
         
         .legal-section {
@@ -245,6 +249,8 @@
             background: rgba(255,255,255,0.25);
             border-color: rgba(255,255,255,0.5);
             transform: translateY(-2px);
+            color: white;
+            text-decoration: none;
         }
         
         .utility-grid {
@@ -295,6 +301,7 @@
         .utility-card a:hover {
             background-color: #e64a00;
             transform: translateY(-1px);
+            text-decoration: none;
         }
         
         .footer-nav {
@@ -315,7 +322,8 @@
             color: #ff5500;
         }
 
-        .emergency-btn[style*="background: rgba(40,167,69,0.25)"] {
+        /* After-hours styling for Book Online buttons */
+        .emergency-btn.after-hours-btn {
             background: rgba(40,167,69,0.25) !important;
         }
         
@@ -354,28 +362,7 @@
     </style>
 </head>
 <body>
-    <!-- Business Closed Banner (hidden by default) -->
-    <div id="closedBanner" class="after-hours-banner" style="background: linear-gradient(135deg, #666, #888);">
-        <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
-        <div id="afterHoursMessage">
-            <p><strong>Business Hours (NZ Time):</strong></p>
-            <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
-            <p>Saturday - Sunday: 7:00 AM - 12:00 PM</p>
-            <p>Please call during business hours or use our emergency service options below</p>
-        </div>
-        <div id="tempUnavailableMessage" style="display: none;">
-            <p><strong>We're currently experiencing high demand</strong></p>
-            <p>Our mechanics are fully dispatched on emergency calls</p>
-            <p>Please use our emergency service options below or try calling again shortly</p>
-        </div>
-    </div>
-
-    <!-- Payment Banner for Token Users -->
-    <div id="paymentBanner">
-        <h2>💳 Ready to Complete Payment</h2>
-        <p>Your roadside assistance payment is ready to process</p>
-        <a href="#" id="paymentBannerButton">💳 Complete Payment</a>
-    </div>
+    <!-- Dynamic banners will be created by master config -->
 
     <div class="container">
         <div class="header">
@@ -395,7 +382,7 @@
                 <a href="/rescue-me" class="emergency-btn normal-hours-btn" data-track="emergency_rescue">🚨 Emergency Service</a>
                 <a href="tel:0800769000" class="emergency-btn phone-link normal-hours-btn" data-track="more_options_call">📞 Call <span class="phone-display">0800 769 000</span></a>
                 <a href="/find-me" class="emergency-btn normal-hours-btn" data-track="find_me_tool">📍 Find Me Tool</a>
-                <a href="/book-service" class="emergency-btn after-hours-btn" data-track="book_online_after_hours" style="background: rgba(40,167,69,0.25); display: none;">📅 Book Online Service</a>
+                <a href="/book-service" class="emergency-btn after-hours-btn" data-track="book_online_after_hours">📅 Book Online Service</a>
             </div>
         </div>
         
@@ -415,7 +402,7 @@
                         <a href="tel:0800769000" class="contact-btn phone-link normal-hours-btn" data-track="customer_call">📞 Call <span class="phone-display">0800 769 000</span></a>
                         <a href="/customer-escalation" class="contact-btn normal-hours-btn" data-track="customer_support">💬 Customer Support</a>
                         <a href="/find-me" class="contact-btn normal-hours-btn" data-track="customer_find_me">📍 Find Me Tool</a>
-                        <a href="/book-service" class="contact-btn after-hours-btn" data-track="customer_book_online" style="display: none;">📅 Book Online Service</a>
+                        <a href="/book-service" class="contact-btn after-hours-btn" data-track="customer_book_online">📅 Book Online Service</a>
                     </div>
                 </div>
                 
@@ -470,32 +457,34 @@
         </div>
         
         <div class="footer-nav">
-            <a href="/" data-track="footer_home">🏠 Homepage</a>
+            <a href="/" class="more-options-link" data-track="footer_home">🏠 Homepage</a>
             <a href="/privacy" data-track="footer_privacy">Privacy Policy</a>
         </div>
     </div>
 
-    <!-- Sticky Call Button -->
-    <a class="sticky-call phone-link" href="tel:0800769000" id="stickyCallButton">📞 Call <span class="phone-display">Eek Now</span></a>
-    <a class="sticky-call" href="#closedBanner" id="stickyClosedButton" style="display: none; background: #666;">🕐 View Hours</a>
+    <!-- Sticky buttons will be created by master config -->
 
     <!-- Load Master Configuration -->
     <script src="/eek-master-config.js"></script>
     
     <script>
-        // More Options page - master config handles all functionality
-        console.log('📄 More Options page loaded with master config integration');
+        // More Options page - fully integrated with master config
+        console.log('📄 More Options page loaded with full master config integration');
         
-        // No page-specific JavaScript needed - master config handles:
-        // ✅ Page view tracking
-        // ✅ Click tracking for all data-track elements  
-        // ✅ Phone number updates
-        // ✅ Banner visibility management
-        // ✅ Sticky button behavior
-        // ✅ Payment UI handling
-        // ✅ Scroll and time tracking
-        // ✅ First visit tracking
-        // ✅ Conversion tracking
+        // Master config automatically handles:
+        // ✅ Dynamic element creation (banners, sticky buttons)
+        // ✅ Phone number updates based on URL parameters
+        // ✅ Banner visibility management (closed/payment)
+        // ✅ Button show/hide logic (normal vs after-hours)
+        // ✅ Page view and conversion tracking
+        // ✅ Click tracking for all data-track elements
+        // ✅ Service link URL parameter preservation
+        // ✅ Scroll and time on page tracking
+        // ✅ Payment UI handling for token users
+        // ✅ System status integration
+        // ✅ Business hours detection
+        
+        // Page is now fully managed by master config - no additional JS needed
     </script>
 </body>
 </html>
