@@ -524,17 +524,23 @@ function getDisplayPhoneNumber() {
 function updatePhoneNumbers() {
     const phoneData = getDisplayPhoneNumber();
     
+    console.log('📞 Updating phone numbers to:', phoneData.display, 'Tel:', phoneData.tel);
+    
     // Update all phone links
-    document.querySelectorAll('.phone-link').forEach(link => {
+    document.querySelectorAll('.phone-link').forEach((link, index) => {
         link.href = phoneData.tel;
+        console.log(`  Updated phone link ${index}:`, link.href);
     });
     
     // Update phone display text - preserve special text like "Eek Now"
-    document.querySelectorAll('.phone-display').forEach(span => {
+    document.querySelectorAll('.phone-display').forEach((span, index) => {
+        console.log(`  Phone display ${index} before:`, span.textContent);
         if (span.textContent === 'Eek Now' || span.textContent.includes('Eek')) {
+            console.log(`  Keeping special text: "${span.textContent}"`);
             return; // Keep sticky button text unchanged
         }
         span.textContent = phoneData.display;
+        console.log(`  Phone display ${index} after:`, span.textContent);
     });
     
     console.log('📞 Phone numbers updated to:', phoneData.display);
@@ -798,11 +804,19 @@ async function updateUIState() {
 function updateBanners() {
     const closedBanner = document.getElementById('closedBanner');
     const paymentBanner = document.getElementById('paymentBanner');
+    const stripePaymentBlock = document.getElementById('stripePaymentBlock');
     
-    // Payment banner (priority)
+    // Payment banner (priority) - only show one payment UI
     if (paymentBanner && EEK_STATE.hasPaymentToken) {
         paymentBanner.style.display = 'block';
         if (closedBanner) closedBanner.style.display = 'none';
+        
+        // Hide Stripe payment block if payment banner is showing
+        if (stripePaymentBlock) {
+            stripePaymentBlock.style.display = 'none';
+            console.log('💳 Hiding Stripe block in favor of payment banner');
+        }
+        
         console.log('💳 Showing payment banner');
         return;
     }
@@ -924,6 +938,13 @@ function updatePaymentUI() {
         // Set up payment functionality
         setupPaymentHandlers(paymentToken);
         console.log('💳 Payment UI configured for token:', paymentToken);
+        
+        // Hide the Stripe payment block on pages other than main
+        const stripePaymentBlock = document.getElementById('stripePaymentBlock');
+        if (stripePaymentBlock && window.location.pathname !== '/') {
+            stripePaymentBlock.style.display = 'none';
+            console.log('💳 Hiding Stripe payment block on non-main page');
+        }
     }
 }
 
@@ -1037,6 +1058,18 @@ function initializePage() {
     EEK_STATE.gclid = getGCLID();
     EEK_STATE.utmData = getUTMData();
     EEK_STATE.hasPaymentToken = hasPaymentToken();
+    
+    // Debug: Check for phone display elements
+    const phoneDisplays = document.querySelectorAll('.phone-display');
+    const phoneLinks = document.querySelectorAll('.phone-link');
+    console.log('🔍 Found phone elements:', {
+        phoneDisplays: phoneDisplays.length,
+        phoneLinks: phoneLinks.length
+    });
+    
+    phoneDisplays.forEach((el, i) => {
+        console.log(`  Phone display ${i}:`, el.textContent, el);
+    });
     
     // Update UI
     updateUIState();
