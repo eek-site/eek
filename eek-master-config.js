@@ -58,51 +58,6 @@ function injectMasterStyles() {
             text-decoration: none;
         }
         
-        /* Payment Banner */
-        .payment-banner {
-            display: none;
-            background: linear-gradient(135deg, #28a745, #20a142);
-            color: white;
-            padding: 20px;
-            margin: 0 auto 20px;
-            max-width: 800px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(40,167,69,0.3);
-            text-align: center;
-        }
-        
-        .payment-banner h2 {
-            margin: 0 0 10px 0;
-            font-size: 1.6em;
-        }
-        
-        .payment-banner p {
-            margin: 10px 0;
-            font-size: 1.1em;
-        }
-        
-        .payment-banner-button {
-            display: inline-block;
-            background: rgba(255,255,255,0.25);
-            color: white;
-            padding: 15px 30px;
-            margin: 10px;
-            font-size: 1.3em;
-            border-radius: 8px;
-            text-decoration: none;
-            border: 2px solid white;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        
-        .payment-banner-button:hover {
-            background: white;
-            color: #28a745;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-            text-decoration: none;
-        }
-        
         /* Business Hours Banner */
         .after-hours-banner {
             background: linear-gradient(135deg, #ff3333, #ff5500);
@@ -803,29 +758,32 @@ async function updateUIState() {
 // === BANNER MANAGEMENT ===
 function updateBanners() {
     const closedBanner = document.getElementById('closedBanner');
-    const paymentBanner = document.getElementById('paymentBanner');
     const stripePaymentBlock = document.getElementById('stripePaymentBlock');
     
-    // Payment banner (priority) - only show one payment UI
-    if (paymentBanner && EEK_STATE.hasPaymentToken) {
-        paymentBanner.style.display = 'block';
-        if (closedBanner) closedBanner.style.display = 'none';
-        
-        // Hide Stripe payment block if payment banner is showing
+    // For payment token users, show only the Stripe payment block
+    if (EEK_STATE.hasPaymentToken) {
+        // Show Stripe payment block for token users
         if (stripePaymentBlock) {
-            stripePaymentBlock.style.display = 'none';
-            console.log('💳 Hiding Stripe block in favor of payment banner');
+            stripePaymentBlock.style.display = 'block';
+            console.log('💳 Showing Stripe payment block for token user');
         }
         
-        console.log('💳 Showing payment banner');
+        // Hide closed banner for token users
+        if (closedBanner) closedBanner.style.display = 'none';
+        
         return;
     }
     
-    // Closed banner logic
+    // Hide Stripe payment block for non-token users
+    if (stripePaymentBlock) {
+        stripePaymentBlock.style.display = 'none';
+    }
+    
+    // Closed banner logic for non-token users
     if (closedBanner) {
-        if (EEK_STATE.hasPaymentToken || EEK_STATE.gclid) {
+        if (EEK_STATE.gclid) {
             closedBanner.style.display = 'none';
-            console.log('💳🎯 Hiding closed banner (token/gclid user)');
+            console.log('🎯 Hiding closed banner (gclid user)');
         } else if (!EEK_STATE.systemActive) {
             closedBanner.style.display = 'block';
             updateClosedBannerContent();
@@ -834,10 +792,6 @@ function updateBanners() {
             closedBanner.style.display = 'none';
             console.log('✅ Hiding closed banner (system active)');
         }
-    }
-    
-    if (paymentBanner && !EEK_STATE.hasPaymentToken) {
-        paymentBanner.style.display = 'none';
     }
 }
 
@@ -965,15 +919,6 @@ function setupPaymentHandlers(token) {
         });
         
         payNowButton.addEventListener('click', () => {
-            window.location.href = `https://buy.stripe.com/${token}`;
-        });
-    }
-    
-    // More Options page payment setup
-    const paymentBannerButton = document.getElementById('paymentBannerButton');
-    if (paymentBannerButton) {
-        paymentBannerButton.addEventListener('click', function(e) {
-            e.preventDefault();
             window.location.href = `https://buy.stripe.com/${token}`;
         });
     }
@@ -1157,25 +1102,6 @@ function createClosedBanner() {
     console.log('📋 Closed banner created dynamically');
 }
 
-function createPaymentBanner() {
-    if (document.getElementById('paymentBanner')) return; // Already exists
-    
-    const banner = document.createElement('div');
-    banner.id = 'paymentBanner';
-    banner.className = 'payment-banner';
-    banner.style.display = 'none';
-    
-    banner.innerHTML = `
-        <h2>💳 Complete Your Payment</h2>
-        <p>Your service request is confirmed. Please complete payment to proceed.</p>
-        <a href="#" id="paymentBannerButton" class="payment-banner-button">Pay Now</a>
-    `;
-    
-    // Insert at top of body
-    document.body.insertBefore(banner, document.body.firstChild);
-    console.log('💳 Payment banner created dynamically');
-}
-
 function createStripePaymentBlock() {
     if (document.getElementById('stripePaymentBlock')) return; // Already exists
     
@@ -1249,7 +1175,6 @@ function createStickyButtons() {
 function initializeDynamicElements() {
     console.log('🎬 Creating dynamic elements...');
     createClosedBanner();
-    createPaymentBanner();
     createStripePaymentBlock();
     createStickyButtons();
     console.log('✅ All dynamic elements initialized');
@@ -1316,6 +1241,5 @@ window.handleServiceSelection = handleServiceSelection;
 window.getServiceType = getServiceType;
 window.initializeDynamicElements = initializeDynamicElements;
 window.createClosedBanner = createClosedBanner;
-window.createPaymentBanner = createPaymentBanner;
 window.createStripePaymentBlock = createStripePaymentBlock;
 window.createStickyButtons = createStickyButtons;
