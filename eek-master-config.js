@@ -484,7 +484,7 @@ function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
             localStorageAvailable: isLocalStorageAvailable(),
             sessionStorageAvailable: isSessionStorageAvailable(),
             cookiesEnabled: navigator.cookieEnabled,
-            thirdPartyCookiesBlocked: await testThirdPartyCookies()
+            thirdPartyCookiesBlocked: testThirdPartyCookies()
         },
         
         // Source & Attribution
