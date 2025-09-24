@@ -6,6 +6,11 @@
     <title>More Options | Eek Mobile Mechanical</title>
     <meta name="description" content="Complete service options and resources for Eek Mobile Mechanical. Emergency services, customer support, supplier partnerships, and employment opportunities." />
     <meta name="keywords" content="mobile mechanic options, emergency service, customer support, supplier partnerships, eek mechanical services" />
+    <meta property="og:title" content="More Options | Eek Mobile Mechanical" />
+    <meta property="og:description" content="Complete service options and resources for Eek Mobile Mechanical. Emergency services, customer support, supplier partnerships." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.eek.nz/more-options" />
+    <meta property="og:image" content="https://www.eek.nz/og-image.jpg" />
     
     <!-- Security Headers -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
@@ -23,440 +28,139 @@
         gtag('config', 'G-DQNKF1YLWR');
     </script>
 
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Eek Mobile Mechanical",
+        "description": "Mobile mechanic services across New Zealand. Pre purchase vehicle inspections, wrong fuel removal, petrol and diesel removal, emergency roadside repairs.",
+        "telephone": "+64800769000",
+        "url": "https://www.eek.nz",
+        "image": "https://www.eek.nz/brand-image.png",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "NZ"
+        },
+        "areaServed": {
+            "@type": "Country",
+            "name": "New Zealand"
+        },
+        "openingHours": [
+            "Mo 07:00-17:00",
+            "Tu 07:00-17:00", 
+            "We 07:00-17:00",
+            "Th 07:00-17:00",
+            "Fr 07:00-17:00",
+            "Sa 07:00-12:00",
+            "Su 07:00-12:00"
+        ]
+    }
+    </script>
+
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f5f5f5;
-            min-height: 100vh;
-            color: #333;
-            padding: 20px 20px 80px 20px;
-        }
-        
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .logo {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .brand-tagline {
-            color: #666;
-            font-size: 1.2em;
-            margin-bottom: 30px;
-        }
-        
-        .description {
-            color: #555;
-            font-size: 1.1em;
-            text-align: center;
-            margin-bottom: 40px;
-            line-height: 1.6;
-        }
-        
-        .section {
-            margin-bottom: 40px;
-        }
-        
-        .section-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        
-        .section-header h2 {
-            color: #333;
-            font-size: 1.8em;
-            margin-bottom: 10px;
-        }
-        
-        .section-header p {
-            color: #666;
-            font-size: 1.1em;
-        }
-        
-        .emergency-section {
-            background: linear-gradient(135deg, #ff5500, #e64a00);
-            color: white;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .emergency-section h2 {
-            font-size: 1.8em;
-            margin-bottom: 15px;
-        }
-        
-        .emergency-section p {
-            font-size: 1.1em;
-            margin-bottom: 25px;
-            opacity: 0.9;
-        }
-        
-        .emergency-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .emergency-btn {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            color: white;
-            text-decoration: none;
-            padding: 15px 25px;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: bold;
-            border: 2px solid rgba(255,255,255,0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .emergency-btn:hover {
-            background: rgba(255,255,255,0.25);
-            border-color: rgba(255,255,255,0.5);
-            transform: translateY(-2px);
-            color: white;
-            text-decoration: none;
-        }
-        
-        .contact-sections {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        
-        .contact-section {
-            padding: 25px;
-            border-radius: 12px;
-            text-align: center;
-        }
-        
-        .contact-section.customers {
-            background: linear-gradient(135deg, #007acc, #0056b3);
-            color: white;
-        }
-        
-        .contact-section.suppliers {
-            background: linear-gradient(135deg, #28a745, #1e7e34);
-            color: white;
-        }
-        
-        .contact-section.employment {
-            background: linear-gradient(135deg, #ff6b35, #e55a2b);
-            color: white;
-        }
-        
-        .contact-section h3 {
-            margin-bottom: 15px;
-            font-size: 1.4em;
-        }
-        
-        .contact-section p {
-            margin-bottom: 20px;
-            opacity: 0.9;
-            font-size: 1em;
-        }
-        
-        .contact-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .contact-btn {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            color: white;
-            text-decoration: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 1em;
-            border: 1px solid rgba(255,255,255,0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .contact-btn:hover {
-            background: rgba(255,255,255,0.25);
-            border-color: rgba(255,255,255,0.5);
-            transform: translateY(-1px);
-            color: white;
-            text-decoration: none;
-        }
-        
-        .legal-section {
-            background: linear-gradient(135deg, #6f42c1, #5a32a3);
-            color: white;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-        }
-        
-        .legal-section h3 {
-            font-size: 1.6em;
-            margin-bottom: 15px;
-        }
-        
-        .legal-section p {
-            font-size: 1.1em;
-            margin-bottom: 25px;
-            opacity: 0.9;
-        }
-        
-        .legal-buttons {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        
-        .legal-btn {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            color: white;
-            text-decoration: none;
-            padding: 15px 20px;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: bold;
-            border: 2px solid rgba(255,255,255,0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .legal-btn:hover {
-            background: rgba(255,255,255,0.25);
-            border-color: rgba(255,255,255,0.5);
-            transform: translateY(-2px);
-            color: white;
-            text-decoration: none;
-        }
-        
-        .utility-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        
-        .utility-card {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            border-left: 4px solid #ff5500;
-            text-align: center;
-        }
-        
-        .utility-card:hover {
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-            transform: translateY(-3px);
-        }
-        
-        .utility-card h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-        
-        .utility-card p {
-            color: #666;
-            margin-bottom: 20px;
-            font-size: 0.95em;
-            line-height: 1.5;
-        }
-        
-        .utility-card a {
-            background-color: #ff5500;
-            color: white;
-            text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-size: 1em;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-        
-        .utility-card a:hover {
-            background-color: #e64a00;
-            transform: translateY(-1px);
-            text-decoration: none;
-        }
-        
-        .footer-nav {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid #eee;
-        }
-        
-        .footer-nav a {
-            color: #666;
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 0.95em;
-        }
-        
-        .footer-nav a:hover {
-            color: #ff5500;
-        }
-
-        /* After-hours styling for Book Online buttons */
-        .emergency-btn.after-hours-btn {
-            background: rgba(40,167,69,0.25) !important;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-                margin: 10px;
-            }
-            
-            .logo {
-                font-size: 2em;
-            }
-            
-            .contact-sections {
-                grid-template-columns: 1fr;
-            }
-            
-            .utility-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .emergency-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .emergency-btn {
-                width: 100%;
-                max-width: 280px;
-            }
-            
-            .legal-buttons {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <!-- Load Style Guide -->
+    <link rel="stylesheet" href="/eek-style-guide.css">
 </head>
 <body>
     <!-- Dynamic banners will be created by master config -->
 
-    <div class="container">
-        <div class="header">
-            <div class="logo">🔧 Eek Mobile Mechanical</div>
-            <div class="brand-tagline">Complete Service Options & Resources</div>
-            <div class="description">
-                Access our full range of services, forms, applications, and support options. 
-                Everything you need for mobile mechanical assistance, supplier partnerships, and customer support.
+    <div class="eek-container">
+        <!-- Header Section -->
+        <div class="eek-header">
+            <img src="/brand-image.png" alt="Eek Mobile Mechanical - Mobile Mechanic Services" class="eek-brand-image" />
+            <div class="eek-business-name">Eek Mobile Mechanical</div>
+            <div class="eek-tagline">Complete Service Options & Resources</div>
+            <p>Access our full range of services, forms, applications, and support options. Everything you need for mobile mechanical assistance, supplier partnerships, and customer support.</p>
+        </div>
+        
+        <!-- Emergency Help Section -->
+        <div class="eek-section eek-card-gradient">
+            <div class="eek-section-header">
+                <h2>🚨 Need Immediate Help?</h2>
+                <p>Get emergency mobile mechanical assistance or speak with our dispatch team</p>
+            </div>
+            <div class="eek-btn-group">
+                <a href="/rescue-me" class="eek-btn eek-btn-glass normal-hours-btn" data-track="emergency_rescue">🚨 Emergency Service</a>
+                <a href="tel:0800769000" class="eek-btn eek-btn-glass phone-link normal-hours-btn" data-track="more_options_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+                <a href="/find-me" class="eek-btn eek-btn-glass normal-hours-btn" data-track="find_me_tool">📍 Find Me Tool</a>
+                <a href="/book-service" class="eek-btn eek-btn-glass after-hours-btn" data-track="book_online_after_hours">📅 Book Online Service</a>
             </div>
         </div>
         
-        <!-- EMERGENCY HELP SECTION -->
-        <div class="emergency-section">
-            <h2>🚨 Need Immediate Help?</h2>
-            <p>Get emergency mobile mechanical assistance or speak with our dispatch team</p>
-            <div class="emergency-buttons">
-                <a href="/rescue-me" class="emergency-btn normal-hours-btn" data-track="emergency_rescue">🚨 Emergency Service</a>
-                <a href="tel:0800769000" class="emergency-btn phone-link normal-hours-btn" data-track="more_options_call">📞 Call <span class="phone-display">0800 769 000</span></a>
-                <a href="/find-me" class="emergency-btn normal-hours-btn" data-track="find_me_tool">📍 Find Me Tool</a>
-                <a href="/book-service" class="emergency-btn after-hours-btn" data-track="book_online_after_hours">📅 Book Online Service</a>
-            </div>
-        </div>
-        
-        <!-- CONTACT BY AUDIENCE SECTION -->
-        <div class="section">
-            <div class="section-header">
+        <!-- Contact by Purpose Section -->
+        <div class="eek-section">
+            <div class="eek-section-header">
                 <h2>📞 Contact by Purpose</h2>
                 <p>Choose the right contact method based on your needs</p>
             </div>
             
-            <div class="contact-sections">
-                <div class="contact-section customers">
+            <div class="eek-contact-grid">
+                <div class="eek-contact-section customers">
                     <h3>👥 For Customers</h3>
                     <p>Service requests, support, and assistance</p>
-                    <div class="contact-buttons">
-                        <a href="/rescue-me" class="contact-btn normal-hours-btn" data-track="customer_emergency">🚨 Emergency Service</a>
-                        <a href="tel:0800769000" class="contact-btn phone-link normal-hours-btn" data-track="customer_call">📞 Call <span class="phone-display">0800 769 000</span></a>
-                        <a href="/customer-escalation" class="contact-btn normal-hours-btn" data-track="customer_support">💬 Customer Support</a>
-                        <a href="/find-me" class="contact-btn normal-hours-btn" data-track="customer_find_me">📍 Find Me Tool</a>
-                        <a href="/book-service" class="contact-btn after-hours-btn" data-track="customer_book_online">📅 Book Online Service</a>
+                    <div class="eek-contact-buttons">
+                        <a href="/rescue-me" class="eek-btn eek-btn-glass normal-hours-btn" data-track="customer_emergency">🚨 Emergency Service</a>
+                        <a href="tel:0800769000" class="eek-btn eek-btn-glass phone-link normal-hours-btn" data-track="customer_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+                        <a href="/customer-escalation" class="eek-btn eek-btn-glass normal-hours-btn" data-track="customer_support">💬 Customer Support</a>
+                        <a href="/find-me" class="eek-btn eek-btn-glass normal-hours-btn" data-track="customer_find_me">📍 Find Me Tool</a>
+                        <a href="/book-service" class="eek-btn eek-btn-glass after-hours-btn" data-track="customer_book_online">📅 Book Online Service</a>
                     </div>
                 </div>
                 
-                <div class="contact-section suppliers">
+                <div class="eek-contact-section suppliers">
                     <h3>🤝 For Suppliers & Partners</h3>
                     <p>Business partnerships and supplier relations</p>
-                    <div class="contact-buttons">
-                        <a href="/supplier" class="contact-btn" data-track="supplier_portal">🤝 Official Supplier Portal</a>
-                        <a href="/supplier-relations" class="contact-btn" data-track="supplier_relations">📝 Supplier Relations</a>
+                    <div class="eek-contact-buttons">
+                        <a href="/supplier" class="eek-btn eek-btn-glass" data-track="supplier_portal">🤝 Official Supplier Portal</a>
+                        <a href="/supplier-relations" class="eek-btn eek-btn-glass" data-track="supplier_relations">📝 Supplier Relations</a>
                     </div>
                 </div>
                 
-                <div class="contact-section employment">
+                <div class="eek-contact-section employment">
                     <h3>💼 Employment & Careers</h3>
                     <p>Join our team as a mobile technician</p>
-                    <div class="contact-buttons">
-                        <a href="/apply" class="contact-btn" data-track="employment_apply">📝 Apply to Work</a>
+                    <div class="eek-contact-buttons">
+                        <a href="/apply" class="eek-btn eek-btn-glass" data-track="employment_apply">📝 Apply to Work</a>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- LEGAL & COMPLIANCE SECTION -->
-        <div class="section">
-            <div class="legal-section">
+        <!-- Legal & Compliance Section -->
+        <div class="eek-section">
+            <div class="eek-contact-section" style="background: linear-gradient(135deg, #6f42c1, #5a32a3);">
                 <h3>🛡️ Legal & Compliance Center</h3>
                 <p>Terms, policies, privacy matters, and legal authority access</p>
-                <div class="legal-buttons">
-                    <a href="/terms" class="legal-btn" data-track="legal_terms">📋 End User Terms</a>
-                    <a href="/supplier-terms" class="legal-btn" data-track="legal_supplier_terms">📋 Supplier Terms</a>
-                    <a href="/privacy" class="legal-btn" data-track="legal_privacy">🔒 Privacy Policy</a>
-                    <a href="/privacy-report" class="legal-btn" data-track="legal_privacy_report">🚨 Privacy Report</a>
-                    <a href="/mjuris" class="legal-btn" data-track="legal_authority">⚖️ Legal Authority</a>
+                <div class="eek-service-grid">
+                    <a href="/terms" class="eek-btn eek-btn-glass" data-track="legal_terms">📋 End User Terms</a>
+                    <a href="/supplier-terms" class="eek-btn eek-btn-glass" data-track="legal_supplier_terms">📋 Supplier Terms</a>
+                    <a href="/privacy" class="eek-btn eek-btn-glass" data-track="legal_privacy">🔒 Privacy Policy</a>
+                    <a href="/privacy-report" class="eek-btn eek-btn-glass" data-track="legal_privacy_report">🚨 Privacy Report</a>
+                    <a href="/mjuris" class="eek-btn eek-btn-glass" data-track="legal_authority">⚖️ Legal Authority</a>
                 </div>
             </div>
         </div>
         
-        <!-- UTILITY TOOLS SECTION -->
-        <div class="section">
-            <div class="section-header">
+        <!-- Utility Tools Section -->
+        <div class="eek-section">
+            <div class="eek-section-header">
                 <h2>🔧 Utility Tools</h2>
                 <p>Helpful tools and resources for customers and technicians</p>
             </div>
             
-            <div class="utility-grid">
-                <div class="utility-card">
+            <div class="eek-service-grid">
+                <div class="eek-card">
                     <h3>🗺️ Navigation Help</h3>
                     <p>Find your current location or get directions for our mobile technicians.</p>
-                    <a href="/map" data-track="utility_maps">Open Maps</a>
+                    <a href="/map" class="eek-btn eek-btn-primary" data-track="utility_maps">Open Maps</a>
                 </div>
             </div>
         </div>
         
-        <div class="footer-nav">
+        <!-- Footer -->
+        <div class="eek-footer">
             <a href="/" class="more-options-link" data-track="footer_home">🏠 Homepage</a>
             <a href="/privacy" data-track="footer_privacy">Privacy Policy</a>
         </div>
@@ -469,9 +173,10 @@
     
     <script>
         // More Options page - fully integrated with master config
-        console.log('📄 More Options page loaded with full master config integration');
+        console.log('📄 More Options page loaded with comprehensive style guide');
         
         // Master config automatically handles:
+        // ✅ Style guide integration with fallback
         // ✅ Dynamic element creation (banners, sticky buttons)
         // ✅ Phone number updates based on URL parameters
         // ✅ Banner visibility management (closed/payment)
@@ -484,7 +189,7 @@
         // ✅ System status integration
         // ✅ Business hours detection
         
-        // Page is now fully managed by master config - no additional JS needed
+        // Page is now fully managed by master config with consistent styling
     </script>
 </body>
 </html>
