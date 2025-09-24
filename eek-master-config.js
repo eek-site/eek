@@ -479,7 +479,7 @@ function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
             saveData: navigator.connection.saveData || false
         } : null,
         
-        // Storage & Privacy
+        // Storage & Privacy (FIXED - removed await)
         storage: {
             localStorageAvailable: isLocalStorageAvailable(),
             sessionStorageAvailable: isSessionStorageAvailable(),
@@ -1147,14 +1147,15 @@ function updateButtons() {
     const normalButtons = document.querySelectorAll('.normal-hours-btn');
     const afterHoursButtons = document.querySelectorAll('.after-hours-btn');
     
-    const showNormalButtons = EEK_STATE.systemActive;
-    const showAfterHoursButtons = !EEK_STATE.systemActive;
+    const showNormalButtons = EEK_STATE.systemActive && !EEK_STATE.hasPaymentToken;
+    const showAfterHoursButtons = !EEK_STATE.systemActive && !EEK_STATE.hasPaymentToken;
     
     console.log('🔘 Found buttons:', {
         normalButtons: normalButtons.length,
         afterHoursButtons: afterHoursButtons.length,
         showNormal: showNormalButtons,
-        showAfterHours: showAfterHoursButtons
+        showAfterHours: showAfterHoursButtons,
+        hasPaymentToken: EEK_STATE.hasPaymentToken
     });
     
     normalButtons.forEach((btn, index) => {
@@ -1205,7 +1206,7 @@ function updateStickyButtons() {
     }
 }
 
-// === PAYMENT UI MANAGEMENT ===
+// === PAYMENT UI MANAGEMENT (FIXED) ===
 function updatePaymentUI() {
     const paymentToken = getPaymentToken();
     const stripePaymentBlock = document.getElementById('stripePaymentBlock');
@@ -1213,9 +1214,10 @@ function updatePaymentUI() {
     const payNowButton = document.getElementById('payNowButton');
     const termsCheckbox = document.getElementById('termsCheckbox');
     
-    console.log('💳 Payment UI Update - Token:', paymentToken);
+    console.log('💳 Payment UI Update - Token:', paymentToken, 'HasToken:', !!paymentToken);
     
-    if (paymentToken) {
+    // CRITICAL FIX: Only show payment UI if there's actually a token
+    if (paymentToken && paymentToken.trim() !== '') {
         // Show payment UI for token users
         if (stripePaymentBlock) {
             stripePaymentBlock.style.display = 'block';
@@ -1227,17 +1229,11 @@ function updatePaymentUI() {
             console.log('💳 Showing sticky payment button');
         }
         
-        // Hide normal service buttons for payment users
-        const normalButtons = document.querySelectorAll('.normal-hours-btn');
-        normalButtons.forEach(btn => {
-            btn.style.display = 'none';
-        });
-        
         // Set up payment functionality
         setupPaymentHandlers(paymentToken);
         console.log('💳 Payment UI configured for token:', paymentToken);
     } else {
-        // Hide all payment UI for non-token users
+        // CRITICAL FIX: Hide ALL payment UI for non-token users
         if (stripePaymentBlock) {
             stripePaymentBlock.style.display = 'none';
             console.log('💳 Hiding Stripe payment block (no token)');
@@ -1285,6 +1281,9 @@ function setupPaymentHandlers(token) {
         const newPayNowButton = payNowButton.cloneNode(true);
         payNowButton.parentNode.replaceChild(newPayNowButton, payNowButton);
         
+        // CRITICAL FIX: Pay Now button starts HIDDEN by default
+        newPayNowButton.style.display = 'none';
+        
         newTermsCheckbox.addEventListener('change', () => {
             console.log('💳 Terms checkbox changed:', newTermsCheckbox.checked);
             newPayNowButton.style.display = newTermsCheckbox.checked ? 'inline-block' : 'none';
@@ -1295,7 +1294,7 @@ function setupPaymentHandlers(token) {
             window.location.href = `https://buy.stripe.com/${token}`;
         });
         
-        console.log('💳 Payment handlers configured successfully');
+        console.log('💳 Payment handlers configured successfully - Pay Now starts hidden');
     } else {
         console.warn('💳 Missing payment elements - handlers not configured');
     }
@@ -1597,7 +1596,7 @@ function isSessionStorageAvailable() {
     }
 }
 
-async function testThirdPartyCookies() {
+function testThirdPartyCookies() {
     try {
         // Simple test for third-party cookie blocking
         document.cookie = "third-party-test=1; SameSite=None; Secure";
