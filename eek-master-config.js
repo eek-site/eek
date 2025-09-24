@@ -4,54 +4,103 @@
  * Include this file on every page to ensure consistency
  */
 
-// === INJECT CRITICAL CSS STYLES ===
+// === INJECT COMPREHENSIVE STYLE GUIDE ===
 function injectMasterStyles() {
     if (document.getElementById('eek-master-styles')) return; // Already injected
+    
+    // Check if style guide is already loaded
+    const existingStyleGuide = document.querySelector('link[href*="eek-style-guide"]') || 
+                               document.getElementById('eek-style-guide');
+    
+    if (existingStyleGuide) {
+        console.log('📋 Style guide already loaded');
+        return;
+    }
+    
+    // Try to load external style guide first
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = '/eek-style-guide.css';
+    link.id = 'eek-style-guide-link';
+    
+    // If external file fails, inject critical styles
+    link.onerror = function() {
+        injectFallbackStyles();
+    };
+    
+    document.head.appendChild(link);
+    console.log('📋 Style guide linked');
+}
+
+function injectFallbackStyles() {
+    if (document.getElementById('eek-master-styles')) return;
     
     const style = document.createElement('style');
     style.id = 'eek-master-styles';
     style.textContent = `
+        /* Critical fallback styles */
+        :root {
+            --eek-primary: #ff5500;
+            --eek-primary-hover: #e64a00;
+            --eek-success: #28a745;
+            --eek-success-hover: #20a142;
+            --eek-bg-body: #f5f5f5;
+            --eek-bg-white: #ffffff;
+            --eek-text: #333;
+            --eek-shadow-md: 0 4px 8px rgba(0,0,0,0.1);
+            --eek-radius-lg: 12px;
+            --eek-radius-full: 50px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--eek-bg-body);
+            color: var(--eek-text);
+            margin: 0;
+            padding: 0 0 80px 0;
+        }
+        
         /* Sticky Call Button */
-        .sticky-call {
+        .sticky-call, .eek-sticky-button {
             position: fixed;
             bottom: 15px;
             right: 15px;
-            background-color: #ff5500;
+            background-color: var(--eek-primary);
             color: white;
             font-size: 1.1em;
             padding: 14px 20px;
-            border-radius: 50px;
+            border-radius: var(--eek-radius-full);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             text-decoration: none;
             z-index: 999;
             transition: all 0.3s ease;
         }
         
-        .sticky-call:hover {
-            background-color: #e64a00;
+        .sticky-call:hover, .eek-sticky-button:hover {
+            background-color: var(--eek-primary-hover);
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.3);
             color: white;
             text-decoration: none;
         }
         
-        .sticky-payment {
+        .sticky-payment, .eek-sticky-payment {
             position: fixed;
             bottom: 15px;
             right: 150px;
-            background-color: #28a745;
+            background-color: var(--eek-success);
             color: white;
             font-size: 1.1em;
             padding: 14px 20px;
-            border-radius: 50px;
+            border-radius: var(--eek-radius-full);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             text-decoration: none;
             z-index: 999;
             transition: all 0.3s ease;
         }
         
-        .sticky-payment:hover {
-            background-color: #20a142;
+        .sticky-payment:hover, .eek-sticky-payment:hover {
+            background-color: var(--eek-success-hover);
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.3);
             color: white;
@@ -59,13 +108,13 @@ function injectMasterStyles() {
         }
         
         /* Business Hours Banner */
-        .after-hours-banner {
+        .after-hours-banner, .eek-banner {
             background: linear-gradient(135deg, #ff3333, #ff5500);
             color: white;
             padding: 20px;
             margin: 0 auto 20px;
             max-width: 800px;
-            border-radius: 12px;
+            border-radius: var(--eek-radius-lg);
             box-shadow: 0 4px 12px rgba(255,51,51,0.3);
             animation: eek-pulse 2s infinite;
             display: none;
@@ -77,26 +126,26 @@ function injectMasterStyles() {
             50% { box-shadow: 0 4px 20px rgba(255,51,51,0.5); }
         }
         
-        .after-hours-banner h2 {
+        .after-hours-banner h2, .eek-banner h2 {
             margin: 0 0 10px 0;
             font-size: 1.6em;
         }
         
-        .after-hours-banner p {
+        .after-hours-banner p, .eek-banner p {
             margin: 10px 0;
             font-size: 1.1em;
         }
         
         /* Mobile responsive */
         @media (max-width: 768px) {
-            .sticky-call {
+            .sticky-call, .eek-sticky-button {
                 font-size: 1em;
                 padding: 12px 18px;
                 bottom: 10px;
                 right: 10px;
             }
             
-            .sticky-payment {
+            .sticky-payment, .eek-sticky-payment {
                 font-size: 1em;
                 padding: 12px 18px;
                 bottom: 10px;
@@ -105,6 +154,7 @@ function injectMasterStyles() {
         }
     `;
     document.head.appendChild(style);
+    console.log('📋 Fallback styles injected');
 }
 
 // === REDDIT PIXEL INITIALIZATION ===
