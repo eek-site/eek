@@ -1018,8 +1018,25 @@ function updateStickyButtons() {
 // === PAYMENT UI MANAGEMENT ===
 function updatePaymentUI() {
     const paymentToken = getPaymentToken();
+    const stripePaymentBlock = document.getElementById('stripePaymentBlock');
+    const stripePaymentSticky = document.getElementById('stripePaymentSticky');
+    const payNowButton = document.getElementById('payNowButton');
+    const termsCheckbox = document.getElementById('termsCheckbox');
+    
+    console.log('💳 Payment UI Update - Token:', paymentToken);
     
     if (paymentToken) {
+        // Show payment UI for token users
+        if (stripePaymentBlock) {
+            stripePaymentBlock.style.display = 'block';
+            console.log('💳 Showing Stripe payment block for token user');
+        }
+        if (stripePaymentSticky) {
+            stripePaymentSticky.style.display = 'inline-block';
+            stripePaymentSticky.href = '#stripePaymentBlock';
+            console.log('💳 Showing sticky payment button');
+        }
+        
         // Hide normal service buttons for payment users
         const normalButtons = document.querySelectorAll('.normal-hours-btn');
         normalButtons.forEach(btn => {
@@ -1029,6 +1046,25 @@ function updatePaymentUI() {
         // Set up payment functionality
         setupPaymentHandlers(paymentToken);
         console.log('💳 Payment UI configured for token:', paymentToken);
+    } else {
+        // Hide all payment UI for non-token users
+        if (stripePaymentBlock) {
+            stripePaymentBlock.style.display = 'none';
+            console.log('💳 Hiding Stripe payment block (no token)');
+        }
+        if (stripePaymentSticky) {
+            stripePaymentSticky.style.display = 'none';
+            console.log('💳 Hiding sticky payment button (no token)');
+        }
+        if (payNowButton) {
+            payNowButton.style.display = 'none';
+            console.log('💳 Hiding pay now button (no token)');
+        }
+        if (termsCheckbox) {
+            termsCheckbox.checked = false;
+            console.log('💳 Resetting terms checkbox (no token)');
+        }
+        console.log('💳 All payment UI hidden for non-token user');
     }
 }
 
@@ -1039,18 +1075,39 @@ function setupPaymentHandlers(token) {
     const payNowButton = document.getElementById('payNowButton');
     const stripePaymentSticky = document.getElementById('stripePaymentSticky');
     
+    console.log('💳 Setting up payment handlers for token:', token);
+    console.log('💳 Payment elements found:', {
+        stripePaymentBlock: !!stripePaymentBlock,
+        termsCheckbox: !!termsCheckbox,
+        payNowButton: !!payNowButton,
+        stripePaymentSticky: !!stripePaymentSticky
+    });
+    
     if (stripePaymentBlock && termsCheckbox && payNowButton && stripePaymentSticky) {
         stripePaymentBlock.style.display = 'block';
         stripePaymentSticky.style.display = 'inline-block';
         stripePaymentSticky.href = '#stripePaymentBlock';
         
-        termsCheckbox.addEventListener('change', () => {
-            payNowButton.style.display = termsCheckbox.checked ? 'inline-block' : 'none';
+        // Remove any existing event listeners
+        const newTermsCheckbox = termsCheckbox.cloneNode(true);
+        termsCheckbox.parentNode.replaceChild(newTermsCheckbox, termsCheckbox);
+        
+        const newPayNowButton = payNowButton.cloneNode(true);
+        payNowButton.parentNode.replaceChild(newPayNowButton, payNowButton);
+        
+        newTermsCheckbox.addEventListener('change', () => {
+            console.log('💳 Terms checkbox changed:', newTermsCheckbox.checked);
+            newPayNowButton.style.display = newTermsCheckbox.checked ? 'inline-block' : 'none';
         });
         
-        payNowButton.addEventListener('click', () => {
+        newPayNowButton.addEventListener('click', () => {
+            console.log('💳 Pay Now button clicked, redirecting to:', `https://buy.stripe.com/${token}`);
             window.location.href = `https://buy.stripe.com/${token}`;
         });
+        
+        console.log('💳 Payment handlers configured successfully');
+    } else {
+        console.warn('💳 Missing payment elements - handlers not configured');
     }
 }
 
