@@ -157,7 +157,94 @@ function injectFallbackStyles() {
     console.log('📋 Fallback styles injected');
 }
 
-// === REDDIT PIXEL INITIALIZATION ===
+// === LOGO MANAGEMENT ===
+function getLogoForPageType() {
+    const currentPath = window.location.pathname.toLowerCase();
+    const urlParams = new URLSearchParams(window.location.search);
+    const serviceType = urlParams.get('service');
+    
+    console.log('🔍 Determining logo for path:', currentPath, 'service:', serviceType);
+    
+    // Pre-purchase inspection pages use lemon logo
+    if (currentPath.includes('inspection') || 
+        currentPath.includes('pre-purchase') ||
+        serviceType === 'inspection') {
+        return { file: 'lemon.png', class: 'lemon', type: 'Pre-Purchase Inspection' };
+    }
+    
+    // Inquiry/support pages use sweet-ride logo
+    if (currentPath.includes('more-options') ||
+        currentPath.includes('customer-escalation') ||
+        currentPath.includes('supplier') ||
+        currentPath.includes('apply') ||
+        currentPath.includes('contact') ||
+        currentPath.includes('support')) {
+        return { file: 'sweet-ride.png', class: 'sweet-ride', type: 'Inquiry/Support' };
+    }
+    
+    // Index page and booking steps use brand-image (default)
+    // This includes: /, /book-service, /rescue-me, etc.
+    return { file: 'brand-image.png', class: 'brand-image', type: 'Main/Booking' };
+}
+
+async function detectAndUpdateLogo() {
+    const logoImages = document.querySelectorAll('.eek-brand-image, img[src*="brand-image"], img[src*="sweet-ride"], img[src*="lemon"]');
+    
+    if (logoImages.length === 0) {
+        console.log('ℹ️ No logo images found on page');
+        return;
+    }
+    
+    const logoInfo = getLogoForPageType();
+    console.log('🎯 Selected logo:', logoInfo.file, 'for page type:', logoInfo.type);
+    
+    for (let img of logoImages) {
+        // If image already has the correct src, skip
+        if (img.src && img.src.endsWith(logoInfo.file)) {
+            console.log('✅ Logo already correct:', img.src);
+            continue;
+        }
+        
+        try {
+            // Test if the selected logo file exists
+            const testImg = new Image();
+            
+            await new Promise((resolve, reject) => {
+                testImg.onload = function() {
+                    // Update the logo
+                    img.src = logoInfo.file;
+                    img.alt = `Eek Mobile Mechanical - Mobile Mechanic Services`;
+                    
+                    // Remove old logo classes
+                    img.classList.remove('brand-image', 'sweet-ride', 'lemon');
+                    // Add appropriate class
+                    img.classList.add(logoInfo.class);
+                    
+                    console.log('🖼️ Logo updated to:', logoInfo.file, 'class:', logoInfo.class);
+                    resolve();
+                };
+                
+                testImg.onerror = function() {
+                    console.warn('❌ Logo file not found:', logoInfo.file, '- falling back to brand-image.png');
+                    
+                    // Fallback to brand-image if selected logo doesn't exist
+                    if (logoInfo.file !== 'brand-image.png') {
+                        img.src = 'brand-image.png';
+                        img.classList.remove('sweet-ride', 'lemon');
+                        img.classList.add('brand-image');
+                        console.log('🔄 Fallback logo applied: brand-image.png');
+                    }
+                    resolve();
+                };
+                
+                testImg.src = logoInfo.file;
+            });
+            
+        } catch (error) {
+            console.error('❌ Error updating logo:', error);
+        }
+    }
+}
 function initializeRedditPixel() {
     if (window.rdt) return; // Already initialized
     
@@ -1041,6 +1128,9 @@ function initializePage() {
     // Initialize tracking pixels
     initializeRedditPixel();
     
+    // Detect and update logos
+    detectAndUpdateLogo();
+    
     // Initialize state
     EEK_STATE.sessionId = getOrCreateSessionId();
     EEK_STATE.gclid = getGCLID();
@@ -1286,3 +1376,5 @@ window.initializeDynamicElements = initializeDynamicElements;
 window.createClosedBanner = createClosedBanner;
 window.createStripePaymentBlock = createStripePaymentBlock;
 window.createStickyButtons = createStickyButtons;
+window.getLogoForPageType = getLogoForPageType;
+window.detectAndUpdateLogo = detectAndUpdateLogo;
