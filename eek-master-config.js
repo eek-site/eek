@@ -245,6 +245,7 @@ async function detectAndUpdateLogo() {
         }
     }
 }
+
 function initializeRedditPixel() {
     if (window.rdt) return; // Already initialized
     
@@ -664,33 +665,6 @@ function trackInteraction(element) {
     // If it's a phone call, track as conversion
     if (trackingAction.includes('call') || (element.href && element.href.startsWith('tel:'))) {
         trackConversion(trackingAction, 'Contact');
-    }
-}
-
-// Helper functions for interaction tracking
-function getClickPosition(element) {
-    try {
-        const rect = element.getBoundingClientRect();
-        return {
-            top: rect.top,
-            left: rect.left,
-            bottom: rect.bottom,
-            right: rect.right,
-            width: rect.width,
-            height: rect.height
-        };
-    } catch (e) {
-        return null;
-    }
-}
-
-function isElementVisible(element) {
-    try {
-        const rect = element.getBoundingClientRect();
-        return rect.top < window.innerHeight && rect.bottom > 0 && 
-               rect.left < window.innerWidth && rect.right > 0;
-    } catch (e) {
-        return false;
     }
 }
 
@@ -1586,246 +1560,7 @@ function initializeDynamicElements() {
     console.log('✅ All dynamic elements initialized');
 }
 
-// === CUSTOMER DATA PERSISTENCE ===
-const CUSTOMER_PROFILE_KEY = 'eek_customer_profile';
-
-function getCustomerProfile() {
-    try {
-        const stored = localStorage.getItem(CUSTOMER_PROFILE_KEY);
-        return stored ? JSON.parse(stored) : createNewCustomerProfile();
-    } catch (e) {
-        console.warn('Error reading customer profile, creating new:', e);
-        return createNewCustomerProfile();
-    }
-}
-
-function createNewCustomerProfile() {
-    const profile = {
-        customerId: 'cust_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-        created: new Date().toISOString(),
-        updated: new Date().toISOString(),
-        
-        // Identity & Attribution
-        attribution: {
-            firstTouch: null,
-            lastTouch: null,
-            allTouchpoints: [],
-            gclids: [],
-            utmHistory: []
-        },
-        
-        // Behavior Tracking
-        behavior: {
-            totalVisits: 0,
-            totalPageViews: 0,
-            totalTimeOnSite: 0,
-            totalInteractions: 0,
-            pagesVisited: [],
-            servicesViewed: [],
-            conversions: [],
-            phoneNumbers: {
-                tracking: 0,
-                default: 0
-            }
-        },
-        
-        // Technical Profile
-        technical: {
-            devices: [],
-            browsers: [],
-            locations: [],
-            referrers: [],
-            screenResolutions: []
-        },
-        
-        // Business Context
-        businessInteractions: {
-            systemActiveVisits: 0,
-            systemInactiveVisits: 0,
-            businessHoursVisits: 0,
-            afterHoursVisits: 0,
-            paymentTokensUsed: []
-        },
-        
-        // Journey Tracking
-        journey: {
-            sessionCount: 0,
-            currentSessionStart: null,
-            lastVisit: null,
-            averageSessionDuration: 0,
-            bounceRate: 0,
-            conversionRate: 0
-        }
-    };
-    
-    saveCustomerProfile(profile);
-    return profile;
-}
-
-function updateCustomerProfile(updates) {
-    const profile = getCustomerProfile();
-    
-    // Deep merge the updates
-    const updatedProfile = deepMerge(profile, updates);
-    updatedProfile.updated = new Date().toISOString();
-    
-    saveCustomerProfile(updatedProfile);
-    return updatedProfile;
-}
-
-function saveCustomerProfile(profile) {
-    try {
-        localStorage.setItem(CUSTOMER_PROFILE_KEY, JSON.stringify(profile));
-    } catch (e) {
-        console.error('Error saving customer profile:', e);
-    }
-}
-
-function addToCustomerJourney(eventType, eventData) {
-    const profile = getCustomerProfile();
-    
-    // Add to journey tracking
-    if (!profile.journey.events) profile.journey.events = [];
-    
-    profile.journey.events.push({
-        timestamp: new Date().toISOString(),
-        type: eventType,
-        data: eventData,
-        page: window.location.pathname,
-        sessionId: EEK_STATE.sessionId
-    });
-    
-    // Keep only last 100 events to prevent storage bloat
-    if (profile.journey.events.length > 100) {
-        profile.journey.events = profile.journey.events.slice(-100);
-    }
-    
-    updateCustomerProfile(profile);
-}
-
-function trackCustomerAttribution(attribution) {
-    const profile = getCustomerProfile();
-    
-    // Set first touch if not exists
-    if (!profile.attribution.firstTouch) {
-        profile.attribution.firstTouch = attribution;
-    }
-    
-    // Always update last touch
-    profile.attribution.lastTouch = attribution;
-    
-    // Add to touchpoints history
-    profile.attribution.allTouchpoints.push(attribution);
-    
-    // Track GCLID history
-    if (attribution.gclid && !profile.attribution.gclids.includes(attribution.gclid)) {
-        profile.attribution.gclids.push(attribution.gclid);
-    }
-    
-    // Track UTM combinations
-    if (attribution.utm_source) {
-        const utmKey = `${attribution.utm_source}|${attribution.utm_medium}|${attribution.utm_campaign}`;
-        if (!profile.attribution.utmHistory.some(u => u.key === utmKey)) {
-            profile.attribution.utmHistory.push({
-                key: utmKey,
-                source: attribution.utm_source,
-                medium: attribution.utm_medium,
-                campaign: attribution.utm_campaign,
-                firstSeen: new Date().toISOString()
-            });
-        }
-    }
-    
-    updateCustomerProfile(profile);
-}
-
-function trackCustomerBehavior(behaviorType, data) {
-    const profile = getCustomerProfile();
-    
-    switch (behaviorType) {
-        case 'page_visit':
-            profile.behavior.totalPageViews++;
-            if (!profile.behavior.pagesVisited.includes(data.page)) {
-                profile.behavior.pagesVisited.push(data.page);
-            }
-            break;
-            
-        case 'service_view':
-            if (!profile.behavior.servicesViewed.includes(data.service)) {
-                profile.behavior.servicesViewed.push(data.service);
-            }
-            break;
-            
-        case 'conversion':
-            profile.behavior.conversions.push({
-                timestamp: new Date().toISOString(),
-                type: data.eventAction,
-                value: data.eventValue,
-                page: window.location.pathname
-            });
-            break;
-            
-        case 'interaction':
-            profile.behavior.totalInteractions++;
-            break;
-            
-        case 'phone_display':
-            if (data.phoneType === 'tracking') {
-                profile.behavior.phoneNumbers.tracking++;
-            } else {
-                profile.behavior.phoneNumbers.default++;
-            }
-            break;
-    }
-    
-    updateCustomerProfile(profile);
-}
-
-function trackCustomerTechnical(technicalData) {
-    const profile = getCustomerProfile();
-    
-    // Track unique devices
-    const deviceFingerprint = `${technicalData.platform}-${technicalData.userAgent.slice(0, 50)}`;
-    if (!profile.technical.devices.some(d => d.fingerprint === deviceFingerprint)) {
-        profile.technical.devices.push({
-            fingerprint: deviceFingerprint,
-            platform: technicalData.platform,
-            mobile: technicalData.mobile,
-            screen: technicalData.screen,
-            firstSeen: new Date().toISOString()
-        });
-    }
-    
-    // Track referrers
-    if (technicalData.referrer && !profile.technical.referrers.includes(technicalData.referrer)) {
-        profile.technical.referrers.push(technicalData.referrer);
-    }
-    
-    updateCustomerProfile(profile);
-}
-
-// Utility function for deep merging objects
-function deepMerge(target, source) {
-    const output = Object.assign({}, target);
-    if (isObject(target) && isObject(source)) {
-        Object.keys(source).forEach(key => {
-            if (isObject(source[key])) {
-                if (!(key in target)) {
-                    Object.assign(output, { [key]: source[key] });
-                } else {
-                    output[key] = deepMerge(target[key], source[key]);
-                }
-            } else {
-                Object.assign(output, { [key]: source[key] });
-            }
-        });
-    }
-    return output;
-}
-
-function isObject(item) {
-    return item && typeof item === 'object' && !Array.isArray(item);
-}
+// === HELPER FUNCTIONS ===
 function getServiceType(eventAction) {
     return EEK_CONFIG.SERVICE_TYPES[eventAction] || 'General Service';
 }
@@ -2000,6 +1735,33 @@ function incrementInteractionCount() {
     const count = getInteractionCount() + 1;
     sessionStorage.setItem('eek_interaction_count', count.toString());
     return count;
+}
+
+// Helper functions for interaction tracking
+function getClickPosition(element) {
+    try {
+        const rect = element.getBoundingClientRect();
+        return {
+            top: rect.top,
+            left: rect.left,
+            bottom: rect.bottom,
+            right: rect.right,
+            width: rect.width,
+            height: rect.height
+        };
+    } catch (e) {
+        return null;
+    }
+}
+
+function isElementVisible(element) {
+    try {
+        const rect = element.getBoundingClientRect();
+        return rect.top < window.innerHeight && rect.bottom > 0 && 
+               rect.left < window.innerWidth && rect.right > 0;
+    } catch (e) {
+        return false;
+    }
 }
 
 // === BACKWARDS COMPATIBILITY WRAPPER ===
