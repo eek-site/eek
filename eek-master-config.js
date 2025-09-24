@@ -354,40 +354,166 @@ let EEK_STATE = {
 
 // === TRACKING AND ANALYTICS ===
 function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const now = new Date();
+    
     return {
         eventType: eventType,
         eventAction: eventAction,
-        timestamp: new Date().toISOString(),
+        timestamp: now.toISOString(),
+        
+        // Session & Identity Data
         sessionId: EEK_STATE.sessionId,
         gclid: EEK_STATE.gclid,
+        hasCurrentGclid: !!urlParams.get('gclid'),
+        hasCurrentToken: !!urlParams.get('token'),
+        hasStoredGclid: !!localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.gclid),
+        gclidAge: getGCLIDAgeInDays(),
+        phoneNumberType: getDisplayPhoneNumber() === EEK_CONFIG.PHONE_NUMBERS.tracking ? 'tracking' : 'default',
         
-        // Page context
+        // Page Context (Enhanced)
         page: {
             title: document.title,
             url: window.location.href,
             path: window.location.pathname,
-            referrer: document.referrer || null
+            hash: window.location.hash,
+            search: window.location.search,
+            referrer: document.referrer || null,
+            domain: window.location.hostname,
+            protocol: window.location.protocol,
+            viewport: {
+                width: window.innerWidth || document.documentElement.clientWidth,
+                height: window.innerHeight || document.documentElement.clientHeight
+            },
+            scroll: {
+                x: window.pageXOffset || document.documentElement.scrollLeft,
+                y: window.pageYOffset || document.documentElement.scrollTop,
+                maxX: Math.max(document.body.scrollWidth, document.documentElement.scrollWidth),
+                maxY: Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)
+            }
         },
         
-        // UTM tracking
-        utm: EEK_STATE.utmData,
+        // Business Context
+        business: {
+            systemActive: EEK_STATE.systemActive,
+            duringBusinessHours: EEK_STATE.duringBusinessHours,
+            nzTime: new Date().toLocaleString("en-US", {timeZone: "Pacific/Auckland"}),
+            dayOfWeek: now.getDay(), // 0=Sunday, 6=Saturday
+            hourOfDay: now.getHours(),
+            isWeekend: (now.getDay() === 0 || now.getDay() === 6)
+        },
         
-        // Device info
+        // UTM & Marketing Data (Enhanced)
+        utm: {
+            ...EEK_STATE.utmData,
+            // Add any missing UTM from current URL
+            utm_source: urlParams.get('utm_source') || EEK_STATE.utmData.utm_source || null,
+            utm_medium: urlParams.get('utm_medium') || EEK_STATE.utmData.utm_medium || null,
+            utm_campaign: urlParams.get('utm_campaign') || EEK_STATE.utmData.utm_campaign || null,
+            utm_term: urlParams.get('utm_term') || EEK_STATE.utmData.utm_term || null,
+            utm_content: urlParams.get('utm_content') || EEK_STATE.utmData.utm_content || null,
+            // Additional marketing parameters
+            fbclid: urlParams.get('fbclid') || null,
+            msclkid: urlParams.get('msclkid') || null,
+            ttclid: urlParams.get('ttclid') || null
+        },
+        
+        // Device & Browser Info (Maximum Detail)
         device: {
             userAgent: navigator.userAgent,
             platform: navigator.platform || null,
             language: navigator.language || null,
+            languages: navigator.languages || [],
             mobile: /Mobi|Android/i.test(navigator.userAgent),
+            cookieEnabled: navigator.cookieEnabled,
+            doNotTrack: navigator.doNotTrack,
+            hardwareConcurrency: navigator.hardwareConcurrency || null,
+            maxTouchPoints: navigator.maxTouchPoints || 0,
+            onLine: navigator.onLine,
+            vendor: navigator.vendor || null,
+            vendorSub: navigator.vendorSub || null,
             screen: {
                 width: window.screen ? window.screen.width : null,
                 height: window.screen ? window.screen.height : null,
-                pixelRatio: window.devicePixelRatio || 1
+                availWidth: window.screen ? window.screen.availWidth : null,
+                availHeight: window.screen ? window.screen.availHeight : null,
+                colorDepth: window.screen ? window.screen.colorDepth : null,
+                pixelDepth: window.screen ? window.screen.pixelDepth : null,
+                pixelRatio: window.devicePixelRatio || 1,
+                orientation: window.screen && window.screen.orientation ? window.screen.orientation.angle : null
             }
         },
         
-        // Source tracking
+        // Performance Data
+        performance: {
+            navigationStart: performance.navigationStart || null,
+            loadEventEnd: performance.loadEventEnd || null,
+            domContentLoadedEventEnd: performance.domContentLoadedEventEnd || null,
+            responseEnd: performance.responseEnd || null,
+            domainLookupStart: performance.domainLookupStart || null,
+            domainLookupEnd: performance.domainLookupEnd || null,
+            connectStart: performance.connectStart || null,
+            connectEnd: performance.connectEnd || null,
+            requestStart: performance.requestStart || null,
+            responseStart: performance.responseStart || null,
+            domLoading: performance.domLoading || null,
+            domInteractive: performance.domInteractive || null,
+            domComplete: performance.domComplete || null,
+            loadEventStart: performance.loadEventStart || null,
+            timing: performance.timing ? {
+                dns: performance.timing.domainLookupEnd - performance.timing.domainLookupStart,
+                connection: performance.timing.connectEnd - performance.timing.connectStart,
+                response: performance.timing.responseEnd - performance.timing.responseStart,
+                domProcessing: performance.timing.domComplete - performance.timing.domLoading,
+                totalLoad: performance.timing.loadEventEnd - performance.timing.navigationStart
+            } : null
+        },
+        
+        // Connection Info
+        connection: navigator.connection ? {
+            effectiveType: navigator.connection.effectiveType || null,
+            type: navigator.connection.type || null,
+            downlink: navigator.connection.downlink || null,
+            rtt: navigator.connection.rtt || null,
+            saveData: navigator.connection.saveData || false
+        } : null,
+        
+        // Storage & Privacy
+        storage: {
+            localStorageAvailable: isLocalStorageAvailable(),
+            sessionStorageAvailable: isSessionStorageAvailable(),
+            cookiesEnabled: navigator.cookieEnabled,
+            thirdPartyCookiesBlocked: await testThirdPartyCookies()
+        },
+        
+        // Source & Attribution
         source: window.location.pathname.includes('more-options') ? 'more_options_page' : 'main_page',
         formVersion: '2.1',
+        
+        // Visit Context
+        visit: {
+            isFirstVisit: !localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.firstVisitSent),
+            sessionDuration: Date.now() - getSessionStartTime(),
+            pageLoadTime: Date.now() - performance.navigationStart,
+            timeOnCurrentPage: Date.now() - getPageStartTime(),
+            previousPage: getPreviousPage(),
+            visitCount: getVisitCount(),
+            pageViewCount: getPageViewCount()
+        },
+        
+        // Feature Detection
+        features: {
+            webgl: !!window.WebGLRenderingContext,
+            webgl2: !!window.WebGL2RenderingContext,
+            canvas: !!document.createElement('canvas').getContext,
+            localStorage: isLocalStorageAvailable(),
+            sessionStorage: isSessionStorageAvailable(),
+            geolocation: !!navigator.geolocation,
+            touchscreen: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+            serviceWorker: 'serviceWorker' in navigator,
+            pushNotifications: 'PushManager' in window,
+            webAssembly: typeof WebAssembly === 'object'
+        },
         
         // Additional data
         ...additionalData
@@ -452,12 +578,44 @@ function trackConversion(eventAction, eventCategory = 'Contact') {
         });
     }
     
-    // Send to our tracking API
+    // Send to our tracking API with enhanced conversion data
     const payload = buildTrackingPayload('conversion', eventAction, {
         conversionId: conversionId,
         eventValue: eventValue,
+        eventValueDollars: eventValue / 100,
         serviceType: serviceType,
-        eventCategory: eventCategory
+        eventCategory: eventCategory,
+        currency: 'NZD',
+        
+        // Conversion context
+        conversionContext: {
+            timeToConversion: Date.now() - getPageStartTime(),
+            sessionTimeToConversion: Date.now() - getSessionStartTime(),
+            pageScrollPosition: window.pageYOffset || document.documentElement.scrollTop,
+            pageScrollPercentage: Math.round(((window.pageYOffset || document.documentElement.scrollTop) / 
+                Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)) * 100),
+            clickedFromSection: getClickedSection(),
+            visibleElements: getVisibleElements()
+        },
+        
+        // Attribution data
+        attribution: {
+            firstTouch: getFirstTouchAttribution(),
+            lastTouch: getLastTouchAttribution(),
+            touchpointCount: getTouchpointCount(),
+            daysSinceFirstVisit: getDaysSinceFirstVisit(),
+            sessionsSinceFirstVisit: getSessionsSinceFirstVisit()
+        },
+        
+        // Conversion funnel data
+        funnel: {
+            landingPage: getFirstVisitPage(),
+            pagesVisitedThisSession: getPagesVisitedThisSession(),
+            totalPageViews: getPageViewCount(),
+            bounceCandidate: getPageViewCount() === 1,
+            timeOnSite: Date.now() - getSessionStartTime(),
+            interactionsBeforeConversion: getInteractionCount()
+        }
     });
     
     sendTrackingEvent(payload);
@@ -475,15 +633,29 @@ function trackInteraction(element) {
     
     console.log('👆 Interaction tracked:', trackingAction);
     
-    // Build event payload
+    // Increment interaction count
+    incrementInteractionCount();
+    
+    // Build event payload with enhanced interaction data
     const payload = buildTrackingPayload('user_interaction', trackingAction, {
         element: {
             tag: element.tagName.toLowerCase(),
             text: linkText,
             href: linkUrl,
-            className: element.className
+            className: element.className,
+            id: element.id || null,
+            dataset: element.dataset || {}
         },
-        interactionType: element.href && element.href.startsWith('tel:') ? 'phone_call' : 'link_click'
+        interactionType: element.href && element.href.startsWith('tel:') ? 'phone_call' : 'link_click',
+        
+        // Interaction context
+        interactionContext: {
+            clickPosition: getClickPosition(element),
+            elementVisible: isElementVisible(element),
+            timeOnPageBeforeClick: Date.now() - getPageStartTime(),
+            interactionSequence: getInteractionCount(),
+            scrollPositionAtClick: window.pageYOffset || document.documentElement.scrollTop
+        }
     });
     
     // Send tracking event
@@ -495,7 +667,37 @@ function trackInteraction(element) {
     }
 }
 
+// Helper functions for interaction tracking
+function getClickPosition(element) {
+    try {
+        const rect = element.getBoundingClientRect();
+        return {
+            top: rect.top,
+            left: rect.left,
+            bottom: rect.bottom,
+            right: rect.right,
+            width: rect.width,
+            height: rect.height
+        };
+    } catch (e) {
+        return null;
+    }
+}
+
+function isElementVisible(element) {
+    try {
+        const rect = element.getBoundingClientRect();
+        return rect.top < window.innerHeight && rect.bottom > 0 && 
+               rect.left < window.innerWidth && rect.right > 0;
+    } catch (e) {
+        return false;
+    }
+}
+
 function trackPageView() {
+    // Update previous page tracking
+    localStorage.setItem('eek_previous_page', window.location.href);
+    
     const firstVisitSent = localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.firstVisitSent);
     const isFirstVisit = !firstVisitSent;
     
@@ -506,7 +708,18 @@ function trackPageView() {
         isFirstVisit: isFirstVisit,
         landingPage: isFirstVisit ? window.location.href : null,
         visitType: isFirstVisit ? 'first_visit' : 'return_visit',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        
+        // Enhanced page-specific data
+        pageSpecific: {
+            hasServiceSelection: !!document.querySelector('#service-selection'),
+            hasPaymentBlock: !!document.getElementById('stripePaymentBlock'),
+            hasClosedBanner: !!document.getElementById('closedBanner'),
+            phoneLinksCount: document.querySelectorAll('.phone-link').length,
+            serviceLinksCount: document.querySelectorAll('.service-link').length,
+            logoType: getLogoForPageType().type,
+            elementsWithTracking: document.querySelectorAll('[data-track]').length
+        }
     });
     
     sendTrackingEvent(payload);
@@ -1373,9 +1586,420 @@ function initializeDynamicElements() {
     console.log('✅ All dynamic elements initialized');
 }
 
-// === HELPER FUNCTIONS ===
+// === CUSTOMER DATA PERSISTENCE ===
+const CUSTOMER_PROFILE_KEY = 'eek_customer_profile';
+
+function getCustomerProfile() {
+    try {
+        const stored = localStorage.getItem(CUSTOMER_PROFILE_KEY);
+        return stored ? JSON.parse(stored) : createNewCustomerProfile();
+    } catch (e) {
+        console.warn('Error reading customer profile, creating new:', e);
+        return createNewCustomerProfile();
+    }
+}
+
+function createNewCustomerProfile() {
+    const profile = {
+        customerId: 'cust_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        created: new Date().toISOString(),
+        updated: new Date().toISOString(),
+        
+        // Identity & Attribution
+        attribution: {
+            firstTouch: null,
+            lastTouch: null,
+            allTouchpoints: [],
+            gclids: [],
+            utmHistory: []
+        },
+        
+        // Behavior Tracking
+        behavior: {
+            totalVisits: 0,
+            totalPageViews: 0,
+            totalTimeOnSite: 0,
+            totalInteractions: 0,
+            pagesVisited: [],
+            servicesViewed: [],
+            conversions: [],
+            phoneNumbers: {
+                tracking: 0,
+                default: 0
+            }
+        },
+        
+        // Technical Profile
+        technical: {
+            devices: [],
+            browsers: [],
+            locations: [],
+            referrers: [],
+            screenResolutions: []
+        },
+        
+        // Business Context
+        businessInteractions: {
+            systemActiveVisits: 0,
+            systemInactiveVisits: 0,
+            businessHoursVisits: 0,
+            afterHoursVisits: 0,
+            paymentTokensUsed: []
+        },
+        
+        // Journey Tracking
+        journey: {
+            sessionCount: 0,
+            currentSessionStart: null,
+            lastVisit: null,
+            averageSessionDuration: 0,
+            bounceRate: 0,
+            conversionRate: 0
+        }
+    };
+    
+    saveCustomerProfile(profile);
+    return profile;
+}
+
+function updateCustomerProfile(updates) {
+    const profile = getCustomerProfile();
+    
+    // Deep merge the updates
+    const updatedProfile = deepMerge(profile, updates);
+    updatedProfile.updated = new Date().toISOString();
+    
+    saveCustomerProfile(updatedProfile);
+    return updatedProfile;
+}
+
+function saveCustomerProfile(profile) {
+    try {
+        localStorage.setItem(CUSTOMER_PROFILE_KEY, JSON.stringify(profile));
+    } catch (e) {
+        console.error('Error saving customer profile:', e);
+    }
+}
+
+function addToCustomerJourney(eventType, eventData) {
+    const profile = getCustomerProfile();
+    
+    // Add to journey tracking
+    if (!profile.journey.events) profile.journey.events = [];
+    
+    profile.journey.events.push({
+        timestamp: new Date().toISOString(),
+        type: eventType,
+        data: eventData,
+        page: window.location.pathname,
+        sessionId: EEK_STATE.sessionId
+    });
+    
+    // Keep only last 100 events to prevent storage bloat
+    if (profile.journey.events.length > 100) {
+        profile.journey.events = profile.journey.events.slice(-100);
+    }
+    
+    updateCustomerProfile(profile);
+}
+
+function trackCustomerAttribution(attribution) {
+    const profile = getCustomerProfile();
+    
+    // Set first touch if not exists
+    if (!profile.attribution.firstTouch) {
+        profile.attribution.firstTouch = attribution;
+    }
+    
+    // Always update last touch
+    profile.attribution.lastTouch = attribution;
+    
+    // Add to touchpoints history
+    profile.attribution.allTouchpoints.push(attribution);
+    
+    // Track GCLID history
+    if (attribution.gclid && !profile.attribution.gclids.includes(attribution.gclid)) {
+        profile.attribution.gclids.push(attribution.gclid);
+    }
+    
+    // Track UTM combinations
+    if (attribution.utm_source) {
+        const utmKey = `${attribution.utm_source}|${attribution.utm_medium}|${attribution.utm_campaign}`;
+        if (!profile.attribution.utmHistory.some(u => u.key === utmKey)) {
+            profile.attribution.utmHistory.push({
+                key: utmKey,
+                source: attribution.utm_source,
+                medium: attribution.utm_medium,
+                campaign: attribution.utm_campaign,
+                firstSeen: new Date().toISOString()
+            });
+        }
+    }
+    
+    updateCustomerProfile(profile);
+}
+
+function trackCustomerBehavior(behaviorType, data) {
+    const profile = getCustomerProfile();
+    
+    switch (behaviorType) {
+        case 'page_visit':
+            profile.behavior.totalPageViews++;
+            if (!profile.behavior.pagesVisited.includes(data.page)) {
+                profile.behavior.pagesVisited.push(data.page);
+            }
+            break;
+            
+        case 'service_view':
+            if (!profile.behavior.servicesViewed.includes(data.service)) {
+                profile.behavior.servicesViewed.push(data.service);
+            }
+            break;
+            
+        case 'conversion':
+            profile.behavior.conversions.push({
+                timestamp: new Date().toISOString(),
+                type: data.eventAction,
+                value: data.eventValue,
+                page: window.location.pathname
+            });
+            break;
+            
+        case 'interaction':
+            profile.behavior.totalInteractions++;
+            break;
+            
+        case 'phone_display':
+            if (data.phoneType === 'tracking') {
+                profile.behavior.phoneNumbers.tracking++;
+            } else {
+                profile.behavior.phoneNumbers.default++;
+            }
+            break;
+    }
+    
+    updateCustomerProfile(profile);
+}
+
+function trackCustomerTechnical(technicalData) {
+    const profile = getCustomerProfile();
+    
+    // Track unique devices
+    const deviceFingerprint = `${technicalData.platform}-${technicalData.userAgent.slice(0, 50)}`;
+    if (!profile.technical.devices.some(d => d.fingerprint === deviceFingerprint)) {
+        profile.technical.devices.push({
+            fingerprint: deviceFingerprint,
+            platform: technicalData.platform,
+            mobile: technicalData.mobile,
+            screen: technicalData.screen,
+            firstSeen: new Date().toISOString()
+        });
+    }
+    
+    // Track referrers
+    if (technicalData.referrer && !profile.technical.referrers.includes(technicalData.referrer)) {
+        profile.technical.referrers.push(technicalData.referrer);
+    }
+    
+    updateCustomerProfile(profile);
+}
+
+// Utility function for deep merging objects
+function deepMerge(target, source) {
+    const output = Object.assign({}, target);
+    if (isObject(target) && isObject(source)) {
+        Object.keys(source).forEach(key => {
+            if (isObject(source[key])) {
+                if (!(key in target)) {
+                    Object.assign(output, { [key]: source[key] });
+                } else {
+                    output[key] = deepMerge(target[key], source[key]);
+                }
+            } else {
+                Object.assign(output, { [key]: source[key] });
+            }
+        });
+    }
+    return output;
+}
+
+function isObject(item) {
+    return item && typeof item === 'object' && !Array.isArray(item);
+}
 function getServiceType(eventAction) {
     return EEK_CONFIG.SERVICE_TYPES[eventAction] || 'General Service';
+}
+
+// Enhanced tracking helper functions
+function getGCLIDAgeInDays() {
+    const timestamp = localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.gclidTimestamp);
+    if (!timestamp) return null;
+    
+    const gclidDate = new Date(timestamp);
+    const now = new Date();
+    return Math.floor((now - gclidDate) / (1000 * 60 * 60 * 24));
+}
+
+function isLocalStorageAvailable() {
+    try {
+        const test = 'localStorage-test';
+        localStorage.setItem(test, test);
+        localStorage.removeItem(test);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+function isSessionStorageAvailable() {
+    try {
+        const test = 'sessionStorage-test';
+        sessionStorage.setItem(test, test);
+        sessionStorage.removeItem(test);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+async function testThirdPartyCookies() {
+    try {
+        // Simple test for third-party cookie blocking
+        document.cookie = "third-party-test=1; SameSite=None; Secure";
+        const hasThirdPartyCookie = document.cookie.indexOf("third-party-test=1") !== -1;
+        // Clean up
+        document.cookie = "third-party-test=; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=None; Secure";
+        return !hasThirdPartyCookie;
+    } catch (e) {
+        return true; // Assume blocked if error
+    }
+}
+
+function getSessionStartTime() {
+    const stored = localStorage.getItem('eek_session_start_time');
+    if (stored) return parseInt(stored);
+    
+    const startTime = Date.now();
+    localStorage.setItem('eek_session_start_time', startTime.toString());
+    return startTime;
+}
+
+function getPageStartTime() {
+    return performance.navigationStart || Date.now();
+}
+
+function getPreviousPage() {
+    return localStorage.getItem('eek_previous_page') || null;
+}
+
+function getVisitCount() {
+    const count = parseInt(localStorage.getItem('eek_visit_count') || '0') + 1;
+    localStorage.setItem('eek_visit_count', count.toString());
+    return count;
+}
+
+function getPageViewCount() {
+    const count = parseInt(localStorage.getItem('eek_page_view_count') || '0') + 1;
+    localStorage.setItem('eek_page_view_count', count.toString());
+    return count;
+}
+
+// Additional conversion tracking helpers
+function getClickedSection() {
+    // Try to determine which section of the page the user clicked from
+    const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    
+    if (scrollY < windowHeight * 0.33) return 'above_fold';
+    if (scrollY < windowHeight * 0.66) return 'middle_section';
+    return 'below_fold';
+}
+
+function getVisibleElements() {
+    const elements = {};
+    
+    // Check if key elements are visible
+    const checkElement = (id, name) => {
+        const el = document.getElementById(id);
+        if (el) {
+            const rect = el.getBoundingClientRect();
+            elements[name] = rect.top < window.innerHeight && rect.bottom > 0;
+        }
+    };
+    
+    checkElement('service-selection', 'serviceSelection');
+    checkElement('stripePaymentBlock', 'paymentBlock');
+    checkElement('closedBanner', 'closedBanner');
+    
+    return elements;
+}
+
+function getFirstTouchAttribution() {
+    return JSON.parse(localStorage.getItem('eek_first_touch') || 'null');
+}
+
+function getLastTouchAttribution() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentAttribution = {
+        timestamp: new Date().toISOString(),
+        url: window.location.href,
+        referrer: document.referrer,
+        utm_source: urlParams.get('utm_source'),
+        utm_medium: urlParams.get('utm_medium'),
+        utm_campaign: urlParams.get('utm_campaign'),
+        gclid: urlParams.get('gclid')
+    };
+    
+    // Store as last touch
+    localStorage.setItem('eek_last_touch', JSON.stringify(currentAttribution));
+    
+    // Store as first touch if not exists
+    if (!getFirstTouchAttribution()) {
+        localStorage.setItem('eek_first_touch', JSON.stringify(currentAttribution));
+    }
+    
+    return currentAttribution;
+}
+
+function getTouchpointCount() {
+    const touchpoints = JSON.parse(localStorage.getItem('eek_touchpoints') || '[]');
+    return touchpoints.length;
+}
+
+function getDaysSinceFirstVisit() {
+    const firstVisit = localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.firstVisitSent);
+    if (!firstVisit) return 0;
+    
+    const firstDate = new Date(firstVisit);
+    const now = new Date();
+    return Math.floor((now - firstDate) / (1000 * 60 * 60 * 24));
+}
+
+function getSessionsSinceFirstVisit() {
+    return parseInt(localStorage.getItem('eek_session_count') || '1');
+}
+
+function getFirstVisitPage() {
+    return localStorage.getItem('eek_first_visit_page') || window.location.href;
+}
+
+function getPagesVisitedThisSession() {
+    const pages = JSON.parse(sessionStorage.getItem('eek_session_pages') || '[]');
+    if (!pages.includes(window.location.pathname)) {
+        pages.push(window.location.pathname);
+        sessionStorage.setItem('eek_session_pages', JSON.stringify(pages));
+    }
+    return pages;
+}
+
+function getInteractionCount() {
+    return parseInt(sessionStorage.getItem('eek_interaction_count') || '0');
+}
+
+function incrementInteractionCount() {
+    const count = getInteractionCount() + 1;
+    sessionStorage.setItem('eek_interaction_count', count.toString());
+    return count;
 }
 
 // === BACKWARDS COMPATIBILITY WRAPPER ===
