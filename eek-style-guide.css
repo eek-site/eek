@@ -1,0 +1,676 @@
+/**
+ * Eek Mobile Mechanical - Master Style Guide
+ * Consistent styling framework for all pages
+ * Version: 1.0
+ */
+
+/* === CORE VARIABLES === */
+:root {
+    /* Brand Colors */
+    --eek-primary: #ff5500;
+    --eek-primary-hover: #e64a00;
+    --eek-primary-light: #ff7733;
+    --eek-secondary: #333;
+    --eek-text: #333;
+    --eek-text-light: #666;
+    --eek-text-muted: #999;
+    
+    /* Status Colors */
+    --eek-success: #28a745;
+    --eek-success-hover: #20a142;
+    --eek-warning: #ff8c00;
+    --eek-danger: #ff3333;
+    --eek-info: #007acc;
+    
+    /* Background Colors */
+    --eek-bg-body: #f5f5f5;
+    --eek-bg-white: #ffffff;
+    --eek-bg-light: #f8f9fa;
+    --eek-bg-accent: #e8f4f8;
+    
+    /* Gradients */
+    --eek-gradient-primary: linear-gradient(135deg, #ff5500, #ff7733);
+    --eek-gradient-emergency: linear-gradient(135deg, #ff3333, #ff5500);
+    --eek-gradient-success: linear-gradient(135deg, #28a745, #20a142);
+    --eek-gradient-info: linear-gradient(135deg, #007acc, #0056b3);
+    --eek-gradient-warning: linear-gradient(135deg, #ff8c00, #ff6b00);
+    --eek-gradient-muted: linear-gradient(135deg, #666, #888);
+    
+    /* Shadows */
+    --eek-shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --eek-shadow-md: 0 4px 8px rgba(0,0,0,0.1);
+    --eek-shadow-lg: 0 6px 12px rgba(0,0,0,0.15);
+    --eek-shadow-xl: 0 8px 16px rgba(0,0,0,0.2);
+    
+    /* Spacing */
+    --eek-spacing-xs: 5px;
+    --eek-spacing-sm: 10px;
+    --eek-spacing-md: 15px;
+    --eek-spacing-lg: 20px;
+    --eek-spacing-xl: 30px;
+    --eek-spacing-2xl: 40px;
+    
+    /* Border Radius */
+    --eek-radius-sm: 4px;
+    --eek-radius-md: 8px;
+    --eek-radius-lg: 12px;
+    --eek-radius-xl: 16px;
+    --eek-radius-full: 50px;
+    
+    /* Typography */
+    --eek-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --eek-font-size-xs: 0.8em;
+    --eek-font-size-sm: 0.9em;
+    --eek-font-size-base: 1em;
+    --eek-font-size-lg: 1.1em;
+    --eek-font-size-xl: 1.2em;
+    --eek-font-size-2xl: 1.5em;
+    --eek-font-size-3xl: 1.8em;
+    --eek-font-size-4xl: 2.2em;
+    --eek-font-size-5xl: 2.5em;
+    
+    /* Layout */
+    --eek-max-width: 900px;
+    --eek-header-max-width: 800px;
+    --eek-container-padding: 40px;
+    --eek-container-padding-mobile: 20px;
+}
+
+/* === RESET & BASE === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--eek-font-family);
+    background-color: var(--eek-bg-body);
+    color: var(--eek-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding-bottom: 80px; /* Space for sticky buttons */
+}
+
+/* === TYPOGRAPHY === */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 0.5em;
+}
+
+h1 { font-size: var(--eek-font-size-3xl); }
+h2 { font-size: var(--eek-font-size-2xl); }
+h3 { font-size: var(--eek-font-size-xl); }
+h4 { font-size: var(--eek-font-size-lg); }
+
+p {
+    margin-bottom: 1em;
+    line-height: 1.6;
+}
+
+a {
+    color: var(--eek-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--eek-primary-hover);
+    text-decoration: underline;
+}
+
+/* === LAYOUT COMPONENTS === */
+.eek-container {
+    max-width: var(--eek-max-width);
+    margin: 0 auto;
+    padding: var(--eek-container-padding);
+    background: var(--eek-bg-white);
+    border-radius: var(--eek-radius-lg);
+    box-shadow: var(--eek-shadow-md);
+}
+
+.eek-header {
+    text-align: center;
+    margin-bottom: var(--eek-spacing-2xl);
+    padding: var(--eek-spacing-lg);
+    background: var(--eek-bg-white);
+    max-width: var(--eek-header-max-width);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.eek-section {
+    margin-bottom: var(--eek-spacing-2xl);
+    padding: var(--eek-spacing-xl);
+    background: var(--eek-bg-white);
+    border-radius: var(--eek-radius-lg);
+    box-shadow: var(--eek-shadow-sm);
+}
+
+.eek-section-header {
+    text-align: center;
+    margin-bottom: var(--eek-spacing-xl);
+}
+
+.eek-section-header h2 {
+    color: var(--eek-text);
+    margin-bottom: var(--eek-spacing-sm);
+}
+
+.eek-section-header p {
+    color: var(--eek-text-light);
+    font-size: var(--eek-font-size-lg);
+}
+
+/* === BRAND ELEMENTS === */
+.eek-brand-image {
+    max-width: 300px;
+    height: auto;
+    border-radius: var(--eek-radius-lg);
+    box-shadow: var(--eek-shadow-md);
+}
+
+.eek-business-name {
+    font-size: var(--eek-font-size-5xl);
+    font-weight: bold;
+    color: var(--eek-primary);
+    margin: 0.3em 0;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.eek-logo {
+    font-size: var(--eek-font-size-5xl);
+    margin-bottom: var(--eek-spacing-sm);
+    font-weight: bold;
+    color: var(--eek-text);
+}
+
+.eek-tagline {
+    font-size: var(--eek-font-size-xl);
+    color: var(--eek-text-light);
+    margin-bottom: var(--eek-spacing-xl);
+}
+
+/* === BUTTONS === */
+.eek-btn {
+    display: inline-block;
+    padding: 14px 24px;
+    font-size: var(--eek-font-size-base);
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: var(--eek-radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--eek-shadow-sm);
+}
+
+.eek-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--eek-shadow-lg);
+    text-decoration: none;
+}
+
+.eek-btn-primary {
+    background-color: var(--eek-primary);
+    color: white;
+}
+
+.eek-btn-primary:hover {
+    background-color: var(--eek-primary-hover);
+    color: white;
+}
+
+.eek-btn-success {
+    background-color: var(--eek-success);
+    color: white;
+}
+
+.eek-btn-success:hover {
+    background-color: var(--eek-success-hover);
+    color: white;
+}
+
+.eek-btn-large {
+    padding: 16px 32px;
+    font-size: var(--eek-font-size-xl);
+}
+
+.eek-btn-gradient {
+    background: var(--eek-gradient-primary);
+    color: white;
+}
+
+.eek-btn-gradient:hover {
+    background: var(--eek-gradient-primary);
+    color: white;
+    filter: brightness(1.1);
+}
+
+/* Emergency/Call-to-Action Buttons */
+.eek-btn-emergency {
+    background: var(--eek-gradient-emergency);
+    color: white;
+    padding: 15px 30px;
+    font-size: var(--eek-font-size-lg);
+    font-weight: bold;
+    border: 2px solid rgba(255,255,255,0.3);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.eek-btn-emergency:hover {
+    color: white;
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+/* Glass effect buttons for overlays */
+.eek-btn-glass {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.eek-btn-glass:hover {
+    background: rgba(255,255,255,0.25);
+    border-color: rgba(255,255,255,0.5);
+    color: white;
+}
+
+/* === CARDS === */
+.eek-card {
+    background: var(--eek-bg-white);
+    padding: var(--eek-spacing-xl);
+    border-radius: var(--eek-radius-lg);
+    box-shadow: var(--eek-shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.eek-card:hover {
+    box-shadow: var(--eek-shadow-lg);
+    transform: translateY(-2px);
+}
+
+.eek-card-gradient {
+    background: var(--eek-gradient-primary);
+    color: white;
+}
+
+.eek-card-gradient h2,
+.eek-card-gradient h3,
+.eek-card-gradient h4 {
+    color: white;
+}
+
+/* Service Cards */
+.eek-service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--eek-spacing-lg);
+    margin-top: var(--eek-spacing-lg);
+}
+
+.eek-service-card {
+    background: rgba(255,255,255,0.15);
+    padding: var(--eek-spacing-md);
+    border-radius: var(--eek-radius-md);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.eek-service-card:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-2px);
+    box-shadow: var(--eek-shadow-lg);
+    color: inherit;
+    text-decoration: none;
+}
+
+.eek-service-card h4 {
+    margin: 0 0 8px 0;
+    font-size: var(--eek-font-size-lg);
+}
+
+.eek-service-card p {
+    margin: 0;
+    font-size: var(--eek-font-size-sm);
+    opacity: 0.9;
+}
+
+/* === CONTACT SECTIONS === */
+.eek-contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--eek-spacing-lg);
+}
+
+.eek-contact-section {
+    padding: var(--eek-spacing-xl);
+    border-radius: var(--eek-radius-lg);
+    text-align: center;
+    color: white;
+}
+
+.eek-contact-section.customers {
+    background: var(--eek-gradient-info);
+}
+
+.eek-contact-section.suppliers {
+    background: var(--eek-gradient-success);
+}
+
+.eek-contact-section.employment {
+    background: linear-gradient(135deg, #ff6b35, #e55a2b);
+}
+
+.eek-contact-section h3 {
+    margin-bottom: var(--eek-spacing-md);
+    color: white;
+}
+
+.eek-contact-section p {
+    margin-bottom: var(--eek-spacing-lg);
+    opacity: 0.9;
+}
+
+.eek-contact-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: var(--eek-spacing-sm);
+}
+
+/* === BANNERS === */
+.eek-banner {
+    padding: var(--eek-spacing-lg);
+    margin: 0 auto var(--eek-spacing-lg);
+    max-width: var(--eek-header-max-width);
+    border-radius: var(--eek-radius-lg);
+    text-align: center;
+    color: white;
+}
+
+.eek-banner-emergency {
+    background: var(--eek-gradient-emergency);
+    box-shadow: 0 4px 12px rgba(255,51,51,0.3);
+    animation: eek-pulse 2s infinite;
+}
+
+.eek-banner-closed {
+    background: var(--eek-gradient-muted);
+}
+
+.eek-banner-payment {
+    background: var(--eek-bg-white);
+    color: var(--eek-text);
+    border-bottom: 2px solid var(--eek-primary);
+    box-shadow: var(--eek-shadow-md);
+}
+
+@keyframes eek-pulse {
+    0%, 100% { box-shadow: 0 4px 12px rgba(255,51,51,0.3); }
+    50% { box-shadow: 0 4px 20px rgba(255,51,51,0.5); }
+}
+
+.eek-banner h2 {
+    margin: 0 0 var(--eek-spacing-sm) 0;
+    font-size: var(--eek-font-size-2xl);
+}
+
+.eek-banner p {
+    margin: var(--eek-spacing-sm) 0;
+    font-size: var(--eek-font-size-lg);
+}
+
+/* === STICKY ELEMENTS === */
+.eek-sticky-button {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    background-color: var(--eek-primary);
+    color: white;
+    font-size: var(--eek-font-size-lg);
+    padding: 14px 20px;
+    border-radius: var(--eek-radius-full);
+    box-shadow: var(--eek-shadow-xl);
+    text-decoration: none;
+    z-index: 999;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.eek-sticky-button:hover {
+    background-color: var(--eek-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    color: white;
+    text-decoration: none;
+}
+
+.eek-sticky-payment {
+    right: 150px;
+    background-color: var(--eek-success);
+}
+
+.eek-sticky-payment:hover {
+    background-color: var(--eek-success-hover);
+}
+
+/* === UTILITIES === */
+.eek-text-center { text-align: center; }
+.eek-text-left { text-align: left; }
+.eek-text-right { text-align: right; }
+
+.eek-mb-sm { margin-bottom: var(--eek-spacing-sm); }
+.eek-mb-md { margin-bottom: var(--eek-spacing-md); }
+.eek-mb-lg { margin-bottom: var(--eek-spacing-lg); }
+.eek-mb-xl { margin-bottom: var(--eek-spacing-xl); }
+
+.eek-mt-sm { margin-top: var(--eek-spacing-sm); }
+.eek-mt-md { margin-top: var(--eek-spacing-md); }
+.eek-mt-lg { margin-top: var(--eek-spacing-lg); }
+.eek-mt-xl { margin-top: var(--eek-spacing-xl); }
+
+.eek-hidden { display: none; }
+.eek-visible { display: block; }
+
+/* Button Groups */
+.eek-btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--eek-spacing-md);
+    margin-top: var(--eek-spacing-md);
+}
+
+/* Lists */
+.eek-list {
+    list-style: none;
+    padding: 0;
+    font-size: var(--eek-font-size-lg);
+}
+
+.eek-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.eek-list li:last-child {
+    border-bottom: none;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+    :root {
+        --eek-container-padding: var(--eek-container-padding-mobile);
+    }
+    
+    .eek-business-name,
+    .eek-logo {
+        font-size: var(--eek-font-size-4xl);
+    }
+    
+    .eek-container,
+    .eek-header,
+    .eek-banner,
+    .eek-section {
+        margin: var(--eek-spacing-sm);
+        padding: var(--eek-container-padding-mobile);
+    }
+    
+    .eek-contact-grid,
+    .eek-service-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .eek-btn-group {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .eek-btn-group .eek-btn {
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .eek-sticky-button {
+        font-size: var(--eek-font-size-base);
+        padding: 12px 18px;
+        bottom: 10px;
+        right: 10px;
+    }
+    
+    .eek-sticky-payment {
+        right: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .eek-business-name,
+    .eek-logo {
+        font-size: var(--eek-font-size-3xl);
+    }
+    
+    .eek-btn {
+        padding: 12px 20px;
+        font-size: var(--eek-font-size-sm);
+    }
+    
+    .eek-btn-large {
+        padding: 14px 24px;
+        font-size: var(--eek-font-size-base);
+    }
+}
+
+/* === FOOTER === */
+.eek-footer {
+    text-align: center;
+    padding: var(--eek-spacing-lg) 0;
+    font-size: var(--eek-font-size-sm);
+    color: var(--eek-text-muted);
+    border-top: 1px solid #eee;
+    margin-top: var(--eek-spacing-2xl);
+}
+
+.eek-footer a {
+    color: var(--eek-text-light);
+    margin: 0 var(--eek-spacing-md);
+}
+
+.eek-footer a:hover {
+    color: var(--eek-primary);
+}
+
+/* === SPECIAL COMPONENTS === */
+/* Hours Section */
+.eek-hours-section {
+    background: var(--eek-bg-accent);
+    padding: var(--eek-spacing-md);
+    margin: var(--eek-spacing-lg) auto;
+    border-radius: var(--eek-radius-md);
+    border-left: 4px solid var(--eek-primary);
+    max-width: var(--eek-header-max-width);
+}
+
+.eek-hours-section h3 {
+    margin: 0 0 var(--eek-spacing-sm) 0;
+    color: var(--eek-text);
+}
+
+.eek-hours-text {
+    font-size: var(--eek-font-size-lg);
+    color: var(--eek-text-light);
+    font-weight: bold;
+}
+
+.eek-after-hours-text {
+    font-size: var(--eek-font-size-base);
+    color: var(--eek-danger);
+    font-weight: bold;
+    margin: var(--eek-spacing-sm) 0;
+}
+
+/* Payment Form Components */
+.eek-payment-form {
+    background-color: var(--eek-bg-light);
+    padding: var(--eek-spacing-xl);
+    border-radius: var(--eek-radius-lg);
+    max-width: 700px;
+    margin: auto;
+    box-shadow: var(--eek-shadow-sm);
+}
+
+.eek-payment-form h1 {
+    font-size: var(--eek-font-size-4xl);
+    margin-bottom: 0.5em;
+    color: var(--eek-text);
+}
+
+.eek-payment-form label {
+    font-size: var(--eek-font-size-lg);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--eek-spacing-sm);
+    color: var(--eek-text);
+}
+
+.eek-payment-form input[type="checkbox"] {
+    transform: scale(1.5);
+}
+
+.eek-payment-form button {
+    background-color: var(--eek-primary);
+    color: white;
+    padding: 14px 32px;
+    font-size: var(--eek-font-size-xl);
+    border: none;
+    border-radius: var(--eek-radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.eek-payment-form button:hover {
+    background-color: var(--eek-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--eek-shadow-md);
+}
+
+/* Debug Components */
+.eek-debug {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: var(--eek-spacing-sm);
+    font-size: var(--eek-font-size-xs);
+    border-radius: var(--eek-radius-sm);
+    z-index: 9999;
+    font-family: monospace;
+}
