@@ -1,665 +1,397 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mobile Mechanics NZ - 30-60 Minute Response | Eek Mobile Mechanical</title>
-  <meta name="description" content="Eek Mobile Mechanical offers nationwide mobile mechanic services including pre-purchase inspections, wrong fuel rescue, jump starts, and roadside repairs. Target arrival: 30-60 minutes NZ-wide. Call 0800 769 000 now." />
-  <meta name="keywords" content="mobile mechanic, mobile mechanics NZ, roadside mechanic, jump start service, fuel drain, wrong fuel, pre purchase inspection, emergency mechanic, mobile car repair, NZ mechanics" />
-  <meta property="og:title" content="Mobile Mechanics NZ - 30-60 Minute Response | Eek Mobile Mechanical" />
-  <meta property="og:description" content="Nationwide mobile mechanic service – inspections, battery help, fuel rescue, roadside repairs. 30-60 minute average arrival time. Call 0800 769 000." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.eek.nz" />
-  <meta property="og:image" content="https://www.eek.nz/og-image.jpg" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mobile Mechanics NZ - 30-60 Minute Response | Eek Mobile Mechanical</title>
+    <meta name="description" content="Eek Mobile Mechanical offers nationwide mobile mechanic services including pre-purchase inspections, wrong fuel rescue, jump starts, and roadside repairs. Target arrival: 30-60 minutes NZ-wide. Call 0800 769 000 now." />
+    <meta name="keywords" content="mobile mechanic, mobile mechanics NZ, roadside mechanic, jump start service, fuel drain, wrong fuel, pre purchase inspection, emergency mechanic, mobile car repair, NZ mechanics" />
+    <meta property="og:title" content="Mobile Mechanics NZ - 30-60 Minute Response | Eek Mobile Mechanical" />
+    <meta property="og:description" content="Nationwide mobile mechanic service – inspections, battery help, fuel rescue, roadside repairs. 30-60 minute average arrival time. Call 0800 769 000." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.eek.nz" />
+    <meta property="og:image" content="https://www.eek.nz/og-image.jpg" />
 
-  <!-- Security Headers -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self';
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self';
 script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net https://widget.reviewability.com;
 style-src 'self' 'unsafe-inline' https://widget.reviewability.com;
 img-src 'self' data: https: https://app.revu.cloud https://widget.reviewability.com;
 connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://app.revu.cloud https://widget.reviewability.com https://www.eek.nz https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com;
 frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com https://app.revu.cloud https://widget.reviewability.com;
 font-src 'self' data:;">
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
 
-  <!-- Reddit Pixel -->
-  <script>
-    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
-    (window,document);
-    
-    // Helper functions to extract user data if available
-    function getEmailFromForm() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const emailParam = urlParams.get('email');
-      if (emailParam) return emailParam;
-      
-      const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"], input[id*="email"]');
-      for (let input of emailInputs) {
-        if (input.value && input.value.includes('@')) {
-          return input.value;
+    <!-- Enhanced Reddit Pixel -->
+    <script>
+        !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
+        (window,document);
+        
+        // Helper functions to extract user data if available
+        function getEmailFromForm() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const emailParam = urlParams.get('email');
+            if (emailParam) return emailParam;
+            
+            const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"], input[id*="email"]');
+            for (let input of emailInputs) {
+                if (input.value && input.value.includes('@')) {
+                    return input.value;
+                }
+            }
+            return null;
         }
-      }
-      return null;
-    }
-    
-    function getPhoneFromForm() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const phoneParam = urlParams.get('phone');
-      if (phoneParam) return phoneParam;
-      
-      const phoneInputs = document.querySelectorAll('input[type="tel"], input[name*="phone"], input[id*="phone"]');
-      for (let input of phoneInputs) {
-        if (input.value) {
-          return input.value;
+        
+        function getPhoneFromForm() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const phoneParam = urlParams.get('phone');
+            if (phoneParam) return phoneParam;
+            
+            const phoneInputs = document.querySelectorAll('input[type="tel"], input[name*="phone"], input[id*="phone"]');
+            for (let input of phoneInputs) {
+                if (input.value) {
+                    return input.value;
+                }
+            }
+            return null;
         }
-      }
-      return null;
+        
+        function getUserId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('uid') || urlParams.get('user_id') || urlParams.get('customer_id');
+        }
+        
+        function getMobileIds() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                idfa: urlParams.get('idfa'),
+                aaid: urlParams.get('aaid')
+            };
+        }
+        
+        const mobileIds = getMobileIds();
+        const initConfig = {};
+        
+        const email = getEmailFromForm();
+        const phoneNumber = getPhoneFromForm();
+        const externalId = getUserId();
+        
+        if (email) initConfig.email = email;
+        if (phoneNumber) initConfig.phoneNumber = phoneNumber;
+        if (externalId) initConfig.externalId = externalId;
+        if (mobileIds.idfa) initConfig.idfa = mobileIds.idfa;
+        if (mobileIds.aaid) initConfig.aaid = mobileIds.aaid;
+        
+        rdt('init', 'a2_hf16791nsdhx', Object.keys(initConfig).length > 0 ? initConfig : undefined);
+        rdt('track', 'PageVisit');
+    </script>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'AW-17084465163');
+        gtag('config', 'G-DQNKF1YLWR');
+    </script>
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Eek Mobile Mechanical",
+        "description": "Mobile mechanic services across New Zealand. Pre purchase vehicle inspections, wrong fuel removal, petrol and diesel removal, emergency roadside repairs.",
+        "telephone": "+64800769000",
+        "url": "https://www.eek.nz",
+        "image": "https://www.eek.nz/brand-image.png",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "NZ"
+        },
+        "areaServed": {
+            "@type": "Country",
+            "name": "New Zealand"
+        },
+        "openingHours": [
+            "Mo 07:00-17:00",
+            "Tu 07:00-17:00", 
+            "We 07:00-17:00",
+            "Th 07:00-17:00",
+            "Fr 07:00-17:00",
+            "Sa 07:00-12:00",
+            "Su 07:00-12:00"
+        ],
+        "serviceType": [
+            "Mobile Mechanic",
+            "Pre Purchase Vehicle Inspections", 
+            "Wrong Fuel Removal",
+            "Petrol and Diesel Removal",
+            "Emergency Roadside Repairs",
+            "Battery Jump Start",
+            "Trailer Repairs"
+        ]
     }
+    </script>
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     
-    function getUserId() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('uid') || urlParams.get('user_id') || urlParams.get('customer_id');
-    }
-    
-    function getMobileIds() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return {
-        idfa: urlParams.get('idfa'),
-        aaid: urlParams.get('aaid')
-      };
-    }
-    
-    const mobileIds = getMobileIds();
-    const initConfig = {};
-    
-    const email = getEmailFromForm();
-    const phoneNumber = getPhoneFromForm();
-    const externalId = getUserId();
-    
-    if (email) initConfig.email = email;
-    if (phoneNumber) initConfig.phoneNumber = phoneNumber;
-    if (externalId) initConfig.externalId = externalId;
-    if (mobileIds.idfa) initConfig.idfa = mobileIds.idfa;
-    if (mobileIds.aaid) initConfig.aaid = mobileIds.aaid;
-    
-    rdt('init', 'a2_hf16791nsdhx', Object.keys(initConfig).length > 0 ? initConfig : undefined);
-    rdt('track', 'PageVisit');
-  </script>
-
-  <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'AW-17084465163');
-    gtag('config', 'G-DQNKF1YLWR');
-  </script>
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "Eek Mobile Mechanical",
-    "description": "Mobile mechanic services across New Zealand. Pre purchase vehicle inspections, wrong fuel removal, petrol and diesel removal, emergency roadside repairs.",
-    "telephone": "+64800769000",
-    "url": "https://www.eek.nz",
-    "image": "https://www.eek.nz/brand-image.png",
-    "address": {
-      "@type": "PostalAddress",
-      "addressCountry": "NZ"
-    },
-    "areaServed": {
-      "@type": "Country",
-      "name": "New Zealand"
-    },
-    "openingHours": [
-      "Mo 07:00-17:00",
-      "Tu 07:00-17:00", 
-      "We 07:00-17:00",
-      "Th 07:00-17:00",
-      "Fr 07:00-17:00",
-      "Sa 07:00-12:00",
-      "Su 07:00-12:00"
-    ],
-    "serviceType": [
-      "Mobile Mechanic",
-      "Pre Purchase Vehicle Inspections", 
-      "Wrong Fuel Removal",
-      "Petrol and Diesel Removal",
-      "Emergency Roadside Repairs",
-      "Battery Jump Start",
-      "Trailer Repairs"
-    ]
-  }
-  </script>
-
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f5f5f5;
-      margin: 0;
-      padding: 0 0 80px 0;
-      color: #333;
-      text-align: center;
-    }
-    header {
-      background: #ffffff;
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .business-name {
-      font-size: 2.5em;
-      font-weight: bold;
-      color: #ff5500;
-      margin: 0.3em 0;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-    }
-    header img {
-      max-width: 300px;
-      height: auto;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    h1 {
-      font-size: 1.8em;
-      margin: 0.5em 0 0.2em;
-      color: #333;
-    }
-    p.tagline {
-      font-size: 1.2em;
-      color: #666;
-    }
-
-    /* After Hours Emergency Banner */
-    .after-hours-banner {
-      background: linear-gradient(135deg, #ff3333, #ff5500);
-      color: white;
-      padding: 20px;
-      margin: 0 auto 20px;
-      max-width: 800px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(255,51,51,0.3);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 4px 12px rgba(255,51,51,0.3); }
-      50% { box-shadow: 0 4px 20px rgba(255,51,51,0.5); }
-    }
-
-    .after-hours-banner h2 {
-      margin: 0 0 10px 0;
-      font-size: 1.6em;
-    }
-
-    .after-hours-banner p {
-      margin: 10px 0;
-      font-size: 1.1em;
-    }
-
-    .emergency-btn {
-      display: inline-block;
-      background: rgba(255,255,255,0.25);
-      color: white;
-      padding: 15px 30px;
-      margin: 10px;
-      font-size: 1.3em;
-      border-radius: 8px;
-      text-decoration: none;
-      border: 2px solid white;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
-
-    .emergency-btn:hover {
-      background: white;
-      color: #ff3333;
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-    }
-
-    .hours-section {
-      background: #e8f4f8;
-      padding: 15px;
-      margin: 20px auto;
-      border-radius: 8px;
-      border-left: 4px solid #ff5500;
-      max-width: 800px;
-    }
-    .hours-section h3 {
-      margin: 0 0 10px 0;
-      color: #333;
-    }
-    .hours-text {
-      font-size: 1.1em;
-      color: #555;
-      font-weight: bold;
-    }
-    .after-hours-text {
-      font-size: 1em;
-      color: #ff3333;
-      font-weight: bold;
-      margin: 10px 0;
-    }
-    .cta-button {
-      display: inline-block;
-      background-color: #ff5500;
-      color: white;
-      padding: 15px 25px;
-      margin: 20px auto;
-      font-size: 1.2em;
-      border-radius: 8px;
-      text-decoration: none;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-    }
-    .services {
-      background: #ffffff;
-      margin: 20px auto;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-      max-width: 800px;
-    }
-    .services h2 {
-      color: #222;
-    }
-    .services ul {
-      list-style: none;
-      padding: 0;
-      font-size: 1.1em;
-    }
-    .services li {
-      padding: 8px 0;
-    }
-    .keywords-highlight {
-      background: linear-gradient(135deg, #ff5500, #ff7733);
-      color: white;
-      padding: 25px;
-      margin: 20px auto;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      max-width: 800px;
-    }
-    .keywords-highlight h2 {
-      margin-top: 0;
-      color: white;
-    }
-    .service-keywords {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
-      margin-top: 20px;
-    }
-    .keyword-item {
-      background: rgba(255,255,255,0.15);
-      padding: 15px;
-      border-radius: 8px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.3);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .keyword-item:hover {
-      background: rgba(255,255,255,0.25);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-    }
-    .keyword-item h4 {
-      margin: 0 0 8px 0;
-      font-size: 1.1em;
-    }
-    .keyword-item p {
-      margin: 0;
-      font-size: 0.9em;
-      opacity: 0.9;
-    }
-
-    /* RevU widget container styling */
-    .services [data-bid] {
-      max-height: 400px;
-      overflow-y: auto;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 15px;
-      background: #fafafa;
-      margin-top: 15px;
-    }
-
-    /* Style the RevU widget content */
-    .services [data-bid] * {
-      max-width: 100% !important;
-      box-sizing: border-box;
-    }
-
-    footer {
-      font-size: 0.9em;
-      color: #999;
-      padding: 20px 0;
-    }
-    .sticky-call, .sticky-payment {
-      position: fixed;
-      bottom: 15px;
-      right: 15px;
-      background-color: #ff5500;
-      color: white;
-      font-size: 1.1em;
-      padding: 14px 20px;
-      border-radius: 50px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      text-decoration: none;
-      z-index: 999;
-    }
-    .sticky-payment {
-      right: 150px;
-      display: none;
-    }
-
-    @media (max-width: 768px) {
-      .service-keywords {
-        grid-template-columns: 1fr;
-      }
-      
-      .business-name {
-        font-size: 2em;
-      }
-      
-      header {
-        margin: 0 10px;
-      }
-      
-      .hours-section, .keywords-highlight, .services {
-        margin: 20px 10px;
-      }
-    }
-  </style>
+    <!-- Load Style Guide -->
+    <link rel="stylesheet" href="/eek-style-guide.css">
 </head>
 <body>
+    <!-- Dynamic banners will be created by master config -->
 
-<!-- Business Closed Banner (hidden by default) -->
-<div id="closedBanner" class="after-hours-banner" style="display: none; background: linear-gradient(135deg, #666, #888);">
-  <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
-  <div id="afterHoursMessage">
-    <p><strong>Business Hours:</strong></p>
-    <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
-    <p>Saturday - Sunday: 7:00 AM - 12:00 PM</p>
-    <p>Please call during business hours or book online for next available service</p>
-  </div>
-  <div id="tempUnavailableMessage" style="display: none;">
-    <p><strong>We're currently experiencing high demand</strong></p>
-    <p>Our mechanics are fully dispatched on emergency calls</p>
-    <p>Please book online for the next available appointment or try calling again shortly</p>
-    <a href="#service-selection" class="emergency-btn" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
-  </div>
-</div>
+    <!-- Header Section -->
+    <div class="eek-header">
+        <img src="brand-image.png" alt="Eek Mobile Mechanical - Mobile Mechanic Services" class="eek-brand-image" />
+        <div class="eek-business-name">Eek Mobile Mechanical</div>
+        <h1>Mobile Mechanics NZ - 30-60 Minute Response</h1>
+        <p class="eek-tagline">Mobile Mechanic • Pre Purchase Inspections • Wrong Fuel Removal • Emergency Roadside Repairs • 30–60 Min Response</p>
+        <a class="eek-btn eek-btn-primary eek-btn-large phone-link" href="tel:0800769000" onclick="trackConversion('header_call', 'Contact')" data-track="header_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+    </div>
 
-<section id="stripePaymentBlock" style="display: none; background-color: #ffffff; padding: 20px; text-align: center; color: #333; border-bottom: 2px solid #ff5500;">
-  <div style="background-color: #f5f5f5; padding: 30px; border-radius: 12px; max-width: 700px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
-    <h1 style="font-size: 2.2em; margin-bottom: 0.5em;">Secure Roadside Payment</h1>
-    <p style="font-size: 1.2em; margin-bottom: 1.5em;">Confirm your payment to get help on the way — fast, safe, and secure.</p>
-    <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: #333;">
-      <input type="checkbox" id="termsCheckbox" style="transform: scale(1.5);" />
-      <span>I agree to the Eek Mobile Mechanical terms of service 
-        <a href="https://www.eek.nz/terms" target="_blank" style="color: #ff5500; text-decoration: underline;">
-          View terms of use
-        </a>
-      </span>
-    </label>
-    <br><br>
-    <button id="payNowButton" style="display: none; background-color: #ff5500; color: white; padding: 14px 32px; font-size: 1.2em; border: none; border-radius: 8px; cursor: pointer;">
-      Pay Now
-    </button>
-  </div>
-</section>
+    <!-- Service Selection Section -->
+    <div class="eek-section eek-card-gradient" id="service-selection">
+        <div class="eek-section-header">
+            <h2>🔧 Professional Mobile Mechanic Services</h2>
+            <p>Eek Mobile Mechanical providing comprehensive mobile mechanic services across New Zealand</p>
+        </div>
+        <div class="eek-service-grid">
+            <a href="#mobile-mechanic-breakdown" class="eek-service-card service-link" data-service="mechanic">
+                <h4>Emergency Breakdown</h4>
+                <p>Professional mechanics arrive in 30-60 minutes anywhere in NZ</p>
+            </a>
+            <a href="#battery-jump-start" class="eek-service-card service-link" data-service="jumpstart">
+                <h4>Battery Jump Start</h4>
+                <p>Dead battery? We'll get you started in 30-60 minutes</p>
+            </a>
+            <a href="#wrong-fuel-removal" class="eek-service-card service-link" data-service="fuel-extraction">
+                <h4>Wrong Fuel Removal</h4>
+                <p>Emergency fuel rescue service - 30-60 minute response</p>
+            </a>
+            <a href="#pre-purchase-inspections" class="eek-service-card service-link" data-service="inspection">
+                <h4>Pre Purchase Inspections</h4>
+                <p>45-point certified inspection - 30-60 minute arrival</p>
+            </a>
+        </div>
+    </div>
 
-<header>
-  <img src="brand-image.png" alt="Eek Mobile Mechanical - Mobile Mechanic Services" />
-  <div class="business-name">Eek Mobile Mechanical</div>
-  <h1>Mobile Mechanics NZ - 30-60 Minute Response</h1>
-  <p class="tagline">Mobile Mechanic • Pre Purchase Inspections • Wrong Fuel Removal • Emergency Roadside Repairs • 30–60 Min Response</p>
-  <a class="cta-button phone-link" href="tel:0800769000" onclick="trackConversion('header_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-</header>
+    <!-- Service Details Sections -->
+    <div class="eek-section" id="mobile-mechanic-breakdown">
+        <h2>Mobile Mechanic Emergency Breakdown Service – Target Arrival: 30–60 Minutes</h2>
+        <p>Engine won't start? Warning lights? Our professional mobile mechanic team arrives fast and diagnoses the issue on-site anywhere in New Zealand.</p>
+        <ul class="eek-list">
+            <li>🛠️ Professional mobile mechanic fault detection & diagnostic scanning</li>
+            <li>🔍 On-site assessment and minor repairs</li>
+            <li>📍 Mobile mechanic coverage anywhere in NZ—city or rural</li>
+            <li>🧰 Mobile mechanics arrive equipped with full professional toolkits</li>
+            <li>📞 Real-time communication with mobile mechanic support staff</li>
+            <li>⏱️ Target arrival: 30–60 minutes nationwide</li>
+        </ul>
+        <div class="eek-btn-group">
+            <a class="eek-btn eek-btn-primary normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')" data-track="breakdown_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+            <a class="eek-btn eek-btn-success after-hours-btn service-link" data-service="mechanic" style="display: none;">📅 Book Online</a>
+        </div>
+    </div>
 
-<div class="keywords-highlight" id="service-selection">
-  <h2>🔧 Professional Mobile Mechanic Services</h2>
-  <p>Eek Mobile Mechanical providing comprehensive mobile mechanic services across New Zealand</p>
-  <div class="service-keywords">
-    <a href="#mobile-mechanic-breakdown" class="service-link" data-service="mechanic" style="text-decoration: none; color: inherit;">
-      <div class="keyword-item">
-        <h4>Emergency Breakdown</h4>
-        <p>Professional mechanics arrive in 30-60 minutes anywhere in NZ</p>
-      </div>
-    </a>
-    <a href="#battery-jump-start" class="service-link" data-service="jumpstart" style="text-decoration: none; color: inherit;">
-      <div class="keyword-item">
-        <h4>Battery Jump Start</h4>
-        <p>Dead battery? We'll get you started in 30-60 minutes</p>
-      </div>
-    </a>
-    <a href="#wrong-fuel-removal" class="service-link" data-service="fuel-extraction" style="text-decoration: none; color: inherit;">
-      <div class="keyword-item">
-        <h4>Wrong Fuel Removal</h4>
-        <p>Emergency fuel rescue service - 30-60 minute response</p>
-      </div>
-    </a>
-    <a href="#pre-purchase-inspections" class="service-link" data-service="inspection" style="text-decoration: none; color: inherit;">
-      <div class="keyword-item">
-        <h4>Pre Purchase Inspections</h4>
-        <p>45-point certified inspection - 30-60 minute arrival</p>
-      </div>
-    </a>
-  </div>
-</div>
+    <div class="eek-section" id="battery-jump-start">
+        <h2>Mobile Mechanic Battery Service – Jump Start in 30–60 Minutes</h2>
+        <p>Dead battery? Our professional mobile mechanic team comes to you and performs a safe, professional jump‑start service.</p>
+        <ul class="eek-list">
+            <li>🔋 Mobile mechanic service compatible with all makes/models</li>
+            <li>⚡ Includes battery voltage & health check by qualified mechanics</li>
+            <li>🧰 Safe jump‑start equipment & professional procedures</li>
+            <li>📍 Mobile mechanic service at your location—home or roadside</li>
+        </ul>
+        <div class="eek-btn-group">
+            <a class="eek-btn eek-btn-primary normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')" data-track="battery_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+            <a class="eek-btn eek-btn-success after-hours-btn service-link" data-service="jumpstart" style="display: none;">📅 Book Online</a>
+        </div>
+    </div>
 
-<div class="services" id="mobile-mechanic-breakdown">
-  <h2>Mobile Mechanic Emergency Breakdown Service – Target Arrival: 30–60 Minutes</h2>
-  <p>Engine won't start? Warning lights? Our professional mobile mechanic team arrives fast and diagnoses the issue on-site anywhere in New Zealand.</p>
-  <ul>
-    <li>🛠️ Professional mobile mechanic fault detection & diagnostic scanning</li>
-    <li>🔍 On-site assessment and minor repairs</li>
-    <li>📍 Mobile mechanic coverage anywhere in NZ—city or rural</li>
-    <li>🧰 Mobile mechanics arrive equipped with full professional toolkits</li>
-    <li>📞 Real-time communication with mobile mechanic support staff</li>
-    <li>⏱️ Target arrival: 30–60 minutes nationwide</li>
-  </ul>
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn service-link" data-service="mechanic" style="background: #28a745; display: none;">📅 Book Online</a>
-  </div>
-</div>
+    <div class="eek-section" id="wrong-fuel-removal">
+        <h2>Wrong Fuel Removal – Petrol and Diesel Removal Emergency Service – Target Arrival: 30–60 Minutes</h2>
+        <p>Filled with petrol instead of diesel? Our mobile mechanic specialists provide immediate wrong fuel removal and petrol and diesel removal services. Don't start the engine!</p>
+        <ul class="eek-list">
+            <li>⛽ Professional petrol and diesel removal on-site</li>
+            <li>🧯 Fully insured wrong fuel removal process</li>
+            <li>🛻 No towing needed, saves time & money</li>
+            <li>📍 Trusted mobile mechanic wrong fuel rescue NZ‑wide</li>
+            <li>🚨 Emergency petrol and diesel removal service</li>
+            <li>⏱️ Target arrival: 30–60 minutes nationwide</li>
+        </ul>
+        <div class="eek-btn-group">
+            <a class="eek-btn eek-btn-primary normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')" data-track="fuel_drain_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+            <a class="eek-btn eek-btn-success after-hours-btn service-link" data-service="fuel-extraction" style="display: none;">📅 Book Online</a>
+        </div>
+    </div>
 
-<div class="services" id="battery-jump-start">
-  <h2>Mobile Mechanic Battery Service – Jump Start in 30–60 Minutes</h2>
-  <p>Dead battery? Our professional mobile mechanic team comes to you and performs a safe, professional jump‑start service.</p>
-  <ul>
-    <li>🔋 Mobile mechanic service compatible with all makes/models</li>
-    <li>⚡ Includes battery voltage & health check by qualified mechanics</li>
-    <li>🧰 Safe jump‑start equipment & professional procedures</li>
-    <li>📍 Mobile mechanic service at your location—home or roadside</li>
-  </ul>
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn service-link" data-service="jumpstart" style="background: #28a745; display: none;">📅 Book Online</a>
-  </div>
-</div>
+    <div class="eek-section" id="pre-purchase-inspections">
+        <h2>Pre Purchase Vehicle Inspections – Target Arrival: 30–60 Minutes</h2>
+        <p>Need peace of mind before buying a car? Our certified mobile mechanic team performs comprehensive pre purchase vehicle inspections at any location across New Zealand.</p>
+        <ul class="eek-list">
+            <li>🧾 Comprehensive 45-point certified mechanical inspection</li>
+            <li>📍 Inspection at seller or dealership location</li>
+            <li>💸 From $199 - best prices when you book ahead!</li>
+            <li>⏱️ Nationwide mobile mechanic dispatch in 30–60 minutes</li>
+            <li>📅 Save money by booking online in advance</li>
+            <li>✅ Written report with price recommendation & upcoming cost estimates</li>
+        </ul>
+        <div class="eek-btn-group">
+            <a class="eek-btn eek-btn-primary normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')" data-track="inspection_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+            <a class="eek-btn eek-btn-success after-hours-btn service-link" data-service="inspection" style="display: none;">📅 Book Online & Save</a>
+        </div>
+    </div>
 
-<div class="services" id="wrong-fuel-removal">
-  <h2>Wrong Fuel Removal – Petrol and Diesel Removal Emergency Service – Target Arrival: 30–60 Minutes</h2>
-  <p>Filled with petrol instead of diesel? Our mobile mechanic specialists provide immediate wrong fuel removal and petrol and diesel removal services. Don't start the engine!</p>
-  <ul>
-    <li>⛽ Professional petrol and diesel removal on-site</li>
-    <li>🧯 Fully insured wrong fuel removal process</li>
-    <li>🛻 No towing needed, saves time & money</li>
-    <li>📍 Trusted mobile mechanic wrong fuel rescue NZ‑wide</li>
-    <li>🚨 Emergency petrol and diesel removal service</li>
-    <li>⏱️ Target arrival: 30–60 minutes nationwide</li>
-  </ul>
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn service-link" data-service="fuel-extraction" style="background: #28a745; display: none;">📅 Book Online</a>
-  </div>
-</div>
+    <!-- Customer Reviews Section -->
+    <div class="eek-section">
+        <div class="eek-section-header">
+            <h2>⭐ What Customers Say</h2>
+            <p>Real, verified reviews from clients across New Zealand.</p>
+        </div>
+        
+        <!-- RevU Banner Widget -->
+        <div data-bid="157676" data-url="https://app.revu.cloud" data-aid="23788" style="max-height: 400px; overflow-y: auto; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; background: #fafafa; margin-top: 15px;">
+            <script src="https://widget.reviewability.com/js/widgetAdv.min.js" async></script>
+        </div>
+    </div>
 
-<div class="services" id="pre-purchase-inspections">
-  <h2>Pre Purchase Vehicle Inspections – Target Arrival: 30–60 Minutes</h2>
-  <p>Need peace of mind before buying a car? Our certified mobile mechanic team performs comprehensive pre purchase vehicle inspections at any location across New Zealand.</p>
-  <ul>
-    <li>🧾 Comprehensive 45-point certified mechanical inspection</li>
-    <li>📍 Inspection at seller or dealership location</li>
-    <li>💸 From $199 - best prices when you book ahead!</li>
-    <li>⏱️ Nationwide mobile mechanic dispatch in 30–60 minutes</li>
-    <li>📅 Save money by booking online in advance</li>
-    <li>✅ Written report with price recommendation & upcoming cost estimates</li>
-  </ul>
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn service-link" data-service="inspection" style="background: #28a745; display: none;">📅 Book Online & Save</a>
-  </div>
-</div>
+    <!-- Business Hours Section -->
+    <div class="eek-hours-section">
+        <h3>🕒 Business Hours</h3>
+        <div class="eek-hours-text">Monday - Friday: 7:00 AM - 5:00 PM</div>
+        <div class="eek-hours-text">Saturday - Sunday: 7:00 AM - 12:00 PM</div>
+        <div class="eek-after-hours-text">After hours emergency service available</div>
+    </div>
 
-<!-- Customer Reviews Section -->
-<div class="services">
-  <h2>⭐ What Customers Say</h2>
-  <p>Real, verified reviews from clients across New Zealand.</p>
-  
-  <!-- RevU Banner Widget -->
-  <div data-bid="157676" data-url="https://app.revu.cloud" data-aid="23788">
-    <script src="https://widget.reviewability.com/js/widgetAdv.min.js" async></script>
-  </div>
-</div>
+    <!-- Footer -->
+    <div class="eek-footer">
+        &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
+        <a href="https://www.eek.nz/privacy" target="_blank">Privacy Policy</a> | 
+        <a href="/more-options" class="more-options-link">More Options</a>
+    </div>
 
-<a id="stripePaymentSticky" class="sticky-payment" href="#">💳 Make Payment</a>
+    <!-- Sticky buttons will be created by master config -->
 
-<footer>
-  &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
-  <a href="https://www.eek.nz/privacy" target="_blank" style="color: #666; text-decoration: underline;">Privacy Policy</a> | 
-  <a href="/more-options" class="more-options-link" style="color: #666; text-decoration: underline;">More Options</a>
-</footer>
+    <!-- Load Master Configuration -->
+    <script src="/eek-master-config.js"></script>
 
-<a class="sticky-call phone-link" href="tel:0800769000" onclick="trackConversion('sticky_call', 'Contact')" id="stickyCallButton">📞 Call <span class="phone-display">Eek Now</span></a>
-<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" style="display: none; background: #666;">🕐 View Hours</a>
+    <script>
+        // Enhanced tracking function with comprehensive analytics
+        function trackConversion(eventAction, eventCategory) {
+            const conversionId = 'eek_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
+            const serviceValues = {
+                'inspection_call': 19900,
+                'breakdown_call': 28900,
+                'battery_call': 14900,
+                'fuel_drain_call': 39900,
+                'header_call': 25000,
+                'sticky_call': 25000,
+                'more_options_call': 25000,
+                'after_hours_emergency': 35000,
+                'breakdown_after_hours': 35000,
+                'battery_after_hours': 20000,
+                'fuel_drain_after_hours': 45000,
+                'inspection_after_hours': 25000
+            };
+            
+            const eventValue = serviceValues[eventAction] || 25000;
+            
+            if (typeof gtag !== 'undefined') {
+                gtag('event', eventAction, {
+                    'event_category': eventCategory,
+                    'event_label': 'Phone Call Click',
+                    'value': eventValue / 100
+                });
+                gtag('event', 'conversion', {
+                    'send_to': 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
+                });
+            }
+            
+            if (typeof rdt !== 'undefined') {
+                rdt('track', 'Lead', {
+                    'customEventName': 'Phone_Call_Click',
+                    'conversionId': conversionId,
+                    'value': eventValue,
+                    'currency': 'NZD',
+                    'itemCount': 1,
+                    'eventSource': eventAction,
+                    'eventCategory': eventCategory,
+                    'serviceType': getServiceType(eventAction)
+                });
+            }
+        }
 
-<!-- Load Master Configuration -->
-<script src="/eek-master-config.js"></script>
+        function getServiceType(eventAction) {
+            const serviceMap = {
+                'inspection_call': 'Pre-Purchase Inspection',
+                'breakdown_call': 'Emergency Breakdown',
+                'battery_call': 'Battery Jump Start',
+                'fuel_drain_call': 'Wrong Fuel Rescue',
+                'header_call': 'General Inquiry',
+                'sticky_call': 'General Inquiry',
+                'more_options_call': 'General Inquiry',
+                'after_hours_emergency': 'After Hours Emergency',
+                'breakdown_after_hours': 'After Hours Breakdown',
+                'battery_after_hours': 'After Hours Battery',
+                'fuel_drain_after_hours': 'After Hours Fuel Drain',
+                'inspection_after_hours': 'After Hours Inspection'
+            };
+            return serviceMap[eventAction] || 'General Service';
+        }
 
-<script>
-// Enhanced tracking function that includes Reddit Pixel with full event parameters
-function trackConversion(eventAction, eventCategory) {
-  const conversionId = 'eek_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-  
-  const serviceValues = {
-    'inspection_call': 19900,
-    'breakdown_call': 28900,
-    'battery_call': 14900,
-    'fuel_drain_call': 39900,
-    'header_call': 25000,
-    'sticky_call': 25000,
-    'more_options_call': 25000,
-    'after_hours_emergency': 35000,
-    'breakdown_after_hours': 35000,
-    'battery_after_hours': 20000,
-    'fuel_drain_after_hours': 45000,
-    'inspection_after_hours': 25000
-  };
-  
-  const eventValue = serviceValues[eventAction] || 25000;
-  
-  if (typeof gtag !== 'undefined') {
-    gtag('event', eventAction, {
-      'event_category': eventCategory,
-      'event_label': 'Phone Call Click',
-      'value': eventValue / 100
-    });
-    gtag('event', 'conversion', {
-      'send_to': 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
-    });
-  }
-  
-  if (typeof rdt !== 'undefined') {
-    rdt('track', 'Lead', {
-      'customEventName': 'Phone_Call_Click',
-      'conversionId': conversionId,
-      'value': eventValue,
-      'currency': 'NZD',
-      'itemCount': 1,
-      'eventSource': eventAction,
-      'eventCategory': eventCategory,
-      'serviceType': getServiceType(eventAction)
-    });
-  }
-}
+        // Handle service selection card clicks
+        function handleServiceSelection() {
+            document.querySelectorAll('.service-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const bookingUrl = this.dataset.bookingUrl;
+                    
+                    // Only redirect to booking for service cards (not already direct booking links)
+                    if (bookingUrl && this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        console.log('🎯 Redirecting to booking page:', bookingUrl);
+                        window.location.href = bookingUrl;
+                    }
+                });
+            });
+        }
 
-function getServiceType(eventAction) {
-  const serviceMap = {
-    'inspection_call': 'Pre-Purchase Inspection',
-    'breakdown_call': 'Emergency Breakdown',
-    'battery_call': 'Battery Jump Start',
-    'fuel_drain_call': 'Wrong Fuel Rescue',
-    'header_call': 'General Inquiry',
-    'sticky_call': 'General Inquiry',
-    'more_options_call': 'General Inquiry',
-    'after_hours_emergency': 'After Hours Emergency',
-    'breakdown_after_hours': 'After Hours Breakdown',
-    'battery_after_hours': 'After Hours Battery',
-    'fuel_drain_after_hours': 'After Hours Fuel Drain',
-    'inspection_after_hours': 'After Hours Inspection'
-  };
-  return serviceMap[eventAction] || 'General Service';
-}
+        // Main page initialization
+        window.addEventListener('load', function() {
+            console.log('🚀 Main page loaded with comprehensive style guide');
+            
+            // Set up service selection handlers
+            handleServiceSelection();
+            
+            // Track page view
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'page_view', {
+                    'page_title': document.title,
+                    'page_location': window.location.href
+                });
+            }
+            
+            console.log('✅ Main page initialization complete');
+        });
 
-// Handle service selection card clicks
-function handleServiceSelection() {
-  document.querySelectorAll('.service-link').forEach(link => {
-    link.addEventListener('click', function(e) {
-      const bookingUrl = this.dataset.bookingUrl;
-      
-      // Only redirect to booking for service cards (not already direct booking links)
-      if (bookingUrl && this.getAttribute('href').startsWith('#')) {
-        e.preventDefault();
-        console.log('🎯 Redirecting to booking page:', bookingUrl);
-        window.location.href = bookingUrl;
-      }
-    });
-  });
-}
-
-// Main page loaded
-window.addEventListener('load', function() {
-  console.log('🚀 Main page loaded with master config');
-  
-  // Set up service selection handlers
-  handleServiceSelection();
-  
-  // Track page view
-  if (typeof gtag !== 'undefined') {
-    gtag('event', 'page_view', {
-      'page_title': document.title,
-      'page_location': window.location.href
-    });
-  }
-  
-  console.log('✅ Main page initialization complete');
-});
-
-// Scroll tracking
-let scrollTracked = false;
-window.addEventListener('scroll', function() {
-  if (!scrollTracked && window.scrollY > document.body.scrollHeight * 0.5) {
-    scrollTracked = true;
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'scroll_50_percent', {
-        'event_category': 'Engagement',
-        'event_label': 'Scrolled 50% of page'
-      });
-    }
-  }
-});
-</script>
-
+        // Scroll tracking
+        let scrollTracked = false;
+        window.addEventListener('scroll', function() {
+            if (!scrollTracked && window.scrollY > document.body.scrollHeight * 0.5) {
+                scrollTracked = true;
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'scroll_50_percent', {
+                        'event_category': 'Engagement',
+                        'event_label': 'Scrolled 50% of page'
+                    });
+                }
+            }
+        });
+    </script>
 </body>
 </html>
