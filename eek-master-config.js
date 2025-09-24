@@ -849,26 +849,27 @@ async function updateUIState() {
     
     // Update global state - check current URL parameters FIRST
     const urlParams = new URLSearchParams(window.location.search);
-    EEK_STATE.hasPaymentToken = hasPaymentToken();
-    
-    // Get current URL GCLID (priority) and stored GCLID (fallback)
     const currentGclid = urlParams.get('gclid');
-    EEK_STATE.gclid = getGCLID(); // This now properly handles current URL vs stored
-    const effectiveGclid = currentGclid || EEK_STATE.gclid;
+    const currentToken = urlParams.get('token');
+    
+    // Always update stored GCLID state for phone number management
+    EEK_STATE.gclid = getGCLID();
+    EEK_STATE.hasPaymentToken = hasPaymentToken();
     
     console.log('🔍 URL Parameter Check:', {
         currentUrlGclid: currentGclid,
+        currentUrlToken: currentToken,
         storedGclid: EEK_STATE.gclid,
-        effectiveGclid: effectiveGclid,
         hasPaymentToken: EEK_STATE.hasPaymentToken
     });
     
-    // System status logic
-    if (effectiveGclid || EEK_STATE.hasPaymentToken) {
+    // System status logic - ONLY based on current URL parameters
+    if (currentGclid || currentToken) {
         EEK_STATE.systemActive = true;
-        console.log('🎯 GCLID or Token detected - forcing system active');
+        console.log('🎯 Current URL GCLID or Token detected - forcing system active');
     } else {
         EEK_STATE.systemActive = await checkSystemStatus();
+        console.log('🔄 No current URL params - checking system status via API');
     }
     
     EEK_STATE.duringBusinessHours = isWithinBusinessHours();
@@ -877,7 +878,9 @@ async function updateUIState() {
         systemActive: EEK_STATE.systemActive,
         duringBusinessHours: EEK_STATE.duringBusinessHours,
         hasPaymentToken: EEK_STATE.hasPaymentToken,
-        hasGclid: !!effectiveGclid
+        hasCurrentGclid: !!currentGclid,
+        hasCurrentToken: !!currentToken,
+        hasStoredGclid: !!EEK_STATE.gclid
     });
     
     // Update phone numbers FIRST (before other UI elements)
