@@ -776,6 +776,9 @@ function initializePage() {
     // Update UI with corrected state management
     updateUIState();
     
+    // NUCLEAR OPTION: Force hide banner if GCLID or token in URL
+    setTimeout(forceHideBannerIfNeeded, 100);
+    
     console.log('✅ Page initialization complete');
     console.log('📊 Final State:', {
         sessionId: EEK_STATE.sessionId,
@@ -783,6 +786,21 @@ function initializePage() {
         hasPaymentToken: EEK_STATE.hasPaymentToken,
         phoneNumber: getDisplayPhoneNumber().display
     });
+}
+
+// === NUCLEAR OPTION - FORCE HIDE BANNER ===
+function forceHideBannerIfNeeded() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasGclid = !!urlParams.get('gclid');
+    const hasToken = !!urlParams.get('token');
+    const banner = document.getElementById('closedBanner');
+    
+    if ((hasGclid || hasToken) && banner) {
+        banner.style.display = 'none';
+        banner.style.visibility = 'hidden';
+        banner.setAttribute('hidden', 'true');
+        console.log('💀 NUCLEAR OPTION: Force hiding banner for GCLID/Token mode');
+    }
 }
 
 // === AUTO-INITIALIZE ON DOM CONTENT LOADED ===
