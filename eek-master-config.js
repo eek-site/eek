@@ -683,13 +683,18 @@ function updateButtonVisibility() {
         // Show book online buttons only in basic mode when system inactive
         afterHoursButtons.forEach(btn => {
             btn.style.display = 'inline-block';
-            // Ensure book online buttons work
-            if (!btn.dataset.bookingUrl && btn.dataset.service) {
-                btn.dataset.bookingUrl = `/book?service=${btn.dataset.service}`;
+            
+            // CRITICAL: Ensure book online buttons work - always set booking URL
+            const service = btn.dataset.service;
+            if (service) {
+                btn.dataset.bookingUrl = `/book?service=${service}`;
+                console.log('🔗 Set booking URL for', service, ':', btn.dataset.bookingUrl);
+            } else {
+                console.warn('⚠️ Book online button missing data-service attribute:', btn);
             }
         });
         normalHoursButtons.forEach(btn => btn.style.display = 'none');
-        console.log('📅 Book online buttons: SHOWN');
+        console.log('📅 Book online buttons: SHOWN with URLs set');
     } else {
         // Hide book online buttons in all other cases
         afterHoursButtons.forEach(btn => btn.style.display = 'none');
@@ -798,6 +803,9 @@ function initializePage() {
     // FINAL SAFEGUARD: Double-check banner visibility after API calls complete
     setTimeout(finalBannerCheck, 2000);
     
+    // FINAL SAFEGUARD: Ensure book online buttons have working URLs
+    setTimeout(finalBookOnlineCheck, 2100);
+    
     console.log('✅ Page initialization complete');
     console.log('📊 Final State:', {
         sessionId: EEK_STATE.sessionId,
@@ -826,6 +834,38 @@ function forceHideBannerIfNeeded() {
         banner.removeAttribute('hidden');
         console.log('💀 NUCLEAR OPTION: Force showing banner for basic mode + system inactive');
     }
+}
+
+// === FINAL BOOK ONLINE CHECK ===
+function finalBookOnlineCheck() {
+    const afterHoursButtons = document.querySelectorAll('.after-hours-btn');
+    
+    console.log('🔗 FINAL BOOK ONLINE CHECK: Found', afterHoursButtons.length, 'after-hours buttons');
+    
+    afterHoursButtons.forEach((btn, index) => {
+        const service = btn.dataset.service;
+        const bookingUrl = btn.dataset.bookingUrl;
+        const isVisible = btn.style.display !== 'none';
+        
+        console.log(`  Button ${index}:`, {
+            service: service,
+            bookingUrl: bookingUrl,
+            visible: isVisible,
+            href: btn.getAttribute('href')
+        });
+        
+        // If button is visible but missing booking URL, fix it
+        if (isVisible && service && !bookingUrl) {
+            btn.dataset.bookingUrl = `/book?service=${service}`;
+            console.log(`  ✅ Fixed booking URL for ${service}:`, btn.dataset.bookingUrl);
+        }
+        
+        // If button is visible but missing href, fix it  
+        if (isVisible && service && !btn.getAttribute('href')) {
+            btn.setAttribute('href', `#book-${service}`);
+            console.log(`  ✅ Fixed href for ${service}:`, btn.getAttribute('href'));
+        }
+    });
 }
 
 // === FINAL SAFEGUARD - BANNER CHECK ===
