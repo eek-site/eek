@@ -23,7 +23,7 @@ function injectMasterStyles() {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = '/eek-style-guide.css';
-    link.id = 'eek-style-guide-link';
+    link.id = 'eek-style-guide';
     
     // If external file fails, inject critical styles
     link.onerror = function() {
