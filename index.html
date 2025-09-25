@@ -231,7 +231,7 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn service-link" data-service="mechanic" style="background: #28a745; display: none;">📅 Book Online</a>
+    <a href="#book-mechanic" class="cta-button after-hours-btn service-link" data-service="mechanic" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
 
@@ -246,7 +246,7 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn service-link" data-service="jumpstart" style="background: #28a745; display: none;">📅 Book Online</a>
+    <a href="#book-jumpstart" class="cta-button after-hours-btn service-link" data-service="jumpstart" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
 
@@ -263,7 +263,7 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn service-link" data-service="fuel-extraction" style="background: #28a745; display: none;">📅 Book Online</a>
+    <a href="#book-fuel-extraction" class="cta-button after-hours-btn service-link" data-service="fuel-extraction" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
 
@@ -280,7 +280,7 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn service-link" data-service="inspection" style="background: #28a745; display: none;">📅 Book Online & Save</a>
+    <a href="#book-inspection" class="cta-button after-hours-btn service-link" data-service="inspection" style="background: #28a745; display: none;">📅 Book Online & Save</a>
   </div>
 </div>
 
@@ -315,9 +315,10 @@ function handleServiceSelection() {
   document.querySelectorAll('.service-link').forEach(link => {
     link.addEventListener('click', function(e) {
       const bookingUrl = this.dataset.bookingUrl;
+      const href = this.getAttribute('href');
       
       // Only redirect to booking for service cards (not already direct booking links)
-      if (bookingUrl && this.getAttribute('href').startsWith('#')) {
+      if (bookingUrl && href && href.startsWith('#')) {
         e.preventDefault();
         console.log('🎯 Redirecting to booking page:', bookingUrl);
         window.location.href = bookingUrl;
