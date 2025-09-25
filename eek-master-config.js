@@ -1,9 +1,9 @@
 /**
- * Eek Mobile Mechanical - Master Configuration & Shared Functions (FIXED)
+ * Eek Mobile Mechanical - Master Configuration & Shared Functions (COMPLETE FIX)
  * This file contains all shared functionality across the website
  * Include this file on every page to ensure consistency
  * 
- * FIXED VERSION: Corrected syntax error in detectAndUpdateLogo function
+ * COMPLETE FIX VERSION: Properly corrected syntax error in detectAndUpdateLogo function
  */
 
 // === INJECT COMPREHENSIVE STYLE GUIDE ===
@@ -205,7 +205,7 @@ let EEK_STATE = {
     duringBusinessHours: false
 };
 
-// === LOGO MANAGEMENT (FIXED) ===
+// === LOGO MANAGEMENT (COMPLETELY FIXED) ===
 function getLogoForPageType() {
     const currentPath = window.location.pathname.toLowerCase();
     const urlParams = new URLSearchParams(window.location.search);
@@ -234,63 +234,59 @@ function getLogoForPageType() {
     return { file: 'brand-image.png', class: 'brand-image', type: 'Main/Booking' };
 }
 
-async function detectAndUpdateLogo() {
+function detectAndUpdateLogo() {
     const logoImages = document.querySelectorAll('.eek-brand-image, img[src*="brand-image"], img[src*="sweet-ride"], img[src*="lemon"]');
     
     if (logoImages.length === 0) {
         console.log('ℹ️ No logo images found on page');
-        return;
+        return Promise.resolve();
     }
     
     const logoInfo = getLogoForPageType();
     console.log('🎯 Selected logo:', logoInfo.file, 'for page type:', logoInfo.type);
     
-    for (let img of logoImages) {
+    const updatePromises = Array.from(logoImages).map(img => {
         // If image already has the correct src, skip
         if (img.src && img.src.endsWith(logoInfo.file)) {
             console.log('✅ Logo already correct:', img.src);
-            continue;
+            return Promise.resolve();
         }
         
-        try {
-            // Test if the selected logo file exists
+        return new Promise((resolve) => {
             const testImg = new Image();
             
-            await new Promise((resolve, reject) => {
-                testImg.onload = function() {
-                    // Update the logo with full path
-                    img.src = `/${logoInfo.file}`;
-                    img.alt = `Eek Mobile Mechanical - Mobile Mechanic Services`;
-                    
-                    // Remove old logo classes
-                    img.classList.remove('brand-image', 'sweet-ride', 'lemon');
-                    // Add appropriate class
-                    img.classList.add(logoInfo.class);
-                    
-                    console.log('🖼️ Logo updated to:', `/${logoInfo.file}`, 'class:', logoInfo.class);
-                    resolve();
-                };
+            testImg.onload = function() {
+                // Update the logo with full path
+                img.src = `/${logoInfo.file}`;
+                img.alt = `Eek Mobile Mechanical - Mobile Mechanic Services`;
+                
+                // Remove old logo classes
+                img.classList.remove('brand-image', 'sweet-ride', 'lemon');
+                // Add appropriate class
+                img.classList.add(logoInfo.class);
+                
+                console.log('🖼️ Logo updated to:', `/${logoInfo.file}`, 'class:', logoInfo.class);
+                resolve();
+            };
 
-                testImg.onerror = function() {
-                    console.warn('❌ Logo file not found:', `/${logoInfo.file}`, '- falling back to /brand-image.png');
-                    
-                    // Fallback to brand-image if selected logo doesn't exist
-                    if (logoInfo.file !== 'brand-image.png') {
-                        img.src = '/brand-image.png';
-                        img.classList.remove('sweet-ride', 'lemon');
-                        img.classList.add('brand-image');
-                        console.log('🔄 Fallback logo applied: /brand-image.png');
-                    }
-                    resolve();
-                };
+            testImg.onerror = function() {
+                console.warn('❌ Logo file not found:', `/${logoInfo.file}`, '- falling back to /brand-image.png');
+                
+                // Fallback to brand-image if selected logo doesn't exist
+                if (logoInfo.file !== 'brand-image.png') {
+                    img.src = '/brand-image.png';
+                    img.classList.remove('sweet-ride', 'lemon');
+                    img.classList.add('brand-image');
+                    console.log('🔄 Fallback logo applied: /brand-image.png');
+                }
+                resolve();
+            };
 
-                testImg.src = `/${logoInfo.file}`;
-            });
-            
-        } catch (error) {
-            console.error('❌ Error updating logo:', error);
-        }
-    }
+            testImg.src = `/${logoInfo.file}`;
+        });
+    });
+    
+    return Promise.all(updatePromises);
 }
 
 // === TRACKING AND ANALYTICS ===
@@ -639,8 +635,10 @@ function initializePage() {
     // Initialize tracking pixels
     initializeRedditPixel();
     
-    // Detect and update logos
-    detectAndUpdateLogo();
+    // Detect and update logos (now properly async)
+    detectAndUpdateLogo().catch(error => {
+        console.error('❌ Error in logo detection:', error);
+    });
     
     // Initialize state from current page URL
     EEK_STATE.sessionId = getOrCreateSessionId();
