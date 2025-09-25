@@ -61,6 +61,39 @@ function injectFallbackStyles() {
             margin: 0;
             padding: 0 0 80px 0;
         }
+        
+        /* Payment Block Visibility Control */
+        #stripePaymentBlock {
+            display: none !important;
+        }
+        
+        body.eek-has-payment-token #stripePaymentBlock {
+            display: block !important;
+        }
+        
+        #stripePaymentSticky {
+            display: none !important;
+        }
+        
+        body.eek-has-payment-token #stripePaymentSticky {
+            display: block !important;
+        }
+        
+        #payNowButton.eek-hidden {
+            display: none !important;
+        }
+        
+        .eek-payment-block.eek-hidden {
+            display: none !important;
+        }
+        
+        .sticky-payment.eek-hidden {
+            display: none !important;
+        }
+        
+        .eek-hidden {
+            display: none !important;
+        }
     `;
     document.head.appendChild(style);
     console.log('📋 Fallback styles injected');
@@ -864,15 +897,19 @@ async function checkSystemStatus() {
     return true;
 }
 
-// === PAYMENT TOKEN HANDLING ===
+// === FIXED PAYMENT TOKEN HANDLING ===
 function hasPaymentToken() {
     const urlParams = new URLSearchParams(window.location.search);
-    return !!urlParams.get('token');
+    const token = urlParams.get('token');
+    // Ensure token exists and is not empty/whitespace
+    return !!(token && token.trim() !== '');
 }
 
 function getPaymentToken() {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('token');
+    const token = urlParams.get('token');
+    // Return token only if it exists and is not empty/whitespace
+    return (token && token.trim() !== '') ? token.trim() : null;
 }
 
 // === URL PARAMETER UTILITIES ===
@@ -937,15 +974,18 @@ function getUTMData() {
     return utm;
 }
 
-// === MASTER UI UPDATE FUNCTION (CORRECTED) ===
+// === FIXED UI UPDATE FUNCTION ===
 async function updateUIState() {
     console.log('🔄 Starting master UI state update...');
     
-    // Update global state
+    // CRITICAL: Always get fresh state from current URL and reset payment token state first
+    EEK_STATE.hasPaymentToken = false;
+    
     const urlParams = new URLSearchParams(window.location.search);
     const currentGclid = urlParams.get('gclid');
     const currentToken = urlParams.get('token');
     
+    // Update global state from current URL
     EEK_STATE.gclid = getGCLID();
     EEK_STATE.hasPaymentToken = hasPaymentToken();
     
@@ -976,7 +1016,7 @@ async function updateUIState() {
         hasStoredGclid: !!EEK_STATE.gclid
     });
     
-    // CORRECTED: Update body classes for CSS state management
+    // CRITICAL: Update body classes first to ensure CSS state is correct
     updateBodyStateClasses();
     
     // Update phone numbers
@@ -991,9 +1031,12 @@ async function updateUIState() {
     console.log('✅ Master UI state update completed');
 }
 
-// === CORRECTED: BODY STATE CLASS MANAGEMENT ===
+// === FIXED BODY STATE CLASS MANAGEMENT ===
 function updateBodyStateClasses() {
     const body = document.body;
+    
+    // CRITICAL: Remove all payment-related classes first
+    body.classList.remove('eek-has-payment-token', 'eek-no-payment-token');
     
     // System state classes
     body.classList.toggle('eek-system-active', EEK_STATE.systemActive);
@@ -1003,9 +1046,14 @@ function updateBodyStateClasses() {
     body.classList.toggle('eek-during-business-hours', EEK_STATE.duringBusinessHours);
     body.classList.toggle('eek-after-hours', !EEK_STATE.duringBusinessHours);
     
-    // Payment token classes
-    body.classList.toggle('eek-has-payment-token', EEK_STATE.hasPaymentToken);
-    body.classList.toggle('eek-no-payment-token', !EEK_STATE.hasPaymentToken);
+    // Payment token classes - CRITICAL: Only add if we actually have a token
+    if (EEK_STATE.hasPaymentToken) {
+        body.classList.add('eek-has-payment-token');
+        console.log('💳 Added eek-has-payment-token class');
+    } else {
+        body.classList.add('eek-no-payment-token');
+        console.log('💳 Added eek-no-payment-token class');
+    }
     
     // GCLID classes
     body.classList.toggle('eek-has-gclid', !!EEK_STATE.gclid);
@@ -1098,25 +1146,45 @@ function updateStickyButtons() {
     console.log('📱 Sticky button visibility controlled by CSS classes');
 }
 
-// === CORRECTED: PAYMENT UI MANAGEMENT ===
+// === FIXED PAYMENT UI MANAGEMENT ===
 function updatePaymentUI() {
     const paymentToken = getPaymentToken();
     
     console.log('💳 Payment UI Update - Token:', paymentToken, 'HasToken:', !!paymentToken);
     
+    // CRITICAL: Only set up payment if we have a valid token
     if (paymentToken && paymentToken.trim() !== '') {
         setupPaymentHandlers(paymentToken);
         console.log('💳 Payment UI configured for token:', paymentToken);
     } else {
-        // Reset payment state
-        const termsCheckbox = document.getElementById('termsCheckbox');
-        const payNowButton = document.getElementById('payNowButton');
-        
-        if (termsCheckbox) termsCheckbox.checked = false;
-        if (payNowButton) payNowButton.classList.add('eek-hidden');
-        
-        console.log('💳 Payment UI reset for non-token user');
+        // CRITICAL: Reset payment UI completely when no token
+        resetPaymentUI();
+        console.log('💳 Payment UI reset - no valid token');
     }
+}
+
+// === NEW: RESET PAYMENT UI FUNCTION ===
+function resetPaymentUI() {
+    const termsCheckbox = document.getElementById('termsCheckbox');
+    const payNowButton = document.getElementById('payNowButton');
+    const paymentBlock = document.getElementById('stripePaymentBlock');
+    
+    // Reset checkbox state
+    if (termsCheckbox) {
+        termsCheckbox.checked = false;
+    }
+    
+    // Hide pay button
+    if (payNowButton) {
+        payNowButton.classList.add('eek-hidden');
+    }
+    
+    // Ensure payment block is hidden by adding the hidden class
+    if (paymentBlock) {
+        paymentBlock.classList.add('eek-hidden');
+    }
+    
+    console.log('💳 Payment UI completely reset');
 }
 
 function setupPaymentHandlers(token) {
@@ -1313,7 +1381,7 @@ function initializeDynamicElements() {
     console.log('✅ All dynamic elements initialized');
 }
 
-// === INITIALIZATION ===
+// === INITIALIZATION WITH PROPER STATE RESET ===
 function initializePage() {
     console.log('🚀 Initializing Eek Mobile Mechanical page...');
     
@@ -1323,17 +1391,20 @@ function initializePage() {
     // Create dynamic elements that may not exist on the page
     initializeDynamicElements();
     
+    // CRITICAL: Reset payment state before checking current page
+    EEK_STATE.hasPaymentToken = false;
+    
     // Initialize tracking pixels
     initializeRedditPixel();
     
     // Detect and update logos
     detectAndUpdateLogo();
     
-    // Initialize state
+    // Initialize state from current page URL
     EEK_STATE.sessionId = getOrCreateSessionId();
     EEK_STATE.gclid = getGCLID();
     EEK_STATE.utmData = getUTMData();
-    EEK_STATE.hasPaymentToken = hasPaymentToken();
+    EEK_STATE.hasPaymentToken = hasPaymentToken(); // Check current URL
     
     // Update UI with corrected state management
     updateUIState();
@@ -1653,3 +1724,4 @@ window.createStickyButtons = createStickyButtons;
 window.getLogoForPageType = getLogoForPageType;
 window.detectAndUpdateLogo = detectAndUpdateLogo;
 window.updateBodyStateClasses = updateBodyStateClasses;
+window.resetPaymentUI = resetPaymentUI;
