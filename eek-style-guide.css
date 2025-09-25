@@ -588,19 +588,62 @@ body.eek-no-gclid .eek-gclid-only {
     display: none;
 }
 
-/* CRITICAL: Payment token button state management */
-/* Default state - show call button, hide payment button */
-body.eek-no-payment-token .sticky-call {
+/* === AFTER HOURS / SYSTEM INACTIVE STATE MANAGEMENT === */
+/* When system is inactive OR after hours - show banner and book online buttons */
+body.eek-system-inactive #closedBanner,
+body.eek-after-hours #closedBanner {
     display: block !important;
 }
 
-body.eek-no-payment-token .sticky-payment,
-body.eek-no-payment-token #stripePaymentSticky {
+body.eek-system-active.eek-during-business-hours #closedBanner {
     display: none !important;
 }
 
-/* Payment token state - hide call button, show payment button */
-body.eek-has-payment-token .sticky-call {
+/* Show "Book Online" buttons when system is inactive or after hours */
+body.eek-system-inactive .after-hours-btn,
+body.eek-after-hours .after-hours-btn {
+    display: inline-block !important;
+}
+
+body.eek-system-active.eek-during-business-hours .after-hours-btn {
+    display: none !important;
+}
+
+/* Hide normal call buttons when system is inactive or after hours */
+body.eek-system-inactive .normal-hours-btn,
+body.eek-after-hours .normal-hours-btn {
+    display: none !important;
+}
+
+body.eek-system-active.eek-during-business-hours .normal-hours-btn {
+    display: inline-block !important;
+}
+
+/* === STICKY BUTTON STATE MANAGEMENT === */
+/* Default state - show appropriate sticky button based on system/hours state */
+body.eek-system-active.eek-during-business-hours.eek-no-payment-token .sticky-call {
+    display: block !important;
+}
+
+body.eek-system-active.eek-during-business-hours.eek-no-payment-token #stickyClosedButton {
+    display: none !important;
+}
+
+/* When system is inactive or after hours - show "View Hours" button instead of call button */
+body.eek-system-inactive.eek-no-payment-token .sticky-call,
+body.eek-after-hours.eek-no-payment-token .sticky-call {
+    display: none !important;
+}
+
+body.eek-system-inactive.eek-no-payment-token #stickyClosedButton,
+body.eek-after-hours.eek-no-payment-token #stickyClosedButton {
+    display: block !important;
+}
+
+/* CRITICAL: Payment token button state management */
+/* Payment token state - hide all other buttons, show payment button */
+body.eek-has-payment-token .sticky-call,
+body.eek-has-payment-token #stickyClosedButton {
     display: none !important;
 }
 
@@ -613,6 +656,12 @@ body.eek-has-payment-token #stripePaymentSticky {
 body.eek-has-payment-token .sticky-payment:hover,
 body.eek-has-payment-token #stripePaymentSticky:hover {
     background-color: #20a142 !important;
+}
+
+/* Hide payment buttons when no payment token */
+body.eek-no-payment-token .sticky-payment,
+body.eek-no-payment-token #stripePaymentSticky {
+    display: none !important;
 }
 
 /* === ACCESSIBILITY === */
