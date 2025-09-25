@@ -658,6 +658,23 @@ body.eek-has-payment-token #stripePaymentSticky:hover {
     background-color: #20a142 !important;
 }
 
+/* === PHONE NUMBER VISIBILITY CONTROL === */
+/* Hide phone numbers when system is inactive or after hours (unless payment token) */
+body.eek-system-inactive.eek-no-payment-token .phone-link,
+body.eek-after-hours.eek-no-payment-token .phone-link {
+    display: none !important;
+}
+
+/* Show phone numbers during normal business hours */
+body.eek-system-active.eek-during-business-hours .phone-link {
+    display: inline-block !important;
+}
+
+/* Always show phone numbers when payment token is present */
+body.eek-has-payment-token .phone-link {
+    display: inline-block !important;
+}
+
 /* Hide payment buttons when no payment token */
 body.eek-no-payment-token .sticky-payment,
 body.eek-no-payment-token #stripePaymentSticky {
