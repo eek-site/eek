@@ -562,23 +562,6 @@ body.eek-system-active .eek-system-inactive-only {
     display: none;
 }
 
-/* Business hours states */
-body.eek-during-business-hours .eek-business-hours-only {
-    display: block;
-}
-
-body.eek-after-hours .eek-business-hours-only {
-    display: none;
-}
-
-body.eek-after-hours .eek-after-hours-only {
-    display: block;
-}
-
-body.eek-during-business-hours .eek-after-hours-only {
-    display: none;
-}
-
 /* GCLID states */
 body.eek-has-gclid .eek-gclid-only {
     display: block;
@@ -588,60 +571,56 @@ body.eek-no-gclid .eek-gclid-only {
     display: none;
 }
 
-/* === AFTER HOURS / SYSTEM INACTIVE STATE MANAGEMENT === */
-/* When system is inactive OR after hours - show banner and book online buttons */
-body.eek-system-inactive #closedBanner,
-body.eek-after-hours #closedBanner {
+/* === BANNER VISIBILITY - Only show in basic mode when system inactive === */
+/* Basic mode (no GCLID, no token) + system inactive = show banner */
+body.eek-system-inactive.eek-no-gclid.eek-no-payment-token #closedBanner {
     display: block !important;
 }
 
-body.eek-system-active.eek-during-business-hours #closedBanner {
+/* Hide banner in all other cases */
+body.eek-system-active #closedBanner,
+body.eek-has-gclid #closedBanner,
+body.eek-has-payment-token #closedBanner {
     display: none !important;
 }
 
-/* Show "Book Online" buttons when system is inactive or after hours */
-body.eek-system-inactive .after-hours-btn,
-body.eek-after-hours .after-hours-btn {
+/* === PHONE NUMBER VISIBILITY === */
+/* Show phone numbers when: system active OR GCLID/token present */
+body.eek-system-active .phone-link,
+body.eek-has-gclid .phone-link,
+body.eek-has-payment-token .phone-link {
     display: inline-block !important;
 }
 
-body.eek-system-active.eek-during-business-hours .after-hours-btn {
+/* Hide phone numbers only in basic mode when system inactive */
+body.eek-system-inactive.eek-no-gclid.eek-no-payment-token .phone-link {
     display: none !important;
 }
 
-/* Hide normal call buttons when system is inactive or after hours */
-body.eek-system-inactive .normal-hours-btn,
-body.eek-after-hours .normal-hours-btn {
-    display: none !important;
-}
-
-body.eek-system-active.eek-during-business-hours .normal-hours-btn {
+/* === BOOK ONLINE BUTTONS - Only show in basic mode when system inactive === */
+body.eek-system-inactive.eek-no-gclid.eek-no-payment-token .after-hours-btn {
     display: inline-block !important;
 }
 
-/* === STICKY BUTTON STATE MANAGEMENT === */
-/* Default state - show appropriate sticky button based on system/hours state */
-body.eek-system-active.eek-during-business-hours.eek-no-payment-token .sticky-call {
-    display: block !important;
-}
-
-body.eek-system-active.eek-during-business-hours.eek-no-payment-token #stickyClosedButton {
+body.eek-system-inactive.eek-no-gclid.eek-no-payment-token .normal-hours-btn {
     display: none !important;
 }
 
-/* When system is inactive or after hours - show "View Hours" button instead of call button */
-body.eek-system-inactive.eek-no-payment-token .sticky-call,
-body.eek-after-hours.eek-no-payment-token .sticky-call {
+/* Hide book online buttons when system active or GCLID/token present */
+body.eek-system-active .after-hours-btn,
+body.eek-has-gclid .after-hours-btn,
+body.eek-has-payment-token .after-hours-btn {
     display: none !important;
 }
 
-body.eek-system-inactive.eek-no-payment-token #stickyClosedButton,
-body.eek-after-hours.eek-no-payment-token #stickyClosedButton {
-    display: block !important;
+body.eek-system-active .normal-hours-btn,
+body.eek-has-gclid .normal-hours-btn,
+body.eek-has-payment-token .normal-hours-btn {
+    display: inline-block !important;
 }
 
-/* CRITICAL: Payment token button state management */
-/* Payment token state - hide all other buttons, show payment button */
+/* === STICKY BUTTON MANAGEMENT === */
+/* Payment token mode - always show payment button */
 body.eek-has-payment-token .sticky-call,
 body.eek-has-payment-token #stickyClosedButton {
     display: none !important;
@@ -650,29 +629,27 @@ body.eek-has-payment-token #stickyClosedButton {
 body.eek-has-payment-token .sticky-payment,
 body.eek-has-payment-token #stripePaymentSticky {
     display: block !important;
-    background-color: #28a745 !important; /* Force green color */
+    background-color: #28a745 !important;
 }
 
-body.eek-has-payment-token .sticky-payment:hover,
-body.eek-has-payment-token #stripePaymentSticky:hover {
-    background-color: #20a142 !important;
-}
-
-/* === PHONE NUMBER VISIBILITY CONTROL === */
-/* Hide phone numbers when system is inactive or after hours (unless payment token) */
-body.eek-system-inactive.eek-no-payment-token .phone-link,
-body.eek-after-hours.eek-no-payment-token .phone-link {
+/* Basic mode + system inactive - show View Hours button */
+body.eek-system-inactive.eek-no-gclid.eek-no-payment-token .sticky-call {
     display: none !important;
 }
 
-/* Show phone numbers during normal business hours */
-body.eek-system-active.eek-during-business-hours .phone-link {
-    display: inline-block !important;
+body.eek-system-inactive.eek-no-gclid.eek-no-payment-token #stickyClosedButton {
+    display: block !important;
 }
 
-/* Always show phone numbers when payment token is present */
-body.eek-has-payment-token .phone-link {
-    display: inline-block !important;
+/* All other cases (system active OR GCLID present) - show call button */
+body.eek-system-active.eek-no-payment-token .sticky-call,
+body.eek-has-gclid.eek-no-payment-token .sticky-call {
+    display: block !important;
+}
+
+body.eek-system-active.eek-no-payment-token #stickyClosedButton,
+body.eek-has-gclid.eek-no-payment-token #stickyClosedButton {
+    display: none !important;
 }
 
 /* Hide payment buttons when no payment token */
