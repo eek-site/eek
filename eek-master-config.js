@@ -4,6 +4,7 @@
  * Include this file on every page to ensure consistency
  * 
  * MERGED VERSION: Combines comprehensive tracking from earlier version with all recent fixes
+ * PHONE NUMBER FIX: Only uses tracking number for current GCLID/token visits, not stored data
  */
 
 // === INJECT COMPREHENSIVE STYLE GUIDE ===
@@ -818,36 +819,27 @@ function setupTimeTracking() {
     });
 }
 
-// === PHONE NUMBER MANAGEMENT ===
+// === PHONE NUMBER MANAGEMENT (FIXED) ===
 function getDisplayPhoneNumber() {
     const urlParams = new URLSearchParams(window.location.search);
     const currentGclid = urlParams.get('gclid');
     const currentToken = urlParams.get('token');
     
-    // PRIORITY 1: Current URL GCLID (always takes precedence)
+    // CRITICAL FIX: Only use tracking number for CURRENT visit parameters
+    // Stored GCLID data should NOT affect phone number display
+    
     if (currentGclid) {
-        localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.phonePreference, 'tracking');
         console.log('📞 Using tracking number (current URL GCLID):', currentGclid);
         return EEK_CONFIG.PHONE_NUMBERS.tracking;
     }
     
-    // PRIORITY 2: Payment token users get tracking number
     if (currentToken) {
-        localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.phonePreference, 'tracking');
-        console.log('📞 Using tracking number (payment token):', currentToken);
+        console.log('📞 Using tracking number (current payment token):', currentToken);
         return EEK_CONFIG.PHONE_NUMBERS.tracking;
     }
     
-    // PRIORITY 3: Check if there's a valid stored GCLID
-    const storedGclid = localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.gclid);
-    if (storedGclid && isGCLIDValid()) {
-        console.log('📞 Using tracking number (stored valid GCLID):', storedGclid);
-        return EEK_CONFIG.PHONE_NUMBERS.tracking;
-    }
-    
-    // PRIORITY 4: Default number for all other cases
-    localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.phonePreference, 'default');
-    console.log('📞 Using default number (no valid GCLID or token)');
+    // DEFAULT for all other cases - including visitors with stored GCLID data
+    console.log('📞 Using default number (no current GCLID or token)');
     return EEK_CONFIG.PHONE_NUMBERS.default;
 }
 
@@ -876,7 +868,7 @@ function updatePhoneNumbers() {
     console.log('📞 Phone numbers updated to:', phoneData.display);
 }
 
-// === GCLID MANAGEMENT ===
+// === GCLID MANAGEMENT (TRACKING DATA ONLY) ===
 function isGCLIDValid() {
     const storedTimestamp = localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.gclidTimestamp);
     if (!storedTimestamp) return false;
@@ -895,22 +887,20 @@ function getGCLID() {
     if (gclidValue) {
         localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.gclid, gclidValue);
         localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.gclidTimestamp, new Date().toISOString());
-        localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.phonePreference, "tracking");
         console.log('✅ GCLID captured from current URL:', gclidValue);
         return gclidValue;
     }
     
-    // PRIORITY 2: Try to get stored GCLID (only if still valid)
+    // PRIORITY 2: Try to get stored GCLID (only if still valid) - FOR TRACKING DATA ONLY
     const storedGclid = localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.gclid);
     
     if (storedGclid && isGCLIDValid()) {
-        console.log('📋 Using stored valid GCLID:', storedGclid);
+        console.log('📋 Using stored valid GCLID for tracking data only:', storedGclid);
         return storedGclid;
     } else if (storedGclid) {
         // GCLID expired - clean it up
         localStorage.removeItem(EEK_CONFIG.STORAGE_KEYS.gclid);
         localStorage.removeItem(EEK_CONFIG.STORAGE_KEYS.gclidTimestamp);
-        localStorage.removeItem(EEK_CONFIG.STORAGE_KEYS.phonePreference);
         console.log('⚠️ GCLID expired and removed');
     }
     
