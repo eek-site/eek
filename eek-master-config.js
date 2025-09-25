@@ -687,7 +687,7 @@ function updateButtonVisibility() {
             // CRITICAL: Ensure book online buttons work - always set booking URL
             const service = btn.dataset.service;
             if (service) {
-                btn.dataset.bookingUrl = `/book?service=${service}`;
+                btn.dataset.bookingUrl = `/book-service/?service=${service}`;
                 console.log('🔗 Set booking URL for', service, ':', btn.dataset.bookingUrl);
             } else {
                 console.warn('⚠️ Book online button missing data-service attribute:', btn);
@@ -856,7 +856,7 @@ function finalBookOnlineCheck() {
         
         // If button is visible but missing booking URL, fix it
         if (isVisible && service && !bookingUrl) {
-            btn.dataset.bookingUrl = `/book?service=${service}`;
+            btn.dataset.bookingUrl = `/book-service/?service=${service}`;
             console.log(`  ✅ Fixed booking URL for ${service}:`, btn.dataset.bookingUrl);
         }
         
