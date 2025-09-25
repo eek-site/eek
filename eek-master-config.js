@@ -1,7 +1,9 @@
 /**
- * Eek Mobile Mechanical - Master Configuration & Shared Functions
+ * Eek Mobile Mechanical - Master Configuration & Shared Functions (Corrected)
  * This file contains all shared functionality across the website
  * Include this file on every page to ensure consistency
+ * 
+ * CORRECTED VERSION: Proper separation of JavaScript and CSS concerns
  */
 
 // === INJECT COMPREHENSIVE STYLE GUIDE ===
@@ -38,7 +40,7 @@ function injectFallbackStyles() {
     const style = document.createElement('style');
     style.id = 'eek-master-styles';
     style.textContent = `
-        /* Critical fallback styles */
+        /* Critical fallback styles - minimal CSS variables only */
         :root {
             --eek-primary: #ff5500;
             --eek-primary-hover: #e64a00;
@@ -59,191 +61,9 @@ function injectFallbackStyles() {
             margin: 0;
             padding: 0 0 80px 0;
         }
-        
-        /* Sticky Call Button */
-        .sticky-call, .eek-sticky-button {
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            background-color: var(--eek-primary);
-            color: white;
-            font-size: 1.1em;
-            padding: 14px 20px;
-            border-radius: var(--eek-radius-full);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            text-decoration: none;
-            z-index: 999;
-            transition: all 0.3s ease;
-        }
-        
-        .sticky-call:hover, .eek-sticky-button:hover {
-            background-color: var(--eek-primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-            color: white;
-            text-decoration: none;
-        }
-        
-        .sticky-payment, .eek-sticky-payment {
-            position: fixed;
-            bottom: 15px;
-            right: 150px;
-            background-color: var(--eek-success);
-            color: white;
-            font-size: 1.1em;
-            padding: 14px 20px;
-            border-radius: var(--eek-radius-full);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            text-decoration: none;
-            z-index: 999;
-            transition: all 0.3s ease;
-        }
-        
-        .sticky-payment:hover, .eek-sticky-payment:hover {
-            background-color: var(--eek-success-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-            color: white;
-            text-decoration: none;
-        }
-        
-        /* Business Hours Banner */
-        .after-hours-banner, .eek-banner {
-            background: linear-gradient(135deg, #ff3333, #ff5500);
-            color: white;
-            padding: 20px;
-            margin: 0 auto 20px;
-            max-width: 800px;
-            border-radius: var(--eek-radius-lg);
-            box-shadow: 0 4px 12px rgba(255,51,51,0.3);
-            animation: eek-pulse 2s infinite;
-            display: none;
-            text-align: center;
-        }
-        
-        @keyframes eek-pulse {
-            0%, 100% { box-shadow: 0 4px 12px rgba(255,51,51,0.3); }
-            50% { box-shadow: 0 4px 20px rgba(255,51,51,0.5); }
-        }
-        
-        .after-hours-banner h2, .eek-banner h2 {
-            margin: 0 0 10px 0;
-            font-size: 1.6em;
-        }
-        
-        .after-hours-banner p, .eek-banner p {
-            margin: 10px 0;
-            font-size: 1.1em;
-        }
-        
-        /* Mobile responsive */
-        @media (max-width: 768px) {
-            .sticky-call, .eek-sticky-button {
-                font-size: 1em;
-                padding: 12px 18px;
-                bottom: 10px;
-                right: 10px;
-            }
-            
-            .sticky-payment, .eek-sticky-payment {
-                font-size: 1em;
-                padding: 12px 18px;
-                bottom: 10px;
-                right: 120px;
-            }
-        }
     `;
     document.head.appendChild(style);
     console.log('📋 Fallback styles injected');
-}
-
-// === LOGO MANAGEMENT ===
-function getLogoForPageType() {
-    const currentPath = window.location.pathname.toLowerCase();
-    const urlParams = new URLSearchParams(window.location.search);
-    const serviceType = urlParams.get('service');
-    
-    console.log('🔍 Determining logo for path:', currentPath, 'service:', serviceType);
-    
-    // Pre-purchase inspection pages use lemon logo
-    if (currentPath.includes('inspection') || 
-        currentPath.includes('pre-purchase') ||
-        serviceType === 'inspection') {
-        return { file: 'lemon.png', class: 'lemon', type: 'Pre-Purchase Inspection' };
-    }
-    
-    // Inquiry/support pages use sweet-ride logo
-    if (currentPath.includes('more-options') ||
-        currentPath.includes('customer-escalation') ||
-        currentPath.includes('supplier') ||
-        currentPath.includes('apply') ||
-        currentPath.includes('contact') ||
-        currentPath.includes('support')) {
-        return { file: 'sweet-ride.png', class: 'sweet-ride', type: 'Inquiry/Support' };
-    }
-    
-    // Index page and booking steps use brand-image (default)
-    // This includes: /, /book-service, /rescue-me, etc.
-    return { file: 'brand-image.png', class: 'brand-image', type: 'Main/Booking' };
-}
-
-async function detectAndUpdateLogo() {
-    const logoImages = document.querySelectorAll('.eek-brand-image, img[src*="brand-image"], img[src*="sweet-ride"], img[src*="lemon"]');
-    
-    if (logoImages.length === 0) {
-        console.log('ℹ️ No logo images found on page');
-        return;
-    }
-    
-    const logoInfo = getLogoForPageType();
-    console.log('🎯 Selected logo:', logoInfo.file, 'for page type:', logoInfo.type);
-    
-    for (let img of logoImages) {
-        // If image already has the correct src, skip
-        if (img.src && img.src.endsWith(logoInfo.file)) {
-            console.log('✅ Logo already correct:', img.src);
-            continue;
-        }
-        
-        try {
-            // Test if the selected logo file exists
-            const testImg = new Image();
-            
-            await new Promise((resolve, reject) => {
-                testImg.onload = function() {
-                    // Update the logo
-                    img.src = logoInfo.file;
-                    img.alt = `Eek Mobile Mechanical - Mobile Mechanic Services`;
-                    
-                    // Remove old logo classes
-                    img.classList.remove('brand-image', 'sweet-ride', 'lemon');
-                    // Add appropriate class
-                    img.classList.add(logoInfo.class);
-                    
-                    console.log('🖼️ Logo updated to:', logoInfo.file, 'class:', logoInfo.class);
-                    resolve();
-                };
-                
-                testImg.onerror = function() {
-                    console.warn('❌ Logo file not found:', logoInfo.file, '- falling back to brand-image.png');
-                    
-                    // Fallback to brand-image if selected logo doesn't exist
-                    if (logoInfo.file !== 'brand-image.png') {
-                        img.src = 'brand-image.png';
-                        img.classList.remove('sweet-ride', 'lemon');
-                        img.classList.add('brand-image');
-                        console.log('🔄 Fallback logo applied: brand-image.png');
-                    }
-                    resolve();
-                };
-                
-                testImg.src = logoInfo.file;
-            });
-            
-        } catch (error) {
-            console.error('❌ Error updating logo:', error);
-        }
-    }
 }
 
 function initializeRedditPixel() {
@@ -253,7 +73,6 @@ function initializeRedditPixel() {
     (window,document);
     
     window.rdt('init', 'a2_hf16791nsdhx');
-    // Note: PageVisit tracking moved to trackPageView() function to prevent duplicates
     
     console.log('📊 Reddit Pixel initialized (PageVisit will be tracked by trackPageView)');
 }
@@ -479,7 +298,7 @@ function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
             saveData: navigator.connection.saveData || false
         } : null,
         
-        // Storage & Privacy (FIXED - removed await)
+        // Storage & Privacy
         storage: {
             localStorageAvailable: isLocalStorageAvailable(),
             sessionStorageAvailable: isSessionStorageAvailable(),
@@ -767,6 +586,94 @@ function setupTimeTracking() {
     });
 }
 
+// === LOGO MANAGEMENT ===
+function getLogoForPageType() {
+    const currentPath = window.location.pathname.toLowerCase();
+    const urlParams = new URLSearchParams(window.location.search);
+    const serviceType = urlParams.get('service');
+    
+    console.log('🔍 Determining logo for path:', currentPath, 'service:', serviceType);
+    
+    // Pre-purchase inspection pages use lemon logo
+    if (currentPath.includes('inspection') || 
+        currentPath.includes('pre-purchase') ||
+        serviceType === 'inspection') {
+        return { file: 'lemon.png', class: 'lemon', type: 'Pre-Purchase Inspection' };
+    }
+    
+    // Inquiry/support pages use sweet-ride logo
+    if (currentPath.includes('more-options') ||
+        currentPath.includes('customer-escalation') ||
+        currentPath.includes('supplier') ||
+        currentPath.includes('apply') ||
+        currentPath.includes('contact') ||
+        currentPath.includes('support')) {
+        return { file: 'sweet-ride.png', class: 'sweet-ride', type: 'Inquiry/Support' };
+    }
+    
+    // Index page and booking steps use brand-image (default)
+    return { file: 'brand-image.png', class: 'brand-image', type: 'Main/Booking' };
+}
+
+async function detectAndUpdateLogo() {
+    const logoImages = document.querySelectorAll('.eek-brand-image, img[src*="brand-image"], img[src*="sweet-ride"], img[src*="lemon"]');
+    
+    if (logoImages.length === 0) {
+        console.log('ℹ️ No logo images found on page');
+        return;
+    }
+    
+    const logoInfo = getLogoForPageType();
+    console.log('🎯 Selected logo:', logoInfo.file, 'for page type:', logoInfo.type);
+    
+    for (let img of logoImages) {
+        // If image already has the correct src, skip
+        if (img.src && img.src.endsWith(logoInfo.file)) {
+            console.log('✅ Logo already correct:', img.src);
+            continue;
+        }
+        
+        try {
+            // Test if the selected logo file exists
+            const testImg = new Image();
+            
+            await new Promise((resolve, reject) => {
+                testImg.onload = function() {
+                    // Update the logo
+                    img.src = logoInfo.file;
+                    img.alt = `Eek Mobile Mechanical - Mobile Mechanic Services`;
+                    
+                    // Remove old logo classes
+                    img.classList.remove('brand-image', 'sweet-ride', 'lemon');
+                    // Add appropriate class
+                    img.classList.add(logoInfo.class);
+                    
+                    console.log('🖼️ Logo updated to:', logoInfo.file, 'class:', logoInfo.class);
+                    resolve();
+                };
+                
+                testImg.onerror = function() {
+                    console.warn('❌ Logo file not found:', logoInfo.file, '- falling back to brand-image.png');
+                    
+                    // Fallback to brand-image if selected logo doesn't exist
+                    if (logoInfo.file !== 'brand-image.png') {
+                        img.src = 'brand-image.png';
+                        img.classList.remove('sweet-ride', 'lemon');
+                        img.classList.add('brand-image');
+                        console.log('🔄 Fallback logo applied: brand-image.png');
+                    }
+                    resolve();
+                };
+                
+                testImg.src = logoInfo.file;
+            });
+            
+        } catch (error) {
+            console.error('❌ Error updating logo:', error);
+        }
+    }
+}
+
 // === PHONE NUMBER MANAGEMENT ===
 function getDisplayPhoneNumber() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -1030,16 +937,15 @@ function getUTMData() {
     return utm;
 }
 
-// === MASTER UI UPDATE FUNCTION ===
+// === MASTER UI UPDATE FUNCTION (CORRECTED) ===
 async function updateUIState() {
     console.log('🔄 Starting master UI state update...');
     
-    // Update global state - check current URL parameters FIRST
+    // Update global state
     const urlParams = new URLSearchParams(window.location.search);
     const currentGclid = urlParams.get('gclid');
     const currentToken = urlParams.get('token');
     
-    // Always update stored GCLID state for phone number management
     EEK_STATE.gclid = getGCLID();
     EEK_STATE.hasPaymentToken = hasPaymentToken();
     
@@ -1050,7 +956,7 @@ async function updateUIState() {
         hasPaymentToken: EEK_STATE.hasPaymentToken
     });
     
-    // System status logic - ONLY based on current URL parameters
+    // System status logic
     if (currentGclid || currentToken) {
         EEK_STATE.systemActive = true;
         console.log('🎯 Current URL GCLID or Token detected - forcing system active');
@@ -1070,10 +976,13 @@ async function updateUIState() {
         hasStoredGclid: !!EEK_STATE.gclid
     });
     
-    // Update phone numbers FIRST (before other UI elements)
+    // CORRECTED: Update body classes for CSS state management
+    updateBodyStateClasses();
+    
+    // Update phone numbers
     updatePhoneNumbers();
     
-    // Update banners and buttons
+    // Update specific UI elements
     updateBanners();
     updateButtons();
     updateStickyButtons();
@@ -1082,198 +991,141 @@ async function updateUIState() {
     console.log('✅ Master UI state update completed');
 }
 
-// === BANNER MANAGEMENT ===
+// === CORRECTED: BODY STATE CLASS MANAGEMENT ===
+function updateBodyStateClasses() {
+    const body = document.body;
+    
+    // System state classes
+    body.classList.toggle('eek-system-active', EEK_STATE.systemActive);
+    body.classList.toggle('eek-system-inactive', !EEK_STATE.systemActive);
+    
+    // Business hours classes
+    body.classList.toggle('eek-during-business-hours', EEK_STATE.duringBusinessHours);
+    body.classList.toggle('eek-after-hours', !EEK_STATE.duringBusinessHours);
+    
+    // Payment token classes
+    body.classList.toggle('eek-has-payment-token', EEK_STATE.hasPaymentToken);
+    body.classList.toggle('eek-no-payment-token', !EEK_STATE.hasPaymentToken);
+    
+    // GCLID classes
+    body.classList.toggle('eek-has-gclid', !!EEK_STATE.gclid);
+    body.classList.toggle('eek-no-gclid', !EEK_STATE.gclid);
+    
+    // Phone number type class
+    const phoneType = getDisplayPhoneNumber() === EEK_CONFIG.PHONE_NUMBERS.tracking ? 'tracking' : 'default';
+    body.classList.toggle('eek-phone-tracking', phoneType === 'tracking');
+    body.classList.toggle('eek-phone-default', phoneType === 'default');
+    
+    console.log('📋 Body state classes updated:', {
+        systemActive: EEK_STATE.systemActive,
+        duringBusinessHours: EEK_STATE.duringBusinessHours,
+        hasPaymentToken: EEK_STATE.hasPaymentToken,
+        hasGclid: !!EEK_STATE.gclid,
+        phoneType: phoneType
+    });
+}
+
+// === CORRECTED: BANNER MANAGEMENT ===
 function updateBanners() {
     const closedBanner = document.getElementById('closedBanner');
     const stripePaymentBlock = document.getElementById('stripePaymentBlock');
     
-    // For payment token users, show only the Stripe payment block
-    if (EEK_STATE.hasPaymentToken) {
-        // Show Stripe payment block for token users
-        if (stripePaymentBlock) {
-            stripePaymentBlock.style.display = 'block';
-            console.log('💳 Showing Stripe payment block for token user');
-        }
-        
-        // Hide closed banner for token users
-        if (closedBanner) closedBanner.style.display = 'none';
-        
-        return;
-    }
-    
-    // Hide Stripe payment block for non-token users
-    if (stripePaymentBlock) {
-        stripePaymentBlock.style.display = 'none';
-    }
-    
-    // Closed banner logic for non-token users
+    // Use CSS classes instead of inline styles
     if (closedBanner) {
-        if (EEK_STATE.gclid) {
-            closedBanner.style.display = 'none';
+        if (EEK_STATE.hasPaymentToken) {
+            closedBanner.classList.add('eek-hidden');
+        } else if (EEK_STATE.gclid) {
+            closedBanner.classList.add('eek-hidden');
             console.log('🎯 Hiding closed banner (gclid user)');
         } else if (!EEK_STATE.systemActive) {
-            closedBanner.style.display = 'block';
+            closedBanner.classList.remove('eek-hidden');
             updateClosedBannerContent();
             console.log('🕐 Showing closed banner');
         } else {
-            closedBanner.style.display = 'none';
+            closedBanner.classList.add('eek-hidden');
             console.log('✅ Hiding closed banner (system active)');
         }
     }
+    
+    // Payment block visibility handled by CSS classes on body
+    console.log('💳 Payment block visibility controlled by CSS classes');
 }
 
 function updateClosedBannerContent() {
     const closedTitle = document.getElementById('closedTitle');
     const afterHoursMessage = document.getElementById('afterHoursMessage');
     const tempUnavailableMessage = document.getElementById('tempUnavailableMessage');
+    const closedBanner = document.getElementById('closedBanner');
     
     if (EEK_STATE.duringBusinessHours) {
         if (closedTitle) closedTitle.innerHTML = '🚧 PHONE LINES BUSY';
-        if (afterHoursMessage) afterHoursMessage.style.display = 'none';
-        if (tempUnavailableMessage) tempUnavailableMessage.style.display = 'block';
-        const closedBanner = document.getElementById('closedBanner');
-        if (closedBanner) closedBanner.style.background = 'linear-gradient(135deg, #ff8c00, #ff6b00)';
+        if (afterHoursMessage) afterHoursMessage.classList.add('eek-hidden');
+        if (tempUnavailableMessage) tempUnavailableMessage.classList.remove('eek-hidden');
+        if (closedBanner) closedBanner.classList.add('eek-banner-busy');
     } else {
         if (closedTitle) closedTitle.innerHTML = '🕐 CURRENTLY CLOSED';
-        if (afterHoursMessage) afterHoursMessage.style.display = 'block';
-        if (tempUnavailableMessage) tempUnavailableMessage.style.display = 'none';
-        const closedBanner = document.getElementById('closedBanner');
-        if (closedBanner) closedBanner.style.background = 'linear-gradient(135deg, #666, #888)';
+        if (afterHoursMessage) afterHoursMessage.classList.remove('eek-hidden');
+        if (tempUnavailableMessage) tempUnavailableMessage.classList.add('eek-hidden');
+        if (closedBanner) closedBanner.classList.add('eek-banner-closed');
     }
 }
 
-// === BUTTON MANAGEMENT ===
+// === CORRECTED: BUTTON MANAGEMENT ===
 function updateButtons() {
-    const normalButtons = document.querySelectorAll('.normal-hours-btn');
-    const afterHoursButtons = document.querySelectorAll('.after-hours-btn');
-    
-    const showNormalButtons = EEK_STATE.systemActive && !EEK_STATE.hasPaymentToken;
-    const showAfterHoursButtons = !EEK_STATE.systemActive && !EEK_STATE.hasPaymentToken;
-    
-    console.log('🔘 Found buttons:', {
-        normalButtons: normalButtons.length,
-        afterHoursButtons: afterHoursButtons.length,
-        showNormal: showNormalButtons,
-        showAfterHours: showAfterHoursButtons,
+    // Button visibility now controlled by CSS classes on body
+    console.log('🔘 Button visibility controlled by CSS classes:', {
+        systemActive: EEK_STATE.systemActive,
         hasPaymentToken: EEK_STATE.hasPaymentToken
     });
-    
-    normalButtons.forEach((btn, index) => {
-        btn.style.display = showNormalButtons ? 'inline-block' : 'none';
-        console.log(`  Normal button ${index}: ${showNormalButtons ? 'VISIBLE' : 'HIDDEN'}`);
-    });
-    
-    afterHoursButtons.forEach((btn, index) => {
-        btn.style.display = showAfterHoursButtons ? 'inline-block' : 'none';
-        console.log(`  After-hours button ${index}: ${showAfterHoursButtons ? 'VISIBLE' : 'HIDDEN'}`);
-    });
-    
-    console.log('🔘 Button update complete - Normal:', showNormalButtons ? 'VISIBLE' : 'HIDDEN', 
-                'After-hours:', showAfterHoursButtons ? 'VISIBLE' : 'HIDDEN');
 }
 
-// === STICKY BUTTON MANAGEMENT ===
+// === CORRECTED: STICKY BUTTON MANAGEMENT ===
 function updateStickyButtons() {
-    const stickyCall = document.getElementById('stickyCallButton');
+    // Sticky button visibility now controlled by CSS classes on body
     const stickyClosed = document.getElementById('stickyClosedButton');
     
-    if (stickyCall) {
-        if (EEK_STATE.hasPaymentToken) {
-            stickyCall.style.display = 'none';
-            console.log('📱 Sticky call button: HIDDEN (payment token)');
+    // Only update content/href for sticky closed button
+    if (stickyClosed) {
+        if (EEK_STATE.duringBusinessHours) {
+            stickyClosed.innerHTML = '📅 Book Online';
+            stickyClosed.href = '#service-selection';
         } else {
-            const shouldShow = EEK_STATE.systemActive;
-            stickyCall.style.display = shouldShow ? 'inline-block' : 'none';
-            console.log('📱 Sticky call button:', shouldShow ? 'VISIBLE' : 'HIDDEN');
+            stickyClosed.innerHTML = '🕐 View Hours';
+            stickyClosed.href = '#closedBanner';
         }
     }
     
-    if (stickyClosed) {
-        if (!EEK_STATE.systemActive && !EEK_STATE.hasPaymentToken && !EEK_STATE.gclid) {
-            stickyClosed.style.display = 'inline-block';
-            if (EEK_STATE.duringBusinessHours) {
-                stickyClosed.innerHTML = '📅 Book Online';
-                stickyClosed.style.background = '#ff8c00';
-                stickyClosed.href = '#service-selection';
-            } else {
-                stickyClosed.innerHTML = '🕐 View Hours';
-                stickyClosed.style.background = '#666';
-                stickyClosed.href = '#closedBanner';
-            }
-        } else {
-            stickyClosed.style.display = 'none';
-        }
-    }
+    console.log('📱 Sticky button visibility controlled by CSS classes');
 }
 
-// === PAYMENT UI MANAGEMENT (FIXED) ===
+// === CORRECTED: PAYMENT UI MANAGEMENT ===
 function updatePaymentUI() {
     const paymentToken = getPaymentToken();
-    const stripePaymentBlock = document.getElementById('stripePaymentBlock');
-    const stripePaymentSticky = document.getElementById('stripePaymentSticky');
-    const payNowButton = document.getElementById('payNowButton');
-    const termsCheckbox = document.getElementById('termsCheckbox');
     
     console.log('💳 Payment UI Update - Token:', paymentToken, 'HasToken:', !!paymentToken);
     
-    // CRITICAL FIX: Only show payment UI if there's actually a token
     if (paymentToken && paymentToken.trim() !== '') {
-        // Show payment UI for token users
-        if (stripePaymentBlock) {
-            stripePaymentBlock.style.display = 'block';
-            console.log('💳 Showing Stripe payment block for token user');
-        }
-        if (stripePaymentSticky) {
-            stripePaymentSticky.style.display = 'inline-block';
-            stripePaymentSticky.href = '#stripePaymentBlock';
-            console.log('💳 Showing sticky payment button');
-        }
-        
-        // Set up payment functionality
         setupPaymentHandlers(paymentToken);
         console.log('💳 Payment UI configured for token:', paymentToken);
     } else {
-        // CRITICAL FIX: Hide ALL payment UI for non-token users
-        if (stripePaymentBlock) {
-            stripePaymentBlock.style.display = 'none';
-            console.log('💳 Hiding Stripe payment block (no token)');
-        }
-        if (stripePaymentSticky) {
-            stripePaymentSticky.style.display = 'none';
-            console.log('💳 Hiding sticky payment button (no token)');
-        }
-        if (payNowButton) {
-            payNowButton.style.display = 'none';
-            console.log('💳 Hiding pay now button (no token)');
-        }
-        if (termsCheckbox) {
-            termsCheckbox.checked = false;
-            console.log('💳 Resetting terms checkbox (no token)');
-        }
-        console.log('💳 All payment UI hidden for non-token user');
+        // Reset payment state
+        const termsCheckbox = document.getElementById('termsCheckbox');
+        const payNowButton = document.getElementById('payNowButton');
+        
+        if (termsCheckbox) termsCheckbox.checked = false;
+        if (payNowButton) payNowButton.classList.add('eek-hidden');
+        
+        console.log('💳 Payment UI reset for non-token user');
     }
 }
 
 function setupPaymentHandlers(token) {
-    // Main page payment setup
-    const stripePaymentBlock = document.getElementById('stripePaymentBlock');
     const termsCheckbox = document.getElementById('termsCheckbox');
     const payNowButton = document.getElementById('payNowButton');
-    const stripePaymentSticky = document.getElementById('stripePaymentSticky');
     
     console.log('💳 Setting up payment handlers for token:', token);
-    console.log('💳 Payment elements found:', {
-        stripePaymentBlock: !!stripePaymentBlock,
-        termsCheckbox: !!termsCheckbox,
-        payNowButton: !!payNowButton,
-        stripePaymentSticky: !!stripePaymentSticky
-    });
     
-    if (stripePaymentBlock && termsCheckbox && payNowButton && stripePaymentSticky) {
-        stripePaymentBlock.style.display = 'block';
-        stripePaymentSticky.style.display = 'inline-block';
-        stripePaymentSticky.href = '#stripePaymentBlock';
-        
+    if (termsCheckbox && payNowButton) {
         // Remove any existing event listeners
         const newTermsCheckbox = termsCheckbox.cloneNode(true);
         termsCheckbox.parentNode.replaceChild(newTermsCheckbox, termsCheckbox);
@@ -1281,12 +1133,12 @@ function setupPaymentHandlers(token) {
         const newPayNowButton = payNowButton.cloneNode(true);
         payNowButton.parentNode.replaceChild(newPayNowButton, payNowButton);
         
-        // CRITICAL FIX: Pay Now button starts HIDDEN by default
-        newPayNowButton.style.display = 'none';
+        // Pay Now button starts hidden by default (CSS class)
+        newPayNowButton.classList.add('eek-hidden');
         
         newTermsCheckbox.addEventListener('change', () => {
             console.log('💳 Terms checkbox changed:', newTermsCheckbox.checked);
-            newPayNowButton.style.display = newTermsCheckbox.checked ? 'inline-block' : 'none';
+            newPayNowButton.classList.toggle('eek-hidden', !newTermsCheckbox.checked);
         });
         
         newPayNowButton.addEventListener('click', () => {
@@ -1294,7 +1146,7 @@ function setupPaymentHandlers(token) {
             window.location.href = `https://buy.stripe.com/${token}`;
         });
         
-        console.log('💳 Payment handlers configured successfully - Pay Now starts hidden');
+        console.log('💳 Payment handlers configured successfully');
     } else {
         console.warn('💳 Missing payment elements - handlers not configured');
     }
@@ -1361,6 +1213,106 @@ function addClickTrackingToElements() {
     });
 }
 
+// === CORRECTED: DYNAMIC ELEMENT CREATION ===
+function createClosedBanner() {
+    if (document.getElementById('closedBanner')) return;
+    
+    const banner = document.createElement('div');
+    banner.id = 'closedBanner';
+    banner.className = 'after-hours-banner eek-hidden'; // Start hidden, CSS controls visibility
+    
+    banner.innerHTML = `
+        <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
+        <div id="afterHoursMessage">
+            <p><strong>Business Hours:</strong></p>
+            <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
+            <p>Saturday - Sunday: 7:00 AM - 12:00 PM</p>
+            <p>Please call during business hours or book online for next available service</p>
+        </div>
+        <div id="tempUnavailableMessage" class="eek-hidden">
+            <p><strong>We're currently experiencing high demand</strong></p>
+            <p>Our mechanics are fully dispatched on emergency calls</p>
+            <p>Please book online for the next available appointment or try calling again shortly</p>
+            <a href="#service-selection" class="emergency-btn">📅 Book Online Now</a>
+        </div>
+    `;
+    
+    // Insert at top of body
+    document.body.insertBefore(banner, document.body.firstChild);
+    console.log('📋 Closed banner created dynamically');
+}
+
+function createStripePaymentBlock() {
+    if (document.getElementById('stripePaymentBlock')) return;
+    
+    const block = document.createElement('section');
+    block.id = 'stripePaymentBlock';
+    block.className = 'eek-payment-block eek-hidden'; // CSS class instead of inline styles
+    
+    block.innerHTML = `
+        <div class="eek-payment-content">
+            <h1>Secure Roadside Payment</h1>
+            <p class="eek-payment-subtitle">Confirm your payment to get help on the way — fast, safe, and secure.</p>
+            <label class="eek-terms-label">
+                <input type="checkbox" id="termsCheckbox" />
+                <span>I agree to the Eek Mobile Mechanical terms of service 
+                    <a href="https://www.eek.nz/terms" target="_blank">View terms of use</a>
+                </span>
+            </label>
+            <button id="payNowButton" class="eek-btn eek-btn-primary eek-hidden">Pay Now</button>
+        </div>
+    `;
+    
+    // Insert at top of body
+    document.body.insertBefore(block, document.body.firstChild);
+    console.log('💳 Stripe payment block created dynamically');
+}
+
+function createStickyButtons() {
+    // Create sticky call button if it doesn't exist
+    if (!document.getElementById('stickyCallButton')) {
+        const callButton = document.createElement('a');
+        callButton.className = 'sticky-call phone-link';
+        callButton.href = 'tel:0800769000';
+        callButton.id = 'stickyCallButton';
+        callButton.setAttribute('data-track', 'sticky_call');
+        callButton.innerHTML = '📞 Call <span class="phone-display">Eek Now</span>';
+        document.body.appendChild(callButton);
+        console.log('📱 Sticky call button created dynamically');
+    }
+    
+    // Create sticky closed button if it doesn't exist
+    if (!document.getElementById('stickyClosedButton')) {
+        const closedButton = document.createElement('a');
+        closedButton.className = 'sticky-call eek-sticky-closed';
+        closedButton.href = '#closedBanner';
+        closedButton.id = 'stickyClosedButton';
+        closedButton.innerHTML = '🕐 View Hours';
+        document.body.appendChild(closedButton);
+        console.log('📱 Sticky closed button created dynamically');
+    }
+    
+    // Create sticky payment button if it doesn't exist
+    if (!document.getElementById('stripePaymentSticky')) {
+        const paymentButton = document.createElement('a');
+        paymentButton.className = 'sticky-payment';
+        paymentButton.href = '#stripePaymentBlock';
+        paymentButton.id = 'stripePaymentSticky';
+        paymentButton.innerHTML = '💳 Make Payment';
+        document.body.appendChild(paymentButton);
+        console.log('💳 Sticky payment button created dynamically');
+    }
+}
+
+// === INITIALIZE ALL DYNAMIC ELEMENTS ===
+function initializeDynamicElements() {
+    console.log('🎬 Creating dynamic elements...');
+    createClosedBanner();
+    createStripePaymentBlock();
+    createStickyButtons();
+    console.log('✅ All dynamic elements initialized');
+}
+
 // === INITIALIZATION ===
 function initializePage() {
     console.log('🚀 Initializing Eek Mobile Mechanical page...');
@@ -1383,19 +1335,7 @@ function initializePage() {
     EEK_STATE.utmData = getUTMData();
     EEK_STATE.hasPaymentToken = hasPaymentToken();
     
-    // Debug: Check for phone display elements
-    const phoneDisplays = document.querySelectorAll('.phone-display');
-    const phoneLinks = document.querySelectorAll('.phone-link');
-    console.log('🔍 Found phone elements:', {
-        phoneDisplays: phoneDisplays.length,
-        phoneLinks: phoneLinks.length
-    });
-    
-    phoneDisplays.forEach((el, i) => {
-        console.log(`  Phone display ${i}:`, el.textContent, el);
-    });
-    
-    // Update UI
+    // Update UI with corrected state management
     updateUIState();
     updateServiceLinks();
     
@@ -1407,7 +1347,7 @@ function initializePage() {
     // Set up service selection handlers (for main page)
     handleServiceSelection();
     
-    trackPageView(); // Single unified event handles both page view AND first visit
+    trackPageView();
     
     // Set up periodic checks
     setInterval(updateUIState, 5 * 60 * 1000); // Every 5 minutes
@@ -1448,115 +1388,6 @@ function handleServiceSelection() {
             }
         });
     });
-}
-
-// === DYNAMIC ELEMENT CREATION ===
-function createClosedBanner() {
-    if (document.getElementById('closedBanner')) return; // Already exists
-    
-    const banner = document.createElement('div');
-    banner.id = 'closedBanner';
-    banner.className = 'after-hours-banner';
-    banner.style.display = 'none';
-    banner.style.background = 'linear-gradient(135deg, #666, #888)';
-    
-    banner.innerHTML = `
-        <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
-        <div id="afterHoursMessage">
-            <p><strong>Business Hours:</strong></p>
-            <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
-            <p>Saturday - Sunday: 7:00 AM - 12:00 PM</p>
-            <p>Please call during business hours or book online for next available service</p>
-        </div>
-        <div id="tempUnavailableMessage" style="display: none;">
-            <p><strong>We're currently experiencing high demand</strong></p>
-            <p>Our mechanics are fully dispatched on emergency calls</p>
-            <p>Please book online for the next available appointment or try calling again shortly</p>
-            <a href="#service-selection" class="emergency-btn" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
-        </div>
-    `;
-    
-    // Insert at top of body
-    document.body.insertBefore(banner, document.body.firstChild);
-    console.log('📋 Closed banner created dynamically');
-}
-
-function createStripePaymentBlock() {
-    if (document.getElementById('stripePaymentBlock')) return; // Already exists
-    
-    const block = document.createElement('section');
-    block.id = 'stripePaymentBlock';
-    block.style.cssText = 'display: none; background-color: #ffffff; padding: 20px; text-align: center; color: #333; border-bottom: 2px solid #ff5500;';
-    
-    block.innerHTML = `
-        <div style="background-color: #f5f5f5; padding: 30px; border-radius: 12px; max-width: 700px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
-            <h1 style="font-size: 2.2em; margin-bottom: 0.5em;">Secure Roadside Payment</h1>
-            <p style="font-size: 1.2em; margin-bottom: 1.5em;">Confirm your payment to get help on the way — fast, safe, and secure.</p>
-            <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: #333;">
-                <input type="checkbox" id="termsCheckbox" style="transform: scale(1.5);" />
-                <span>I agree to the Eek Mobile Mechanical terms of service 
-                    <a href="https://www.eek.nz/terms" target="_blank" style="color: #ff5500; text-decoration: underline;">
-                        View terms of use
-                    </a>
-                </span>
-            </label>
-            <br><br>
-            <button id="payNowButton" style="display: none; background-color: #ff5500; color: white; padding: 14px 32px; font-size: 1.2em; border: none; border-radius: 8px; cursor: pointer;">
-                Pay Now
-            </button>
-        </div>
-    `;
-    
-    // Insert at top of body
-    document.body.insertBefore(block, document.body.firstChild);
-    console.log('💳 Stripe payment block created dynamically');
-}
-
-function createStickyButtons() {
-    // Create sticky call button if it doesn't exist
-    if (!document.getElementById('stickyCallButton')) {
-        const callButton = document.createElement('a');
-        callButton.className = 'sticky-call phone-link';
-        callButton.href = 'tel:0800769000';
-        callButton.id = 'stickyCallButton';
-        callButton.setAttribute('data-track', 'sticky_call');
-        callButton.innerHTML = '📞 Call <span class="phone-display">Eek Now</span>';
-        document.body.appendChild(callButton);
-        console.log('📱 Sticky call button created dynamically');
-    }
-    
-    // Create sticky closed button if it doesn't exist
-    if (!document.getElementById('stickyClosedButton')) {
-        const closedButton = document.createElement('a');
-        closedButton.className = 'sticky-call';
-        closedButton.href = '#closedBanner';
-        closedButton.id = 'stickyClosedButton';
-        closedButton.style.cssText = 'display: none; background: #666;';
-        closedButton.innerHTML = '🕐 View Hours';
-        document.body.appendChild(closedButton);
-        console.log('📱 Sticky closed button created dynamically');
-    }
-    
-    // Create sticky payment button if it doesn't exist
-    if (!document.getElementById('stripePaymentSticky')) {
-        const paymentButton = document.createElement('a');
-        paymentButton.className = 'sticky-payment';
-        paymentButton.href = '#';
-        paymentButton.id = 'stripePaymentSticky';
-        paymentButton.style.display = 'none';
-        paymentButton.innerHTML = '💳 Make Payment';
-        document.body.appendChild(paymentButton);
-        console.log('💳 Sticky payment button created dynamically');
-    }
-}
-
-// === INITIALIZE ALL DYNAMIC ELEMENTS ===
-function initializeDynamicElements() {
-    console.log('🎬 Creating dynamic elements...');
-    createClosedBanner();
-    createStripePaymentBlock();
-    createStickyButtons();
-    console.log('✅ All dynamic elements initialized');
 }
 
 // === HELPER FUNCTIONS ===
@@ -1764,9 +1595,7 @@ function isElementVisible(element) {
 }
 
 // === BACKWARDS COMPATIBILITY WRAPPER ===
-// This ensures any existing onclick handlers in HTML still work
 window.trackConversionCompat = function(eventAction, eventCategory = 'Contact') {
-    // Call the main tracking function that's already defined above
     const conversionId = 'eek_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     const eventValue = EEK_CONFIG.SERVICE_VALUES[eventAction] || 25000;
     const serviceType = EEK_CONFIG.SERVICE_TYPES[eventAction] || 'General Service';
@@ -1823,3 +1652,4 @@ window.createStripePaymentBlock = createStripePaymentBlock;
 window.createStickyButtons = createStickyButtons;
 window.getLogoForPageType = getLogoForPageType;
 window.detectAndUpdateLogo = detectAndUpdateLogo;
+window.updateBodyStateClasses = updateBodyStateClasses;
