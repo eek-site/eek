@@ -453,10 +453,22 @@ body.eek-has-payment-token #stripePaymentSticky {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
+    display: none; /* Hidden by default */
 }
 
 #payNowButton:hover {
     background-color: #e64a00;
+}
+
+/* Show Pay Now button when terms are accepted */
+#payNowButton.show-button,
+#payNowButton:not(.eek-hidden) {
+    display: inline-block;
+}
+
+/* Ensure button is hidden when it has the hidden class */
+#payNowButton.eek-hidden {
+    display: none !important;
 }
 
 /* === MORE OPTIONS PAGE STYLES === */
