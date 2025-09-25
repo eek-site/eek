@@ -600,9 +600,39 @@ function updateBodyStateClasses() {
     if (EEK_STATE.hasPaymentToken) {
         body.classList.add('eek-has-payment-token');
         console.log('💳 Added eek-has-payment-token class');
+        
+        // Immediately hide call button and show payment button
+        const callButton = document.getElementById('stickyCallButton');
+        const paymentButton = document.getElementById('stripePaymentSticky');
+        
+        if (callButton) {
+            callButton.style.display = 'none';
+            console.log('📞 Hidden call button due to payment token');
+        }
+        
+        if (paymentButton) {
+            paymentButton.style.display = 'block';
+            paymentButton.style.backgroundColor = '#28a745'; // Force green
+            console.log('💳 Shown payment button (green)');
+        }
+        
     } else {
         body.classList.add('eek-no-payment-token');
         console.log('💳 Added eek-no-payment-token class');
+        
+        // Immediately show call button and hide payment button
+        const callButton = document.getElementById('stickyCallButton');
+        const paymentButton = document.getElementById('stripePaymentSticky');
+        
+        if (callButton) {
+            callButton.style.display = 'block';
+            console.log('📞 Shown call button (no payment token)');
+        }
+        
+        if (paymentButton) {
+            paymentButton.style.display = 'none';
+            console.log('💳 Hidden payment button (no payment token)');
+        }
     }
     
     // GCLID classes
