@@ -1,7 +1,9 @@
 /**
- * Eek Mobile Mechanical - Master Style Guide
+ * Eek Mobile Mechanical - Master Style Guide (Corrected)
  * Comprehensive styling framework with original Eek branding
- * Version: 2.0
+ * Version: 2.1 - Corrected with proper JavaScript/CSS separation
+ * 
+ * CORRECTED VERSION: State-based classes for JavaScript control
  */
 
 /* === CORE VARIABLES === */
@@ -41,6 +43,8 @@
     --eek-gradient-info: linear-gradient(135deg, #007acc, #0056b3);
     --eek-gradient-warning: linear-gradient(135deg, #ff8c00, #ff6b00);
     --eek-gradient-muted: linear-gradient(135deg, #666, #888);
+    --eek-gradient-busy: linear-gradient(135deg, #ff8c00, #ff6b00);
+    --eek-gradient-closed: linear-gradient(135deg, #666, #888);
     
     /* Shadows */
     --eek-shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
@@ -109,6 +113,137 @@ body {
     min-height: 100vh;
     padding-bottom: 80px; /* Space for sticky buttons */
     text-align: center; /* Eek default center alignment */
+}
+
+/* === UTILITY CLASSES === */
+.eek-hidden { 
+    display: none !important; 
+}
+
+.eek-visible { 
+    display: block !important; 
+}
+
+.eek-text-center { 
+    text-align: center; 
+}
+
+/* === STATE-BASED VISIBILITY CONTROLS === */
+
+/* System State Controls */
+.eek-system-active .after-hours-only {
+    display: none !important;
+}
+
+.eek-system-inactive .normal-hours-only {
+    display: none !important;
+}
+
+/* Payment Token Controls */
+.eek-has-payment-token .no-token-only {
+    display: none !important;
+}
+
+.eek-no-payment-token .token-only {
+    display: none !important;
+}
+
+.eek-has-payment-token #stripePaymentBlock {
+    display: block !important;
+}
+
+.eek-no-payment-token #stripePaymentBlock {
+    display: none !important;
+}
+
+/* GCLID Controls */
+.eek-has-gclid .no-gclid-only {
+    display: none !important;
+}
+
+.eek-no-gclid .gclid-only {
+    display: none !important;
+}
+
+/* Business Hours Controls */
+.eek-during-business-hours .after-hours-only {
+    display: none !important;
+}
+
+.eek-after-hours .business-hours-only {
+    display: none !important;
+}
+
+/* Sticky Button Visibility Controls */
+.eek-has-payment-token .sticky-call,
+.eek-has-payment-token #stickyCallButton {
+    display: none !important;
+}
+
+.eek-system-active .sticky-call,
+.eek-system-active #stickyCallButton {
+    display: inline-block !important;
+}
+
+.eek-system-inactive .sticky-call,
+.eek-system-inactive #stickyCallButton {
+    display: none !important;
+}
+
+/* Sticky Closed Button Logic */
+.eek-system-active #stickyClosedButton,
+.eek-has-payment-token #stickyClosedButton,
+.eek-has-gclid #stickyClosedButton {
+    display: none !important;
+}
+
+.eek-system-inactive.eek-no-payment-token.eek-no-gclid #stickyClosedButton {
+    display: inline-block !important;
+}
+
+/* Sticky Payment Button */
+.eek-has-payment-token #stripePaymentSticky {
+    display: inline-block !important;
+}
+
+.eek-no-payment-token #stripePaymentSticky {
+    display: none !important;
+}
+
+/* Banner Controls */
+.eek-has-payment-token #closedBanner,
+.eek-has-gclid #closedBanner {
+    display: none !important;
+}
+
+.eek-system-active #closedBanner {
+    display: none !important;
+}
+
+.eek-system-inactive.eek-no-payment-token.eek-no-gclid #closedBanner {
+    display: block !important;
+}
+
+/* Button State Controls */
+.eek-has-payment-token .normal-hours-btn,
+.eek-has-payment-token .after-hours-btn {
+    display: none !important;
+}
+
+.eek-system-active .normal-hours-btn {
+    display: inline-block !important;
+}
+
+.eek-system-active .after-hours-btn {
+    display: none !important;
+}
+
+.eek-system-inactive .normal-hours-btn {
+    display: none !important;
+}
+
+.eek-system-inactive .after-hours-btn {
+    display: inline-block !important;
 }
 
 /* === TYPOGRAPHY === */
@@ -359,6 +494,16 @@ div[style*="display: flex"] {
     border-radius: var(--eek-radius-lg);
     box-shadow: var(--eek-shadow-pulse-start);
     animation: eek-pulse 2s infinite;
+    text-align: center;
+}
+
+/* Banner State Variants */
+.after-hours-banner.eek-banner-busy {
+    background: var(--eek-gradient-busy);
+}
+
+.after-hours-banner.eek-banner-closed {
+    background: var(--eek-gradient-closed);
 }
 
 @keyframes eek-pulse {
@@ -369,16 +514,17 @@ div[style*="display: flex"] {
 .after-hours-banner h2 {
     margin: 0 0 var(--eek-spacing-sm) 0;
     font-size: 1.6em;
+    color: white;
 }
 
 .after-hours-banner p {
     margin: var(--eek-spacing-sm) 0;
     font-size: var(--eek-font-size-lg);
+    color: white;
 }
 
-/* Payment Section */
-#stripePaymentBlock {
-    display: none;
+/* === PAYMENT SECTION (CORRECTED) === */
+.eek-payment-block {
     background-color: var(--eek-bg-white);
     padding: var(--eek-spacing-lg);
     text-align: center;
@@ -386,7 +532,46 @@ div[style*="display: flex"] {
     border-bottom: 2px solid var(--eek-primary);
 }
 
-/* === STICKY ELEMENTS === */
+.eek-payment-content {
+    background-color: #f5f5f5;
+    padding: 30px;
+    border-radius: var(--eek-radius-lg);
+    max-width: 700px;
+    margin: auto;
+    box-shadow: var(--eek-shadow-sm);
+}
+
+.eek-payment-content h1 {
+    font-size: 2.2em;
+    margin-bottom: 0.5em;
+    color: var(--eek-text);
+}
+
+.eek-payment-subtitle {
+    font-size: 1.2em;
+    margin-bottom: 1.5em;
+    color: var(--eek-text-light);
+}
+
+.eek-terms-label {
+    font-size: 1.1em;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--eek-text);
+    margin-bottom: var(--eek-spacing-lg);
+}
+
+.eek-terms-label input[type="checkbox"] {
+    transform: scale(1.5);
+}
+
+.eek-terms-label a {
+    color: var(--eek-primary);
+    text-decoration: underline;
+}
+
+/* === STICKY ELEMENTS (CORRECTED) === */
 .sticky-call, .sticky-payment {
     position: fixed;
     bottom: 15px;
@@ -411,13 +596,38 @@ div[style*="display: flex"] {
     text-decoration: none;
 }
 
-.sticky-payment {
+.sticky-payment, #stripePaymentSticky {
     right: 150px;
     background-color: var(--eek-success);
 }
 
-.sticky-payment:hover {
+.sticky-payment:hover, #stripePaymentSticky:hover {
     background-color: var(--eek-success-hover);
+}
+
+/* Sticky Closed Button Styling */
+.eek-sticky-closed, #stickyClosedButton {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    background-color: #666;
+    color: white;
+    font-size: var(--eek-font-size-lg);
+    padding: 14px 20px;
+    border-radius: var(--eek-radius-full);
+    box-shadow: var(--eek-shadow-xl);
+    text-decoration: none;
+    z-index: 999;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.eek-sticky-closed:hover, #stickyClosedButton:hover {
+    background-color: #555;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    color: white;
+    text-decoration: none;
 }
 
 /* === FOOTER === */
@@ -453,42 +663,6 @@ footer a:hover {
 .services [data-bid] * {
     max-width: 100% !important;
     box-sizing: border-box;
-}
-
-/* === RESPONSIVE DESIGN === */
-@media (max-width: 768px) {
-    .service-keywords {
-        grid-template-columns: 1fr;
-    }
-    
-    .business-name {
-        font-size: var(--eek-font-size-4xl);
-    }
-    
-    header {
-        margin: 0 var(--eek-spacing-sm);
-    }
-    
-    .hours-section, .keywords-highlight, .services {
-        margin: var(--eek-spacing-lg) var(--eek-spacing-sm);
-    }
-    
-    .sticky-call, .sticky-payment {
-        font-size: var(--eek-font-size-base);
-        padding: 12px 18px;
-        bottom: 10px;
-        right: 10px;
-    }
-    
-    .sticky-payment {
-        right: 120px;
-    }
-}
-
-@media (max-width: 480px) {
-    .business-name {
-        font-size: var(--eek-font-size-3xl);
-    }
 }
 
 /* === SPECIALIZED COMPONENTS FOR OTHER PAGES === */
@@ -599,7 +773,76 @@ footer a:hover {
     margin-bottom: var(--eek-spacing-xl);
 }
 
-/* === UTILITIES === */
-.eek-text-center { text-align: center; }
-.eek-hidden { display: none; }
-.eek-visible { display: block; }
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+    .service-keywords {
+        grid-template-columns: 1fr;
+    }
+    
+    .business-name, .eek-business-name {
+        font-size: var(--eek-font-size-4xl);
+    }
+    
+    header, .eek-header {
+        margin: 0 var(--eek-spacing-sm);
+    }
+    
+    .hours-section, .keywords-highlight, .services, .eek-section {
+        margin: var(--eek-spacing-lg) var(--eek-spacing-sm);
+    }
+    
+    .eek-container {
+        padding: var(--eek-container-padding-mobile);
+        margin: var(--eek-spacing-sm);
+    }
+    
+    .sticky-call, .sticky-payment, .eek-sticky-closed,
+    #stickyCallButton, #stripePaymentSticky, #stickyClosedButton {
+        font-size: var(--eek-font-size-base);
+        padding: 12px 18px;
+        bottom: 10px;
+        right: 10px;
+    }
+    
+    .sticky-payment, #stripePaymentSticky {
+        right: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .business-name, .eek-business-name {
+        font-size: var(--eek-font-size-3xl);
+    }
+    
+    .eek-payment-content {
+        padding: var(--eek-spacing-lg);
+        margin: var(--eek-spacing-sm);
+    }
+    
+    .eek-payment-content h1 {
+        font-size: 1.8em;
+    }
+    
+    .eek-payment-subtitle {
+        font-size: 1.1em;
+    }
+}
+
+/* === DEBUG HELPERS (for development) === */
+.eek-debug-state::after {
+    content: 'System: ' attr(data-system-state) ', Hours: ' attr(data-hours-state) ', Token: ' attr(data-token-state);
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+/* Remove debug helper in production */
+.eek-no-debug .eek-debug-state::after {
+    display: none;
+}
