@@ -552,15 +552,16 @@ async function updateUIState() {
         hasPaymentToken: EEK_STATE.hasPaymentToken
     });
     
-    // System status logic
+    // System status logic - GCLID or Token users always get active system
     if (currentGclid || currentToken) {
         EEK_STATE.systemActive = true;
         console.log('🎯 Current URL GCLID or Token detected - forcing system active');
     } else {
         EEK_STATE.systemActive = await checkSystemStatus();
-        console.log('🔄 No current URL params - checking system status via API');
+        console.log('🔄 Basic mode - using API system status');
     }
     
+    // Still track business hours for banner text, but don't use for logic
     EEK_STATE.duringBusinessHours = isWithinBusinessHours();
     
     console.log('📊 Master State:', {
@@ -588,21 +589,32 @@ async function updateUIState() {
 // === BANNER VISIBILITY MANAGEMENT ===
 function updateBannerVisibility() {
     const banner = document.getElementById('closedBanner');
+    const closedTitle = document.getElementById('closedTitle');
     
     if (!banner) {
         console.log('⚠️ No closedBanner element found');
         return;
     }
     
-    // Show banner when system is inactive OR after business hours (unless payment token)
-    const shouldShowBanner = (!EEK_STATE.systemActive || !EEK_STATE.duringBusinessHours) && !EEK_STATE.hasPaymentToken;
+    // Show banner ONLY in basic mode when system is inactive
+    const hasGclidOrToken = EEK_STATE.gclid || EEK_STATE.hasPaymentToken;
+    const shouldShowBanner = !EEK_STATE.systemActive && !hasGclidOrToken;
     
     if (shouldShowBanner) {
         banner.style.display = 'block';
-        console.log('🏷️ Showing after-hours banner');
+        
+        // Update banner text based on business hours
+        if (closedTitle) {
+            if (EEK_STATE.duringBusinessHours) {
+                closedTitle.textContent = '📞 WE ARE ON CALLS';
+            } else {
+                closedTitle.textContent = '🕐 CURRENTLY CLOSED';
+            }
+        }
+        console.log('🏷️ Showing banner:', EEK_STATE.duringBusinessHours ? 'ON CALLS' : 'CLOSED');
     } else {
         banner.style.display = 'none';
-        console.log('🏷️ Hiding after-hours banner');
+        console.log('🏷️ Hiding banner (GCLID/Token mode or system active)');
     }
 }
 
@@ -612,58 +624,62 @@ function updateButtonVisibility() {
     const closedButton = document.getElementById('stickyClosedButton');
     const paymentButton = document.getElementById('stripePaymentSticky');
     
-    // Update "Book Online" buttons
+    // Update service section buttons
     const afterHoursButtons = document.querySelectorAll('.after-hours-btn');
     const normalHoursButtons = document.querySelectorAll('.normal-hours-btn');
-    
-    // Update phone links
     const phoneLinks = document.querySelectorAll('.phone-link');
     
-    const shouldShowAfterHours = (!EEK_STATE.systemActive || !EEK_STATE.duringBusinessHours) && !EEK_STATE.hasPaymentToken;
+    const hasGclidOrToken = EEK_STATE.gclid || EEK_STATE.hasPaymentToken;
     
-    // Show/hide "Book Online" vs normal buttons
-    afterHoursButtons.forEach(btn => {
-        btn.style.display = shouldShowAfterHours ? 'inline-block' : 'none';
-    });
-    
-    normalHoursButtons.forEach(btn => {
-        btn.style.display = shouldShowAfterHours ? 'none' : 'inline-block';
-    });
-    
-    // CRITICAL: Hide phone numbers when system inactive or after hours (unless payment token)
-    const shouldShowPhoneNumbers = (EEK_STATE.systemActive && EEK_STATE.duringBusinessHours) || EEK_STATE.hasPaymentToken;
+    // PHONE NUMBERS: Show when system active OR when GCLID/token present
+    const shouldShowPhoneNumbers = EEK_STATE.systemActive || hasGclidOrToken;
     
     phoneLinks.forEach(link => {
         link.style.display = shouldShowPhoneNumbers ? 'inline-block' : 'none';
     });
     
-    console.log('📞 Phone numbers:', shouldShowPhoneNumbers ? 'SHOWN' : 'HIDDEN');
-    console.log('📅 Book online buttons:', shouldShowAfterHours ? 'SHOWN' : 'HIDDEN');
+    // BOOK ONLINE BUTTONS: Show only in basic mode when system inactive
+    const shouldShowBookOnline = !EEK_STATE.systemActive && !hasGclidOrToken;
     
-    // Sticky button logic
+    afterHoursButtons.forEach(btn => {
+        btn.style.display = shouldShowBookOnline ? 'inline-block' : 'none';
+        // Make sure book online buttons work by adding booking URLs if missing
+        if (!btn.dataset.bookingUrl && btn.dataset.service) {
+            btn.dataset.bookingUrl = `/book?service=${btn.dataset.service}`;
+        }
+    });
+    
+    normalHoursButtons.forEach(btn => {
+        btn.style.display = shouldShowBookOnline ? 'none' : 'inline-block';
+    });
+    
+    console.log('📞 Phone numbers:', shouldShowPhoneNumbers ? 'SHOWN' : 'HIDDEN');
+    console.log('📅 Book online buttons:', shouldShowBookOnline ? 'SHOWN' : 'HIDDEN');
+    
+    // STICKY BUTTON LOGIC
     if (EEK_STATE.hasPaymentToken) {
-        // Payment token: only show payment button
+        // Payment token: always show payment button
         if (callButton) callButton.style.display = 'none';
         if (closedButton) closedButton.style.display = 'none';
         if (paymentButton) {
             paymentButton.style.display = 'block';
             paymentButton.style.backgroundColor = '#28a745';
         }
-        console.log('💳 Payment mode: showing payment button only');
+        console.log('💳 Payment mode: showing payment button');
         
-    } else if (!EEK_STATE.systemActive || !EEK_STATE.duringBusinessHours) {
-        // System inactive or after hours: show "View Hours" button
+    } else if (!EEK_STATE.systemActive && !EEK_STATE.gclid) {
+        // Basic mode + system inactive: show "View Hours" button
         if (callButton) callButton.style.display = 'none';
         if (paymentButton) paymentButton.style.display = 'none';
         if (closedButton) closedButton.style.display = 'block';
-        console.log('🕐 After hours mode: showing View Hours button');
+        console.log('🕐 Basic mode + system inactive: showing View Hours button');
         
     } else {
-        // Normal hours: show call button
+        // All other cases: show call button (system active, or GCLID mode)
         if (closedButton) closedButton.style.display = 'none';
         if (paymentButton) paymentButton.style.display = 'none';
         if (callButton) callButton.style.display = 'block';
-        console.log('📞 Normal hours mode: showing call button');
+        console.log('📞 Showing call button (system active or GCLID mode)');
     }
 }
 
