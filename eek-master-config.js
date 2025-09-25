@@ -672,34 +672,33 @@ async function detectAndUpdateLogo() {
             
             await new Promise((resolve, reject) => {
                 testImg.onload = function() {
-                    // Update the logo
-                    img.src = logoInfo.file;
-                    img.alt = `Eek Mobile Mechanical - Mobile Mechanic Services`;
-                    
-                    // Remove old logo classes
-                    img.classList.remove('brand-image', 'sweet-ride', 'lemon');
-                    // Add appropriate class
-                    img.classList.add(logoInfo.class);
-                    
-                    console.log('🖼️ Logo updated to:', logoInfo.file, 'class:', logoInfo.class);
-                    resolve();
-                };
-                
-                testImg.onerror = function() {
-                    console.warn('❌ Logo file not found:', logoInfo.file, '- falling back to brand-image.png');
-                    
-                    // Fallback to brand-image if selected logo doesn't exist
-                    if (logoInfo.file !== 'brand-image.png') {
-                        img.src = 'brand-image.png';
-                        img.classList.remove('sweet-ride', 'lemon');
-                        img.classList.add('brand-image');
-                        console.log('🔄 Fallback logo applied: brand-image.png');
-                    }
-                    resolve();
-                };
-                
-                testImg.src = logoInfo.file;
-            });
+    // Update the logo with full path
+    img.src = `/${logoInfo.file}`;
+    img.alt = `Eek Mobile Mechanical - Mobile Mechanic Services`;
+    
+    // Remove old logo classes
+    img.classList.remove('brand-image', 'sweet-ride', 'lemon');
+    // Add appropriate class
+    img.classList.add(logoInfo.class);
+    
+    console.log('🖼️ Logo updated to:', `/${logoInfo.file}`, 'class:', logoInfo.class);
+    resolve();
+};
+
+testImg.onerror = function() {
+    console.warn('❌ Logo file not found:', `/${logoInfo.file}`, '- falling back to /brand-image.png');
+    
+    // Fallback to brand-image if selected logo doesn't exist
+    if (logoInfo.file !== 'brand-image.png') {
+        img.src = '/brand-image.png';
+        img.classList.remove('sweet-ride', 'lemon');
+        img.classList.add('brand-image');
+        console.log('🔄 Fallback logo applied: /brand-image.png');
+    }
+    resolve();
+};
+
+testImg.src = `/${logoInfo.file}`;
             
         } catch (error) {
             console.error('❌ Error updating logo:', error);
