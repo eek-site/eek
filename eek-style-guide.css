@@ -1,6 +1,6 @@
 /**
  * Eek Mobile Mechanical - Complete Style Guide
- * Master CSS file with payment token visibility fixes
+ * Master CSS file with payment token visibility fixes and header styles
  */
 
 /* === CSS VARIABLES === */
@@ -83,6 +83,60 @@ body {
     padding: 0 0 80px 0;
     line-height: 1.6;
     font-size: var(--eek-font-base);
+}
+
+/* === HEADER STYLES === */
+header {
+    text-align: center;
+    padding: var(--eek-space-xl);
+    background-color: var(--eek-bg-white);
+    box-shadow: var(--eek-shadow-md);
+    margin-bottom: var(--eek-space-lg);
+}
+
+header img {
+    max-width: 200px;
+    height: auto;
+    margin-bottom: var(--eek-space-md);
+}
+
+header .business-name {
+    font-size: var(--eek-font-2xl);
+    font-weight: 700;
+    color: var(--eek-primary);
+    margin-bottom: var(--eek-space-sm);
+}
+
+header h1 {
+    font-size: var(--eek-font-3xl);
+    font-weight: 700;
+    margin-bottom: var(--eek-space-md);
+    color: var(--eek-text);
+}
+
+header .tagline {
+    font-size: var(--eek-font-lg);
+    color: var(--eek-text-light);
+    margin-bottom: var(--eek-space-lg);
+}
+
+header .cta-button {
+    display: inline-block;
+    background-color: var(--eek-primary);
+    color: var(--eek-text-white);
+    padding: var(--eek-space-lg) var(--eek-space-xl);
+    border-radius: var(--eek-radius-full);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: var(--eek-font-lg);
+    transition: var(--eek-transition);
+    box-shadow: var(--eek-shadow-md);
+}
+
+header .cta-button:hover {
+    background-color: var(--eek-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--eek-shadow-lg);
 }
 
 /* === UTILITY CLASSES === */
@@ -435,6 +489,118 @@ body.eek-system-inactive .eek-sticky-closed:hover {
     font-size: var(--eek-font-lg);
 }
 
+/* === KEYWORDS HIGHLIGHT SECTION === */
+.keywords-highlight {
+    background: linear-gradient(135deg, var(--eek-primary) 0%, var(--eek-primary-light) 100%);
+    color: var(--eek-text-white);
+    padding: var(--eek-space-xl);
+    border-radius: var(--eek-radius-lg);
+    box-shadow: var(--eek-shadow-lg);
+    margin: var(--eek-space-lg) 0;
+}
+
+.keywords-highlight h2 {
+    color: var(--eek-text-white);
+    margin-bottom: var(--eek-space-md);
+}
+
+.keywords-highlight p {
+    color: var(--eek-text-white);
+    opacity: 0.9;
+    margin-bottom: var(--eek-space-lg);
+}
+
+.service-keywords {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--eek-space-md);
+}
+
+.keyword-item {
+    background: rgba(255, 255, 255, 0.15);
+    padding: var(--eek-space-lg);
+    border-radius: var(--eek-radius-md);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: var(--eek-transition);
+    cursor: pointer;
+}
+
+.keyword-item:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: var(--eek-shadow-md);
+}
+
+.keyword-item h4 {
+    margin: 0 0 var(--eek-space-sm) 0;
+    font-size: var(--eek-font-lg);
+    color: var(--eek-text-white);
+}
+
+.keyword-item p {
+    margin: 0;
+    font-size: var(--eek-font-sm);
+    color: var(--eek-text-white);
+    opacity: 0.9;
+}
+
+/* === SERVICES SECTION === */
+.services {
+    background: var(--eek-bg-white);
+    margin: var(--eek-space-lg) 0;
+    padding: var(--eek-space-xl);
+    border-radius: var(--eek-radius-lg);
+    box-shadow: var(--eek-shadow-md);
+}
+
+.services h2 {
+    color: var(--eek-text);
+    margin-bottom: var(--eek-space-md);
+}
+
+.services ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: var(--eek-space-lg);
+}
+
+.services li {
+    padding: var(--eek-space-sm) 0;
+    font-size: var(--eek-font-base);
+}
+
+/* === CTA BUTTON === */
+.cta-button {
+    display: inline-block;
+    background-color: var(--eek-primary);
+    color: var(--eek-text-white);
+    padding: var(--eek-space-lg) var(--eek-space-xl);
+    font-size: var(--eek-font-lg);
+    font-weight: 600;
+    border-radius: var(--eek-radius-md);
+    text-decoration: none;
+    box-shadow: var(--eek-shadow-md);
+    transition: var(--eek-transition);
+    margin: var(--eek-space-sm);
+}
+
+.cta-button:hover {
+    background-color: var(--eek-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--eek-shadow-lg);
+    color: var(--eek-text-white);
+    text-decoration: none;
+}
+
+/* Button group styling */
+div[style*="display: flex"] {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--eek-space-md);
+}
+
 /* === LOGO STYLES === */
 .eek-brand-image {
     max-height: 60px;
@@ -573,10 +739,55 @@ body.eek-system-inactive .eek-sticky-closed:hover {
     to { transform: rotate(360deg); }
 }
 
+/* === FOOTER === */
+footer {
+    text-align: center;
+    padding: var(--eek-space-lg);
+    color: var(--eek-text-muted);
+    font-size: var(--eek-font-sm);
+}
+
+footer a {
+    color: var(--eek-text-light);
+    text-decoration: none;
+    margin: 0 var(--eek-space-sm);
+}
+
+footer a:hover {
+    color: var(--eek-primary);
+    text-decoration: underline;
+}
+
 /* === RESPONSIVE DESIGN === */
 @media (max-width: 768px) {
     body {
         padding-bottom: 100px;
+    }
+    
+    header {
+        padding: var(--eek-space-lg);
+    }
+    
+    header img {
+        max-width: 150px;
+    }
+    
+    header h1 {
+        font-size: var(--eek-font-2xl);
+    }
+    
+    header .business-name {
+        font-size: var(--eek-font-xl);
+    }
+    
+    .keywords-highlight,
+    .services {
+        margin: var(--eek-space-lg) var(--eek-space-md);
+        padding: var(--eek-space-lg);
+    }
+    
+    .service-keywords {
+        grid-template-columns: 1fr;
     }
     
     .sticky-call,
@@ -606,6 +817,18 @@ body.eek-system-inactive .eek-sticky-closed:hover {
 }
 
 @media (max-width: 480px) {
+    header img {
+        max-width: 120px;
+    }
+    
+    header h1 {
+        font-size: var(--eek-font-xl);
+    }
+    
+    header .business-name {
+        font-size: var(--eek-font-lg);
+    }
+    
     .eek-payment-content h1 {
         font-size: var(--eek-font-xl);
     }
