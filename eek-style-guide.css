@@ -1,6 +1,7 @@
 /**
  * Eek Mobile Mechanical - Complete Style Guide
  * Master CSS file with payment token visibility fixes and header styles
+ * FIXED VERSION: Includes proper banner visibility controls
  */
 
 /* === CSS VARIABLES === */
@@ -145,7 +146,8 @@ header .cta-button:hover {
 }
 
 /* === AFTER HOURS BANNER (MATCHING ORIGINAL) === */
-.after-hours-banner {
+.after-hours-banner,
+#closedBanner {
     background: linear-gradient(135deg, #ff3333, #ff5500);
     color: white;
     padding: 20px;
@@ -154,6 +156,7 @@ header .cta-button:hover {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(255,51,51,0.3);
     animation: pulse 2s infinite;
+    display: none; /* Default hidden, controlled by state classes */
 }
 
 @keyframes pulse {
@@ -161,14 +164,21 @@ header .cta-button:hover {
     50% { box-shadow: 0 4px 20px rgba(255,51,51,0.5); }
 }
 
-.after-hours-banner h2 {
+.after-hours-banner h2,
+.after-hours-banner h3,
+#closedBanner h2,
+#closedBanner h3,
+#closedTitle {
     margin: 0 0 10px 0;
     font-size: 1.6em;
+    color: white;
 }
 
-.after-hours-banner p {
+.after-hours-banner p,
+#closedBanner p {
     margin: 10px 0;
     font-size: 1.1em;
+    color: white;
 }
 
 .emergency-btn {
@@ -190,6 +200,44 @@ header .cta-button:hover {
     color: #ff3333;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+/* === BANNER VISIBILITY FIXES === */
+/* Show banner when system is inactive (basic mode without GCLID/token) */
+body.eek-system-inactive #closedBanner,
+body.eek-system-inactive .after-hours-banner {
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* Show banner with show-banner class (JavaScript fallback) */
+#closedBanner.show-banner,
+.after-hours-banner.show-banner {
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* Ensure banner text is visible when shown */
+body.eek-system-inactive #closedBanner h2,
+body.eek-system-inactive #closedBanner h3,
+body.eek-system-inactive #closedBanner p,
+body.eek-system-inactive #closedTitle,
+#closedBanner.show-banner h2,
+#closedBanner.show-banner h3,
+#closedBanner.show-banner p,
+#closedBanner.show-banner #closedTitle {
+    display: block;
+    margin: 10px 0;
+    color: white;
+}
+
+/* FORCE HIDE banner when URL has GCLID or token parameters - ABSOLUTE OVERRIDE */
+body.eek-has-gclid #closedBanner,
+body.eek-has-payment-token #closedBanner,
+body.eek-has-gclid .after-hours-banner,
+body.eek-has-payment-token .after-hours-banner {
+    display: none !important;
+    visibility: hidden !important;
 }
 
 /* === HOURS SECTION (MATCHING ORIGINAL) === */
@@ -321,7 +369,10 @@ header .cta-button:hover {
 
 /* === STICKY BUTTONS (MATCHING ORIGINAL) === */
 .sticky-call,
-.sticky-payment {
+.sticky-payment,
+#stickyCallButton,
+#stickyClosedButton,
+#stripePaymentSticky {
     position: fixed;
     bottom: 15px;
     right: 15px;
@@ -334,34 +385,69 @@ header .cta-button:hover {
     text-decoration: none;
     z-index: 999;
     transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
 }
 
-.sticky-payment {
+.sticky-payment,
+#stripePaymentSticky {
     right: 15px;
     display: none;
     background-color: #28a745; /* Green for payment button */
 }
 
-.sticky-payment:hover {
+#stickyClosedButton {
+    background-color: #666;
+    display: none;
+}
+
+.sticky-payment:hover,
+#stripePaymentSticky:hover {
     background-color: #20a142;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    color: white;
+    text-decoration: none;
 }
 
-.sticky-call:hover {
+.sticky-call:hover,
+#stickyCallButton:hover {
     background-color: #e64a00;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    color: white;
+    text-decoration: none;
+}
+
+#stickyClosedButton:hover {
+    background-color: #555;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    color: white;
+    text-decoration: none;
 }
 
 /* CRITICAL: Hide call button when payment token is present */
-body.eek-has-payment-token .sticky-call {
+body.eek-has-payment-token .sticky-call,
+body.eek-has-payment-token #stickyCallButton {
     display: none !important;
 }
 
 /* Show payment button when payment token is present */
-body.eek-has-payment-token .sticky-payment {
+body.eek-has-payment-token .sticky-payment,
+body.eek-has-payment-token #stripePaymentSticky {
     display: block !important;
+}
+
+/* Show closed/hours button when system inactive (basic mode only) */
+body.eek-system-inactive:not(.eek-has-payment-token):not(.eek-has-gclid) #stickyClosedButton {
+    display: block !important;
+}
+
+/* Hide call button when system inactive (basic mode only) */
+body.eek-system-inactive:not(.eek-has-payment-token):not(.eek-has-gclid) .sticky-call,
+body.eek-system-inactive:not(.eek-has-payment-token):not(.eek-has-gclid) #stickyCallButton {
+    display: none !important;
 }
 
 /* === CRITICAL PAYMENT BLOCK VISIBILITY CONTROL === */
@@ -779,14 +865,16 @@ body.eek-has-payment-token #stripePaymentSticky {
 /* === MORE OPTIONS STATE-BASED VISIBILITY === */
 /* Show after-hours buttons when system is inactive */
 body.eek-system-inactive .eek-emergency-btn.after-hours-btn,
-body.eek-system-inactive .eek-contact-btn.after-hours-btn {
-    display: inline-block;
+body.eek-system-inactive .eek-contact-btn.after-hours-btn,
+body.eek-system-inactive .after-hours-btn {
+    display: inline-block !important;
 }
 
 /* Hide normal hours buttons when system is inactive */
 body.eek-system-inactive .eek-emergency-btn.normal-hours-btn,
-body.eek-system-inactive .eek-contact-btn.normal-hours-btn {
-    display: none;
+body.eek-system-inactive .eek-contact-btn.normal-hours-btn,
+body.eek-system-inactive .normal-hours-btn {
+    display: none !important;
 }
 
 /* === MORE OPTIONS RESPONSIVE DESIGN === */
@@ -891,39 +979,28 @@ footer a {
     
     .hours-section,
     .keywords-highlight,
-    .services {
+    .services,
+    .after-hours-banner,
+    #closedBanner {
         margin: 20px 10px;
     }
     
     .sticky-call,
-    .sticky-payment {
+    .sticky-payment,
+    #stickyCallButton,
+    #stickyClosedButton,
+    #stripePaymentSticky {
         right: 15px;
         bottom: 15px;
         padding: 12px 16px;
         font-size: 1em;
     }
-    
-    .sticky-payment {
-        right: 130px;
-    }
 }
 
 /* === STATE-BASED VISIBILITY CONTROLS === */
-/* These CSS rules are backup - JavaScript handles the main logic */
-
-/* FORCE HIDE banner when URL has GCLID or token parameters */
-#closedBanner {
-    display: none; /* Default hidden, JavaScript will show if needed */
-}
-
-/* NEVER show banner when GCLID or token present - FORCE OVERRIDE */
-body.eek-has-gclid #closedBanner,
-body.eek-has-payment-token #closedBanner {
-    display: none !important;
-}
-
 /* Payment token always overrides everything else */
 body.eek-has-payment-token .sticky-call,
+body.eek-has-payment-token #stickyCallButton,
 body.eek-has-payment-token #stickyClosedButton {
     display: none !important;
 }
@@ -960,7 +1037,11 @@ body.eek-no-payment-token #stripePaymentSticky {
 @media print {
     .sticky-call,
     .sticky-payment,
+    #stickyCallButton,
+    #stickyClosedButton,
+    #stripePaymentSticky,
     .after-hours-banner,
+    #closedBanner,
     #stripePaymentBlock {
         display: none !important;
     }
