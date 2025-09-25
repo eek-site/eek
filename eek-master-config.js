@@ -575,10 +575,84 @@ async function updateUIState() {
     // CRITICAL: Update body classes first to ensure CSS state is correct
     updateBodyStateClasses();
     
+    // Update UI elements based on state
+    updateBannerVisibility();
+    updateButtonVisibility();
+    
     // Update phone numbers
     updatePhoneNumbers();
     
     console.log('✅ Master UI state update completed');
+}
+
+// === BANNER VISIBILITY MANAGEMENT ===
+function updateBannerVisibility() {
+    const banner = document.getElementById('closedBanner');
+    
+    if (!banner) {
+        console.log('⚠️ No closedBanner element found');
+        return;
+    }
+    
+    // Show banner when system is inactive OR after business hours (unless payment token)
+    const shouldShowBanner = (!EEK_STATE.systemActive || !EEK_STATE.duringBusinessHours) && !EEK_STATE.hasPaymentToken;
+    
+    if (shouldShowBanner) {
+        banner.style.display = 'block';
+        console.log('🏷️ Showing after-hours banner');
+    } else {
+        banner.style.display = 'none';
+        console.log('🏷️ Hiding after-hours banner');
+    }
+}
+
+// === BUTTON VISIBILITY MANAGEMENT ===
+function updateButtonVisibility() {
+    const callButton = document.getElementById('stickyCallButton');
+    const closedButton = document.getElementById('stickyClosedButton');
+    const paymentButton = document.getElementById('stripePaymentSticky');
+    
+    // Update "Book Online" buttons
+    const afterHoursButtons = document.querySelectorAll('.after-hours-btn');
+    const normalHoursButtons = document.querySelectorAll('.normal-hours-btn');
+    
+    const shouldShowAfterHours = (!EEK_STATE.systemActive || !EEK_STATE.duringBusinessHours) && !EEK_STATE.hasPaymentToken;
+    
+    afterHoursButtons.forEach(btn => {
+        btn.style.display = shouldShowAfterHours ? 'inline-block' : 'none';
+    });
+    
+    normalHoursButtons.forEach(btn => {
+        btn.style.display = shouldShowAfterHours ? 'none' : 'inline-block';
+    });
+    
+    console.log('📅 Book online buttons:', shouldShowAfterHours ? 'SHOWN' : 'HIDDEN');
+    
+    // Sticky button logic
+    if (EEK_STATE.hasPaymentToken) {
+        // Payment token: only show payment button
+        if (callButton) callButton.style.display = 'none';
+        if (closedButton) closedButton.style.display = 'none';
+        if (paymentButton) {
+            paymentButton.style.display = 'block';
+            paymentButton.style.backgroundColor = '#28a745';
+        }
+        console.log('💳 Payment mode: showing payment button only');
+        
+    } else if (!EEK_STATE.systemActive || !EEK_STATE.duringBusinessHours) {
+        // System inactive or after hours: show "View Hours" button
+        if (callButton) callButton.style.display = 'none';
+        if (paymentButton) paymentButton.style.display = 'none';
+        if (closedButton) closedButton.style.display = 'block';
+        console.log('🕐 After hours mode: showing View Hours button');
+        
+    } else {
+        // Normal hours: show call button
+        if (closedButton) closedButton.style.display = 'none';
+        if (paymentButton) paymentButton.style.display = 'none';
+        if (callButton) callButton.style.display = 'block';
+        console.log('📞 Normal hours mode: showing call button');
+    }
 }
 
 // === BODY STATE CLASS MANAGEMENT ===
@@ -600,39 +674,9 @@ function updateBodyStateClasses() {
     if (EEK_STATE.hasPaymentToken) {
         body.classList.add('eek-has-payment-token');
         console.log('💳 Added eek-has-payment-token class');
-        
-        // Immediately hide call button and show payment button
-        const callButton = document.getElementById('stickyCallButton');
-        const paymentButton = document.getElementById('stripePaymentSticky');
-        
-        if (callButton) {
-            callButton.style.display = 'none';
-            console.log('📞 Hidden call button due to payment token');
-        }
-        
-        if (paymentButton) {
-            paymentButton.style.display = 'block';
-            paymentButton.style.backgroundColor = '#28a745'; // Force green
-            console.log('💳 Shown payment button (green)');
-        }
-        
     } else {
         body.classList.add('eek-no-payment-token');
         console.log('💳 Added eek-no-payment-token class');
-        
-        // Immediately show call button and hide payment button
-        const callButton = document.getElementById('stickyCallButton');
-        const paymentButton = document.getElementById('stripePaymentSticky');
-        
-        if (callButton) {
-            callButton.style.display = 'block';
-            console.log('📞 Shown call button (no payment token)');
-        }
-        
-        if (paymentButton) {
-            paymentButton.style.display = 'none';
-            console.log('💳 Hidden payment button (no payment token)');
-        }
     }
     
     // GCLID classes
