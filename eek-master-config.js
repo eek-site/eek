@@ -616,8 +616,12 @@ function updateButtonVisibility() {
     const afterHoursButtons = document.querySelectorAll('.after-hours-btn');
     const normalHoursButtons = document.querySelectorAll('.normal-hours-btn');
     
+    // Update phone links
+    const phoneLinks = document.querySelectorAll('.phone-link');
+    
     const shouldShowAfterHours = (!EEK_STATE.systemActive || !EEK_STATE.duringBusinessHours) && !EEK_STATE.hasPaymentToken;
     
+    // Show/hide "Book Online" vs normal buttons
     afterHoursButtons.forEach(btn => {
         btn.style.display = shouldShowAfterHours ? 'inline-block' : 'none';
     });
@@ -626,6 +630,14 @@ function updateButtonVisibility() {
         btn.style.display = shouldShowAfterHours ? 'none' : 'inline-block';
     });
     
+    // CRITICAL: Hide phone numbers when system inactive or after hours (unless payment token)
+    const shouldShowPhoneNumbers = (EEK_STATE.systemActive && EEK_STATE.duringBusinessHours) || EEK_STATE.hasPaymentToken;
+    
+    phoneLinks.forEach(link => {
+        link.style.display = shouldShowPhoneNumbers ? 'inline-block' : 'none';
+    });
+    
+    console.log('📞 Phone numbers:', shouldShowPhoneNumbers ? 'SHOWN' : 'HIDDEN');
     console.log('📅 Book online buttons:', shouldShowAfterHours ? 'SHOWN' : 'HIDDEN');
     
     // Sticky button logic
