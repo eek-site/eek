@@ -337,15 +337,31 @@ header .cta-button:hover {
 }
 
 .sticky-payment {
-    right: 150px;
+    right: 15px;
     display: none;
+    background-color: #28a745; /* Green for payment button */
 }
 
-.sticky-call:hover,
 .sticky-payment:hover {
+    background-color: #20a142;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+.sticky-call:hover {
     background-color: #e64a00;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+/* CRITICAL: Hide call button when payment token is present */
+body.eek-has-payment-token .sticky-call {
+    display: none !important;
+}
+
+/* Show payment button when payment token is present */
+body.eek-has-payment-token .sticky-payment {
+    display: block !important;
 }
 
 /* === CRITICAL PAYMENT BLOCK VISIBILITY CONTROL === */
@@ -570,6 +586,33 @@ body.eek-has-gclid .eek-gclid-only {
 
 body.eek-no-gclid .eek-gclid-only {
     display: none;
+}
+
+/* CRITICAL: Payment token button state management */
+/* Default state - show call button, hide payment button */
+body.eek-no-payment-token .sticky-call {
+    display: block !important;
+}
+
+body.eek-no-payment-token .sticky-payment,
+body.eek-no-payment-token #stripePaymentSticky {
+    display: none !important;
+}
+
+/* Payment token state - hide call button, show payment button */
+body.eek-has-payment-token .sticky-call {
+    display: none !important;
+}
+
+body.eek-has-payment-token .sticky-payment,
+body.eek-has-payment-token #stripePaymentSticky {
+    display: block !important;
+    background-color: #28a745 !important; /* Force green color */
+}
+
+body.eek-has-payment-token .sticky-payment:hover,
+body.eek-has-payment-token #stripePaymentSticky:hover {
+    background-color: #20a142 !important;
 }
 
 /* === ACCESSIBILITY === */
