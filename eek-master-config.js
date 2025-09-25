@@ -60,6 +60,7 @@ function injectFallbackStyles() {
             color: var(--eek-text);
             margin: 0;
             padding: 0 0 80px 0;
+            text-align: center;
         }
         
         /* Payment Block Visibility Control */
