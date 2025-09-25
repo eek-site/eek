@@ -459,6 +459,358 @@ body.eek-has-payment-token #stripePaymentSticky {
     background-color: #e64a00;
 }
 
+/* === MORE OPTIONS PAGE STYLES === */
+.eek-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.eek-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.eek-brand-title {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: var(--eek-text);
+}
+
+.eek-brand-tagline {
+    color: var(--eek-text-light);
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+
+.eek-description {
+    color: #555;
+    font-size: 1.1em;
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+/* Emergency Section */
+.eek-emergency-section {
+    background: linear-gradient(135deg, var(--eek-primary), var(--eek-primary-dark));
+    color: var(--eek-text-white);
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.eek-emergency-section h2 {
+    font-size: 1.8em;
+    margin-bottom: 15px;
+}
+
+.eek-emergency-section p {
+    font-size: 1.1em;
+    margin-bottom: 25px;
+    opacity: 0.9;
+}
+
+.eek-emergency-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.eek-emergency-btn {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    color: var(--eek-text-white);
+    text-decoration: none;
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: 2px solid rgba(255,255,255,0.3);
+    transition: var(--eek-transition);
+}
+
+.eek-emergency-btn:hover {
+    background: rgba(255,255,255,0.25);
+    border-color: rgba(255,255,255,0.5);
+    transform: translateY(-2px);
+    color: var(--eek-text-white);
+    text-decoration: none;
+}
+
+.eek-emergency-btn.after-hours-btn {
+    background: var(--eek-success);
+    border-color: var(--eek-success);
+    display: none;
+}
+
+/* Contact Section */
+.eek-contact-section {
+    margin-bottom: 40px;
+}
+
+.eek-section-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.eek-section-header h2 {
+    color: var(--eek-text);
+    font-size: 1.8em;
+    margin-bottom: 10px;
+}
+
+.eek-section-header p {
+    color: var(--eek-text-light);
+    font-size: 1.1em;
+}
+
+.eek-contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.eek-contact-card {
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.eek-contact-card.eek-customers {
+    background: linear-gradient(135deg, #007acc, #0056b3);
+    color: var(--eek-text-white);
+}
+
+.eek-contact-card.eek-suppliers {
+    background: linear-gradient(135deg, var(--eek-success), #1e7e34);
+    color: var(--eek-text-white);
+}
+
+.eek-contact-card.eek-employment {
+    background: linear-gradient(135deg, #ff6b35, #e55a2b);
+    color: var(--eek-text-white);
+}
+
+.eek-contact-card h3 {
+    margin-bottom: 15px;
+    font-size: 1.4em;
+}
+
+.eek-contact-card p {
+    margin-bottom: 20px;
+    opacity: 0.9;
+    font-size: 1em;
+}
+
+.eek-contact-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.eek-contact-btn {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    color: var(--eek-text-white);
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 1em;
+    border: 1px solid rgba(255,255,255,0.3);
+    transition: var(--eek-transition);
+}
+
+.eek-contact-btn:hover {
+    background: rgba(255,255,255,0.25);
+    border-color: rgba(255,255,255,0.5);
+    transform: translateY(-1px);
+    color: var(--eek-text-white);
+    text-decoration: none;
+}
+
+.eek-contact-btn.after-hours-btn {
+    background: var(--eek-success);
+    border-color: var(--eek-success);
+    display: none;
+}
+
+/* Legal Section */
+.eek-legal-section {
+    background: linear-gradient(135deg, #6f42c1, #5a32a3);
+    color: var(--eek-text-white);
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.eek-legal-section h3 {
+    font-size: 1.6em;
+    margin-bottom: 15px;
+}
+
+.eek-legal-section p {
+    font-size: 1.1em;
+    margin-bottom: 25px;
+    opacity: 0.9;
+}
+
+.eek-legal-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.eek-legal-btn {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    color: var(--eek-text-white);
+    text-decoration: none;
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    border: 2px solid rgba(255,255,255,0.3);
+    transition: var(--eek-transition);
+}
+
+.eek-legal-btn:hover {
+    background: rgba(255,255,255,0.25);
+    border-color: rgba(255,255,255,0.5);
+    transform: translateY(-2px);
+    color: var(--eek-text-white);
+    text-decoration: none;
+}
+
+/* Utility Section */
+.eek-utility-section {
+    margin-bottom: 40px;
+}
+
+.eek-utility-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.eek-utility-card {
+    background: var(--eek-bg-light);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: var(--eek-transition);
+    border-left: 4px solid var(--eek-primary);
+    text-align: center;
+}
+
+.eek-utility-card:hover {
+    box-shadow: var(--eek-shadow-lg);
+    transform: translateY(-3px);
+}
+
+.eek-utility-card h3 {
+    color: var(--eek-text);
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.eek-utility-card p {
+    color: var(--eek-text-light);
+    margin-bottom: 20px;
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+.eek-utility-card a {
+    background-color: var(--eek-primary);
+    color: var(--eek-text-white);
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 1em;
+    display: inline-block;
+    transition: var(--eek-transition);
+}
+
+.eek-utility-card a:hover {
+    background-color: var(--eek-primary-hover);
+    transform: translateY(-1px);
+    color: var(--eek-text-white);
+    text-decoration: none;
+}
+
+/* Footer */
+.eek-footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid var(--eek-border);
+}
+
+.eek-footer a {
+    color: var(--eek-text-light);
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 0.95em;
+}
+
+.eek-footer a:hover {
+    color: var(--eek-primary);
+}
+
+/* === MORE OPTIONS STATE-BASED VISIBILITY === */
+/* Show after-hours buttons when system is inactive */
+body.eek-system-inactive .eek-emergency-btn.after-hours-btn,
+body.eek-system-inactive .eek-contact-btn.after-hours-btn {
+    display: inline-block;
+}
+
+/* Hide normal hours buttons when system is inactive */
+body.eek-system-inactive .eek-emergency-btn.normal-hours-btn,
+body.eek-system-inactive .eek-contact-btn.normal-hours-btn {
+    display: none;
+}
+
+/* === MORE OPTIONS RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+    .eek-container {
+        padding: 20px;
+        margin: 10px;
+    }
+    
+    .eek-brand-title {
+        font-size: 2em;
+    }
+    
+    .eek-contact-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .eek-utility-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .eek-emergency-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .eek-emergency-btn {
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .eek-legal-buttons {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* === UTILITY CLASSES === */
 .eek-hidden {
     display: none !important;
