@@ -1,848 +1,798 @@
 /**
- * Eek Mobile Mechanical - Master Style Guide (Corrected)
- * Comprehensive styling framework with original Eek branding
- * Version: 2.1 - Corrected with proper JavaScript/CSS separation
- * 
- * CORRECTED VERSION: State-based classes for JavaScript control
+ * Eek Mobile Mechanical - Complete Style Guide
+ * Master CSS file with payment token visibility fixes
  */
 
-/* === CORE VARIABLES === */
+/* === CSS VARIABLES === */
 :root {
-    /* Brand Colors - Eek Mobile Mechanical */
     --eek-primary: #ff5500;
     --eek-primary-hover: #e64a00;
     --eek-primary-light: #ff7733;
-    --eek-secondary: #333;
-    --eek-text: #333;
-    --eek-text-light: #666;
-    --eek-text-muted: #999;
+    --eek-primary-dark: #cc4400;
     
-    /* Status Colors */
     --eek-success: #28a745;
     --eek-success-hover: #20a142;
-    --eek-warning: #ff8c00;
-    --eek-danger: #ff3333;
-    --eek-info: #007acc;
     
-    /* Background Colors */
+    --eek-danger: #dc3545;
+    --eek-danger-hover: #c82333;
+    
+    --eek-warning: #ffc107;
+    --eek-warning-hover: #e0a800;
+    
+    --eek-info: #17a2b8;
+    --eek-info-hover: #138496;
+    
     --eek-bg-body: #f5f5f5;
     --eek-bg-white: #ffffff;
     --eek-bg-light: #f8f9fa;
-    --eek-bg-accent: #e8f4f8;
+    --eek-bg-dark: #343a40;
     
-    /* Eek-specific UI Colors */
-    --eek-hours-bg: #e8f4f8;
-    --eek-hours-border: #ff5500;
-    --eek-after-hours-text: #ff3333;
-    --eek-service-text: #222;
+    --eek-text: #333333;
+    --eek-text-light: #666666;
+    --eek-text-muted: #888888;
+    --eek-text-white: #ffffff;
     
-    /* Gradients */
-    --eek-gradient-primary: linear-gradient(135deg, #ff5500, #ff7733);
-    --eek-gradient-emergency: linear-gradient(135deg, #ff3333, #ff5500);
-    --eek-gradient-success: linear-gradient(135deg, #28a745, #20a142);
-    --eek-gradient-info: linear-gradient(135deg, #007acc, #0056b3);
-    --eek-gradient-warning: linear-gradient(135deg, #ff8c00, #ff6b00);
-    --eek-gradient-muted: linear-gradient(135deg, #666, #888);
-    --eek-gradient-busy: linear-gradient(135deg, #ff8c00, #ff6b00);
-    --eek-gradient-closed: linear-gradient(135deg, #666, #888);
+    --eek-border: #dee2e6;
+    --eek-border-light: #f0f0f0;
     
-    /* Shadows */
-    --eek-shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-    --eek-shadow-md: 0 4px 8px rgba(0,0,0,0.1);
-    --eek-shadow-lg: 0 6px 12px rgba(0,0,0,0.15);
-    --eek-shadow-xl: 0 8px 16px rgba(0,0,0,0.2);
-    --eek-shadow-button: 0 4px 6px rgba(0,0,0,0.2);
+    --eek-shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    --eek-shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+    --eek-shadow-lg: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
+    --eek-shadow-xl: 0 20px 25px rgba(0,0,0,0.15), 0 10px 10px rgba(0,0,0,0.04);
     
-    /* Eek-specific Shadows */
-    --eek-shadow-brand-image: 0 4px 8px rgba(0,0,0,0.1);
-    --eek-shadow-service-card: 0 4px 8px rgba(0,0,0,0.05);
-    --eek-shadow-service-hover: 0 6px 12px rgba(0,0,0,0.15);
-    --eek-shadow-pulse-start: 0 4px 12px rgba(255,51,51,0.3);
-    --eek-shadow-pulse-mid: 0 4px 20px rgba(255,51,51,0.5);
-    
-    /* Spacing */
-    --eek-spacing-xs: 5px;
-    --eek-spacing-sm: 10px;
-    --eek-spacing-md: 15px;
-    --eek-spacing-lg: 20px;
-    --eek-spacing-xl: 30px;
-    --eek-spacing-2xl: 40px;
-    
-    /* Border Radius */
     --eek-radius-sm: 4px;
     --eek-radius-md: 8px;
     --eek-radius-lg: 12px;
     --eek-radius-xl: 16px;
     --eek-radius-full: 50px;
     
-    /* Typography */
-    --eek-font-family: 'Segoe UI', sans-serif;
-    --eek-font-size-xs: 0.8em;
-    --eek-font-size-sm: 0.9em;
-    --eek-font-size-base: 1em;
-    --eek-font-size-lg: 1.1em;
-    --eek-font-size-xl: 1.2em;
-    --eek-font-size-2xl: 1.5em;
-    --eek-font-size-3xl: 1.8em;
-    --eek-font-size-4xl: 2.2em;
-    --eek-font-size-5xl: 2.5em;
+    --eek-space-xs: 4px;
+    --eek-space-sm: 8px;
+    --eek-space-md: 16px;
+    --eek-space-lg: 24px;
+    --eek-space-xl: 32px;
+    --eek-space-xxl: 48px;
     
-    /* Layout */
-    --eek-max-width: 900px;
-    --eek-header-max-width: 800px;
-    --eek-container-padding: 40px;
-    --eek-container-padding-mobile: 20px;
+    --eek-font-xs: 0.75rem;
+    --eek-font-sm: 0.875rem;
+    --eek-font-base: 1rem;
+    --eek-font-lg: 1.125rem;
+    --eek-font-xl: 1.25rem;
+    --eek-font-2xl: 1.5rem;
+    --eek-font-3xl: 1.875rem;
+    --eek-font-4xl: 2.25rem;
     
-    /* Eek-specific measurements */
-    --eek-brand-image-max-width: 300px;
-    --eek-service-card-min-width: 250px;
+    --eek-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --eek-transition-fast: all 0.15s ease-in-out;
 }
 
-/* === RESET & BASE === */
+/* === RESET AND BASE STYLES === */
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    font-family: var(--eek-font-family);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--eek-bg-body);
     color: var(--eek-text);
+    margin: 0;
+    padding: 0 0 80px 0;
     line-height: 1.6;
-    min-height: 100vh;
-    padding-bottom: 80px; /* Space for sticky buttons */
-    text-align: center; /* Eek default center alignment */
+    font-size: var(--eek-font-base);
 }
 
 /* === UTILITY CLASSES === */
-.eek-hidden { 
-    display: none !important; 
-}
-
-.eek-visible { 
-    display: block !important; 
-}
-
-.eek-text-center { 
-    text-align: center; 
-}
-
-/* === STATE-BASED VISIBILITY CONTROLS === */
-
-/* System State Controls */
-.eek-system-active .after-hours-only {
+.eek-hidden {
     display: none !important;
 }
 
-.eek-system-inactive .normal-hours-only {
-    display: none !important;
-}
-
-/* Payment Token Controls */
-.eek-has-payment-token .no-token-only {
-    display: none !important;
-}
-
-.eek-no-payment-token .token-only {
-    display: none !important;
-}
-
-.eek-has-payment-token #stripePaymentBlock {
+.eek-visible {
     display: block !important;
 }
 
-.eek-no-payment-token #stripePaymentBlock {
-    display: none !important;
-}
-
-/* GCLID Controls */
-.eek-has-gclid .no-gclid-only {
-    display: none !important;
-}
-
-.eek-no-gclid .gclid-only {
-    display: none !important;
-}
-
-/* Business Hours Controls */
-.eek-during-business-hours .after-hours-only {
-    display: none !important;
-}
-
-.eek-after-hours .business-hours-only {
-    display: none !important;
-}
-
-/* Sticky Button Visibility Controls */
-.eek-has-payment-token .sticky-call,
-.eek-has-payment-token #stickyCallButton {
-    display: none !important;
-}
-
-.eek-system-active .sticky-call,
-.eek-system-active #stickyCallButton {
-    display: inline-block !important;
-}
-
-.eek-system-inactive .sticky-call,
-.eek-system-inactive #stickyCallButton {
-    display: none !important;
-}
-
-/* Sticky Closed Button Logic */
-.eek-system-active #stickyClosedButton,
-.eek-has-payment-token #stickyClosedButton,
-.eek-has-gclid #stickyClosedButton {
-    display: none !important;
-}
-
-.eek-system-inactive.eek-no-payment-token.eek-no-gclid #stickyClosedButton {
-    display: inline-block !important;
-}
-
-/* Sticky Payment Button */
-.eek-has-payment-token #stripePaymentSticky {
-    display: inline-block !important;
-}
-
-.eek-no-payment-token #stripePaymentSticky {
-    display: none !important;
-}
-
-/* Banner Controls */
-.eek-has-payment-token #closedBanner,
-.eek-has-gclid #closedBanner {
-    display: none !important;
-}
-
-.eek-system-active #closedBanner {
-    display: none !important;
-}
-
-.eek-system-inactive.eek-no-payment-token.eek-no-gclid #closedBanner {
-    display: block !important;
-}
-
-/* Button State Controls */
-.eek-has-payment-token .normal-hours-btn,
-.eek-has-payment-token .after-hours-btn {
-    display: none !important;
-}
-
-.eek-system-active .normal-hours-btn {
-    display: inline-block !important;
-}
-
-.eek-system-active .after-hours-btn {
-    display: none !important;
-}
-
-.eek-system-inactive .normal-hours-btn {
-    display: none !important;
-}
-
-.eek-system-inactive .after-hours-btn {
-    display: inline-block !important;
-}
-
-/* === TYPOGRAPHY === */
-h1, h2, h3, h4, h5, h6 {
-    font-weight: 600;
-    line-height: 1.3;
-    margin-bottom: 0.5em;
-}
-
-h1 { 
-    font-size: var(--eek-font-size-3xl);
-    margin: 0.5em 0 0.2em;
-    color: var(--eek-text);
-}
-
-h2 { 
-    font-size: var(--eek-font-size-2xl);
-    margin-top: 0;
-    color: var(--eek-service-text);
-}
-
-h3 { font-size: var(--eek-font-size-xl); }
-h4 { font-size: var(--eek-font-size-lg); }
-
-p {
-    margin-bottom: 1em;
-    line-height: 1.6;
-}
-
-p.tagline {
-    font-size: var(--eek-font-size-xl);
-    color: var(--eek-text-light);
-}
-
-a {
-    color: var(--eek-primary);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-a:hover {
-    color: var(--eek-primary-hover);
-    text-decoration: underline;
-}
-
-/* === EEK ORIGINAL LAYOUT COMPONENTS === */
-
-/* Header */
-header {
-    background: var(--eek-bg-white);
-    padding: var(--eek-spacing-lg);
-    max-width: var(--eek-header-max-width);
-    margin: 0 auto;
-}
-
-header img {
-    max-width: var(--eek-brand-image-max-width);
-    height: auto;
-    border-radius: var(--eek-radius-lg);
-    box-shadow: var(--eek-shadow-brand-image);
-}
-
-.business-name {
-    font-size: var(--eek-font-size-5xl);
-    font-weight: bold;
-    color: var(--eek-primary);
-    margin: 0.3em 0;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-}
-
-/* Service Selection Section */
-.keywords-highlight {
-    background: var(--eek-gradient-primary);
-    color: white;
-    padding: 25px;
-    margin: var(--eek-spacing-lg) auto;
-    border-radius: var(--eek-radius-lg);
-    box-shadow: var(--eek-shadow-md);
-    max-width: var(--eek-header-max-width);
-}
-
-.keywords-highlight h2 {
-    margin-top: 0;
-    color: white;
-}
-
-.keywords-highlight p {
-    color: white;
-}
-
-.service-keywords {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(var(--eek-service-card-min-width), 1fr));
-    gap: var(--eek-spacing-md);
-    margin-top: var(--eek-spacing-lg);
-}
-
-.keyword-item {
-    background: rgba(255,255,255,0.15);
-    padding: var(--eek-spacing-md);
-    border-radius: var(--eek-radius-md);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.3);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.keyword-item:hover {
-    background: rgba(255,255,255,0.25);
-    transform: translateY(-2px);
-    box-shadow: var(--eek-shadow-service-hover);
-}
-
-.keyword-item h4 {
-    margin: 0 0 8px 0;
-    font-size: var(--eek-font-size-lg);
-}
-
-.keyword-item p {
-    margin: 0;
-    font-size: var(--eek-font-size-sm);
-    opacity: 0.9;
-}
-
-/* Service Detail Sections */
-.services {
-    background: var(--eek-bg-white);
-    margin: var(--eek-spacing-lg) auto;
-    padding: var(--eek-spacing-lg);
-    border-radius: var(--eek-radius-lg);
-    box-shadow: var(--eek-shadow-service-card);
-    max-width: var(--eek-header-max-width);
-}
-
-.services h2 {
-    color: var(--eek-service-text);
-}
-
-.services ul {
-    list-style: none;
-    padding: 0;
-    font-size: var(--eek-font-size-lg);
-}
-
-.services li {
-    padding: 8px 0;
-}
-
-/* Buttons */
-.cta-button {
-    display: inline-block;
-    background-color: var(--eek-primary);
-    color: white;
-    padding: 15px 25px;
-    margin: var(--eek-spacing-lg) auto;
-    font-size: var(--eek-font-size-xl);
-    border-radius: var(--eek-radius-md);
-    text-decoration: none;
-    box-shadow: var(--eek-shadow-button);
-    transition: all 0.3s ease;
-}
-
-.cta-button:hover {
-    background-color: var(--eek-primary-hover);
-    color: white;
-    text-decoration: none;
-}
-
-/* Button Groups */
-.eek-btn-group,
-div[style*="display: flex"] {
+.eek-flex {
     display: flex;
-    flex-wrap: wrap;
+}
+
+.eek-flex-center {
+    display: flex;
     justify-content: center;
-    gap: var(--eek-spacing-md);
-    margin-top: var(--eek-spacing-md);
-}
-
-/* Emergency Buttons */
-.emergency-btn {
-    display: inline-block;
-    background: rgba(255,255,255,0.25);
-    color: white;
-    padding: 15px 30px;
-    margin: var(--eek-spacing-sm);
-    font-size: 1.3em;
-    border-radius: var(--eek-radius-md);
-    text-decoration: none;
-    border: 2px solid white;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.emergency-btn:hover {
-    background: white;
-    color: var(--eek-danger);
-    transform: translateY(-2px);
-    box-shadow: var(--eek-shadow-lg);
-    text-decoration: none;
-}
-
-/* Service Links */
-.service-link {
-    text-decoration: none;
-    color: inherit;
-}
-
-.service-link:hover {
-    text-decoration: none;
-    color: inherit;
-}
-
-/* Hours Section */
-.hours-section {
-    background: var(--eek-hours-bg);
-    padding: var(--eek-spacing-md);
-    margin: var(--eek-spacing-lg) auto;
-    border-radius: var(--eek-radius-md);
-    border-left: 4px solid var(--eek-hours-border);
-    max-width: var(--eek-header-max-width);
-}
-
-.hours-section h3 {
-    margin: 0 0 var(--eek-spacing-sm) 0;
-    color: var(--eek-text);
-}
-
-.hours-text {
-    font-size: var(--eek-font-size-lg);
-    color: var(--eek-text-light);
-    font-weight: bold;
-}
-
-.after-hours-text {
-    font-size: var(--eek-font-size-base);
-    color: var(--eek-after-hours-text);
-    font-weight: bold;
-    margin: var(--eek-spacing-sm) 0;
-}
-
-/* === BANNERS === */
-.after-hours-banner {
-    background: var(--eek-gradient-emergency);
-    color: white;
-    padding: var(--eek-spacing-lg);
-    margin: 0 auto var(--eek-spacing-lg);
-    max-width: var(--eek-header-max-width);
-    border-radius: var(--eek-radius-lg);
-    box-shadow: var(--eek-shadow-pulse-start);
-    animation: eek-pulse 2s infinite;
-    text-align: center;
-}
-
-/* Banner State Variants */
-.after-hours-banner.eek-banner-busy {
-    background: var(--eek-gradient-busy);
-}
-
-.after-hours-banner.eek-banner-closed {
-    background: var(--eek-gradient-closed);
-}
-
-@keyframes eek-pulse {
-    0%, 100% { box-shadow: var(--eek-shadow-pulse-start); }
-    50% { box-shadow: var(--eek-shadow-pulse-mid); }
-}
-
-.after-hours-banner h2 {
-    margin: 0 0 var(--eek-spacing-sm) 0;
-    font-size: 1.6em;
-    color: white;
-}
-
-.after-hours-banner p {
-    margin: var(--eek-spacing-sm) 0;
-    font-size: var(--eek-font-size-lg);
-    color: white;
-}
-
-/* === PAYMENT SECTION (CORRECTED) === */
-.eek-payment-block {
-    background-color: var(--eek-bg-white);
-    padding: var(--eek-spacing-lg);
-    text-align: center;
-    color: var(--eek-text);
-    border-bottom: 2px solid var(--eek-primary);
-}
-
-.eek-payment-content {
-    background-color: #f5f5f5;
-    padding: 30px;
-    border-radius: var(--eek-radius-lg);
-    max-width: 700px;
-    margin: auto;
-    box-shadow: var(--eek-shadow-sm);
-}
-
-.eek-payment-content h1 {
-    font-size: 2.2em;
-    margin-bottom: 0.5em;
-    color: var(--eek-text);
-}
-
-.eek-payment-subtitle {
-    font-size: 1.2em;
-    margin-bottom: 1.5em;
-    color: var(--eek-text-light);
-}
-
-.eek-terms-label {
-    font-size: 1.1em;
-    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    color: var(--eek-text);
-    margin-bottom: var(--eek-spacing-lg);
 }
 
-.eek-terms-label input[type="checkbox"] {
-    transform: scale(1.5);
-}
-
-.eek-terms-label a {
-    color: var(--eek-primary);
-    text-decoration: underline;
-}
-
-/* === STICKY ELEMENTS (CORRECTED) === */
-.sticky-call, .sticky-payment {
-    position: fixed;
-    bottom: 15px;
-    right: 15px;
-    background-color: var(--eek-primary);
-    color: white;
-    font-size: var(--eek-font-size-lg);
-    padding: 14px 20px;
-    border-radius: var(--eek-radius-full);
-    box-shadow: var(--eek-shadow-xl);
-    text-decoration: none;
-    z-index: 999;
-    transition: all 0.3s ease;
-    font-weight: 600;
-}
-
-.sticky-call:hover, .sticky-payment:hover {
-    background-color: var(--eek-primary-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-    color: white;
-    text-decoration: none;
-}
-
-.sticky-payment, #stripePaymentSticky {
-    right: 150px;
-    background-color: var(--eek-success);
-}
-
-.sticky-payment:hover, #stripePaymentSticky:hover {
-    background-color: var(--eek-success-hover);
-}
-
-/* Sticky Closed Button Styling */
-.eek-sticky-closed, #stickyClosedButton {
-    position: fixed;
-    bottom: 15px;
-    right: 15px;
-    background-color: #666;
-    color: white;
-    font-size: var(--eek-font-size-lg);
-    padding: 14px 20px;
-    border-radius: var(--eek-radius-full);
-    box-shadow: var(--eek-shadow-xl);
-    text-decoration: none;
-    z-index: 999;
-    transition: all 0.3s ease;
-    font-weight: 600;
-}
-
-.eek-sticky-closed:hover, #stickyClosedButton:hover {
-    background-color: #555;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-    color: white;
-    text-decoration: none;
-}
-
-/* === FOOTER === */
-footer {
-    font-size: var(--eek-font-size-sm);
-    color: var(--eek-text-muted);
-    padding: var(--eek-spacing-lg) 0;
+.eek-text-center {
     text-align: center;
 }
 
-footer a {
-    color: var(--eek-text-light);
-    margin: 0 var(--eek-spacing-md);
+.eek-text-left {
+    text-align: left;
 }
 
-footer a:hover {
-    color: var(--eek-primary);
+.eek-text-right {
+    text-align: right;
 }
 
-/* === WIDGET STYLING === */
-/* RevU widget container styling */
-.services [data-bid] {
-    max-height: 400px;
-    overflow-y: auto;
-    border: 1px solid #e0e0e0;
-    border-radius: var(--eek-radius-md);
-    padding: var(--eek-spacing-md);
-    background: #fafafa;
-    margin-top: var(--eek-spacing-md);
+.eek-w-full {
+    width: 100%;
 }
 
-/* Style the RevU widget content */
-.services [data-bid] * {
-    max-width: 100% !important;
-    box-sizing: border-box;
+.eek-h-full {
+    height: 100%;
 }
 
-/* === SPECIALIZED COMPONENTS FOR OTHER PAGES === */
-
-/* Container system for other pages (not index) */
-.eek-container {
-    max-width: var(--eek-max-width);
-    margin: 0 auto;
-    padding: var(--eek-container-padding);
-    background: var(--eek-bg-white);
-    border-radius: var(--eek-radius-lg);
-    box-shadow: var(--eek-shadow-md);
+/* === CRITICAL PAYMENT BLOCK VISIBILITY CONTROL === */
+/* Hide payment block by default */
+#stripePaymentBlock {
+    display: none !important;
 }
 
-.eek-header {
-    background: var(--eek-bg-white);
-    padding: var(--eek-spacing-lg);
-    max-width: var(--eek-header-max-width);
-    margin: 0 auto;
-    text-align: center;
+/* Show payment block only when body has payment token class */
+body.eek-has-payment-token #stripePaymentBlock {
+    display: block !important;
 }
 
-.eek-section {
-    margin: var(--eek-spacing-lg) auto;
-    padding: var(--eek-spacing-lg);
-    background: var(--eek-bg-white);
-    border-radius: var(--eek-radius-lg);
-    box-shadow: var(--eek-shadow-sm);
-    max-width: var(--eek-header-max-width);
+/* Hide sticky payment button by default */
+#stripePaymentSticky {
+    display: none !important;
 }
 
-/* Generic components */
+/* Show sticky payment button only when body has payment token class */
+body.eek-has-payment-token #stripePaymentSticky {
+    display: block !important;
+}
+
+/* Ensure pay button is hidden by default */
+#payNowButton.eek-hidden {
+    display: none !important;
+}
+
+/* Additional safety classes for payment UI */
+.eek-payment-block.eek-hidden {
+    display: none !important;
+}
+
+.sticky-payment.eek-hidden {
+    display: none !important;
+}
+
+/* === BUTTON STYLES === */
 .eek-btn {
     display: inline-block;
-    padding: 14px 24px;
-    font-size: var(--eek-font-size-base);
+    padding: var(--eek-space-md) var(--eek-space-lg);
+    border: none;
+    border-radius: var(--eek-radius-lg);
+    font-size: var(--eek-font-base);
     font-weight: 600;
     text-align: center;
     text-decoration: none;
-    border: none;
-    border-radius: var(--eek-radius-md);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: var(--eek-transition);
     box-shadow: var(--eek-shadow-sm);
 }
 
 .eek-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--eek-shadow-lg);
-    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: var(--eek-shadow-md);
+}
+
+.eek-btn:active {
+    transform: translateY(0);
+    box-shadow: var(--eek-shadow-sm);
 }
 
 .eek-btn-primary {
     background-color: var(--eek-primary);
-    color: white;
+    color: var(--eek-text-white);
 }
 
 .eek-btn-primary:hover {
     background-color: var(--eek-primary-hover);
-    color: white;
 }
 
 .eek-btn-success {
     background-color: var(--eek-success);
-    color: white;
+    color: var(--eek-text-white);
 }
 
 .eek-btn-success:hover {
     background-color: var(--eek-success-hover);
-    color: white;
 }
 
-/* === BRAND ELEMENTS === */
-.eek-brand-image {
-    max-width: var(--eek-brand-image-max-width);
-    height: auto;
+.eek-btn-danger {
+    background-color: var(--eek-danger);
+    color: var(--eek-text-white);
+}
+
+.eek-btn-danger:hover {
+    background-color: var(--eek-danger-hover);
+}
+
+.eek-btn-lg {
+    padding: var(--eek-space-lg) var(--eek-space-xl);
+    font-size: var(--eek-font-lg);
+}
+
+.eek-btn-sm {
+    padding: var(--eek-space-sm) var(--eek-space-md);
+    font-size: var(--eek-font-sm);
+}
+
+/* === PAYMENT BLOCK STYLES === */
+.eek-payment-block {
+    background: linear-gradient(135deg, var(--eek-primary) 0%, var(--eek-primary-dark) 100%);
+    color: var(--eek-text-white);
+    padding: var(--eek-space-xxl);
+    text-align: center;
+    box-shadow: var(--eek-shadow-lg);
+    margin-bottom: var(--eek-space-lg);
+}
+
+.eek-payment-content {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.eek-payment-content h1 {
+    font-size: var(--eek-font-3xl);
+    font-weight: 700;
+    margin-bottom: var(--eek-space-md);
+}
+
+.eek-payment-subtitle {
+    font-size: var(--eek-font-lg);
+    opacity: 0.9;
+    margin-bottom: var(--eek-space-xl);
+}
+
+.eek-terms-label {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--eek-space-sm);
+    margin-bottom: var(--eek-space-lg);
+    text-align: left;
+}
+
+.eek-terms-label input[type="checkbox"] {
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.eek-terms-label a {
+    color: var(--eek-text-white);
+    text-decoration: underline;
+}
+
+.eek-terms-label a:hover {
+    opacity: 0.8;
+}
+
+/* === BANNER STYLES === */
+.after-hours-banner {
+    background: linear-gradient(45deg, var(--eek-danger) 0%, #ff6b35 100%);
+    color: var(--eek-text-white);
+    padding: var(--eek-space-xl);
+    text-align: center;
+    box-shadow: var(--eek-shadow-lg);
+    margin-bottom: var(--eek-space-lg);
+}
+
+.after-hours-banner h2 {
+    font-size: var(--eek-font-2xl);
+    font-weight: 700;
+    margin-bottom: var(--eek-space-md);
+}
+
+.after-hours-banner p {
+    margin-bottom: var(--eek-space-sm);
+}
+
+.emergency-btn {
+    display: inline-block;
+    background-color: var(--eek-text-white);
+    color: var(--eek-danger);
+    padding: var(--eek-space-md) var(--eek-space-xl);
+    border-radius: var(--eek-radius-full);
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: var(--eek-space-md);
+    transition: var(--eek-transition);
+    box-shadow: var(--eek-shadow-md);
+}
+
+.emergency-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--eek-shadow-lg);
+}
+
+/* Banner state variations */
+.eek-banner-busy {
+    background: linear-gradient(45deg, var(--eek-warning) 0%, #ffb347 100%);
+    color: var(--eek-text);
+}
+
+.eek-banner-closed {
+    background: linear-gradient(45deg, var(--eek-info) 0%, #4a90e2 100%);
+}
+
+/* === STICKY BUTTONS === */
+.sticky-call,
+.sticky-payment {
+    position: fixed;
+    bottom: var(--eek-space-lg);
+    right: var(--eek-space-lg);
+    background-color: var(--eek-primary);
+    color: var(--eek-text-white);
+    padding: var(--eek-space-md) var(--eek-space-lg);
+    border-radius: var(--eek-radius-full);
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: var(--eek-shadow-lg);
+    z-index: 1000;
+    transition: var(--eek-transition);
+    display: flex;
+    align-items: center;
+    gap: var(--eek-space-sm);
+}
+
+.sticky-call:hover,
+.sticky-payment:hover {
+    background-color: var(--eek-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--eek-shadow-xl);
+}
+
+/* Sticky button positioning adjustments */
+.sticky-call {
+    bottom: var(--eek-space-lg);
+}
+
+.sticky-payment {
+    bottom: calc(var(--eek-space-lg) + 60px);
+}
+
+/* State-based sticky button visibility */
+body.eek-system-active .sticky-call {
+    display: flex;
+}
+
+body.eek-system-inactive .sticky-call {
+    display: none;
+}
+
+body.eek-system-inactive .eek-sticky-closed {
+    display: flex !important;
+    background-color: var(--eek-info);
+}
+
+body.eek-system-inactive .eek-sticky-closed:hover {
+    background-color: var(--eek-info-hover);
+}
+
+/* === PHONE LINK STYLES === */
+.phone-link {
+    color: inherit;
+    text-decoration: none;
+    transition: var(--eek-transition);
+}
+
+.phone-link:hover {
+    opacity: 0.8;
+}
+
+.phone-display {
+    font-weight: 600;
+}
+
+/* === SERVICE SELECTION STYLES === */
+#service-selection {
+    background-color: var(--eek-bg-white);
+    padding: var(--eek-space-xl);
     border-radius: var(--eek-radius-lg);
     box-shadow: var(--eek-shadow-md);
-    margin-bottom: var(--eek-spacing-md);
+    margin: var(--eek-space-lg) 0;
 }
 
-/* Support for different logo variants */
-.eek-brand-image.brand-image {
-    /* Standard brand image styling */
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--eek-space-lg);
+    margin-top: var(--eek-space-lg);
 }
 
-.eek-brand-image.sweet-ride {
-    /* Sweet ride variant styling - could be different size/styling */
-    max-width: 280px;
+.service-card {
+    background-color: var(--eek-bg-light);
+    padding: var(--eek-space-lg);
+    border-radius: var(--eek-radius-lg);
+    border: 2px solid transparent;
+    transition: var(--eek-transition);
+    text-decoration: none;
+    color: inherit;
 }
 
-.eek-brand-image.lemon {
-    /* Lemon variant styling - could be different size/styling */  
-    max-width: 250px;
+.service-card:hover {
+    border-color: var(--eek-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--eek-shadow-md);
 }
 
-.eek-business-name {
-    font-size: var(--eek-font-size-5xl);
-    font-weight: bold;
+.service-card h3 {
     color: var(--eek-primary);
-    margin: 0.3em 0;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    margin-bottom: var(--eek-space-sm);
 }
 
-.eek-tagline {
-    font-size: var(--eek-font-size-xl);
+.service-card p {
+    margin-bottom: var(--eek-space-md);
     color: var(--eek-text-light);
-    margin-bottom: var(--eek-spacing-xl);
+}
+
+.service-price {
+    font-weight: 700;
+    color: var(--eek-success);
+    font-size: var(--eek-font-lg);
+}
+
+/* === LOGO STYLES === */
+.eek-brand-image {
+    max-height: 60px;
+    width: auto;
+    transition: var(--eek-transition);
+}
+
+.eek-brand-image:hover {
+    opacity: 0.8;
+}
+
+/* Logo variations */
+.brand-image {
+    /* Default logo styles */
+}
+
+.sweet-ride {
+    /* Sweet ride logo specific styles */
+    filter: hue-rotate(45deg);
+}
+
+.lemon {
+    /* Lemon logo specific styles */
+    filter: hue-rotate(90deg);
+}
+
+/* === FORM STYLES === */
+.eek-form-group {
+    margin-bottom: var(--eek-space-lg);
+}
+
+.eek-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: var(--eek-space-sm);
+    color: var(--eek-text);
+}
+
+.eek-input,
+.eek-textarea,
+.eek-select {
+    width: 100%;
+    padding: var(--eek-space-md);
+    border: 2px solid var(--eek-border);
+    border-radius: var(--eek-radius-md);
+    font-size: var(--eek-font-base);
+    transition: var(--eek-transition);
+}
+
+.eek-input:focus,
+.eek-textarea:focus,
+.eek-select:focus {
+    outline: none;
+    border-color: var(--eek-primary);
+    box-shadow: 0 0 0 3px rgba(255, 85, 0, 0.1);
+}
+
+.eek-textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* === CARD STYLES === */
+.eek-card {
+    background-color: var(--eek-bg-white);
+    border-radius: var(--eek-radius-lg);
+    box-shadow: var(--eek-shadow-md);
+    overflow: hidden;
+    transition: var(--eek-transition);
+}
+
+.eek-card:hover {
+    box-shadow: var(--eek-shadow-lg);
+    transform: translateY(-2px);
+}
+
+.eek-card-header {
+    padding: var(--eek-space-lg);
+    border-bottom: 1px solid var(--eek-border-light);
+    background-color: var(--eek-bg-light);
+}
+
+.eek-card-body {
+    padding: var(--eek-space-lg);
+}
+
+.eek-card-footer {
+    padding: var(--eek-space-lg);
+    border-top: 1px solid var(--eek-border-light);
+    background-color: var(--eek-bg-light);
+}
+
+/* === ALERT STYLES === */
+.eek-alert {
+    padding: var(--eek-space-md);
+    border-radius: var(--eek-radius-md);
+    margin-bottom: var(--eek-space-lg);
+}
+
+.eek-alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.eek-alert-danger {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.eek-alert-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+}
+
+.eek-alert-info {
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+}
+
+/* === LOADING STYLES === */
+.eek-loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--eek-text-white);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
 
 /* === RESPONSIVE DESIGN === */
 @media (max-width: 768px) {
-    .service-keywords {
+    body {
+        padding-bottom: 100px;
+    }
+    
+    .sticky-call,
+    .sticky-payment {
+        right: var(--eek-space-md);
+        bottom: var(--eek-space-md);
+        padding: var(--eek-space-sm) var(--eek-space-md);
+        font-size: var(--eek-font-sm);
+    }
+    
+    .sticky-payment {
+        bottom: calc(var(--eek-space-md) + 50px);
+    }
+    
+    .after-hours-banner,
+    .eek-payment-block {
+        padding: var(--eek-space-lg);
+    }
+    
+    .service-grid {
         grid-template-columns: 1fr;
     }
     
-    .business-name, .eek-business-name {
-        font-size: var(--eek-font-size-4xl);
-    }
-    
-    header, .eek-header {
-        margin: 0 var(--eek-spacing-sm);
-    }
-    
-    .hours-section, .keywords-highlight, .services, .eek-section {
-        margin: var(--eek-spacing-lg) var(--eek-spacing-sm);
-    }
-    
-    .eek-container {
-        padding: var(--eek-container-padding-mobile);
-        margin: var(--eek-spacing-sm);
-    }
-    
-    .sticky-call, .sticky-payment, .eek-sticky-closed,
-    #stickyCallButton, #stripePaymentSticky, #stickyClosedButton {
-        font-size: var(--eek-font-size-base);
-        padding: 12px 18px;
-        bottom: 10px;
-        right: 10px;
-    }
-    
-    .sticky-payment, #stripePaymentSticky {
-        right: 120px;
+    .eek-payment-content h1 {
+        font-size: var(--eek-font-2xl);
     }
 }
 
 @media (max-width: 480px) {
-    .business-name, .eek-business-name {
-        font-size: var(--eek-font-size-3xl);
-    }
-    
-    .eek-payment-content {
-        padding: var(--eek-spacing-lg);
-        margin: var(--eek-spacing-sm);
-    }
-    
     .eek-payment-content h1 {
-        font-size: 1.8em;
+        font-size: var(--eek-font-xl);
     }
     
-    .eek-payment-subtitle {
-        font-size: 1.1em;
+    .after-hours-banner h2 {
+        font-size: var(--eek-font-xl);
+    }
+    
+    .eek-btn-lg {
+        padding: var(--eek-space-md) var(--eek-space-lg);
+        font-size: var(--eek-font-base);
     }
 }
 
-/* === DEBUG HELPERS (for development) === */
-.eek-debug-state::after {
-    content: 'System: ' attr(data-system-state) ', Hours: ' attr(data-hours-state) ', Token: ' attr(data-token-state);
+/* === STATE-BASED VISIBILITY CONTROLS === */
+
+/* System active/inactive states */
+body.eek-system-active .eek-system-active-only {
+    display: block;
+}
+
+body.eek-system-inactive .eek-system-active-only {
+    display: none;
+}
+
+body.eek-system-inactive .eek-system-inactive-only {
+    display: block;
+}
+
+body.eek-system-active .eek-system-inactive-only {
+    display: none;
+}
+
+/* Business hours states */
+body.eek-during-business-hours .eek-business-hours-only {
+    display: block;
+}
+
+body.eek-after-hours .eek-business-hours-only {
+    display: none;
+}
+
+body.eek-after-hours .eek-after-hours-only {
+    display: block;
+}
+
+body.eek-during-business-hours .eek-after-hours-only {
+    display: none;
+}
+
+/* GCLID states */
+body.eek-has-gclid .eek-gclid-only {
+    display: block;
+}
+
+body.eek-no-gclid .eek-gclid-only {
+    display: none;
+}
+
+/* Phone number type indication */
+body.eek-phone-tracking .phone-display::after {
+    content: " 📞";
+    opacity: 0.7;
+    font-size: 0.8em;
+}
+
+/* === ANIMATION CLASSES === */
+.eek-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.eek-slide-up {
+    animation: slideUp 0.5s ease-out;
+}
+
+.eek-bounce {
+    animation: bounce 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { 
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+        animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        transform: translate3d(0, 0, 0);
+    }
+    40%, 43% {
+        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+        transform: translate3d(0, -30px, 0);
+    }
+    70% {
+        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+        transform: translate3d(0, -15px, 0);
+    }
+    90% {
+        transform: translate3d(0, -4px, 0);
+    }
+}
+
+/* === ACCESSIBILITY === */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus visible for better accessibility */
+.eek-btn:focus-visible,
+.eek-input:focus-visible,
+.eek-textarea:focus-visible,
+.eek-select:focus-visible {
+    outline: 2px solid var(--eek-primary);
+    outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --eek-primary: #ff4400;
+        --eek-text: #000000;
+        --eek-bg-white: #ffffff;
+        --eek-border: #000000;
+    }
+}
+
+/* === PRINT STYLES === */
+@media print {
+    .sticky-call,
+    .sticky-payment,
+    .after-hours-banner,
+    #stripePaymentBlock {
+        display: none !important;
+    }
+    
+    .eek-btn {
+        border: 1px solid #000;
+        background: transparent !important;
+        color: #000 !important;
+    }
+}
+
+/* === DEBUG STYLES (remove in production) === */
+body.eek-has-payment-token::before {
+    content: "PAYMENT TOKEN DETECTED";
     position: fixed;
     top: 0;
-    left: 0;
-    background: rgba(0,0,0,0.8);
+    right: 0;
+    background: green;
     color: white;
-    padding: 5px 10px;
+    padding: 5px;
     font-size: 12px;
     z-index: 9999;
-    pointer-events: none;
+    display: none; /* Set to block for debugging */
 }
 
-/* Remove debug helper in production */
-.eek-no-debug .eek-debug-state::after {
-    display: none;
+body.eek-no-payment-token::before {
+    content: "NO PAYMENT TOKEN";
+    position: fixed;
+    top: 0;
+    right: 0;
+    background: red;
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+    z-index: 9999;
+    display: none; /* Set to block for debugging */
+}
+
+/* Enable debug indicators by adding this class to body */
+body.eek-debug::before {
+    display: block !important;
 }
