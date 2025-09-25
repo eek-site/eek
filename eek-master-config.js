@@ -910,6 +910,27 @@ if (document.readyState === 'loading') {
     initializePage();
 }
 
+// Add event listener for payment terms checkbox
+document.addEventListener('DOMContentLoaded', function() {
+    const termsCheckbox = document.querySelector('#stripePaymentBlock input[type="checkbox"]');
+    const payNowButton = document.getElementById('payNowButton');
+    
+    if (termsCheckbox && payNowButton) {
+        // Hide button initially
+        payNowButton.classList.add('eek-hidden');
+        
+        termsCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                payNowButton.classList.remove('eek-hidden');
+                payNowButton.classList.add('show-button');
+            } else {
+                payNowButton.classList.add('eek-hidden');
+                payNowButton.classList.remove('show-button');
+            }
+        });
+    }
+});
+
 // === EXPORT FOR GLOBAL ACCESS ===
 window.EEK_CONFIG = EEK_CONFIG;
 window.EEK_STATE = EEK_STATE;
