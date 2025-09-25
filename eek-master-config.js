@@ -501,7 +501,8 @@ function isWithinBusinessHours() {
 // === SYSTEM STATUS ===
 async function checkSystemStatus() {
     try {
-        console.log('🔄 Checking system status...');
+        console.log('🔄 Checking system status via API...');
+        console.log('📡 API URL:', EEK_CONFIG.SYSTEM_STATUS_API_URL);
         
         const response = await fetch(EEK_CONFIG.SYSTEM_STATUS_API_URL, {
             method: "POST",
@@ -509,20 +510,25 @@ async function checkSystemStatus() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({}),
-            cache: "no-store",
-            timeout: 10000
+            cache: "no-store"
         });
+        
+        console.log('📡 API Response status:', response.status, response.statusText);
         
         if (response.ok) {
             const data = await response.json();
+            console.log('📡 API Response data:', data);
+            
             const isActive = data.state === 'Active';
-            console.log('✅ System status check successful:', isActive ? 'ACTIVE' : 'INACTIVE');
+            console.log('✅ System status parsed:', isActive ? 'ACTIVE' : 'INACTIVE', '(Raw state:', data.state, ')');
             return isActive;
         } else {
-            console.warn('⚠️ System status API returned non-OK status:', response.status);
+            console.warn('⚠️ System status API returned non-OK status:', response.status, response.statusText);
+            console.warn('⚠️ Response text:', await response.text().catch(e => 'Could not read response text'));
         }
     } catch (error) {
-        console.error('❌ Error checking system status:', error);
+        console.error('❌ Error checking system status:', error.message);
+        console.error('❌ Full error:', error);
     }
     
     // Default to active if check fails
@@ -596,22 +602,31 @@ function updateBannerVisibility() {
         return;
     }
     
-    // SIMPLE LOGIC: Only show banner in basic mode when system is inactive
-    // NEVER show banner if GCLID or token present
+    // Get current URL parameters directly
     const urlParams = new URLSearchParams(window.location.search);
     const hasGclid = !!urlParams.get('gclid');
     const hasToken = !!urlParams.get('token');
     
+    console.log('🏷️ Banner visibility check:', {
+        hasGclid: hasGclid,
+        hasToken: hasToken,
+        systemActive: EEK_STATE.systemActive,
+        duringBusinessHours: EEK_STATE.duringBusinessHours
+    });
+    
     if (hasGclid || hasToken) {
         // GCLID or Token mode: NEVER show banner
         banner.style.display = 'none';
+        banner.style.visibility = 'hidden';
         console.log('🏷️ Hiding banner (GCLID or Token mode)');
         return;
     }
     
     if (!EEK_STATE.systemActive) {
-        // Basic mode + system inactive: show banner
+        // Basic mode + system inactive: ALWAYS show banner
         banner.style.display = 'block';
+        banner.style.visibility = 'visible';
+        banner.removeAttribute('hidden');
         
         // Update banner text based on business hours
         if (closedTitle) {
@@ -621,10 +636,11 @@ function updateBannerVisibility() {
                 closedTitle.textContent = '🕐 CURRENTLY CLOSED';
             }
         }
-        console.log('🏷️ Showing banner (Basic mode + system inactive):', EEK_STATE.duringBusinessHours ? 'ON CALLS' : 'CLOSED');
+        console.log('🏷️ SHOWING banner (Basic mode + system inactive):', EEK_STATE.duringBusinessHours ? 'ON CALLS' : 'CLOSED');
     } else {
         // Basic mode + system active: hide banner
         banner.style.display = 'none';
+        banner.style.visibility = 'hidden';
         console.log('🏷️ Hiding banner (Basic mode + system active)');
     }
 }
@@ -779,6 +795,9 @@ function initializePage() {
     // NUCLEAR OPTION: Force hide banner if GCLID or token in URL
     setTimeout(forceHideBannerIfNeeded, 100);
     
+    // FINAL SAFEGUARD: Double-check banner visibility after API calls complete
+    setTimeout(finalBannerCheck, 2000);
+    
     console.log('✅ Page initialization complete');
     console.log('📊 Final State:', {
         sessionId: EEK_STATE.sessionId,
@@ -800,6 +819,47 @@ function forceHideBannerIfNeeded() {
         banner.style.visibility = 'hidden';
         banner.setAttribute('hidden', 'true');
         console.log('💀 NUCLEAR OPTION: Force hiding banner for GCLID/Token mode');
+    } else if (!hasGclid && !hasToken && !EEK_STATE.systemActive && banner) {
+        // Basic mode + system inactive: ensure banner is visible
+        banner.style.display = 'block';
+        banner.style.visibility = 'visible';
+        banner.removeAttribute('hidden');
+        console.log('💀 NUCLEAR OPTION: Force showing banner for basic mode + system inactive');
+    }
+}
+
+// === FINAL SAFEGUARD - BANNER CHECK ===
+function finalBannerCheck() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasGclid = !!urlParams.get('gclid');
+    const hasToken = !!urlParams.get('token');
+    const banner = document.getElementById('closedBanner');
+    
+    if (!banner) return;
+    
+    console.log('🔍 FINAL BANNER CHECK:', {
+        hasGclid: hasGclid,
+        hasToken: hasToken,
+        systemActive: EEK_STATE.systemActive,
+        bannerCurrentlyVisible: banner.style.display !== 'none' && banner.style.visibility !== 'hidden'
+    });
+    
+    // Basic mode + system inactive: banner should be visible
+    if (!hasGclid && !hasToken && !EEK_STATE.systemActive) {
+        if (banner.style.display === 'none' || banner.style.visibility === 'hidden') {
+            banner.style.display = 'block';
+            banner.style.visibility = 'visible';
+            banner.removeAttribute('hidden');
+            console.log('🚨 FINAL CHECK: Fixed missing banner in basic mode + system inactive');
+        }
+    }
+    
+    // GCLID/Token mode: banner should be hidden
+    if ((hasGclid || hasToken) && (banner.style.display !== 'none' || banner.style.visibility !== 'hidden')) {
+        banner.style.display = 'none';
+        banner.style.visibility = 'hidden';
+        banner.setAttribute('hidden', 'true');
+        console.log('🚨 FINAL CHECK: Fixed visible banner in GCLID/Token mode');
     }
 }
 
