@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -139,13 +138,13 @@ font-src 'self' data:;">
 
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   
-  <!-- Load Eek Style Guide -->
-  <link rel="stylesheet" href="/eek-style-guide.css">
+  <!-- Link to external style guide -->
+  <link rel="stylesheet" href="eek-style-guide.css" id="eek-style-guide">
 </head>
 <body>
 
 <!-- Business Closed Banner (hidden by default) -->
-<div id="closedBanner" class="after-hours-banner" style="display: none; background: var(--eek-gradient-muted);">
+<div id="closedBanner" class="after-hours-banner" style="display: none; background: linear-gradient(135deg, #666, #888);">
   <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
   <div id="afterHoursMessage">
     <p><strong>Business Hours:</strong></p>
@@ -161,20 +160,20 @@ font-src 'self' data:;">
   </div>
 </div>
 
-<section id="stripePaymentBlock" style="display: none;">
-  <div style="background-color: #f5f5f5; padding: 30px; border-radius: var(--eek-radius-lg); max-width: 700px; margin: auto; box-shadow: var(--eek-shadow-sm);">
+<section id="stripePaymentBlock" style="display: none; background-color: #ffffff; padding: 20px; text-align: center; color: #333; border-bottom: 2px solid #ff5500;">
+  <div style="background-color: #f5f5f5; padding: 30px; border-radius: 12px; max-width: 700px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
     <h1 style="font-size: 2.2em; margin-bottom: 0.5em;">Secure Roadside Payment</h1>
     <p style="font-size: 1.2em; margin-bottom: 1.5em;">Confirm your payment to get help on the way — fast, safe, and secure.</p>
-    <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: var(--eek-text);">
+    <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: #333;">
       <input type="checkbox" id="termsCheckbox" style="transform: scale(1.5);" />
       <span>I agree to the Eek Mobile Mechanical terms of service 
-        <a href="https://www.eek.nz/terms" target="_blank" style="color: var(--eek-primary); text-decoration: underline;">
+        <a href="https://www.eek.nz/terms" target="_blank" style="color: #ff5500; text-decoration: underline;">
           View terms of use
         </a>
       </span>
     </label>
     <br><br>
-    <button id="payNowButton" style="display: none; background-color: var(--eek-primary); color: white; padding: 14px 32px; font-size: 1.2em; border: none; border-radius: var(--eek-radius-md); cursor: pointer;">
+    <button id="payNowButton" style="display: none; background-color: #ff5500; color: white; padding: 14px 32px; font-size: 1.2em; border: none; border-radius: 8px; cursor: pointer;">
       Pay Now
     </button>
   </div>
@@ -232,7 +231,7 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn service-link" data-service="mechanic" style="background: var(--eek-success); display: none;">📅 Book Online</a>
+    <a class="cta-button after-hours-btn service-link" data-service="mechanic" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
 
@@ -247,7 +246,7 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn service-link" data-service="jumpstart" style="background: var(--eek-success); display: none;">📅 Book Online</a>
+    <a class="cta-button after-hours-btn service-link" data-service="jumpstart" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
 
@@ -264,7 +263,7 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn service-link" data-service="fuel-extraction" style="background: var(--eek-success); display: none;">📅 Book Online</a>
+    <a class="cta-button after-hours-btn service-link" data-service="fuel-extraction" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
 
@@ -281,7 +280,7 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn service-link" data-service="inspection" style="background: var(--eek-success); display: none;">📅 Book Online & Save</a>
+    <a class="cta-button after-hours-btn service-link" data-service="inspection" style="background: #28a745; display: none;">📅 Book Online & Save</a>
   </div>
 </div>
 
@@ -300,81 +299,17 @@ font-src 'self' data:;">
 
 <footer>
   &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
-  <a href="https://www.eek.nz/privacy" target="_blank" style="color: var(--eek-text-light); text-decoration: underline;">Privacy Policy</a> | 
-  <a href="/more-options" class="more-options-link" style="color: var(--eek-text-light); text-decoration: underline;">More Options</a>
+  <a href="https://www.eek.nz/privacy" target="_blank" style="color: #666; text-decoration: underline;">Privacy Policy</a> | 
+  <a href="/more-options" class="more-options-link" style="color: #666; text-decoration: underline;">More Options</a>
 </footer>
 
 <a class="sticky-call phone-link" href="tel:0800769000" onclick="trackConversion('sticky_call', 'Contact')" id="stickyCallButton">📞 Call <span class="phone-display">Eek Now</span></a>
-<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" style="display: none; background: var(--eek-text-light);">🕐 View Hours</a>
+<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" style="display: none; background: #666;">🕐 View Hours</a>
 
 <!-- Load Master Configuration -->
-<script src="/eek-master-config.js"></script>
+<script src="eek-master-config.js"></script>
 
 <script>
-// Enhanced tracking function that includes Reddit Pixel with full event parameters
-function trackConversion(eventAction, eventCategory) {
-  const conversionId = 'eek_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-  
-  const serviceValues = {
-    'inspection_call': 19900,
-    'breakdown_call': 28900,
-    'battery_call': 14900,
-    'fuel_drain_call': 39900,
-    'header_call': 25000,
-    'sticky_call': 25000,
-    'more_options_call': 25000,
-    'after_hours_emergency': 35000,
-    'breakdown_after_hours': 35000,
-    'battery_after_hours': 20000,
-    'fuel_drain_after_hours': 45000,
-    'inspection_after_hours': 25000
-  };
-  
-  const eventValue = serviceValues[eventAction] || 25000;
-  
-  if (typeof gtag !== 'undefined') {
-    gtag('event', eventAction, {
-      'event_category': eventCategory,
-      'event_label': 'Phone Call Click',
-      'value': eventValue / 100
-    });
-    gtag('event', 'conversion', {
-      'send_to': 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
-    });
-  }
-  
-  if (typeof rdt !== 'undefined') {
-    rdt('track', 'Lead', {
-      'customEventName': 'Phone_Call_Click',
-      'conversionId': conversionId,
-      'value': eventValue,
-      'currency': 'NZD',
-      'itemCount': 1,
-      'eventSource': eventAction,
-      'eventCategory': eventCategory,
-      'serviceType': getServiceType(eventAction)
-    });
-  }
-}
-
-function getServiceType(eventAction) {
-  const serviceMap = {
-    'inspection_call': 'Pre-Purchase Inspection',
-    'breakdown_call': 'Emergency Breakdown',
-    'battery_call': 'Battery Jump Start',
-    'fuel_drain_call': 'Wrong Fuel Rescue',
-    'header_call': 'General Inquiry',
-    'sticky_call': 'General Inquiry',
-    'more_options_call': 'General Inquiry',
-    'after_hours_emergency': 'After Hours Emergency',
-    'breakdown_after_hours': 'After Hours Breakdown',
-    'battery_after_hours': 'After Hours Battery',
-    'fuel_drain_after_hours': 'After Hours Fuel Drain',
-    'inspection_after_hours': 'After Hours Inspection'
-  };
-  return serviceMap[eventAction] || 'General Service';
-}
-
 // Handle service selection card clicks
 function handleServiceSelection() {
   document.querySelectorAll('.service-link').forEach(link => {
@@ -393,7 +328,7 @@ function handleServiceSelection() {
 
 // Main page loaded
 window.addEventListener('load', function() {
-  console.log('🚀 Main page loaded with centralized CSS styling');
+  console.log('🚀 Main page loaded with master config');
   
   // Set up service selection handlers
   handleServiceSelection();
