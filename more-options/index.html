@@ -83,9 +83,9 @@
             </div>
             <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;">
                 <a href="/rescue-me" class="eek-btn normal-hours-btn" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);" data-track="emergency_rescue">🚨 Emergency Service</a>
-                <a href="tel:0800769000" class="eek-btn phone-link normal-hours-btn" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);" data-track="more_options_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+                <a href="tel:0800769000" class="eek-btn phone-link" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);" data-track="more_options_call">📞 Call <span class="phone-display">0800 769 000</span></a>
                 <a href="/find-me" class="eek-btn normal-hours-btn" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);" data-track="find_me_tool">📍 Find Me Tool</a>
-                <a href="/book-service" class="eek-btn after-hours-btn" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3);" data-track="book_online_after_hours">📅 Book Online Service</a>
+                <a href="#book-emergency" class="eek-btn after-hours-btn service-link" data-service="emergency" style="background: var(--eek-success); color: white; display: none;" data-track="book_online_after_hours">📅 Book Online Service</a>
             </div>
         </div>
         
@@ -102,10 +102,10 @@
                     <p>Service requests, support, and assistance</p>
                     <div style="display: flex; flex-wrap: wrap; gap: 8px;">
                         <a href="/rescue-me" class="eek-btn normal-hours-btn" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); font-size: 0.875rem;" data-track="customer_emergency">🚨 Emergency Service</a>
-                        <a href="tel:0800769000" class="eek-btn phone-link normal-hours-btn" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); font-size: 0.875rem;" data-track="customer_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+                        <a href="tel:0800769000" class="eek-btn phone-link" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); font-size: 0.875rem;" data-track="customer_call">📞 Call <span class="phone-display">0800 769 000</span></a>
                         <a href="/customer-escalation" class="eek-btn normal-hours-btn" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); font-size: 0.875rem;" data-track="customer_support">💬 Customer Support</a>
                         <a href="/find-me" class="eek-btn normal-hours-btn" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); font-size: 0.875rem;" data-track="customer_find_me">📍 Find Me Tool</a>
-                        <a href="/book-service" class="eek-btn after-hours-btn" style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); font-size: 0.875rem;" data-track="customer_book_online">📅 Book Online Service</a>
+                        <a href="#book-customer" class="eek-btn after-hours-btn service-link" data-service="mechanic" style="background: var(--eek-success); color: white; font-size: 0.875rem; display: none;" data-track="customer_book_online">📅 Book Online Service</a>
                     </div>
                 </div>
                 
@@ -191,32 +191,5 @@
         
         // Page is now fully managed by master config with consistent styling
     </script>
-    
-    <style>
-        /* State-based button visibility for more-options page */
-        .normal-hours-btn {
-            display: inline-block;
-        }
-        
-        .after-hours-btn {
-            display: none;
-        }
-        
-        body.eek-system-inactive .normal-hours-btn {
-            display: none;
-        }
-        
-        body.eek-system-inactive .after-hours-btn {
-            display: inline-block;
-        }
-        
-        body.eek-after-hours .normal-hours-btn {
-            display: none;
-        }
-        
-        body.eek-after-hours .after-hours-btn {
-            display: inline-block;
-        }
-    </style>
 </body>
 </html>
