@@ -547,7 +547,12 @@ footer a {
 /* === STATE-BASED VISIBILITY CONTROLS === */
 /* These CSS rules are backup - JavaScript handles the main logic */
 
-/* NEVER show banner when GCLID or token present */
+/* FORCE HIDE banner when URL has GCLID or token parameters */
+#closedBanner {
+    display: none; /* Default hidden, JavaScript will show if needed */
+}
+
+/* NEVER show banner when GCLID or token present - FORCE OVERRIDE */
 body.eek-has-gclid #closedBanner,
 body.eek-has-payment-token #closedBanner {
     display: none !important;
