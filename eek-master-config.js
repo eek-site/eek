@@ -1,10 +1,11 @@
 /**
- * Eek Mobile Mechanical - Master Configuration & Shared Functions (COMPLETE MERGED VERSION)
+ * Eek Mobile Mechanical - Master Configuration & Shared Functions (PHONE LOGIC FIXED)
  * This file contains all shared functionality across the website
  * Include this file on every page to ensure consistency
  * 
- * MERGED VERSION: Combines comprehensive tracking from earlier version with all recent fixes
- * PHONE NUMBER FIX: Only uses tracking number for current GCLID/token visits, not stored data
+ * PHONE LOGIC FIX: Completely separates tracking data from display decisions
+ * Current URL parameters ONLY determine phone number display
+ * Stored GCLID data is ONLY used for tracking/analytics purposes
  */
 
 // === INJECT COMPREHENSIVE STYLE GUIDE ===
@@ -311,7 +312,8 @@ const EEK_CONFIG = {
 // === GLOBAL STATE ===
 let EEK_STATE = {
     sessionId: null,
-    gclid: null,
+    currentUrlGclid: null,        // FIXED: Only current URL GCLID
+    storedGclidForTracking: null, // FIXED: Stored GCLID for analytics only
     utmData: {},
     hasPaymentToken: false,
     systemActive: true,
@@ -414,10 +416,10 @@ function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
         
         // Session & Identity Data
         sessionId: EEK_STATE.sessionId,
-        gclid: EEK_STATE.gclid,
+        gclid: EEK_STATE.storedGclidForTracking, // Use stored GCLID for tracking
         hasCurrentGclid: !!urlParams.get('gclid'),
         hasCurrentToken: !!urlParams.get('token'),
-        hasStoredGclid: !!localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.gclid),
+        hasStoredGclid: !!EEK_STATE.storedGclidForTracking,
         gclidAge: getGCLIDAgeInDays(),
         phoneNumberType: getDisplayPhoneNumber() === EEK_CONFIG.PHONE_NUMBERS.tracking ? 'tracking' : 'default',
         
@@ -604,7 +606,7 @@ function trackConversion(eventAction, eventCategory = 'Contact') {
             'event_category': eventCategory,
             'event_label': serviceType,
             'value': eventValue / 100, // Convert to dollars
-            'gclid': EEK_STATE.gclid
+            'gclid': EEK_STATE.storedGclidForTracking // Use stored GCLID for tracking
         });
         
         // Track phone calls as conversions
@@ -626,7 +628,7 @@ function trackConversion(eventAction, eventCategory = 'Contact') {
             'eventSource': window.location.pathname.includes('more-options') ? 'more_options_page' : 'main_page',
             'eventCategory': eventCategory,
             'serviceType': serviceType,
-            'gclid': EEK_STATE.gclid
+            'gclid': EEK_STATE.storedGclidForTracking // Use stored GCLID for tracking
         });
     }
     
@@ -762,7 +764,7 @@ function trackPageView() {
         gtag('event', 'page_view', {
             'page_title': document.title,
             'page_location': window.location.href,
-            'gclid': EEK_STATE.gclid
+            'gclid': EEK_STATE.storedGclidForTracking // Use stored GCLID for tracking
         });
     }
     
@@ -819,14 +821,13 @@ function setupTimeTracking() {
     });
 }
 
-// === PHONE NUMBER MANAGEMENT (FIXED) ===
+// === PHONE NUMBER MANAGEMENT (COMPLETELY FIXED) ===
 function getDisplayPhoneNumber() {
+    // CRITICAL FIX: ONLY check current URL parameters
+    // NEVER reference stored GCLID data for phone number decisions
     const urlParams = new URLSearchParams(window.location.search);
     const currentGclid = urlParams.get('gclid');
     const currentToken = urlParams.get('token');
-    
-    // CRITICAL FIX: Only use tracking number for CURRENT visit parameters
-    // Stored GCLID data should NOT affect phone number display
     
     if (currentGclid) {
         console.log('📞 Using tracking number (current URL GCLID):', currentGclid);
@@ -868,7 +869,7 @@ function updatePhoneNumbers() {
     console.log('📞 Phone numbers updated to:', phoneData.display);
 }
 
-// === GCLID MANAGEMENT (TRACKING DATA ONLY) ===
+// === GCLID MANAGEMENT (FIXED - SEPARATE TRACKING FROM DISPLAY) ===
 function isGCLIDValid() {
     const storedTimestamp = localStorage.getItem(EEK_CONFIG.STORAGE_KEYS.gclidTimestamp);
     if (!storedTimestamp) return false;
@@ -879,7 +880,14 @@ function isGCLIDValid() {
     return new Date(storedTimestamp) > thirtyDaysAgo;
 }
 
-function getGCLID() {
+// FIXED: Returns current URL GCLID only
+function getCurrentURLGCLID() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('gclid');
+}
+
+// FIXED: Returns stored GCLID for tracking purposes only
+function getStoredGCLIDForTracking() {
     const urlParams = new URLSearchParams(window.location.search);
     let gclidValue = urlParams.get('gclid');
     
@@ -887,7 +895,7 @@ function getGCLID() {
     if (gclidValue) {
         localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.gclid, gclidValue);
         localStorage.setItem(EEK_CONFIG.STORAGE_KEYS.gclidTimestamp, new Date().toISOString());
-        console.log('✅ GCLID captured from current URL:', gclidValue);
+        console.log('✅ GCLID captured from current URL for tracking:', gclidValue);
         return gclidValue;
     }
     
@@ -1013,29 +1021,32 @@ async function checkSystemStatus() {
     return true;
 }
 
-// === UI UPDATE FUNCTION ===
+// === UI UPDATE FUNCTION (FIXED) ===
 async function updateUIState() {
     console.log('🔄 Starting master UI state update...');
     
-    // CRITICAL: Always get fresh state from current URL and reset payment token state first
+    // CRITICAL FIX: Reset state and separate tracking from display logic
     EEK_STATE.hasPaymentToken = false;
+    EEK_STATE.currentUrlGclid = null;
+    EEK_STATE.storedGclidForTracking = null;
     
     const urlParams = new URLSearchParams(window.location.search);
     const currentGclid = urlParams.get('gclid');
     const currentToken = urlParams.get('token');
     
-    // Update global state from current URL
-    EEK_STATE.gclid = getGCLID();
+    // FIXED: Separate current URL data from stored tracking data
+    EEK_STATE.currentUrlGclid = currentGclid;                    // For display decisions
+    EEK_STATE.storedGclidForTracking = getStoredGCLIDForTracking(); // For tracking only
     EEK_STATE.hasPaymentToken = hasPaymentToken();
     
-    console.log('🔍 URL Parameter Check:', {
-        currentUrlGclid: currentGclid,
+    console.log('🔍 FIXED State Check:', {
+        currentUrlGclid: EEK_STATE.currentUrlGclid,
         currentUrlToken: currentToken,
-        storedGclid: EEK_STATE.gclid,
+        storedGclidForTracking: EEK_STATE.storedGclidForTracking,
         hasPaymentToken: EEK_STATE.hasPaymentToken
     });
     
-    // System status logic - GCLID or Token users always get active system
+    // System status logic - Current URL GCLID or Token users always get active system
     if (currentGclid || currentToken) {
         EEK_STATE.systemActive = true;
         console.log('🎯 Current URL GCLID or Token detected - forcing system active');
@@ -1047,13 +1058,13 @@ async function updateUIState() {
     // Still track business hours for banner text, but don't use for logic
     EEK_STATE.duringBusinessHours = isWithinBusinessHours();
     
-    console.log('📊 Master State:', {
+    console.log('📊 FIXED Master State:', {
         systemActive: EEK_STATE.systemActive,
         duringBusinessHours: EEK_STATE.duringBusinessHours,
         hasPaymentToken: EEK_STATE.hasPaymentToken,
         hasCurrentGclid: !!currentGclid,
         hasCurrentToken: !!currentToken,
-        hasStoredGclid: !!EEK_STATE.gclid
+        hasStoredGclidForTracking: !!EEK_STATE.storedGclidForTracking
     });
     
     // CRITICAL: Update body classes first to ensure CSS state is correct
@@ -1063,10 +1074,10 @@ async function updateUIState() {
     updateBannerVisibility();
     updateButtonVisibility();
     
-    // Update phone numbers
+    // Update phone numbers (now completely isolated from stored GCLID)
     updatePhoneNumbers();
     
-    console.log('✅ Master UI state update completed');
+    console.log('✅ FIXED Master UI state update completed');
 }
 
 // === BANNER VISIBILITY MANAGEMENT ===
@@ -1079,7 +1090,7 @@ function updateBannerVisibility() {
         return;
     }
     
-    // Get current URL parameters directly
+    // FIXED: Use current URL parameters only (not stored state)
     const urlParams = new URLSearchParams(window.location.search);
     const hasGclid = !!urlParams.get('gclid');
     const hasToken = !!urlParams.get('token');
@@ -1128,7 +1139,7 @@ function updateButtonVisibility() {
     const closedButton = document.getElementById('stickyClosedButton');
     const paymentButton = document.getElementById('stripePaymentSticky');
     
-    // Get current URL parameters directly
+    // FIXED: Get current URL parameters directly
     const urlParams = new URLSearchParams(window.location.search);
     const hasGclid = !!urlParams.get('gclid');
     const hasToken = !!urlParams.get('token');
@@ -1206,12 +1217,13 @@ function updateButtonVisibility() {
     }
 }
 
-// === BODY STATE CLASS MANAGEMENT ===
+// === BODY STATE CLASS MANAGEMENT (FIXED) ===
 function updateBodyStateClasses() {
     const body = document.body;
     
     // CRITICAL: Remove all payment-related classes first
     body.classList.remove('eek-has-payment-token', 'eek-no-payment-token');
+    body.classList.remove('eek-has-gclid', 'eek-no-gclid');
     
     // System state classes
     body.classList.toggle('eek-system-active', EEK_STATE.systemActive);
@@ -1230,20 +1242,25 @@ function updateBodyStateClasses() {
         console.log('💳 Added eek-no-payment-token class');
     }
     
-    // GCLID classes
-    body.classList.toggle('eek-has-gclid', !!EEK_STATE.gclid);
-    body.classList.toggle('eek-no-gclid', !EEK_STATE.gclid);
+    // FIXED: GCLID classes based on CURRENT URL only (not stored data)
+    if (EEK_STATE.currentUrlGclid) {
+        body.classList.add('eek-has-gclid');
+        console.log('🔗 Added eek-has-gclid class for current URL GCLID');
+    } else {
+        body.classList.add('eek-no-gclid');
+        console.log('🔗 Added eek-no-gclid class (no current URL GCLID)');
+    }
     
     // Phone number type class
     const phoneType = getDisplayPhoneNumber() === EEK_CONFIG.PHONE_NUMBERS.tracking ? 'tracking' : 'default';
     body.classList.toggle('eek-phone-tracking', phoneType === 'tracking');
     body.classList.toggle('eek-phone-default', phoneType === 'default');
     
-    console.log('📋 Body state classes updated:', {
+    console.log('📋 FIXED Body state classes updated:', {
         systemActive: EEK_STATE.systemActive,
         duringBusinessHours: EEK_STATE.duringBusinessHours,
         hasPaymentToken: EEK_STATE.hasPaymentToken,
-        hasGclid: !!EEK_STATE.gclid,
+        hasCurrentUrlGclid: !!EEK_STATE.currentUrlGclid,
         phoneType: phoneType
     });
 }
@@ -1321,15 +1338,17 @@ function getUTMData() {
     return utm;
 }
 
-// === INITIALIZATION ===
+// === INITIALIZATION (FIXED) ===
 function initializePage() {
     console.log('🚀 Initializing Eek Mobile Mechanical page...');
     
     // Inject critical CSS styles first
     injectMasterStyles();
     
-    // CRITICAL: Reset payment state before checking current page
+    // CRITICAL FIX: Reset payment and GCLID state before checking current page
     EEK_STATE.hasPaymentToken = false;
+    EEK_STATE.currentUrlGclid = null;
+    EEK_STATE.storedGclidForTracking = null;
     
     // Initialize tracking pixels
     initializeRedditPixel();
@@ -1339,9 +1358,10 @@ function initializePage() {
         console.error('❌ Error in logo detection:', error);
     });
     
-    // Initialize state from current page URL
+    // FIXED: Initialize state with separated logic
     EEK_STATE.sessionId = getOrCreateSessionId();
-    EEK_STATE.gclid = getGCLID();
+    EEK_STATE.currentUrlGclid = getCurrentURLGCLID();           // For display decisions
+    EEK_STATE.storedGclidForTracking = getStoredGCLIDForTracking(); // For tracking only
     EEK_STATE.utmData = getUTMData();
     EEK_STATE.hasPaymentToken = hasPaymentToken(); // Check current URL
     
@@ -1371,10 +1391,11 @@ function initializePage() {
     // PAYMENT HANDLER: Set up payment checkbox functionality
     setTimeout(setupPaymentCheckboxHandler, 200);
     
-    console.log('✅ Page initialization complete');
-    console.log('📊 Final State:', {
+    console.log('✅ FIXED Page initialization complete');
+    console.log('📊 FIXED Final State:', {
         sessionId: EEK_STATE.sessionId,
-        gclid: EEK_STATE.gclid,
+        currentUrlGclid: EEK_STATE.currentUrlGclid,
+        storedGclidForTracking: EEK_STATE.storedGclidForTracking,
         hasPaymentToken: EEK_STATE.hasPaymentToken,
         phoneNumber: getDisplayPhoneNumber().display
     });
@@ -1743,3 +1764,6 @@ window.detectAndUpdateLogo = detectAndUpdateLogo;
 window.updateBodyStateClasses = updateBodyStateClasses;
 window.handleServiceSelection = handleServiceSelection;
 window.addClickTrackingToElements = addClickTrackingToElements;
+window.getDisplayPhoneNumber = getDisplayPhoneNumber;
+window.getCurrentURLGCLID = getCurrentURLGCLID;
+window.getStoredGCLIDForTracking = getStoredGCLIDForTracking;
