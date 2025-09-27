@@ -6,81 +6,25 @@
   <title>Emergency Mobile Mechanic Services - Eek Mobile Mechanical</title>
   <meta name="description" content="Book emergency mobile mechanic services with Eek Mobile Mechanical. Battery jump start, fuel extraction, mechanical diagnostics. Professional service across New Zealand." />
   <meta name="keywords" content="mobile mechanic, emergency mechanic, battery jump start, wrong fuel removal, mobile mechanic NZ" />
+  <meta property="og:title" content="Emergency Mobile Mechanic Services - Eek Mobile Mechanical" />
+  <meta property="og:description" content="Book emergency mobile mechanic services with Eek Mobile Mechanical. Battery jump start, fuel extraction, mechanical diagnostics. Professional service across New Zealand." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.eek.nz/book-service" />
+  <meta property="og:image" content="https://www.eek.nz/og-image.jpg" />
 
   <!-- Security Headers -->
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self';
-    script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com https://googleads.g.doubleclick.net https://www.redditstatic.com;
-    style-src 'self' 'unsafe-inline';
-    img-src 'self' data: https:;
-    frame-src https://js.stripe.com https://hooks.stripe.com https://www.googletagmanager.com;
-    connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://api.stripe.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://www.google.hn;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self';
+script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net https://widget.reviewability.com https://js.stripe.com;
+style-src 'self' 'unsafe-inline' https://widget.reviewability.com;
+img-src 'self' data: https: https://app.revu.cloud https://widget.reviewability.com;
+connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://app.revu.cloud https://widget.reviewability.com https://www.eek.nz https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com https://api.stripe.com;
+frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com https://app.revu.cloud https://widget.reviewability.com https://js.stripe.com https://hooks.stripe.com;
+font-src 'self' data:;">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
 
-  <!-- Reddit Pixel -->
-  <script>
-    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
-    (window,document);
-    
-    // Helper functions to extract user data if available
-    function getEmailFromForm() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const emailParam = urlParams.get('email');
-      if (emailParam) return emailParam;
-      
-      const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"], input[id*="email"]');
-      for (let input of emailInputs) {
-        if (input.value && input.value.includes('@')) {
-          return input.value;
-        }
-      }
-      return null;
-    }
-    
-    function getPhoneFromForm() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const phoneParam = urlParams.get('phone');
-      if (phoneParam) return phoneParam;
-      
-      const phoneInputs = document.querySelectorAll('input[type="tel"], input[name*="phone"], input[id*="phone"]');
-      for (let input of phoneInputs) {
-        if (input.value) {
-          return input.value;
-        }
-      }
-      return null;
-    }
-    
-    function getUserId() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('uid') || urlParams.get('user_id') || urlParams.get('customer_id');
-    }
-    
-    function getMobileIds() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return {
-        idfa: urlParams.get('idfa'),
-        aaid: urlParams.get('aaid')
-      };
-    }
-    
-    const mobileIds = getMobileIds();
-    const initConfig = {};
-    
-    const email = getEmailFromForm();
-    const phoneNumber = getPhoneFromForm();
-    const externalId = getUserId();
-    
-    if (email) initConfig.email = email;
-    if (phoneNumber) initConfig.phoneNumber = phoneNumber;
-    if (externalId) initConfig.externalId = externalId;
-    if (mobileIds.idfa) initConfig.idfa = mobileIds.idfa;
-    if (mobileIds.aaid) initConfig.aaid = mobileIds.aaid;
-    
-    rdt('init', 'a2_hf16791nsdhx', Object.keys(initConfig).length > 0 ? initConfig : undefined);
-    rdt('track', 'PageVisit');
-  </script>
-
-  <!-- Google Analytics -->
+  <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -88,6 +32,44 @@
     gtag('js', new Date());
     gtag('config', 'AW-17084465163');
     gtag('config', 'G-DQNKF1YLWR');
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Eek Mobile Mechanical",
+    "description": "Mobile mechanic services across New Zealand. Pre purchase vehicle inspections, wrong fuel removal, petrol and diesel removal, emergency roadside repairs.",
+    "telephone": "+64800769000",
+    "url": "https://www.eek.nz",
+    "image": "https://www.eek.nz/brand-image.png",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "NZ"
+    },
+    "areaServed": {
+      "@type": "Country",
+      "name": "New Zealand"
+    },
+    "openingHours": [
+      "Mo 07:00-17:00",
+      "Tu 07:00-17:00", 
+      "We 07:00-17:00",
+      "Th 07:00-17:00",
+      "Fr 07:00-17:00",
+      "Sa 07:00-12:00",
+      "Su 07:00-12:00"
+    ],
+    "serviceType": [
+      "Mobile Mechanic",
+      "Pre Purchase Vehicle Inspections", 
+      "Wrong Fuel Removal",
+      "Petrol and Diesel Removal",
+      "Emergency Roadside Repairs",
+      "Battery Jump Start",
+      "Trailer Repairs"
+    ]
+  }
   </script>
 
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -246,15 +228,16 @@
 </section>
 
 <header>
-  <img id="headerImage" src="/sweet-ride.png" alt="Eek Mobile Mechanical"/>
+  <img id="headerImage" src="/brand-image.png" alt="Eek Mobile Mechanical - Mobile Mechanic Services" />
   <div class="business-name">Eek Mobile Mechanical</div>
   <h1 id="headerTitle">Emergency Mobile Mechanic Service</h1>
-  <p id="headerSubtitle" style="font-size:1.1em;color:#666;margin:10px 0;"></p>
+  <p class="tagline" id="headerSubtitle">Mobile Mechanic • Pre Purchase Inspections • Wrong Fuel Removal • Emergency Roadside Repairs • 30–60 Min Response</p>
+  <a class="cta-button phone-link" href="tel:0800769000" data-track="header_call">📞 Call <span class="phone-display">0800 769 000</span></a>
 </header>
 
 <div class="breadcrumb">
-  <a href="/" onclick="this.href='/' + window.location.search">Home</a> > 
-  <a href="/more-options" onclick="this.href='/more-options' + window.location.search">More Options</a> > 
+  <a href="/" onclick="this.href='/' + window.location.search" data-track="breadcrumb_home">Home</a> > 
+  <a href="/more-options" onclick="this.href='/more-options' + window.location.search" data-track="breadcrumb_more_options">More Options</a> > 
   <span id="breadcrumbText">Emergency Service</span>
 </div>
 
@@ -386,7 +369,7 @@
         <div class="terms-checkbox">
           <input type="checkbox" id="termsAgree" onchange="toggleBookingButton()" />
           <div class="terms-text">
-            I agree to the <a href="/terms" target="_blank" onclick="this.href='/terms' + window.location.search">Eek Mobile Mechanical Terms of Service</a> and understand that:
+            I agree to the <a href="/terms" target="_blank" onclick="this.href='/terms' + window.location.search" data-track="legal_terms">Eek Mobile Mechanical Terms of Service</a> and understand that:
             <ul style="margin:10px 0;padding-left:20px;" id="termsList"></ul>
           </div>
         </div>
@@ -660,8 +643,8 @@ function buildBookingData(status) {
   const urlParams = new URLSearchParams(window.location.search);
   
   const baseData = {
-    // Session and tracking
-    sessionId: window.sessionId,
+    // Session and tracking - ENHANCED with master config integration
+    sessionId: window.sessionId || localStorage.getItem("eek_session_id"),
     bookingStatus: status,
     statusColor: STATUS_COLORS[status] || '#6c757d',
     statusDescription: STATUS_DESCRIPTIONS[status] || 'Unknown status',
@@ -690,18 +673,18 @@ function buildBookingData(status) {
     serviceCode: window.currentConfig.serviceCode,
     serviceTitle: window.currentConfig.title,
     
-    // Source tracking - Enhanced with persistent GCLID
+    // Source tracking - ENHANCED to use master config data
     source: 'booking_form',
-    formVersion: '2.0',
+    formVersion: '2.1',
     gclid: localStorage.getItem("eek_gclid") || urlParams.get('gclid') || null,
     
-    // UTM tracking from URL or storage
+    // UTM tracking from localStorage (managed by master config)
     utm: {
-      source: urlParams.get('utm_source') || localStorage.getItem("eek_utm_source") || null,
-      medium: urlParams.get('utm_medium') || localStorage.getItem("eek_utm_medium") || null,
-      campaign: urlParams.get('utm_campaign') || localStorage.getItem("eek_utm_campaign") || null,
-      term: urlParams.get('utm_term') || localStorage.getItem("eek_utm_term") || null,
-      content: urlParams.get('utm_content') || localStorage.getItem("eek_utm_content") || null,
+      source: localStorage.getItem("eek_utm_source") || urlParams.get('utm_source') || null,
+      medium: localStorage.getItem("eek_utm_medium") || urlParams.get('utm_medium') || null,
+      campaign: localStorage.getItem("eek_utm_campaign") || urlParams.get('utm_campaign') || null,
+      term: localStorage.getItem("eek_utm_term") || urlParams.get('utm_term') || null,
+      content: localStorage.getItem("eek_utm_content") || urlParams.get('utm_content') || null,
       gclid: localStorage.getItem("eek_gclid") || urlParams.get('gclid') || null
     }
   };
@@ -820,7 +803,7 @@ async function generateWinzQuote() {
   }
 }
 
-// Initialize - ENHANCED with URL parameter capture and inspection redirect
+// Initialize - ENHANCED with master config integration
 document.addEventListener('DOMContentLoaded', function(){
   console.log('🚀 === BOOKING FORM INITIALIZED === 🚀');
   const urlParams = new URLSearchParams(window.location.search);
@@ -857,66 +840,81 @@ document.addEventListener('DOMContentLoaded', function(){
   console.log('📍 GCLID from URL:', gclid || 'None');
   console.log('🔗 Session ID from URL:', sessionId || 'None');
   
-  // Store GCLID if present in URL (this ensures persistence across pages)
-  if (gclid) {
-    localStorage.setItem("eek_gclid", gclid);
-    localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
-    console.log('✅ GCLID stored for tracking:', gclid);
-  } else {
-    // Check if we have a stored GCLID from main page visit
-    const storedGclid = localStorage.getItem("eek_gclid");
-    if (storedGclid) {
-      console.log('📋 Using stored GCLID from previous page visit:', storedGclid);
-    }
-  }
-  
-  // Use provided session ID or create new one
+  // Let master config handle GCLID and UTM storage - but ensure we have session ID
   if (sessionId) {
     window.sessionId = sessionId;
     localStorage.setItem("eek_session_id", sessionId);
     console.log('✅ Using session ID from main page:', sessionId);
   } else {
-    window.sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // Check for existing session ID or create new one
+    window.sessionId = localStorage.getItem("eek_session_id") || `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     localStorage.setItem("eek_session_id", window.sessionId);
-    console.log('✅ Created new session ID:', window.sessionId);
+    console.log('✅ Session ID:', window.sessionId);
   }
-  
-  // Store UTM parameters for tracking continuity
-  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
-    const value = urlParams.get(param);
-    if (value) {
-      localStorage.setItem(`eek_${param}`, value);
-      console.log(`📊 UTM parameter stored: ${param} = ${value}`);
-    }
-  });
   
   loadServiceConfig(service);
   
   // Send initial status with enhanced data
   sendBookingUpdate(BOOKING_STATUS.INITIAL);
   
-  // Initialize master config features after a brief delay
-  setTimeout(() => {
-    console.log('🔧 Initializing master config integration');
-    
-    // Trigger business hours check if function exists
-    if (typeof checkBusinessHours === 'function') {
-      checkBusinessHours();
+  // IMPROVED: Integrate with master config immediately
+  console.log('🔧 Initializing master config integration');
+  
+  // Wait for master config to load, then initialize features
+  const initMasterConfig = () => {
+    if (typeof window.masterConfigLoaded !== 'undefined' && window.masterConfigLoaded) {
+      console.log('✅ Master config loaded, initializing features');
+      
+      // Trigger business hours check
+      if (typeof checkBusinessHours === 'function') {
+        checkBusinessHours();
+      }
+      
+      // Update phone numbers
+      if (typeof updatePhoneNumbers === 'function') {
+        updatePhoneNumbers();
+      }
+      
+      // Detect and update logo
+      if (typeof detectAndUpdateLogo === 'function') {
+        detectAndUpdateLogo();
+      }
+      
+      // Set up parameter forwarding
+      if (typeof updateExternalLinks === 'function') {
+        updateExternalLinks();
+      } else {
+        // Fallback parameter forwarding
+        setupParameterForwarding();
+      }
+      
+      console.log('✅ Master config integration complete');
+    } else {
+      // Retry after brief delay
+      setTimeout(initMasterConfig, 100);
     }
-    
-    // Update phone numbers if function exists
-    if (typeof updatePhoneNumbers === 'function') {
-      updatePhoneNumbers();
-    }
-    
-    // Detect and update logo if function exists
-    if (typeof detectAndUpdateLogo === 'function') {
-      detectAndUpdateLogo();
-    }
-    
-    console.log('✅ Master config integration complete');
-  }, 500);
+  };
+  
+  initMasterConfig();
 });
+
+// Fallback parameter forwarding if master config doesn't provide it
+function setupParameterForwarding() {
+  const currentParams = window.location.search;
+  if (!currentParams) return;
+  
+  console.log('🔗 Setting up parameter forwarding:', currentParams);
+  
+  document.querySelectorAll('a[href^="/"], a[href^="https://www.eek.nz/"], a[href^="https://eek.nz/"]').forEach(link => {
+    const href = link.getAttribute('href');
+    
+    if (href.startsWith('#') || href.includes('?') || link.onclick || href.startsWith('tel:')) return;
+    
+    link.onclick = function() {
+      this.href = href + currentParams;
+    };
+  });
+}
 
 function loadServiceConfig(serviceType){
   const config = serviceConfigs[serviceType] || serviceConfigs['jumpstart'];
@@ -1537,37 +1535,6 @@ async function generatePaymentLink(){
     alert('Unable to generate payment link automatically.\n\nPlease try one of these options:\n1. Refresh the page and try again\n2. Call us at 0800 769 000');
   }
 }
-
-// Handle parameter forwarding for external links
-function updateExternalLinks() {
-  const currentParams = window.location.search;
-  if (!currentParams) return;
-  
-  console.log('🔗 Updating external links to preserve parameters:', currentParams);
-  
-  // Update all links that don't already have onclick handlers for parameter forwarding
-  document.querySelectorAll('a[href^="/"], a[href^="https://www.eek.nz/"], a[href^="https://eek.nz/"]').forEach(link => {
-    const href = link.getAttribute('href');
-    
-    // Skip if it's an anchor link or already has parameters
-    if (href.startsWith('#') || href.includes('?') || link.onclick) return;
-    
-    // Skip phone links
-    if (href.startsWith('tel:')) return;
-    
-    // Add parameter forwarding
-    link.onclick = function() {
-      this.href = href + currentParams;
-    };
-    
-    console.log('  Updated link:', href, '-> will add params on click');
-  });
-}
-
-// Initialize parameter forwarding after page load
-window.addEventListener('load', function() {
-  updateExternalLinks();
-});
 </script>
 
 </body>
