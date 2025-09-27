@@ -12,9 +12,6 @@
   <meta property="og:url" content="https://www.eek.nz/book-service" />
   <meta property="og:image" content="https://www.eek.nz/og-image.jpg" />
 
-  <!-- Only booking-specific CSP additions -->
-  <meta http-equiv="Content-Security-Policy" content="connect-src 'self' https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com;">
-
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   
   <!-- Load base styles from main site -->
@@ -22,6 +19,15 @@
   
   <!-- Booking-specific style extensions only -->
   <style>
+    /* Fallback CSS variables in case main style doesn't load */
+    :root {
+      --brand: #ff5500;
+      --brand2: #ff7700;
+      --purple: #6f42c1;
+      --ok: #28a745;
+      --muted: #6c757d;
+    }
+    
     /* Extend base styles for booking form - no duplications */
     .booking-container{max-width:900px;margin:20px auto;background:#fff;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);overflow:hidden}
     .booking-header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:30px;text-align:center}
@@ -771,7 +777,7 @@ async function goToStep2(){
   if (!make) { alert('Please enter the vehicle make'); document.getElementById('makeInput').focus(); return; }
   if (!model) { alert('Please enter the vehicle model'); document.getElementById('modelInput').focus(); return; }
 
-  // WINZ specific validation
+  // Service specific validation
   if (window.currentConfig.isWinz) {
     if (!selectedEmergencyType) { alert('Please select an emergency type'); return; }
     if (!document.getElementById('detailsInput').value.trim()) { 
@@ -779,6 +785,12 @@ async function goToStep2(){
       document.getElementById('detailsInput').focus(); 
       return; 
     }
+  }
+  
+  // Voltage selection required for jumpstart
+  if (window.currentService === 'jumpstart' && !window.currentConfig.isWinz && !selectedVoltageId) {
+    alert('Please select your battery voltage (12V or 24V)');
+    return;
   }
 
   // Get pricing for non-WINZ services
