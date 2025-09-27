@@ -743,12 +743,18 @@ function setupUrgencyOptions() {
   const urgencyContainer = document.getElementById('urgencyOptions');
   const now = nowNZ();
   
-  // Calculate the three days
-  const today = new Date(now);
-  const tomorrow = new Date(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const dayAfter = new Date(now);
-  dayAfter.setDate(dayAfter.getDate() + 2);
+  // Check if it's after 4 PM - if so, move everything forward a day
+  const isAfter4PM = now.getHours() >= 16;
+  
+  // Calculate the three days, adjusting for 4 PM cutoff
+  const startDay = isAfter4PM ? 1 : 0; // Start from tomorrow if after 4 PM
+  
+  const day1 = new Date(now);
+  day1.setDate(day1.getDate() + startDay);
+  const day2 = new Date(now);
+  day2.setDate(day2.getDate() + startDay + 1);
+  const day3 = new Date(now);
+  day3.setDate(day3.getDate() + startDay + 2);
   
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -757,24 +763,29 @@ function setupUrgencyOptions() {
     return `${dayNames[date.getDay()]} ${date.getDate()} ${monthNames[date.getMonth()]}`;
   };
   
+  // Determine labels based on whether we shifted forward
+  const firstLabel = isAfter4PM ? `Tomorrow (${formatDate(day1)})` : `Today (${formatDate(day1)})`;
+  const secondLabel = isAfter4PM ? `${formatDate(day2)}` : `Tomorrow (${formatDate(day2)})`;
+  const thirdLabel = `${formatDate(day3)}`;
+  
   const options = [
     {
-      id: 'today',
-      title: `Today (${formatDate(today)})`,
-      time: 'Within 4 hours if available',
-      description: 'Subject to availability - confirmation after booking',
-      price: 289
+      id: isAfter4PM ? 'tomorrow' : 'today',
+      title: firstLabel,
+      time: isAfter4PM ? 'Next business day' : 'Within 4 hours if available',
+      description: isAfter4PM ? 'Priority next-day inspection' : 'Subject to availability - confirmation after booking',
+      price: isAfter4PM ? 239 : 289
     },
     {
-      id: 'tomorrow', 
-      title: `Tomorrow (${formatDate(tomorrow)})`,
-      time: 'Next business day',
-      description: 'Priority next-day inspection',
-      price: 239
+      id: isAfter4PM ? 'dayafter' : 'tomorrow', 
+      title: secondLabel,
+      time: isAfter4PM ? 'Standard scheduling' : 'Next business day',
+      description: isAfter4PM ? 'Regular appointment booking' : 'Priority next-day inspection',
+      price: isAfter4PM ? 199 : 239
     },
     {
-      id: 'dayafter',
-      title: `${formatDate(dayAfter)}`,
+      id: 'dayafter2',
+      title: thirdLabel,
       time: 'Standard scheduling',
       description: 'Regular appointment booking', 
       price: 199
