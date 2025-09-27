@@ -24,70 +24,6 @@ font-src 'self' data:;">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
   <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
 
-  <!-- Reddit Pixel -->
-  <script>
-    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
-    (window,document);
-    
-    // Helper functions to extract user data if available
-    function getEmailFromForm() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const emailParam = urlParams.get('email');
-      if (emailParam) return emailParam;
-      
-      const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"], input[id*="email"]');
-      for (let input of emailInputs) {
-        if (input.value && input.value.includes('@')) {
-          return input.value;
-        }
-      }
-      return null;
-    }
-    
-    function getPhoneFromForm() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const phoneParam = urlParams.get('phone');
-      if (phoneParam) return phoneParam;
-      
-      const phoneInputs = document.querySelectorAll('input[type="tel"], input[name*="phone"], input[id*="phone"]');
-      for (let input of phoneInputs) {
-        if (input.value) {
-          return input.value;
-        }
-      }
-      return null;
-    }
-    
-    function getUserId() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('uid') || urlParams.get('user_id') || urlParams.get('customer_id');
-    }
-    
-    function getMobileIds() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return {
-        idfa: urlParams.get('idfa'),
-        aaid: urlParams.get('aaid')
-      };
-    }
-    
-    const mobileIds = getMobileIds();
-    const initConfig = {};
-    
-    const email = getEmailFromForm();
-    const phoneNumber = getPhoneFromForm();
-    const externalId = getUserId();
-    
-    if (email) initConfig.email = email;
-    if (phoneNumber) initConfig.phoneNumber = phoneNumber;
-    if (externalId) initConfig.externalId = externalId;
-    if (mobileIds.idfa) initConfig.idfa = mobileIds.idfa;
-    if (mobileIds.aaid) initConfig.aaid = mobileIds.aaid;
-    
-    rdt('init', 'a2_hf16791nsdhx', Object.keys(initConfig).length > 0 ? initConfig : undefined);
-    rdt('track', 'PageVisit');
-  </script>
-
   <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
   <script>
@@ -143,9 +79,9 @@ font-src 'self' data:;">
 </head>
 <body>
 
-<!-- Business Closed Banner (hidden by default) -->
+<!-- Business Closed Banner (managed by master config) -->
 <div id="closedBanner" class="after-hours-banner" style="display: none; background: linear-gradient(135deg, #666, #888);">
-  <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
+  <h2 id="closedTitle">Currently Closed</h2>
   <div id="afterHoursMessage">
     <p><strong>Business Hours:</strong></p>
     <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
@@ -156,10 +92,11 @@ font-src 'self' data:;">
     <p><strong>We're currently experiencing high demand</strong></p>
     <p>Our mechanics are fully dispatched on emergency calls</p>
     <p>Please book online for the next available appointment or try calling again shortly</p>
-    <a href="#emergency-services" class="emergency-btn" data-track="customer_book_online" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
+    <a href="#emergency-services" class="emergency-btn" data-track="customer_book_online" style="background: rgba(255,255,255,0.25); margin-top: 10px;">Book Online Now</a>
   </div>
 </div>
 
+<!-- Payment Block (managed by master config) -->
 <section id="stripePaymentBlock" style="display: none; background-color: #ffffff; padding: 20px; text-align: center; color: #333; border-bottom: 2px solid #ff5500;">
   <div style="background-color: #f5f5f5; padding: 30px; border-radius: 12px; max-width: 700px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
     <h1 style="font-size: 2.2em; margin-bottom: 0.5em;">Secure Roadside Payment</h1>
@@ -184,11 +121,11 @@ font-src 'self' data:;">
   <div class="business-name">Eek Mobile Mechanical</div>
   <h1>More Options & Support</h1>
   <p class="tagline">Complete Service Options • Customer Support • Supplier Portal • Employment • Legal Resources</p>
-  <a class="cta-button phone-link" href="tel:0800769000" data-track="header_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+  <a class="cta-button phone-link" href="tel:0800769000" data-track="header_call">Call <span class="phone-display">0800 769 000</span></a>
 </header>
 
 <div class="keywords-highlight" id="emergency-services">
-  <h2>🚨 Emergency Services</h2>
+  <h2>Emergency Services</h2>
   <p>Need immediate help? Our emergency dispatch team is ready to assist you</p>
   <div class="service-keywords">
     <a href="/rescue-me" class="service-link" data-service="emergency" data-track="emergency_rescue" onclick="this.href='/rescue-me' + window.location.search" style="text-decoration: none; color: inherit;">
@@ -219,94 +156,95 @@ font-src 'self' data:;">
 </div>
 
 <div class="services" id="customer-support">
-  <h2>👥 Customer Services & Support</h2>
+  <h2>Customer Services & Support</h2>
   <p>Comprehensive support options for all your mobile mechanic needs</p>
   <ul>
-    <li>🚨 Emergency roadside assistance and rescue services</li>
-    <li>📞 Direct phone support during business hours</li>
-    <li>💬 Customer escalation and complaint resolution</li>
-    <li>📍 GPS location tools for emergency dispatch</li>
-    <li>📅 Online booking and appointment management</li>
-    <li>🔧 Service history and maintenance records</li>
+    <li>Emergency roadside assistance and rescue services</li>
+    <li>Direct phone support during business hours</li>
+    <li>Customer escalation and complaint resolution</li>
+    <li>GPS location tools for emergency dispatch</li>
+    <li>Online booking and appointment management</li>
+    <li>Service history and maintenance records</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="customer_call">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a href="/rescue-me" class="cta-button normal-hours-btn" data-track="customer_emergency" onclick="this.href='/rescue-me' + window.location.search" style="background: #dc3545;">🚨 Emergency Service</a>
-    <a href="/customer-escalation" class="cta-button normal-hours-btn" data-track="customer_support" onclick="this.href='/customer-escalation' + window.location.search" style="background: #6c757d;">💬 Customer Support</a>
-    <a href="#book-support" class="cta-button after-hours-btn service-link" data-service="support" data-track="customer_book_online" style="background: #28a745; display: none;">📅 Book Online</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="customer_call">Call <span class="phone-display">0800 769 000</span></a>
+    <a href="/rescue-me" class="cta-button normal-hours-btn" data-track="customer_emergency" onclick="this.href='/rescue-me' + window.location.search" style="background: #dc3545;">Emergency Service</a>
+    <a href="/customer-escalation" class="cta-button normal-hours-btn" data-track="customer_support" onclick="this.href='/customer-escalation' + window.location.search" style="background: #6c757d;">Customer Support</a>
+    <a href="#book-support" class="cta-button after-hours-btn service-link" data-service="support" data-track="customer_book_online" style="background: #28a745; display: none;">Book Online</a>
   </div>
 </div>
 
 <div class="services" id="business-services">
-  <h2>🤝 Business & Supplier Services</h2>
+  <h2>Business & Supplier Services</h2>
   <p>Partnership opportunities and business relationships with Eek Mobile Mechanical</p>
   <ul>
-    <li>🤝 Official supplier portal and partnership applications</li>
-    <li>📋 Supplier terms, conditions, and compliance requirements</li>
-    <li>💼 Business-to-business service contracts</li>
-    <li>🔗 Supply chain integration and logistics support</li>
-    <li>📊 Performance metrics and quality assurance programs</li>
-    <li>💰 Payment terms and invoicing systems</li>
+    <li>Official supplier portal and partnership applications</li>
+    <li>Supplier terms, conditions, and compliance requirements</li>
+    <li>Business-to-business service contracts</li>
+    <li>Supply chain integration and logistics support</li>
+    <li>Performance metrics and quality assurance programs</li>
+    <li>Payment terms and invoicing systems</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a href="/supplier" class="cta-button" data-track="supplier_portal" onclick="this.href='/supplier' + window.location.search" style="background: #17a2b8;">🤝 Supplier Portal</a>
-    <a href="/supplier-relations" class="cta-button" data-track="supplier_relations" onclick="this.href='/supplier-relations' + window.location.search" style="background: #6f42c1;">📝 Supplier Relations</a>
+    <a href="/supplier" class="cta-button" data-track="supplier_portal" onclick="this.href='/supplier' + window.location.search" style="background: #17a2b8;">Supplier Portal</a>
+    <a href="/supplier-relations" class="cta-button" data-track="supplier_relations" onclick="this.href='/supplier-relations' + window.location.search" style="background: #6f42c1;">Supplier Relations</a>
   </div>
 </div>
 
 <div class="services" id="employment">
-  <h2>💼 Employment & Careers</h2>
+  <h2>Employment & Careers</h2>
   <p>Join our growing team of mobile mechanical professionals across New Zealand</p>
   <ul>
-    <li>🔧 Mobile mechanic technician positions</li>
-    <li>📞 Dispatch and customer service roles</li>
-    <li>🚗 Company vehicle and equipment provision</li>
-    <li>📚 Comprehensive training and certification programs</li>
-    <li>💰 Competitive wages and performance bonuses</li>
-    <li>📈 Career advancement and professional development</li>
+    <li>Mobile mechanic technician positions</li>
+    <li>Dispatch and customer service roles</li>
+    <li>Company vehicle and equipment provision</li>
+    <li>Comprehensive training and certification programs</li>
+    <li>Competitive wages and performance bonuses</li>
+    <li>Career advancement and professional development</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a href="/apply" class="cta-button" data-track="employment_apply" onclick="this.href='/apply' + window.location.search" style="background: #fd7e14;">📝 Apply to Work</a>
+    <a href="/apply" class="cta-button" data-track="employment_apply" onclick="this.href='/apply' + window.location.search" style="background: #fd7e14;">Apply to Work</a>
   </div>
 </div>
 
 <div class="services" id="legal-resources">
-  <h2>🛡️ Legal & Compliance</h2>
+  <h2>Legal & Compliance</h2>
   <p>Terms, policies, privacy protection, and legal authority access</p>
   <ul>
-    <li>📋 End user terms and service conditions</li>
-    <li>📋 Supplier terms and business agreements</li>
-    <li>🔒 Privacy policy and data protection measures</li>
-    <li>🚨 Privacy violation reporting system</li>
-    <li>⚖️ Legal authority and compliance documentation</li>
-    <li>📞 Legal contact and support channels</li>
+    <li>End user terms and service conditions</li>
+    <li>Supplier terms and business agreements</li>
+    <li>Privacy policy and data protection measures</li>
+    <li>Privacy violation reporting system</li>
+    <li>Legal authority and compliance documentation</li>
+    <li>Legal contact and support channels</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a href="/terms" class="cta-button" data-track="legal_terms" onclick="this.href='/terms' + window.location.search" style="background: #6c757d;">📋 End User Terms</a>
-    <a href="/supplier-terms" class="cta-button" data-track="legal_supplier_terms" onclick="this.href='/supplier-terms' + window.location.search" style="background: #6c757d;">📋 Supplier Terms</a>
-    <a href="/privacy" class="cta-button" data-track="legal_privacy" onclick="this.href='/privacy' + window.location.search" style="background: #28a745;">🔒 Privacy Policy</a>
-    <a href="/privacy-report" class="cta-button" data-track="legal_privacy_report" onclick="this.href='/privacy-report' + window.location.search" style="background: #dc3545;">🚨 Privacy Report</a>
-    <a href="/mjuris" class="cta-button" data-track="legal_authority" onclick="this.href='/mjuris' + window.location.search" style="background: #ffc107; color: #000;">⚖️ Legal Authority</a>
+    <a href="/terms" class="cta-button" data-track="legal_terms" onclick="this.href='/terms' + window.location.search" style="background: #6c757d;">End User Terms</a>
+    <a href="/supplier-terms" class="cta-button" data-track="legal_supplier_terms" onclick="this.href='/supplier-terms' + window.location.search" style="background: #6c757d;">Supplier Terms</a>
+    <a href="/privacy" class="cta-button" data-track="legal_privacy" onclick="this.href='/privacy' + window.location.search" style="background: #28a745;">Privacy Policy</a>
+    <a href="/privacy-report" class="cta-button" data-track="legal_privacy_report" onclick="this.href='/privacy-report' + window.location.search" style="background: #dc3545;">Privacy Report</a>
+    <a href="/mjuris" class="cta-button" data-track="legal_authority" onclick="this.href='/mjuris' + window.location.search" style="background: #ffc107; color: #000;">Legal Authority</a>
   </div>
 </div>
 
 <div class="services" id="utility-tools">
-  <h2>🔧 Utility Tools & Resources</h2>
+  <h2>Utility Tools & Resources</h2>
   <p>Helpful tools and resources for customers and technicians</p>
   <ul>
-    <li>🗺️ Interactive maps and GPS location tools</li>
-    <li>📍 Find your current location for service dispatch</li>
-    <li>🧭 Navigation assistance for mobile technicians</li>
-    <li>📱 Mobile-friendly tools and applications</li>
-    <li>🔍 Service area coverage verification</li>
-    <li>📊 Real-time service availability status</li>
+    <li>Interactive maps and GPS location tools</li>
+    <li>Find your current location for service dispatch</li>
+    <li>Navigation assistance for mobile technicians</li>
+    <li>Mobile-friendly tools and applications</li>
+    <li>Service area coverage verification</li>
+    <li>Real-time service availability status</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a href="/map" class="cta-button" data-track="utility_maps" onclick="this.href='/map' + window.location.search" style="background: #20c997;">🗺️ Open Maps</a>
+    <a href="/map" class="cta-button" data-track="utility_maps" onclick="this.href='/map' + window.location.search" style="background: #20c997;">Open Maps</a>
   </div>
 </div>
 
-<a id="stripePaymentSticky" class="sticky-payment" href="#" data-track="customer_call">💳 Make Payment</a>
+<!-- Sticky payment button (managed by master config) -->
+<a id="stripePaymentSticky" class="sticky-payment" href="#" data-track="customer_call">Make Payment</a>
 
 <footer>
   &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
@@ -314,90 +252,22 @@ font-src 'self' data:;">
   <a href="/" data-track="footer_home" onclick="this.href='/' + window.location.search" style="color: #666; text-decoration: underline;">Main Services</a>
 </footer>
 
-<a class="sticky-call phone-link" href="tel:0800769000" data-track="sticky_call" id="stickyCallButton">📞 Call <span class="phone-display">Eek Now</span></a>
-<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" data-track="customer_support" style="display: none; background: #666;">🕐 View Hours</a>
+<!-- Sticky call buttons (managed by master config) -->
+<a class="sticky-call phone-link" href="tel:0800769000" data-track="sticky_call" id="stickyCallButton">Call <span class="phone-display">Eek Now</span></a>
+<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" data-track="customer_support" style="display: none; background: #666;">View Hours</a>
 
-<!-- Load Master Configuration -->
+<!-- MASTER CONFIG - HANDLES ALL TRACKING -->
 <script src="/eek-master-config.js"></script>
 
 <script>
-// Handle service selection card clicks
-function handleServiceSelection() {
-  document.querySelectorAll('.service-link').forEach(link => {
-    link.addEventListener('click', function(e) {
-      const bookingUrl = this.dataset.bookingUrl;
-      const href = this.getAttribute('href');
-      
-      // Only redirect to booking for service cards (not already direct booking links)
-      if (bookingUrl && href && href.startsWith('#')) {
-        e.preventDefault();
-        console.log('🎯 Redirecting to booking page:', bookingUrl);
-        // Preserve URL parameters when redirecting to booking
-        window.location.href = bookingUrl + window.location.search;
-      }
-    });
-  });
-}
-
-// Update external links to preserve URL parameters
-function updateExternalLinks() {
-  const currentParams = window.location.search;
-  if (!currentParams) return;
-  
-  console.log('🔗 Updating external links to preserve parameters:', currentParams);
-  
-  // Update all links that don't already have onclick handlers for parameter forwarding
-  document.querySelectorAll('a[href^="/"], a[href^="https://www.eek.nz/"]').forEach(link => {
-    const href = link.getAttribute('href');
-    
-    // Skip if it's an anchor link or already has parameters
-    if (href.startsWith('#') || href.includes('?') || link.onclick) return;
-    
-    // Skip phone links
-    if (href.startsWith('tel:')) return;
-    
-    // Add parameter forwarding
-    link.onclick = function() {
-      this.href = href + currentParams;
-    };
-    
-    console.log('  Updated link:', href, '-> will add params on click');
-  });
-}
-
-// Main page loaded
+// Page-specific logic only - all tracking handled by master config
 window.addEventListener('load', function() {
-  console.log('🚀 More Options page loaded with master config');
+  console.log('More Options page loaded - master config handling all tracking');
   
-  // Set up service selection handlers
+  // Set up service selection with booking URLs (handled by master config)
   handleServiceSelection();
   
-  // Update external links to preserve parameters
-  updateExternalLinks();
-  
-  // Track page view
-  if (typeof gtag !== 'undefined') {
-    gtag('event', 'page_view', {
-      'page_title': document.title,
-      'page_location': window.location.href
-    });
-  }
-  
-  console.log('✅ More Options page initialization complete');
-});
-
-// Scroll tracking
-let scrollTracked = false;
-window.addEventListener('scroll', function() {
-  if (!scrollTracked && window.scrollY > document.body.scrollHeight * 0.5) {
-    scrollTracked = true;
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'scroll_50_percent', {
-        'event_category': 'Engagement',
-        'event_label': 'Scrolled 50% of page'
-      });
-    }
-  }
+  console.log('More Options page initialization complete');
 });
 </script>
 
