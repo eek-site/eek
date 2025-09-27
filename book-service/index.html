@@ -100,7 +100,8 @@
     .terms-text a{color:var(--brand);text-decoration:none}
     .terms-text a:hover{text-decoration:underline}
 
-    .info-box{background:linear-gradient(135deg,#fff9e6,#fff3cd);border:2px solid #ffd700;border-radius:12px;padding:20px;margin:20px 0;text-align:left;position:relative;box-shadow:0 2px 8px rgba(255,193,7,.15)}
+    .info-box{background:linear-gradient(135deg,#fff9e6,#fff3cd);border:2px solid #ffd700;border-radius:12px;padding:20px;margin:20px 0;text-align:left;position:relative;box-shadow:0 2px 8px rgba(255,193,7,.15);min-height:0}
+    .info-box:empty{display:none}
     .info-box::before{content:'💡';position:absolute;top:-10px;left:20px;background:#ffd700;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:14px}
     .info-box h4{margin:0 0 15px 0;color:#b8860b;font-size:1.2em;font-weight:700}
     .info-box ul{margin:10px 0;padding-left:20px;color:#b8860b;line-height:1.6}
