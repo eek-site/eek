@@ -170,13 +170,6 @@
       <!-- SERVICE INFO BOX -->
       <div class="info-box" id="serviceInfoBox"></div>
 
-      <!-- REVIU WIDGET PLACEHOLDER -->
-      <div id="reviewWidget" style="display: none;">
-        <div data-bid="reviews-widget">
-          <!-- RevU widget will be loaded here -->
-        </div>
-      </div>
-
       <!-- NEXT BUTTON -->
       <div class="button-container">
         <button class="button" id="nextBtn" data-track="booking_step_1_complete">Next: Select Time</button>
@@ -262,7 +255,7 @@
 <!-- MASTER CONFIG LOADS FIRST -->
 <script src="/eek-master-config.js"></script>
 
-<!-- BOOKING-SPECIFIC JAVASCRIPT (FULLY INTEGRATED) -->
+<!-- BOOKING-SPECIFIC JAVASCRIPT (USES MASTER CONFIG ONLY) -->
 <script>
 // Service configurations
 const serviceConfigs = {
@@ -428,7 +421,7 @@ const serviceConfigs = {
 const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
 const WINZ_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95fc801df59b4250a48919ace91c0276/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mFpTX4gPrz1u1DbdfF3YqHBnAsW3pnAAj-GWXWvBYYc';
 
-// Global state - simplified since master config handles most of this
+// Global state - booking specific only (no duplicate tracking)
 let selectedUrgency = null;
 let selectedUrgencyDetails = {};
 let selectedVoltageId = null;
@@ -436,42 +429,35 @@ let selectedVoltagePrice = null;
 let selectedEmergencyType = null;
 let calculatedPrice = null;
 
-// Enhanced tracking function using master config
-async function sendBookingUpdate(status) {
+// USES MASTER CONFIG TRACKING ONLY
+function sendBookingUpdate(status) {
   if (!window.buildTrackingPayload || !window.sendTrackingEvent) {
     console.warn('Master config tracking functions not available');
     return;
   }
 
-  const data = window.buildTrackingPayload('booking_update', status, {
+  const additionalData = {
     name: document.getElementById('nameInput').value.trim(),
     phone: document.getElementById('phoneInput').value.replace(/\D/g,''),
     email: document.getElementById('emailInput').value.trim(),
     details: document.getElementById('detailsInput').value || '',
-    rego: document.getElementById('regoInput').value.toUpperCase().replace(/[^A-Z0-9]/g,''),
+    vehicleRego: document.getElementById('regoInput').value.toUpperCase().replace(/[^A-Z0-9]/g,''),
     year: document.getElementById('yearInput').value.trim(),
     make: document.getElementById('makeInput').value.trim(),
     model: document.getElementById('modelInput').value.trim(),
-    vehicleType: selectedVoltageId === '24v' ? 'truck' : 'car',
     service: window.currentService,
-    serviceCode: window.currentConfig.serviceCode,
-    serviceTitle: window.currentConfig.title,
+    serviceCode: window.currentConfig?.serviceCode,
+    serviceTitle: window.currentConfig?.title,
     locationString: document.getElementById('locationInput').value.trim(),
     source: 'booking_form',
-    formVersion: '2.5',
+    formVersion: '3.0',
     bookingStatus: status,
-    
-    // Enhanced business context from master config
-    duringBusinessHours: window.isWithinBusinessHours ? window.isWithinBusinessHours() : false,
-    systemActive: window.EEK_STATE?.systemActive || true,
-    phoneNumberType: window.getDisplayPhoneNumber ? 
-      (window.getDisplayPhoneNumber().tel === window.EEK_CONFIG?.PHONE_NUMBERS?.tracking.tel ? 'tracking' : 'default') : 'unknown',
     
     // Add booking-specific fields based on status
     ...(status === 'time_selected' && {
       selectedTime: selectedUrgencyDetails.time || '',
       selectedUrgency: selectedUrgency,
-      calculatedPrice: calculatedPrice || window.currentConfig.basePrice,
+      calculatedPrice: calculatedPrice || window.currentConfig?.basePrice,
       finalPrice: getTotalPrice()
     }),
 
@@ -487,26 +473,26 @@ async function sendBookingUpdate(status) {
       selectedVoltage: selectedVoltageId,
       batteryVoltage: selectedVoltageId === '12v' ? '12V' : '24V'
     })
-  });
+  };
   
-  return await window.sendTrackingEvent(data);
+  const payload = window.buildTrackingPayload('booking_update', status, additionalData);
+  return window.sendTrackingEvent(payload);
 }
 
-// Initialize booking form with full master config integration
+// Initialize booking form - uses master config tracking
 function initializeBookingForm() {
   const urlParams = new URLSearchParams(window.location.search);
   const service = urlParams.get('service') || 'jumpstart';
   
   // Redirect inspection to dedicated page
   if (service === 'inspection') {
-    window.location.href = `https://eek.nz/pre-purchase-vehicle-inspection/${window.location.search}`;
+    window.location.href = `/pre-purchase-vehicle-inspection/${window.location.search}`;
     return;
   }
   
   loadServiceConfig(service);
   setupEventHandlers();
-  updateBusinessContext(); // Use master config business context
-  setupFormAbandonmentTracking(); // Use master config tracking
+  updateBusinessContext();
   
   // Track conversion using master config
   if (window.trackConversion) {
@@ -541,53 +527,6 @@ function updateBusinessContext() {
   } else {
     notice.style.display = 'none';
   }
-}
-
-// Set up form abandonment tracking using master config
-function setupFormAbandonmentTracking() {
-  if (!window.buildTrackingPayload || !window.sendTrackingEvent) return;
-  
-  let formStartTime = Date.now();
-  let hasInteracted = false;
-  
-  // Track when user first interacts with form
-  document.addEventListener('input', function() {
-    if (!hasInteracted) {
-      hasInteracted = true;
-      const payload = window.buildTrackingPayload('form_interaction', 'first_form_interaction', {
-        timeToFirstInteraction: Date.now() - formStartTime,
-        service: window.currentService
-      });
-      window.sendTrackingEvent(payload);
-    }
-  });
-  
-  // Track form abandonment on page unload
-  window.addEventListener('beforeunload', function() {
-    if (hasInteracted && document.querySelector('.step.active')?.id !== 'step3') {
-      const currentStep = document.querySelector('.step.active')?.id || 'unknown';
-      const timeOnForm = Date.now() - formStartTime;
-      
-      // Only track if user spent meaningful time and didn't complete
-      if (timeOnForm > 30000) { // 30 seconds minimum
-        const payload = window.buildTrackingPayload('form_abandonment', 'booking_abandoned', {
-          abandonedAtStep: currentStep,
-          timeOnForm: timeOnForm,
-          service: window.currentService,
-          hasName: !!document.getElementById('nameInput').value.trim(),
-          hasPhone: !!document.getElementById('phoneInput').value.trim(),
-          hasEmail: !!document.getElementById('emailInput').value.trim(),
-          selectedVoltage: selectedVoltageId,
-          selectedEmergencyType: selectedEmergencyType
-        });
-        
-        // Use sendBeacon for reliable tracking on page unload
-        if (navigator.sendBeacon && window.EEK_CONFIG?.TRACKING_API_URL) {
-          navigator.sendBeacon(window.EEK_CONFIG.TRACKING_API_URL, JSON.stringify(payload));
-        }
-      }
-    }
-  });
 }
 
 function loadServiceConfig(serviceType) {
@@ -659,26 +598,12 @@ function loadServiceConfig(serviceType) {
     termsList.innerHTML = '';
   }
 
-  // Set up service-specific header buttons
-  setupServiceHeaderButtons(serviceType);
-
   window.currentService = serviceType;
   window.currentConfig = config;
 }
 
-// Setup service-specific header buttons with proper state management
-function setupServiceHeaderButtons(serviceType) {
-  const normalBtn = document.querySelector('.cta-button.normal-hours-btn');
-  const afterHoursBtn = document.querySelector('.cta-button.after-hours-btn');
-  
-  if (afterHoursBtn) {
-    afterHoursBtn.dataset.service = serviceType;
-    afterHoursBtn.dataset.bookingUrl = `/book-service/?service=${serviceType}`;
-  }
-}
-
 function setupEventHandlers() {
-  // Emergency type selection with enhanced tracking
+  // Emergency type selection with master config tracking
   document.getElementById('emergencyOptions').addEventListener('click', function(e) {
     const option = e.target.closest('.emergency-option');
     if (option) {
@@ -694,7 +619,7 @@ function setupEventHandlers() {
     }
   });
 
-  // Voltage selection with enhanced tracking
+  // Voltage selection with master config tracking
   document.getElementById('voltageGrid').addEventListener('click', function(e) {
     const card = e.target.closest('.voltage-card');
     if (card) {
@@ -707,13 +632,10 @@ function setupEventHandlers() {
       if (window.trackConversion) {
         window.trackConversion(`battery_${selectedVoltageId}_selected`, 'Booking');
       }
-      
-      // Update price display using master config business logic
-      updateVoltagePrice(card);
     }
   });
 
-  // Urgency selection with enhanced tracking
+  // Urgency selection with master config tracking
   document.getElementById('urgencyOptions').addEventListener('click', function(e) {
     const option = e.target.closest('.urgency-option');
     if (option) {
@@ -749,55 +671,6 @@ function setupEventHandlers() {
   });
   
   document.getElementById('generatePaymentBtn').addEventListener('click', generatePaymentLink);
-
-  // Enhanced form field tracking for engagement analytics
-  setupFormFieldTracking();
-}
-
-// Enhanced form field tracking using master config
-function setupFormFieldTracking() {
-  if (!window.buildTrackingPayload || !window.sendTrackingEvent) return;
-  
-  const trackableFields = ['nameInput', 'phoneInput', 'emailInput', 'locationInput', 'detailsInput'];
-  trackableFields.forEach(fieldId => {
-    const field = document.getElementById(fieldId);
-    if (field) {
-      field.addEventListener('focus', function() {
-        const payload = window.buildTrackingPayload('form_interaction', `${fieldId}_focused`, {
-          fieldType: field.type || 'text',
-          step: document.querySelector('.step.active')?.id || 'unknown'
-        });
-        window.sendTrackingEvent(payload);
-      });
-      
-      // Track form field completion for conversion optimization
-      field.addEventListener('blur', function() {
-        if (this.value.trim()) {
-          const payload = window.buildTrackingPayload('form_interaction', `${fieldId}_completed`, {
-            fieldType: field.type || 'text',
-            step: document.querySelector('.step.active')?.id || 'unknown',
-            hasValue: !!this.value.trim()
-          });
-          window.sendTrackingEvent(payload);
-        }
-      });
-    }
-  });
-}
-
-// Update voltage price with business logic
-function updateVoltagePrice(card) {
-  if (!window.EEK_STATE) return;
-  
-  const systemActive = window.EEK_STATE.systemActive;
-  const duringBusinessHours = window.isWithinBusinessHours ? window.isWithinBusinessHours() : false;
-  let finalPrice = selectedVoltagePrice;
-  
-  if (!systemActive && !duringBusinessHours) {
-    finalPrice = Math.round(finalPrice * 1.2); // 20% after-hours surcharge
-  }
-  
-  card.querySelector('.voltage-price').textContent = `$${finalPrice}`;
 }
 
 function goToStep1() {
@@ -838,34 +711,7 @@ async function goToStep2() {
     window.trackConversion(`${window.currentService}_step_1_complete`, 'Booking');
   }
   
-  // Calculate price using master config business logic
-  if (!window.currentConfig.isWinz) {
-    const btn = document.getElementById('nextBtn');
-    btn.disabled = true;
-    btn.textContent = 'Calculating price...';
-    
-    try {
-      const systemActive = window.EEK_STATE?.systemActive;
-      const duringBusinessHours = window.isWithinBusinessHours ? window.isWithinBusinessHours() : false;
-      
-      calculatedPrice = window.currentConfig.basePrice;
-      
-      if (!systemActive && !duringBusinessHours) {
-        // Use after-hours pricing if available
-        const afterHoursAction = `${window.currentService}_after_hours`;
-        calculatedPrice = window.EEK_CONFIG?.SERVICE_VALUES?.[afterHoursAction] ? 
-          window.EEK_CONFIG.SERVICE_VALUES[afterHoursAction] / 100 : Math.round(calculatedPrice * 1.2);
-      }
-      
-      await sendBookingUpdate('details_complete');
-    } catch (err) {
-      console.error('Price calculation error:', err);
-      calculatedPrice = window.currentConfig.basePrice;
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Next: Select Time';
-    }
-  }
+  await sendBookingUpdate('details_complete');
 
   // Move to step 2
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
@@ -880,10 +726,6 @@ async function goToStep2() {
 function setupUrgencyOptions() {
   const urgencyContainer = document.getElementById('urgencyOptions');
   
-  // Use master config to determine pricing strategy
-  const systemActive = window.EEK_STATE?.systemActive;
-  const duringBusinessHours = window.isWithinBusinessHours ? window.isWithinBusinessHours() : false;
-  
   urgencyContainer.innerHTML = window.currentConfig.urgencyOptions.map(o => {
     let displayPrice = calculatedPrice || window.currentConfig.basePrice;
     
@@ -894,29 +736,15 @@ function setupUrgencyOptions() {
       displayPrice = selectedVoltagePrice;
     }
     
-    // Apply after-hours surcharge if applicable
-    if (!systemActive && !duringBusinessHours) {
-      const afterHoursMultiplier = 1.2; // 20% surcharge
-      displayPrice = Math.round(displayPrice * afterHoursMultiplier);
-    }
-    
     const priceHtml = (o.hidePrice || window.currentConfig.hidePrice) ? 
       '<div class="urgency-price calculating">Price in quote</div>' :
       `<div class="urgency-price">$${displayPrice}</div>`;
-    
-    // Add business context to urgency descriptions
-    let description = o.description;
-    if (!systemActive && duringBusinessHours) {
-      description += ' • High demand period';
-    } else if (!duringBusinessHours) {
-      description += ' • After hours service';
-    }
     
     return `
       <div class="urgency-option" data-id="${o.id}" data-title="${o.title}" data-time="${o.time}" data-price="${o.price || displayPrice}">
         <div class="urgency-title">${o.title}</div>
         <div class="urgency-time">${o.time}</div>
-        <div class="urgency-description">${description}</div>
+        <div class="urgency-description">${o.description}</div>
         ${priceHtml}
       </div>`;
   }).join('');
@@ -962,9 +790,6 @@ async function goToStep3() {
 }
 
 function getTotalPrice() {
-  const systemActive = window.EEK_STATE?.systemActive;
-  const duringBusinessHours = window.isWithinBusinessHours ? window.isWithinBusinessHours() : true;
-  
   let basePrice = 0;
   
   if (window.currentConfig.isWinz) {
@@ -978,19 +803,6 @@ function getTotalPrice() {
     basePrice = option ? option.price : window.currentConfig.basePrice;
   } else {
     basePrice = calculatedPrice || selectedUrgencyDetails.price || window.currentConfig.basePrice;
-  }
-  
-  // Apply master config business logic for after-hours pricing
-  if (!systemActive && !duringBusinessHours) {
-    // Check if master config has specific after-hours pricing
-    const afterHoursAction = `${window.currentService}_after_hours`;
-    const afterHoursPrice = window.EEK_CONFIG?.SERVICE_VALUES?.[afterHoursAction];
-    
-    if (afterHoursPrice) {
-      return afterHoursPrice / 100; // Convert from cents
-    } else {
-      return Math.round(basePrice * 1.2); // 20% surcharge if no specific pricing
-    }
   }
   
   return basePrice;
@@ -1163,7 +975,7 @@ async function generatePaymentLink() {
     btn.disabled = false;
     btn.textContent = 'Generate Payment Link';
     
-    // Track payment generation failure
+    // Track payment generation failure using master config
     if (window.buildTrackingPayload && window.sendTrackingEvent) {
       const failurePayload = window.buildTrackingPayload('booking_error', 'payment_generation_failed', {
         errorMessage: err.message,
@@ -1177,17 +989,14 @@ async function generatePaymentLink() {
   }
 }
 
-// Initialize when DOM is ready
+// Initialize when DOM is ready - wait for master config
 document.addEventListener('DOMContentLoaded', function() {
-  // Wait a moment for master config to load, then initialize
   setTimeout(initializeBookingForm, 200);
 });
 </script>
 
-<!-- Additional CSS for missing features -->
+<!-- Additional CSS for booking styles -->
 <style>
-/* FULLY INTEGRATED STYLES */
-
 /* Breadcrumb Navigation */
 .breadcrumb {
   background: #f8f9fa;
@@ -1236,41 +1045,6 @@ document.addEventListener('DOMContentLoaded', function() {
 .business-notice p {
   margin: 0;
   color: #666;
-}
-
-/* Enhanced Header Button States */
-.cta-button.after-hours-btn {
-  background-color: var(--eek-success);
-  display: none;
-}
-
-.cta-button.after-hours-btn:hover {
-  background-color: var(--eek-success-hover);
-}
-
-/* Show/hide buttons based on system state */
-body.eek-system-inactive .after-hours-btn {
-  display: inline-block !important;
-}
-
-body.eek-system-inactive .normal-hours-btn {
-  display: none !important;
-}
-
-/* RevU Widget Styles (from CSS file) */
-.services [data-bid] {
-  max-height: 400px;
-  overflow-y: auto;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 15px;
-  background: #fafafa;
-  margin-top: 15px;
-}
-
-.services [data-bid] * {
-  max-width: 100% !important;
-  box-sizing: border-box;
 }
 
 /* BOOKING-SPECIFIC STYLES */
