@@ -646,18 +646,21 @@ document.addEventListener('DOMContentLoaded', function(){
     return;
   }
   
-  // Wait for master config, then initialize
-  const initBooking = () => {
+  // Initialize immediately - don't wait for master config for booking logic
+  console.log('✅ Initializing booking immediately');
+  loadServiceConfig(service);
+  sendBookingUpdate(BOOKING_STATUS.INITIAL);
+  
+  // Wait for master config for UI elements
+  const waitForMasterConfig = () => {
     if (typeof window.masterConfigLoaded !== 'undefined' && window.masterConfigLoaded) {
-      console.log('✅ Master config ready, initializing booking');
-      loadServiceConfig(service);
-      sendBookingUpdate(BOOKING_STATUS.INITIAL);
+      console.log('✅ Master config ready for UI updates');
     } else {
-      setTimeout(initBooking, 50);
+      setTimeout(waitForMasterConfig, 50);
     }
   };
   
-  initBooking();
+  waitForMasterConfig();
 });
 
 function loadServiceConfig(serviceType){
