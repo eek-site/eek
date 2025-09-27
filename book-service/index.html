@@ -120,6 +120,23 @@
     .button:disabled{background:#ddd;color:#999;cursor:not-allowed;transform:none;box-shadow:none}
     .button:disabled:hover{background:#ddd;transform:none;box-shadow:none}
 
+    .breadcrumb {
+      text-align: center;
+      margin: 10px auto;
+      max-width: 800px;
+      color: #666;
+      font-size: 0.9em;
+    }
+
+    .breadcrumb a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
     @media (max-width: 768px) {
       .booking-steps{padding:20px}
       .urgency-options{grid-template-columns:1fr}
@@ -130,25 +147,49 @@
 </head>
 <body>
 
-<!-- These elements will be populated by master config -->
+<!-- THESE ELEMENTS WILL BE MANAGED BY MASTER CONFIG -->
 <div id="closedBanner" class="after-hours-banner" style="display: none;">
-  <h2 id="closedTitle"></h2>
-  <div id="afterHoursMessage"></div>
-  <div id="tempUnavailableMessage" style="display: none;"></div>
+  <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
+  <div id="afterHoursMessage">
+    <p><strong>Business Hours:</strong></p>
+    <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
+    <p>Saturday - Sunday: 7:00 AM - 12:00 PM</p>
+    <p>Please call during business hours or book online for next available service</p>
+  </div>
+  <div id="tempUnavailableMessage" style="display: none;">
+    <p><strong>We're currently experiencing high demand</strong></p>
+    <p>Our mechanics are fully dispatched on emergency calls</p>
+    <p>Please book online for the next available appointment or try calling again shortly</p>
+    <a href="#service-selection" class="emergency-btn" data-track="customer_book_online" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
+  </div>
 </div>
 
-<section id="stripePaymentBlock" style="display: none;">
-  <!-- Master config will populate this -->
+<section id="stripePaymentBlock" style="display: none; background-color: #ffffff; padding: 20px; text-align: center; color: #333; border-bottom: 2px solid #ff5500;">
+  <div style="background-color: #f5f5f5; padding: 30px; border-radius: 12px; max-width: 700px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+    <h1 style="font-size: 2.2em; margin-bottom: 0.5em;">Secure Roadside Payment</h1>
+    <p style="font-size: 1.2em; margin-bottom: 1.5em;">Confirm your payment to get help on the way — fast, safe, and secure.</p>
+    <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: #333;">
+      <input type="checkbox" id="termsCheckbox" style="transform: scale(1.5);" />
+      <span>I agree to the Eek Mobile Mechanical terms of service 
+        <a href="https://www.eek.nz/terms" target="_blank" data-track="legal_terms" onclick="this.href='https://www.eek.nz/terms' + window.location.search" style="color: #ff5500; text-decoration: underline;">
+          View terms of use
+        </a>
+      </span>
+    </label>
+    <br><br>
+    <button id="payNowButton" style="display: none; background-color: #ff5500; color: white; padding: 14px 32px; font-size: 1.2em; border: none; border-radius: 8px; cursor: pointer;">
+      Pay Now
+    </button>
+  </div>
 </section>
 
+<!-- HEADER THAT WILL BE MANAGED BY MASTER CONFIG -->
 <header>
-  <!-- Logo with fallback src for master config detection -->
-  <img id="headerImage" src="/brand-image.png" alt="Eek Mobile Mechanical - Mobile Mechanic Services" />
+  <img src="/brand-image.png" alt="Eek Mobile Mechanical - Mobile Mechanic Services" />
   <div class="business-name">Eek Mobile Mechanical</div>
   <h1 id="headerTitle">Emergency Mobile Mechanic Service</h1>
   <p class="tagline" id="headerSubtitle">Mobile Mechanic • Pre Purchase Inspections • Wrong Fuel Removal • Emergency Roadside Repairs • 30–60 Min Response</p>
-  <!-- Phone number will be populated by master config -->
-  <a class="cta-button phone-link" href="tel:" data-track="header_call">📞 Call <span class="phone-display"></span></a>
+  <a class="cta-button phone-link" href="tel:0800769000" data-track="header_call">📞 Call <span class="phone-display">0800 769 000</span></a>
 </header>
 
 <div class="breadcrumb">
@@ -307,7 +348,7 @@
   </div>
 </div>
 
-<!-- These will be populated by master config -->
+<!-- THESE WILL BE MANAGED BY MASTER CONFIG -->
 <a id="stripePaymentSticky" class="sticky-payment" href="#" data-track="customer_call">💳 Make Payment</a>
 
 <footer>
@@ -316,16 +357,24 @@
   <a href="/more-options" data-track="more_options_call">More Options</a>
 </footer>
 
-<!-- Phone will be populated by master config -->
-<a class="sticky-call phone-link" href="tel:" data-track="sticky_call" id="stickyCallButton">📞 Call <span class="phone-display"></span></a>
+<a class="sticky-call phone-link" href="tel:0800769000" data-track="sticky_call" id="stickyCallButton">📞 Call <span class="phone-display">0800 769 000</span></a>
 <a class="sticky-call" href="#closedBanner" id="stickyClosedButton" data-track="customer_support" style="display: none; background: #666;">🕐 View Hours</a>
 
-<!-- Master config handles all shared functionality -->
+<!-- MASTER CONFIG LOADS FIRST -->
 <script src="/eek-master-config.js"></script>
 
-<!-- Booking-specific JavaScript - focused only on booking logic -->
+<!-- BOOKING-SPECIFIC JAVASCRIPT AFTER MASTER CONFIG -->
 <script>
-console.log('🚀 Booking form loaded - waiting for master config');
+console.log('🚀 Booking form initializing...');
+
+// Wait for master config to be fully loaded
+async function waitForMasterConfig() {
+  while (typeof window.EEK_CONFIG === 'undefined' || typeof window.EEK_STATE === 'undefined') {
+    console.log('⏳ Waiting for master config...');
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  console.log('✅ Master config is ready');
+}
 
 // NZ timezone helpers
 const NZ_TZ = 'Pacific/Auckland';
@@ -360,7 +409,7 @@ const STATUS_COLORS = {
   'winz_quote_sent': '#20c997'
 };
 
-// Service configurations - booking form only manages service logic
+// Service configurations
 const serviceConfigs = {
   'jumpstart': {
     title:'Battery Jump Start Service',
@@ -526,9 +575,8 @@ const serviceConfigs = {
   }
 };
 
-// API URLs - booking specific
+// API URLs - use master config's URLs where available
 const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
-const PRICING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
 const WINZ_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95fc801df59b4250a48919ace91c0276/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mFpTX4gPrz1u1DbdfF3YqHBnAsW3pnAAj-GWXWvBYYc';
 
 // Global state - booking specific only
@@ -539,7 +587,7 @@ let selectedVoltagePrice = null;
 let selectedEmergencyType = null;
 let calculatedPrice = null;
 
-// Helpers
+// Helper functions
 function sanitizePhone(val){ return (val || '').replace(/\D/g,''); }
 function sanitizeRego(val){ return (val || '').toUpperCase().replace(/[^A-Z0-9]/g,''); }
 function sanitizeText(val){ return (val || '').trim().replace(/\s+/g,' '); }
@@ -548,7 +596,7 @@ function buildBookingData(status) {
   const urlParams = new URLSearchParams(window.location.search);
   
   return {
-    sessionId: window.sessionId || localStorage.getItem("eek_session_id"),
+    sessionId: window.EEK_STATE?.sessionId || localStorage.getItem("eek_session_id"),
     bookingStatus: status,
     statusColor: STATUS_COLORS[status] || '#6c757d',
     timestamp: new Date().toISOString(),
@@ -573,15 +621,9 @@ function buildBookingData(status) {
     source: 'booking_form',
     formVersion: '2.2',
     
-    // Use master config's stored UTM data
-    gclid: localStorage.getItem("eek_gclid") || urlParams.get('gclid') || null,
-    utm: {
-      source: localStorage.getItem("eek_utm_source") || null,
-      medium: localStorage.getItem("eek_utm_medium") || null,
-      campaign: localStorage.getItem("eek_utm_campaign") || null,
-      term: localStorage.getItem("eek_utm_term") || null,
-      content: localStorage.getItem("eek_utm_content") || null
-    },
+    // Use master config's stored UTM/tracking data
+    gclid: window.EEK_STATE?.storedGclidForTracking || localStorage.getItem("eek_gclid") || urlParams.get('gclid') || null,
+    utm: window.EEK_STATE?.utmData || {},
 
     // Booking specific fields
     ...(status === BOOKING_STATUS.TIME_SELECTED && {
@@ -611,7 +653,11 @@ async function sendBookingUpdate(status) {
   console.log(`📡 Booking ${status}:`, data);
   
   try {
-    const response = await fetch(PRICING_API_URL, {
+    // Use master config's tracking API if available
+    const apiUrl = window.EEK_CONFIG?.TRACKING_API_URL || window.EEK_CONFIG?.PRICING_API_URL || 
+                   'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
+    
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data)
@@ -623,20 +669,26 @@ async function sendBookingUpdate(status) {
   }
 }
 
-// Initialize when master config is ready
-document.addEventListener('DOMContentLoaded', function(){
+// Main initialization function
+async function initializeBookingForm() {
+  console.log('🚀 Starting booking form initialization...');
+  
+  // Wait for master config
+  await waitForMasterConfig();
+  
   const urlParams = new URLSearchParams(window.location.search);
   const service = urlParams.get('service') || 'jumpstart';
   const sessionId = urlParams.get('session_id');
   
   console.log('📌 Service:', service);
   
-  // Handle session ID
+  // Handle session ID - use master config's session management
   if (sessionId) {
     window.sessionId = sessionId;
     localStorage.setItem("eek_session_id", sessionId);
   } else {
-    window.sessionId = localStorage.getItem("eek_session_id") || `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    window.sessionId = window.EEK_STATE?.sessionId || localStorage.getItem("eek_session_id") || 
+                      `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     localStorage.setItem("eek_session_id", window.sessionId);
   }
   
@@ -646,22 +698,13 @@ document.addEventListener('DOMContentLoaded', function(){
     return;
   }
   
-  // Initialize immediately - don't wait for master config for booking logic
-  console.log('✅ Initializing booking immediately');
+  // Initialize booking
+  console.log('✅ Initializing booking with master config integration');
   loadServiceConfig(service);
   sendBookingUpdate(BOOKING_STATUS.INITIAL);
   
-  // Wait for master config for UI elements
-  const waitForMasterConfig = () => {
-    if (typeof window.masterConfigLoaded !== 'undefined' && window.masterConfigLoaded) {
-      console.log('✅ Master config ready for UI updates');
-    } else {
-      setTimeout(waitForMasterConfig, 50);
-    }
-  };
-  
-  waitForMasterConfig();
-});
+  console.log('📊 Booking initialization complete with master config integration');
+}
 
 function loadServiceConfig(serviceType){
   const config = serviceConfigs[serviceType] || serviceConfigs['jumpstart'];
@@ -1036,7 +1079,7 @@ function buildRedirectUrl(){
   params.append('bookingTime', new Date().toISOString());
   
   // Tracking data from master config
-  const gclid = localStorage.getItem("eek_gclid") || urlParams.get('gclid');
+  const gclid = window.EEK_STATE?.storedGclidForTracking || localStorage.getItem("eek_gclid") || urlParams.get('gclid');
   if (gclid) params.append('gclid', gclid);
   if (window.sessionId) params.append('session_id', window.sessionId);
   
@@ -1125,7 +1168,7 @@ async function generatePaymentLink(){
       scheduledDate: fmtDateNZ(nowNZ()),
       scheduledTime: selectedUrgencyDetails.time || '',
       urgencyLevel: selectedUrgency || 'emergency',
-      gclid: localStorage.getItem("eek_gclid"),
+      gclid: window.EEK_STATE?.storedGclidForTracking || localStorage.getItem("eek_gclid"),
       sessionId: window.sessionId,
       ...(window.currentService === 'jumpstart' ? { 
         batteryVoltage: selectedVoltageId === '12v' ? '12V' : '24V' 
@@ -1172,6 +1215,13 @@ async function generatePaymentLink(){
     alert('Unable to generate payment link automatically.\n\nPlease call us at 0800 769 000 or try refreshing the page.');
   }
 }
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', initializeBookingForm);
+
+// Mark that booking script is loaded (for master config)
+window.bookingFormLoaded = true;
+console.log('✅ Booking form script loaded and ready');
 </script>
 
 </body>
