@@ -296,11 +296,6 @@
         <script id="popup-rating-widget-script" src="https://widget.reviewability.com/js/popupWidget.min.js" data-gfspw="https://app.revu.cloud/popup-pixel/get/1e8ac54d1020ced847d10f515125aa3ff719d1f3" async></script>
       </div>
 
-      <!-- RevU Popup Rating Widget -->
-      <div id="popup-rating-widget">
-        <script id="popup-rating-widget-script" src="https://widget.reviewability.com/js/popupWidget.min.js" data-gfspw="https://app.revu.cloud/popup-pixel/get/1e8ac54d1020ced847d10f515125aa3ff719d1f3" async></script>
-      </div>
-
       <div style="text-align:center;margin:20px 0;">
         <button class="button" id="nextBtn" onclick="goToStep2()">Next: Select Time</button>
       </div>
@@ -477,21 +472,24 @@ const inspectionConfig = {
       title: 'Today (if available)',
       time: 'Within 4 hours',
       description: 'Emergency same-day inspection',
-      priceMultiplier: 1.5
+      priceMultiplier: 1.0,
+      fixedPrice: 289  // Weekend price for emergency
     },
     {
       id: 'tomorrow',
       title: 'Tomorrow',
       time: 'Next business day',
-      description: 'Priority next-day inspection',
-      priceMultiplier: 1.2
+      description: 'Priority next-day inspection', 
+      priceMultiplier: 1.0,
+      fixedPrice: 239  // Between weekday and weekend
     },
     {
       id: 'scheduled',
       title: 'Scheduled Service',
       time: 'Within 2-3 days',
       description: 'Standard scheduling',
-      priceMultiplier: 1.0
+      priceMultiplier: 1.0,
+      fixedPrice: null  // Use calculated or base price
     }
   ],
   vehicleTypes: [
@@ -750,10 +748,11 @@ function setupUrgencyOptions() {
   const basePrice = calculatedPrice || (isWeekendNZ(now) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
   
   urgencyContainer.innerHTML = inspectionConfig.urgencyOptions.map(option => {
-    const price = Math.round(basePrice * option.priceMultiplier);
+    // Use fixed price if specified, otherwise use base price
+    const price = option.fixedPrice || basePrice;
     
     return `
-      <div class="urgency-option" onclick="selectUrgency('${option.id}','${option.title}','${option.time}',${option.priceMultiplier},this)">
+      <div class="urgency-option" onclick="selectUrgency('${option.id}','${option.title}','${option.time}',${price},this)">
         <div class="urgency-title">${option.title}</div>
         <div class="urgency-time">${option.time}</div>
         <div class="urgency-description">${option.description}</div>
@@ -762,11 +761,11 @@ function setupUrgencyOptions() {
   }).join('');
 }
 
-function selectUrgency(id, title, time, priceMultiplier, el){
+function selectUrgency(id, title, time, price, el){
   document.querySelectorAll('.urgency-option.selected').forEach(x => x.classList.remove('selected'));
   el.classList.add('selected');
   selectedUrgency = id;
-  selectedUrgencyDetails = { title, time, priceMultiplier };
+  selectedUrgencyDetails = { title, time, basePrice: price };
   
   document.getElementById('confirmTimeBtn').disabled = false;
 }
@@ -794,12 +793,11 @@ async function goToStep3(){
 
 function setupVehicleTypes() {
   const vehicleContainer = document.getElementById('vehicleTypes');
-  const now = nowNZ();
-  const basePrice = calculatedPrice || (isWeekendNZ(now) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
-  const urgencyPrice = Math.round(basePrice * (selectedUrgencyDetails.priceMultiplier || 1.0));
+  const basePrice = selectedUrgencyDetails.basePrice || calculatedPrice || 
+    (isWeekendNZ(nowNZ()) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
   
   vehicleContainer.innerHTML = inspectionConfig.vehicleTypes.map(type => {
-    const totalPrice = urgencyPrice + type.addon;
+    const totalPrice = basePrice + type.addon;
     const popularClass = type.popular ? 'popular' : '';
     const selectedClass = type.id === 'standard' ? 'selected' : '';
     
@@ -835,10 +833,9 @@ async function goToStep4(){
 }
 
 function getTotalPrice(){
-  const now = nowNZ();
-  const basePrice = calculatedPrice || (isWeekendNZ(now) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
-  const urgencyPrice = Math.round(basePrice * (selectedUrgencyDetails.priceMultiplier || 1.0));
-  return urgencyPrice + vehicleTypeAddon;
+  const basePrice = selectedUrgencyDetails.basePrice || calculatedPrice || 
+    (isWeekendNZ(nowNZ()) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
+  return basePrice + vehicleTypeAddon;
 }
 
 function updateSummary(){
