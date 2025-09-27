@@ -304,6 +304,8 @@
         <p><strong>Report delivery:</strong> Written report delivered same day normally</p>
       </div>
       
+      <div class="urgency-options" id="urgencyOptions"></div>
+      
       <div style="background:#f0f8ff;border:2px solid #87ceeb;border-radius:12px;padding:20px;margin:20px 0;">
         <h4 style="margin:0 0 15px 0;color:#1e90ff;">🕐 Need a Specific Time?</h4>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:15px;">
@@ -317,9 +319,8 @@
           </select>
           <div id="specificTimeResult" style="display:none;margin-top:15px;padding:15px;border-radius:8px;"></div>
         </div>
+        <p style="margin:15px 0 0 0;color:#666;font-size:0.9em;font-style:italic;">Time windows are approximate arrival times. As a mobile service, a previous job may run long.</p>
       </div>
-
-      <div class="urgency-options" id="urgencyOptions"></div>
 
       <div style="margin:20px 0;">
         <button class="button secondary" onclick="goToStep1()">Back</button>
@@ -741,18 +742,52 @@ async function goToStep2(){
 function setupUrgencyOptions() {
   const urgencyContainer = document.getElementById('urgencyOptions');
   const now = nowNZ();
-  const basePrice = calculatedPrice || (isWeekendNZ(now) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
   
-  urgencyContainer.innerHTML = inspectionConfig.urgencyOptions.map(option => {
-    // Use fixed price if specified, otherwise use base price
-    const price = option.fixedPrice || basePrice;
-    
+  // Calculate the three days
+  const today = new Date(now);
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const dayAfter = new Date(now);
+  dayAfter.setDate(dayAfter.getDate() + 2);
+  
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  
+  const formatDate = (date) => {
+    return `${dayNames[date.getDay()]} ${date.getDate()} ${monthNames[date.getMonth()]}`;
+  };
+  
+  const options = [
+    {
+      id: 'today',
+      title: `Today (${formatDate(today)})`,
+      time: 'Within 4 hours if available',
+      description: 'Subject to availability - confirmation after booking',
+      price: 289
+    },
+    {
+      id: 'tomorrow', 
+      title: `Tomorrow (${formatDate(tomorrow)})`,
+      time: 'Next business day',
+      description: 'Priority next-day inspection',
+      price: 239
+    },
+    {
+      id: 'dayafter',
+      title: `${formatDate(dayAfter)}`,
+      time: 'Standard scheduling',
+      description: 'Regular appointment booking', 
+      price: 199
+    }
+  ];
+  
+  urgencyContainer.innerHTML = options.map(option => {
     return `
-      <div class="urgency-option" onclick="selectUrgency('${option.id}','${option.title}','${option.time}',${price},this)">
+      <div class="urgency-option" onclick="selectUrgency('${option.id}','${option.title}','${option.time}',${option.price},this)">
         <div class="urgency-title">${option.title}</div>
         <div class="urgency-time">${option.time}</div>
         <div class="urgency-description">${option.description}</div>
-        <div class="urgency-price">$${price}</div>
+        <div class="urgency-price">$${option.price}</div>
       </div>`;
   }).join('');
 }
