@@ -1,162 +1,375 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>More Options | Eek Mobile Mechanical</title>
-    <meta name="description" content="Complete service options and resources for Eek Mobile Mechanical. Emergency services, customer support, supplier partnerships, and employment opportunities." />
-    <meta name="keywords" content="mobile mechanic options, emergency service, customer support, supplier partnerships, eek mechanical services" />
-    <meta property="og:title" content="More Options | Eek Mobile Mechanical" />
-    <meta property="og:description" content="Complete service options and resources for Eek Mobile Mechanical. Emergency services, customer support, supplier partnerships." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.eek.nz/more-options" />
-    <meta property="og:image" content="https://www.eek.nz/og-image.jpg" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>More Options & Support | Eek Mobile Mechanical</title>
+  <meta name="description" content="Complete service options, customer support, supplier partnerships, and employment opportunities. Emergency services, legal resources, and utility tools for Eek Mobile Mechanical." />
+  <meta name="keywords" content="mobile mechanic options, emergency service, customer support, supplier partnerships, eek mechanical services, employment, legal terms" />
+  <meta property="og:title" content="More Options & Support | Eek Mobile Mechanical" />
+  <meta property="og:description" content="Complete service options and resources for Eek Mobile Mechanical. Emergency services, customer support, supplier partnerships." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.eek.nz/more-options" />
+  <meta property="og:image" content="https://www.eek.nz/og-image.jpg" />
+
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self';
+script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net https://widget.reviewability.com;
+style-src 'self' 'unsafe-inline' https://widget.reviewability.com;
+img-src 'self' data: https: https://app.revu.cloud https://widget.reviewability.com;
+connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://app.revu.cloud https://widget.reviewability.com https://www.eek.nz https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com;
+frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com https://app.revu.cloud https://widget.reviewability.com;
+font-src 'self' data:;">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+
+  <!-- Reddit Pixel -->
+  <script>
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
+    (window,document);
     
-    <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'AW-17084465163');
-        gtag('config', 'G-DQNKF1YLWR');
-    </script>
-
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "LocalBusiness",
-        "name": "Eek Mobile Mechanical",
-        "description": "Mobile mechanic services across New Zealand. Pre purchase vehicle inspections, wrong fuel removal, petrol and diesel removal, emergency roadside repairs.",
-        "telephone": "+64800769000",
-        "url": "https://www.eek.nz",
-        "image": "https://www.eek.nz/brand-image.png",
-        "address": {
-            "@type": "PostalAddress",
-            "addressCountry": "NZ"
-        },
-        "areaServed": {
-            "@type": "Country",
-            "name": "New Zealand"
-        },
-        "openingHours": [
-            "Mo 07:00-17:00",
-            "Tu 07:00-17:00", 
-            "We 07:00-17:00",
-            "Th 07:00-17:00",
-            "Fr 07:00-17:00",
-            "Sa 07:00-12:00",
-            "Su 07:00-12:00"
-        ]
+    // Helper functions to extract user data if available
+    function getEmailFromForm() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const emailParam = urlParams.get('email');
+      if (emailParam) return emailParam;
+      
+      const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"], input[id*="email"]');
+      for (let input of emailInputs) {
+        if (input.value && input.value.includes('@')) {
+          return input.value;
+        }
+      }
+      return null;
     }
-    </script>
+    
+    function getPhoneFromForm() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const phoneParam = urlParams.get('phone');
+      if (phoneParam) return phoneParam;
+      
+      const phoneInputs = document.querySelectorAll('input[type="tel"], input[name*="phone"], input[id*="phone"]');
+      for (let input of phoneInputs) {
+        if (input.value) {
+          return input.value;
+        }
+      }
+      return null;
+    }
+    
+    function getUserId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('uid') || urlParams.get('user_id') || urlParams.get('customer_id');
+    }
+    
+    function getMobileIds() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return {
+        idfa: urlParams.get('idfa'),
+        aaid: urlParams.get('aaid')
+      };
+    }
+    
+    const mobileIds = getMobileIds();
+    const initConfig = {};
+    
+    const email = getEmailFromForm();
+    const phoneNumber = getPhoneFromForm();
+    const externalId = getUserId();
+    
+    if (email) initConfig.email = email;
+    if (phoneNumber) initConfig.phoneNumber = phoneNumber;
+    if (externalId) initConfig.externalId = externalId;
+    if (mobileIds.idfa) initConfig.idfa = mobileIds.idfa;
+    if (mobileIds.aaid) initConfig.aaid = mobileIds.aaid;
+    
+    rdt('init', 'a2_hf16791nsdhx', Object.keys(initConfig).length > 0 ? initConfig : undefined);
+    rdt('track', 'PageVisit');
+  </script>
 
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/eek-style-guide.css">
+  <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-17084465163');
+    gtag('config', 'G-DQNKF1YLWR');
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Eek Mobile Mechanical",
+    "description": "Mobile mechanic services across New Zealand. Pre purchase vehicle inspections, wrong fuel removal, petrol and diesel removal, emergency roadside repairs.",
+    "telephone": "+64800769000",
+    "url": "https://www.eek.nz",
+    "image": "https://www.eek.nz/brand-image.png",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "NZ"
+    },
+    "areaServed": {
+      "@type": "Country",
+      "name": "New Zealand"
+    },
+    "openingHours": [
+      "Mo 07:00-17:00",
+      "Tu 07:00-17:00", 
+      "We 07:00-17:00",
+      "Th 07:00-17:00",
+      "Fr 07:00-17:00",
+      "Sa 07:00-12:00",
+      "Su 07:00-12:00"
+    ],
+    "serviceType": [
+      "Mobile Mechanic",
+      "Pre Purchase Vehicle Inspections", 
+      "Wrong Fuel Removal",
+      "Petrol and Diesel Removal",
+      "Emergency Roadside Repairs",
+      "Battery Jump Start",
+      "Trailer Repairs"
+    ]
+  }
+  </script>
+
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  
+  <!-- Link to external style guide -->
+  <link rel="stylesheet" href="eek-style-guide.css" id="eek-style-guide">
 </head>
 <body>
-    <div class="eek-container">
-        <header class="eek-header">
-            <img src="brand-image.png" alt="Eek Mobile Mechanical - Mobile Mechanic Services" class="eek-brand-image" />
-            <h1 class="eek-brand-title">Eek Mobile Mechanical</h1>
-            <p class="eek-brand-tagline">Complete Service Options & Resources</p>
-            <p class="eek-description">Access our full range of services, forms, applications, and support options. Everything you need for mobile mechanical assistance, supplier partnerships, and customer support.</p>
-        </header>
-        
-        <section class="eek-emergency-section">
-            <h2>🚨 Need Immediate Help?</h2>
-            <p>Get emergency mobile mechanical assistance or speak with our dispatch team</p>
-            <div class="eek-emergency-buttons">
-                <a href="/rescue-me" class="eek-btn eek-emergency-btn normal-hours-btn" data-track="emergency_rescue">🚨 Emergency Service</a>
-                <a href="tel:0800769000" class="eek-btn eek-emergency-btn phone-link" data-track="more_options_call">📞 Call <span class="phone-display">0800 769 000</span></a>
-                <a href="/find-me" class="eek-btn eek-emergency-btn normal-hours-btn" data-track="find_me_tool">📍 Find Me Tool</a>
-                <a href="#book-emergency" class="eek-btn eek-emergency-btn after-hours-btn service-link" data-service="emergency" data-track="book_online_after_hours">📅 Book Online Service</a>
-            </div>
-        </section>
-        
-        <section class="eek-contact-section">
-            <div class="eek-section-header">
-                <h2>📞 Contact by Purpose</h2>
-                <p>Choose the right contact method based on your needs</p>
-            </div>
-            
-            <div class="eek-contact-grid">
-                <div class="eek-contact-card eek-customers">
-                    <h3>👥 For Customers</h3>
-                    <p>Service requests, support, and assistance</p>
-                    <div class="eek-contact-buttons">
-                        <a href="/rescue-me" class="eek-btn eek-contact-btn normal-hours-btn" data-track="customer_emergency">🚨 Emergency Service</a>
-                        <a href="tel:0800769000" class="eek-btn eek-contact-btn phone-link" data-track="customer_call">📞 Call <span class="phone-display">0800 769 000</span></a>
-                        <a href="/customer-escalation" class="eek-btn eek-contact-btn normal-hours-btn" data-track="customer_support">💬 Customer Support</a>
-                        <a href="/find-me" class="eek-btn eek-contact-btn normal-hours-btn" data-track="customer_find_me">📍 Find Me Tool</a>
-                        <a href="#book-customer" class="eek-btn eek-contact-btn after-hours-btn service-link" data-service="mechanic" data-track="customer_book_online">📅 Book Online Service</a>
-                    </div>
-                </div>
-                
-                <div class="eek-contact-card eek-suppliers">
-                    <h3>🤝 For Suppliers & Partners</h3>
-                    <p>Business partnerships and supplier relations</p>
-                    <div class="eek-contact-buttons">
-                        <a href="/supplier" class="eek-btn eek-contact-btn" data-track="supplier_portal">🤝 Official Supplier Portal</a>
-                        <a href="/supplier-relations" class="eek-btn eek-contact-btn" data-track="supplier_relations">📝 Supplier Relations</a>
-                    </div>
-                </div>
-                
-                <div class="eek-contact-card eek-employment">
-                    <h3>💼 Employment & Careers</h3>
-                    <p>Join our team as a mobile technician</p>
-                    <div class="eek-contact-buttons">
-                        <a href="/apply" class="eek-btn eek-contact-btn" data-track="employment_apply">📝 Apply to Work</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section class="eek-legal-section">
-            <h3>🛡️ Legal & Compliance Center</h3>
-            <p>Terms, policies, privacy matters, and legal authority access</p>
-            <div class="eek-legal-buttons">
-                <a href="/terms" class="eek-btn eek-legal-btn" data-track="legal_terms">📋 End User Terms</a>
-                <a href="/supplier-terms" class="eek-btn eek-legal-btn" data-track="legal_supplier_terms">📋 Supplier Terms</a>
-                <a href="/privacy" class="eek-btn eek-legal-btn" data-track="legal_privacy">🔒 Privacy Policy</a>
-                <a href="/privacy-report" class="eek-btn eek-legal-btn" data-track="legal_privacy_report">🚨 Privacy Report</a>
-                <a href="/mjuris" class="eek-btn eek-legal-btn" data-track="legal_authority">⚖️ Legal Authority</a>
-            </div>
-        </section>
-        
-        <section class="eek-utility-section">
-            <div class="eek-section-header">
-                <h2>🔧 Utility Tools</h2>
-                <p>Helpful tools and resources for customers and technicians</p>
-            </div>
-            
-            <div class="eek-utility-grid">
-                <div class="eek-utility-card">
-                    <h3>🗺️ Navigation Help</h3>
-                    <p>Find your current location or get directions for our mobile technicians.</p>
-                    <a href="/map" class="eek-btn eek-btn-primary" data-track="utility_maps">Open Maps</a>
-                </div>
-            </div>
-        </section>
-        
-        <footer class="eek-footer">
-            <a href="/" data-track="footer_home">🏠 Homepage</a> | 
-            <a href="/privacy" data-track="footer_privacy">Privacy Policy</a>
-        </footer>
-    </div>
 
-    <!-- Load Master Configuration -->
-    <script src="/eek-master-config.js"></script>
-    
-    <script>
-        console.log('📄 More Options page loaded with master config integration');
-    </script>
+<!-- Business Closed Banner (hidden by default) -->
+<div id="closedBanner" class="after-hours-banner" style="display: none; background: linear-gradient(135deg, #666, #888);">
+  <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
+  <div id="afterHoursMessage">
+    <p><strong>Business Hours:</strong></p>
+    <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
+    <p>Saturday - Sunday: 7:00 AM - 12:00 PM</p>
+    <p>Please call during business hours or book online for next available service</p>
+  </div>
+  <div id="tempUnavailableMessage" style="display: none;">
+    <p><strong>We're currently experiencing high demand</strong></p>
+    <p>Our mechanics are fully dispatched on emergency calls</p>
+    <p>Please book online for the next available appointment or try calling again shortly</p>
+    <a href="#emergency-services" class="emergency-btn" data-track="customer_book_online" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
+  </div>
+</div>
+
+<section id="stripePaymentBlock" style="display: none; background-color: #ffffff; padding: 20px; text-align: center; color: #333; border-bottom: 2px solid #ff5500;">
+  <div style="background-color: #f5f5f5; padding: 30px; border-radius: 12px; max-width: 700px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+    <h1 style="font-size: 2.2em; margin-bottom: 0.5em;">Secure Roadside Payment</h1>
+    <p style="font-size: 1.2em; margin-bottom: 1.5em;">Confirm your payment to get help on the way — fast, safe, and secure.</p>
+    <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: #333;">
+      <input type="checkbox" id="termsCheckbox" style="transform: scale(1.5);" />
+      <span>I agree to the Eek Mobile Mechanical terms of service 
+        <a href="https://www.eek.nz/terms" target="_blank" data-track="legal_terms" style="color: #ff5500; text-decoration: underline;">
+          View terms of use
+        </a>
+      </span>
+    </label>
+    <br><br>
+    <button id="payNowButton" style="display: none; background-color: #ff5500; color: white; padding: 14px 32px; font-size: 1.2em; border: none; border-radius: 8px; cursor: pointer;">
+      Pay Now
+    </button>
+  </div>
+</section>
+
+<header>
+  <img src="sweet-ride.png" alt="Eek Mobile Mechanical - Mobile Mechanic Services" />
+  <div class="business-name">Eek Mobile Mechanical</div>
+  <h1>More Options & Support</h1>
+  <p class="tagline">Complete Service Options • Customer Support • Supplier Portal • Employment • Legal Resources</p>
+  <a class="cta-button phone-link" href="tel:0800769000" data-track="header_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+</header>
+
+<div class="keywords-highlight" id="emergency-services">
+  <h2>🚨 Emergency Services</h2>
+  <p>Need immediate help? Our emergency dispatch team is ready to assist you</p>
+  <div class="service-keywords">
+    <a href="/rescue-me" class="service-link" data-service="emergency" data-track="emergency_rescue" style="text-decoration: none; color: inherit;">
+      <div class="keyword-item">
+        <h4>Emergency Rescue</h4>
+        <p>Critical roadside assistance - immediate dispatch</p>
+      </div>
+    </a>
+    <a href="/find-me" class="service-link" data-service="location" data-track="find_me_tool" style="text-decoration: none; color: inherit;">
+      <div class="keyword-item">
+        <h4>Find Me Tool</h4>
+        <p>GPS location assistance for emergency dispatch</p>
+      </div>
+    </a>
+    <a href="#customer-support" class="service-link" data-service="support" data-track="customer_support" style="text-decoration: none; color: inherit;">
+      <div class="keyword-item">
+        <h4>Customer Support</h4>
+        <p>Get help with existing bookings and services</p>
+      </div>
+    </a>
+    <a href="/" class="service-link" data-service="main" data-track="footer_home" style="text-decoration: none; color: inherit;">
+      <div class="keyword-item">
+        <h4>Main Services</h4>
+        <p>Return to main service selection page</p>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="services" id="customer-support">
+  <h2>👥 Customer Services & Support</h2>
+  <p>Comprehensive support options for all your mobile mechanic needs</p>
+  <ul>
+    <li>🚨 Emergency roadside assistance and rescue services</li>
+    <li>📞 Direct phone support during business hours</li>
+    <li>💬 Customer escalation and complaint resolution</li>
+    <li>📍 GPS location tools for emergency dispatch</li>
+    <li>📅 Online booking and appointment management</li>
+    <li>🔧 Service history and maintenance records</li>
+  </ul>
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="customer_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+    <a href="/rescue-me" class="cta-button normal-hours-btn" data-track="customer_emergency" style="background: #dc3545;">🚨 Emergency Service</a>
+    <a href="/customer-escalation" class="cta-button normal-hours-btn" data-track="customer_support" style="background: #6c757d;">💬 Customer Support</a>
+    <a href="#book-support" class="cta-button after-hours-btn service-link" data-service="support" data-track="customer_book_online" style="background: #28a745; display: none;">📅 Book Online</a>
+  </div>
+</div>
+
+<div class="services" id="business-services">
+  <h2>🤝 Business & Supplier Services</h2>
+  <p>Partnership opportunities and business relationships with Eek Mobile Mechanical</p>
+  <ul>
+    <li>🤝 Official supplier portal and partnership applications</li>
+    <li>📋 Supplier terms, conditions, and compliance requirements</li>
+    <li>💼 Business-to-business service contracts</li>
+    <li>🔗 Supply chain integration and logistics support</li>
+    <li>📊 Performance metrics and quality assurance programs</li>
+    <li>💰 Payment terms and invoicing systems</li>
+  </ul>
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
+    <a href="/supplier" class="cta-button" data-track="supplier_portal" style="background: #17a2b8;">🤝 Supplier Portal</a>
+    <a href="/supplier-relations" class="cta-button" data-track="supplier_relations" style="background: #6f42c1;">📝 Supplier Relations</a>
+  </div>
+</div>
+
+<div class="services" id="employment">
+  <h2>💼 Employment & Careers</h2>
+  <p>Join our growing team of mobile mechanical professionals across New Zealand</p>
+  <ul>
+    <li>🔧 Mobile mechanic technician positions</li>
+    <li>📞 Dispatch and customer service roles</li>
+    <li>🚗 Company vehicle and equipment provision</li>
+    <li>📚 Comprehensive training and certification programs</li>
+    <li>💰 Competitive wages and performance bonuses</li>
+    <li>📈 Career advancement and professional development</li>
+  </ul>
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
+    <a href="/apply" class="cta-button" data-track="employment_apply" style="background: #fd7e14;">📝 Apply to Work</a>
+  </div>
+</div>
+
+<div class="services" id="legal-resources">
+  <h2>🛡️ Legal & Compliance</h2>
+  <p>Terms, policies, privacy protection, and legal authority access</p>
+  <ul>
+    <li>📋 End user terms and service conditions</li>
+    <li>📋 Supplier terms and business agreements</li>
+    <li>🔒 Privacy policy and data protection measures</li>
+    <li>🚨 Privacy violation reporting system</li>
+    <li>⚖️ Legal authority and compliance documentation</li>
+    <li>📞 Legal contact and support channels</li>
+  </ul>
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
+    <a href="/terms" class="cta-button" data-track="legal_terms" style="background: #6c757d;">📋 End User Terms</a>
+    <a href="/supplier-terms" class="cta-button" data-track="legal_supplier_terms" style="background: #6c757d;">📋 Supplier Terms</a>
+    <a href="/privacy" class="cta-button" data-track="legal_privacy" style="background: #28a745;">🔒 Privacy Policy</a>
+    <a href="/privacy-report" class="cta-button" data-track="legal_privacy_report" style="background: #dc3545;">🚨 Privacy Report</a>
+    <a href="/mjuris" class="cta-button" data-track="legal_authority" style="background: #ffc107; color: #000;">⚖️ Legal Authority</a>
+  </div>
+</div>
+
+<div class="services" id="utility-tools">
+  <h2>🔧 Utility Tools & Resources</h2>
+  <p>Helpful tools and resources for customers and technicians</p>
+  <ul>
+    <li>🗺️ Interactive maps and GPS location tools</li>
+    <li>📍 Find your current location for service dispatch</li>
+    <li>🧭 Navigation assistance for mobile technicians</li>
+    <li>📱 Mobile-friendly tools and applications</li>
+    <li>🔍 Service area coverage verification</li>
+    <li>📊 Real-time service availability status</li>
+  </ul>
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
+    <a href="/map" class="cta-button" data-track="utility_maps" style="background: #20c997;">🗺️ Open Maps</a>
+  </div>
+</div>
+
+<a id="stripePaymentSticky" class="sticky-payment" href="#" data-track="customer_call">💳 Make Payment</a>
+
+<footer>
+  &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
+  <a href="https://www.eek.nz/privacy" target="_blank" data-track="footer_privacy" style="color: #666; text-decoration: underline;">Privacy Policy</a> | 
+  <a href="/" data-track="footer_home" style="color: #666; text-decoration: underline;">Main Services</a>
+</footer>
+
+<a class="sticky-call phone-link" href="tel:0800769000" data-track="sticky_call" id="stickyCallButton">📞 Call <span class="phone-display">Eek Now</span></a>
+<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" data-track="customer_support" style="display: none; background: #666;">🕐 View Hours</a>
+
+<!-- Load Master Configuration -->
+<script src="eek-master-config.js"></script>
+
+<script>
+// Handle service selection card clicks
+function handleServiceSelection() {
+  document.querySelectorAll('.service-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+      const bookingUrl = this.dataset.bookingUrl;
+      const href = this.getAttribute('href');
+      
+      // Only redirect to booking for service cards (not already direct booking links)
+      if (bookingUrl && href && href.startsWith('#')) {
+        e.preventDefault();
+        console.log('🎯 Redirecting to booking page:', bookingUrl);
+        window.location.href = bookingUrl;
+      }
+    });
+  });
+}
+
+// Main page loaded
+window.addEventListener('load', function() {
+  console.log('🚀 More Options page loaded with master config');
+  
+  // Set up service selection handlers
+  handleServiceSelection();
+  
+  // Track page view
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'page_view', {
+      'page_title': document.title,
+      'page_location': window.location.href
+    });
+  }
+  
+  console.log('✅ More Options page initialization complete');
+});
+
+// Scroll tracking
+let scrollTracked = false;
+window.addEventListener('scroll', function() {
+  if (!scrollTracked && window.scrollY > document.body.scrollHeight * 0.5) {
+    scrollTracked = true;
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'scroll_50_percent', {
+        'event_category': 'Engagement',
+        'event_label': 'Scrolled 50% of page'
+      });
+    }
+  }
+});
+</script>
+
 </body>
 </html>
