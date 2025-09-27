@@ -136,10 +136,10 @@ font-src 'self' data:;">
   }
   </script>
 
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
   
   <!-- Link to external style guide -->
-  <link rel="stylesheet" href="eek-style-guide.css" id="eek-style-guide">
+  <link rel="stylesheet" href="/eek-style-guide.css" id="eek-style-guide">
 </head>
 <body>
 
@@ -167,7 +167,7 @@ font-src 'self' data:;">
     <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: #333;">
       <input type="checkbox" id="termsCheckbox" style="transform: scale(1.5);" />
       <span>I agree to the Eek Mobile Mechanical terms of service 
-        <a href="https://www.eek.nz/terms" target="_blank" data-track="legal_terms" style="color: #ff5500; text-decoration: underline;">
+        <a href="https://www.eek.nz/terms" target="_blank" data-track="legal_terms" onclick="this.href='https://www.eek.nz/terms' + window.location.search" style="color: #ff5500; text-decoration: underline;">
           View terms of use
         </a>
       </span>
@@ -180,7 +180,7 @@ font-src 'self' data:;">
 </section>
 
 <header>
-  <img src="sweet-ride.png" alt="Eek Mobile Mechanical - Mobile Mechanic Services" />
+  <img src="/sweet-ride.png" alt="Eek Mobile Mechanical - Mobile Mechanic Services" />
   <div class="business-name">Eek Mobile Mechanical</div>
   <h1>More Options & Support</h1>
   <p class="tagline">Complete Service Options • Customer Support • Supplier Portal • Employment • Legal Resources</p>
@@ -191,13 +191,13 @@ font-src 'self' data:;">
   <h2>🚨 Emergency Services</h2>
   <p>Need immediate help? Our emergency dispatch team is ready to assist you</p>
   <div class="service-keywords">
-    <a href="/rescue-me" class="service-link" data-service="emergency" data-track="emergency_rescue" style="text-decoration: none; color: inherit;">
+    <a href="/rescue-me" class="service-link" data-service="emergency" data-track="emergency_rescue" onclick="this.href='/rescue-me' + window.location.search" style="text-decoration: none; color: inherit;">
       <div class="keyword-item">
         <h4>Emergency Rescue</h4>
         <p>Critical roadside assistance - immediate dispatch</p>
       </div>
     </a>
-    <a href="/find-me" class="service-link" data-service="location" data-track="find_me_tool" style="text-decoration: none; color: inherit;">
+    <a href="/find-me" class="service-link" data-service="location" data-track="find_me_tool" onclick="this.href='/find-me' + window.location.search" style="text-decoration: none; color: inherit;">
       <div class="keyword-item">
         <h4>Find Me Tool</h4>
         <p>GPS location assistance for emergency dispatch</p>
@@ -209,7 +209,7 @@ font-src 'self' data:;">
         <p>Get help with existing bookings and services</p>
       </div>
     </a>
-    <a href="/" class="service-link" data-service="main" data-track="footer_home" style="text-decoration: none; color: inherit;">
+    <a href="/" class="service-link" data-service="main" data-track="footer_home" onclick="this.href='/' + window.location.search" style="text-decoration: none; color: inherit;">
       <div class="keyword-item">
         <h4>Main Services</h4>
         <p>Return to main service selection page</p>
@@ -231,8 +231,8 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="customer_call">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a href="/rescue-me" class="cta-button normal-hours-btn" data-track="customer_emergency" style="background: #dc3545;">🚨 Emergency Service</a>
-    <a href="/customer-escalation" class="cta-button normal-hours-btn" data-track="customer_support" style="background: #6c757d;">💬 Customer Support</a>
+    <a href="/rescue-me" class="cta-button normal-hours-btn" data-track="customer_emergency" onclick="this.href='/rescue-me' + window.location.search" style="background: #dc3545;">🚨 Emergency Service</a>
+    <a href="/customer-escalation" class="cta-button normal-hours-btn" data-track="customer_support" onclick="this.href='/customer-escalation' + window.location.search" style="background: #6c757d;">💬 Customer Support</a>
     <a href="#book-support" class="cta-button after-hours-btn service-link" data-service="support" data-track="customer_book_online" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
@@ -249,8 +249,8 @@ font-src 'self' data:;">
     <li>💰 Payment terms and invoicing systems</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a href="/supplier" class="cta-button" data-track="supplier_portal" style="background: #17a2b8;">🤝 Supplier Portal</a>
-    <a href="/supplier-relations" class="cta-button" data-track="supplier_relations" style="background: #6f42c1;">📝 Supplier Relations</a>
+    <a href="/supplier" class="cta-button" data-track="supplier_portal" onclick="this.href='/supplier' + window.location.search" style="background: #17a2b8;">🤝 Supplier Portal</a>
+    <a href="/supplier-relations" class="cta-button" data-track="supplier_relations" onclick="this.href='/supplier-relations' + window.location.search" style="background: #6f42c1;">📝 Supplier Relations</a>
   </div>
 </div>
 
@@ -266,7 +266,7 @@ font-src 'self' data:;">
     <li>📈 Career advancement and professional development</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a href="/apply" class="cta-button" data-track="employment_apply" style="background: #fd7e14;">📝 Apply to Work</a>
+    <a href="/apply" class="cta-button" data-track="employment_apply" onclick="this.href='/apply' + window.location.search" style="background: #fd7e14;">📝 Apply to Work</a>
   </div>
 </div>
 
@@ -282,11 +282,11 @@ font-src 'self' data:;">
     <li>📞 Legal contact and support channels</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a href="/terms" class="cta-button" data-track="legal_terms" style="background: #6c757d;">📋 End User Terms</a>
-    <a href="/supplier-terms" class="cta-button" data-track="legal_supplier_terms" style="background: #6c757d;">📋 Supplier Terms</a>
-    <a href="/privacy" class="cta-button" data-track="legal_privacy" style="background: #28a745;">🔒 Privacy Policy</a>
-    <a href="/privacy-report" class="cta-button" data-track="legal_privacy_report" style="background: #dc3545;">🚨 Privacy Report</a>
-    <a href="/mjuris" class="cta-button" data-track="legal_authority" style="background: #ffc107; color: #000;">⚖️ Legal Authority</a>
+    <a href="/terms" class="cta-button" data-track="legal_terms" onclick="this.href='/terms' + window.location.search" style="background: #6c757d;">📋 End User Terms</a>
+    <a href="/supplier-terms" class="cta-button" data-track="legal_supplier_terms" onclick="this.href='/supplier-terms' + window.location.search" style="background: #6c757d;">📋 Supplier Terms</a>
+    <a href="/privacy" class="cta-button" data-track="legal_privacy" onclick="this.href='/privacy' + window.location.search" style="background: #28a745;">🔒 Privacy Policy</a>
+    <a href="/privacy-report" class="cta-button" data-track="legal_privacy_report" onclick="this.href='/privacy-report' + window.location.search" style="background: #dc3545;">🚨 Privacy Report</a>
+    <a href="/mjuris" class="cta-button" data-track="legal_authority" onclick="this.href='/mjuris' + window.location.search" style="background: #ffc107; color: #000;">⚖️ Legal Authority</a>
   </div>
 </div>
 
@@ -302,7 +302,7 @@ font-src 'self' data:;">
     <li>📊 Real-time service availability status</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a href="/map" class="cta-button" data-track="utility_maps" style="background: #20c997;">🗺️ Open Maps</a>
+    <a href="/map" class="cta-button" data-track="utility_maps" onclick="this.href='/map' + window.location.search" style="background: #20c997;">🗺️ Open Maps</a>
   </div>
 </div>
 
@@ -310,15 +310,15 @@ font-src 'self' data:;">
 
 <footer>
   &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
-  <a href="https://www.eek.nz/privacy" target="_blank" data-track="footer_privacy" style="color: #666; text-decoration: underline;">Privacy Policy</a> | 
-  <a href="/" data-track="footer_home" style="color: #666; text-decoration: underline;">Main Services</a>
+  <a href="https://www.eek.nz/privacy" target="_blank" data-track="footer_privacy" onclick="this.href='https://www.eek.nz/privacy' + window.location.search" style="color: #666; text-decoration: underline;">Privacy Policy</a> | 
+  <a href="/" data-track="footer_home" onclick="this.href='/' + window.location.search" style="color: #666; text-decoration: underline;">Main Services</a>
 </footer>
 
 <a class="sticky-call phone-link" href="tel:0800769000" data-track="sticky_call" id="stickyCallButton">📞 Call <span class="phone-display">Eek Now</span></a>
 <a class="sticky-call" href="#closedBanner" id="stickyClosedButton" data-track="customer_support" style="display: none; background: #666;">🕐 View Hours</a>
 
 <!-- Load Master Configuration -->
-<script src="eek-master-config.js"></script>
+<script src="/eek-master-config.js"></script>
 
 <script>
 // Handle service selection card clicks
@@ -332,9 +332,36 @@ function handleServiceSelection() {
       if (bookingUrl && href && href.startsWith('#')) {
         e.preventDefault();
         console.log('🎯 Redirecting to booking page:', bookingUrl);
-        window.location.href = bookingUrl;
+        // Preserve URL parameters when redirecting to booking
+        window.location.href = bookingUrl + window.location.search;
       }
     });
+  });
+}
+
+// Update external links to preserve URL parameters
+function updateExternalLinks() {
+  const currentParams = window.location.search;
+  if (!currentParams) return;
+  
+  console.log('🔗 Updating external links to preserve parameters:', currentParams);
+  
+  // Update all links that don't already have onclick handlers for parameter forwarding
+  document.querySelectorAll('a[href^="/"], a[href^="https://www.eek.nz/"]').forEach(link => {
+    const href = link.getAttribute('href');
+    
+    // Skip if it's an anchor link or already has parameters
+    if (href.startsWith('#') || href.includes('?') || link.onclick) return;
+    
+    // Skip phone links
+    if (href.startsWith('tel:')) return;
+    
+    // Add parameter forwarding
+    link.onclick = function() {
+      this.href = href + currentParams;
+    };
+    
+    console.log('  Updated link:', href, '-> will add params on click');
   });
 }
 
@@ -344,6 +371,9 @@ window.addEventListener('load', function() {
   
   // Set up service selection handlers
   handleServiceSelection();
+  
+  // Update external links to preserve parameters
+  updateExternalLinks();
   
   // Track page view
   if (typeof gtag !== 'undefined') {
