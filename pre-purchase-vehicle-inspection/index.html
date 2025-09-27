@@ -310,7 +310,7 @@
         <h4 style="margin:0 0 15px 0;color:#1e90ff;">🕐 Need a Specific Time?</h4>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:15px;">
           <input type="checkbox" id="specificTimeRequest" onchange="toggleSpecificTime()" style="transform:scale(1.2);">
-          <label for="specificTimeRequest" style="font-weight:600;margin:0;">I need a specific appointment time</label>
+          <label for="specificTimeRequest" style="font-weight:600;margin:0;">I need a specific appointment time <span style="color:#ff5500;font-weight:700;">(+$39)</span></label>
         </div>
         <div id="specificTimeContainer" style="display:none;">
           <p style="margin:0 0 10px 0;color:#1e90ff;">Select your preferred time:</p>
@@ -590,6 +590,9 @@ function buildBookingData(status) {
     ...(status === BOOKING_STATUS.VEHICLE_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.PAYMENT_PENDING) && {
       selectedVehicleType: selectedVehicleType,
       vehicleTypeAddon: vehicleTypeAddon,
+      specificTimeRequested: document.getElementById('specificTimeRequest')?.checked || false,
+      specificTime: document.getElementById('specificTimeSelect')?.value || null,
+      specificTimeSurcharge: specificTimeSurcharge,
       calculatedPrice: getTotalPrice(),
       finalPrice: getTotalPrice()
     }
@@ -845,19 +848,22 @@ function setupVehicleTypes() {
     basePrice = calculatedPrice || (isWeekendNZ(nowNZ()) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
   }
   
-  console.log('setupVehicleTypes - basePrice:', basePrice, 'selectedUrgencyDetails:', selectedUrgencyDetails);
+  console.log('setupVehicleTypes - basePrice:', basePrice, 'selectedUrgencyDetails:', selectedUrgencyDetails, 'specificTimeSurcharge:', specificTimeSurcharge);
   
   vehicleContainer.innerHTML = inspectionConfig.vehicleTypes.map(type => {
     let totalPrice;
     let displayText;
     
     if (type.id === 'specialty') {
-      totalPrice = 399; // Always $399 for specialty
+      totalPrice = 399 + specificTimeSurcharge; // Specialty is always $399 plus any surcharges
       const calculatedAddon = 399 - basePrice; // Calculate what addon brings us to $399
-      displayText = `$${totalPrice} (+$${calculatedAddon})`;
+      const surchargeText = specificTimeSurcharge > 0 ? ` + $${specificTimeSurcharge} specific time` : '';
+      displayText = `$${totalPrice} (+$${calculatedAddon}${surchargeText})`;
     } else {
-      totalPrice = basePrice + type.addon;
-      displayText = `$${totalPrice}${type.addon > 0 ? ` (+$${type.addon})` : ''}`;
+      totalPrice = basePrice + type.addon + specificTimeSurcharge;
+      const addonText = type.addon > 0 ? ` (+$${type.addon})` : '';
+      const surchargeText = specificTimeSurcharge > 0 ? ` + $${specificTimeSurcharge} specific time` : '';
+      displayText = `$${totalPrice}${addonText}${surchargeText}`;
     }
     
     const popularClass = type.popular ? 'popular' : '';
@@ -917,8 +923,16 @@ function getTotalPrice(){
     basePrice = calculatedPrice || (isWeekendNZ(nowNZ()) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
   }
   
-  const total = basePrice + vehicleTypeAddon;
-  console.log('getTotalPrice - basePrice:', basePrice, 'addon:', vehicleTypeAddon, 'total:', total);
+  let total;
+  if (selectedVehicleType === 'specialty') {
+    // Specialty vehicles are always $399 plus any surcharges
+    total = 399 + specificTimeSurcharge;
+  } else {
+    // Normal calculation for other vehicle types
+    total = basePrice + vehicleTypeAddon + specificTimeSurcharge;
+  }
+  
+  console.log('getTotalPrice - basePrice:', basePrice, 'addon:', vehicleTypeAddon, 'surcharge:', specificTimeSurcharge, 'total:', total);
   return total;
 }
 
@@ -1104,6 +1118,8 @@ function checkLocationAvailability() {
 }
 
 // Specific time functionality
+let specificTimeSurcharge = 0;
+
 function toggleSpecificTime() {
   const checkbox = document.getElementById('specificTimeRequest');
   const container = document.getElementById('specificTimeContainer');
@@ -1111,10 +1127,21 @@ function toggleSpecificTime() {
   
   if (checkbox.checked) {
     container.style.display = 'block';
+    specificTimeSurcharge = 39; // $39 surcharge for specific time
     populateTimeSlots();
+    updateVehicleTypePricing(); // Update pricing to reflect surcharge
   } else {
     container.style.display = 'none';
+    specificTimeSurcharge = 0;
     document.getElementById('specificTimeResult').style.display = 'none';
+    updateVehicleTypePricing(); // Update pricing to remove surcharge
+  }
+}
+
+function updateVehicleTypePricing() {
+  // If we're on step 3 and vehicle types are already displayed, refresh them
+  if (document.getElementById('step3').classList.contains('active')) {
+    setupVehicleTypes();
   }
 }
 
