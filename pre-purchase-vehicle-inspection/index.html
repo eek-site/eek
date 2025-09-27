@@ -473,7 +473,7 @@ const inspectionConfig = {
       time: 'Within 4 hours',
       description: 'Emergency same-day inspection',
       priceMultiplier: 1.0,
-      fixedPrice: 289  // Weekend price for emergency
+      fixedPrice: 289
     },
     {
       id: 'tomorrow',
@@ -481,7 +481,7 @@ const inspectionConfig = {
       time: 'Next business day',
       description: 'Priority next-day inspection', 
       priceMultiplier: 1.0,
-      fixedPrice: 239  // Between weekday and weekend
+      fixedPrice: 239
     },
     {
       id: 'scheduled',
@@ -489,7 +489,7 @@ const inspectionConfig = {
       time: 'Within 2-3 days',
       description: 'Standard scheduling',
       priceMultiplier: 1.0,
-      fixedPrice: null  // Use calculated or base price
+      fixedPrice: 199
     }
   ],
   vehicleTypes: [
@@ -513,7 +513,7 @@ const inspectionConfig = {
       title: 'Classic/Specialty Vehicle',
       subtitle: 'Classics, modified, imports',
       note: 'Specialist expertise required',
-      addon: 129
+      addon: 111  // Ensures max total of $400 (289 + 111)
     }
   ],
   terms: [
@@ -797,25 +797,44 @@ function setupVehicleTypes() {
     (isWeekendNZ(nowNZ()) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
   
   vehicleContainer.innerHTML = inspectionConfig.vehicleTypes.map(type => {
-    const totalPrice = basePrice + type.addon;
+    let totalPrice;
+    let displayText;
+    
+    if (type.id === 'specialty') {
+      totalPrice = 399; // Always $399 for specialty
+      const calculatedAddon = 399 - basePrice; // Calculate what addon brings us to $399
+      displayText = `$${totalPrice} (+$${calculatedAddon})`;
+    } else {
+      totalPrice = basePrice + type.addon;
+      displayText = `$${totalPrice}${type.addon > 0 ? ` (+$${type.addon})` : ''}`;
+    }
+    
     const popularClass = type.popular ? 'popular' : '';
     const selectedClass = type.id === 'standard' ? 'selected' : '';
     
     return `
-      <div class="vehicle-type ${popularClass} ${selectedClass}" onclick="selectVehicleType('${type.id}', ${type.addon}, this)">
+      <div class="vehicle-type ${popularClass} ${selectedClass}" onclick="selectVehicleType('${type.id}', ${type.addon}, this, ${totalPrice})">
         <div class="vehicle-type-title">${type.title}</div>
         <div class="vehicle-type-subtitle">${type.subtitle}</div>
         <div class="vehicle-type-note">${type.note}</div>
-        <div class="vehicle-type-price">$${totalPrice}${type.addon > 0 ? ` (+$${type.addon})` : ''}</div>
+        <div class="vehicle-type-price">${displayText}</div>
       </div>`;
   }).join('');
 }
 
-function selectVehicleType(type, addon, el){
+function selectVehicleType(type, addon, el, fixedPrice = null){
   document.querySelectorAll('.vehicle-type.selected').forEach(x=>x.classList.remove('selected'));
   el.classList.add('selected');
   selectedVehicleType = type;
-  vehicleTypeAddon = addon;
+  
+  if (type === 'specialty') {
+    // Calculate addon needed to reach $399
+    const basePrice = selectedUrgencyDetails.basePrice || calculatedPrice || 
+      (isWeekendNZ(nowNZ()) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
+    vehicleTypeAddon = 399 - basePrice;
+  } else {
+    vehicleTypeAddon = addon;
+  }
 }
 
 async function goToStep4(){
