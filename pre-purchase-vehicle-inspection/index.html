@@ -151,7 +151,7 @@
     <p><strong>We're currently experiencing high demand</strong></p>
     <p>Our mechanics are fully dispatched on emergency calls</p>
     <p>Please book online for the next available appointment or try calling again shortly</p>
-    <a href="#service-selection" class="emergency-btn" data-track="customer_book_online" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
+    <a href="#service-selection" class="emergency-btn after-hours-btn" data-track="customer_book_online" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
   </div>
 </div>
 
@@ -176,7 +176,7 @@
 
 <!-- HEADER THAT WILL BE MANAGED BY MASTER CONFIG -->
 <header>
-  <img src="/lemon.png" alt="Don't buy a lemon! Eek Mobile Mechanical Pre Purchase Vehicle Inspection" />
+  <img src="/lemon.png" alt="Don't buy a lemon! Eek Mobile Mechanical Pre Purchase Vehicle Inspection" class="eek-brand-image" />
   <div class="business-name">Eek Mobile Mechanical</div>
   <h1 id="headerTitle">Don't Buy a Lemon! Pre Purchase Vehicle Inspection</h1>
   <p class="tagline" id="headerSubtitle">Avoid costly mistakes with our professional vehicle inspection • 45-point inspection • Written report • Mobile service anywhere in NZ</p>
@@ -289,7 +289,7 @@
       </div>
 
       <div style="text-align:center;margin:20px 0;">
-        <button class="button" id="nextBtn" onclick="goToStep2()">Next: Select Time</button>
+        <button class="button" id="nextBtn" onclick="goToStep2()" data-track="inspection_step1_complete">Next: Select Time</button>
       </div>
     </div>
 
@@ -323,8 +323,8 @@
       </div>
 
       <div style="margin:20px 0;">
-        <button class="button secondary" onclick="goToStep1()">Back</button>
-        <button class="button" id="confirmTimeBtn" onclick="goToStep3()" disabled>Continue</button>
+        <button class="button secondary" onclick="goToStep1()" data-track="inspection_step2_back">Back</button>
+        <button class="button" id="confirmTimeBtn" onclick="goToStep3()" disabled data-track="inspection_step2_complete">Continue</button>
       </div>
     </div>
 
@@ -336,8 +336,8 @@
       <div class="vehicle-types" id="vehicleTypes"></div>
 
       <div style="margin:20px 0;">
-        <button class="button secondary" onclick="goToStep2()">Back</button>
-        <button class="button" onclick="goToStep4()">Continue to Review</button>
+        <button class="button secondary" onclick="goToStep2()" data-track="inspection_step3_back">Back</button>
+        <button class="button" onclick="goToStep4()" data-track="inspection_step3_complete">Continue to Review</button>
       </div>
     </div>
 
@@ -384,8 +384,8 @@
 
       <div style="text-align:center;margin:20px 0;">
         <div style="display:flex;justify-content:center;gap:15px;flex-wrap:wrap;">
-          <button class="button secondary" onclick="goToStep3()">Back to Selection</button>
-          <button class="button" id="generatePaymentBtn" onclick="generatePaymentLink()" disabled>Generate Payment Link</button>
+          <button class="button secondary" onclick="goToStep3()" data-track="inspection_step4_back">Back to Selection</button>
+          <button class="button" id="generatePaymentBtn" onclick="generatePaymentLink()" disabled data-track="inspection_payment_generate">Generate Payment Link</button>
         </div>
         <p style="margin:15px 0;color:#666;font-size:.9em;" id="paymentNote">Secure payment processing powered by Stripe</p>
       </div>
@@ -394,7 +394,7 @@
 </div>
 
 <!-- THESE WILL BE MANAGED BY MASTER CONFIG -->
-<a id="stripePaymentSticky" class="sticky-payment" href="#" data-track="customer_call">💳 Make Payment</a>
+<a id="stripePaymentSticky" class="sticky-payment" href="#" data-track="inspection_payment_sticky">💳 Make Payment</a>
 
 <footer>
   &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
@@ -439,23 +439,14 @@ function isWeekendNZ(d){
   return g===0 || g===6; 
 }
 
-// Booking status tracking
+// Booking status tracking - integrated with master config
 const BOOKING_STATUS = {
-  INITIAL: 'booking_started',
-  DETAILS_COMPLETE: 'details_complete',
-  TIME_SELECTED: 'time_selected',
-  VEHICLE_SELECTED: 'vehicle_selected',
-  TERMS_ACCEPTED: 'terms_accepted',
-  PAYMENT_PENDING: 'payment_pending'
-};
-
-const STATUS_COLORS = {
-  'booking_started': '#007bff',
-  'details_complete': '#28a745',
-  'time_selected': '#fd7e14',
-  'vehicle_selected': '#6f42c1',
-  'terms_accepted': '#20c997',
-  'payment_pending': '#dc3545'
+  INITIAL: 'inspection_booking_started',
+  DETAILS_COMPLETE: 'inspection_details_complete',
+  TIME_SELECTED: 'inspection_time_selected',
+  VEHICLE_SELECTED: 'inspection_vehicle_selected',
+  TERMS_ACCEPTED: 'inspection_terms_accepted',
+  PAYMENT_PENDING: 'inspection_payment_pending'
 };
 
 // Inspection service configuration
@@ -533,15 +524,13 @@ const inspectionConfig = {
   ]
 };
 
-// API URLs - use master config's URLs where available
-const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
-
 // Global state - booking specific only
 let selectedUrgency = null;
 let selectedUrgencyDetails = {};
 let selectedVehicleType = 'standard';
 let vehicleTypeAddon = 0;
 let calculatedPrice = null;
+let specificTimeSurcharge = 0;
 
 // Helper functions
 function sanitizePhone(val){ return (val || '').replace(/\D/g,''); }
@@ -552,35 +541,39 @@ function buildBookingData(status) {
   const urlParams = new URLSearchParams(window.location.search);
   
   return {
-    sessionId: window.EEK_STATE?.sessionId || localStorage.getItem("eek_session_id"),
-    bookingStatus: status,
-    statusColor: STATUS_COLORS[status] || '#6c757d',
+    eventType: 'booking_update',
+    eventAction: status,
     timestamp: new Date().toISOString(),
     
+    // Use master config's session and tracking data
+    sessionId: window.EEK_STATE?.sessionId || localStorage.getItem("eek_session_id"),
+    gclid: window.EEK_STATE?.storedGclidForTracking || localStorage.getItem("eek_gclid") || urlParams.get('gclid') || null,
+    utm: window.EEK_STATE?.utmData || {},
+    
+    // Customer data
     name: sanitizeText(document.getElementById('nameInput').value),
     phone: sanitizePhone(document.getElementById('phoneInput').value),
     email: document.getElementById('emailInput').value.trim(),
     location: sanitizeText(document.getElementById('locationInput').value),
     details: document.getElementById('detailsInput').value || '',
     
+    // Vehicle data
     rego: sanitizeRego(document.getElementById('regoInput').value),
     vehicleRego: sanitizeRego(document.getElementById('regoInput').value),
     year: document.getElementById('yearInput').value.trim(),
     make: sanitizeText(document.getElementById('makeInput').value),
     model: sanitizeText(document.getElementById('modelInput').value),
     
+    // Service data
     service: 'inspection',
     serviceCode: inspectionConfig.serviceCode,
     serviceTitle: inspectionConfig.title,
+    serviceValue: EEK_CONFIG?.SERVICE_VALUES?.inspection_call || 19900,
     
     source: 'inspection_booking_form',
-    formVersion: '2.2',
-    
-    // Use master config's stored UTM/tracking data
-    gclid: window.EEK_STATE?.storedGclidForTracking || localStorage.getItem("eek_gclid") || urlParams.get('gclid') || null,
-    utm: window.EEK_STATE?.utmData || {},
+    formVersion: '3.0',
 
-    // Booking specific fields
+    // Booking specific fields based on step
     ...(status === BOOKING_STATUS.TIME_SELECTED && {
       selectedTime: selectedUrgencyDetails.time || '',
       selectedUrgency: selectedUrgency,
@@ -600,23 +593,37 @@ function buildBookingData(status) {
 }
 
 async function sendBookingUpdate(status) {
-  const data = buildBookingData(status);
-  console.log(`📡 Inspection ${status}:`, data);
-  
-  try {
-    // Use master config's tracking API if available
-    const apiUrl = window.EEK_CONFIG?.TRACKING_API_URL || window.EEK_CONFIG?.PRICING_API_URL || 
-                   'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
+  // Use master config's tracking system
+  if (window.sendTrackingEvent && window.buildTrackingPayload) {
+    const payload = window.buildTrackingPayload('booking_update', status, buildBookingData(status));
+    console.log(`📡 Inspection ${status}:`, payload);
+    return await window.sendTrackingEvent(payload);
+  } else {
+    // Fallback to direct API call
+    const data = buildBookingData(status);
+    console.log(`📡 Inspection ${status} (fallback):`, data);
     
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
-    });
-    console.log(`✅ API Response: ${response.status}`);
-    return response;
-  } catch (err) {
-    console.error(`❌ Error:`, err);
+    try {
+      const apiUrl = window.EEK_CONFIG?.TRACKING_API_URL || 
+                     'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
+      
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+      });
+      console.log(`✅ API Response: ${response.status}`);
+      return response;
+    } catch (err) {
+      console.error(`❌ Error:`, err);
+    }
+  }
+}
+
+// Track conversions using master config system
+function trackInspectionConversion(step) {
+  if (window.trackConversion) {
+    window.trackConversion(step, 'Inspection Booking');
   }
 }
 
@@ -647,6 +654,11 @@ async function initializeInspectionForm() {
   loadInspectionConfig();
   sendBookingUpdate(BOOKING_STATUS.INITIAL);
   
+  // Track initial page view with inspection context
+  if (window.trackPageView) {
+    window.trackPageView();
+  }
+  
   console.log('📊 Inspection initialization complete with master config integration');
 }
 
@@ -670,6 +682,7 @@ function loadInspectionConfig() {
   selectedVehicleType = 'standard';
   vehicleTypeAddon = 0;
   calculatedPrice = null;
+  specificTimeSurcharge = 0;
 
   window.currentService = 'inspection';
   window.currentConfig = inspectionConfig;
@@ -702,6 +715,9 @@ async function goToStep2(){
     alert('Please enter a valid email address'); document.getElementById('emailInput').focus(); return; 
   }
   if (!location) { alert('Please enter the vehicle location'); document.getElementById('locationInput').focus(); return; }
+
+  // Track step completion
+  trackInspectionConversion(BOOKING_STATUS.DETAILS_COMPLETE);
 
   // Get pricing
   const btn = document.getElementById('nextBtn');
@@ -797,7 +813,7 @@ function setupUrgencyOptions() {
   
   urgencyContainer.innerHTML = options.map(option => {
     return `
-      <div class="urgency-option" onclick="selectUrgency('${option.id}','${option.title}','${option.time}',${option.price},this)">
+      <div class="urgency-option" onclick="selectUrgency('${option.id}','${option.title}','${option.time}',${option.price},this)" data-track="inspection_urgency_${option.id}">
         <div class="urgency-title">${option.title}</div>
         <div class="urgency-time">${option.time}</div>
         <div class="urgency-description">${option.description}</div>
@@ -812,6 +828,11 @@ function selectUrgency(id, title, time, price, el){
   selectedUrgency = id;
   selectedUrgencyDetails = { title, time, basePrice: price };
   
+  // Track interaction with master config
+  if (window.trackInteraction) {
+    window.trackInteraction(el);
+  }
+  
   document.getElementById('confirmTimeBtn').disabled = false;
 }
 
@@ -823,6 +844,8 @@ async function goToStep3(){
     return;
   }
 
+  // Track step completion
+  trackInspectionConversion(BOOKING_STATUS.TIME_SELECTED);
   await sendBookingUpdate(BOOKING_STATUS.TIME_SELECTED);
 
   // Move to step 3
@@ -863,7 +886,7 @@ function setupVehicleTypes() {
     const selectedClass = type.id === 'standard' ? 'selected' : '';
     
     return `
-      <div class="vehicle-type ${popularClass} ${selectedClass}" onclick="selectVehicleType('${type.id}', ${type.addon}, this, ${totalPrice})">
+      <div class="vehicle-type ${popularClass} ${selectedClass}" onclick="selectVehicleType('${type.id}', ${type.addon}, this, ${totalPrice})" data-track="inspection_vehicle_${type.id}">
         <div class="vehicle-type-title">${type.title}</div>
         <div class="vehicle-type-subtitle">${type.subtitle}</div>
         <div class="vehicle-type-note">${type.note}</div>
@@ -876,6 +899,11 @@ function selectVehicleType(type, addon, el, fixedPrice = null){
   document.querySelectorAll('.vehicle-type.selected').forEach(x=>x.classList.remove('selected'));
   el.classList.add('selected');
   selectedVehicleType = type;
+  
+  // Track interaction with master config
+  if (window.trackInteraction) {
+    window.trackInteraction(el);
+  }
   
   if (type === 'specialty') {
     // Calculate addon needed to reach $399 using the correct base price
@@ -896,6 +924,8 @@ function selectVehicleType(type, addon, el, fixedPrice = null){
 async function goToStep4(){
   console.log('🚗 Step 3 → 4');
   
+  // Track step completion
+  trackInspectionConversion(BOOKING_STATUS.VEHICLE_SELECTED);
   await sendBookingUpdate(BOOKING_STATUS.VEHICLE_SELECTED);
   
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
@@ -947,7 +977,14 @@ function updateSummary(){
 }
 
 function toggleBookingButton(){
-  document.getElementById('generatePaymentBtn').disabled = !document.getElementById('termsAgree').checked;
+  const isChecked = document.getElementById('termsAgree').checked;
+  document.getElementById('generatePaymentBtn').disabled = !isChecked;
+  
+  if (isChecked) {
+    // Track terms acceptance
+    trackInspectionConversion(BOOKING_STATUS.TERMS_ACCEPTED);
+    sendBookingUpdate(BOOKING_STATUS.TERMS_ACCEPTED);
+  }
 }
 
 function buildRedirectUrl(){
@@ -996,7 +1033,9 @@ async function generatePaymentLink(){
   btn.disabled = true;
   btn.classList.add('processing');
   
-  await sendBookingUpdate(BOOKING_STATUS.TERMS_ACCEPTED);
+  // Track payment generation attempt
+  trackInspectionConversion(BOOKING_STATUS.PAYMENT_PENDING);
+  await sendBookingUpdate(BOOKING_STATUS.PAYMENT_PENDING);
   
   btn.textContent = 'Generating Link';
 
@@ -1007,9 +1046,6 @@ async function generatePaymentLink(){
     sanitizeText(document.getElementById('makeInput').value),
     sanitizeText(document.getElementById('modelInput').value)
   ].filter(Boolean).join(' ') || 'Vehicle details not provided';
-
-  // Send final update before payment
-  await sendBookingUpdate(BOOKING_STATUS.PAYMENT_PENDING);
 
   const bookingData = {
     rego: sanitizeRego(document.getElementById('regoInput').value) || 'Not provided',
@@ -1044,7 +1080,11 @@ async function generatePaymentLink(){
   };
 
   try {
-    const response = await fetch(POWER_AUTOMATE_URL, {
+    // Use the correct API URL from master config
+    const apiUrl = window.EEK_CONFIG?.PRICING_API_URL || 
+                   'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
+    
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(bookingData)
@@ -1061,11 +1101,16 @@ async function generatePaymentLink(){
         successDiv.innerHTML = `
           <h4 style="color:#155724;margin:0 0 15px 0;">✓ Payment Link Generated Successfully!</h4>
           <p style="color:#155724;margin:10px 0;">Your secure payment link is ready:</p>
-          <a href="${result.url}" class="button" style="background:#28a745;font-size:1.2em;padding:15px 30px;display:inline-block;margin:10px 0;">
+          <a href="${result.url}" class="button" style="background:#28a745;font-size:1.2em;padding:15px 30px;display:inline-block;margin:10px 0;" data-track="inspection_payment_complete">
             Complete Payment ($${total})
           </a>
           <p style="color:#666;font-size:.9em;margin-top:15px;">After payment, you'll receive an SMS confirmation with your inspection details.</p>`;
         btn.parentElement.appendChild(successDiv);
+        
+        // Track successful payment link generation
+        if (window.trackConversion) {
+          window.trackConversion('inspection_payment_link_generated', 'Inspection Booking');
+        }
         
         setTimeout(() => { window.location.href = result.url; }, 3000);
       } else {
@@ -1111,8 +1156,6 @@ function checkLocationAvailability() {
 }
 
 // Specific time functionality
-let specificTimeSurcharge = 0;
-
 function toggleSpecificTime() {
   const checkbox = document.getElementById('specificTimeRequest');
   const container = document.getElementById('specificTimeContainer');
@@ -1123,6 +1166,11 @@ function toggleSpecificTime() {
     specificTimeSurcharge = 39; // $39 surcharge for specific time
     populateTimeSlots();
     updateVehicleTypePricing(); // Update pricing to reflect surcharge
+    
+    // Track specific time request
+    if (window.trackInteraction) {
+      window.trackInteraction(checkbox);
+    }
   } else {
     container.style.display = 'none';
     specificTimeSurcharge = 0;
@@ -1178,7 +1226,7 @@ function populateTimeSlots() {
 
 // Mark that inspection script is loaded (for master config)
 window.inspectionFormLoaded = true;
-console.log('✅ Inspection form script loaded and ready');
+console.log('✅ Inspection form script loaded and ready with full master config integration');
 </script>
 
 </body>
