@@ -167,7 +167,7 @@ font-src 'self' data:;">
     <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: #333;">
       <input type="checkbox" id="termsCheckbox" style="transform: scale(1.5);" />
       <span>I agree to the Eek Mobile Mechanical terms of service 
-        <a href="https://www.eek.nz/terms" target="_blank" data-track="legal_terms" style="color: #ff5500; text-decoration: underline;">
+        <a href="https://www.eek.nz/terms" target="_blank" data-track="legal_terms" onclick="this.href='https://www.eek.nz/terms' + window.location.search" style="color: #ff5500; text-decoration: underline;">
           View terms of use
         </a>
       </span>
@@ -299,8 +299,8 @@ font-src 'self' data:;">
 
 <footer>
   &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
-  <a href="https://www.eek.nz/privacy" target="_blank" data-track="legal_privacy" style="color: #666; text-decoration: underline;">Privacy Policy</a> | 
-  <a href="/more-options" class="more-options-link" data-track="more_options_call" style="color: #666; text-decoration: underline;">More Options</a>
+  <a href="https://www.eek.nz/privacy" target="_blank" data-track="footer_privacy" onclick="this.href='https://www.eek.nz/privacy' + window.location.search" style="color: #666; text-decoration: underline;">Privacy Policy</a> | 
+  <a href="/more-options" class="more-options-link" data-track="more_options_call" onclick="this.href='/more-options' + window.location.search" style="color: #666; text-decoration: underline;">More Options</a>
 </footer>
 
 <a class="sticky-call phone-link" href="tel:0800769000" data-track="sticky_call" id="stickyCallButton">📞 Call <span class="phone-display">Eek Now</span></a>
@@ -321,9 +321,36 @@ function handleServiceSelection() {
       if (bookingUrl && href && href.startsWith('#')) {
         e.preventDefault();
         console.log('🎯 Redirecting to booking page:', bookingUrl);
-        window.location.href = bookingUrl;
+        // Preserve URL parameters when redirecting to booking
+        window.location.href = bookingUrl + window.location.search;
       }
     });
+  });
+}
+
+// Update external links to preserve URL parameters
+function updateExternalLinks() {
+  const currentParams = window.location.search;
+  if (!currentParams) return;
+  
+  console.log('🔗 Updating external links to preserve parameters:', currentParams);
+  
+  // Update all links that don't already have onclick handlers for parameter forwarding
+  document.querySelectorAll('a[href^="/"], a[href^="https://www.eek.nz/"]').forEach(link => {
+    const href = link.getAttribute('href');
+    
+    // Skip if it's an anchor link or already has parameters
+    if (href.startsWith('#') || href.includes('?') || link.onclick) return;
+    
+    // Skip phone links
+    if (href.startsWith('tel:')) return;
+    
+    // Add parameter forwarding
+    link.onclick = function() {
+      this.href = href + currentParams;
+    };
+    
+    console.log('  Updated link:', href, '-> will add params on click');
   });
 }
 
@@ -333,6 +360,9 @@ window.addEventListener('load', function() {
   
   // Set up service selection handlers
   handleServiceSelection();
+  
+  // Update external links to preserve parameters
+  updateExternalLinks();
   
   // Track page view
   if (typeof gtag !== 'undefined') {
