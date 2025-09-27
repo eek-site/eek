@@ -16,140 +16,12 @@
   
   <!-- Load base styles from main site -->
   <link rel="stylesheet" href="/eek-style-guide.css">
-  
-  <!-- Booking-specific style extensions only -->
-  <style>
-    /* Fallback CSS variables in case main style doesn't load */
-    :root {
-      --brand: #ff5500;
-      --brand2: #ff7700;
-      --purple: #6f42c1;
-      --ok: #28a745;
-      --muted: #6c757d;
-    }
-    
-    /* Extend base styles for booking form - no duplications */
-    .booking-container{max-width:900px;margin:20px auto;background:#fff;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);overflow:hidden}
-    .booking-header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:30px;text-align:center}
-    .booking-header.winz{background:linear-gradient(135deg,var(--purple),#5a32a3)}
-    .booking-header h2{margin:0 0 10px 0;font-size:2em}
-    .booking-header p{margin:0;font-size:1.1em;opacity:.95}
-    .service-stats{background:rgba(255,255,255,.15);padding:15px;border-radius:8px;margin-top:15px}
-    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:15px;text-align:center}
-    .stat-item{font-size:.9em}.stat-number{font-size:1.8em;font-weight:700;display:block}
-
-    .progress-bar{display:flex;justify-content:space-between;margin:20px 0;padding:0 20px}
-    .progress-step{flex:1;text-align:center;position:relative}
-    .progress-step::before{content:'';width:30px;height:30px;border-radius:50%;background:#ddd;display:block;margin:0 auto 8px}
-    .progress-step.active::before{background:var(--brand)}
-    .progress-step.completed::before{background:var(--ok)}
-    .progress-step span{font-size:.9em;color:#666}
-    .progress-step.active span{color:var(--brand);font-weight:700}
-
-    .booking-steps{padding:30px}
-    .step{display:none;text-align:left}
-    .step.active{display:block}
-    .step h3{color:var(--brand);margin-bottom:20px;font-size:1.4em}
-    .step.winz-step h3{background:#f0f0f0;padding:15px;border-radius:8px;color:#333;font-weight:600}
-
-    .emergency-selector{margin:20px 0}
-    .emergency-selector label{font-weight:700;font-size:1.05em;display:block;margin-bottom:15px;color:#333}
-    .emergency-selector label .required{color:#ff0000}
-    .emergency-option{display:flex;align-items:center;padding:15px;border:2px solid #e0e0e0;border-radius:8px;margin-bottom:10px;cursor:pointer;transition:all .2s;background:#fff}
-    .emergency-option:hover{border-color:var(--purple);background:#f9f5ff}
-    .emergency-option input[type="radio"]{width:20px;height:20px;margin-right:15px;cursor:pointer}
-    .emergency-option.selected{border-color:var(--purple);background:#f9f5ff;border-width:3px}
-    .emergency-label{font-size:1.05em;color:#333}
-
-    .location-input,.details-input{width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:1.05em;margin-bottom:20px;box-sizing:border-box}
-    .location-input:focus,.details-input:focus{border-color:var(--brand);outline:none}
-    .details-input{height:120px;resize:vertical}
-
-    .timing-notice{background:#fff3cd;border:2px solid #ffeaa7;border-radius:12px;padding:20px;margin:20px 0;text-align:left}
-    .timing-notice h4{margin:0 0 10px 0;color:#856404}
-    .timing-notice p{margin:8px 0;color:#856404;line-height:1.5}
-
-    .urgency-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;margin:20px 0}
-    .urgency-option{border:2px solid #ddd;border-radius:12px;padding:20px;cursor:pointer;text-align:center;transition:all .3s;background:#fff}
-    .urgency-option:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,85,0,.15)}
-    .urgency-option.selected{border-color:var(--brand);background:linear-gradient(135deg,#fff5f0,#ffe5d9);border-width:3px}
-    .urgency-title{font-weight:700;margin-bottom:8px;font-size:1.1em}
-    .urgency-time{color:var(--brand);font-size:.95em;margin-bottom:8px;font-weight:600}
-    .urgency-description{font-size:.9em;color:#666;margin-bottom:12px}
-    .urgency-price{font-size:1.25em;font-weight:800;color:var(--brand)}
-    .urgency-price.calculating{color:var(--muted);font-size:1em}
-
-    .voltage-wrap{background:#f8f9fa;border:2px solid #e9ecef;border-radius:12px;padding:16px;margin:16px 0}
-    .voltage-title{font-weight:800;margin-bottom:10px}
-    .voltage-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
-    .voltage-card{border:2px solid #ddd;border-radius:12px;padding:14px;cursor:pointer;background:#fff;transition:all .2s}
-    .voltage-card:hover{border-color:var(--brand);transform:translateY(-1px)}
-    .voltage-card.selected{border-color:var(--brand);background:linear-gradient(135deg,#fff5f0,#ffe5d9)}
-    .voltage-label{font-weight:700}
-    .voltage-price{color:var(--brand);font-weight:800;margin-top:6px}
-
-    .reservation-summary{background:#e8f4f8;border-radius:8px;padding:20px;margin:20px 0}
-    .reservation-summary h4{margin:0 0 15px 0}
-    .summary-item{display:flex;justify-content:space-between;margin:8px 0;align-items:center}
-    .summary-item strong{color:var(--brand)}
-
-    .terms-section{background:#f8f9fa;border-radius:8px;padding:20px;margin:20px 0;text-align:left}
-    .terms-checkbox{display:flex;align-items:flex-start;gap:10px;margin:15px 0}
-    .terms-checkbox input{margin-top:4px;transform:scale(1.2)}
-    .terms-text{font-size:.95em;line-height:1.5}
-    .terms-text a{color:var(--brand);text-decoration:none}
-    .terms-text a:hover{text-decoration:underline}
-
-    .info-box{background:linear-gradient(135deg,#fff9e6,#fff3cd);border:2px solid #ffd700;border-radius:12px;padding:20px;margin:20px 0;text-align:left;position:relative;box-shadow:0 2px 8px rgba(255,193,7,.15);min-height:0}
-    .info-box:empty{display:none}
-    .info-box::before{content:'💡';position:absolute;top:-10px;left:20px;background:#ffd700;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:14px}
-    .info-box h4{margin:0 0 15px 0;color:#b8860b;font-size:1.2em;font-weight:700}
-    .info-box ul{margin:10px 0;padding-left:20px;color:#b8860b;line-height:1.6}
-    .info-box li{margin:8px 0}
-
-    .contact-info{margin:15px 0}
-    .contact-info label{display:block;margin-bottom:8px;font-weight:700}
-    .contact-info input{width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:1em;margin-bottom:15px;box-sizing:border-box}
-    .contact-info input:focus{border-color:var(--brand);outline:none}
-
-    .button{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:14px 28px;border:none;border-radius:10px;cursor:pointer;font-size:1.1em;font-weight:600;text-decoration:none;display:inline-block;transition:all .3s;margin:10px 5px;box-shadow:0 3px 8px rgba(255,85,0,.2);text-align:center;min-width:160px}
-    .button:hover{background:linear-gradient(135deg,#e04400,#ff6600);transform:translateY(-2px);box-shadow:0 5px 15px rgba(255,85,0,.3)}
-    .button:active{transform:translateY(0);box-shadow:0 2px 5px rgba(255,85,0,.2)}
-    .button.secondary{background:linear-gradient(135deg,#6c757d,#868e96);box-shadow:0 3px 8px rgba(108,117,125,.2)}
-    .button.secondary:hover{background:linear-gradient(135deg,#545b62,#6c757d);box-shadow:0 5px 15px rgba(108,117,125,.3)}
-    .button:disabled{background:#ddd;color:#999;cursor:not-allowed;transform:none;box-shadow:none}
-    .button:disabled:hover{background:#ddd;transform:none;box-shadow:none}
-
-    .breadcrumb {
-      text-align: center;
-      margin: 10px auto;
-      max-width: 800px;
-      color: #666;
-      font-size: 0.9em;
-    }
-
-    .breadcrumb a {
-      color: #007bff;
-      text-decoration: none;
-    }
-
-    .breadcrumb a:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 768px) {
-      .booking-steps{padding:20px}
-      .urgency-options{grid-template-columns:1fr}
-      .voltage-grid{grid-template-columns:1fr}
-      .stats-grid{grid-template-columns:repeat(2,1fr)}
-    }
-  </style>
 </head>
 <body>
 
-<!-- THESE ELEMENTS WILL BE MANAGED BY MASTER CONFIG -->
-<div id="closedBanner" class="after-hours-banner" style="display: none;">
-  <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
+<!-- BANNER - Managed by master config -->
+<div id="closedBanner" class="after-hours-banner">
+  <h2 id="closedTitle">Currently Closed</h2>
   <div id="afterHoursMessage">
     <p><strong>Business Hours:</strong></p>
     <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
@@ -160,44 +32,46 @@
     <p><strong>We're currently experiencing high demand</strong></p>
     <p>Our mechanics are fully dispatched on emergency calls</p>
     <p>Please book online for the next available appointment or try calling again shortly</p>
-    <a href="#service-selection" class="emergency-btn" data-track="customer_book_online" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
+    <a href="#service-selection" class="emergency-btn after-hours-btn" data-track="customer_book_online">Book Online Now</a>
   </div>
 </div>
 
-<section id="stripePaymentBlock" style="display: none; background-color: #ffffff; padding: 20px; text-align: center; color: #333; border-bottom: 2px solid #ff5500;">
-  <div style="background-color: #f5f5f5; padding: 30px; border-radius: 12px; max-width: 700px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
-    <h1 style="font-size: 2.2em; margin-bottom: 0.5em;">Secure Roadside Payment</h1>
-    <p style="font-size: 1.2em; margin-bottom: 1.5em;">Confirm your payment to get help on the way — fast, safe, and secure.</p>
-    <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: #333;">
-      <input type="checkbox" id="termsCheckbox" style="transform: scale(1.5);" />
+<!-- PAYMENT BLOCK - Managed by master config -->
+<section id="stripePaymentBlock">
+  <div>
+    <h1>Secure Roadside Payment</h1>
+    <p>Confirm your payment to get help on the way — fast, safe, and secure.</p>
+    <label>
+      <input type="checkbox" id="termsCheckbox" />
       <span>I agree to the Eek Mobile Mechanical terms of service 
-        <a href="https://www.eek.nz/terms" target="_blank" data-track="legal_terms" onclick="this.href='https://www.eek.nz/terms' + window.location.search" style="color: #ff5500; text-decoration: underline;">
+        <a href="https://www.eek.nz/terms" target="_blank" data-track="legal_terms">
           View terms of use
         </a>
       </span>
     </label>
     <br><br>
-    <button id="payNowButton" style="display: none; background-color: #ff5500; color: white; padding: 14px 32px; font-size: 1.2em; border: none; border-radius: 8px; cursor: pointer;">
-      Pay Now
-    </button>
+    <button id="payNowButton" class="eek-hidden">Pay Now</button>
   </div>
 </section>
 
-<!-- HEADER THAT WILL BE MANAGED BY MASTER CONFIG -->
+<!-- HEADER -->
 <header>
-  <img src="/brand-image.png" alt="Eek Mobile Mechanical - Mobile Mechanic Services" />
+  <img src="/brand-image.png" alt="Eek Mobile Mechanical - Mobile Mechanic Services" class="eek-brand-image" />
   <div class="business-name">Eek Mobile Mechanical</div>
   <h1 id="headerTitle">Emergency Mobile Mechanic Service</h1>
   <p class="tagline" id="headerSubtitle">Mobile Mechanic • Pre Purchase Inspections • Wrong Fuel Removal • Emergency Roadside Repairs • 30–60 Min Response</p>
-  <a class="cta-button phone-link" href="tel:0800769000" data-track="header_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+  <a class="cta-button phone-link normal-hours-btn" href="tel:0800769000" data-track="header_call">Call <span class="phone-display">0800 769 000</span></a>
+  <a class="cta-button after-hours-btn" href="#service-selection" data-track="customer_book_online" data-service="jumpstart" style="display: none;">Book Emergency Service</a>
 </header>
 
+<!-- BREADCRUMB -->
 <div class="breadcrumb">
   <a href="/" data-track="breadcrumb_home">Home</a> > 
   <a href="/more-options" data-track="breadcrumb_more_options">More Options</a> > 
   <span id="breadcrumbText">Emergency Service</span>
 </div>
 
+<!-- MAIN BOOKING CONTAINER -->
 <div class="booking-container">
   <div class="booking-header" id="bookingHeader">
     <h2 id="bookingTitle">Book Your Emergency Service</h2>
@@ -205,56 +79,69 @@
     <div class="service-stats">
       <div class="stats-grid" id="statsContent"></div>
     </div>
+    
+    <!-- Business Context Notice - Enhanced from master config -->
+    <div id="businessContextNotice" class="business-notice" style="display: none;">
+      <h4 id="businessContextTitle">Service Information</h4>
+      <p id="businessContextMessage">We'll provide the best possible service for your situation.</p>
+    </div>
   </div>
 
+  <!-- PROGRESS BAR -->
   <div class="progress-bar">
     <div class="progress-step active" id="step1-progress"><span>Details</span></div>
     <div class="progress-step" id="step2-progress"><span id="step2Label">Scheduling</span></div>
     <div class="progress-step" id="step3-progress"><span>Confirm</span></div>
   </div>
 
+  <!-- BOOKING STEPS -->
   <div class="booking-steps">
-    <!-- Step 1: Service Details -->
+    
+    <!-- STEP 1: SERVICE DETAILS -->
     <div class="step active" id="step1">
       <h3 id="step1Title">Step 1: Service Details</h3>
 
-      <!-- Emergency type selector for WINZ only -->
-      <div id="emergencySelector" class="emergency-selector" style="display:none;">
+      <!-- Emergency type selector for WINZ -->
+      <div id="emergencySelector" class="emergency-selector" style="display: none;">
         <label>1. What is your emergency? <span class="required">*</span></label>
         <div id="emergencyOptions"></div>
       </div>
 
-      <div style="background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:20px;">
-        <h4 style="margin:0 0 15px 0;color:#333;">Your Information</h4>
+      <!-- CUSTOMER INFORMATION -->
+      <div class="info-section">
+        <h4>Your Information</h4>
         <div class="contact-info">
           <label for="nameInput">Full Name (required)</label>
           <input type="text" id="nameInput" placeholder="John Smith" required autocomplete="name"/>
+          
           <label for="phoneInput">Phone Number (required)</label>
           <input type="tel" id="phoneInput" placeholder="021 234 5678" required inputmode="tel" autocomplete="tel"/>
+          
           <label for="emailInput">Email Address (required)</label>
           <input type="email" id="emailInput" placeholder="your.email@example.com" required autocomplete="email"/>
         </div>
       </div>
 
-      <div style="background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:20px;">
-        <h4 style="margin:0 0 15px 0;color:#333;">Vehicle Information</h4>
+      <!-- VEHICLE INFORMATION -->
+      <div class="info-section">
+        <h4>Vehicle Information</h4>
         <div class="contact-info">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
-            <div>
+          <div class="form-row">
+            <div class="form-col">
               <label for="regoInput">Registration Number (required)</label>
-              <input type="text" id="regoInput" placeholder="ABC123" style="text-transform:uppercase;" required autocapitalize="characters" spellcheck="false"/>
+              <input type="text" id="regoInput" placeholder="ABC123" required autocapitalize="characters" spellcheck="false"/>
             </div>
-            <div>
+            <div class="form-col">
               <label for="yearInput">Year (required)</label>
               <input type="text" id="yearInput" placeholder="2018" maxlength="4" required pattern="\\d{4}" inputmode="numeric"/>
             </div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
-            <div>
+          <div class="form-row">
+            <div class="form-col">
               <label for="makeInput">Make (required)</label>
               <input type="text" id="makeInput" placeholder="Toyota" required/>
             </div>
-            <div>
+            <div class="form-col">
               <label for="modelInput">Model (required)</label>
               <input type="text" id="modelInput" placeholder="Corolla" required/>
             </div>
@@ -262,64 +149,74 @@
         </div>
       </div>
 
-      <!-- Voltage selector (only for jump starts) -->
-      <div id="voltageSelector" class="voltage-wrap" style="display:none;">
+      <!-- VOLTAGE SELECTOR -->
+      <div id="voltageSelector" class="voltage-wrap" style="display: none;">
         <div class="voltage-title">Select battery voltage (required for jump starts)</div>
         <div class="voltage-grid" id="voltageGrid"></div>
       </div>
 
-      <label for="locationInput" style="display:block;margin-bottom:8px;font-weight:700;">Where do you need service?</label>
-      <input type="text" class="location-input" id="locationInput" placeholder="Enter your address, suburb, or region" required autocomplete="street-address"/>
-
-      <label for="detailsInput" style="display:block;margin-bottom:8px;margin-top:15px;font-weight:700;" id="detailsLabel">Tell us more about your situation:</label>
-      <textarea class="details-input" id="detailsInput" placeholder="Describe the issue or what you need help with..."></textarea>
-
-      <div class="info-box" id="serviceInfoBox"></div>
-
-      <!-- RevU Popup Rating Widget -->
-      <div id="popup-rating-widget">
-        <script id="popup-rating-widget-script" src="https://widget.reviewability.com/js/popupWidget.min.js" data-gfspw="https://app.revu.cloud/popup-pixel/get/1e8ac54d1020ced847d10f515125aa3ff719d1f3" async></script>
+      <!-- LOCATION -->
+      <div class="form-group">
+        <label for="locationInput">Where do you need service?</label>
+        <input type="text" class="location-input" id="locationInput" placeholder="Enter your address, suburb, or region" required autocomplete="street-address"/>
       </div>
 
-      <div style="text-align:center;margin:20px 0;">
-        <button class="button" id="nextBtn" onclick="goToStep2()">Next: Select Time</button>
+      <!-- DETAILS -->
+      <div class="form-group">
+        <label for="detailsInput" id="detailsLabel">Tell us more about your situation:</label>
+        <textarea class="details-input" id="detailsInput" placeholder="Describe the issue or what you need help with..."></textarea>
+      </div>
+
+      <!-- SERVICE INFO BOX -->
+      <div class="info-box" id="serviceInfoBox"></div>
+
+      <!-- REVIU WIDGET PLACEHOLDER -->
+      <div id="reviewWidget" style="display: none;">
+        <div data-bid="reviews-widget">
+          <!-- RevU widget will be loaded here -->
+        </div>
+      </div>
+
+      <!-- NEXT BUTTON -->
+      <div class="button-container">
+        <button class="button" id="nextBtn" data-track="booking_step_1_complete">Next: Select Time</button>
       </div>
     </div>
 
-    <!-- Step 2: Scheduling (or Quote for WINZ) -->
+    <!-- STEP 2: SCHEDULING -->
     <div class="step" id="step2">
       <h3 id="step2Title">Step 2: When do you need service?</h3>
 
       <div class="timing-notice" id="timingNotice">
-        <h4>⏰ Important Timing Information</h4>
+        <h4>Important Timing Information</h4>
         <p><strong>Time windows are approximate arrival times.</strong> As a mobile service, a previous job may run long. We'll text you when your tech is on the way.</p>
       </div>
 
       <div class="urgency-options" id="urgencyOptions"></div>
 
-      <div style="margin:20px 0;">
-        <button class="button secondary" onclick="goToStep1()">Back</button>
-        <button class="button" id="confirmTimeBtn" onclick="goToStep3()" disabled>Continue</button>
+      <div class="button-container">
+        <button class="button secondary" id="backBtn" data-track="booking_back_to_step_1">Back</button>
+        <button class="button" id="confirmTimeBtn" disabled data-track="booking_step_2_complete">Continue</button>
       </div>
     </div>
 
-    <!-- Step 3: Confirmation -->
+    <!-- STEP 3: CONFIRMATION -->
     <div class="step" id="step3">
       <h3 id="step3Title">Step 3: Review and confirm</h3>
 
       <div class="reservation-summary">
         <h4>Your Service Request</h4>
         <div class="summary-item"><span>Service:</span><strong id="summaryService"></strong></div>
-        <div class="summary-item" id="summaryEmergencyRow" style="display:none;"><span>Emergency Type:</span><strong id="summaryEmergency"></strong></div>
+        <div class="summary-item" id="summaryEmergencyRow" style="display: none;"><span>Emergency Type:</span><strong id="summaryEmergency"></strong></div>
         <div class="summary-item"><span>Location:</span><strong id="summaryLocation"></strong></div>
         <div class="summary-item"><span>Phone:</span><strong id="summaryPhone"></strong></div>
-        <div class="summary-item" id="summaryVoltageRow" style="display:none;"><span>Battery Voltage:</span><strong id="summaryVoltage"></strong></div>
+        <div class="summary-item" id="summaryVoltageRow" style="display: none;"><span>Battery Voltage:</span><strong id="summaryVoltage"></strong></div>
         <div class="summary-item" id="summaryUrgencyRow"><span>Response Time:</span><strong id="summaryUrgency"></strong></div>
         <div class="summary-item" id="summaryPriceRow"><span>Service Fee:</span><strong id="summaryPrice"></strong></div>
       </div>
 
-      <div class="timing-notice" id="nextStepsBox" style="background:#e8f8ff;border-color:#bee5eb;">
-        <h4>📱 What happens next?</h4>
+      <div class="timing-notice next-steps-box">
+        <h4>What happens next?</h4>
         <p>1. Click "Generate Payment Link" to create your secure payment link</p>
         <p>2. Complete payment through Stripe's secure checkout</p>
         <p>3. Receive SMS confirmation with your booking details</p>
@@ -329,86 +226,44 @@
       <div class="terms-section">
         <h4>Terms and Conditions</h4>
         <div class="terms-checkbox">
-          <input type="checkbox" id="termsAgree" onchange="toggleBookingButton()" />
+          <input type="checkbox" id="termsAgree" />
           <div class="terms-text">
             I agree to the <a href="/terms" target="_blank" data-track="legal_terms">Eek Mobile Mechanical Terms of Service</a> and understand that:
-            <ul style="margin:10px 0;padding-left:20px;" id="termsList"></ul>
+            <ul id="termsList"></ul>
           </div>
         </div>
       </div>
 
-      <div style="text-align:center;margin:20px 0;">
-        <div style="display:flex;justify-content:center;gap:15px;flex-wrap:wrap;">
-          <button class="button secondary" onclick="goToStep2()">Back to Selection</button>
-          <button class="button" id="generatePaymentBtn" onclick="generatePaymentLink()" disabled>Generate Payment Link</button>
+      <div class="button-container">
+        <div class="button-group">
+          <button class="button secondary" id="backToStep2Btn" data-track="booking_back_to_step_2">Back to Selection</button>
+          <button class="button" id="generatePaymentBtn" disabled data-track="booking_payment_request">Generate Payment Link</button>
         </div>
-        <p style="margin:15px 0;color:#666;font-size:.9em;" id="paymentNote">Secure payment processing powered by Stripe</p>
+        <p class="payment-note" id="paymentNote">Secure payment processing powered by Stripe</p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- THESE WILL BE MANAGED BY MASTER CONFIG -->
-<a id="stripePaymentSticky" class="sticky-payment" href="#" data-track="customer_call">💳 Make Payment</a>
+<!-- STICKY BUTTONS - Managed by master config -->
+<a id="stripePaymentSticky" class="sticky-payment" href="#" data-track="customer_call">Make Payment</a>
 
+<!-- FOOTER -->
 <footer>
   &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
   <a href="/privacy" target="_blank" data-track="footer_privacy">Privacy Policy</a> | 
   <a href="/more-options" data-track="more_options_call">More Options</a>
 </footer>
 
-<a class="sticky-call phone-link" href="tel:0800769000" data-track="sticky_call" id="stickyCallButton">📞 Call <span class="phone-display">0800 769 000</span></a>
-<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" data-track="customer_support" style="display: none; background: #666;">🕐 View Hours</a>
+<!-- STICKY CALL BUTTONS - Managed by master config -->
+<a class="sticky-call phone-link" href="tel:0800769000" data-track="sticky_call" id="stickyCallButton">Call <span class="phone-display">0800 769 000</span></a>
+<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" data-track="customer_support" style="display: none;">View Hours</a>
 
 <!-- MASTER CONFIG LOADS FIRST -->
 <script src="/eek-master-config.js"></script>
 
-<!-- BOOKING-SPECIFIC JAVASCRIPT AFTER MASTER CONFIG -->
+<!-- BOOKING-SPECIFIC JAVASCRIPT (FULLY INTEGRATED) -->
 <script>
-console.log('🚀 Booking form initializing...');
-
-// Wait for master config to be fully loaded
-async function waitForMasterConfig() {
-  while (typeof window.EEK_CONFIG === 'undefined' || typeof window.EEK_STATE === 'undefined') {
-    console.log('⏳ Waiting for master config...');
-    await new Promise(resolve => setTimeout(resolve, 100));
-  }
-  console.log('✅ Master config is ready');
-}
-
-// NZ timezone helpers
-const NZ_TZ = 'Pacific/Auckland';
-function nowNZ(){
-  const parts = new Intl.DateTimeFormat('en-NZ',{
-    timeZone:NZ_TZ,hour12:false,year:'numeric',month:'2-digit',day:'2-digit',
-    hour:'2-digit',minute:'2-digit',second:'2-digit'
-  }).formatToParts(new Date());
-  const get=t=>parts.find(p=>p.type===t).value;
-  return new Date(`${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}:${get('second')}`);
-}
-function fmtDateNZ(d){
-  return d.toLocaleDateString('en-NZ',{timeZone:NZ_TZ,weekday:'long',year:'numeric',month:'long',day:'numeric'});
-}
-
-// Booking status tracking
-const BOOKING_STATUS = {
-  INITIAL: 'booking_started',
-  DETAILS_COMPLETE: 'details_complete',
-  TIME_SELECTED: 'time_selected',
-  TERMS_ACCEPTED: 'terms_accepted',
-  PAYMENT_PENDING: 'payment_pending',
-  WINZ_QUOTE_SENT: 'winz_quote_sent'
-};
-
-const STATUS_COLORS = {
-  'booking_started': '#007bff',
-  'details_complete': '#28a745',
-  'time_selected': '#fd7e14',
-  'terms_accepted': '#6f42c1',
-  'payment_pending': '#dc3545',
-  'winz_quote_sent': '#20c997'
-};
-
 // Service configurations
 const serviceConfigs = {
   'jumpstart': {
@@ -424,7 +279,7 @@ const serviceConfigs = {
     basePrice:149,
     voltages: [
       { id:'12v', label:'12V (cars, SUVs, utes)', price:149 },
-      { id:'24v', label:'24V (trucks, buses)',   price:229 }
+      { id:'24v', label:'24V (trucks, buses)', price:229 }
     ],
     stats:[
       {number:'30–90',text:'min arrival'},
@@ -519,15 +374,9 @@ const serviceConfigs = {
         <li><strong>Fully insured service</strong> for your protection</li>
         <li><strong>Professional assessment</strong> will determine the best approach for your situation</li>
       </ul>`,
-    terms:{
-      mobile:[
-        'In some cases, transfer to workshop may be necessary. Towing costs not included in service price. Additional fees may apply.'
-      ],
-      workshop:[
-        'Towing costs not included in service price',
-        'Additional fees may apply for complex extraction requirements'
-      ]
-    }
+    terms:[
+      'In some cases, transfer to workshop may be necessary. Towing costs not included in service price. Additional fees may apply.'
+    ]
   },
   'winz': {
     title:'WINZ Vehicle Repair Quote',
@@ -575,11 +424,11 @@ const serviceConfigs = {
   }
 };
 
-// API URLs - use master config's URLs where available
+// API URLs
 const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
 const WINZ_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95fc801df59b4250a48919ace91c0276/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mFpTX4gPrz1u1DbdfF3YqHBnAsW3pnAAj-GWXWvBYYc';
 
-// Global state - booking specific only
+// Global state - simplified since master config handles most of this
 let selectedUrgency = null;
 let selectedUrgencyDetails = {};
 let selectedVoltageId = null;
@@ -587,46 +436,39 @@ let selectedVoltagePrice = null;
 let selectedEmergencyType = null;
 let calculatedPrice = null;
 
-// Helper functions
-function sanitizePhone(val){ return (val || '').replace(/\D/g,''); }
-function sanitizeRego(val){ return (val || '').toUpperCase().replace(/[^A-Z0-9]/g,''); }
-function sanitizeText(val){ return (val || '').trim().replace(/\s+/g,' '); }
+// Enhanced tracking function using master config
+async function sendBookingUpdate(status) {
+  if (!window.buildTrackingPayload || !window.sendTrackingEvent) {
+    console.warn('Master config tracking functions not available');
+    return;
+  }
 
-function buildBookingData(status) {
-  const urlParams = new URLSearchParams(window.location.search);
-  
-  return {
-    sessionId: window.EEK_STATE?.sessionId || localStorage.getItem("eek_session_id"),
-    bookingStatus: status,
-    statusColor: STATUS_COLORS[status] || '#6c757d',
-    timestamp: new Date().toISOString(),
-    
-    name: sanitizeText(document.getElementById('nameInput').value),
-    phone: sanitizePhone(document.getElementById('phoneInput').value),
+  const data = window.buildTrackingPayload('booking_update', status, {
+    name: document.getElementById('nameInput').value.trim(),
+    phone: document.getElementById('phoneInput').value.replace(/\D/g,''),
     email: document.getElementById('emailInput').value.trim(),
-    location: sanitizeText(document.getElementById('locationInput').value),
     details: document.getElementById('detailsInput').value || '',
-    
-    rego: sanitizeRego(document.getElementById('regoInput').value),
-    vehicleRego: sanitizeRego(document.getElementById('regoInput').value),
+    rego: document.getElementById('regoInput').value.toUpperCase().replace(/[^A-Z0-9]/g,''),
     year: document.getElementById('yearInput').value.trim(),
-    make: sanitizeText(document.getElementById('makeInput').value),
-    model: sanitizeText(document.getElementById('modelInput').value),
+    make: document.getElementById('makeInput').value.trim(),
+    model: document.getElementById('modelInput').value.trim(),
     vehicleType: selectedVoltageId === '24v' ? 'truck' : 'car',
-    
     service: window.currentService,
     serviceCode: window.currentConfig.serviceCode,
     serviceTitle: window.currentConfig.title,
-    
+    locationString: document.getElementById('locationInput').value.trim(),
     source: 'booking_form',
-    formVersion: '2.2',
+    formVersion: '2.5',
+    bookingStatus: status,
     
-    // Use master config's stored UTM/tracking data
-    gclid: window.EEK_STATE?.storedGclidForTracking || localStorage.getItem("eek_gclid") || urlParams.get('gclid') || null,
-    utm: window.EEK_STATE?.utmData || {},
-
-    // Booking specific fields
-    ...(status === BOOKING_STATUS.TIME_SELECTED && {
+    // Enhanced business context from master config
+    duringBusinessHours: window.isWithinBusinessHours ? window.isWithinBusinessHours() : false,
+    systemActive: window.EEK_STATE?.systemActive || true,
+    phoneNumberType: window.getDisplayPhoneNumber ? 
+      (window.getDisplayPhoneNumber().tel === window.EEK_CONFIG?.PHONE_NUMBERS?.tracking.tel ? 'tracking' : 'default') : 'unknown',
+    
+    // Add booking-specific fields based on status
+    ...(status === 'time_selected' && {
       selectedTime: selectedUrgencyDetails.time || '',
       selectedUrgency: selectedUrgency,
       calculatedPrice: calculatedPrice || window.currentConfig.basePrice,
@@ -645,52 +487,15 @@ function buildBookingData(status) {
       selectedVoltage: selectedVoltageId,
       batteryVoltage: selectedVoltageId === '12v' ? '12V' : '24V'
     })
-  };
+  });
+  
+  return await window.sendTrackingEvent(data);
 }
 
-async function sendBookingUpdate(status) {
-  const data = buildBookingData(status);
-  console.log(`📡 Booking ${status}:`, data);
-  
-  try {
-    // Use master config's tracking API if available
-    const apiUrl = window.EEK_CONFIG?.TRACKING_API_URL || window.EEK_CONFIG?.PRICING_API_URL || 
-                   'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
-    
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
-    });
-    console.log(`✅ API Response: ${response.status}`);
-    return response;
-  } catch (err) {
-    console.error(`❌ Error:`, err);
-  }
-}
-
-// Main initialization function
-async function initializeBookingForm() {
-  console.log('🚀 Starting booking form initialization...');
-  
-  // Wait for master config
-  await waitForMasterConfig();
-  
+// Initialize booking form with full master config integration
+function initializeBookingForm() {
   const urlParams = new URLSearchParams(window.location.search);
   const service = urlParams.get('service') || 'jumpstart';
-  const sessionId = urlParams.get('session_id');
-  
-  console.log('📌 Service:', service);
-  
-  // Handle session ID - use master config's session management
-  if (sessionId) {
-    window.sessionId = sessionId;
-    localStorage.setItem("eek_session_id", sessionId);
-  } else {
-    window.sessionId = window.EEK_STATE?.sessionId || localStorage.getItem("eek_session_id") || 
-                      `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    localStorage.setItem("eek_session_id", window.sessionId);
-  }
   
   // Redirect inspection to dedicated page
   if (service === 'inspection') {
@@ -698,19 +503,96 @@ async function initializeBookingForm() {
     return;
   }
   
-  // Initialize booking
-  console.log('✅ Initializing booking with master config integration');
   loadServiceConfig(service);
-  sendBookingUpdate(BOOKING_STATUS.INITIAL);
+  setupEventHandlers();
+  updateBusinessContext(); // Use master config business context
+  setupFormAbandonmentTracking(); // Use master config tracking
   
-  console.log('📊 Booking initialization complete with master config integration');
+  // Track conversion using master config
+  if (window.trackConversion) {
+    window.trackConversion(`${service}_form_loaded`, 'Booking');
+  }
+  
+  // Send initial booking update
+  sendBookingUpdate('booking_started');
 }
 
-function loadServiceConfig(serviceType){
+// Update business context using master config
+function updateBusinessContext() {
+  if (!window.EEK_STATE) return;
+  
+  const notice = document.getElementById('businessContextNotice');
+  const title = document.getElementById('businessContextTitle');
+  const message = document.getElementById('businessContextMessage');
+  
+  const systemActive = window.EEK_STATE.systemActive;
+  const duringBusinessHours = window.isWithinBusinessHours ? window.isWithinBusinessHours() : true;
+  
+  if (!systemActive && duringBusinessHours) {
+    notice.style.display = 'block';
+    notice.className = 'business-notice high-demand';
+    title.textContent = 'High Demand Period';
+    message.textContent = 'We\'re currently experiencing high demand. Booking online ensures your place in the queue.';
+  } else if (!duringBusinessHours) {
+    notice.style.display = 'block';
+    notice.className = 'business-notice after-hours';
+    title.textContent = 'After Hours Service';
+    message.textContent = 'After-hours bookings include a priority service fee. Your request will be processed first thing in the morning.';
+  } else {
+    notice.style.display = 'none';
+  }
+}
+
+// Set up form abandonment tracking using master config
+function setupFormAbandonmentTracking() {
+  if (!window.buildTrackingPayload || !window.sendTrackingEvent) return;
+  
+  let formStartTime = Date.now();
+  let hasInteracted = false;
+  
+  // Track when user first interacts with form
+  document.addEventListener('input', function() {
+    if (!hasInteracted) {
+      hasInteracted = true;
+      const payload = window.buildTrackingPayload('form_interaction', 'first_form_interaction', {
+        timeToFirstInteraction: Date.now() - formStartTime,
+        service: window.currentService
+      });
+      window.sendTrackingEvent(payload);
+    }
+  });
+  
+  // Track form abandonment on page unload
+  window.addEventListener('beforeunload', function() {
+    if (hasInteracted && document.querySelector('.step.active')?.id !== 'step3') {
+      const currentStep = document.querySelector('.step.active')?.id || 'unknown';
+      const timeOnForm = Date.now() - formStartTime;
+      
+      // Only track if user spent meaningful time and didn't complete
+      if (timeOnForm > 30000) { // 30 seconds minimum
+        const payload = window.buildTrackingPayload('form_abandonment', 'booking_abandoned', {
+          abandonedAtStep: currentStep,
+          timeOnForm: timeOnForm,
+          service: window.currentService,
+          hasName: !!document.getElementById('nameInput').value.trim(),
+          hasPhone: !!document.getElementById('phoneInput').value.trim(),
+          hasEmail: !!document.getElementById('emailInput').value.trim(),
+          selectedVoltage: selectedVoltageId,
+          selectedEmergencyType: selectedEmergencyType
+        });
+        
+        // Use sendBeacon for reliable tracking on page unload
+        if (navigator.sendBeacon && window.EEK_CONFIG?.TRACKING_API_URL) {
+          navigator.sendBeacon(window.EEK_CONFIG.TRACKING_API_URL, JSON.stringify(payload));
+        }
+      }
+    }
+  });
+}
+
+function loadServiceConfig(serviceType) {
   const config = serviceConfigs[serviceType] || serviceConfigs['jumpstart'];
   
-  console.log('⚙️ Loading service:', config.title);
-
   // Update page content
   document.title = `${config.title} - Eek Mobile Mechanical`;
   document.getElementById('headerTitle').textContent = config.title;
@@ -725,16 +607,29 @@ function loadServiceConfig(serviceType){
 
   // Handle WINZ styling
   const bookingHeader = document.getElementById('bookingHeader');
+  const emergencySelector = document.getElementById('emergencySelector');
+  
   if (config.isWinz) {
     bookingHeader.classList.add('winz');
     document.getElementById('step1').classList.add('winz-step');
     document.getElementById('nextBtn').textContent = 'Get Quote';
     document.getElementById('step2Label').textContent = 'Quote';
+    
+    // Show emergency selector
+    emergencySelector.style.display = 'block';
+    document.getElementById('emergencyOptions').innerHTML = config.emergencyTypes.map(e => `
+      <div class="emergency-option" data-id="${e.id}">
+        <input type="radio" name="emergencyType" value="${e.id}" id="emergency_${e.id}">
+        <label for="emergency_${e.id}" class="emergency-label">${e.label}</label>
+        <p class="emergency-description">${e.description}</p>
+      </div>
+    `).join('');
   } else {
     bookingHeader.classList.remove('winz');
     document.getElementById('step1').classList.remove('winz-step');
     document.getElementById('nextBtn').textContent = 'Next: Select Time';
     document.getElementById('step2Label').textContent = 'Scheduling';
+    emergencySelector.style.display = 'none';
   }
 
   // Populate stats
@@ -742,28 +637,14 @@ function loadServiceConfig(serviceType){
     `<div class="stat-item"><span class="stat-number">${stat.number}</span>${stat.text}</div>`
   ).join('');
 
-  // Handle emergency types for WINZ
-  const emergencySelector = document.getElementById('emergencySelector');
-  if (config.isWinz && config.emergencyTypes) {
-    emergencySelector.style.display = 'block';
-    document.getElementById('emergencyOptions').innerHTML = config.emergencyTypes.map(e => `
-      <div class="emergency-option" onclick="selectEmergencyType('${e.id}', this)">
-        <input type="radio" name="emergencyType" value="${e.id}" id="emergency_${e.id}">
-        <label for="emergency_${e.id}" class="emergency-label">${e.label}</label>
-      </div>
-    `).join('');
-  } else {
-    emergencySelector.style.display = 'none';
-  }
-
   // Handle voltage selection for jumpstart
   const voltageSelector = document.getElementById('voltageSelector');
   if (config.voltages && !config.isWinz) {
     voltageSelector.style.display = 'block';
     document.getElementById('voltageGrid').innerHTML = config.voltages.map(v => `
-      <div class="voltage-card" data-id="${v.id}" onclick="selectVoltage('${v.id}', ${v.price}, this)">
+      <div class="voltage-card" data-id="${v.id}" data-price="${v.price}">
         <div class="voltage-label">${v.label}</div>
-        <div class="voltage-price">Calculating...</div>
+        <div class="voltage-price">$${v.price}</div>
       </div>
     `).join('');
   } else {
@@ -778,119 +659,207 @@ function loadServiceConfig(serviceType){
     termsList.innerHTML = '';
   }
 
-  // Reset state
-  selectedVoltageId = null;
-  selectedEmergencyType = null;
-  selectedUrgency = null;
-  selectedUrgencyDetails = {};
-  calculatedPrice = null;
+  // Set up service-specific header buttons
+  setupServiceHeaderButtons(serviceType);
 
   window.currentService = serviceType;
   window.currentConfig = config;
 }
 
-function selectEmergencyType(id, el){
-  document.querySelectorAll('.emergency-option').forEach(x=>x.classList.remove('selected'));
-  el.classList.add('selected');
-  el.querySelector('input[type="radio"]').checked = true;
-  selectedEmergencyType = id;
+// Setup service-specific header buttons with proper state management
+function setupServiceHeaderButtons(serviceType) {
+  const normalBtn = document.querySelector('.cta-button.normal-hours-btn');
+  const afterHoursBtn = document.querySelector('.cta-button.after-hours-btn');
+  
+  if (afterHoursBtn) {
+    afterHoursBtn.dataset.service = serviceType;
+    afterHoursBtn.dataset.bookingUrl = `/book-service/?service=${serviceType}`;
+  }
 }
 
-function selectVoltage(id, price, el){
-  document.querySelectorAll('.voltage-card.selected').forEach(x=>x.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedVoltageId = id;
-  selectedVoltagePrice = price;
+function setupEventHandlers() {
+  // Emergency type selection with enhanced tracking
+  document.getElementById('emergencyOptions').addEventListener('click', function(e) {
+    const option = e.target.closest('.emergency-option');
+    if (option) {
+      document.querySelectorAll('.emergency-option').forEach(x => x.classList.remove('selected'));
+      option.classList.add('selected');
+      option.querySelector('input[type="radio"]').checked = true;
+      selectedEmergencyType = option.dataset.id;
+      
+      // Track using master config
+      if (window.trackConversion) {
+        window.trackConversion(`winz_emergency_${selectedEmergencyType}`, 'Booking');
+      }
+    }
+  });
+
+  // Voltage selection with enhanced tracking
+  document.getElementById('voltageGrid').addEventListener('click', function(e) {
+    const card = e.target.closest('.voltage-card');
+    if (card) {
+      document.querySelectorAll('.voltage-card.selected').forEach(x => x.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedVoltageId = card.dataset.id;
+      selectedVoltagePrice = parseInt(card.dataset.price);
+      
+      // Track using master config
+      if (window.trackConversion) {
+        window.trackConversion(`battery_${selectedVoltageId}_selected`, 'Booking');
+      }
+      
+      // Update price display using master config business logic
+      updateVoltagePrice(card);
+    }
+  });
+
+  // Urgency selection with enhanced tracking
+  document.getElementById('urgencyOptions').addEventListener('click', function(e) {
+    const option = e.target.closest('.urgency-option');
+    if (option) {
+      document.querySelectorAll('.urgency-option.selected').forEach(x => x.classList.remove('selected'));
+      option.classList.add('selected');
+      selectedUrgency = option.dataset.id;
+      selectedUrgencyDetails = {
+        title: option.dataset.title,
+        time: option.dataset.time,
+        price: calculatedPrice || parseInt(option.dataset.price) || 0
+      };
+      document.getElementById('confirmTimeBtn').disabled = false;
+      
+      // Track using master config
+      if (window.trackConversion) {
+        window.trackConversion(`${window.currentService}_urgency_${selectedUrgency}`, 'Booking');
+      }
+    }
+  });
+
+  // Button event handlers
+  document.getElementById('nextBtn').addEventListener('click', goToStep2);
+  document.getElementById('backBtn').addEventListener('click', goToStep1);
+  document.getElementById('confirmTimeBtn').addEventListener('click', goToStep3);
+  document.getElementById('backToStep2Btn').addEventListener('click', goToStep2);
+  
+  document.getElementById('termsAgree').addEventListener('change', function() {
+    document.getElementById('generatePaymentBtn').disabled = !this.checked;
+    
+    if (this.checked && window.trackConversion) {
+      window.trackConversion('booking_terms_accepted', 'Booking');
+    }
+  });
+  
+  document.getElementById('generatePaymentBtn').addEventListener('click', generatePaymentLink);
+
+  // Enhanced form field tracking for engagement analytics
+  setupFormFieldTracking();
 }
 
-function goToStep1(){
+// Enhanced form field tracking using master config
+function setupFormFieldTracking() {
+  if (!window.buildTrackingPayload || !window.sendTrackingEvent) return;
+  
+  const trackableFields = ['nameInput', 'phoneInput', 'emailInput', 'locationInput', 'detailsInput'];
+  trackableFields.forEach(fieldId => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+      field.addEventListener('focus', function() {
+        const payload = window.buildTrackingPayload('form_interaction', `${fieldId}_focused`, {
+          fieldType: field.type || 'text',
+          step: document.querySelector('.step.active')?.id || 'unknown'
+        });
+        window.sendTrackingEvent(payload);
+      });
+      
+      // Track form field completion for conversion optimization
+      field.addEventListener('blur', function() {
+        if (this.value.trim()) {
+          const payload = window.buildTrackingPayload('form_interaction', `${fieldId}_completed`, {
+            fieldType: field.type || 'text',
+            step: document.querySelector('.step.active')?.id || 'unknown',
+            hasValue: !!this.value.trim()
+          });
+          window.sendTrackingEvent(payload);
+        }
+      });
+    }
+  });
+}
+
+// Update voltage price with business logic
+function updateVoltagePrice(card) {
+  if (!window.EEK_STATE) return;
+  
+  const systemActive = window.EEK_STATE.systemActive;
+  const duringBusinessHours = window.isWithinBusinessHours ? window.isWithinBusinessHours() : false;
+  let finalPrice = selectedVoltagePrice;
+  
+  if (!systemActive && !duringBusinessHours) {
+    finalPrice = Math.round(finalPrice * 1.2); // 20% after-hours surcharge
+  }
+  
+  card.querySelector('.voltage-price').textContent = `$${finalPrice}`;
+}
+
+function goToStep1() {
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step1').classList.add('active');
   document.querySelectorAll('.progress-step').forEach(el => el.classList.remove('active','completed'));
   document.getElementById('step1-progress').classList.add('active');
 }
 
-async function goToStep2(){
-  console.log('📝 Step 1 → 2');
-  
-  // Validate all required fields
+async function goToStep2() {
+  // Enhanced validation
   const name = document.getElementById('nameInput').value.trim();
   const phone = document.getElementById('phoneInput').value.trim();
   const email = document.getElementById('emailInput').value.trim();
   const location = document.getElementById('locationInput').value.trim();
-  const rego = sanitizeRego(document.getElementById('regoInput').value);
+  const rego = document.getElementById('regoInput').value.trim();
   const year = document.getElementById('yearInput').value.trim();
   const make = document.getElementById('makeInput').value.trim();
   const model = document.getElementById('modelInput').value.trim();
-
-  const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (!name) { alert('Please enter your full name'); document.getElementById('nameInput').focus(); return; }
-  if (!phone || !phoneRegex.test(phone) || phone.replace(/\D/g,'').length < 9) { 
-    alert('Please enter a valid phone number'); document.getElementById('phoneInput').focus(); return; 
-  }
-  if (!email || !emailRegex.test(email)) { 
-    alert('Please enter a valid email address'); document.getElementById('emailInput').focus(); return; 
-  }
-  if (!location) { alert('Please enter the service location'); document.getElementById('locationInput').focus(); return; }
-  if (!rego) { alert('Please enter the vehicle registration'); document.getElementById('regoInput').focus(); return; }
-  if (year.length !== 4) { alert('Please enter a 4-digit vehicle year'); document.getElementById('yearInput').focus(); return; }
-  if (!make) { alert('Please enter the vehicle make'); document.getElementById('makeInput').focus(); return; }
-  if (!model) { alert('Please enter the vehicle model'); document.getElementById('modelInput').focus(); return; }
-
-  // Service specific validation
-  if (window.currentConfig.isWinz) {
-    if (!selectedEmergencyType) { alert('Please select an emergency type'); return; }
-    if (!document.getElementById('detailsInput').value.trim()) { 
-      alert('Please describe the problem in detail'); 
-      document.getElementById('detailsInput').focus(); 
-      return; 
-    }
-  }
   
-  // Voltage selection required for jumpstart
-  if (window.currentService === 'jumpstart' && !window.currentConfig.isWinz && !selectedVoltageId) {
-    alert('Please select your battery voltage (12V or 24V)');
+  if (!name || !phone || !email || !location || !rego || !year || !make || !model) {
+    alert('Please fill in all required fields');
     return;
   }
-
-  // Get pricing for non-WINZ services
+  
+  if (window.currentConfig.isWinz && !selectedEmergencyType) {
+    alert('Please select your emergency type');
+    return;
+  }
+  
+  if (window.currentService === 'jumpstart' && !window.currentConfig.isWinz && !selectedVoltageId) {
+    alert('Please select your battery voltage');
+    return;
+  }
+  
+  // Track using master config
+  if (window.trackConversion) {
+    window.trackConversion(`${window.currentService}_step_1_complete`, 'Booking');
+  }
+  
+  // Calculate price using master config business logic
   if (!window.currentConfig.isWinz) {
     const btn = document.getElementById('nextBtn');
     btn.disabled = true;
     btn.textContent = 'Calculating price...';
     
     try {
-      const response = await sendBookingUpdate(BOOKING_STATUS.DETAILS_COMPLETE);
+      const systemActive = window.EEK_STATE?.systemActive;
+      const duringBusinessHours = window.isWithinBusinessHours ? window.isWithinBusinessHours() : false;
       
-      if (response?.ok) {
-        const responseText = await response.text();
-        if (responseText) {
-          try {
-            const result = JSON.parse(responseText);
-            calculatedPrice = result.price || window.currentConfig.basePrice;
-          } catch (e) {
-            calculatedPrice = window.currentConfig.basePrice;
-          }
-        } else {
-          calculatedPrice = window.currentConfig.basePrice;
-        }
-        
-        // Update voltage prices if jumpstart
-        if (window.currentService === 'jumpstart') {
-          document.querySelectorAll('.voltage-card').forEach(card => {
-            const isV24 = card.dataset.id === '24v';
-            const price = isV24 ? Math.round(calculatedPrice * 1.5) : calculatedPrice;
-            card.querySelector('.voltage-price').textContent = `$${price}`;
-            if (card.dataset.id === selectedVoltageId) {
-              selectedVoltagePrice = price;
-            }
-          });
-        }
+      calculatedPrice = window.currentConfig.basePrice;
+      
+      if (!systemActive && !duringBusinessHours) {
+        // Use after-hours pricing if available
+        const afterHoursAction = `${window.currentService}_after_hours`;
+        calculatedPrice = window.EEK_CONFIG?.SERVICE_VALUES?.[afterHoursAction] ? 
+          window.EEK_CONFIG.SERVICE_VALUES[afterHoursAction] / 100 : Math.round(calculatedPrice * 1.2);
       }
+      
+      await sendBookingUpdate('details_complete');
     } catch (err) {
-      console.error('Pricing error:', err);
+      console.error('Price calculation error:', err);
       calculatedPrice = window.currentConfig.basePrice;
     } finally {
       btn.disabled = false;
@@ -905,72 +874,72 @@ async function goToStep2(){
   document.getElementById('step1-progress').classList.remove('active');
   document.getElementById('step2-progress').classList.add('active');
 
-  // Setup step 2 content
-  if (window.currentConfig.isWinz) {
-    document.getElementById('step2Title').textContent = 'Step 2: Generate Your WINZ Quote';
-    document.getElementById('timingNotice').style.display = 'none';
-    document.getElementById('confirmTimeBtn').textContent = 'Generate Quote';
-  } else {
-    document.getElementById('step2Title').textContent = 'Step 2: When do you need service?';
-    document.getElementById('confirmTimeBtn').textContent = 'Continue';
-  }
+  setupUrgencyOptions();
+}
 
-  // Setup urgency options
+function setupUrgencyOptions() {
   const urgencyContainer = document.getElementById('urgencyOptions');
+  
+  // Use master config to determine pricing strategy
+  const systemActive = window.EEK_STATE?.systemActive;
+  const duringBusinessHours = window.isWithinBusinessHours ? window.isWithinBusinessHours() : false;
+  
   urgencyContainer.innerHTML = window.currentConfig.urgencyOptions.map(o => {
-    const displayPrice = window.currentService === 'fuel-extraction' ? 
-      o.price : (calculatedPrice || window.currentConfig.basePrice);
+    let displayPrice = calculatedPrice || window.currentConfig.basePrice;
+    
+    // Apply service-specific pricing
+    if (window.currentService === 'fuel-extraction') {
+      displayPrice = o.price;
+    } else if (window.currentService === 'jumpstart' && selectedVoltagePrice) {
+      displayPrice = selectedVoltagePrice;
+    }
+    
+    // Apply after-hours surcharge if applicable
+    if (!systemActive && !duringBusinessHours) {
+      const afterHoursMultiplier = 1.2; // 20% surcharge
+      displayPrice = Math.round(displayPrice * afterHoursMultiplier);
+    }
     
     const priceHtml = (o.hidePrice || window.currentConfig.hidePrice) ? 
       '<div class="urgency-price calculating">Price in quote</div>' :
       `<div class="urgency-price">$${displayPrice}</div>`;
     
-    const titleText = window.currentService === 'fuel-extraction' ? 
-      `${o.title} - $${o.price}` : o.title;
+    // Add business context to urgency descriptions
+    let description = o.description;
+    if (!systemActive && duringBusinessHours) {
+      description += ' • High demand period';
+    } else if (!duringBusinessHours) {
+      description += ' • After hours service';
+    }
     
     return `
-      <div class="urgency-option" onclick="selectUrgency('${o.id}','${o.title}','${o.time}',${o.price || displayPrice},this)">
-        <div class="urgency-title">${titleText}</div>
+      <div class="urgency-option" data-id="${o.id}" data-title="${o.title}" data-time="${o.time}" data-price="${o.price || displayPrice}">
+        <div class="urgency-title">${o.title}</div>
         <div class="urgency-time">${o.time}</div>
-        <div class="urgency-description">${o.description}</div>
+        <div class="urgency-description">${description}</div>
         ${priceHtml}
       </div>`;
   }).join('');
 
   // Auto-select single option
   if (window.currentConfig.urgencyOptions.length === 1) {
-    const firstOption = window.currentConfig.urgencyOptions[0];
-    selectUrgency(firstOption.id, firstOption.title, firstOption.time, 
-      calculatedPrice || firstOption.price || 0, 
-      urgencyContainer.querySelector('.urgency-option'));
+    const firstOption = urgencyContainer.querySelector('.urgency-option');
+    firstOption.click();
   }
 }
 
-function selectUrgency(id, title, time, price, el){
-  document.querySelectorAll('.urgency-option.selected').forEach(x => x.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedUrgency = id;
-  selectedUrgencyDetails = { title, time, price: calculatedPrice || price };
-  
-  // Update terms for fuel-extraction
-  if (window.currentService === 'fuel-extraction' && window.currentConfig.terms && !Array.isArray(window.currentConfig.terms)) {
-    const termsList = document.getElementById('termsList');
-    const termsForSelection = window.currentConfig.terms[id] || [];
-    termsList.innerHTML = termsForSelection.map(term => `<li>${term}</li>`).join('');
-  }
-  
-  document.getElementById('confirmTimeBtn').disabled = false;
-}
-
-async function goToStep3(){
-  console.log('⏰ Step 2 → 3');
-  
+async function goToStep3() {
   if (!selectedUrgency) {
     alert('Please select a service time');
     return;
   }
 
-  await sendBookingUpdate(BOOKING_STATUS.TIME_SELECTED);
+  // Track using master config
+  if (window.trackConversion) {
+    window.trackConversion('booking_step_2_complete', 'Booking');
+  }
+  
+  await sendBookingUpdate('time_selected');
 
   // Calculate WINZ pricing
   if (window.currentConfig.isWinz) {
@@ -992,20 +961,45 @@ async function goToStep3(){
   updateSummary();
 }
 
-function getTotalPrice(){
-  if (window.currentConfig.isWinz) return calculatedPrice || 0;
-  if (window.currentService === 'jumpstart' && selectedVoltagePrice) return selectedVoltagePrice;
-  if (window.currentService === 'fuel-extraction' && selectedUrgency) {
-    const option = window.currentConfig.urgencyOptions.find(opt => opt.id === selectedUrgency);
-    return option ? option.price : window.currentConfig.basePrice;
+function getTotalPrice() {
+  const systemActive = window.EEK_STATE?.systemActive;
+  const duringBusinessHours = window.isWithinBusinessHours ? window.isWithinBusinessHours() : true;
+  
+  let basePrice = 0;
+  
+  if (window.currentConfig.isWinz) {
+    return calculatedPrice || 0;
   }
-  return calculatedPrice || selectedUrgencyDetails.price || window.currentConfig.basePrice;
+  
+  if (window.currentService === 'jumpstart' && selectedVoltagePrice) {
+    basePrice = selectedVoltagePrice;
+  } else if (window.currentService === 'fuel-extraction' && selectedUrgency) {
+    const option = window.currentConfig.urgencyOptions.find(opt => opt.id === selectedUrgency);
+    basePrice = option ? option.price : window.currentConfig.basePrice;
+  } else {
+    basePrice = calculatedPrice || selectedUrgencyDetails.price || window.currentConfig.basePrice;
+  }
+  
+  // Apply master config business logic for after-hours pricing
+  if (!systemActive && !duringBusinessHours) {
+    // Check if master config has specific after-hours pricing
+    const afterHoursAction = `${window.currentService}_after_hours`;
+    const afterHoursPrice = window.EEK_CONFIG?.SERVICE_VALUES?.[afterHoursAction];
+    
+    if (afterHoursPrice) {
+      return afterHoursPrice / 100; // Convert from cents
+    } else {
+      return Math.round(basePrice * 1.2); // 20% surcharge if no specific pricing
+    }
+  }
+  
+  return basePrice;
 }
 
-function updateSummary(){
+function updateSummary() {
   document.getElementById('summaryService').textContent = window.currentConfig.title;
   document.getElementById('summaryLocation').textContent = document.getElementById('locationInput').value;
-  document.getElementById('summaryPhone').textContent = sanitizePhone(document.getElementById('phoneInput').value);
+  document.getElementById('summaryPhone').textContent = document.getElementById('phoneInput').value.replace(/\D/g,'');
   
   // Emergency type for WINZ
   if (window.currentConfig.isWinz && selectedEmergencyType) {
@@ -1028,17 +1022,6 @@ function updateSummary(){
   if (window.currentConfig.isWinz) {
     document.getElementById('summaryUrgencyRow').style.display = 'none';
     document.getElementById('summaryPrice').textContent = `$${getTotalPrice()} (quote for WINZ)`;
-    
-    document.getElementById('nextStepsBox').innerHTML = `
-      <h4>📋 Your WINZ Quote is Ready!</h4>
-      <p><strong>Quote Amount: $${getTotalPrice()}</strong></p>
-      ${window.winzQuoteReference ? `<p>Quote Reference: ${window.winzQuoteReference}</p>` : ''}
-      <p>1. Download or print your quote</p>
-      <p>2. Take it to your local WINZ office or upload to MyMSD</p>
-      <p>3. WINZ will process within 1-2 business days</p>
-      <p>4. Once approved, we'll contact you to arrange service</p>
-    `;
-    
     document.getElementById('generatePaymentBtn').textContent = 'Download WINZ Quote';
     document.getElementById('paymentNote').textContent = 'Quote will be emailed and available for download';
   } else {
@@ -1048,55 +1031,7 @@ function updateSummary(){
   }
 }
 
-function toggleBookingButton(){
-  document.getElementById('generatePaymentBtn').disabled = !document.getElementById('termsAgree').checked;
-}
-
-function buildRedirectUrl(){
-  const baseUrl = 'https://www.eek.nz/thanks';
-  const params = new URLSearchParams();
-  const urlParams = new URLSearchParams(window.location.search);
-
-  // Basic customer data
-  params.append('name', sanitizeText(document.getElementById('nameInput').value));
-  params.append('phone', sanitizePhone(document.getElementById('phoneInput').value));
-  params.append('email', document.getElementById('emailInput').value.trim());
-  params.append('location', sanitizeText(document.getElementById('locationInput').value));
-  params.append('rego', sanitizeRego(document.getElementById('regoInput').value));
-  params.append('year', document.getElementById('yearInput').value.trim());
-  params.append('make', sanitizeText(document.getElementById('makeInput').value));
-  params.append('model', sanitizeText(document.getElementById('modelInput').value));
-  
-  // Service data
-  params.append('service', window.currentService);
-  params.append('serviceCode', window.currentConfig.serviceCode);
-  params.append('serviceTitle', window.currentConfig.title);
-  params.append('price', getTotalPrice());
-  params.append('details', document.getElementById('detailsInput').value || '');
-  params.append('scheduledDate', fmtDateNZ(nowNZ()));
-  params.append('timeWindow', selectedUrgencyDetails.time || '');
-  params.append('urgencyLevel', selectedUrgency || '');
-  params.append('bookingTime', new Date().toISOString());
-  
-  // Tracking data from master config
-  const gclid = window.EEK_STATE?.storedGclidForTracking || localStorage.getItem("eek_gclid") || urlParams.get('gclid');
-  if (gclid) params.append('gclid', gclid);
-  if (window.sessionId) params.append('session_id', window.sessionId);
-  
-  // Service specific data
-  if (window.currentConfig.isWinz) {
-    params.append('emergencyType', selectedEmergencyType || '');
-    if (window.winzQuoteReference) params.append('quoteReference', window.winzQuoteReference);
-  }
-  
-  if (window.currentService === 'jumpstart' && !window.currentConfig.isWinz) {
-    params.append('batteryVoltage', selectedVoltageId || '');
-  }
-
-  return `${baseUrl}?${params.toString()}`;
-}
-
-async function generatePaymentLink(){
+async function generatePaymentLink() {
   if (!document.getElementById('termsAgree').checked) {
     alert('Please accept the terms and conditions');
     return;
@@ -1104,75 +1039,99 @@ async function generatePaymentLink(){
 
   const btn = document.getElementById('generatePaymentBtn');
   btn.disabled = true;
-  btn.classList.add('processing');
   
-  await sendBookingUpdate(BOOKING_STATUS.TERMS_ACCEPTED);
+  // Track conversion using master config service values
+  const conversionAction = `${window.currentService}_payment_request`;
+  if (window.trackConversion) {
+    window.trackConversion(conversionAction, 'Booking');
+  }
+  
+  await sendBookingUpdate('terms_accepted');
   
   // Handle WINZ quote generation
   if (window.currentConfig.isWinz) {
     btn.textContent = 'Generating Quote';
     
     try {
-      await sendBookingUpdate(BOOKING_STATUS.WINZ_QUOTE_SENT);
+      await sendBookingUpdate('winz_quote_sent');
       
-      // Send to dedicated WINZ endpoint
+      // Use master config tracking for WINZ quote
+      const winzPayload = window.buildTrackingPayload ? 
+        window.buildTrackingPayload('winz_quote', 'quote_generated', {
+          emergencyType: selectedEmergencyType,
+          quoteAmount: calculatedPrice || getTotalPrice(),
+          quoteReference: window.winzQuoteReference,
+          conversionValue: window.EEK_CONFIG?.SERVICE_VALUES?.['winz_quote'] || 20000
+        }) : {
+          emergencyType: selectedEmergencyType,
+          quoteAmount: calculatedPrice || getTotalPrice(),
+          quoteReference: window.winzQuoteReference
+        };
+      
       await fetch(WINZ_API_URL, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(buildBookingData(BOOKING_STATUS.WINZ_QUOTE_SENT))
+        body: JSON.stringify(winzPayload)
       });
+      
+      // Track WINZ conversion with proper value
+      if (window.trackConversion) {
+        window.trackConversion('winz_quote_generated', 'WINZ');
+      }
       
     } catch (err) {
       console.error('WINZ quote error:', err);
     }
     
     btn.textContent = 'Preparing Quote';
-    setTimeout(() => { window.location.href = buildRedirectUrl(); }, 1500);
+    setTimeout(() => { 
+      const params = new URLSearchParams();
+      params.append('service', window.currentService);
+      params.append('emergencyType', selectedEmergencyType || '');
+      params.append('price', getTotalPrice());
+      if (window.winzQuoteReference) params.append('quoteReference', window.winzQuoteReference);
+      window.location.href = `https://www.eek.nz/thanks?${params.toString()}`;
+    }, 1500);
     return;
   }
   
   // Handle regular payment generation
-  await sendBookingUpdate(BOOKING_STATUS.PAYMENT_PENDING);
+  await sendBookingUpdate('payment_pending');
   btn.textContent = 'Generating Link';
-
   const total = getTotalPrice();
-  const vehicleDescription = [
-    sanitizeRego(document.getElementById('regoInput').value),
-    document.getElementById('yearInput').value.trim(),
-    sanitizeText(document.getElementById('makeInput').value),
-    sanitizeText(document.getElementById('modelInput').value)
-  ].filter(Boolean).join(' ') || 'Vehicle details not provided';
-
+  
+  // Enhanced booking data using master config session and tracking data
   const bookingData = {
-    rego: sanitizeRego(document.getElementById('regoInput').value) || 'Not provided',
+    rego: document.getElementById('regoInput').value.toUpperCase().replace(/[^A-Z0-9]/g,'') || 'Not provided',
     amount: total * 100,
     currency: 'NZD',
-    description: `${window.currentConfig.title} - ${vehicleDescription} - ${document.getElementById('locationInput').value}`,
-    redirectUrl: buildRedirectUrl(),
+    description: `${window.currentConfig.title} - ${document.getElementById('locationInput').value}`,
+    redirectUrl: 'https://www.eek.nz/thanks',
     customerData: {
-      name: sanitizeText(document.getElementById('nameInput').value),
-      phone: sanitizePhone(document.getElementById('phoneInput').value),
+      name: document.getElementById('nameInput').value.trim(),
+      phone: document.getElementById('phoneInput').value.replace(/\D/g,''),
       email: document.getElementById('emailInput').value.trim(),
-      location: sanitizeText(document.getElementById('locationInput').value),
-      vehicleRego: sanitizeRego(document.getElementById('regoInput').value),
-      vehicleYear: document.getElementById('yearInput').value.trim(),
-      vehicleMake: sanitizeText(document.getElementById('makeInput').value),
-      vehicleModel: sanitizeText(document.getElementById('modelInput').value),
-      vehicleDescription,
+      location: document.getElementById('locationInput').value.trim(),
+      vehicleRego: document.getElementById('regoInput').value.toUpperCase().replace(/[^A-Z0-9]/g,''),
       service: window.currentService,
       serviceCode: window.currentConfig.serviceCode,
       serviceTitle: window.currentConfig.title,
       details: document.getElementById('detailsInput').value || 'No additional details provided',
       price: `${total}`,
-      bookingDateTime: nowNZ().toLocaleString('en-NZ', { timeZone: NZ_TZ }),
-      scheduledDate: fmtDateNZ(nowNZ()),
-      scheduledTime: selectedUrgencyDetails.time || '',
-      urgencyLevel: selectedUrgency || 'emergency',
-      gclid: window.EEK_STATE?.storedGclidForTracking || localStorage.getItem("eek_gclid"),
-      sessionId: window.sessionId,
-      ...(window.currentService === 'jumpstart' ? { 
-        batteryVoltage: selectedVoltageId === '12v' ? '12V' : '24V' 
-      } : {})
+      
+      // Enhanced data from master config
+      gclid: window.EEK_STATE?.storedGclidForTracking,
+      sessionId: window.EEK_STATE?.sessionId,
+      duringBusinessHours: window.isWithinBusinessHours ? window.isWithinBusinessHours() : false,
+      systemActive: window.EEK_STATE?.systemActive,
+      phoneNumberType: window.getDisplayPhoneNumber ? 
+        (window.getDisplayPhoneNumber().tel === window.EEK_CONFIG?.PHONE_NUMBERS?.tracking.tel ? 'tracking' : 'default') : 'unknown',
+      
+      // Booking-specific context
+      selectedVoltage: selectedVoltageId,
+      selectedUrgency: selectedUrgency,
+      emergencyType: selectedEmergencyType,
+      calculatedPrice: calculatedPrice
     }
   };
 
@@ -1186,21 +1145,13 @@ async function generatePaymentLink(){
     if (response.ok) {
       const result = await response.json();
       if (result.url) {
-        btn.classList.remove('processing');
-        btn.style.display = 'none';
+        // Track successful payment link generation
+        const paymentGeneratedAction = `${window.currentService}_payment_generated`;
+        if (window.trackConversion) {
+          window.trackConversion(paymentGeneratedAction, 'Booking');
+        }
         
-        const successDiv = document.createElement('div');
-        successDiv.style.cssText = 'background:#d4edda;border:2px solid #28a745;padding:20px;border-radius:8px;margin-top:20px;';
-        successDiv.innerHTML = `
-          <h4 style="color:#155724;margin:0 0 15px 0;">✓ Payment Link Generated Successfully!</h4>
-          <p style="color:#155724;margin:10px 0;">Your secure payment link is ready:</p>
-          <a href="${result.url}" class="button" style="background:#28a745;font-size:1.2em;padding:15px 30px;display:inline-block;margin:10px 0;">
-            Complete Payment ($${total})
-          </a>
-          <p style="color:#666;font-size:.9em;margin-top:15px;">After payment, you'll receive an SMS confirmation with your booking details.</p>`;
-        btn.parentElement.appendChild(successDiv);
-        
-        setTimeout(() => { window.location.href = result.url; }, 3000);
+        setTimeout(() => { window.location.href = result.url; }, 1000);
       } else {
         throw new Error('No payment URL received');
       }
@@ -1210,19 +1161,659 @@ async function generatePaymentLink(){
   } catch (err) {
     console.error('Payment link error:', err);
     btn.disabled = false;
-    btn.classList.remove('processing');
     btn.textContent = 'Generate Payment Link';
+    
+    // Track payment generation failure
+    if (window.buildTrackingPayload && window.sendTrackingEvent) {
+      const failurePayload = window.buildTrackingPayload('booking_error', 'payment_generation_failed', {
+        errorMessage: err.message,
+        service: window.currentService,
+        totalPrice: total
+      });
+      window.sendTrackingEvent(failurePayload);
+    }
+    
     alert('Unable to generate payment link automatically.\n\nPlease call us at 0800 769 000 or try refreshing the page.');
   }
 }
 
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', initializeBookingForm);
-
-// Mark that booking script is loaded (for master config)
-window.bookingFormLoaded = true;
-console.log('✅ Booking form script loaded and ready');
+document.addEventListener('DOMContentLoaded', function() {
+  // Wait a moment for master config to load, then initialize
+  setTimeout(initializeBookingForm, 200);
+});
 </script>
+
+<!-- Additional CSS for missing features -->
+<style>
+/* FULLY INTEGRATED STYLES */
+
+/* Breadcrumb Navigation */
+.breadcrumb {
+  background: #f8f9fa;
+  padding: 10px 20px;
+  margin: 0 auto 20px;
+  max-width: 800px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.breadcrumb a {
+  color: var(--eek-primary);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* Business Context Notices */
+.business-notice {
+  background: #e8f4f8;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px 0;
+  border-left: 4px solid #007bff;
+}
+
+.business-notice.high-demand {
+  background: #fff3cd;
+  border-color: #ffc107;
+}
+
+.business-notice.after-hours {
+  background: #f8d7da;
+  border-color: #dc3545;
+}
+
+.business-notice h4 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 1.1em;
+}
+
+.business-notice p {
+  margin: 0;
+  color: #666;
+}
+
+/* Enhanced Header Button States */
+.cta-button.after-hours-btn {
+  background-color: var(--eek-success);
+  display: none;
+}
+
+.cta-button.after-hours-btn:hover {
+  background-color: var(--eek-success-hover);
+}
+
+/* Show/hide buttons based on system state */
+body.eek-system-inactive .after-hours-btn {
+  display: inline-block !important;
+}
+
+body.eek-system-inactive .normal-hours-btn {
+  display: none !important;
+}
+
+/* RevU Widget Styles (from CSS file) */
+.services [data-bid] {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  background: #fafafa;
+  margin-top: 15px;
+}
+
+.services [data-bid] * {
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* BOOKING-SPECIFIC STYLES */
+.booking-container {
+  max-width: 800px;
+  margin: 20px auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.booking-header {
+  padding: 30px;
+  text-align: center;
+  background: linear-gradient(135deg, var(--eek-primary), var(--eek-primary-light));
+  color: white;
+}
+
+.booking-header.winz {
+  background: linear-gradient(135deg, #28a745, #20a142);
+}
+
+.booking-header h2 {
+  margin: 0 0 10px 0;
+  font-size: 2em;
+  color: white;
+}
+
+.booking-header p {
+  margin: 0 0 20px 0;
+  font-size: 1.2em;
+  opacity: 0.9;
+  color: white;
+}
+
+.service-stats {
+  margin-top: 20px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.stat-item {
+  background: rgba(255,255,255,0.15);
+  padding: 15px 10px;
+  border-radius: 8px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.stat-number {
+  display: block;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: white;
+}
+
+.progress-bar {
+  display: flex;
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.progress-step {
+  flex: 1;
+  padding: 15px;
+  text-align: center;
+  background: #e9ecef;
+  color: #6c757d;
+  border-right: 1px solid #dee2e6;
+  transition: all 0.3s ease;
+}
+
+.progress-step:last-child {
+  border-right: none;
+}
+
+.progress-step.active {
+  background: var(--eek-primary);
+  color: white;
+}
+
+.progress-step.completed {
+  background: var(--eek-success);
+  color: white;
+}
+
+.booking-steps {
+  padding: 30px;
+}
+
+.step {
+  display: none;
+}
+
+.step.active {
+  display: block;
+}
+
+.step.winz-step {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  padding: 30px;
+  border-radius: 12px;
+  border: 2px solid #28a745;
+}
+
+.info-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.info-section h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 1.2em;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.form-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+  color: #333;
+}
+
+.contact-info label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.contact-info input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1em;
+}
+
+.location-input, .details-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1em;
+}
+
+.details-input {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.emergency-selector {
+  background: #e8f5e8;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 2px solid #28a745;
+}
+
+.emergency-selector label {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #155724;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.emergency-option {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.emergency-option:hover {
+  border-color: #28a745;
+}
+
+.emergency-option.selected {
+  border-color: #28a745;
+  background: #f8fff8;
+}
+
+.emergency-label {
+  font-weight: bold;
+  font-size: 1.1em;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.emergency-description {
+  color: #666;
+  font-size: 0.95em;
+  margin: 5px 0 0 0;
+}
+
+.voltage-wrap {
+  background: #fff3cd;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 2px solid #ffc107;
+}
+
+.voltage-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #856404;
+  margin-bottom: 15px;
+}
+
+.voltage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.voltage-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.voltage-card:hover {
+  border-color: #ffc107;
+}
+
+.voltage-card.selected {
+  border-color: #ffc107;
+  background: #fffbf0;
+}
+
+.voltage-label {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.voltage-price {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #ffc107;
+}
+
+.info-box {
+  background: #e7f3ff;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  border-left: 4px solid #007bff;
+}
+
+.info-box h4 {
+  color: #004085;
+  margin-top: 0;
+}
+
+.info-box ul {
+  margin-bottom: 0;
+}
+
+.info-box li {
+  margin-bottom: 8px;
+}
+
+.timing-notice {
+  background: #fff3cd;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #ffeaa7;
+}
+
+.timing-notice h4 {
+  color: #856404;
+  margin-top: 0;
+}
+
+.next-steps-box {
+  background: #e8f4f8;
+  border-color: #bee5eb;
+}
+
+.urgency-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.urgency-option {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.urgency-option:hover {
+  border-color: var(--eek-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.urgency-option.selected {
+  border-color: var(--eek-primary);
+  background: #fff5f5;
+}
+
+.urgency-title {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.urgency-time {
+  font-size: 1.1em;
+  color: var(--eek-primary);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.urgency-description {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.urgency-price {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: var(--eek-success);
+}
+
+.urgency-price.calculating {
+  color: #666;
+  font-style: italic;
+}
+
+.reservation-summary {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.reservation-summary h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.summary-item:last-child {
+  border-bottom: none;
+}
+
+.summary-item span {
+  color: #666;
+}
+
+.summary-item strong {
+  color: #333;
+}
+
+.terms-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.terms-section h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+.terms-checkbox {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.terms-checkbox input[type="checkbox"] {
+  margin-top: 4px;
+  transform: scale(1.2);
+}
+
+.terms-text {
+  flex: 1;
+  font-size: 0.95em;
+  line-height: 1.5;
+}
+
+.terms-text ul {
+  margin: 10px 0 0 20px;
+  padding: 0;
+}
+
+.terms-text li {
+  margin-bottom: 5px;
+}
+
+.button-container {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.button {
+  background-color: var(--eek-primary);
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.button:hover {
+  background-color: var(--eek-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.button.secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.button.secondary:hover {
+  background-color: #5a6268;
+}
+
+.payment-note {
+  margin: 15px 0 0 0;
+  color: #666;
+  font-size: 0.9em;
+}
+
+.required {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .booking-container {
+    margin: 10px;
+  }
+  
+  .booking-steps {
+    padding: 20px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .voltage-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .button {
+    width: 100%;
+    max-width: 280px;
+  }
+  
+  .breadcrumb {
+    margin: 0 10px 20px;
+  }
+}
+</style>
 
 </body>
 </html>
