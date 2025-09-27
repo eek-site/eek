@@ -402,6 +402,8 @@ font-src 'self' data:;">
 
 <!-- Booking-specific JavaScript -->
 <script>
+console.log('🚀 === BOOKING FORM LOADED === 🚀');
+
 // --- NZ timezone helpers (force all "wall-clock" logic to Pacific/Auckland) ---
 const NZ_TZ = 'Pacific/Auckland';
 function nowNZ(){
@@ -417,28 +419,24 @@ function fmtDateNZ(d){
 }
 
 // === BOOKING STATUS CONSTANTS ===
-// Standardized booking status values for consistent tracking
 const BOOKING_STATUS = {
-  INITIAL: 'booking_started',           // Form loaded, user started entering details
-  DETAILS_COMPLETE: 'details_complete', // Step 1 completed, moving to step 2
-  TIME_SELECTED: 'time_selected',       // Step 2 completed, moving to step 3
-  TERMS_ACCEPTED: 'terms_accepted',     // Step 3, terms accepted, about to generate payment/quote
-  PAYMENT_PENDING: 'payment_pending',   // Payment link generated, awaiting payment
-  WINZ_QUOTE_SENT: 'winz_quote_sent'    // WINZ quote generated and sent
+  INITIAL: 'booking_started',
+  DETAILS_COMPLETE: 'details_complete',
+  TIME_SELECTED: 'time_selected',
+  TERMS_ACCEPTED: 'terms_accepted',
+  PAYMENT_PENDING: 'payment_pending',
+  WINZ_QUOTE_SENT: 'winz_quote_sent'
 };
 
-// === COLOR CODING SYSTEM ===
-// Visual status indicators for tracking customer journey progression
 const STATUS_COLORS = {
-  'booking_started': '#007bff',     // Blue - Initial engagement
-  'details_complete': '#28a745',    // Green - Progress made
-  'time_selected': '#fd7e14',       // Orange - Getting close
-  'terms_accepted': '#6f42c1',      // Purple - Ready to commit
-  'payment_pending': '#dc3545',     // Red - Critical action needed
-  'winz_quote_sent': '#20c997'      // Teal - Quote delivered
+  'booking_started': '#007bff',
+  'details_complete': '#28a745',
+  'time_selected': '#fd7e14',
+  'terms_accepted': '#6f42c1',
+  'payment_pending': '#dc3545',
+  'winz_quote_sent': '#20c997'
 };
 
-// Human-readable status descriptions
 const STATUS_DESCRIPTIONS = {
   'booking_started': 'Customer started booking form',
   'details_complete': 'Customer completed contact and vehicle details',
@@ -448,7 +446,7 @@ const STATUS_DESCRIPTIONS = {
   'winz_quote_sent': 'WINZ quote generated and sent to customer'
 };
 
-// Service Configurations - REMOVED INSPECTION SERVICE
+// Service Configurations
 const serviceConfigs = {
   'jumpstart': {
     title:'Battery Jump Start Service',
@@ -614,16 +612,12 @@ const serviceConfigs = {
   }
 };
 
-// Globals
-// UPDATED: New Power Automate URL for Stripe payment link generation
+// API URLs
 const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
-
-// For non-WINZ pre-sale notifications and pricing
 const PRICING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
-
-// For WINZ quotes
 const WINZ_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95fc801df59b4250a48919ace91c0276/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mFpTX4gPrz1u1DbdfF3YqHBnAsW3pnAAj-GWXWvBYYc';
 
+// Global state
 let selectedUrgency = null;
 let selectedUrgencyDetails = {};
 let selectedVoltageId = null;
@@ -632,32 +626,27 @@ let selectedEmergencyType = null;
 let calculatedPrice = null;
 let winzQuoteGenerated = false;
 
-// Normalization helpers - UPDATED to fix rego sanitization
+// Helpers
 function sanitizePhone(val){ return (val || '').replace(/\D/g,''); }
 function sanitizeRego(val){ return (val || '').toUpperCase().replace(/[^A-Z0-9]/g,''); }
 function sanitizeText(val){ return (val || '').trim().replace(/\s+/g,' '); }
 
-// === CONSISTENT DATA BUILDER ===
-// Builds consistent data structure for all API calls
 function buildBookingData(status) {
   const urlParams = new URLSearchParams(window.location.search);
   
   const baseData = {
-    // Session and tracking - ENHANCED with master config integration
     sessionId: window.sessionId || localStorage.getItem("eek_session_id"),
     bookingStatus: status,
     statusColor: STATUS_COLORS[status] || '#6c757d',
     statusDescription: STATUS_DESCRIPTIONS[status] || 'Unknown status',
     timestamp: new Date().toISOString(),
     
-    // Customer information
     name: sanitizeText(document.getElementById('nameInput').value),
     phone: sanitizePhone(document.getElementById('phoneInput').value),
     email: document.getElementById('emailInput').value.trim(),
     location: sanitizeText(document.getElementById('locationInput').value),
     details: document.getElementById('detailsInput').value || '',
     
-    // Vehicle information
     rego: sanitizeRego(document.getElementById('regoInput').value),
     vehicleRego: sanitizeRego(document.getElementById('regoInput').value),
     year: document.getElementById('yearInput').value.trim(),
@@ -668,17 +657,14 @@ function buildBookingData(status) {
     vehicleModel: sanitizeText(document.getElementById('modelInput').value),
     vehicleType: selectedVoltageId === '24v' ? 'truck' : 'car',
     
-    // Service information
     service: window.currentService,
     serviceCode: window.currentConfig.serviceCode,
     serviceTitle: window.currentConfig.title,
     
-    // Source tracking - ENHANCED to use master config data
     source: 'booking_form',
     formVersion: '2.1',
     gclid: localStorage.getItem("eek_gclid") || urlParams.get('gclid') || null,
     
-    // UTM tracking from localStorage (managed by master config)
     utm: {
       source: localStorage.getItem("eek_utm_source") || urlParams.get('utm_source') || null,
       medium: localStorage.getItem("eek_utm_medium") || urlParams.get('utm_medium') || null,
@@ -689,7 +675,6 @@ function buildBookingData(status) {
     }
   };
 
-  // Add service-specific data based on status
   if (status === BOOKING_STATUS.TIME_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.PAYMENT_PENDING) {
     baseData.selectedTime = selectedUrgencyDetails.time || '';
     baseData.selectedUrgency = selectedUrgency;
@@ -697,38 +682,32 @@ function buildBookingData(status) {
     baseData.calculatedPrice = calculatedPrice || window.currentConfig.basePrice;
     baseData.finalPrice = getTotalPrice();
     
-    // Add accepted terms for fuel-extraction service
     if (window.currentService === 'fuel-extraction' && window.currentConfig.terms && !Array.isArray(window.currentConfig.terms)) {
       const acceptedTerms = window.currentConfig.terms[selectedUrgency] || [];
       baseData.acceptedTerms = acceptedTerms;
-      baseData.serviceLevel = selectedUrgency; // mobile or workshop
+      baseData.serviceLevel = selectedUrgency;
     }
   }
 
-  // Add voltage for jumpstart services
   if (window.currentService === 'jumpstart' && selectedVoltageId) {
     baseData.selectedVoltage = selectedVoltageId;
     baseData.batteryVoltage = selectedVoltageId === '12v' ? '12V' : '24V';
   }
 
-  // Add emergency type and pricing for WINZ
   if (window.currentConfig.isWinz && selectedEmergencyType) {
     baseData.emergencyType = selectedEmergencyType;
     
-    // Add WINZ-specific pricing fields when quote is being generated
     if (status === BOOKING_STATUS.TIME_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.WINZ_QUOTE_SENT) {
       baseData.quoteAmount = calculatedPrice || getTotalPrice();
       baseData.calculatedPrice = calculatedPrice || getTotalPrice();
       baseData.finalPrice = calculatedPrice || getTotalPrice();
-      baseData.price = calculatedPrice || getTotalPrice(); // For Power Automate compatibility
+      baseData.price = calculatedPrice || getTotalPrice();
       
-      // Generate quote reference if not exists
       if (!window.winzQuoteReference) {
         window.winzQuoteReference = `WINZ-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
       }
       baseData.quoteReference = window.winzQuoteReference;
       
-      // Add specific emergency type details
       const emergencyConfig = window.currentConfig.emergencyTypes.find(e => e.id === selectedEmergencyType);
       if (emergencyConfig) {
         baseData.emergencyLabel = emergencyConfig.label;
@@ -737,37 +716,17 @@ function buildBookingData(status) {
     }
   }
 
-  console.log('📊 GCLID tracking data:', {
-    fromURL: urlParams.get('gclid'),
-    fromStorage: localStorage.getItem("eek_gclid"),
-    final: baseData.gclid
-  });
-
   return baseData;
 }
 
-// === CONSISTENT API CALLER ===
-// Sends booking data to appropriate API with consistent structure
 async function sendBookingUpdate(status) {
   const data = buildBookingData(status);
   
-  // Enhanced console logging with color coding
   console.log(`%c📡 BOOKING STATUS UPDATE: ${status.toUpperCase()}`, `color: ${STATUS_COLORS[status]}; font-weight: bold; font-size: 14px;`);
   console.log(`%c${STATUS_DESCRIPTIONS[status]}`, `color: ${STATUS_COLORS[status]}; font-style: italic;`);
   console.log('📊 Complete booking data:', data);
-  console.log(`🎨 Status Color: ${STATUS_COLORS[status]}`);
-  
-  // Log WINZ-specific data
-  if (window.currentConfig.isWinz && (status === BOOKING_STATUS.WINZ_QUOTE_SENT || status === BOOKING_STATUS.TIME_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED)) {
-    console.log('💰 WINZ Quote Data:');
-    console.log('  - Quote Amount:', data.quoteAmount);
-    console.log('  - Quote Reference:', data.quoteReference);
-    console.log('  - Emergency Type:', data.emergencyType);
-    console.log('  - Emergency Label:', data.emergencyLabel);
-  }
   
   try {
-    // ALL status notifications go to the unified pricing API endpoint
     const response = await fetch(PRICING_API_URL, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
@@ -780,13 +739,10 @@ async function sendBookingUpdate(status) {
   }
 }
 
-// === SEPARATE WINZ QUOTE GENERATION ===
-// Sends final quote generation request to dedicated WINZ endpoint
 async function generateWinzQuote() {
   const data = buildBookingData(BOOKING_STATUS.WINZ_QUOTE_SENT);
   
   console.log('📋 === WINZ QUOTE GENERATION === 📋');
-  console.log('🎯 Sending to dedicated WINZ quote endpoint');
   console.log('💰 Quote data:', data);
   
   try {
@@ -803,7 +759,7 @@ async function generateWinzQuote() {
   }
 }
 
-// Initialize - ENHANCED with master config integration
+// Initialize
 document.addEventListener('DOMContentLoaded', function(){
   console.log('🚀 === BOOKING FORM INITIALIZED === 🚀');
   const urlParams = new URLSearchParams(window.location.search);
@@ -811,17 +767,14 @@ document.addEventListener('DOMContentLoaded', function(){
   const gclid = urlParams.get('gclid');
   const sessionId = urlParams.get('session_id');
   
-  // Redirect inspection service to new dedicated page
   if (service === 'inspection') {
     console.log('🔄 Redirecting inspection service to dedicated page');
     let redirectUrl = 'https://eek.nz/pre-purchase-vehicle-inspection/';
     
-    // Preserve tracking parameters in redirect
     const redirectParams = new URLSearchParams();
     if (gclid) redirectParams.append('gclid', gclid);
     if (sessionId) redirectParams.append('session_id', sessionId);
     
-    // Preserve UTM parameters
     ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
       const value = urlParams.get(param);
       if (value) redirectParams.append(param, value);
@@ -837,60 +790,45 @@ document.addEventListener('DOMContentLoaded', function(){
   
   console.log('📌 Service requested:', service);
   console.log('🌐 Current URL:', window.location.href);
-  console.log('📍 GCLID from URL:', gclid || 'None');
-  console.log('🔗 Session ID from URL:', sessionId || 'None');
   
-  // Let master config handle GCLID and UTM storage - but ensure we have session ID
   if (sessionId) {
     window.sessionId = sessionId;
     localStorage.setItem("eek_session_id", sessionId);
     console.log('✅ Using session ID from main page:', sessionId);
   } else {
-    // Check for existing session ID or create new one
     window.sessionId = localStorage.getItem("eek_session_id") || `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     localStorage.setItem("eek_session_id", window.sessionId);
     console.log('✅ Session ID:', window.sessionId);
   }
   
   loadServiceConfig(service);
-  
-  // Send initial status with enhanced data
   sendBookingUpdate(BOOKING_STATUS.INITIAL);
   
-  // IMPROVED: Integrate with master config immediately
-  console.log('🔧 Initializing master config integration');
-  
-  // Wait for master config to load, then initialize features
+  // Master config integration
   const initMasterConfig = () => {
     if (typeof window.masterConfigLoaded !== 'undefined' && window.masterConfigLoaded) {
       console.log('✅ Master config loaded, initializing features');
       
-      // Trigger business hours check
       if (typeof checkBusinessHours === 'function') {
         checkBusinessHours();
       }
       
-      // Update phone numbers
       if (typeof updatePhoneNumbers === 'function') {
         updatePhoneNumbers();
       }
       
-      // Detect and update logo
       if (typeof detectAndUpdateLogo === 'function') {
         detectAndUpdateLogo();
       }
       
-      // Set up parameter forwarding
       if (typeof updateExternalLinks === 'function') {
         updateExternalLinks();
       } else {
-        // Fallback parameter forwarding
         setupParameterForwarding();
       }
       
       console.log('✅ Master config integration complete');
     } else {
-      // Retry after brief delay
       setTimeout(initMasterConfig, 100);
     }
   };
@@ -898,7 +836,6 @@ document.addEventListener('DOMContentLoaded', function(){
   initMasterConfig();
 });
 
-// Fallback parameter forwarding if master config doesn't provide it
 function setupParameterForwarding() {
   const currentParams = window.location.search;
   if (!currentParams) return;
@@ -938,7 +875,6 @@ function loadServiceConfig(serviceType){
   document.getElementById('detailsInput').placeholder = config.detailsPlaceholder;
   document.getElementById('serviceInfoBox').innerHTML = config.infoContent;
 
-  // Update header color for WINZ
   const bookingHeader = document.getElementById('bookingHeader');
   if (config.isWinz) {
     bookingHeader.classList.add('winz');
@@ -948,25 +884,20 @@ function loadServiceConfig(serviceType){
     document.getElementById('step1').classList.remove('winz-step');
   }
 
-  // Stats container
   const statsContainer = document.getElementById('statsContent');
   statsContainer.innerHTML = config.stats.map(stat =>
     `<div class="stat-item"><span class="stat-number">${stat.number}</span>${stat.text}</div>`
   ).join('');
 
-  // Terms list - handle both array and conditional object formats
   const termsList = document.getElementById('termsList');
   if (config.terms) {
     if (Array.isArray(config.terms)) {
-      // Standard array format for other services
       termsList.innerHTML = config.terms.map(term => `<li>${term}</li>`).join('');
     } else {
-      // Conditional format for fuel-extraction
-      termsList.innerHTML = ''; // Will be populated when urgency is selected
+      termsList.innerHTML = '';
     }
   }
 
-  // Emergency selector for WINZ
   const emergencySelector = document.getElementById('emergencySelector');
   const emergencyOptions = document.getElementById('emergencyOptions');
   if (config.isWinz && config.emergencyTypes) {
@@ -981,7 +912,6 @@ function loadServiceConfig(serviceType){
     emergencySelector.style.display = 'none';
   }
 
-  // Voltage UI (jumpstart only)
   const vWrap = document.getElementById('voltageSelector');
   const vGrid = document.getElementById('voltageGrid');
   if (config.voltages && !config.isWinz){
@@ -997,7 +927,6 @@ function loadServiceConfig(serviceType){
     vGrid.innerHTML = '';
   }
 
-  // Update button text for WINZ
   if (config.isWinz) {
     document.getElementById('nextBtn').textContent = 'Get Quote';
     document.getElementById('nextBtn').classList.add('winz');
@@ -1061,7 +990,6 @@ async function goToStep2(){
   console.log('📧 Email:', email);
   console.log('📍 Location:', location);
 
-  // vehicle fields
   const regoRaw = document.getElementById('regoInput').value;
   const yearRaw = document.getElementById('yearInput').value;
   const makeRaw = document.getElementById('makeInput').value;
@@ -1181,7 +1109,6 @@ async function goToStep2(){
     let displayPrice, priceHtml;
     
     if (window.currentService === 'fuel-extraction') {
-      // For fuel-extraction, show price in the button title and hide separate price display
       displayPrice = o.price;
       priceHtml = `<div class="urgency-price" style="display:none;">$${displayPrice}</div>`;
       const titleWithPrice = `${o.title} - $${displayPrice}`;
@@ -1194,7 +1121,6 @@ async function goToStep2(){
           ${priceHtml}
         </div>`;
     } else {
-      // For other services, use calculated price or fallback
       displayPrice = calculatedPrice || window.currentConfig.basePrice;
       priceHtml = (o.hidePrice || window.currentConfig.hidePrice) 
         ? '<div class="urgency-price calculating">Price in quote</div>'
@@ -1227,7 +1153,6 @@ function selectUrgency(id, title, time, price, el){
     price: calculatedPrice || price
   };
   
-  // Update terms for fuel-extraction service based on selection
   if (window.currentService === 'fuel-extraction' && window.currentConfig.terms && !Array.isArray(window.currentConfig.terms)) {
     const termsList = document.getElementById('termsList');
     const termsForSelection = window.currentConfig.terms[id] || [];
@@ -1249,19 +1174,16 @@ async function goToStep3(){
   console.log('✅ Time selected:', selectedUrgencyDetails.time);
   console.log('📊 Moving to confirmation step');
 
-  // Send time selection update
   await sendBookingUpdate(BOOKING_STATUS.TIME_SELECTED);
 
-  // For WINZ, calculate the price but DON'T send to API yet
   if (window.currentConfig.isWinz) {
-    // Determine price based on emergency type - FIXED PRICES
-    let quotePrice = 299; // default
+    let quotePrice = 299;
     if (selectedEmergencyType === 'battery') {
-      quotePrice = 149; // Jump start price
+      quotePrice = 149;
     } else if (selectedEmergencyType === 'mechanical') {
-      quotePrice = 249; // Mechanical diagnostic price
+      quotePrice = 249;
     } else if (selectedEmergencyType === 'misfuel') {
-      quotePrice = 849; // Fuel extraction price
+      quotePrice = 849;
     }
 
     console.log('💰 WINZ Quote Price calculated:', quotePrice);
@@ -1287,7 +1209,6 @@ function getTotalPrice(){
     return selectedVoltagePrice;
   }
   if (window.currentService === 'fuel-extraction' && selectedUrgency) {
-    // For fuel-extraction, price depends on selected urgency option
     const selectedOption = window.currentConfig.urgencyOptions.find(opt => opt.id === selectedUrgency);
     return selectedOption ? selectedOption.price : window.currentConfig.basePrice;
   }
@@ -1302,7 +1223,6 @@ function updateSummary(){
   document.getElementById('summaryLocation').textContent = location;
   document.getElementById('summaryPhone').textContent = sanitizePhone(phone);
   
-  // Emergency type row for WINZ
   const emergencyRow = document.getElementById('summaryEmergencyRow');
   if (window.currentConfig.isWinz && selectedEmergencyType) {
     emergencyRow.style.display = '';
@@ -1312,7 +1232,6 @@ function updateSummary(){
     emergencyRow.style.display = 'none';
   }
 
-  // Voltage row
   const voltageRow = document.getElementById('summaryVoltageRow');
   if (window.currentService === 'jumpstart' && selectedVoltageId && !window.currentConfig.isWinz){
     voltageRow.style.display = '';
@@ -1321,12 +1240,10 @@ function updateSummary(){
     voltageRow.style.display = 'none';
   }
 
-  // Update urgency and price display
   if (window.currentConfig.isWinz) {
     document.getElementById('summaryUrgencyRow').style.display = 'none';
     document.getElementById('summaryPrice').textContent = `$${getTotalPrice()} (quote for WINZ)`;
     
-    // Update next steps for WINZ
     document.getElementById('nextStepsBox').innerHTML = `
       <h4>📋 Your WINZ Quote is Ready!</h4>
       <p><strong>Quote Amount: $${getTotalPrice()}</strong></p>
@@ -1337,7 +1254,6 @@ function updateSummary(){
       <p>4. Once approved, we'll contact you to arrange service</p>
     `;
     
-    // Update button for WINZ
     document.getElementById('generatePaymentBtn').textContent = 'Download WINZ Quote';
     document.getElementById('generatePaymentBtn').classList.add('winz');
     document.getElementById('paymentNote').textContent = 'Quote will be emailed and available for download';
@@ -1385,7 +1301,6 @@ function buildRedirectUrl(){
   params.append('urgencyLevel', selectedUrgency || '');
   params.append('bookingTime', new Date().toISOString());
   
-  // Enhanced: Include GCLID and session tracking in redirect
   const gclid = localStorage.getItem("eek_gclid") || urlParams.get('gclid');
   if (gclid) {
     params.append('gclid', gclid);
@@ -1418,10 +1333,8 @@ async function generatePaymentLink(){
   btn.disabled = true;
   btn.classList.add('processing');
   
-  // Send terms accepted status
   await sendBookingUpdate(BOOKING_STATUS.TERMS_ACCEPTED);
   
-  // For WINZ, send status notification first, then generate quote
   if (window.currentConfig.isWinz) {
     btn.textContent = 'Generating Quote';
     
@@ -1431,11 +1344,9 @@ async function generatePaymentLink(){
     console.log('✅ Terms accepted, processing WINZ quote');
     
     try {
-      // First: Send status notification to unified endpoint
       console.log('📡 Step 1: Sending status notification to unified endpoint');
       await sendBookingUpdate(BOOKING_STATUS.WINZ_QUOTE_SENT);
       
-      // Second: Generate actual quote via dedicated WINZ endpoint
       console.log('📄 Step 2: Generating quote via dedicated WINZ endpoint');
       await generateWinzQuote();
       
@@ -1447,7 +1358,6 @@ async function generatePaymentLink(){
     
     btn.textContent = 'Preparing Quote';
     
-    // Redirect to /thanks page with quote details
     const redirectUrl = buildRedirectUrl();
     
     setTimeout(() => {
@@ -1456,7 +1366,6 @@ async function generatePaymentLink(){
     return;
   }
   
-  // Send final update for non-WINZ services before payment
   await sendBookingUpdate(BOOKING_STATUS.PAYMENT_PENDING);
   
   btn.textContent = 'Generating Link';
@@ -1491,7 +1400,6 @@ async function generatePaymentLink(){
       scheduledDate: fmtDateNZ(nowNZ()),
       scheduledTime: selectedUrgencyDetails.time || '',
       urgencyLevel: selectedUrgency || 'emergency',
-      // Enhanced: Include GCLID in payment data for complete tracking
       gclid: localStorage.getItem("eek_gclid"),
       sessionId: window.sessionId,
       ...(window.currentService === 'jumpstart' ? { batteryVoltage: (selectedVoltageId === '12v' ? '12V' : '24V') } : {})
