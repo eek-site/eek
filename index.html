@@ -24,70 +24,6 @@ font-src 'self' data:;">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
   <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
 
-  <!-- Reddit Pixel -->
-  <script>
-    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
-    (window,document);
-    
-    // Helper functions to extract user data if available
-    function getEmailFromForm() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const emailParam = urlParams.get('email');
-      if (emailParam) return emailParam;
-      
-      const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"], input[id*="email"]');
-      for (let input of emailInputs) {
-        if (input.value && input.value.includes('@')) {
-          return input.value;
-        }
-      }
-      return null;
-    }
-    
-    function getPhoneFromForm() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const phoneParam = urlParams.get('phone');
-      if (phoneParam) return phoneParam;
-      
-      const phoneInputs = document.querySelectorAll('input[type="tel"], input[name*="phone"], input[id*="phone"]');
-      for (let input of phoneInputs) {
-        if (input.value) {
-          return input.value;
-        }
-      }
-      return null;
-    }
-    
-    function getUserId() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('uid') || urlParams.get('user_id') || urlParams.get('customer_id');
-    }
-    
-    function getMobileIds() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return {
-        idfa: urlParams.get('idfa'),
-        aaid: urlParams.get('aaid')
-      };
-    }
-    
-    const mobileIds = getMobileIds();
-    const initConfig = {};
-    
-    const email = getEmailFromForm();
-    const phoneNumber = getPhoneFromForm();
-    const externalId = getUserId();
-    
-    if (email) initConfig.email = email;
-    if (phoneNumber) initConfig.phoneNumber = phoneNumber;
-    if (externalId) initConfig.externalId = externalId;
-    if (mobileIds.idfa) initConfig.idfa = mobileIds.idfa;
-    if (mobileIds.aaid) initConfig.aaid = mobileIds.aaid;
-    
-    rdt('init', 'a2_hf16791nsdhx', Object.keys(initConfig).length > 0 ? initConfig : undefined);
-    rdt('track', 'PageVisit');
-  </script>
-
   <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
   <script>
@@ -143,9 +79,9 @@ font-src 'self' data:;">
 </head>
 <body>
 
-<!-- Business Closed Banner (hidden by default) -->
+<!-- Business Closed Banner (managed by master config) -->
 <div id="closedBanner" class="after-hours-banner" style="display: none; background: linear-gradient(135deg, #666, #888);">
-  <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
+  <h2 id="closedTitle">Currently Closed</h2>
   <div id="afterHoursMessage">
     <p><strong>Business Hours:</strong></p>
     <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
@@ -156,10 +92,11 @@ font-src 'self' data:;">
     <p><strong>We're currently experiencing high demand</strong></p>
     <p>Our mechanics are fully dispatched on emergency calls</p>
     <p>Please book online for the next available appointment or try calling again shortly</p>
-    <a href="#service-selection" class="emergency-btn" data-track="customer_book_online" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
+    <a href="#service-selection" class="emergency-btn" data-track="customer_book_online" style="background: rgba(255,255,255,0.25); margin-top: 10px;">Book Online Now</a>
   </div>
 </div>
 
+<!-- Payment Block (managed by master config) -->
 <section id="stripePaymentBlock" style="display: none; background-color: #ffffff; padding: 20px; text-align: center; color: #333; border-bottom: 2px solid #ff5500;">
   <div style="background-color: #f5f5f5; padding: 30px; border-radius: 12px; max-width: 700px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
     <h1 style="font-size: 2.2em; margin-bottom: 0.5em;">Secure Roadside Payment</h1>
@@ -184,11 +121,11 @@ font-src 'self' data:;">
   <div class="business-name">Eek Mobile Mechanical</div>
   <h1>Mobile Mechanics NZ - 30-60 Minute Response</h1>
   <p class="tagline">Mobile Mechanic • Pre Purchase Inspections • Wrong Fuel Removal • Emergency Roadside Repairs • 30–60 Min Response</p>
-  <a class="cta-button phone-link" href="tel:0800769000" data-track="header_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+  <a class="cta-button phone-link" href="tel:0800769000" data-track="header_call">Call <span class="phone-display">0800 769 000</span></a>
 </header>
 
 <div class="keywords-highlight" id="service-selection">
-  <h2>🔧 Professional Mobile Mechanic Services</h2>
+  <h2>Professional Mobile Mechanic Services</h2>
   <p>Eek Mobile Mechanical providing comprehensive mobile mechanic services across New Zealand</p>
   <div class="service-keywords">
     <a href="#mobile-mechanic-breakdown" class="service-link" data-service="mechanic" data-track="breakdown_call" style="text-decoration: none; color: inherit;">
@@ -222,16 +159,16 @@ font-src 'self' data:;">
   <h2>Mobile Mechanic Emergency Breakdown Service – Target Arrival: 30–60 Minutes</h2>
   <p>Engine won't start? Warning lights? Our professional mobile mechanic team arrives fast and diagnoses the issue on-site anywhere in New Zealand.</p>
   <ul>
-    <li>🛠️ Professional mobile mechanic fault detection & diagnostic scanning</li>
-    <li>🔍 On-site assessment and minor repairs</li>
-    <li>📍 Mobile mechanic coverage anywhere in NZ—city or rural</li>
-    <li>🧰 Mobile mechanics arrive equipped with full professional toolkits</li>
-    <li>📞 Real-time communication with mobile mechanic support staff</li>
-    <li>⏱️ Target arrival: 30–60 minutes nationwide</li>
+    <li>Professional mobile mechanic fault detection & diagnostic scanning</li>
+    <li>On-site assessment and minor repairs</li>
+    <li>Mobile mechanic coverage anywhere in NZ—city or rural</li>
+    <li>Mobile mechanics arrive equipped with full professional toolkits</li>
+    <li>Real-time communication with mobile mechanic support staff</li>
+    <li>Target arrival: 30–60 minutes nationwide</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="breakdown_call">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a href="#book-mechanic" class="cta-button after-hours-btn service-link" data-service="mechanic" data-track="breakdown_after_hours" style="background: #28a745; display: none;">📅 Book Online</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="breakdown_call">Call <span class="phone-display">0800 769 000</span></a>
+    <a href="#book-mechanic" class="cta-button after-hours-btn service-link" data-service="mechanic" data-track="breakdown_after_hours" style="background: #28a745; display: none;">Book Online</a>
   </div>
 </div>
 
@@ -239,14 +176,14 @@ font-src 'self' data:;">
   <h2>Mobile Mechanic Battery Service – Jump Start in 30–60 Minutes</h2>
   <p>Dead battery? Our professional mobile mechanic team comes to you and performs a safe, professional jump‑start service.</p>
   <ul>
-    <li>🔋 Mobile mechanic service compatible with all makes/models</li>
-    <li>⚡ Includes battery voltage & health check by qualified mechanics</li>
-    <li>🧰 Safe jump‑start equipment & professional procedures</li>
-    <li>📍 Mobile mechanic service at your location—home or roadside</li>
+    <li>Mobile mechanic service compatible with all makes/models</li>
+    <li>Includes battery voltage & health check by qualified mechanics</li>
+    <li>Safe jump‑start equipment & professional procedures</li>
+    <li>Mobile mechanic service at your location—home or roadside</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="battery_call">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a href="#book-jumpstart" class="cta-button after-hours-btn service-link" data-service="jumpstart" data-track="battery_after_hours" style="background: #28a745; display: none;">📅 Book Online</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="battery_call">Call <span class="phone-display">0800 769 000</span></a>
+    <a href="#book-jumpstart" class="cta-button after-hours-btn service-link" data-service="jumpstart" data-track="battery_after_hours" style="background: #28a745; display: none;">Book Online</a>
   </div>
 </div>
 
@@ -254,16 +191,16 @@ font-src 'self' data:;">
   <h2>Wrong Fuel Removal – Petrol and Diesel Removal Emergency Service – Target Arrival: 30–60 Minutes</h2>
   <p>Filled with petrol instead of diesel? Our mobile mechanic specialists provide immediate wrong fuel removal and petrol and diesel removal services. Don't start the engine!</p>
   <ul>
-    <li>⛽ Professional petrol and diesel removal on-site</li>
-    <li>🧯 Fully insured wrong fuel removal process</li>
-    <li>🛻 No towing needed, saves time & money</li>
-    <li>📍 Trusted mobile mechanic wrong fuel rescue NZ‑wide</li>
-    <li>🚨 Emergency petrol and diesel removal service</li>
-    <li>⏱️ Target arrival: 30–60 minutes nationwide</li>
+    <li>Professional petrol and diesel removal on-site</li>
+    <li>Fully insured wrong fuel removal process</li>
+    <li>No towing needed, saves time & money</li>
+    <li>Trusted mobile mechanic wrong fuel rescue NZ‑wide</li>
+    <li>Emergency petrol and diesel removal service</li>
+    <li>Target arrival: 30–60 minutes nationwide</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="fuel_drain_call">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a href="#book-fuel-extraction" class="cta-button after-hours-btn service-link" data-service="fuel-extraction" data-track="fuel_drain_after_hours" style="background: #28a745; display: none;">📅 Book Online</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="fuel_drain_call">Call <span class="phone-display">0800 769 000</span></a>
+    <a href="#book-fuel-extraction" class="cta-button after-hours-btn service-link" data-service="fuel-extraction" data-track="fuel_drain_after_hours" style="background: #28a745; display: none;">Book Online</a>
   </div>
 </div>
 
@@ -271,22 +208,22 @@ font-src 'self' data:;">
   <h2>Pre Purchase Vehicle Inspections – Target Arrival: 30–60 Minutes</h2>
   <p>Need peace of mind before buying a car? Our certified mobile mechanic team performs comprehensive pre purchase vehicle inspections at any location across New Zealand.</p>
   <ul>
-    <li>🧾 Comprehensive 45-point certified mechanical inspection</li>
-    <li>📍 Inspection at seller or dealership location</li>
-    <li>💸 From $199 - best prices when you book ahead!</li>
-    <li>⏱️ Nationwide mobile mechanic dispatch in 30–60 minutes</li>
-    <li>📅 Save money by booking online in advance</li>
-    <li>✅ Written report with price recommendation & upcoming cost estimates</li>
+    <li>Comprehensive 45-point certified mechanical inspection</li>
+    <li>Inspection at seller or dealership location</li>
+    <li>From $199 - best prices when you book ahead!</li>
+    <li>Nationwide mobile mechanic dispatch in 30–60 minutes</li>
+    <li>Save money by booking online in advance</li>
+    <li>Written report with price recommendation & upcoming cost estimates</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="inspection_call">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a href="#book-inspection" class="cta-button after-hours-btn service-link" data-service="inspection" data-track="inspection_after_hours" style="background: #28a745; display: none;">📅 Book Online & Save</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="inspection_call">Call <span class="phone-display">0800 769 000</span></a>
+    <a href="#book-inspection" class="cta-button after-hours-btn service-link" data-service="inspection" data-track="inspection_after_hours" style="background: #28a745; display: none;">Book Online & Save</a>
   </div>
 </div>
 
 <!-- Customer Reviews Section -->
 <div class="services">
-  <h2>⭐ What Customers Say</h2>
+  <h2>What Customers Say</h2>
   <p>Real, verified reviews from clients across New Zealand.</p>
   
   <!-- RevU Banner Widget -->
@@ -295,7 +232,8 @@ font-src 'self' data:;">
   </div>
 </div>
 
-<a id="stripePaymentSticky" class="sticky-payment" href="#" data-track="customer_call">💳 Make Payment</a>
+<!-- Sticky payment button (managed by master config) -->
+<a id="stripePaymentSticky" class="sticky-payment" href="#" data-track="customer_call">Make Payment</a>
 
 <footer>
   &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
@@ -303,90 +241,22 @@ font-src 'self' data:;">
   <a href="/more-options" class="more-options-link" data-track="more_options_call" onclick="this.href='/more-options' + window.location.search" style="color: #666; text-decoration: underline;">More Options</a>
 </footer>
 
-<a class="sticky-call phone-link" href="tel:0800769000" data-track="sticky_call" id="stickyCallButton">📞 Call <span class="phone-display">Eek Now</span></a>
-<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" data-track="customer_support" style="display: none; background: #666;">🕐 View Hours</a>
+<!-- Sticky call button (managed by master config) -->
+<a class="sticky-call phone-link" href="tel:0800769000" data-track="sticky_call" id="stickyCallButton">Call <span class="phone-display">Eek Now</span></a>
+<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" data-track="customer_support" style="display: none; background: #666;">View Hours</a>
 
-<!-- Load Master Configuration -->
+<!-- MASTER CONFIG - HANDLES ALL TRACKING -->
 <script src="eek-master-config.js"></script>
 
 <script>
-// Handle service selection card clicks
-function handleServiceSelection() {
-  document.querySelectorAll('.service-link').forEach(link => {
-    link.addEventListener('click', function(e) {
-      const bookingUrl = this.dataset.bookingUrl;
-      const href = this.getAttribute('href');
-      
-      // Only redirect to booking for service cards (not already direct booking links)
-      if (bookingUrl && href && href.startsWith('#')) {
-        e.preventDefault();
-        console.log('🎯 Redirecting to booking page:', bookingUrl);
-        // Preserve URL parameters when redirecting to booking
-        window.location.href = bookingUrl + window.location.search;
-      }
-    });
-  });
-}
-
-// Update external links to preserve URL parameters
-function updateExternalLinks() {
-  const currentParams = window.location.search;
-  if (!currentParams) return;
-  
-  console.log('🔗 Updating external links to preserve parameters:', currentParams);
-  
-  // Update all links that don't already have onclick handlers for parameter forwarding
-  document.querySelectorAll('a[href^="/"], a[href^="https://www.eek.nz/"]').forEach(link => {
-    const href = link.getAttribute('href');
-    
-    // Skip if it's an anchor link or already has parameters
-    if (href.startsWith('#') || href.includes('?') || link.onclick) return;
-    
-    // Skip phone links
-    if (href.startsWith('tel:')) return;
-    
-    // Add parameter forwarding
-    link.onclick = function() {
-      this.href = href + currentParams;
-    };
-    
-    console.log('  Updated link:', href, '-> will add params on click');
-  });
-}
-
-// Main page loaded
+// Page-specific logic only - all tracking handled by master config
 window.addEventListener('load', function() {
-  console.log('🚀 Main page loaded with master config');
+  console.log('Main page loaded - master config handling all tracking');
   
-  // Set up service selection handlers
+  // Set up service selection with booking URLs (handled by master config)
   handleServiceSelection();
   
-  // Update external links to preserve parameters
-  updateExternalLinks();
-  
-  // Track page view
-  if (typeof gtag !== 'undefined') {
-    gtag('event', 'page_view', {
-      'page_title': document.title,
-      'page_location': window.location.href
-    });
-  }
-  
-  console.log('✅ Main page initialization complete');
-});
-
-// Scroll tracking
-let scrollTracked = false;
-window.addEventListener('scroll', function() {
-  if (!scrollTracked && window.scrollY > document.body.scrollHeight * 0.5) {
-    scrollTracked = true;
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'scroll_50_percent', {
-        'event_category': 'Engagement',
-        'event_label': 'Scrolled 50% of page'
-      });
-    }
-  }
+  console.log('Main page initialization complete');
 });
 </script>
 
