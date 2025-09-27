@@ -10,11 +10,75 @@
   <!-- Security Headers -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
-    script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com https://googleads.g.doubleclick.net;
+    script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com https://googleads.g.doubleclick.net https://www.redditstatic.com;
     style-src 'self' 'unsafe-inline';
     img-src 'self' data: https:;
     frame-src https://js.stripe.com https://hooks.stripe.com https://www.googletagmanager.com;
-    connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://api.stripe.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com;">
+    connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://api.stripe.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://www.google.hn;">
+
+  <!-- Reddit Pixel -->
+  <script>
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
+    (window,document);
+    
+    // Helper functions to extract user data if available
+    function getEmailFromForm() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const emailParam = urlParams.get('email');
+      if (emailParam) return emailParam;
+      
+      const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"], input[id*="email"]');
+      for (let input of emailInputs) {
+        if (input.value && input.value.includes('@')) {
+          return input.value;
+        }
+      }
+      return null;
+    }
+    
+    function getPhoneFromForm() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const phoneParam = urlParams.get('phone');
+      if (phoneParam) return phoneParam;
+      
+      const phoneInputs = document.querySelectorAll('input[type="tel"], input[name*="phone"], input[id*="phone"]');
+      for (let input of phoneInputs) {
+        if (input.value) {
+          return input.value;
+        }
+      }
+      return null;
+    }
+    
+    function getUserId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('uid') || urlParams.get('user_id') || urlParams.get('customer_id');
+    }
+    
+    function getMobileIds() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return {
+        idfa: urlParams.get('idfa'),
+        aaid: urlParams.get('aaid')
+      };
+    }
+    
+    const mobileIds = getMobileIds();
+    const initConfig = {};
+    
+    const email = getEmailFromForm();
+    const phoneNumber = getPhoneFromForm();
+    const externalId = getUserId();
+    
+    if (email) initConfig.email = email;
+    if (phoneNumber) initConfig.phoneNumber = phoneNumber;
+    if (externalId) initConfig.externalId = externalId;
+    if (mobileIds.idfa) initConfig.idfa = mobileIds.idfa;
+    if (mobileIds.aaid) initConfig.aaid = mobileIds.aaid;
+    
+    rdt('init', 'a2_hf16791nsdhx', Object.keys(initConfig).length > 0 ? initConfig : undefined);
+    rdt('track', 'PageVisit');
+  </script>
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
@@ -27,15 +91,15 @@
   </script>
 
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <!-- External CSS from main site -->
+  <link rel="stylesheet" href="/eek-style-guide.css" id="eek-style-guide">
+  
+  <!-- Booking-specific styles -->
   <style>
-    :root{
-      --brand:#ff5500; --brand2:#ff7733; --ok:#28a745; --warn:#ff9500; --muted:#6c757d; --purple:#6f42c1;
-    }
-    body{font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;background:#f5f5f5;margin:0;padding:0 0 80px 0;color:#333;text-align:center}
-    header{background:#fff;padding:20px;box-shadow:0 2px 4px rgba(0,0,0,.1)}
-    .business-name{font-size:2.2em;font-weight:700;color:var(--brand);margin:.3em 0;text-shadow:1px 1px 2px rgba(0,0,0,.08)}
-    header img{max-width:250px;height:auto;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1)}
-    h1{font-size:1.8em;margin:.5em 0 .2em}
+    /* Override/extend base styles for booking form */
+    body { padding: 0 0 80px 0; }
+    
     .breadcrumb{background:#e8f4f8;padding:10px 20px;margin:0;text-align:left;font-size:.9em}
     .breadcrumb a{color:var(--brand);text-decoration:none}
     .breadcrumb a:hover{text-decoration:underline}
@@ -139,12 +203,48 @@
       .booking-steps{padding:20px}
       .urgency-options{grid-template-columns:1fr}
       .voltage-grid{grid-template-columns:1fr}
-      .business-name{font-size:1.8em}
       .stats-grid{grid-template-columns:repeat(2,1fr)}
     }
   </style>
 </head>
 <body>
+
+<!-- Business Closed Banner (hidden by default) -->
+<div id="closedBanner" class="after-hours-banner" style="display: none; background: linear-gradient(135deg, #666, #888);">
+  <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
+  <div id="afterHoursMessage">
+    <p><strong>Business Hours:</strong></p>
+    <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
+    <p>Saturday - Sunday: 7:00 AM - 12:00 PM</p>
+    <p>Please call during business hours or book online for next available service</p>
+  </div>
+  <div id="tempUnavailableMessage" style="display: none;">
+    <p><strong>We're currently experiencing high demand</strong></p>
+    <p>Our mechanics are fully dispatched on emergency calls</p>
+    <p>Please book online for the next available appointment or try calling again shortly</p>
+    <a href="#emergency-services" class="emergency-btn" data-track="customer_book_online" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
+  </div>
+</div>
+
+<section id="stripePaymentBlock" style="display: none; background-color: #ffffff; padding: 20px; text-align: center; color: #333; border-bottom: 2px solid #ff5500;">
+  <div style="background-color: #f5f5f5; padding: 30px; border-radius: 12px; max-width: 700px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
+    <h1 style="font-size: 2.2em; margin-bottom: 0.5em;">Secure Roadside Payment</h1>
+    <p style="font-size: 1.2em; margin-bottom: 1.5em;">Confirm your payment to get help on the way — fast, safe, and secure.</p>
+    <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: #333;">
+      <input type="checkbox" id="termsCheckbox" style="transform: scale(1.5);" />
+      <span>I agree to the Eek Mobile Mechanical terms of service 
+        <a href="/terms" target="_blank" data-track="legal_terms" onclick="this.href='/terms' + window.location.search" style="color: #ff5500; text-decoration: underline;">
+          View terms of use
+        </a>
+      </span>
+    </label>
+    <br><br>
+    <button id="payNowButton" style="display: none; background-color: #ff5500; color: white; padding: 14px 32px; font-size: 1.2em; border: none; border-radius: 8px; cursor: pointer;">
+      Pay Now
+    </button>
+  </div>
+</section>
+
 <header>
   <img id="headerImage" src="/sweet-ride.png" alt="Eek Mobile Mechanical"/>
   <div class="business-name">Eek Mobile Mechanical</div>
@@ -153,7 +253,9 @@
 </header>
 
 <div class="breadcrumb">
-  <a href="/">Home</a> > <span id="breadcrumbText">Emergency Service</span>
+  <a href="/" onclick="this.href='/' + window.location.search">Home</a> > 
+  <a href="/more-options" onclick="this.href='/more-options' + window.location.search">More Options</a> > 
+  <span id="breadcrumbText">Emergency Service</span>
 </div>
 
 <div class="booking-container">
@@ -284,7 +386,7 @@
         <div class="terms-checkbox">
           <input type="checkbox" id="termsAgree" onchange="toggleBookingButton()" />
           <div class="terms-text">
-            I agree to the <a href="https://eek.nz/terms" target="_blank">Eek Mobile Mechanical Terms of Service</a> and understand that:
+            I agree to the <a href="/terms" target="_blank" onclick="this.href='/terms' + window.location.search">Eek Mobile Mechanical Terms of Service</a> and understand that:
             <ul style="margin:10px 0;padding-left:20px;" id="termsList"></ul>
           </div>
         </div>
@@ -301,6 +403,21 @@
   </div>
 </div>
 
+<a id="stripePaymentSticky" class="sticky-payment" href="#" data-track="customer_call">💳 Make Payment</a>
+
+<footer>
+  &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
+  <a href="/privacy" target="_blank" data-track="footer_privacy" onclick="this.href='/privacy' + window.location.search" style="color: #666; text-decoration: underline;">Privacy Policy</a> | 
+  <a href="/more-options" data-track="more_options_call" onclick="this.href='/more-options' + window.location.search" style="color: #666; text-decoration: underline;">More Options</a>
+</footer>
+
+<a class="sticky-call phone-link" href="tel:0800769000" data-track="sticky_call" id="stickyCallButton">📞 Call <span class="phone-display">Eek Now</span></a>
+<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" data-track="customer_support" style="display: none; background: #666;">🕐 View Hours</a>
+
+<!-- Load Master Configuration for shared functionality -->
+<script src="/eek-master-config.js"></script>
+
+<!-- Booking-specific JavaScript -->
 <script>
 // --- NZ timezone helpers (force all "wall-clock" logic to Pacific/Auckland) ---
 const NZ_TZ = 'Pacific/Auckland';
@@ -777,6 +894,28 @@ document.addEventListener('DOMContentLoaded', function(){
   
   // Send initial status with enhanced data
   sendBookingUpdate(BOOKING_STATUS.INITIAL);
+  
+  // Initialize master config features after a brief delay
+  setTimeout(() => {
+    console.log('🔧 Initializing master config integration');
+    
+    // Trigger business hours check if function exists
+    if (typeof checkBusinessHours === 'function') {
+      checkBusinessHours();
+    }
+    
+    // Update phone numbers if function exists
+    if (typeof updatePhoneNumbers === 'function') {
+      updatePhoneNumbers();
+    }
+    
+    // Detect and update logo if function exists
+    if (typeof detectAndUpdateLogo === 'function') {
+      detectAndUpdateLogo();
+    }
+    
+    console.log('✅ Master config integration complete');
+  }, 500);
 });
 
 function loadServiceConfig(serviceType){
@@ -1398,6 +1537,38 @@ async function generatePaymentLink(){
     alert('Unable to generate payment link automatically.\n\nPlease try one of these options:\n1. Refresh the page and try again\n2. Call us at 0800 769 000');
   }
 }
+
+// Handle parameter forwarding for external links
+function updateExternalLinks() {
+  const currentParams = window.location.search;
+  if (!currentParams) return;
+  
+  console.log('🔗 Updating external links to preserve parameters:', currentParams);
+  
+  // Update all links that don't already have onclick handlers for parameter forwarding
+  document.querySelectorAll('a[href^="/"], a[href^="https://www.eek.nz/"], a[href^="https://eek.nz/"]').forEach(link => {
+    const href = link.getAttribute('href');
+    
+    // Skip if it's an anchor link or already has parameters
+    if (href.startsWith('#') || href.includes('?') || link.onclick) return;
+    
+    // Skip phone links
+    if (href.startsWith('tel:')) return;
+    
+    // Add parameter forwarding
+    link.onclick = function() {
+      this.href = href + currentParams;
+    };
+    
+    console.log('  Updated link:', href, '-> will add params on click');
+  });
+}
+
+// Initialize parameter forwarding after page load
+window.addEventListener('load', function() {
+  updateExternalLinks();
+});
 </script>
+
 </body>
 </html>
