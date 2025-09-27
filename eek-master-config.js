@@ -1,11 +1,9 @@
 /**
- * Eek Mobile Mechanical - Master Configuration & Shared Functions (PHONE LOGIC FIXED)
+ * Eek Mobile Mechanical - Master Configuration & Shared Functions (ENHANCED TRACKING)
  * This file contains all shared functionality across the website
  * Include this file on every page to ensure consistency
  * 
- * PHONE LOGIC FIX: Completely separates tracking data from display decisions
- * Current URL parameters ONLY determine phone number display
- * Stored GCLID data is ONLY used for tracking/analytics purposes
+ * ENHANCED VERSION: Includes comprehensive location and engagement tracking
  */
 
 // === INJECT COMPREHENSIVE STYLE GUIDE ===
@@ -320,6 +318,311 @@ let EEK_STATE = {
     duringBusinessHours: false
 };
 
+// === ENGAGEMENT TRACKING GLOBALS ===
+let focusTime = 0;
+let lastFocusTime = Date.now();
+let isPageFocused = true;
+let clickCount = 0;
+let firstInteractionTime = null;
+let sessionCount = parseInt(localStorage.getItem('eek_session_count') || '1');
+
+// Set up engagement event listeners
+window.addEventListener('focus', () => {
+    isPageFocused = true;
+    lastFocusTime = Date.now();
+});
+
+window.addEventListener('blur', () => {
+    if (isPageFocused) {
+        focusTime += Date.now() - lastFocusTime;
+        isPageFocused = false;
+    }
+});
+
+window.addEventListener('click', () => {
+    clickCount++;
+    if (!firstInteractionTime) {
+        firstInteractionTime = Date.now();
+    }
+});
+
+// === ENHANCED HELPER FUNCTIONS ===
+function getTimezone() {
+    try {
+        return Intl.DateTimeFormat().resolvedOptions().timeZone || null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function getTimezoneAbbreviation() {
+    try {
+        const date = new Date();
+        const shortFormat = date.toLocaleTimeString('en', {timeZoneName: 'short'});
+        return shortFormat.split(' ').pop() || null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function getLocale() {
+    try {
+        return Intl.DateTimeFormat().resolvedOptions().locale || navigator.language || null;
+    } catch (e) {
+        return navigator.language || null;
+    }
+}
+
+function getCurrencyFromLocale() {
+    try {
+        const locale = getLocale();
+        if (!locale) return null;
+        
+        // Common currency mappings
+        const currencyMap = {
+            'en-NZ': 'NZD',
+            'en-AU': 'AUD', 
+            'en-US': 'USD',
+            'en-GB': 'GBP',
+            'en-CA': 'CAD'
+        };
+        
+        return currencyMap[locale] || null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function getConnectionType() {
+    try {
+        return navigator.connection ? navigator.connection.effectiveType : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function getISPHints() {
+    try {
+        const connection = navigator.connection;
+        if (connection && connection.effectiveType) {
+            return {
+                effectiveType: connection.effectiveType,
+                downlink: connection.downlink,
+                rtt: connection.rtt
+            };
+        }
+        return null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function getTimeFormat() {
+    try {
+        const testTime = new Date('2023-01-01 13:00:00');
+        const formatted = testTime.toLocaleTimeString();
+        return formatted.includes('PM') ? '12-hour' : '24-hour';
+    } catch (e) {
+        return null;
+    }
+}
+
+function getReferrerDomain() {
+    try {
+        if (!document.referrer) return null;
+        return new URL(document.referrer).hostname;
+    } catch (e) {
+        return null;
+    }
+}
+
+function extractGeoFromCampaign() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const campaign = urlParams.get('utm_campaign') || '';
+    const term = urlParams.get('utm_term') || '';
+    const content = urlParams.get('utm_content') || '';
+    
+    // Look for geographic indicators in campaign data
+    const geoKeywords = ['auckland', 'wellington', 'christchurch', 'hamilton', 'tauranga', 'dunedin', 'palmerston', 'hastings', 'rotorua', 'whangarei', 'new-zealand', 'nz', 'north-island', 'south-island'];
+    
+    const allCampaignText = (campaign + ' ' + term + ' ' + content).toLowerCase();
+    const foundGeo = geoKeywords.filter(keyword => allCampaignText.includes(keyword));
+    
+    return foundGeo.length > 0 ? foundGeo : null;
+}
+
+function getScreenInfo() {
+    try {
+        return {
+            width: window.screen ? window.screen.width : null,
+            height: window.screen ? window.screen.height : null,
+            resolution: window.screen ? `${window.screen.width}x${window.screen.height}` : null,
+            colorDepth: window.screen ? window.screen.colorDepth : null,
+            pixelRatio: window.devicePixelRatio || 1
+        };
+    } catch (e) {
+        return null;
+    }
+}
+
+function getDeviceOrientation() {
+    try {
+        if (window.screen && window.screen.orientation) {
+            return {
+                angle: window.screen.orientation.angle,
+                type: window.screen.orientation.type
+            };
+        }
+        return window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+    } catch (e) {
+        return null;
+    }
+}
+
+function getDeviceType() {
+    const ua = navigator.userAgent || '';
+    
+    if (/tablet|ipad/i.test(ua)) return 'tablet';
+    if (/mobile|phone|android/i.test(ua)) return 'mobile';
+    return 'desktop';
+}
+
+function getOperatingSystem() {
+    const ua = navigator.userAgent || '';
+    
+    if (/windows/i.test(ua)) return 'Windows';
+    if (/macintosh|mac os x/i.test(ua)) return 'macOS';
+    if (/linux/i.test(ua)) return 'Linux';
+    if (/android/i.test(ua)) return 'Android';
+    if (/iphone|ipad|ipod/i.test(ua)) return 'iOS';
+    
+    return 'Unknown';
+}
+
+function getBrowserInfo() {
+    const ua = navigator.userAgent || '';
+    
+    if (/chrome/i.test(ua) && !/edge/i.test(ua)) return 'Chrome';
+    if (/firefox/i.test(ua)) return 'Firefox';
+    if (/safari/i.test(ua) && !/chrome/i.test(ua)) return 'Safari';
+    if (/edge/i.test(ua)) return 'Edge';
+    if (/opera/i.test(ua)) return 'Opera';
+    
+    return 'Unknown';
+}
+
+function getScreenOrientation() {
+    try {
+        if (window.screen && window.screen.orientation) {
+            return window.screen.orientation.angle;
+        }
+        return window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
+    } catch (e) {
+        return null;
+    }
+}
+
+function checkJavaEnabled() {
+    try {
+        return navigator.javaEnabled ? navigator.javaEnabled() : false;
+    } catch (e) {
+        return false;
+    }
+}
+
+function checkWebGLSupport() {
+    try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        return !!gl;
+    } catch (e) {
+        return false;
+    }
+}
+
+function isLocalBusinessHours() {
+    // Check if user's local time aligns with typical business hours
+    const now = new Date();
+    const hour = now.getHours();
+    return hour >= 8 && hour <= 17; // 8 AM to 5 PM local time
+}
+
+function getFirstContentfulPaint() {
+    try {
+        const entries = performance.getEntriesByType('paint');
+        const fcp = entries.find(entry => entry.name === 'first-contentful-paint');
+        return fcp ? fcp.startTime : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function getLargestContentfulPaint() {
+    try {
+        const entries = performance.getEntriesByType('largest-contentful-paint');
+        return entries.length > 0 ? entries[entries.length - 1].startTime : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function getConnectionSpeed() {
+    try {
+        return navigator.connection ? navigator.connection.downlink : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function getFocusTime() {
+    if (isPageFocused) {
+        return focusTime + (Date.now() - lastFocusTime);
+    }
+    return focusTime;
+}
+
+function getClickCount() {
+    return clickCount;
+}
+
+function getTimeToFirstInteraction() {
+    return firstInteractionTime ? firstInteractionTime - getPageStartTime() : null;
+}
+
+function getScrollPercentage() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const docHeight = Math.max(document.body.scrollHeight || 0, document.documentElement.scrollHeight || 0);
+    const winHeight = window.innerHeight;
+    const scrollPercent = (scrollTop / (docHeight - winHeight)) * 100;
+    return Math.min(Math.max(scrollPercent, 0), 100);
+}
+
+function getBounceCandidate() {
+    const timeOnPage = Date.now() - getPageStartTime();
+    const hasInteracted = clickCount > 0 || getScrollPercentage() > 25;
+    return timeOnPage < 30000 && !hasInteracted; // Less than 30 seconds and no interaction
+}
+
+function getEngagementScore() {
+    const timeOnPage = Date.now() - getPageStartTime();
+    const focusRatio = getFocusTime() / timeOnPage;
+    const scrollPercentage = getScrollPercentage();
+    const interactions = clickCount;
+    
+    // Simple engagement score (0-100)
+    let score = 0;
+    score += Math.min(timeOnPage / 1000, 60); // Up to 60 points for time (max 60 seconds)
+    score += focusRatio * 20; // Up to 20 points for focus ratio
+    score += Math.min(scrollPercentage / 4, 15); // Up to 15 points for scrolling
+    score += Math.min(interactions * 2, 10); // Up to 10 points for interactions
+    
+    return Math.round(Math.min(score, 100));
+}
+
+function getSessionCount() {
+    return sessionCount;
+}
+
 // === LOGO MANAGEMENT (COMPLETELY FIXED) ===
 function getLogoForPageType() {
     const currentPath = window.location.pathname.toLowerCase();
@@ -404,7 +707,7 @@ function detectAndUpdateLogo() {
     return Promise.all(updatePromises);
 }
 
-// === COMPREHENSIVE TRACKING PAYLOAD BUILDER ===
+// === ENHANCED TRACKING PAYLOAD BUILDER ===
 function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
     const urlParams = new URLSearchParams(window.location.search);
     const now = new Date();
@@ -423,26 +726,65 @@ function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
         gclidAge: getGCLIDAgeInDays(),
         phoneNumberType: getDisplayPhoneNumber() === EEK_CONFIG.PHONE_NUMBERS.tracking ? 'tracking' : 'default',
         
+        // Enhanced Location Data (Non-Intrusive)
+        location: {
+            // Timezone-based location indicators
+            timezone: getTimezone(),
+            timezoneOffset: new Date().getTimezoneOffset(),
+            timezoneAbbr: getTimezoneAbbreviation(),
+            
+            // Locale-based location indicators  
+            locale: getLocale(),
+            language: navigator.language || null,
+            languages: navigator.languages || [],
+            currency: getCurrencyFromLocale(),
+            
+            // Network-based location hints
+            connectionType: getConnectionType(),
+            isp: getISPHints(),
+            
+            // Time-based location indicators
+            localTime: now.toLocaleString(),
+            localTimeFormat: getTimeFormat(),
+            weekday: now.toLocaleDateString(undefined, {weekday: 'long'}),
+            
+            // URL-based location hints
+            referrerDomain: getReferrerDomain(),
+            campaignGeo: extractGeoFromCampaign(),
+            
+            // Screen/device location indicators
+            screenResolution: getScreenInfo(),
+            deviceOrientation: getDeviceOrientation()
+        },
+        
         // Page Context (Enhanced)
         page: {
-            title: document.title,
-            url: window.location.href,
-            path: window.location.pathname,
-            hash: window.location.hash,
-            search: window.location.search,
+            title: document.title || '',
+            url: window.location.href || '',
+            path: window.location.pathname || '',
+            hash: window.location.hash || '',
+            search: window.location.search || '',
             referrer: document.referrer || null,
-            domain: window.location.hostname,
-            protocol: window.location.protocol,
+            domain: window.location.hostname || '',
+            protocol: window.location.protocol || '',
+            
             viewport: {
                 width: window.innerWidth || document.documentElement.clientWidth,
                 height: window.innerHeight || document.documentElement.clientHeight
             },
+            
             scroll: {
                 x: window.pageXOffset || document.documentElement.scrollLeft,
                 y: window.pageYOffset || document.documentElement.scrollTop,
-                maxX: Math.max(document.body.scrollWidth, document.documentElement.scrollWidth),
-                maxY: Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)
-            }
+                maxX: Math.max(document.body.scrollWidth || 0, document.documentElement.scrollWidth || 0),
+                maxY: Math.max(document.body.scrollHeight || 0, document.documentElement.scrollHeight || 0)
+            },
+            
+            // Page engagement indicators
+            timeOnPage: Date.now() - getPageStartTime(),
+            focusTime: getFocusTime(),
+            scrollPercentage: getScrollPercentage(),
+            clickCount: getClickCount()
         },
         
         // Business Context
@@ -452,7 +794,8 @@ function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
             nzTime: new Date().toLocaleString("en-US", {timeZone: "Pacific/Auckland"}),
             dayOfWeek: now.getDay(), // 0=Sunday, 6=Saturday
             hourOfDay: now.getHours(),
-            isWeekend: (now.getDay() === 0 || now.getDay() === 6)
+            isWeekend: (now.getDay() === 0 || now.getDay() === 6),
+            localBusinessHours: isLocalBusinessHours()
         },
         
         // UTM & Marketing Data (Enhanced)
@@ -464,26 +807,41 @@ function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
             utm_campaign: urlParams.get('utm_campaign') || EEK_STATE.utmData.utm_campaign || null,
             utm_term: urlParams.get('utm_term') || EEK_STATE.utmData.utm_term || null,
             utm_content: urlParams.get('utm_content') || EEK_STATE.utmData.utm_content || null,
+            
             // Additional marketing parameters
             fbclid: urlParams.get('fbclid') || null,
             msclkid: urlParams.get('msclkid') || null,
-            ttclid: urlParams.get('ttclid') || null
+            ttclid: urlParams.get('ttclid') || null,
+            gad_source: urlParams.get('gad_source') || null,
+            campaignid: urlParams.get('campaignid') || null,
+            adgroupid: urlParams.get('adgroupid') || null,
+            keyword: urlParams.get('keyword') || null
         },
         
         // Device & Browser Info (Maximum Detail)
         device: {
-            userAgent: navigator.userAgent,
+            userAgent: navigator.userAgent || '',
             platform: navigator.platform || null,
             language: navigator.language || null,
             languages: navigator.languages || [],
             mobile: /Mobi|Android/i.test(navigator.userAgent),
+            deviceType: getDeviceType(),
+            operatingSystem: getOperatingSystem(),
+            browser: getBrowserInfo(),
             cookieEnabled: navigator.cookieEnabled,
-            doNotTrack: navigator.doNotTrack,
+            doNotTrack: navigator.doNotTrack || null,
             hardwareConcurrency: navigator.hardwareConcurrency || null,
             maxTouchPoints: navigator.maxTouchPoints || 0,
+            deviceMemory: navigator.deviceMemory || null,
             onLine: navigator.onLine,
             vendor: navigator.vendor || null,
             vendorSub: navigator.vendorSub || null,
+            
+            // Capabilities
+            touchscreen: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+            webgl: checkWebGLSupport(),
+            javaEnabled: checkJavaEnabled(),
+            
             screen: {
                 width: window.screen ? window.screen.width : null,
                 height: window.screen ? window.screen.height : null,
@@ -492,11 +850,11 @@ function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
                 colorDepth: window.screen ? window.screen.colorDepth : null,
                 pixelDepth: window.screen ? window.screen.pixelDepth : null,
                 pixelRatio: window.devicePixelRatio || 1,
-                orientation: window.screen && window.screen.orientation ? window.screen.orientation.angle : null
+                orientation: getScreenOrientation()
             }
         },
         
-        // Performance Data
+        // Performance Data (Enhanced)
         performance: {
             navigationStart: performance.navigationStart || null,
             loadEventEnd: performance.loadEventEnd || null,
@@ -512,6 +870,9 @@ function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
             domInteractive: performance.domInteractive || null,
             domComplete: performance.domComplete || null,
             loadEventStart: performance.loadEventStart || null,
+            firstContentfulPaint: getFirstContentfulPaint(),
+            largestContentfulPaint: getLargestContentfulPaint(),
+            connectionSpeed: getConnectionSpeed(),
             timing: performance.timing ? {
                 dns: performance.timing.domainLookupEnd - performance.timing.domainLookupStart,
                 connection: performance.timing.connectEnd - performance.timing.connectStart,
@@ -553,6 +914,16 @@ function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
             pageViewCount: getPageViewCount()
         },
         
+        // User behavior indicators
+        behavior: {
+            visitCount: getVisitCount(),
+            sessionCount: getSessionCount(),
+            pageViewCount: getPageViewCount(),
+            timeToFirstInteraction: getTimeToFirstInteraction(),
+            bounceCandidate: getBounceCandidate(),
+            engagementScore: getEngagementScore()
+        },
+        
         // Feature Detection
         features: {
             webgl: !!window.WebGLRenderingContext,
@@ -571,6 +942,9 @@ function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
         ...additionalData
     };
 }
+
+// Continue with the rest of your existing functions...
+// (All the other functions from your original file remain the same)
 
 // === SEND TRACKING EVENT TO API ===
 async function sendTrackingEvent(payload) {
@@ -674,6 +1048,9 @@ function trackConversion(eventAction, eventCategory = 'Contact') {
     
     sendTrackingEvent(payload);
 }
+
+// Continue with all your other original functions...
+// I'll include the rest to maintain completeness
 
 // === USER INTERACTION TRACKING ===
 function trackInteraction(element) {
@@ -1767,3 +2144,5 @@ window.addClickTrackingToElements = addClickTrackingToElements;
 window.getDisplayPhoneNumber = getDisplayPhoneNumber;
 window.getCurrentURLGCLID = getCurrentURLGCLID;
 window.getStoredGCLIDForTracking = getStoredGCLIDForTracking;
+
+console.log('📊 Enhanced tracking configuration loaded with comprehensive location and engagement data');
