@@ -156,7 +156,7 @@ font-src 'self' data:;">
     <p><strong>We're currently experiencing high demand</strong></p>
     <p>Our mechanics are fully dispatched on emergency calls</p>
     <p>Please book online for the next available appointment or try calling again shortly</p>
-    <a href="#service-selection" class="emergency-btn" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
+    <a href="#service-selection" class="emergency-btn" data-track="customer_book_online" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
   </div>
 </div>
 
@@ -167,7 +167,7 @@ font-src 'self' data:;">
     <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: #333;">
       <input type="checkbox" id="termsCheckbox" style="transform: scale(1.5);" />
       <span>I agree to the Eek Mobile Mechanical terms of service 
-        <a href="https://www.eek.nz/terms" target="_blank" style="color: #ff5500; text-decoration: underline;">
+        <a href="https://www.eek.nz/terms" target="_blank" data-track="legal_terms" style="color: #ff5500; text-decoration: underline;">
           View terms of use
         </a>
       </span>
@@ -184,32 +184,32 @@ font-src 'self' data:;">
   <div class="business-name">Eek Mobile Mechanical</div>
   <h1>Mobile Mechanics NZ - 30-60 Minute Response</h1>
   <p class="tagline">Mobile Mechanic • Pre Purchase Inspections • Wrong Fuel Removal • Emergency Roadside Repairs • 30–60 Min Response</p>
-  <a class="cta-button phone-link" href="tel:0800769000" onclick="trackConversion('header_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
+  <a class="cta-button phone-link" href="tel:0800769000" data-track="header_call">📞 Call <span class="phone-display">0800 769 000</span></a>
 </header>
 
 <div class="keywords-highlight" id="service-selection">
   <h2>🔧 Professional Mobile Mechanic Services</h2>
   <p>Eek Mobile Mechanical providing comprehensive mobile mechanic services across New Zealand</p>
   <div class="service-keywords">
-    <a href="#mobile-mechanic-breakdown" class="service-link" data-service="mechanic" style="text-decoration: none; color: inherit;">
+    <a href="#mobile-mechanic-breakdown" class="service-link" data-service="mechanic" data-track="breakdown_call" style="text-decoration: none; color: inherit;">
       <div class="keyword-item">
         <h4>Emergency Breakdown</h4>
         <p>Professional mechanics arrive in 30-60 minutes anywhere in NZ</p>
       </div>
     </a>
-    <a href="#battery-jump-start" class="service-link" data-service="jumpstart" style="text-decoration: none; color: inherit;">
+    <a href="#battery-jump-start" class="service-link" data-service="jumpstart" data-track="battery_call" style="text-decoration: none; color: inherit;">
       <div class="keyword-item">
         <h4>Battery Jump Start</h4>
         <p>Dead battery? We'll get you started in 30-60 minutes</p>
       </div>
     </a>
-    <a href="#wrong-fuel-removal" class="service-link" data-service="fuel-extraction" style="text-decoration: none; color: inherit;">
+    <a href="#wrong-fuel-removal" class="service-link" data-service="fuel-extraction" data-track="fuel_drain_call" style="text-decoration: none; color: inherit;">
       <div class="keyword-item">
         <h4>Wrong Fuel Removal</h4>
         <p>Emergency fuel rescue service - 30-60 minute response</p>
       </div>
     </a>
-    <a href="#pre-purchase-inspections" class="service-link" data-service="inspection" style="text-decoration: none; color: inherit;">
+    <a href="#pre-purchase-inspections" class="service-link" data-service="inspection" data-track="inspection_call" style="text-decoration: none; color: inherit;">
       <div class="keyword-item">
         <h4>Pre Purchase Inspections</h4>
         <p>45-point certified inspection - 30-60 minute arrival</p>
@@ -230,8 +230,8 @@ font-src 'self' data:;">
     <li>⏱️ Target arrival: 30–60 minutes nationwide</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a href="#book-mechanic" class="cta-button after-hours-btn service-link" data-service="mechanic" style="background: #28a745; display: none;">📅 Book Online</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="breakdown_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+    <a href="#book-mechanic" class="cta-button after-hours-btn service-link" data-service="mechanic" data-track="breakdown_after_hours" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
 
@@ -245,8 +245,8 @@ font-src 'self' data:;">
     <li>📍 Mobile mechanic service at your location—home or roadside</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a href="#book-jumpstart" class="cta-button after-hours-btn service-link" data-service="jumpstart" style="background: #28a745; display: none;">📅 Book Online</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="battery_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+    <a href="#book-jumpstart" class="cta-button after-hours-btn service-link" data-service="jumpstart" data-track="battery_after_hours" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
 
@@ -262,8 +262,8 @@ font-src 'self' data:;">
     <li>⏱️ Target arrival: 30–60 minutes nationwide</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a href="#book-fuel-extraction" class="cta-button after-hours-btn service-link" data-service="fuel-extraction" style="background: #28a745; display: none;">📅 Book Online</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="fuel_drain_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+    <a href="#book-fuel-extraction" class="cta-button after-hours-btn service-link" data-service="fuel-extraction" data-track="fuel_drain_after_hours" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
 
@@ -279,8 +279,8 @@ font-src 'self' data:;">
     <li>✅ Written report with price recommendation & upcoming cost estimates</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a href="#book-inspection" class="cta-button after-hours-btn service-link" data-service="inspection" style="background: #28a745; display: none;">📅 Book Online & Save</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="inspection_call">📞 Call <span class="phone-display">0800 769 000</span></a>
+    <a href="#book-inspection" class="cta-button after-hours-btn service-link" data-service="inspection" data-track="inspection_after_hours" style="background: #28a745; display: none;">📅 Book Online & Save</a>
   </div>
 </div>
 
@@ -295,16 +295,16 @@ font-src 'self' data:;">
   </div>
 </div>
 
-<a id="stripePaymentSticky" class="sticky-payment" href="#">💳 Make Payment</a>
+<a id="stripePaymentSticky" class="sticky-payment" href="#" data-track="customer_call">💳 Make Payment</a>
 
 <footer>
   &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
-  <a href="https://www.eek.nz/privacy" target="_blank" style="color: #666; text-decoration: underline;">Privacy Policy</a> | 
-  <a href="/more-options" class="more-options-link" style="color: #666; text-decoration: underline;">More Options</a>
+  <a href="https://www.eek.nz/privacy" target="_blank" data-track="legal_privacy" style="color: #666; text-decoration: underline;">Privacy Policy</a> | 
+  <a href="/more-options" class="more-options-link" data-track="more_options_call" style="color: #666; text-decoration: underline;">More Options</a>
 </footer>
 
-<a class="sticky-call phone-link" href="tel:0800769000" onclick="trackConversion('sticky_call', 'Contact')" id="stickyCallButton">📞 Call <span class="phone-display">Eek Now</span></a>
-<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" style="display: none; background: #666;">🕐 View Hours</a>
+<a class="sticky-call phone-link" href="tel:0800769000" data-track="sticky_call" id="stickyCallButton">📞 Call <span class="phone-display">Eek Now</span></a>
+<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" data-track="customer_support" style="display: none; background: #666;">🕐 View Hours</a>
 
 <!-- Load Master Configuration -->
 <script src="eek-master-config.js"></script>
