@@ -774,21 +774,21 @@ function setupUrgencyOptions() {
       title: firstLabel,
       time: isAfter4PM ? 'Next business day' : 'Within 4 hours if available',
       description: isAfter4PM ? 'Priority next-day inspection' : 'Subject to availability - confirmation after booking',
-      price: isAfter4PM ? 239 : 289
+      price: 289  // Always $289 for first option (emergency pricing)
     },
     {
       id: isAfter4PM ? 'dayafter' : 'tomorrow', 
       title: secondLabel,
       time: isAfter4PM ? 'Standard scheduling' : 'Next business day',
       description: isAfter4PM ? 'Regular appointment booking' : 'Priority next-day inspection',
-      price: isAfter4PM ? 199 : 239
+      price: 239  // Always $239 for second option
     },
     {
       id: 'dayafter2',
       title: thirdLabel,
       time: 'Standard scheduling',
       description: 'Regular appointment booking', 
-      price: 199
+      price: 199  // Always $199 for third option
     }
   ];
   
