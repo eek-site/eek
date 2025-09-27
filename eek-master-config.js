@@ -1,9 +1,10 @@
 /**
- * Eek Mobile Mechanical - Master Configuration & Shared Functions (ENHANCED TRACKING)
+ * Eek Mobile Mechanical - Master Configuration & Shared Functions (ENHANCED TRACKING - FIXED)
  * This file contains all shared functionality across the website
  * Include this file on every page to ensure consistency
  * 
  * ENHANCED VERSION: Includes comprehensive location and engagement tracking
+ * FIXED VERSION: Resolves duplicate event tracking issues
  */
 
 // === INJECT COMPREHENSIVE STYLE GUIDE ===
@@ -325,6 +326,23 @@ let isPageFocused = true;
 let clickCount = 0;
 let firstInteractionTime = null;
 let sessionCount = parseInt(localStorage.getItem('eek_session_count') || '1');
+
+// === FIXED: EVENT DEDUPLICATION ===
+let recentEvents = new Map();
+let eventSequence = 0;
+
+function isDuplicateEvent(eventAction, timeWindow = 5000) {
+    const now = Date.now();
+    const lastTime = recentEvents.get(eventAction);
+    
+    if (lastTime && (now - lastTime) < timeWindow) {
+        console.log('🚫 Skipping duplicate event:', eventAction, 'within', timeWindow, 'ms');
+        return true;
+    }
+    
+    recentEvents.set(eventAction, now);
+    return false;
+}
 
 // Set up engagement event listeners
 window.addEventListener('focus', () => {
@@ -712,9 +730,13 @@ function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
     const urlParams = new URLSearchParams(window.location.search);
     const now = new Date();
     
+    // Increment event sequence
+    eventSequence++;
+    
     return {
         eventType: eventType,
         eventAction: eventAction,
+        eventSequence: eventSequence,
         timestamp: now.toISOString(),
         
         // Session & Identity Data
@@ -943,11 +965,13 @@ function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
     };
 }
 
-// Continue with the rest of your existing functions...
-// (All the other functions from your original file remain the same)
-
-// === SEND TRACKING EVENT TO API ===
+// === FIXED: SEND TRACKING EVENT TO API ===
 async function sendTrackingEvent(payload) {
+    // FIXED: Check for duplicate events before sending
+    if (isDuplicateEvent(payload.eventAction)) {
+        return false;
+    }
+    
     try {
         const response = await fetch(EEK_CONFIG.TRACKING_API_URL, {
             method: 'POST',
@@ -1049,10 +1073,7 @@ function trackConversion(eventAction, eventCategory = 'Contact') {
     sendTrackingEvent(payload);
 }
 
-// Continue with all your other original functions...
-// I'll include the rest to maintain completeness
-
-// === USER INTERACTION TRACKING ===
+// === FIXED: USER INTERACTION TRACKING ===
 function trackInteraction(element) {
     const trackingAction = element.dataset.track;
     const linkUrl = element.href;
@@ -1152,7 +1173,7 @@ function trackPageView() {
     }
 }
 
-// === AUTOMATIC EVENT TRACKING ===
+// === FIXED: AUTOMATIC EVENT TRACKING ===
 function setupScrollTracking() {
     let scrollTracked = false;
     
@@ -1184,17 +1205,22 @@ function setupScrollTracking() {
     });
 }
 
+// === FIXED: TIME TRACKING WITH MINIMUM THRESHOLD ===
 function setupTimeTracking() {
     const startTime = Date.now();
     
     window.addEventListener('beforeunload', function() {
         const timeOnPage = Date.now() - startTime;
-        const payload = buildTrackingPayload('user_engagement', 'time_on_page', {
-            timeOnPage: timeOnPage,
-            timeOnPageSeconds: Math.round(timeOnPage / 1000)
-        });
         
-        sendTrackingEvent(payload);
+        // FIXED: Only send if user was on page for at least 10 seconds
+        if (timeOnPage > 10000) {
+            const payload = buildTrackingPayload('user_engagement', 'time_on_page', {
+                timeOnPage: timeOnPage,
+                timeOnPageSeconds: Math.round(timeOnPage / 1000)
+            });
+            
+            sendTrackingEvent(payload);
+        }
     });
 }
 
@@ -1642,7 +1668,7 @@ function updateBodyStateClasses() {
     });
 }
 
-// === EVENT LISTENER ATTACHMENT ===
+// === FIXED: EVENT LISTENER ATTACHMENT ===
 function addClickTrackingToElements() {
     // Add tracking to all elements with data-track attributes
     document.querySelectorAll('[data-track]').forEach(element => {
@@ -1651,17 +1677,23 @@ function addClickTrackingToElements() {
         });
     });
     
-    // Add tracking to all phone links
+    // FIXED: Add tracking to phone links WITHOUT existing data-track attributes only
     document.querySelectorAll('a[href^="tel:"]').forEach(element => {
-        if (!element.dataset.track) {
-            element.dataset.track = 'phone_call';
+        // FIXED: Skip if element already has specific tracking
+        if (element.dataset.track) {
+            console.log('📞 Skipping phone link with existing tracking:', element.dataset.track);
+            return; // Don't add generic tracking
         }
+        
+        // Only add generic tracking to untracked phone links
+        element.dataset.track = 'phone_call';
         element.addEventListener('click', function() {
             trackInteraction(this);
         });
+        console.log('📞 Added generic phone_call tracking to untracked phone link');
     });
     
-    console.log('👂 Click tracking attached to all data-track elements and phone links');
+    console.log('👂 Click tracking attached to all data-track elements and untracked phone links');
 }
 
 // === SERVICE SELECTION HANDLERS ===
@@ -1747,8 +1779,8 @@ function initializePage() {
     
     // Set up tracking
     setupScrollTracking();
-    setupTimeTracking();
-    addClickTrackingToElements();
+    setupTimeTracking(); // FIXED: Now has minimum time threshold
+    addClickTrackingToElements(); // FIXED: No duplicate phone tracking
     
     // Set up service selection handlers (for main page)
     handleServiceSelection();
@@ -2145,4 +2177,4 @@ window.getDisplayPhoneNumber = getDisplayPhoneNumber;
 window.getCurrentURLGCLID = getCurrentURLGCLID;
 window.getStoredGCLIDForTracking = getStoredGCLIDForTracking;
 
-console.log('📊 Enhanced tracking configuration loaded with comprehensive location and engagement data');
+console.log('📊 FIXED Enhanced tracking configuration loaded - duplicate events resolved');
