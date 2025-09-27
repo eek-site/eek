@@ -1,1233 +1,742 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Don't Buy a Lemon! Pre Purchase Vehicle Inspection - Eek Mobile Mechanical</title>
-  <meta name="description" content="Book a comprehensive 45-point pre-purchase vehicle inspection. Mobile service anywhere in New Zealand. Don't buy a lemon! 20% of vehicles we inspect are rejected." />
-  <meta name="keywords" content="pre purchase inspection, vehicle inspection, mobile mechanic, car inspection NZ, don't buy a lemon" />
-  <meta property="og:title" content="Don't Buy a Lemon! Pre Purchase Vehicle Inspection - Eek Mobile Mechanical" />
-  <meta property="og:description" content="Book a comprehensive 45-point pre-purchase vehicle inspection. Mobile service anywhere in New Zealand. Don't buy a lemon! 20% of vehicles we inspect are rejected." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.eek.nz/pre-purchase-vehicle-inspection" />
-  <meta property="og:image" content="https://www.eek.nz/lemon.png" />
-
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  
-  <!-- Load base styles from main site -->
-  <link rel="stylesheet" href="/eek-style-guide.css">
-  
-  <!-- Inspection-specific style extensions only -->
-  <style>
-    /* Fallback CSS variables in case main style doesn't load */
-    :root {
-      --brand: #ff5500;
-      --brand2: #ff7700;
-      --purple: #6f42c1;
-      --ok: #28a745;
-      --muted: #6c757d;
-    }
-    
-    /* Extend base styles for inspection form - no duplications */
-    .booking-container{max-width:900px;margin:20px auto;background:#fff;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);overflow:hidden}
-    .booking-header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:30px;text-align:center}
-    .booking-header h2{margin:0 0 10px 0;font-size:2em}
-    .booking-header p{margin:0;font-size:1.1em;opacity:.95}
-    .service-stats{background:rgba(255,255,255,.15);padding:15px;border-radius:8px;margin-top:15px}
-    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:15px;text-align:center}
-    .stat-item{font-size:.9em}.stat-number{font-size:1.8em;font-weight:700;display:block}
-
-    .progress-bar{display:flex;justify-content:space-between;margin:20px 0;padding:0 20px}
-    .progress-step{flex:1;text-align:center;position:relative}
-    .progress-step::before{content:'';width:30px;height:30px;border-radius:50%;background:#ddd;display:block;margin:0 auto 8px}
-    .progress-step.active::before{background:var(--brand)}
-    .progress-step.completed::before{background:var(--ok)}
-    .progress-step span{font-size:.9em;color:#666}
-    .progress-step.active span{color:var(--brand);font-weight:700}
-
-    .booking-steps{padding:30px}
-    .step{display:none;text-align:left}
-    .step.active{display:block}
-    .step h3{color:var(--brand);margin-bottom:20px;font-size:1.4em}
-
-    .location-input,.details-input{width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:1.05em;margin-bottom:20px;box-sizing:border-box}
-    .location-input:focus,.details-input:focus{border-color:var(--brand);outline:none}
-    .details-input{height:120px;resize:vertical}
-
-    .timing-notice{background:#fff3cd;border:2px solid #ffeaa7;border-radius:12px;padding:20px;margin:20px 0;text-align:left}
-    .timing-notice h4{margin:0 0 10px 0;color:#856404}
-    .timing-notice p{margin:8px 0;color:#856404;line-height:1.5}
-
-    .urgency-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;margin:20px 0}
-    .urgency-option{border:2px solid #ddd;border-radius:12px;padding:20px;cursor:pointer;text-align:center;transition:all .3s;background:#fff}
-    .urgency-option:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,85,0,.15)}
-    .urgency-option.selected{border-color:var(--brand);background:linear-gradient(135deg,#fff5f0,#ffe5d9);border-width:3px}
-    .urgency-title{font-weight:700;margin-bottom:8px;font-size:1.1em}
-    .urgency-time{color:var(--brand);font-size:.95em;margin-bottom:8px;font-weight:600}
-    .urgency-description{font-size:.9em;color:#666;margin-bottom:12px}
-    .urgency-price{font-size:1.25em;font-weight:800;color:var(--brand)}
-    .urgency-price.calculating{color:var(--muted);font-size:1em}
-
-    .vehicle-types{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;margin:20px 0}
-    .vehicle-type{border:2px solid #ddd;border-radius:12px;padding:20px;cursor:pointer;text-align:center;transition:all .3s;background:#fff}
-    .vehicle-type:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,85,0,.15)}
-    .vehicle-type.selected{border-color:var(--brand);background:linear-gradient(135deg,#fff5f0,#ffe5d9);border-width:3px}
-    .vehicle-type.popular{border-color:var(--ok);background:linear-gradient(135deg,#f0fff4,#e8ffed)}
-    .vehicle-type.popular.selected{border-color:var(--ok);background:linear-gradient(135deg,#e8ffed,#d4f8da)}
-    .vehicle-type-title{font-weight:700;margin-bottom:8px;font-size:1.1em}
-    .vehicle-type-subtitle{color:#666;font-size:.95em;margin-bottom:8px}
-    .vehicle-type-price{color:var(--brand);font-weight:800;margin-top:8px;font-size:1.1em}
-    .vehicle-type.popular .vehicle-type-price{color:var(--ok)}
-
-    .reservation-summary{background:#e8f4f8;border-radius:8px;padding:20px;margin:20px 0}
-    .reservation-summary h4{margin:0 0 15px 0}
-    .summary-item{display:flex;justify-content:space-between;margin:8px 0;align-items:center}
-    .summary-item strong{color:var(--brand)}
-
-    .terms-section{background:#f8f9fa;border-radius:8px;padding:20px;margin:20px 0;text-align:left}
-    .terms-checkbox{display:flex;align-items:flex-start;gap:10px;margin:15px 0}
-    .terms-checkbox input{margin-top:4px;transform:scale(1.2)}
-    .terms-text{font-size:.95em;line-height:1.5}
-    .terms-text a{color:var(--brand);text-decoration:none}
-    .terms-text a:hover{text-decoration:underline}
-
-    .info-box{background:linear-gradient(135deg,#fff9e6,#fff3cd);border:2px solid #ffd700;border-radius:12px;padding:20px;margin:20px 0;text-align:left;position:relative;box-shadow:0 2px 8px rgba(255,193,7,.15);min-height:0}
-    .info-box:empty{display:none}
-    .info-box::before{content:'💡';position:absolute;top:-10px;left:20px;background:#ffd700;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:14px}
-    .info-box h4{margin:0 0 15px 0;color:#b8860b;font-size:1.2em;font-weight:700}
-    .info-box ul{margin:10px 0;padding-left:20px;color:#b8860b;line-height:1.6}
-    .info-box li{margin:8px 0}
-
-    .contact-info{margin:15px 0}
-    .contact-info label{display:block;margin-bottom:8px;font-weight:700}
-    .contact-info input{width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:1em;margin-bottom:15px;box-sizing:border-box}
-    .contact-info input:focus{border-color:var(--brand);outline:none}
-
-    .button{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:14px 28px;border:none;border-radius:10px;cursor:pointer;font-size:1.1em;font-weight:600;text-decoration:none;display:inline-block;transition:all .3s;margin:10px 5px;box-shadow:0 3px 8px rgba(255,85,0,.2);text-align:center;min-width:160px}
-    .button:hover{background:linear-gradient(135deg,#e04400,#ff6600);transform:translateY(-2px);box-shadow:0 5px 15px rgba(255,85,0,.3)}
-    .button:active{transform:translateY(0);box-shadow:0 2px 5px rgba(255,85,0,.2)}
-    .button.secondary{background:linear-gradient(135deg,#6c757d,#868e96);box-shadow:0 3px 8px rgba(108,117,125,.2)}
-    .button.secondary:hover{background:linear-gradient(135deg,#545b62,#6c757d);box-shadow:0 5px 15px rgba(108,117,125,.3)}
-    .button:disabled{background:#ddd;color:#999;cursor:not-allowed;transform:none;box-shadow:none}
-    .button:disabled:hover{background:#ddd;transform:none;box-shadow:none}
-
-    .breadcrumb {
-      text-align: center;
-      margin: 10px auto;
-      max-width: 800px;
-      color: #666;
-      font-size: 0.9em;
-    }
-
-    .breadcrumb a {
-      color: #007bff;
-      text-decoration: none;
-    }
-
-    .breadcrumb a:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 768px) {
-      .booking-steps{padding:20px}
-      .urgency-options{grid-template-columns:1fr}
-      .vehicle-types{grid-template-columns:1fr}
-      .stats-grid{grid-template-columns:repeat(2,1fr)}
-    }
-  </style>
-</head>
-<body>
-
-<!-- THESE ELEMENTS WILL BE MANAGED BY MASTER CONFIG -->
-<div id="closedBanner" class="after-hours-banner" style="display: none;">
-  <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
-  <div id="afterHoursMessage">
-    <p><strong>Business Hours:</strong></p>
-    <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
-    <p>Saturday - Sunday: 7:00 AM - 12:00 PM</p>
-    <p>Please call during business hours or book online for next available service</p>
-  </div>
-  <div id="tempUnavailableMessage" style="display: none;">
-    <p><strong>We're currently experiencing high demand</strong></p>
-    <p>Our mechanics are fully dispatched on emergency calls</p>
-    <p>Please book online for the next available appointment or try calling again shortly</p>
-    <a href="#service-selection" class="emergency-btn after-hours-btn" data-track="customer_book_online" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
-  </div>
-</div>
-
-<section id="stripePaymentBlock" style="display: none; background-color: #ffffff; padding: 20px; text-align: center; color: #333; border-bottom: 2px solid #ff5500;">
-  <div style="background-color: #f5f5f5; padding: 30px; border-radius: 12px; max-width: 700px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
-    <h1 style="font-size: 2.2em; margin-bottom: 0.5em;">Secure Payment for Inspection</h1>
-    <p style="font-size: 1.2em; margin-bottom: 1.5em;">Complete your payment to schedule your pre-purchase inspection — fast, safe, and secure.</p>
-    <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: #333;">
-      <input type="checkbox" id="termsCheckbox" style="transform: scale(1.5);" />
-      <span>I agree to the Eek Mobile Mechanical terms of service 
-        <a href="https://www.eek.nz/terms" target="_blank" data-track="legal_terms" onclick="this.href='https://www.eek.nz/terms' + window.location.search" style="color: #ff5500; text-decoration: underline;">
-          View terms of use
-        </a>
-      </span>
-    </label>
-    <br><br>
-    <button id="payNowButton" style="display: none; background-color: #ff5500; color: white; padding: 14px 32px; font-size: 1.2em; border: none; border-radius: 8px; cursor: pointer;">
-      Pay Now
-    </button>
-  </div>
-</section>
-
-<!-- HEADER THAT WILL BE MANAGED BY MASTER CONFIG -->
-<header>
-  <img src="/lemon.png" alt="Don't buy a lemon! Eek Mobile Mechanical Pre Purchase Vehicle Inspection" class="eek-brand-image" />
-  <div class="business-name">Eek Mobile Mechanical</div>
-  <h1 id="headerTitle">Don't Buy a Lemon! Pre Purchase Vehicle Inspection</h1>
-  <p class="tagline" id="headerSubtitle">Avoid costly mistakes with our professional vehicle inspection • 45-point inspection • Written report • Mobile service anywhere in NZ</p>
-  <a class="cta-button phone-link" href="tel:0800769000" data-track="header_call">📞 Call <span class="phone-display">0800 769 000</span></a>
-</header>
-
-<div class="breadcrumb">
-  <a href="/" data-track="breadcrumb_home">Home</a> > 
-  <a href="/more-options" data-track="breadcrumb_more_options">More Options</a> > 
-  <span id="breadcrumbText">Pre Purchase Inspection</span>
-</div>
-
-<div class="booking-container">
-  <div class="booking-header" id="bookingHeader">
-    <h2 id="bookingTitle">Don't Buy a Lemon! Book Your Pre Purchase Inspection</h2>
-    <p id="bookingDescription">Professional 45-point certified inspection • Mobile service anywhere in NZ</p>
-    <div class="service-stats">
-      <div class="stats-grid" id="statsContent">
-        <div class="stat-item"><span class="stat-number">20%</span>of vehicles rejected</div>
-        <div class="stat-item"><span class="stat-number">40%</span>have unaddressed recalls</div>
-        <div class="stat-item"><span class="stat-number">25%</span>electrical problems</div>
-        <div class="stat-item"><span class="stat-number">39%</span>buyers overpay</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="progress-bar">
-    <div class="progress-step active" id="step1-progress"><span>Details</span></div>
-    <div class="progress-step" id="step2-progress"><span>Scheduling</span></div>
-    <div class="progress-step" id="step3-progress"><span>Vehicle Type</span></div>
-    <div class="progress-step" id="step4-progress"><span>Confirm</span></div>
-  </div>
-
-  <div class="booking-steps">
-    <!-- Step 1: Service Details -->
-    <div class="step active" id="step1">
-      <h3 id="step1Title">Step 1: Tell us about your inspection</h3>
-
-      <div style="background:#fff3cd;border:2px solid #ffeaa7;border-radius:12px;padding:20px;margin-bottom:20px;text-align:left;">
-        <h4 style="margin:0 0 10px 0;color:#856404;">⚠️ Why You Need This Inspection</h4>
-        <ul style="margin:0;padding-left:20px;color:#856404;">
-          <li><strong>1 in 5 vehicles</strong> we inspect have serious issues (20% rejection rate)</li>
-          <li><strong>Nearly 40%</strong> of used cars have unaddressed safety recalls</li>
-          <li><strong>25% have electrical problems</strong> that can cost thousands</li>
-          <li><strong>39% of buyers overpay</strong> without a professional inspection</li>
-        </ul>
-      </div>
-
-      <div style="background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:20px;">
-        <h4 style="margin:0 0 15px 0;color:#333;">Your Information</h4>
-        <div class="contact-info">
-          <label for="nameInput">Full Name (required)</label>
-          <input type="text" id="nameInput" placeholder="John Smith" required autocomplete="name"/>
-          <label for="phoneInput">Phone Number (required)</label>
-          <input type="tel" id="phoneInput" placeholder="021 234 5678" required inputmode="tel" autocomplete="tel"/>
-          <label for="emailInput">Email Address (required)</label>
-          <input type="email" id="emailInput" placeholder="your.email@example.com" required autocomplete="email"/>
-        </div>
-      </div>
-
-      <div style="background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:20px;">
-        <h4 style="margin:0 0 15px 0;color:#333;">Vehicle Information</h4>
-        <div class="contact-info">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
-            <div>
-              <label for="regoInput">Registration Number</label>
-              <input type="text" id="regoInput" placeholder="ABC123" style="text-transform:uppercase;" autocapitalize="characters" spellcheck="false"/>
-            </div>
-            <div>
-              <label for="yearInput">Year</label>
-              <input type="text" id="yearInput" placeholder="2018" maxlength="4" pattern="\\d{4}" inputmode="numeric"/>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
-            <div>
-              <label for="makeInput">Make</label>
-              <input type="text" id="makeInput" placeholder="Toyota"/>
-            </div>
-            <div>
-              <label for="modelInput">Model</label>
-              <input type="text" id="modelInput" placeholder="Corolla"/>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <label for="locationInput" style="display:block;margin-bottom:8px;font-weight:700;">Where is the vehicle located?</label>
-      <input type="text" class="location-input" id="locationInput" placeholder="Enter address, suburb, or region (e.g. Auckland CBD, Christchurch, Wellington)" required autocomplete="street-address" onblur="checkLocationAvailability()"/>
-      
-      <div id="locationCheckResult" style="display:none;margin:15px 0;padding:15px;border-radius:8px;"></div>
-
-      <label for="detailsInput" style="display:block;margin-bottom:8px;margin-top:15px;font-weight:700;" id="detailsLabel">Vehicle and inspection details:</label>
-      <textarea class="details-input" id="detailsInput" placeholder="e.g., Any specific concerns, dealer or private sale, any known issues, etc."></textarea>
-
-      <div class="info-box" id="serviceInfoBox">
-        <h4>Our Pre-Purchase Inspection Includes:</h4>
-        <ul>
-          <li><strong>Comprehensive certified mechanical inspection</strong> of all major systems</li>
-          <li><strong>45-point inspection checklist</strong> covering engine, brakes, suspension, electrical</li>
-          <li><strong>Written inspection report</strong> with detailed findings delivered same day</li>
-          <li><strong>Professional recommendation</strong> on whether to proceed with purchase</li>
-          <li><strong>Transparent pricing</strong> calculated based on your location and vehicle type</li>
-          <li><strong>Mobile service</strong> - we come to any location in New Zealand (extra km charges may apply for distant locations)</li>
-        </ul>
-      </div>
-
-      <!-- RevU Popup Rating Widget -->
-      <div id="popup-rating-widget">
-        <script id="popup-rating-widget-script" src="https://widget.reviewability.com/js/popupWidget.min.js" data-gfspw="https://app.revu.cloud/popup-pixel/get/1e8ac54d1020ced847d10f515125aa3ff719d1f3" async></script>
-      </div>
-
-      <div style="text-align:center;margin:20px 0;">
-        <button class="button" id="nextBtn" onclick="goToStep2()" data-track="inspection_step1_complete">Next: Select Time</button>
-      </div>
-    </div>
-
-    <!-- Step 2: Scheduling -->
-    <div class="step" id="step2">
-      <h3 id="step2Title">Step 2: When do you need the inspection?</h3>
-
-      <div class="timing-notice" id="timingNotice">
-        <h4>⏰ Inspection Scheduling Information</h4>
-        <p><strong>Time windows are approximate arrival times.</strong> As a mobile service, a previous job may run long. We'll text you when your technician is on the way.</p>
-        <p><strong>Inspection time:</strong> Typically takes 60-90 minutes to complete</p>
-        <p><strong>Report delivery:</strong> Written report delivered same day normally</p>
-      </div>
-      
-      <div class="urgency-options" id="urgencyOptions"></div>
-      
-      <div style="background:#f0f8ff;border:2px solid #87ceeb;border-radius:12px;padding:20px;margin:20px 0;">
-        <h4 style="margin:0 0 15px 0;color:#1e90ff;">🕐 Need a Specific Time?</h4>
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:15px;">
-          <input type="checkbox" id="specificTimeRequest" onchange="toggleSpecificTime()" style="transform:scale(1.2);">
-          <label for="specificTimeRequest" style="font-weight:600;margin:0;">I need a specific appointment time <span style="color:#ff5500;font-weight:700;">(+$39)</span></label>
-        </div>
-        <div id="specificTimeContainer" style="display:none;">
-          <p style="margin:0 0 10px 0;color:#1e90ff;">Select your preferred time:</p>
-          <select id="specificTimeSelect" style="width:100%;padding:10px;border:2px solid #87ceeb;border-radius:6px;font-size:1em;">
-            <option value="">Choose a time...</option>
-          </select>
-          <div id="specificTimeResult" style="display:none;margin-top:15px;padding:15px;border-radius:8px;"></div>
-        </div>
-        <p style="margin:15px 0 0 0;color:#666;font-size:0.9em;font-style:italic;">Time windows are approximate arrival times. As a mobile service, a previous job may run long.</p>
-      </div>
-
-      <div style="margin:20px 0;">
-        <button class="button secondary" onclick="goToStep1()" data-track="inspection_step2_back">Back</button>
-        <button class="button" id="confirmTimeBtn" onclick="goToStep3()" disabled data-track="inspection_step2_complete">Continue</button>
-      </div>
-    </div>
-
-    <!-- Step 3: Vehicle Type -->
-    <div class="step" id="step3">
-      <h3 id="step3Title">Step 3: Vehicle Type</h3>
-      <p style="color:#666;margin-bottom:25px;">Select your vehicle type for accurate inspection pricing:</p>
-
-      <div class="vehicle-types" id="vehicleTypes"></div>
-
-      <div style="margin:20px 0;">
-        <button class="button secondary" onclick="goToStep2()" data-track="inspection_step3_back">Back</button>
-        <button class="button" onclick="goToStep4()" data-track="inspection_step3_complete">Continue to Review</button>
-      </div>
-    </div>
-
-    <!-- Step 4: Confirmation -->
-    <div class="step" id="step4">
-      <h3 id="step4Title">Step 4: Review and confirm</h3>
-
-      <div class="reservation-summary">
-        <h4>Your Inspection Booking</h4>
-        <div class="summary-item"><span>Service:</span><strong id="summaryService">Pre Purchase Vehicle Inspection</strong></div>
-        <div class="summary-item"><span>Location:</span><strong id="summaryLocation"></strong></div>
-        <div class="summary-item"><span>Phone:</span><strong id="summaryPhone"></strong></div>
-        <div class="summary-item"><span>Date & Time:</span><strong id="summaryDateTime"></strong></div>
-        <div class="summary-item"><span>Vehicle Type:</span><strong id="summaryVehicleType"></strong></div>
-        <div class="summary-item"><span>Total Fee:</span><strong id="summaryPrice"></strong></div>
-      </div>
-
-      <div class="timing-notice" id="nextStepsBox" style="background:#e8f8ff;border-color:#bee5eb;">
-        <h4>📱 What happens next?</h4>
-        <p>1. Click "Generate Payment Link" to create your secure payment link</p>
-        <p>2. Complete payment through Stripe's secure checkout</p>
-        <p>3. Receive SMS confirmation with your booking details</p>
-        <p>4. Get a notification when your technician is on the way</p>
-        <p>5. Receive your detailed written report within 24 hours</p>
-      </div>
-
-      <div class="terms-section">
-        <h4>Terms and Conditions</h4>
-        <div class="terms-checkbox">
-          <input type="checkbox" id="termsAgree" onchange="toggleBookingButton()" />
-          <div class="terms-text">
-            I agree to the <a href="/terms" target="_blank" data-track="legal_terms">Eek Mobile Mechanical Terms of Service</a> and understand that:
-            <ul style="margin:10px 0;padding-left:20px;" id="termsList">
-              <li>Comprehensive certified 45-point mechanical inspection</li>
-              <li>Price calculated based on location and vehicle type</li>
-              <li>Written report delivered same day normally</li>
-              <li>Inspection typically takes 60-90 minutes to complete</li>
-              <li>Arrival times are approximate - we will SMS you when the technician is on the way</li>
-              <li>Payment required via secure Stripe checkout</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div style="text-align:center;margin:20px 0;">
-        <div style="display:flex;justify-content:center;gap:15px;flex-wrap:wrap;">
-          <button class="button secondary" onclick="goToStep3()" data-track="inspection_step4_back">Back to Selection</button>
-          <button class="button" id="generatePaymentBtn" onclick="generatePaymentLink()" disabled data-track="inspection_payment_generate">Generate Payment Link</button>
-        </div>
-        <p style="margin:15px 0;color:#666;font-size:.9em;" id="paymentNote">Secure payment processing powered by Stripe</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- THESE WILL BE MANAGED BY MASTER CONFIG -->
-<a id="stripePaymentSticky" class="sticky-payment" href="#" data-track="inspection_payment_sticky">💳 Make Payment</a>
-
-<footer>
-  &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
-  <a href="/privacy" target="_blank" data-track="footer_privacy">Privacy Policy</a> | 
-  <a href="/more-options" data-track="more_options_call">More Options</a>
-</footer>
-
-<a class="sticky-call phone-link" href="tel:0800769000" data-track="sticky_call" id="stickyCallButton">📞 Call <span class="phone-display">0800 769 000</span></a>
-<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" data-track="customer_support" style="display: none; background: #666;">🕐 View Hours</a>
-
-<!-- MASTER CONFIG LOADS FIRST -->
-<script src="/eek-master-config.js"></script>
-
-<!-- INSPECTION-SPECIFIC JAVASCRIPT AFTER MASTER CONFIG -->
-<script>
-console.log('🚀 Pre-purchase inspection form initializing...');
-
-// Wait for master config to be fully loaded
-async function waitForMasterConfig() {
-  while (typeof window.EEK_CONFIG === 'undefined' || typeof window.EEK_STATE === 'undefined') {
-    console.log('⏳ Waiting for master config...');
-    await new Promise(resolve => setTimeout(resolve, 100));
-  }
-  console.log('✅ Master config is ready');
-}
-
-// NZ timezone helpers
-const NZ_TZ = 'Pacific/Auckland';
-function nowNZ(){
-  const parts = new Intl.DateTimeFormat('en-NZ',{
-    timeZone:NZ_TZ,hour12:false,year:'numeric',month:'2-digit',day:'2-digit',
-    hour:'2-digit',minute:'2-digit',second:'2-digit'
-  }).formatToParts(new Date());
-  const get=t=>parts.find(p=>p.type===t).value;
-  return new Date(`${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}:${get('second')}`);
-}
-function fmtDateNZ(d){
-  return d.toLocaleDateString('en-NZ',{timeZone:NZ_TZ,weekday:'long',year:'numeric',month:'long',day:'numeric'});
-}
-function isWeekendNZ(d){ 
-  const g=d.getDay(); 
-  return g===0 || g===6; 
-}
-
-// Booking status tracking - integrated with master config
-const BOOKING_STATUS = {
-  INITIAL: 'inspection_booking_started',
-  DETAILS_COMPLETE: 'inspection_details_complete',
-  TIME_SELECTED: 'inspection_time_selected',
-  VEHICLE_SELECTED: 'inspection_vehicle_selected',
-  TERMS_ACCEPTED: 'inspection_terms_accepted',
-  PAYMENT_PENDING: 'inspection_payment_pending'
-};
-
-// Inspection service configuration
-const inspectionConfig = {
-  title: 'Pre Purchase Vehicle Inspection',
-  subtitle: "Don't buy a lemon! Get a professional inspection",
-  breadcrumb: 'Pre Purchase Inspection',
-  bookingTitle: 'Don\'t Buy a Lemon! Book Your Pre Purchase Inspection',
-  bookingDescription: 'Professional 45-point certified inspection • Mobile service anywhere in NZ',
-  step1Title: 'Step 1: Tell us about your inspection',
-  detailsLabel: 'Vehicle and inspection details:',
-  detailsPlaceholder: 'e.g., Any specific concerns, dealer or private sale, any known issues, etc.',
-  serviceCode: 'INSP',
-  basePrice: {
-    weekday: 199,
-    weekend: 289
-  },
-  urgencyOptions: [
-    {
-      id: 'today',
-      title: 'Today (subject to availability)',
-      time: 'Within 4 hours if available',
-      description: 'Emergency same-day inspection - availability confirmed after booking',
-      priceMultiplier: 1.0,
-      fixedPrice: 289
-    },
-    {
-      id: 'tomorrow',
-      title: 'Tomorrow',
-      time: 'Next business day',
-      description: 'Priority next-day inspection', 
-      priceMultiplier: 1.0,
-      fixedPrice: 239
-    },
-    {
-      id: 'scheduled',
-      title: 'Scheduled Service',
-      time: 'Within 2-3 days',
-      description: 'Standard scheduling',
-      priceMultiplier: 1.0,
-      fixedPrice: 199
-    }
-  ],
-  vehicleTypes: [
-    {
-      id: 'standard',
-      title: 'Standard Vehicle',
-      subtitle: 'Cars, SUVs, Utes under 3500kg',
-      note: 'Most common vehicle type',
-      addon: 0,
-      popular: true
-    },
-    {
-      id: 'commercial',
-      title: 'Commercial Vehicle',
-      subtitle: 'Vans, trucks, heavy vehicles > 3500kg',
-      note: 'Additional inspection time required',
-      addon: 39
-    },
-    {
-      id: 'specialty',
-      title: 'Classic/Specialty Vehicle',
-      subtitle: 'Classics, modified, imports',
-      note: 'Specialist expertise required',
-      addon: 111  // Ensures max total of $400 (289 + 111)
-    }
-  ],
-  terms: [
-    'Comprehensive certified 45-point mechanical inspection',
-    'Price calculated based on location and vehicle type',
-    'Written report with photos provided within 24 hours',
-    'Inspection typically takes 60-90 minutes to complete',
-    'Arrival times are approximate - we will SMS you when the technician is on the way',
-    'Payment required via secure Stripe checkout'
-  ]
-};
-
-// Global state - booking specific only
-let selectedUrgency = null;
-let selectedUrgencyDetails = {};
-let selectedVehicleType = 'standard';
-let vehicleTypeAddon = 0;
-let calculatedPrice = null;
-let specificTimeSurcharge = 0;
-
-// Helper functions
-function sanitizePhone(val){ return (val || '').replace(/\D/g,''); }
-function sanitizeRego(val){ return (val || '').toUpperCase().replace(/[^A-Z0-9]/g,''); }
-function sanitizeText(val){ return (val || '').trim().replace(/\s+/g,' '); }
-
-function buildBookingData(status) {
-  const urlParams = new URLSearchParams(window.location.search);
-  
-  return {
-    eventType: 'booking_update',
-    eventAction: status,
-    timestamp: new Date().toISOString(),
-    
-    // Use master config's session and tracking data
-    sessionId: window.EEK_STATE?.sessionId || localStorage.getItem("eek_session_id"),
-    gclid: window.EEK_STATE?.storedGclidForTracking || localStorage.getItem("eek_gclid") || urlParams.get('gclid') || null,
-    utm: window.EEK_STATE?.utmData || {},
-    
-    // Customer data
-    name: sanitizeText(document.getElementById('nameInput').value),
-    phone: sanitizePhone(document.getElementById('phoneInput').value),
-    email: document.getElementById('emailInput').value.trim(),
-    location: sanitizeText(document.getElementById('locationInput').value),
-    details: document.getElementById('detailsInput').value || '',
-    
-    // Vehicle data
-    rego: sanitizeRego(document.getElementById('regoInput').value),
-    vehicleRego: sanitizeRego(document.getElementById('regoInput').value),
-    year: document.getElementById('yearInput').value.trim(),
-    make: sanitizeText(document.getElementById('makeInput').value),
-    model: sanitizeText(document.getElementById('modelInput').value),
-    
-    // Service data
-    service: 'inspection',
-    serviceCode: inspectionConfig.serviceCode,
-    serviceTitle: inspectionConfig.title,
-    serviceValue: EEK_CONFIG?.SERVICE_VALUES?.inspection_call || 19900,
-    
-    source: 'inspection_booking_form',
-    formVersion: '3.0',
-
-    // Booking specific fields based on step
-    ...(status === BOOKING_STATUS.TIME_SELECTED && {
-      selectedTime: selectedUrgencyDetails.time || '',
-      selectedUrgency: selectedUrgency,
-      urgencyMultiplier: selectedUrgencyDetails.priceMultiplier || 1.0
-    }),
-
-    ...(status === BOOKING_STATUS.VEHICLE_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.PAYMENT_PENDING) && {
-      selectedVehicleType: selectedVehicleType,
-      vehicleTypeAddon: vehicleTypeAddon,
-      specificTimeRequested: document.getElementById('specificTimeRequest')?.checked || false,
-      specificTime: document.getElementById('specificTimeSelect')?.value || null,
-      specificTimeSurcharge: specificTimeSurcharge,
-      calculatedPrice: getTotalPrice(),
-      finalPrice: getTotalPrice()
-    }
-  };
-}
-
-async function sendBookingUpdate(status) {
-  // Use master config's tracking system
-  if (window.sendTrackingEvent && window.buildTrackingPayload) {
-    const payload = window.buildTrackingPayload('booking_update', status, buildBookingData(status));
-    console.log(`📡 Inspection ${status}:`, payload);
-    return await window.sendTrackingEvent(payload);
-  } else {
-    // Fallback to direct API call
-    const data = buildBookingData(status);
-    console.log(`📡 Inspection ${status} (fallback):`, data);
-    
-    try {
-      const apiUrl = window.EEK_CONFIG?.TRACKING_API_URL || 
-                     'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
-      
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(data)
-      });
-      console.log(`✅ API Response: ${response.status}`);
-      return response;
-    } catch (err) {
-      console.error(`❌ Error:`, err);
-    }
-  }
-}
-
-// Track conversions using master config system
-function trackInspectionConversion(step) {
-  if (window.trackConversion) {
-    window.trackConversion(step, 'Inspection Booking');
-  }
-}
-
-// Main initialization function
-async function initializeInspectionForm() {
-  console.log('🚀 Starting inspection form initialization...');
-  
-  // Wait for master config
-  await waitForMasterConfig();
-  
-  const urlParams = new URLSearchParams(window.location.search);
-  const sessionId = urlParams.get('session_id');
-  
-  console.log('📌 Service: Pre Purchase Vehicle Inspection');
-  
-  // Handle session ID - use master config's session management
-  if (sessionId) {
-    window.sessionId = sessionId;
-    localStorage.setItem("eek_session_id", sessionId);
-  } else {
-    window.sessionId = window.EEK_STATE?.sessionId || localStorage.getItem("eek_session_id") || 
-                      `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    localStorage.setItem("eek_session_id", window.sessionId);
-  }
-  
-  // Initialize booking
-  console.log('✅ Initializing inspection with master config integration');
-  loadInspectionConfig();
-  sendBookingUpdate(BOOKING_STATUS.INITIAL);
-  
-  // Track initial page view with inspection context
-  if (window.trackPageView) {
-    window.trackPageView();
-  }
-  
-  console.log('📊 Inspection initialization complete with master config integration');
-}
-
-function loadInspectionConfig() {
-  console.log('⚙️ Loading service:', inspectionConfig.title);
-
-  // Update page content
-  document.title = `${inspectionConfig.title} - Eek Mobile Mechanical`;
-  document.getElementById('headerTitle').textContent = inspectionConfig.title;
-  document.getElementById('headerSubtitle').textContent = inspectionConfig.subtitle;
-  document.getElementById('breadcrumbText').textContent = inspectionConfig.breadcrumb;
-  document.getElementById('bookingTitle').textContent = inspectionConfig.bookingTitle;
-  document.getElementById('bookingDescription').textContent = inspectionConfig.bookingDescription;
-  document.getElementById('step1Title').textContent = inspectionConfig.step1Title;
-  document.getElementById('detailsLabel').textContent = inspectionConfig.detailsLabel;
-  document.getElementById('detailsInput').placeholder = inspectionConfig.detailsPlaceholder;
-
-  // Reset state
-  selectedUrgency = null;
-  selectedUrgencyDetails = {};
-  selectedVehicleType = 'standard';
-  vehicleTypeAddon = 0;
-  calculatedPrice = null;
-  specificTimeSurcharge = 0;
-
-  window.currentService = 'inspection';
-  window.currentConfig = inspectionConfig;
-}
-
-function goToStep1(){
-  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-  document.getElementById('step1').classList.add('active');
-  document.querySelectorAll('.progress-step').forEach(el => el.classList.remove('active','completed'));
-  document.getElementById('step1-progress').classList.add('active');
-}
-
-async function goToStep2(){
-  console.log('📝 Step 1 → 2');
-  
-  // Validate all required fields
-  const name = document.getElementById('nameInput').value.trim();
-  const phone = document.getElementById('phoneInput').value.trim();
-  const email = document.getElementById('emailInput').value.trim();
-  const location = document.getElementById('locationInput').value.trim();
-
-  const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (!name) { alert('Please enter your full name'); document.getElementById('nameInput').focus(); return; }
-  if (!phone || !phoneRegex.test(phone) || phone.replace(/\D/g,'').length < 9) { 
-    alert('Please enter a valid phone number'); document.getElementById('phoneInput').focus(); return; 
-  }
-  if (!email || !emailRegex.test(email)) { 
-    alert('Please enter a valid email address'); document.getElementById('emailInput').focus(); return; 
-  }
-  if (!location) { alert('Please enter the vehicle location'); document.getElementById('locationInput').focus(); return; }
-
-  // Track step completion
-  trackInspectionConversion(BOOKING_STATUS.DETAILS_COMPLETE);
-
-  // Get pricing
-  const btn = document.getElementById('nextBtn');
-  btn.disabled = true;
-  btn.textContent = 'Calculating price...';
-  
-  try {
-    const response = await sendBookingUpdate(BOOKING_STATUS.DETAILS_COMPLETE);
-    
-    if (response?.ok) {
-      const responseText = await response.text();
-      if (responseText) {
-        try {
-          const result = JSON.parse(responseText);
-          if (result.price) {
-            calculatedPrice = result.price;
-          }
-        } catch (e) {
-          // Use default pricing if API response can't be parsed
-        }
-      }
-    }
-  } catch (err) {
-    console.error('Pricing error:', err);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Next: Select Time';
-  }
-
-  // Move to step 2
-  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-  document.getElementById('step2').classList.add('active');
-  document.getElementById('step1-progress').classList.add('completed');
-  document.getElementById('step1-progress').classList.remove('active');
-  document.getElementById('step2-progress').classList.add('active');
-
-  // Setup urgency options
-  setupUrgencyOptions();
-}
-
-function setupUrgencyOptions() {
-  const urgencyContainer = document.getElementById('urgencyOptions');
-  const now = nowNZ();
-  
-  // Check if it's after 4 PM - if so, move everything forward a day
-  const isAfter4PM = now.getHours() >= 16;
-  
-  // Calculate the three days, adjusting for 4 PM cutoff
-  const startDay = isAfter4PM ? 1 : 0; // Start from tomorrow if after 4 PM
-  
-  const day1 = new Date(now);
-  day1.setDate(day1.getDate() + startDay);
-  const day2 = new Date(now);
-  day2.setDate(day2.getDate() + startDay + 1);
-  const day3 = new Date(now);
-  day3.setDate(day3.getDate() + startDay + 2);
-  
-  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  
-  const formatDate = (date) => {
-    return `${dayNames[date.getDay()]} ${date.getDate()} ${monthNames[date.getMonth()]}`;
-  };
-  
-  // Determine labels based on whether we shifted forward
-  const firstLabel = isAfter4PM ? `Tomorrow (${formatDate(day1)})` : `Today (${formatDate(day1)})`;
-  const secondLabel = isAfter4PM ? `${formatDate(day2)}` : `Tomorrow (${formatDate(day2)})`;
-  const thirdLabel = `${formatDate(day3)}`;
-  
-  const options = [
-    {
-      id: isAfter4PM ? 'tomorrow' : 'today',
-      title: firstLabel,
-      time: isAfter4PM ? 'Next business day' : 'Within 4 hours if available',
-      description: isAfter4PM ? 'Priority next-day inspection' : 'Subject to availability - confirmation after booking',
-      price: 289  // Always $289 for first option (emergency pricing)
-    },
-    {
-      id: isAfter4PM ? 'dayafter' : 'tomorrow', 
-      title: secondLabel,
-      time: isAfter4PM ? 'Standard scheduling' : 'Next business day',
-      description: isAfter4PM ? 'Regular appointment booking' : 'Priority next-day inspection',
-      price: 239  // Always $239 for second option
-    },
-    {
-      id: 'dayafter2',
-      title: thirdLabel,
-      time: 'Standard scheduling',
-      description: 'Regular appointment booking', 
-      price: 199  // Always $199 for third option
-    }
-  ];
-  
-  urgencyContainer.innerHTML = options.map(option => {
-    return `
-      <div class="urgency-option" onclick="selectUrgency('${option.id}','${option.title}','${option.time}',${option.price},this)" data-track="inspection_urgency_${option.id}">
-        <div class="urgency-title">${option.title}</div>
-        <div class="urgency-time">${option.time}</div>
-        <div class="urgency-description">${option.description}</div>
-        <div class="urgency-price">$${option.price}</div>
-      </div>`;
-  }).join('');
-}
-
-function selectUrgency(id, title, time, price, el){
-  document.querySelectorAll('.urgency-option.selected').forEach(x => x.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedUrgency = id;
-  selectedUrgencyDetails = { title, time, basePrice: price };
-  
-  // Track interaction with master config
-  if (window.trackInteraction) {
-    window.trackInteraction(el);
-  }
-  
-  document.getElementById('confirmTimeBtn').disabled = false;
-}
-
-async function goToStep3(){
-  console.log('⏰ Step 2 → 3');
-  
-  if (!selectedUrgency) {
-    alert('Please select a service time');
-    return;
-  }
-
-  // Track step completion
-  trackInspectionConversion(BOOKING_STATUS.TIME_SELECTED);
-  await sendBookingUpdate(BOOKING_STATUS.TIME_SELECTED);
-
-  // Move to step 3
-  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-  document.getElementById('step3').classList.add('active');
-  document.getElementById('step2-progress').classList.add('completed');
-  document.getElementById('step2-progress').classList.remove('active');
-  document.getElementById('step3-progress').classList.add('active');
-
-  // Setup vehicle types
-  setupVehicleTypes();
-}
-
-function setupVehicleTypes() {
-  const vehicleContainer = document.getElementById('vehicleTypes');
-  
-  // Get the base price from the selected timing option
-  let basePrice;
-  if (selectedUrgencyDetails && selectedUrgencyDetails.basePrice) {
-    basePrice = selectedUrgencyDetails.basePrice;
-  } else {
-    // Fallback to calculated or default pricing
-    basePrice = calculatedPrice || (isWeekendNZ(nowNZ()) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
-  }
-  
-  console.log('setupVehicleTypes - basePrice:', basePrice, 'selectedUrgencyDetails:', selectedUrgencyDetails, 'specificTimeSurcharge:', specificTimeSurcharge);
-  
-  vehicleContainer.innerHTML = inspectionConfig.vehicleTypes.map(type => {
-    let totalPrice;
-    
-    if (type.id === 'specialty') {
-      totalPrice = 399 + specificTimeSurcharge; // Specialty is always $399 plus any surcharges
-    } else {
-      totalPrice = basePrice + type.addon + specificTimeSurcharge;
-    }
-    
-    const popularClass = type.popular ? 'popular' : '';
-    const selectedClass = type.id === 'standard' ? 'selected' : '';
-    
-    return `
-      <div class="vehicle-type ${popularClass} ${selectedClass}" onclick="selectVehicleType('${type.id}', ${type.addon}, this, ${totalPrice})" data-track="inspection_vehicle_${type.id}">
-        <div class="vehicle-type-title">${type.title}</div>
-        <div class="vehicle-type-subtitle">${type.subtitle}</div>
-        <div class="vehicle-type-note">${type.note}</div>
-        <div class="vehicle-type-price">$${totalPrice}</div>
-      </div>`;
-  }).join('');
-}
-
-function selectVehicleType(type, addon, el, fixedPrice = null){
-  document.querySelectorAll('.vehicle-type.selected').forEach(x=>x.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedVehicleType = type;
-  
-  // Track interaction with master config
-  if (window.trackInteraction) {
-    window.trackInteraction(el);
-  }
-  
-  if (type === 'specialty') {
-    // Calculate addon needed to reach $399 using the correct base price
-    let basePrice;
-    if (selectedUrgencyDetails && selectedUrgencyDetails.basePrice) {
-      basePrice = selectedUrgencyDetails.basePrice;
-    } else {
-      basePrice = calculatedPrice || (isWeekendNZ(nowNZ()) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
-    }
-    vehicleTypeAddon = 399 - basePrice;
-    console.log('Specialty selected - basePrice:', basePrice, 'addon:', vehicleTypeAddon);
-  } else {
-    vehicleTypeAddon = addon;
-    console.log('Non-specialty selected - type:', type, 'addon:', addon);
-  }
-}
-
-async function goToStep4(){
-  console.log('🚗 Step 3 → 4');
-  
-  // Track step completion
-  trackInspectionConversion(BOOKING_STATUS.VEHICLE_SELECTED);
-  await sendBookingUpdate(BOOKING_STATUS.VEHICLE_SELECTED);
-  
-  document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-  document.getElementById('step4').classList.add('active');
-  document.getElementById('step3-progress').classList.add('completed');
-  document.getElementById('step3-progress').classList.remove('active');
-  document.getElementById('step4-progress').classList.add('active');
-  
-  updateSummary();
-}
-
-function getTotalPrice(){
-  // Get the base price from the selected timing option
-  let basePrice;
-  if (selectedUrgencyDetails && selectedUrgencyDetails.basePrice) {
-    basePrice = selectedUrgencyDetails.basePrice;
-  } else {
-    basePrice = calculatedPrice || (isWeekendNZ(nowNZ()) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
-  }
-  
-  let total;
-  if (selectedVehicleType === 'specialty') {
-    // Specialty vehicles are always $399 plus any surcharges
-    total = 399 + specificTimeSurcharge;
-  } else {
-    // Normal calculation for other vehicle types
-    total = basePrice + vehicleTypeAddon + specificTimeSurcharge;
-  }
-  
-  console.log('getTotalPrice - basePrice:', basePrice, 'addon:', vehicleTypeAddon, 'surcharge:', specificTimeSurcharge, 'total:', total);
-  return total;
-}
-
-function updateSummary(){
-  document.getElementById('summaryService').textContent = inspectionConfig.title;
-  document.getElementById('summaryLocation').textContent = document.getElementById('locationInput').value;
-  document.getElementById('summaryPhone').textContent = sanitizePhone(document.getElementById('phoneInput').value);
-  
-  const dateTimeText = selectedUrgencyDetails.time ? 
-    `${selectedUrgencyDetails.title} - ${selectedUrgencyDetails.time}` : 'Not selected';
-  document.getElementById('summaryDateTime').textContent = dateTimeText;
-  
-  const vehicleType = inspectionConfig.vehicleTypes.find(v => v.id === selectedVehicleType);
-  const vehicleText = vehicleType ? 
-    `${vehicleType.title}${vehicleTypeAddon > 0 ? ` (+$${vehicleTypeAddon})` : ''}` : 'Standard Vehicle';
-  document.getElementById('summaryVehicleType').textContent = vehicleText;
-  
-  document.getElementById('summaryPrice').textContent = `$${getTotalPrice()}`;
-}
-
-function toggleBookingButton(){
-  const isChecked = document.getElementById('termsAgree').checked;
-  document.getElementById('generatePaymentBtn').disabled = !isChecked;
-  
-  if (isChecked) {
-    // Track terms acceptance
-    trackInspectionConversion(BOOKING_STATUS.TERMS_ACCEPTED);
-    sendBookingUpdate(BOOKING_STATUS.TERMS_ACCEPTED);
-  }
-}
-
-function buildRedirectUrl(){
-  const baseUrl = 'https://www.eek.nz/thanks';
-  const params = new URLSearchParams();
-  const urlParams = new URLSearchParams(window.location.search);
-
-  // Basic customer data
-  params.append('name', sanitizeText(document.getElementById('nameInput').value));
-  params.append('phone', sanitizePhone(document.getElementById('phoneInput').value));
-  params.append('email', document.getElementById('emailInput').value.trim());
-  params.append('location', sanitizeText(document.getElementById('locationInput').value));
-  params.append('rego', sanitizeRego(document.getElementById('regoInput').value));
-  params.append('year', document.getElementById('yearInput').value.trim());
-  params.append('make', sanitizeText(document.getElementById('makeInput').value));
-  params.append('model', sanitizeText(document.getElementById('modelInput').value));
-  
-  // Service data
-  params.append('service', 'inspection');
-  params.append('serviceCode', inspectionConfig.serviceCode);
-  params.append('serviceTitle', inspectionConfig.title);
-  params.append('price', getTotalPrice());
-  params.append('details', document.getElementById('detailsInput').value || '');
-  params.append('scheduledDate', fmtDateNZ(nowNZ()));
-  params.append('timeWindow', selectedUrgencyDetails.time || '');
-  params.append('urgencyLevel', selectedUrgency || 'scheduled');
-  params.append('vehicleType', selectedVehicleType);
-  params.append('vehicleAddon', vehicleTypeAddon);
-  params.append('bookingTime', new Date().toISOString());
-  
-  // Tracking data from master config
-  const gclid = window.EEK_STATE?.storedGclidForTracking || localStorage.getItem("eek_gclid") || urlParams.get('gclid');
-  if (gclid) params.append('gclid', gclid);
-  if (window.sessionId) params.append('session_id', window.sessionId);
-
-  return `${baseUrl}?${params.toString()}`;
-}
-
-async function generatePaymentLink(){
-  if (!document.getElementById('termsAgree').checked) {
-    alert('Please accept the terms and conditions');
-    return;
-  }
-
-  const btn = document.getElementById('generatePaymentBtn');
-  btn.disabled = true;
-  btn.classList.add('processing');
-  
-  // Track payment generation attempt
-  trackInspectionConversion(BOOKING_STATUS.PAYMENT_PENDING);
-  await sendBookingUpdate(BOOKING_STATUS.PAYMENT_PENDING);
-  
-  btn.textContent = 'Generating Link';
-
-  const total = getTotalPrice();
-  const vehicleDescription = [
-    sanitizeRego(document.getElementById('regoInput').value),
-    document.getElementById('yearInput').value.trim(),
-    sanitizeText(document.getElementById('makeInput').value),
-    sanitizeText(document.getElementById('modelInput').value)
-  ].filter(Boolean).join(' ') || 'Vehicle details not provided';
-
-  const bookingData = {
-    rego: sanitizeRego(document.getElementById('regoInput').value) || 'Not provided',
-    amount: total * 100,
-    currency: 'NZD',
-    description: `Pre Purchase Vehicle Inspection - ${vehicleDescription} - ${document.getElementById('locationInput').value}`,
-    redirectUrl: buildRedirectUrl(),
-    customerData: {
-      name: sanitizeText(document.getElementById('nameInput').value),
-      phone: sanitizePhone(document.getElementById('phoneInput').value),
-      email: document.getElementById('emailInput').value.trim(),
-      location: sanitizeText(document.getElementById('locationInput').value),
-      vehicleRego: sanitizeRego(document.getElementById('regoInput').value),
-      vehicleYear: document.getElementById('yearInput').value.trim(),
-      vehicleMake: sanitizeText(document.getElementById('makeInput').value),
-      vehicleModel: sanitizeText(document.getElementById('modelInput').value),
-      vehicleDescription,
-      service: 'inspection',
-      serviceCode: inspectionConfig.serviceCode,
-      serviceTitle: inspectionConfig.title,
-      details: document.getElementById('detailsInput').value || 'No additional details provided',
-      price: `${total}`,
-      selectedVehicleType: selectedVehicleType,
-      vehicleTypeAddon: vehicleTypeAddon,
-      bookingDateTime: nowNZ().toLocaleString('en-NZ', { timeZone: NZ_TZ }),
-      scheduledDate: fmtDateNZ(nowNZ()),
-      scheduledTime: selectedUrgencyDetails.time || '',
-      urgencyLevel: selectedUrgency || 'scheduled',
-      gclid: window.EEK_STATE?.storedGclidForTracking || localStorage.getItem("eek_gclid"),
-      sessionId: window.sessionId
-    }
-  };
-
-  try {
-    // Use the correct API URL from master config
-    const apiUrl = window.EEK_CONFIG?.PRICING_API_URL || 
-                   'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
-    
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(bookingData)
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-      if (result.url) {
-        btn.classList.remove('processing');
-        btn.style.display = 'none';
-        
-        const successDiv = document.createElement('div');
-        successDiv.style.cssText = 'background:#d4edda;border:2px solid #28a745;padding:20px;border-radius:8px;margin-top:20px;';
-        successDiv.innerHTML = `
-          <h4 style="color:#155724;margin:0 0 15px 0;">✓ Payment Link Generated Successfully!</h4>
-          <p style="color:#155724;margin:10px 0;">Your secure payment link is ready:</p>
-          <a href="${result.url}" class="button" style="background:#28a745;font-size:1.2em;padding:15px 30px;display:inline-block;margin:10px 0;" data-track="inspection_payment_complete">
-            Complete Payment ($${total})
-          </a>
-          <p style="color:#666;font-size:.9em;margin-top:15px;">After payment, you'll receive an SMS confirmation with your inspection details.</p>`;
-        btn.parentElement.appendChild(successDiv);
-        
-        // Track successful payment link generation
-        if (window.trackConversion) {
-          window.trackConversion('inspection_payment_link_generated', 'Inspection Booking');
-        }
-        
-        setTimeout(() => { window.location.href = result.url; }, 3000);
-      } else {
-        throw new Error('No payment URL received');
-      }
-    } else {
-      throw new Error('Server returned ' + response.status);
-    }
-  } catch (err) {
-    console.error('Payment link error:', err);
-    btn.disabled = false;
-    btn.classList.remove('processing');
-    btn.textContent = 'Generate Payment Link';
-    alert('Unable to generate payment link automatically.\n\nPlease call us at 0800 769 000 or try refreshing the page.');
-  }
-}
-
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', initializeInspectionForm);
-
-// Location availability checking
-function checkLocationAvailability() {
-  const location = document.getElementById('locationInput').value.trim();
-  const resultDiv = document.getElementById('locationCheckResult');
-  
-  if (!location) {
-    resultDiv.style.display = 'none';
-    return;
-  }
-  
-  // Show checking state
-  resultDiv.style.display = 'block';
-  resultDiv.style.background = '#fff3cd';
-  resultDiv.style.border = '2px solid #ffeaa7';
-  resultDiv.innerHTML = '🔍 Checking service availability for your location...';
-  
-  // Simulate checking delay
-  setTimeout(() => {
-    resultDiv.style.background = '#d4edda';
-    resultDiv.style.border = '2px solid #28a745';
-    resultDiv.innerHTML = '✅ Great! We service your area. Mobile inspection available at your location.';
-  }, 1500);
-}
-
-// Specific time functionality
-function toggleSpecificTime() {
-  const checkbox = document.getElementById('specificTimeRequest');
-  const container = document.getElementById('specificTimeContainer');
-  const select = document.getElementById('specificTimeSelect');
-  
-  if (checkbox.checked) {
-    container.style.display = 'block';
-    specificTimeSurcharge = 39; // $39 surcharge for specific time
-    populateTimeSlots();
-    updateVehicleTypePricing(); // Update pricing to reflect surcharge
-    
-    // Track specific time request
-    if (window.trackInteraction) {
-      window.trackInteraction(checkbox);
-    }
-  } else {
-    container.style.display = 'none';
-    specificTimeSurcharge = 0;
-    document.getElementById('specificTimeResult').style.display = 'none';
-    updateVehicleTypePricing(); // Update pricing to remove surcharge
-  }
-}
-
-function updateVehicleTypePricing() {
-  // If we're on step 3 and vehicle types are already displayed, refresh them
-  if (document.getElementById('step3').classList.contains('active')) {
-    setupVehicleTypes();
-  }
-}
-
-function populateTimeSlots() {
-  const select = document.getElementById('specificTimeSelect');
-  const times = [];
-  
-  // Generate time slots from 7:00 AM to 5:00 PM (every 30 minutes)
-  for (let hour = 7; hour <= 17; hour++) {
-    for (let minute = 0; minute < 60; minute += 30) {
-      if (hour === 17 && minute > 0) break; // Stop at 5:00 PM
-      
-      const time24 = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-      const hour12 = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
-      const ampm = hour >= 12 ? 'PM' : 'AM';
-      const time12 = `${hour12}:${minute.toString().padStart(2, '0')} ${ampm}`;
-      
-      times.push({ value: time24, display: time12 });
-    }
-  }
-  
-  select.innerHTML = '<option value="">Choose a time...</option>' + 
-    times.map(t => `<option value="${t.value}">${t.display}</option>`).join('');
-  
-  select.onchange = function() {
-    if (this.value) {
-      const resultDiv = document.getElementById('specificTimeResult');
-      resultDiv.style.display = 'block';
-      resultDiv.style.background = '#fff3cd';
-      resultDiv.style.border = '2px solid #ffeaa7';
-      resultDiv.innerHTML = '⏳ Checking availability for ' + times.find(t => t.value === this.value).display + '...';
-      
-      setTimeout(() => {
-        resultDiv.style.background = '#d4edda';
-        resultDiv.style.border = '2px solid #28a745';
-        resultDiv.innerHTML = '✅ Perfect! We can accommodate ' + times.find(t => t.value === this.value).display + '. Time windows are approximate arrival times. As a mobile service, a previous job may run long.';
-      }, 2000);
-    }
-  };
-}
-
-// Mark that inspection script is loaded (for master config)
-window.inspectionFormLoaded = true;
-console.log('✅ Inspection form script loaded and ready with full master config integration');
-</script>
-
-</body>
-</html>
+<!-- Power Automate Optimized Email Template - Location Object Fix -->
+<table cellpadding="0" cellspacing="0" border="0" style="background-color: #f4f4f4; margin: 0; padding: 0; width: 100%;">
+    <tbody><tr>
+        <td style="padding: 0;">
+            <table cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; margin: 0 auto; max-width: 800px; width: 100%;">
+                
+                <!-- Header -->
+                <tbody><tr>
+                    <td style="background-color: #007bff; color: white; padding: 20px; text-align: center;">
+                        <h1 style="margin: 0 0 10px 0; font-size: 24px; font-family: Arial, sans-serif;">Eek Mobile Mechanical</h1>
+                        <h2 style="margin: 0 0 10px 0; font-size: 18px; font-family: Arial, sans-serif; font-weight: normal;">
+                            @{coalesce(body('Parse_JSON')?['serviceTitle'], body('Parse_JSON')?['eventAction'], 'Website Interaction')}
+                        </h2>
+                        <div style="background-color: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 15px; display: inline-block; font-size: 14px; font-family: Arial, sans-serif;">
+                            @{coalesce(body('Parse_JSON')?['bookingStatus'], body('Parse_JSON')?['eventAction'], 'INTERACTION LOGGED')}
+                        </div>
+                        <div style="margin-top: 10px; font-size: 12px; opacity: 0.9;">
+                            Session: @{substring(coalesce(body('Parse_JSON')?['sessionId'], 'Unknown'), 0, 25)}...
+                        </div>
+                    </td>
+                </tr>
+                
+                <!-- Status Bar -->
+                <tr>
+                    <td style="background-color: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; color: #0d47a1; font-family: Arial, sans-serif; font-size: 14px;">
+                        <div style="margin-bottom: 8px;">
+                            <strong>Event:</strong> @{coalesce(body('Parse_JSON')?['eventType'], 'Unknown')} - @{coalesce(body('Parse_JSON')?['eventAction'], 'Unknown')} (Sequence: @{coalesce(body('Parse_JSON')?['eventSequence'], 'N/A')})
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <strong>Source:</strong> @{coalesce(body('Parse_JSON')?['source'], 'Unknown')} | Form Version: @{coalesce(body('Parse_JSON')?['formVersion'], 'N/A')}
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <strong>Device:</strong> @{coalesce(body('Parse_JSON')?['device']?['deviceType'], if(coalesce(body('Parse_JSON')?['device']?['mobile'], false), 'Mobile', 'Desktop'))} | @{coalesce(body('Parse_JSON')?['device']?['operatingSystem'], 'Unknown')} | @{coalesce(body('Parse_JSON')?['device']?['browser'], 'Unknown')}
+                        </div>
+                        <div>
+                            <strong>Timestamp:</strong> @{coalesce(body('Parse_JSON')?['timestamp'], 'N/A')} | NZ Time: @{coalesce(body('Parse_JSON')?['business']?['nzTime'], 'N/A')}
+                        </div>
+                    </td>
+                </tr>
+                
+                <!-- Customer Information -->
+                <tr>
+                    <td style="padding: 20px;">
+                        <table cellpadding="8" cellspacing="0" border="1" style="background-color: #f8f9fa; border-color: #dee2e6; font-family: Arial, sans-serif; font-size: 14px; width: 100%;">
+                            <tbody><tr>
+                                <td colspan="2" style="background-color: #e9ecef; font-weight: bold; font-size: 16px; color: #333;">
+                                    @{if(not(empty(body('Parse_JSON')?['name'])), 'Customer Details', 'Visitor Information')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Name:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['name'], 'Anonymous')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Phone:</td>
+                                <td style="color: #333;">
+                                    @{coalesce(body('Parse_JSON')?['phone'], 'N/A')} (@{coalesce(body('Parse_JSON')?['phoneNumberType'], 'unknown')})
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Email:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['email'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Details:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['details'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Visit Type:</td>
+                                <td style="color: #333;">
+                                    @{if(coalesce(body('Parse_JSON')?['visit']?['isFirstVisit'], coalesce(body('Parse_JSON')?['isFirstVisit'], false)), 'First Visit', 'Return Visit')} | 
+                                    @{coalesce(body('Parse_JSON')?['visitType'], 'N/A')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Visit Summary:</td>
+                                <td style="color: #333;">
+                                    Visit #@{coalesce(body('Parse_JSON')?['behavior']?['visitCount'], body('Parse_JSON')?['visit']?['visitCount'], '0')} | 
+                                    Session #@{coalesce(body('Parse_JSON')?['behavior']?['sessionCount'], '0')} | 
+                                    @{coalesce(body('Parse_JSON')?['behavior']?['pageViewCount'], body('Parse_JSON')?['visit']?['pageViewCount'], '0')} pages viewed
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Session Duration:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['visit']?['sessionDuration'], '0')}s</td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+
+                <!-- Location & Geographic Data -->
+                <tr>
+                    <td style="padding: 20px;">
+                        <table cellpadding="8" cellspacing="0" border="1" style="background-color: #e8f5e8; border-color: #4caf50; font-family: Arial, sans-serif; font-size: 14px; width: 100%;">
+                            <tbody><tr>
+                                <td colspan="2" style="background-color: #c8e6c8; font-weight: bold; font-size: 16px; color: #333;">
+                                    Location & Geographic Data
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Timezone:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['location']?['timezone'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Timezone Offset:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['location']?['timezoneOffset'], 'N/A')} | @{coalesce(body('Parse_JSON')?['location']?['timezoneAbbr'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Local Time:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['location']?['localTime'], 'N/A')} (@{coalesce(body('Parse_JSON')?['location']?['localTimeFormat'], 'N/A')})</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Weekday:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['location']?['weekday'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Locale:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['location']?['locale'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Language:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['location']?['language'], coalesce(body('Parse_JSON')?['device']?['language'], 'N/A'))}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Languages:</td>
+                                <td style="color: #333;">@{join(coalesce(body('Parse_JSON')?['location']?['languages'], coalesce(body('Parse_JSON')?['device']?['languages'], createArray('N/A'))), ', ')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Currency:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['location']?['currency'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Connection Type:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['location']?['connectionType'], coalesce(body('Parse_JSON')?['connection']?['type'], 'N/A'))}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">ISP Data:</td>
+                                <td style="color: #333;">
+                                    Type: @{coalesce(body('Parse_JSON')?['location']?['isp']?['effectiveType'], 'N/A')} | 
+                                    Speed: @{coalesce(body('Parse_JSON')?['location']?['isp']?['downlink'], 'N/A')}Mbps | 
+                                    RTT: @{coalesce(body('Parse_JSON')?['location']?['isp']?['rtt'], 'N/A')}ms
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Screen Resolution:</td>
+                                <td style="color: #333;">
+                                    @{coalesce(body('Parse_JSON')?['location']?['screenResolution']?['width'], 'N/A')}x@{coalesce(body('Parse_JSON')?['location']?['screenResolution']?['height'], 'N/A')} | 
+                                    Ratio: @{coalesce(body('Parse_JSON')?['location']?['screenResolution']?['pixelRatio'], 'N/A')} | 
+                                    Color: @{coalesce(body('Parse_JSON')?['location']?['screenResolution']?['colorDepth'], 'N/A')}bit
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Device Orientation:</td>
+                                <td style="color: #333;">
+                                    Angle: @{coalesce(body('Parse_JSON')?['location']?['deviceOrientation']?['angle'], 'N/A')} | 
+                                    Type: @{coalesce(body('Parse_JSON')?['location']?['deviceOrientation']?['type'], 'N/A')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Referrer Domain:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['location']?['referrerDomain'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Campaign Geo:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['location']?['campaignGeo'], 'N/A')}</td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+
+                <!-- Attribution & Traffic Data -->
+                <tr>
+                    <td style="padding: 20px;">
+                        <table cellpadding="8" cellspacing="0" border="1" style="background-color: #fff3cd; border-color: #ffc107; font-family: Arial, sans-serif; font-size: 14px; width: 100%;">
+                            <tbody><tr>
+                                <td colspan="2" style="background-color: #ffeaa7; font-weight: bold; font-size: 16px; color: #333;">
+                                    Attribution & Traffic Data
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">GCLID Value:</td>
+                                <td style="color: #333; word-break: break-all; font-family: monospace; font-size: 12px;">
+                                    @{if(not(empty(body('Parse_JSON')?['gclid'])), body('Parse_JSON')?['gclid'], 'Not Available')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">GCLID Status:</td>
+                                <td style="color: #333;">
+                                    Current: @{if(coalesce(body('Parse_JSON')?['hasCurrentGclid'], false), 'Yes', 'No')} | 
+                                    Stored: @{if(coalesce(body('Parse_JSON')?['hasStoredGclid'], false), 'Yes', 'No')} | 
+                                    Age: @{coalesce(body('Parse_JSON')?['gclidAge'], 'N/A')} days
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Token Status:</td>
+                                <td style="color: #333;">Current Token: @{if(coalesce(body('Parse_JSON')?['hasCurrentToken'], false), 'Yes', 'No')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">UTM Source:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['utm']?['utm_source'], 'Direct')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">UTM Medium:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['utm']?['utm_medium'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">UTM Campaign:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['utm']?['utm_campaign'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">UTM Term:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['utm']?['utm_term'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">UTM Content:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['utm']?['utm_content'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Other Tracking:</td>
+                                <td style="color: #333;">
+                                    FBCLID: @{coalesce(body('Parse_JSON')?['utm']?['fbclid'], 'N/A')} | 
+                                    MSCLKID: @{coalesce(body('Parse_JSON')?['utm']?['msclkid'], 'N/A')} | 
+                                    TTCLID: @{coalesce(body('Parse_JSON')?['utm']?['ttclid'], 'N/A')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Google Ads Data:</td>
+                                <td style="color: #333;">
+                                    GAD Source: @{coalesce(body('Parse_JSON')?['utm']?['gad_source'], 'N/A')} | 
+                                    Campaign ID: @{coalesce(body('Parse_JSON')?['utm']?['campaignid'], 'N/A')} | 
+                                    AdGroup ID: @{coalesce(body('Parse_JSON')?['utm']?['adgroupid'], 'N/A')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Keywords:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['utm']?['keyword'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Page Referrer:</td>
+                                <td style="color: #333; word-break: break-all;">
+                                    @{coalesce(body('Parse_JSON')?['page']?['referrer'], 'Direct')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Landing Page:</td>
+                                <td style="color: #333; word-break: break-all;">@{coalesce(body('Parse_JSON')?['landingPage'], 'N/A')}</td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+                
+                <!-- Service & Vehicle Information -->
+                <tr>
+                    <td style="padding: 20px;">
+                        <table cellpadding="8" cellspacing="0" border="1" style="background-color: #e1f5fe; border-color: #0288d1; font-family: Arial, sans-serif; font-size: 14px; width: 100%;">
+                            <tbody><tr>
+                                <td colspan="2" style="background-color: #b3e5fc; font-weight: bold; font-size: 16px; color: #333;">
+                                    Service & Vehicle Information
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Service:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['service'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Service Code:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['serviceCode'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Service Title:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['serviceTitle'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Service Value:</td>
+                                <td style="color: #333;">$@{div(coalesce(body('Parse_JSON')?['serviceValue'], 0), 100)}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Registration:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['rego'], coalesce(body('Parse_JSON')?['vehicleRego'], 'N/A'))}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Vehicle:</td>
+                                <td style="color: #333;">
+                                    @{trim(concat(coalesce(body('Parse_JSON')?['year'], ''), ' ', coalesce(body('Parse_JSON')?['make'], ''), ' ', coalesce(body('Parse_JSON')?['model'], '')))}
+                                </td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+
+                <!-- Page & Interaction Data -->
+                <tr>
+                    <td style="padding: 20px;">
+                        <table cellpadding="8" cellspacing="0" border="1" style="background-color: #f3e5f5; border-color: #9c27b0; font-family: Arial, sans-serif; font-size: 14px; width: 100%;">
+                            <tbody><tr>
+                                <td colspan="2" style="background-color: #e1bee7; font-weight: bold; font-size: 16px; color: #333;">
+                                    Page & Interaction Data
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Page Title:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['page']?['title'], 'Unknown')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">URL:</td>
+                                <td style="color: #333; word-break: break-all;">@{coalesce(body('Parse_JSON')?['page']?['url'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Path:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['page']?['path'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Search Parameters:</td>
+                                <td style="color: #333; word-break: break-all;">@{coalesce(body('Parse_JSON')?['page']?['search'], 'None')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Hash:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['page']?['hash'], 'None')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Domain:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['page']?['domain'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Protocol:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['page']?['protocol'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Page Type:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['pageType'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Previous Page:</td>
+                                <td style="color: #333; word-break: break-all;">@{coalesce(body('Parse_JSON')?['visit']?['previousPage'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Viewport:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['page']?['viewport']?['width'], 'N/A')}x@{coalesce(body('Parse_JSON')?['page']?['viewport']?['height'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Scroll Position:</td>
+                                <td style="color: #333;">
+                                    X: @{coalesce(body('Parse_JSON')?['page']?['scroll']?['x'], '0')}, 
+                                    Y: @{coalesce(body('Parse_JSON')?['page']?['scroll']?['y'], '0')} | 
+                                    Max: @{coalesce(body('Parse_JSON')?['page']?['scroll']?['maxX'], '0')}x@{coalesce(body('Parse_JSON')?['page']?['scroll']?['maxY'], '0')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Page Interaction:</td>
+                                <td style="color: #333;">
+                                    Time on Page: @{div(coalesce(body('Parse_JSON')?['page']?['timeOnPage'], 0), 1000)}s | 
+                                    Focus Time: @{div(coalesce(body('Parse_JSON')?['page']?['focusTime'], 0), 1000)}s | 
+                                    Clicks: @{coalesce(body('Parse_JSON')?['page']?['clickCount'], '0')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Scroll Percentage:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['page']?['scrollPercentage'], '0')}%</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Load Time:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['loadTime'], coalesce(body('Parse_JSON')?['visit']?['pageLoadTime'], 'N/A'))}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Time on Current Page:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['visit']?['timeOnCurrentPage'], '0')}s</td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+
+                <!-- Behavioral & Engagement Data -->
+                <tr>
+                    <td style="padding: 20px;">
+                        <table cellpadding="8" cellspacing="0" border="1" style="background-color: #ffebee; border-color: #f44336; font-family: Arial, sans-serif; font-size: 14px; width: 100%;">
+                            <tbody><tr>
+                                <td colspan="2" style="background-color: #ffcdd2; font-weight: bold; font-size: 16px; color: #333;">
+                                    Behavioral & Engagement Data
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Engagement Score:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['behavior']?['engagementScore'], '0')}/100</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Time to First Interaction:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['behavior']?['timeToFirstInteraction'], 'N/A')}s</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Bounce Candidate:</td>
+                                <td style="color: #333;">@{if(coalesce(body('Parse_JSON')?['behavior']?['bounceCandidate'], false), 'Yes', 'No')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">First Visit:</td>
+                                <td style="color: #333;">@{if(coalesce(body('Parse_JSON')?['isFirstVisit'], coalesce(body('Parse_JSON')?['visit']?['isFirstVisit'], false)), 'Yes', 'No')}</td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+
+                <!-- Business Status -->
+                <tr>
+                    <td style="padding: 20px;">
+                        <table cellpadding="8" cellspacing="0" border="1" style="background-color: #e8f5e8; border-color: #4caf50; font-family: Arial, sans-serif; font-size: 14px; width: 100%;">
+                            <tbody><tr>
+                                <td colspan="2" style="background-color: #c8e6c8; font-weight: bold; font-size: 16px; color: #333;">
+                                    Business Status
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">System Status:</td>
+                                <td style="color: #333;">@{if(coalesce(body('Parse_JSON')?['business']?['systemActive'], false), 'Active', 'Inactive')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Business Hours:</td>
+                                <td style="color: #333;">
+                                    During Hours: @{if(coalesce(body('Parse_JSON')?['business']?['duringBusinessHours'], false), 'Yes', 'No')} | 
+                                    Local Hours: @{if(coalesce(body('Parse_JSON')?['business']?['localBusinessHours'], false), 'Yes', 'No')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Day of Week:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['business']?['dayOfWeek'], 'N/A')} | Weekend: @{if(coalesce(body('Parse_JSON')?['business']?['isWeekend'], false), 'Yes', 'No')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Hour of Day:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['business']?['hourOfDay'], 'N/A')}</td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+
+                <!-- Device & Technical Details -->
+                <tr>
+                    <td style="padding: 20px;">
+                        <table cellpadding="8" cellspacing="0" border="1" style="background-color: #f3e5f5; border-color: #9c27b0; font-family: Arial, sans-serif; font-size: 14px; width: 100%;">
+                            <tbody><tr>
+                                <td colspan="2" style="background-color: #e1bee7; font-weight: bold; font-size: 16px; color: #333;">
+                                    Device & Technical Details
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">User Agent:</td>
+                                <td style="color: #333; word-break: break-all; font-size: 12px;">@{coalesce(body('Parse_JSON')?['device']?['userAgent'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Platform:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['device']?['platform'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Mobile Device:</td>
+                                <td style="color: #333;">@{if(coalesce(body('Parse_JSON')?['device']?['mobile'], false), 'Yes', 'No')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Touchscreen:</td>
+                                <td style="color: #333;">@{if(coalesce(body('Parse_JSON')?['device']?['touchscreen'], false), 'Yes', 'No')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Screen Resolution:</td>
+                                <td style="color: #333;">
+                                    @{coalesce(body('Parse_JSON')?['device']?['screen']?['width'], 'N/A')}x@{coalesce(body('Parse_JSON')?['device']?['screen']?['height'], 'N/A')} | 
+                                    Available: @{coalesce(body('Parse_JSON')?['device']?['screen']?['availWidth'], 'N/A')}x@{coalesce(body('Parse_JSON')?['device']?['screen']?['availHeight'], 'N/A')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Color Depth:</td>
+                                <td style="color: #333;">
+                                    @{coalesce(body('Parse_JSON')?['device']?['screen']?['colorDepth'], 'N/A')} bit | 
+                                    Pixel Depth: @{coalesce(body('Parse_JSON')?['device']?['screen']?['pixelDepth'], 'N/A')} bit
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Pixel Ratio:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['device']?['screen']?['pixelRatio'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Device Orientation:</td>
+                                <td style="color: #333;">
+                                    Angle: @{coalesce(body('Parse_JSON')?['device']?['screen']?['orientation'], 'N/A')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Hardware:</td>
+                                <td style="color: #333;">
+                                    CPU Cores: @{coalesce(body('Parse_JSON')?['device']?['hardwareConcurrency'], 'N/A')} | 
+                                    RAM: @{coalesce(body('Parse_JSON')?['device']?['deviceMemory'], 'N/A')}GB | 
+                                    Touch Points: @{coalesce(body('Parse_JSON')?['device']?['maxTouchPoints'], 'N/A')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Browser Capabilities:</td>
+                                <td style="color: #333;">
+                                    Cookies: @{if(coalesce(body('Parse_JSON')?['device']?['cookieEnabled'], false), 'Yes', 'No')} | 
+                                    Java: @{if(coalesce(body('Parse_JSON')?['device']?['javaEnabled'], false), 'Yes', 'No')} | 
+                                    WebGL: @{if(coalesce(body('Parse_JSON')?['device']?['webgl'], false), 'Yes', 'No')} | 
+                                    Online: @{if(coalesce(body('Parse_JSON')?['device']?['onLine'], false), 'Yes', 'No')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Browser Vendor:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['device']?['vendor'], 'N/A')} | Sub: @{coalesce(body('Parse_JSON')?['device']?['vendorSub'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Do Not Track:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['device']?['doNotTrack'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Language:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['device']?['language'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Languages:</td>
+                                <td style="color: #333;">@{join(coalesce(body('Parse_JSON')?['device']?['languages'], createArray('N/A')), ', ')}</td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+
+                <!-- Connection & Network Data -->
+                <tr>
+                    <td style="padding: 20px;">
+                        <table cellpadding="8" cellspacing="0" border="1" style="background-color: #e3f2fd; border-color: #2196f3; font-family: Arial, sans-serif; font-size: 14px; width: 100%;">
+                            <tbody><tr>
+                                <td colspan="2" style="background-color: #bbdefb; font-weight: bold; font-size: 16px; color: #333;">
+                                    Connection & Network Data
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Connection Type:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['connection']?['type'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Effective Type:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['connection']?['effectiveType'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Downlink Speed:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['connection']?['downlink'], coalesce(body('Parse_JSON')?['performance']?['connectionSpeed'], 'N/A'))} Mbps</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Round Trip Time:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['connection']?['rtt'], 'N/A')}ms</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Save Data Mode:</td>
+                                <td style="color: #333;">@{if(coalesce(body('Parse_JSON')?['connection']?['saveData'], false), 'Yes', 'No')}</td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+
+                <!-- Storage & Features -->
+                <tr>
+                    <td style="padding: 20px;">
+                        <table cellpadding="8" cellspacing="0" border="1" style="background-color: #fff8e1; border-color: #ff9800; font-family: Arial, sans-serif; font-size: 14px; width: 100%;">
+                            <tbody><tr>
+                                <td colspan="2" style="background-color: #ffecb3; font-weight: bold; font-size: 16px; color: #333;">
+                                    Storage & Browser Features
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Local Storage:</td>
+                                <td style="color: #333;">@{if(coalesce(body('Parse_JSON')?['storage']?['localStorageAvailable'], coalesce(body('Parse_JSON')?['features']?['localStorage'], false)), 'Available', 'Not Available')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Session Storage:</td>
+                                <td style="color: #333;">@{if(coalesce(body('Parse_JSON')?['storage']?['sessionStorageAvailable'], coalesce(body('Parse_JSON')?['features']?['sessionStorage'], false)), 'Available', 'Not Available')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Cookies:</td>
+                                <td style="color: #333;">
+                                    Enabled: @{if(coalesce(body('Parse_JSON')?['storage']?['cookiesEnabled'], false), 'Yes', 'No')} | 
+                                    3rd Party Blocked: @{if(coalesce(body('Parse_JSON')?['storage']?['thirdPartyCookiesBlocked'], false), 'Yes', 'No')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Advanced Features:</td>
+                                <td style="color: #333;">
+                                    WebGL: @{if(coalesce(body('Parse_JSON')?['features']?['webgl'], false), 'Yes', 'No')} | 
+                                    WebGL2: @{if(coalesce(body('Parse_JSON')?['features']?['webgl2'], false), 'Yes', 'No')} | 
+                                    Canvas: @{if(coalesce(body('Parse_JSON')?['features']?['canvas'], false), 'Yes', 'No')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Modern Features:</td>
+                                <td style="color: #333;">
+                                    Geolocation: @{if(coalesce(body('Parse_JSON')?['features']?['geolocation'], false), 'Yes', 'No')} | 
+                                    Service Worker: @{if(coalesce(body('Parse_JSON')?['features']?['serviceWorker'], false), 'Yes', 'No')} | 
+                                    Push Notifications: @{if(coalesce(body('Parse_JSON')?['features']?['pushNotifications'], false), 'Yes', 'No')} | 
+                                    WebAssembly: @{if(coalesce(body('Parse_JSON')?['features']?['webAssembly'], false), 'Yes', 'No')}
+                                </td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+
+                <!-- Performance Data -->
+                <tr>
+                    <td style="padding: 20px;">
+                        <table cellpadding="8" cellspacing="0" border="1" style="background-color: #fce4ec; border-color: #e91e63; font-family: Arial, sans-serif; font-size: 14px; width: 100%;">
+                            <tbody><tr>
+                                <td colspan="2" style="background-color: #f8bbd9; font-weight: bold; font-size: 16px; color: #333;">
+                                    Performance Data
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Navigation Timing:</td>
+                                <td style="color: #333;">
+                                    Start: @{coalesce(body('Parse_JSON')?['performance']?['navigationStart'], 'N/A')}ms | 
+                                    Load End: @{coalesce(body('Parse_JSON')?['performance']?['loadEventEnd'], 'N/A')}ms
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">DOM Timing:</td>
+                                <td style="color: #333;">
+                                    Content Loaded: @{coalesce(body('Parse_JSON')?['performance']?['domContentLoadedEventEnd'], 'N/A')}ms | 
+                                    Interactive: @{coalesce(body('Parse_JSON')?['performance']?['domInteractive'], 'N/A')}ms | 
+                                    Complete: @{coalesce(body('Parse_JSON')?['performance']?['domComplete'], 'N/A')}ms
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Network Timing:</td>
+                                <td style="color: #333;">
+                                    DNS: @{coalesce(body('Parse_JSON')?['performance']?['timing']?['dns'], coalesce(body('Parse_JSON')?['performance']?['domainLookupStart'], 'N/A'))}ms | 
+                                    Connection: @{coalesce(body('Parse_JSON')?['performance']?['timing']?['connection'], coalesce(body('Parse_JSON')?['performance']?['connectStart'], 'N/A'))}ms | 
+                                    Response: @{coalesce(body('Parse_JSON')?['performance']?['timing']?['response'], coalesce(body('Parse_JSON')?['performance']?['responseStart'], 'N/A'))}ms
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Paint Timing:</td>
+                                <td style="color: #333;">
+                                    First Contentful Paint: @{coalesce(body('Parse_JSON')?['performance']?['firstContentfulPaint'], 'N/A')}ms | 
+                                    Largest Contentful Paint: @{coalesce(body('Parse_JSON')?['performance']?['largestContentfulPaint'], 'N/A')}ms
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Load Performance:</td>
+                                <td style="color: #333;">
+                                    DOM Processing: @{coalesce(body('Parse_JSON')?['performance']?['timing']?['domProcessing'], 'N/A')}ms | 
+                                    Total Load: @{coalesce(body('Parse_JSON')?['performance']?['timing']?['totalLoad'], 'N/A')}ms
+                                </td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+
+                <!-- Page-Specific Data (conditional) -->
+                <tr style="@{if(empty(body('Parse_JSON')?['pageSpecific']), 'display: none;', '')}">
+                    <td style="padding: 20px;">
+                        <table cellpadding="8" cellspacing="0" border="1" style="background-color: #e0f2f1; border-color: #009688; font-family: Arial, sans-serif; font-size: 14px; width: 100%;">
+                            <tbody><tr>
+                                <td colspan="2" style="background-color: #b2dfdb; font-weight: bold; font-size: 16px; color: #333;">
+                                    Page-Specific Data
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Service Selection:</td>
+                                <td style="color: #333;">@{if(coalesce(body('Parse_JSON')?['pageSpecific']?['hasServiceSelection'], false), 'Available', 'Not Available')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Payment Block:</td>
+                                <td style="color: #333;">@{if(coalesce(body('Parse_JSON')?['pageSpecific']?['hasPaymentBlock'], false), 'Available', 'Not Available')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Closed Banner:</td>
+                                <td style="color: #333;">@{if(coalesce(body('Parse_JSON')?['pageSpecific']?['hasClosedBanner'], false), 'Yes', 'No')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Phone Links:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['pageSpecific']?['phoneLinksCount'], '0')} links</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Service Links:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['pageSpecific']?['serviceLinksCount'], '0')} links</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Logo Type:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['pageSpecific']?['logoType'], 'N/A')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; width: 30%; color: #555;">Tracked Elements:</td>
+                                <td style="color: #333;">@{coalesce(body('Parse_JSON')?['pageSpecific']?['elementsWithTracking'], '0')} elements</td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+                
+                <!-- Action Buttons -->
+                <tr>
+                    <td style="padding: 20px; text-align: center; font-family: Arial, sans-serif;">
+                        <h3 style="margin: 0 0 15px 0; font-size: 18px; color: #333;">Quick Actions</h3>
+                        
+                        <table cellpadding="5" cellspacing="0" border="0" style="margin: 0 auto;">
+                            <tbody><tr>
+                                <td style="padding: 5px;">
+                                    <a href="tel:@{coalesce(body('Parse_JSON')?['phone'], '')}" style="display: @{if(not(empty(body('Parse_JSON')?['phone'])), 'inline-block', 'none')}; padding: 12px 24px; background-color: #4caf50; color: white; text-decoration: none; font-weight: bold; border-radius: 4px; font-family: Arial, sans-serif;">
+                                        📞 Call Customer
+                                    </a>
+                                </td>
+                                <td style="padding: 5px;">
+                                    <a href="https://www.carjam.co.nz/car/?plate=@{coalesce(body('Parse_JSON')?['rego'], coalesce(body('Parse_JSON')?['vehicleRego'], ''))}" style="display: @{if(not(empty(coalesce(body('Parse_JSON')?['rego'], body('Parse_JSON')?['vehicleRego']))), 'inline-block', 'none')}; padding: 12px 24px; background-color: #2196f3; color: white; text-decoration: none; font-weight: bold; border-radius: 4px; font-family: Arial, sans-serif;">
+                                        🚗 CarJam Lookup
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px;">
+                                    <a href="https://ads.google.com/aw/conversions@{if(not(empty(body('Parse_JSON')?['gclid'])), concat('?gclid=', body('Parse_JSON')?['gclid']), '')}" style="display: inline-block; padding: 12px 24px; background-color: #ff5722; color: white; text-decoration: none; font-weight: bold; border-radius: 4px; font-family: Arial, sans-serif;">
+                                        📊 Google Ads
+                                    </a>
+                                </td>
+                                <td style="padding: 5px;">
+                                    <a href="mailto:@{coalesce(body('Parse_JSON')?['email'], '')}" style="display: @{if(not(empty(body('Parse_JSON')?['email'])), 'inline-block', 'none')}; padding: 12px 24px; background-color: #9c27b0; color: white; text-decoration: none; font-weight: bold; border-radius: 4px; font-family: Arial, sans-serif;">
+                                        ✉️ Email Customer
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody></table>
+                    </td>
+                </tr>
+                
+                <!-- Footer -->
+                <tr>
+                    <td style="background-color: #f8f9fa; padding: 15px; text-align: center; font-size: 12px; color: #666; border-top: 1px solid #dee2e6; font-family: Arial, sans-serif;">
+                        <div style="font-weight: bold; margin-bottom: 5px;">Eek Mobile Mechanical - Complete Tracking Report</div>
+                        <div style="margin-bottom: 5px;">Auto-generated from Power Automate | @{formatDateTime(utcNow(), 'dd/MM/yyyy HH:mm')} NZT</div>
+                        <div style="font-size: 11px;">
+                            Session: @{coalesce(body('Parse_JSON')?['sessionId'], 'Unknown')} | 
+                            Event Sequence: @{coalesce(body('Parse_JSON')?['eventSequence'], 'N/A')} | 
+                            Source: @{coalesce(body('Parse_JSON')?['utm']?['utm_source'], 'Direct')} | 
+                            GCLID: @{if(coalesce(body('Parse_JSON')?['hasCurrentGclid'], false), 'Active', 'None')}
+                        </div>
+                        <div style="font-size: 10px; margin-top: 5px; opacity: 0.7;">
+                            Fixed template - handles location object properly
+                        </div>
+                    </td>
+                </tr>
+                
+            </tbody></table>
+        </td>
+    </tr>
+</tbody></table>
