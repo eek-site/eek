@@ -852,18 +852,11 @@ function setupVehicleTypes() {
   
   vehicleContainer.innerHTML = inspectionConfig.vehicleTypes.map(type => {
     let totalPrice;
-    let displayText;
     
     if (type.id === 'specialty') {
       totalPrice = 399 + specificTimeSurcharge; // Specialty is always $399 plus any surcharges
-      const calculatedAddon = 399 - basePrice; // Calculate what addon brings us to $399
-      const surchargeText = specificTimeSurcharge > 0 ? ` + $${specificTimeSurcharge} specific time` : '';
-      displayText = `$${totalPrice} (+$${calculatedAddon}${surchargeText})`;
     } else {
       totalPrice = basePrice + type.addon + specificTimeSurcharge;
-      const addonText = type.addon > 0 ? ` (+$${type.addon})` : '';
-      const surchargeText = specificTimeSurcharge > 0 ? ` + $${specificTimeSurcharge} specific time` : '';
-      displayText = `$${totalPrice}${addonText}${surchargeText}`;
     }
     
     const popularClass = type.popular ? 'popular' : '';
@@ -874,7 +867,7 @@ function setupVehicleTypes() {
         <div class="vehicle-type-title">${type.title}</div>
         <div class="vehicle-type-subtitle">${type.subtitle}</div>
         <div class="vehicle-type-note">${type.note}</div>
-        <div class="vehicle-type-price">${displayText}</div>
+        <div class="vehicle-type-price">$${totalPrice}</div>
       </div>`;
   }).join('');
 }
