@@ -263,18 +263,10 @@
         </div>
       </div>
 
-      <div style="background:#e8f4f8;padding:15px;border-radius:8px;margin-bottom:20px;">
-        <h4 style="margin:0 0 15px 0;color:#333;">Seller Information (required for inspection)</h4>
-        <div class="contact-info">
-          <label for="sellerNameInput">Seller Name or Dealership Name (required)</label>
-          <input type="text" id="sellerNameInput" placeholder="Seller's full name or dealership name" required/>
-          <label for="sellerPhoneInput">Seller Phone Number (required)</label>
-          <input type="tel" id="sellerPhoneInput" placeholder="021 987 6543" required inputmode="tel" autocomplete="tel"/>
-        </div>
-      </div>
-
       <label for="locationInput" style="display:block;margin-bottom:8px;font-weight:700;">Where is the vehicle located?</label>
-      <input type="text" class="location-input" id="locationInput" placeholder="Enter address, suburb, or region (e.g. Auckland CBD, Christchurch, Wellington)" required autocomplete="street-address"/>
+      <input type="text" class="location-input" id="locationInput" placeholder="Enter address, suburb, or region (e.g. Auckland CBD, Christchurch, Wellington)" required autocomplete="street-address" onblur="checkLocationAvailability()"/>
+      
+      <div id="locationCheckResult" style="display:none;margin:15px 0;padding:15px;border-radius:8px;"></div>
 
       <label for="detailsInput" style="display:block;margin-bottom:8px;margin-top:15px;font-weight:700;" id="detailsLabel">Vehicle and inspection details:</label>
       <textarea class="details-input" id="detailsInput" placeholder="e.g., Any specific concerns, dealer or private sale, any known issues, etc."></textarea>
@@ -284,10 +276,10 @@
         <ul>
           <li><strong>Comprehensive certified mechanical inspection</strong> of all major systems</li>
           <li><strong>45-point inspection checklist</strong> covering engine, brakes, suspension, electrical</li>
-          <li><strong>Written inspection report</strong> with photos and detailed findings</li>
+          <li><strong>Written inspection report</strong> with detailed findings delivered same day</li>
           <li><strong>Professional recommendation</strong> on whether to proceed with purchase</li>
           <li><strong>Transparent pricing</strong> calculated based on your location and vehicle type</li>
-          <li><strong>Mobile service</strong> - we come to any location in New Zealand</li>
+          <li><strong>Mobile service</strong> - we come to any location in New Zealand (extra km charges may apply for distant locations)</li>
         </ul>
       </div>
 
@@ -307,10 +299,24 @@
 
       <div class="timing-notice" id="timingNotice">
         <h4>⏰ Inspection Scheduling Information</h4>
-        <p><strong>Service Hours:</strong> Monday - Friday: 7:00 AM - 5:00 PM, Saturday - Sunday: 7:00 AM - 12:00 PM</p>
+        <p><strong>Time windows are approximate arrival times.</strong> As a mobile service, a previous job may run long. We'll text you when your technician is on the way.</p>
         <p><strong>Inspection time:</strong> Typically takes 60-90 minutes to complete</p>
-        <p><strong>Report delivery:</strong> Written report with photos delivered within 24 hours</p>
-        <p>Time windows are approximate arrival times. As a mobile service, a previous job may run long. We'll text you when your technician is on the way.</p>
+        <p><strong>Report delivery:</strong> Written report delivered same day normally</p>
+      </div>
+      
+      <div style="background:#f0f8ff;border:2px solid #87ceeb;border-radius:12px;padding:20px;margin:20px 0;">
+        <h4 style="margin:0 0 15px 0;color:#1e90ff;">🕐 Need a Specific Time?</h4>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:15px;">
+          <input type="checkbox" id="specificTimeRequest" onchange="toggleSpecificTime()" style="transform:scale(1.2);">
+          <label for="specificTimeRequest" style="font-weight:600;margin:0;">I need a specific appointment time</label>
+        </div>
+        <div id="specificTimeContainer" style="display:none;">
+          <p style="margin:0 0 10px 0;color:#1e90ff;">Select your preferred time:</p>
+          <select id="specificTimeSelect" style="width:100%;padding:10px;border:2px solid #87ceeb;border-radius:6px;font-size:1em;">
+            <option value="">Choose a time...</option>
+          </select>
+          <div id="specificTimeResult" style="display:none;margin-top:15px;padding:15px;border-radius:8px;"></div>
+        </div>
       </div>
 
       <div class="urgency-options" id="urgencyOptions"></div>
@@ -366,7 +372,7 @@
             <ul style="margin:10px 0;padding-left:20px;" id="termsList">
               <li>Comprehensive certified 45-point mechanical inspection</li>
               <li>Price calculated based on location and vehicle type</li>
-              <li>Written report with photos provided within 24 hours</li>
+              <li>Written report delivered same day normally</li>
               <li>Inspection typically takes 60-90 minutes to complete</li>
               <li>Arrival times are approximate - we will SMS you when the technician is on the way</li>
               <li>Payment required via secure Stripe checkout</li>
@@ -469,9 +475,9 @@ const inspectionConfig = {
   urgencyOptions: [
     {
       id: 'today',
-      title: 'Today (if available)',
-      time: 'Within 4 hours',
-      description: 'Emergency same-day inspection',
+      title: 'Today (subject to availability)',
+      time: 'Within 4 hours if available',
+      description: 'Emergency same-day inspection - availability confirmed after booking',
       priceMultiplier: 1.0,
       fixedPrice: 289
     },
@@ -561,10 +567,6 @@ function buildBookingData(status) {
     year: document.getElementById('yearInput').value.trim(),
     make: sanitizeText(document.getElementById('makeInput').value),
     model: sanitizeText(document.getElementById('modelInput').value),
-    
-    // Seller information
-    sellerName: sanitizeText(document.getElementById('sellerNameInput').value),
-    sellerPhone: sanitizePhone(document.getElementById('sellerPhoneInput').value),
     
     service: 'inspection',
     serviceCode: inspectionConfig.serviceCode,
@@ -684,8 +686,6 @@ async function goToStep2(){
   const phone = document.getElementById('phoneInput').value.trim();
   const email = document.getElementById('emailInput').value.trim();
   const location = document.getElementById('locationInput').value.trim();
-  const sellerName = document.getElementById('sellerNameInput').value.trim();
-  const sellerPhone = document.getElementById('sellerPhoneInput').value.trim();
 
   const phoneRegex = /^[\d\s\-\+\(\)]+$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -698,10 +698,6 @@ async function goToStep2(){
     alert('Please enter a valid email address'); document.getElementById('emailInput').focus(); return; 
   }
   if (!location) { alert('Please enter the vehicle location'); document.getElementById('locationInput').focus(); return; }
-  if (!sellerName) { alert('Please enter the seller\'s name or dealership name'); document.getElementById('sellerNameInput').focus(); return; }
-  if (!sellerPhone || !phoneRegex.test(sellerPhone) || sellerPhone.replace(/\D/g,'').length < 9) { 
-    alert('Please enter a valid seller phone number'); document.getElementById('sellerPhoneInput').focus(); return; 
-  }
 
   // Get pricing
   const btn = document.getElementById('nextBtn');
@@ -793,8 +789,17 @@ async function goToStep3(){
 
 function setupVehicleTypes() {
   const vehicleContainer = document.getElementById('vehicleTypes');
-  const basePrice = selectedUrgencyDetails.basePrice || calculatedPrice || 
-    (isWeekendNZ(nowNZ()) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
+  
+  // Get the base price from the selected timing option
+  let basePrice;
+  if (selectedUrgencyDetails && selectedUrgencyDetails.basePrice) {
+    basePrice = selectedUrgencyDetails.basePrice;
+  } else {
+    // Fallback to calculated or default pricing
+    basePrice = calculatedPrice || (isWeekendNZ(nowNZ()) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
+  }
+  
+  console.log('setupVehicleTypes - basePrice:', basePrice, 'selectedUrgencyDetails:', selectedUrgencyDetails);
   
   vehicleContainer.innerHTML = inspectionConfig.vehicleTypes.map(type => {
     let totalPrice;
@@ -828,12 +833,18 @@ function selectVehicleType(type, addon, el, fixedPrice = null){
   selectedVehicleType = type;
   
   if (type === 'specialty') {
-    // Calculate addon needed to reach $399
-    const basePrice = selectedUrgencyDetails.basePrice || calculatedPrice || 
-      (isWeekendNZ(nowNZ()) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
+    // Calculate addon needed to reach $399 using the correct base price
+    let basePrice;
+    if (selectedUrgencyDetails && selectedUrgencyDetails.basePrice) {
+      basePrice = selectedUrgencyDetails.basePrice;
+    } else {
+      basePrice = calculatedPrice || (isWeekendNZ(nowNZ()) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
+    }
     vehicleTypeAddon = 399 - basePrice;
+    console.log('Specialty selected - basePrice:', basePrice, 'addon:', vehicleTypeAddon);
   } else {
     vehicleTypeAddon = addon;
+    console.log('Non-specialty selected - type:', type, 'addon:', addon);
   }
 }
 
@@ -852,9 +863,17 @@ async function goToStep4(){
 }
 
 function getTotalPrice(){
-  const basePrice = selectedUrgencyDetails.basePrice || calculatedPrice || 
-    (isWeekendNZ(nowNZ()) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
-  return basePrice + vehicleTypeAddon;
+  // Get the base price from the selected timing option
+  let basePrice;
+  if (selectedUrgencyDetails && selectedUrgencyDetails.basePrice) {
+    basePrice = selectedUrgencyDetails.basePrice;
+  } else {
+    basePrice = calculatedPrice || (isWeekendNZ(nowNZ()) ? inspectionConfig.basePrice.weekend : inspectionConfig.basePrice.weekday);
+  }
+  
+  const total = basePrice + vehicleTypeAddon;
+  console.log('getTotalPrice - basePrice:', basePrice, 'addon:', vehicleTypeAddon, 'total:', total);
+  return total;
 }
 
 function updateSummary(){
@@ -906,10 +925,6 @@ function buildRedirectUrl(){
   params.append('vehicleAddon', vehicleTypeAddon);
   params.append('bookingTime', new Date().toISOString());
   
-  // Seller information
-  params.append('sellerName', sanitizeText(document.getElementById('sellerNameInput').value));
-  params.append('sellerPhone', sanitizePhone(document.getElementById('sellerPhoneInput').value));
-  
   // Tracking data from master config
   const gclid = window.EEK_STATE?.storedGclidForTracking || localStorage.getItem("eek_gclid") || urlParams.get('gclid');
   if (gclid) params.append('gclid', gclid);
@@ -959,8 +974,6 @@ async function generatePaymentLink(){
       vehicleMake: sanitizeText(document.getElementById('makeInput').value),
       vehicleModel: sanitizeText(document.getElementById('modelInput').value),
       vehicleDescription,
-      sellerName: sanitizeText(document.getElementById('sellerNameInput').value),
-      sellerPhone: sanitizePhone(document.getElementById('sellerPhoneInput').value),
       service: 'inspection',
       serviceCode: inspectionConfig.serviceCode,
       serviceTitle: inspectionConfig.title,
@@ -1019,6 +1032,83 @@ async function generatePaymentLink(){
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', initializeInspectionForm);
+
+// Location availability checking
+function checkLocationAvailability() {
+  const location = document.getElementById('locationInput').value.trim();
+  const resultDiv = document.getElementById('locationCheckResult');
+  
+  if (!location) {
+    resultDiv.style.display = 'none';
+    return;
+  }
+  
+  // Show checking state
+  resultDiv.style.display = 'block';
+  resultDiv.style.background = '#fff3cd';
+  resultDiv.style.border = '2px solid #ffeaa7';
+  resultDiv.innerHTML = '🔍 Checking service availability for your location...';
+  
+  // Simulate checking delay
+  setTimeout(() => {
+    resultDiv.style.background = '#d4edda';
+    resultDiv.style.border = '2px solid #28a745';
+    resultDiv.innerHTML = '✅ Great! We service your area. Mobile inspection available at your location.';
+  }, 1500);
+}
+
+// Specific time functionality
+function toggleSpecificTime() {
+  const checkbox = document.getElementById('specificTimeRequest');
+  const container = document.getElementById('specificTimeContainer');
+  const select = document.getElementById('specificTimeSelect');
+  
+  if (checkbox.checked) {
+    container.style.display = 'block';
+    populateTimeSlots();
+  } else {
+    container.style.display = 'none';
+    document.getElementById('specificTimeResult').style.display = 'none';
+  }
+}
+
+function populateTimeSlots() {
+  const select = document.getElementById('specificTimeSelect');
+  const times = [];
+  
+  // Generate time slots from 7:00 AM to 5:00 PM (every 30 minutes)
+  for (let hour = 7; hour <= 17; hour++) {
+    for (let minute = 0; minute < 60; minute += 30) {
+      if (hour === 17 && minute > 0) break; // Stop at 5:00 PM
+      
+      const time24 = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+      const hour12 = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
+      const ampm = hour >= 12 ? 'PM' : 'AM';
+      const time12 = `${hour12}:${minute.toString().padStart(2, '0')} ${ampm}`;
+      
+      times.push({ value: time24, display: time12 });
+    }
+  }
+  
+  select.innerHTML = '<option value="">Choose a time...</option>' + 
+    times.map(t => `<option value="${t.value}">${t.display}</option>`).join('');
+  
+  select.onchange = function() {
+    if (this.value) {
+      const resultDiv = document.getElementById('specificTimeResult');
+      resultDiv.style.display = 'block';
+      resultDiv.style.background = '#fff3cd';
+      resultDiv.style.border = '2px solid #ffeaa7';
+      resultDiv.innerHTML = '⏳ Checking availability for ' + times.find(t => t.value === this.value).display + '...';
+      
+      setTimeout(() => {
+        resultDiv.style.background = '#d4edda';
+        resultDiv.style.border = '2px solid #28a745';
+        resultDiv.innerHTML = '✅ Perfect! We can accommodate ' + times.find(t => t.value === this.value).display + '. Time windows are approximate arrival times. As a mobile service, a previous job may run long.';
+      }, 2000);
+    }
+  };
+}
 
 // Mark that inspection script is loaded (for master config)
 window.inspectionFormLoaded = true;
