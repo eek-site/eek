@@ -4,7 +4,7 @@
  * Include this file on every page to ensure consistency
  * 
  * ENHANCED VERSION: Includes comprehensive location and engagement tracking
- * FIXED VERSION: Resolves duplicate event tracking issues
+ * FIXED VERSION: Resolves duplicate event tracking issues and service selection redirects
  */
 
 // === INJECT COMPREHENSIVE STYLE GUIDE ===
@@ -1536,7 +1536,7 @@ function updateBannerVisibility() {
     }
 }
 
-// === BUTTON VISIBILITY MANAGEMENT ===
+// === BUTTON VISIBILITY MANAGEMENT (FIXED - NO BOOKING URLS FOR SERVICE CARDS) ===
 function updateButtonVisibility() {
     const callButton = document.getElementById('stickyCallButton');
     const closedButton = document.getElementById('stickyClosedButton');
@@ -1547,7 +1547,7 @@ function updateButtonVisibility() {
     const hasGclid = !!urlParams.get('gclid');
     const hasToken = !!urlParams.get('token');
     
-    // Update service section buttons
+    // Update service section buttons (NOT service selection cards)
     const afterHoursButtons = document.querySelectorAll('.after-hours-btn');
     const normalHoursButtons = document.querySelectorAll('.normal-hours-btn');
     const phoneLinks = document.querySelectorAll('.phone-link');
@@ -1569,23 +1569,29 @@ function updateButtonVisibility() {
         console.log('📞 Phone numbers: HIDDEN (basic mode + system inactive)');
     }
     
-    // BOOK ONLINE BUTTONS LOGIC
+    // BOOK ONLINE BUTTONS LOGIC (ONLY FOR BUTTONS IN SERVICE SECTIONS, NOT SERVICE CARDS)
     if (!hasToken && !hasGclid && !EEK_STATE.systemActive) {
         // Show book online buttons only in basic mode when system inactive
         afterHoursButtons.forEach(btn => {
-            btn.style.display = 'inline-block';
-            
-            // CRITICAL: Ensure book online buttons work - always set booking URL
-            const service = btn.dataset.service;
-            if (service) {
-                btn.dataset.bookingUrl = `/book-service/?service=${service}`;
-                console.log('🔗 Set booking URL for', service, ':', btn.dataset.bookingUrl);
+            // FIXED: Only add booking URLs to buttons that are NOT service selection cards
+            const isServiceCard = btn.closest('#service-selection');
+            if (!isServiceCard) {
+                btn.style.display = 'inline-block';
+                
+                // Only set booking URL for actual booking buttons (not service cards)
+                const service = btn.dataset.service;
+                if (service) {
+                    btn.dataset.bookingUrl = `/book-service/?service=${service}`;
+                    console.log('🔗 Set booking URL for booking button', service, ':', btn.dataset.bookingUrl);
+                }
             } else {
-                console.warn('⚠️ Book online button missing data-service attribute:', btn);
+                // Service selection cards should just be visible but without booking URLs
+                btn.style.display = 'inline-block';
+                console.log('🎯 Service selection card visible without booking URL');
             }
         });
         normalHoursButtons.forEach(btn => btn.style.display = 'none');
-        console.log('📅 Book online buttons: SHOWN with URLs set');
+        console.log('📅 Book online buttons: SHOWN (only for service sections)');
     } else {
         // Hide book online buttons in all other cases
         afterHoursButtons.forEach(btn => btn.style.display = 'none');
@@ -1696,26 +1702,25 @@ function addClickTrackingToElements() {
     console.log('👂 Click tracking attached to all data-track elements and untracked phone links');
 }
 
-// === SERVICE SELECTION HANDLERS ===
+// === FIXED: SERVICE SELECTION HANDLERS (NO BOOKING REDIRECTS) ===
 function handleServiceSelection() {
     document.querySelectorAll('.service-link').forEach(link => {
         link.addEventListener('click', function(e) {
-            const bookingUrl = this.dataset.bookingUrl;
             const service = this.dataset.service;
             
-            // Track the service interaction
+            // Track the service interaction for analytics
             if (service) {
                 trackInteraction(this);
+                console.log('🎯 Service selection tracked for analytics:', service);
             }
             
-            // Only redirect to booking for service cards (not already direct booking links)
-            if (bookingUrl && this.getAttribute('href').startsWith('#')) {
-                e.preventDefault();
-                console.log('🎯 Redirecting to booking page:', bookingUrl);
-                window.location.href = bookingUrl;
-            }
+            // FIXED: Never prevent default or redirect to booking pages
+            // Let the natural anchor scrolling behavior happen
+            console.log('🎯 Service card clicked, allowing natural anchor scroll to:', this.getAttribute('href'));
         });
     });
+    
+    console.log('🎯 Service selection tracking configured (anchor scrolling only)');
 }
 
 // === UTM DATA COLLECTION ===
@@ -1782,7 +1787,7 @@ function initializePage() {
     setupTimeTracking(); // FIXED: Now has minimum time threshold
     addClickTrackingToElements(); // FIXED: No duplicate phone tracking
     
-    // Set up service selection handlers (for main page)
+    // Set up service selection handlers (FIXED: no booking redirects)
     handleServiceSelection();
     
     // Track page view (sends to API + Google Analytics + Reddit Pixel)
@@ -1794,7 +1799,7 @@ function initializePage() {
     // FINAL SAFEGUARD: Double-check banner visibility after API calls complete
     setTimeout(finalBannerCheck, 2000);
     
-    // FINAL SAFEGUARD: Ensure book online buttons have working URLs
+    // FINAL SAFEGUARD: Ensure book online buttons have working URLs (only for non-service-cards)
     setTimeout(finalBookOnlineCheck, 2100);
     
     // PAYMENT HANDLER: Set up payment checkbox functionality
@@ -1873,23 +1878,32 @@ function forceHideBannerIfNeeded() {
     }
 }
 
-// === FINAL BOOK ONLINE CHECK ===
+// === FINAL BOOK ONLINE CHECK (FIXED - EXCLUDE SERVICE CARDS) ===
 function finalBookOnlineCheck() {
-    const afterHoursButtons = document.querySelectorAll('.after-hours-btn');
+    // Only check buttons that are NOT in the service selection section
+    const afterHoursButtons = document.querySelectorAll('.after-hours-btn:not(#service-selection .after-hours-btn)');
     
-    console.log('🔗 FINAL BOOK ONLINE CHECK: Found', afterHoursButtons.length, 'after-hours buttons');
+    console.log('🔗 FINAL BOOK ONLINE CHECK: Found', afterHoursButtons.length, 'after-hours buttons (excluding service cards)');
     
     afterHoursButtons.forEach((btn, index) => {
         const service = btn.dataset.service;
         const bookingUrl = btn.dataset.bookingUrl;
         const isVisible = btn.style.display !== 'none';
+        const isServiceCard = btn.closest('#service-selection');
         
         console.log(`  Button ${index}:`, {
             service: service,
             bookingUrl: bookingUrl,
             visible: isVisible,
-            href: btn.getAttribute('href')
+            href: btn.getAttribute('href'),
+            isServiceCard: !!isServiceCard
         });
+        
+        // Skip service cards - they should NOT have booking URLs
+        if (isServiceCard) {
+            console.log(`  ⏭️ Skipping service card (should only scroll to anchor)`);
+            return;
+        }
         
         // If button is visible but missing booking URL, fix it
         if (isVisible && service && !bookingUrl) {
@@ -2177,4 +2191,4 @@ window.getDisplayPhoneNumber = getDisplayPhoneNumber;
 window.getCurrentURLGCLID = getCurrentURLGCLID;
 window.getStoredGCLIDForTracking = getStoredGCLIDForTracking;
 
-console.log('📊 FIXED Enhanced tracking configuration loaded - duplicate events resolved');
+console.log('📊 FIXED Enhanced tracking configuration loaded - service selection now only scrolls to anchors for tracking');
