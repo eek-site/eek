@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -23,6 +24,70 @@ font-src 'self' data:;">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
   <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+
+  <!-- Reddit Pixel -->
+  <script>
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
+    (window,document);
+    
+    // Helper functions to extract user data if available
+    function getEmailFromForm() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const emailParam = urlParams.get('email');
+      if (emailParam) return emailParam;
+      
+      const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"], input[id*="email"]');
+      for (let input of emailInputs) {
+        if (input.value && input.value.includes('@')) {
+          return input.value;
+        }
+      }
+      return null;
+    }
+    
+    function getPhoneFromForm() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const phoneParam = urlParams.get('phone');
+      if (phoneParam) return phoneParam;
+      
+      const phoneInputs = document.querySelectorAll('input[type="tel"], input[name*="phone"], input[id*="phone"]');
+      for (let input of phoneInputs) {
+        if (input.value) {
+          return input.value;
+        }
+      }
+      return null;
+    }
+    
+    function getUserId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('uid') || urlParams.get('user_id') || urlParams.get('customer_id');
+    }
+    
+    function getMobileIds() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return {
+        idfa: urlParams.get('idfa'),
+        aaid: urlParams.get('aaid')
+      };
+    }
+    
+    const mobileIds = getMobileIds();
+    const initConfig = {};
+    
+    const email = getEmailFromForm();
+    const phoneNumber = getPhoneFromForm();
+    const externalId = getUserId();
+    
+    if (email) initConfig.email = email;
+    if (phoneNumber) initConfig.phoneNumber = phoneNumber;
+    if (externalId) initConfig.externalId = externalId;
+    if (mobileIds.idfa) initConfig.idfa = mobileIds.idfa;
+    if (mobileIds.aaid) initConfig.aaid = mobileIds.aaid;
+    
+    rdt('init', 'a2_hf16791nsdhx', Object.keys(initConfig).length > 0 ? initConfig : undefined);
+    rdt('track', 'PageVisit');
+  </script>
 
   <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
@@ -73,15 +138,274 @@ font-src 'self' data:;">
   </script>
 
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  
-  <!-- Link to external style guide -->
-  <link rel="stylesheet" href="eek-style-guide.css" id="eek-style-guide">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0 0 80px 0;
+      color: #333;
+      text-align: center;
+    }
+    header {
+      background: #ffffff;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .business-name {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #ff5500;
+      margin: 0.3em 0;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    header img {
+      max-width: 300px;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      font-size: 1.8em;
+      margin: 0.5em 0 0.2em;
+      color: #333;
+    }
+    p.tagline {
+      font-size: 1.2em;
+      color: #666;
+    }
+
+    /* After Hours Emergency Banner */
+    .after-hours-banner {
+      background: linear-gradient(135deg, #ff3333, #ff5500);
+      color: white;
+      padding: 20px;
+      margin: 0 auto 20px;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(255,51,51,0.3);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 4px 12px rgba(255,51,51,0.3); }
+      50% { box-shadow: 0 4px 20px rgba(255,51,51,0.5); }
+    }
+
+    .after-hours-banner h2 {
+      margin: 0 0 10px 0;
+      font-size: 1.6em;
+    }
+
+    .after-hours-banner p {
+      margin: 10px 0;
+      font-size: 1.1em;
+    }
+
+    .emergency-btn {
+      display: inline-block;
+      background: rgba(255,255,255,0.25);
+      color: white;
+      padding: 15px 30px;
+      margin: 10px;
+      font-size: 1.3em;
+      border-radius: 8px;
+      text-decoration: none;
+      border: 2px solid white;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .emergency-btn:hover {
+      background: white;
+      color: #ff3333;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+
+    .hours-section {
+      background: #e8f4f8;
+      padding: 15px;
+      margin: 20px auto;
+      border-radius: 8px;
+      border-left: 4px solid #ff5500;
+      max-width: 800px;
+    }
+    .hours-section h3 {
+      margin: 0 0 10px 0;
+      color: #333;
+    }
+    .hours-text {
+      font-size: 1.1em;
+      color: #555;
+      font-weight: bold;
+    }
+    .after-hours-text {
+      font-size: 1em;
+      color: #ff3333;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .cta-button {
+      display: inline-block;
+      background-color: #ff5500;
+      color: white;
+      padding: 15px 25px;
+      margin: 20px auto;
+      font-size: 1.2em;
+      border-radius: 8px;
+      text-decoration: none;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
+    .services {
+      background: #ffffff;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      max-width: 800px;
+    }
+    .services h2 {
+      color: #222;
+    }
+    .services ul {
+      list-style: none;
+      padding: 0;
+      font-size: 1.1em;
+    }
+    .services li {
+      padding: 8px 0;
+    }
+    .keywords-highlight {
+      background: linear-gradient(135deg, #ff5500, #ff7733);
+      color: white;
+      padding: 25px;
+      margin: 20px auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 800px;
+    }
+    .keywords-highlight h2 {
+      margin-top: 0;
+      color: white;
+    }
+    .service-keywords {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .keyword-item {
+      background: rgba(255,255,255,0.15);
+      padding: 15px;
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .keyword-item:hover {
+      background: rgba(255,255,255,0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    .keyword-item h4 {
+      margin: 0 0 8px 0;
+      font-size: 1.1em;
+    }
+    .keyword-item p {
+      margin: 0;
+      font-size: 0.9em;
+      opacity: 0.9;
+    }
+
+    /* RevU widget container styling */
+    .services [data-bid] {
+      max-height: 400px;
+      overflow-y: auto;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 15px;
+      background: #fafafa;
+      margin-top: 15px;
+    }
+
+    /* Style the RevU widget content */
+    .services [data-bid] * {
+      max-width: 100% !important;
+      box-sizing: border-box;
+    }
+
+    footer {
+      font-size: 0.9em;
+      color: #999;
+      padding: 20px 0;
+    }
+    .sticky-call, .sticky-payment {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      background-color: #ff5500;
+      color: white;
+      font-size: 1.1em;
+      padding: 14px 20px;
+      border-radius: 50px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      text-decoration: none;
+      z-index: 999;
+    }
+    .sticky-payment {
+      right: 150px;
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .service-keywords {
+        grid-template-columns: 1fr;
+      }
+      
+      .business-name {
+        font-size: 2em;
+      }
+      
+      header {
+        margin: 0 10px;
+      }
+      
+      .hours-section, .keywords-highlight, .services {
+        margin: 20px 10px;
+      }
+    }
+
+    /* Debug styles - remove in production */
+    .debug-info {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 10px;
+      font-size: 12px;
+      border-radius: 5px;
+      z-index: 9999;
+      display: none; /* Change to 'block' to enable debugging */
+    }
+  </style>
 </head>
 <body>
 
-<!-- Business Closed Banner (managed by master config) -->
+<!-- Debug Info Panel -->
+<div class="debug-info" id="debugInfo">
+  <div>System Status: <span id="debugSystemStatus">Checking...</span></div>
+  <div>Business Hours: <span id="debugBusinessHours">Checking...</span></div>
+  <div>Current Time: <span id="debugCurrentTime"></span></div>
+  <div>Payment Token: <span id="debugPaymentToken">No</span></div>
+</div>
+
+<!-- Business Closed Banner (hidden by default) -->
 <div id="closedBanner" class="after-hours-banner" style="display: none; background: linear-gradient(135deg, #666, #888);">
-  <h2 id="closedTitle">Currently Closed</h2>
+  <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
   <div id="afterHoursMessage">
     <p><strong>Business Hours:</strong></p>
     <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
@@ -92,11 +416,10 @@ font-src 'self' data:;">
     <p><strong>We're currently experiencing high demand</strong></p>
     <p>Our mechanics are fully dispatched on emergency calls</p>
     <p>Please book online for the next available appointment or try calling again shortly</p>
-    <a href="#service-selection" class="emergency-btn" data-track="customer_book_online" style="background: rgba(255,255,255,0.25); margin-top: 10px;">Book Online Now</a>
+    <a href="#service-selection" class="emergency-btn" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
   </div>
 </div>
 
-<!-- Payment Block (managed by master config) -->
 <section id="stripePaymentBlock" style="display: none; background-color: #ffffff; padding: 20px; text-align: center; color: #333; border-bottom: 2px solid #ff5500;">
   <div style="background-color: #f5f5f5; padding: 30px; border-radius: 12px; max-width: 700px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
     <h1 style="font-size: 2.2em; margin-bottom: 0.5em;">Secure Roadside Payment</h1>
@@ -104,7 +427,7 @@ font-src 'self' data:;">
     <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: #333;">
       <input type="checkbox" id="termsCheckbox" style="transform: scale(1.5);" />
       <span>I agree to the Eek Mobile Mechanical terms of service 
-        <a href="https://www.eek.nz/terms" target="_blank" data-track="legal_terms" style="color: #ff5500; text-decoration: underline;">
+        <a href="https://www.eek.nz/terms" target="_blank" style="color: #ff5500; text-decoration: underline;">
           View terms of use
         </a>
       </span>
@@ -121,37 +444,38 @@ font-src 'self' data:;">
   <div class="business-name">Eek Mobile Mechanical</div>
   <h1>Mobile Mechanics NZ - 30-60 Minute Response</h1>
   <p class="tagline">Mobile Mechanic • Pre Purchase Inspections • Wrong Fuel Removal • Emergency Roadside Repairs • 30–60 Min Response</p>
-  <a class="cta-button phone-link" href="tel:0800769000" data-track="header_call">Call <span class="phone-display">0800 769 000</span></a>
+  <a class="cta-button phone-link" href="tel:0800769000" onclick="trackConversion('header_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
 </header>
 
 <div class="keywords-highlight" id="service-selection">
-  <h2>Professional Mobile Mechanic Services</h2>
+  <h2>🔧 Professional Mobile Mechanic Services</h2>
   <p>Eek Mobile Mechanical providing comprehensive mobile mechanic services across New Zealand</p>
   <div class="service-keywords">
-    <a href="#mobile-mechanic-breakdown" class="service-link" data-service="mechanic" data-track="breakdown_call" style="text-decoration: none; color: inherit;">
+    <a href="#mobile-mechanic-breakdown" class="service-link" data-service="mechanic" style="text-decoration: none; color: inherit;">
       <div class="keyword-item">
         <h4>Emergency Breakdown</h4>
         <p>Professional mechanics arrive in 30-60 minutes anywhere in NZ</p>
       </div>
     </a>
-    <a href="#battery-jump-start" class="service-link" data-service="jumpstart" data-track="battery_call" style="text-decoration: none; color: inherit;">
+    <a href="#battery-jump-start" class="service-link" data-service="jumpstart" style="text-decoration: none; color: inherit;">
       <div class="keyword-item">
         <h4>Battery Jump Start</h4>
         <p>Dead battery? We'll get you started in 30-60 minutes</p>
       </div>
     </a>
-    <a href="#wrong-fuel-removal" class="service-link" data-service="fuel-extraction" data-track="fuel_drain_call" style="text-decoration: none; color: inherit;">
+    <a href="#wrong-fuel-removal" class="service-link" data-service="fuel-extraction" style="text-decoration: none; color: inherit;">
       <div class="keyword-item">
         <h4>Wrong Fuel Removal</h4>
         <p>Emergency fuel rescue service - 30-60 minute response</p>
       </div>
     </a>
-    <a href="#pre-purchase-inspections" class="service-link" data-service="inspection" data-track="inspection_call" style="text-decoration: none; color: inherit;">
+    <a href="#pre-purchase-inspections" class="service-link" data-service="inspection" style="text-decoration: none; color: inherit;">
       <div class="keyword-item">
         <h4>Pre Purchase Inspections</h4>
         <p>45-point certified inspection - 30-60 minute arrival</p>
       </div>
     </a>
+
   </div>
 </div>
 
@@ -159,16 +483,16 @@ font-src 'self' data:;">
   <h2>Mobile Mechanic Emergency Breakdown Service – Target Arrival: 30–60 Minutes</h2>
   <p>Engine won't start? Warning lights? Our professional mobile mechanic team arrives fast and diagnoses the issue on-site anywhere in New Zealand.</p>
   <ul>
-    <li>Professional mobile mechanic fault detection & diagnostic scanning</li>
-    <li>On-site assessment and minor repairs</li>
-    <li>Mobile mechanic coverage anywhere in NZ—city or rural</li>
-    <li>Mobile mechanics arrive equipped with full professional toolkits</li>
-    <li>Real-time communication with mobile mechanic support staff</li>
-    <li>Target arrival: 30–60 minutes nationwide</li>
+    <li>🛠️ Professional mobile mechanic fault detection & diagnostic scanning</li>
+    <li>🔍 On-site assessment and minor repairs</li>
+    <li>📍 Mobile mechanic coverage anywhere in NZ—city or rural</li>
+    <li>🧰 Mobile mechanics arrive equipped with full professional toolkits</li>
+    <li>📞 Real-time communication with mobile mechanic support staff</li>
+    <li>⏱️ Target arrival: 30–60 minutes nationwide</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="breakdown_call">Call <span class="phone-display">0800 769 000</span></a>
-    <a href="#book-mechanic" class="cta-button after-hours-btn" data-service="mechanic" data-track="breakdown_after_hours" style="background: #28a745; display: none;">Book Online</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
+    <a class="cta-button after-hours-btn service-link" data-service="mechanic" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
 
@@ -176,14 +500,14 @@ font-src 'self' data:;">
   <h2>Mobile Mechanic Battery Service – Jump Start in 30–60 Minutes</h2>
   <p>Dead battery? Our professional mobile mechanic team comes to you and performs a safe, professional jump‑start service.</p>
   <ul>
-    <li>Mobile mechanic service compatible with all makes/models</li>
-    <li>Includes battery voltage & health check by qualified mechanics</li>
-    <li>Safe jump‑start equipment & professional procedures</li>
-    <li>Mobile mechanic service at your location—home or roadside</li>
+    <li>🔋 Mobile mechanic service compatible with all makes/models</li>
+    <li>⚡ Includes battery voltage & health check by qualified mechanics</li>
+    <li>🧰 Safe jump‑start equipment & professional procedures</li>
+    <li>📍 Mobile mechanic service at your location—home or roadside</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="battery_call">Call <span class="phone-display">0800 769 000</span></a>
-    <a href="#book-jumpstart" class="cta-button after-hours-btn" data-service="jumpstart" data-track="battery_after_hours" style="background: #28a745; display: none;">Book Online</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
+    <a class="cta-button after-hours-btn service-link" data-service="jumpstart" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
 
@@ -191,16 +515,16 @@ font-src 'self' data:;">
   <h2>Wrong Fuel Removal – Petrol and Diesel Removal Emergency Service – Target Arrival: 30–60 Minutes</h2>
   <p>Filled with petrol instead of diesel? Our mobile mechanic specialists provide immediate wrong fuel removal and petrol and diesel removal services. Don't start the engine!</p>
   <ul>
-    <li>Professional petrol and diesel removal on-site</li>
-    <li>Fully insured wrong fuel removal process</li>
-    <li>No towing needed, saves time & money</li>
-    <li>Trusted mobile mechanic wrong fuel rescue NZ‑wide</li>
-    <li>Emergency petrol and diesel removal service</li>
-    <li>Target arrival: 30–60 minutes nationwide</li>
+    <li>⛽ Professional petrol and diesel removal on-site</li>
+    <li>🧯 Fully insured wrong fuel removal process</li>
+    <li>🛻 No towing needed, saves time & money</li>
+    <li>📍 Trusted mobile mechanic wrong fuel rescue NZ‑wide</li>
+    <li>🚨 Emergency petrol and diesel removal service</li>
+    <li>⏱️ Target arrival: 30–60 minutes nationwide</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="fuel_drain_call">Call <span class="phone-display">0800 769 000</span></a>
-    <a href="#book-fuel-extraction" class="cta-button after-hours-btn" data-service="fuel-extraction" data-track="fuel_drain_after_hours" style="background: #28a745; display: none;">Book Online</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
+    <a class="cta-button after-hours-btn service-link" data-service="fuel-extraction" style="background: #28a745; display: none;">📅 Book Online</a>
   </div>
 </div>
 
@@ -208,22 +532,24 @@ font-src 'self' data:;">
   <h2>Pre Purchase Vehicle Inspections – Target Arrival: 30–60 Minutes</h2>
   <p>Need peace of mind before buying a car? Our certified mobile mechanic team performs comprehensive pre purchase vehicle inspections at any location across New Zealand.</p>
   <ul>
-    <li>Comprehensive 45-point certified mechanical inspection</li>
-    <li>Inspection at seller or dealership location</li>
-    <li>From $199 - best prices when you book ahead!</li>
-    <li>Nationwide mobile mechanic dispatch in 30–60 minutes</li>
-    <li>Save money by booking online in advance</li>
-    <li>Written report with price recommendation & upcoming cost estimates</li>
+    <li>🧾 Comprehensive 45-point certified mechanical inspection</li>
+    <li>📍 Inspection at seller or dealership location</li>
+    <li>💸 From $199 - best prices when you book ahead!</li>
+    <li>⏱️ Nationwide mobile mechanic dispatch in 30–60 minutes</li>
+    <li>📅 Save money by booking online in advance</li>
+    <li>✅ Written report with price recommendation & upcoming cost estimates</li>
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="inspection_call">Call <span class="phone-display">0800 769 000</span></a>
-    <a href="#book-inspection" class="cta-button after-hours-btn" data-service="inspection" data-track="inspection_after_hours" style="background: #28a745; display: none;">Book Online & Save</a>
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
+    <a class="cta-button after-hours-btn service-link" data-service="inspection" style="background: #28a745; display: none;">📅 Book Online & Save</a>
   </div>
 </div>
 
+
+
 <!-- Customer Reviews Section -->
 <div class="services">
-  <h2>What Customers Say</h2>
+  <h2>⭐ What Customers Say</h2>
   <p>Real, verified reviews from clients across New Zealand.</p>
   
   <!-- RevU Banner Widget -->
@@ -232,21 +558,811 @@ font-src 'self' data:;">
   </div>
 </div>
 
-<!-- Sticky payment button (managed by master config) -->
-<a id="stripePaymentSticky" class="sticky-payment" href="#" data-track="customer_call">Make Payment</a>
+<a id="stripePaymentSticky" class="sticky-payment" href="#">💳 Make Payment</a>
 
 <footer>
   &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
-  <a href="https://www.eek.nz/privacy" target="_blank" data-track="footer_privacy" style="color: #666; text-decoration: underline;">Privacy Policy</a> | 
-  <a href="/more-options" class="more-options-link" data-track="more_options_call" style="color: #666; text-decoration: underline;">More Options</a>
+  <a href="https://www.eek.nz/privacy" target="_blank" style="color: #666; text-decoration: underline;">Privacy Policy</a> | 
+  <a href="/more-options" class="more-options-link" style="color: #666; text-decoration: underline;">More Options</a>
 </footer>
 
-<!-- Sticky call button (managed by master config) -->
-<a class="sticky-call phone-link" href="tel:0800769000" data-track="sticky_call" id="stickyCallButton">Call <span class="phone-display">Eek Now</span></a>
-<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" data-track="customer_support" style="display: none; background: #666;">View Hours</a>
+<a class="sticky-call phone-link" href="tel:0800769000" onclick="trackConversion('sticky_call', 'Contact')" id="stickyCallButton">📞 Call <span class="phone-display">Eek Now</span></a>
+<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" style="display: none; background: #666;">🕐 View Hours</a>
 
-<!-- MASTER CONFIG - HANDLES ALL TRACKING AND INITIALIZATION -->
-<script src="eek-master-config.js"></script>
+<script>
+// IMMEDIATE FIRST VISIT TRACKING - NO DEPENDENCIES
+(function() {
+  const FIRST_VISIT_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
+  
+  console.log('🔥 FIRST VISIT SCRIPT EXECUTING IMMEDIATELY');
+  
+  // Check if already sent this session
+  if (sessionStorage.getItem("eek_first_visit_sent") === "1") {
+    console.log('❌ First visit already sent this session');
+    return;
+  }
+  
+  // Get or create session ID
+  let sessionId = localStorage.getItem("eek_session_id");
+  if (!sessionId) {
+    sessionId = "session_" + Date.now() + "_" + Math.random().toString(36).slice(2, 11);
+    localStorage.setItem("eek_session_id", sessionId);
+    console.log('✅ Created new session ID:', sessionId);
+  } else {
+    console.log('✅ Using existing session ID:', sessionId);
+  }
+  
+  // Get GCLID
+  const urlParams = new URLSearchParams(location.search);
+  let gclid = urlParams.get("gclid");
+  if (gclid) {
+    localStorage.setItem("eek_gclid", gclid);
+    localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
+    console.log('✅ GCLID captured and stored:', gclid);
+  } else {
+    gclid = localStorage.getItem("eek_gclid");
+    console.log('📋 Using stored GCLID:', gclid);
+  }
+  
+  // Build payload
+  const payload = {
+    eventType: "session_started",
+    timestamp: new Date().toISOString(),
+    sessionId: sessionId,
+    gclid: gclid,
+    site: {
+      domain: location.hostname,
+      url: location.href,
+      path: location.pathname,
+      query: location.search ? location.search.slice(1) : "",
+      title: document.title,
+      referrer: document.referrer || null
+    },
+    utm: {
+      source: urlParams.get("utm_source") || null,
+      medium: urlParams.get("utm_medium") || null,
+      campaign: urlParams.get("utm_campaign") || null,
+      term: urlParams.get("utm_term") || null,
+      content: urlParams.get("utm_content") || null,
+      gclid: gclid,
+      msclkid: urlParams.get("msclkid") || null,
+      fbclid: urlParams.get("fbclid") || null,
+      rdtclid: urlParams.get("rdtclid") || null
+    },
+    device: {
+      userAgent: navigator.userAgent,
+      platform: navigator.platform || null,
+      language: navigator.language || null,
+      mobile: /Mobi|Android/i.test(navigator.userAgent),
+      screen: {
+        width: (window.screen && window.screen.width) || null,
+        height: (window.screen && window.screen.height) || null,
+        pixelRatio: window.devicePixelRatio || 1
+      }
+    }
+  };
+  
+  console.log('🚀 SENDING FIRST VISIT WEBHOOK NOW:', payload);
+  
+  // Send webhook immediately
+  fetch(FIRST_VISIT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+    keepalive: true,
+    cache: "no-store"
+  }).then(response => {
+    console.log('✅ FIRST VISIT WEBHOOK SUCCESS:', response.status, response.statusText);
+    if (response.ok) {
+      sessionStorage.setItem("eek_first_visit_sent", "1");
+      console.log('✅ Marked as sent for this session');
+    } else {
+      console.error('❌ FIRST VISIT WEBHOOK FAILED:', response.status);
+    }
+  }).catch(error => {
+    console.error('❌ FIRST VISIT WEBHOOK ERROR:', error);
+  });
+})();
+
+// Dynamic phone number based on traffic source
+function getDisplayPhoneNumber() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const gclid = urlParams.get('gclid');
+  
+  // If traffic comes from Google Ads, show tracking number and store preference
+  if (gclid) {
+    localStorage.setItem('eek_phone_preference', 'tracking');
+    return {
+      tel: 'tel:0800447153',
+      display: '0800 447 153'
+    };
+  }
+  
+  // Default number for all other traffic
+  localStorage.setItem('eek_phone_preference', 'default');
+  return {
+    tel: 'tel:0800769000', 
+    display: '0800 769 000'
+  };
+}
+
+// Build tracking parameters for service URLs
+function buildTrackingParams() {
+  const params = new URLSearchParams();
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  // Preserve payment token if present
+  const token = urlParams.get('token');
+  if (token) {
+    params.set('token', token);
+  }
+  
+  // Preserve GCLID if present
+  const gclid = urlParams.get('gclid');
+  if (gclid) {
+    params.set('gclid', gclid);
+  }
+  
+  // Preserve UTM parameters
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+    const value = urlParams.get(param);
+    if (value) {
+      params.set(param, value);
+    }
+  });
+  
+  // Add session ID for tracking continuity
+  const sessionId = localStorage.getItem("eek_session_id");
+  if (sessionId) {
+    params.set('session_id', sessionId);
+  }
+  
+  return params.toString();
+}
+
+// Update service links with tracking parameters
+function updateServiceLinks() {
+  const trackingParams = buildTrackingParams();
+  
+  document.querySelectorAll('.service-link').forEach(link => {
+    const service = link.dataset.service;
+    if (service) {
+      const baseUrl = `/book-service?service=${service}`;
+      const fullUrl = trackingParams ? `${baseUrl}&${trackingParams}` : baseUrl;
+      
+      // Convert to actual href for booking links
+      if (link.classList.contains('after-hours-btn') || link.closest('#winz-assistance') || link.getAttribute('href') === '#service-selection') {
+        link.href = fullUrl;
+      } else {
+        // For main service selection cards, keep the hash but store the booking URL
+        link.dataset.bookingUrl = fullUrl;
+      }
+    }
+  });
+  
+  // Update More Options link with tracking parameters
+  const moreOptionsLink = document.querySelector('.more-options-link, a[href*="more-options"]');
+  if (moreOptionsLink) {
+    const baseUrl = '/more-options';
+    const fullUrl = trackingParams ? `${baseUrl}?${trackingParams}` : baseUrl;
+    moreOptionsLink.href = fullUrl;
+    console.log('🔗 More Options link updated:', fullUrl);
+  }
+  
+  console.log('🔗 Service links updated with tracking parameters:', trackingParams);
+}
+
+// Handle service selection card clicks
+function handleServiceSelection() {
+  document.querySelectorAll('.service-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+      const bookingUrl = this.dataset.bookingUrl;
+      
+      // Only redirect to booking for service cards (not already direct booking links)
+      if (bookingUrl && this.getAttribute('href').startsWith('#')) {
+        e.preventDefault();
+        console.log('🎯 Redirecting to booking page:', bookingUrl);
+        window.location.href = bookingUrl;
+      }
+    });
+  });
+}
+
+// Update all phone numbers on page load
+function updatePhoneNumbers() {
+  const phoneData = getDisplayPhoneNumber();
+  
+  // Update all tel: links
+  document.querySelectorAll('.phone-link').forEach(link => {
+    link.href = phoneData.tel;
+  });
+  
+  // Update displayed phone numbers in spans
+  document.querySelectorAll('.phone-display').forEach(span => {
+    if (span.textContent.includes('769 000') || span.textContent.includes('769000') || span.textContent === 'Eek Now') {
+      if (span.textContent === 'Eek Now') {
+        span.textContent = 'Eek Now'; // Keep this unchanged
+      } else {
+        span.textContent = phoneData.display;
+      }
+    }
+  });
+}
+
+// FIXED: Check system availability status with better error handling
+async function checkSystemStatus() {
+  const debugSystemStatus = document.getElementById('debugSystemStatus');
+  
+  try {
+    console.log('🔄 Checking system status...');
+    
+    const response = await fetch("https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/17b1d2990e6f4082a2b0d9c2f1a29025/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=bPyoxJ24kuxJZOyLGAclGaEuH6BHwUTFaGmYOwHofa8", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({}),
+      cache: "no-store",
+      timeout: 10000 // 10 second timeout
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      const isActive = data.state === 'Active';
+      console.log('✅ System status check successful:', isActive ? 'ACTIVE' : 'INACTIVE');
+      
+      if (debugSystemStatus) {
+        debugSystemStatus.textContent = isActive ? 'ACTIVE' : 'INACTIVE';
+        debugSystemStatus.style.color = isActive ? '#0f0' : '#f00';
+      }
+      
+      return isActive;
+    } else {
+      console.warn('⚠️ System status API returned non-OK status:', response.status);
+      if (debugSystemStatus) {
+        debugSystemStatus.textContent = `ERROR (${response.status})`;
+        debugSystemStatus.style.color = '#ff0';
+      }
+    }
+  } catch (error) {
+    console.error('❌ Error checking system status:', error);
+    if (debugSystemStatus) {
+      debugSystemStatus.textContent = 'ERROR (Network)';
+      debugSystemStatus.style.color = '#f00';
+    }
+  }
+  
+  // Default to active (phones visible) if check fails
+  console.log('🔄 Defaulting to ACTIVE due to API failure');
+  return true;
+}
+
+// Function to check if current time is within business hours (NZ time)
+function isWithinBusinessHours() {
+  // Get current time in New Zealand (Pacific/Auckland timezone)
+  const nzTime = new Date().toLocaleString("en-US", {timeZone: "Pacific/Auckland"});
+  const now = new Date(nzTime);
+  const day = now.getDay(); // 0 = Sunday, 6 = Saturday
+  const hour = now.getHours();
+  const minutes = now.getMinutes();
+  const time = hour + minutes / 60;
+  
+  let isOpen = false;
+  
+  // Monday-Friday: 7:00 AM - 5:00 PM (NZ time)
+  if (day >= 1 && day <= 5) {
+    isOpen = time >= 7 && time < 17;
+  }
+  
+  // Saturday-Sunday: 7:00 AM - 12:00 PM (NZ time)
+  if (day === 0 || day === 6) {
+    isOpen = time >= 7 && time < 12;
+  }
+  
+  // Update debug info
+  const debugBusinessHours = document.getElementById('debugBusinessHours');
+  const debugCurrentTime = document.getElementById('debugCurrentTime');
+  
+  if (debugBusinessHours) {
+    debugBusinessHours.textContent = isOpen ? 'OPEN' : 'CLOSED';
+    debugBusinessHours.style.color = isOpen ? '#0f0' : '#f00';
+  }
+  
+  if (debugCurrentTime) {
+    debugCurrentTime.textContent = now.toLocaleString() + ' (NZ Time)';
+  }
+  
+  console.log('🕒 Business hours check:', isOpen ? 'OPEN' : 'CLOSED', `(${now.toLocaleString()} NZ Time)`);
+  
+  return isOpen;
+}
+
+// FIXED: Update UI based on system status with proper logic
+async function updateHoursDisplay() {
+  console.log('🔄 Starting updateHoursDisplay...');
+  
+  // Check if payment token or gclid exists
+  const urlParams = new URLSearchParams(window.location.search);
+  const hasPaymentToken = urlParams.get('token');
+  const hasGclid = urlParams.get('gclid');
+  
+  // Update debug info
+  const debugPaymentToken = document.getElementById('debugPaymentToken');
+  if (debugPaymentToken) {
+    debugPaymentToken.textContent = hasPaymentToken ? 'YES' : 'NO';
+  }
+  
+  // For gclid or token users, always treat as system active (open for business)
+  let systemActive;
+  if (hasGclid || hasPaymentToken) {
+    systemActive = true;
+    console.log('🎯 GCLID or Token detected - forcing system active (always open)');
+  } else {
+    systemActive = await checkSystemStatus();
+  }
+  
+  const duringBusinessHours = isWithinBusinessHours();
+  
+  console.log('📊 Status Summary:', {
+    systemActive,
+    duringBusinessHours,
+    hasPaymentToken: !!hasPaymentToken,
+    hasGclid: !!hasGclid
+  });
+  
+  // Banner logic - hide for payment token or gclid users
+  const closedBanner = document.getElementById('closedBanner');
+  const closedTitle = document.getElementById('closedTitle');
+  const afterHoursMessage = document.getElementById('afterHoursMessage');
+  const tempUnavailableMessage = document.getElementById('tempUnavailableMessage');
+  
+  if (hasPaymentToken || hasGclid) {
+    // Hide closed banner for payment flow or gclid traffic
+    if (closedBanner) {
+      closedBanner.style.display = 'none';
+    }
+    console.log('💳🎯 Payment token or GCLID detected - hiding closed banner');
+  } else {
+    // Normal banner logic for direct visitors
+    if (closedBanner) {
+      if (!systemActive) {
+        closedBanner.style.display = 'block';
+        
+        if (duringBusinessHours) {
+          closedTitle.innerHTML = '🚧 PHONE LINES BUSY';
+          closedBanner.style.background = 'linear-gradient(135deg, #ff8c00, #ff6b00)';
+          afterHoursMessage.style.display = 'none';
+          tempUnavailableMessage.style.display = 'block';
+          console.log('🚧 Showing "BUSY" banner (system inactive during business hours)');
+        } else {
+          closedTitle.innerHTML = '🕐 CURRENTLY CLOSED';
+          closedBanner.style.background = 'linear-gradient(135deg, #666, #888)';
+          afterHoursMessage.style.display = 'block';
+          tempUnavailableMessage.style.display = 'none';
+          console.log('🕐 Showing "CLOSED" banner (system inactive outside business hours)');
+        }
+      } else {
+        closedBanner.style.display = 'none';
+        console.log('✅ Hiding banner (system active)');
+      }
+    }
+  }
+  
+  // Update header call button (hide if system inactive AND no payment token AND no gclid)
+  const headerButton = document.querySelector('header .cta-button');
+  if (headerButton) {
+    const shouldShow = systemActive;
+    headerButton.style.display = shouldShow ? 'inline-block' : 'none';
+    console.log('📞 Header button:', shouldShow ? 'VISIBLE' : 'HIDDEN');
+  }
+  
+  // Update service buttons
+  const normalButtons = document.querySelectorAll('.normal-hours-btn');
+  const afterHoursButtons = document.querySelectorAll('.after-hours-btn');
+  
+  // Show normal buttons if system is active (which includes gclid/token users)
+  const showNormalButtons = systemActive;
+  const showAfterHoursButtons = !systemActive;
+  
+  normalButtons.forEach(btn => {
+    btn.style.display = showNormalButtons ? 'inline-block' : 'none';
+  });
+  
+  afterHoursButtons.forEach(btn => {
+    btn.style.display = showAfterHoursButtons ? 'inline-block' : 'none';
+  });
+  
+  console.log('🔘 Service buttons - Normal:', showNormalButtons ? 'VISIBLE' : 'HIDDEN', 
+              'After-hours:', showAfterHoursButtons ? 'VISIBLE' : 'HIDDEN');
+  
+  // Update sticky buttons
+  const stickyCall = document.getElementById('stickyCallButton');
+  const stickyClosed = document.getElementById('stickyClosedButton');
+  
+  if (stickyCall) {
+    // For token users, ALWAYS hide the sticky call button
+    if (hasPaymentToken) {
+      stickyCall.style.display = 'none';
+      console.log('📱 Sticky call button: HIDDEN (payment token detected)');
+    } else {
+      // For non-token users, show based on system status
+      const shouldShowSticky = systemActive;
+      stickyCall.style.display = shouldShowSticky ? 'inline-block' : 'none';
+      console.log('📱 Sticky call button:', shouldShowSticky ? 'VISIBLE' : 'HIDDEN');
+    }
+  }
+  
+  if (stickyClosed) {
+    // Only show closed button for direct visitors when system is inactive
+    if (!systemActive && !hasPaymentToken && !hasGclid) {
+      stickyClosed.style.display = 'inline-block';
+      if (duringBusinessHours) {
+        stickyClosed.innerHTML = '📅 Book Online';
+        stickyClosed.style.background = '#ff8c00';
+        stickyClosed.href = '#service-selection';
+      } else {
+        stickyClosed.innerHTML = '🕐 View Hours';
+        stickyClosed.style.background = '#666';
+        stickyClosed.href = '#closedBanner';
+      }
+      console.log('🔲 Sticky closed button: VISIBLE (' + 
+                  (duringBusinessHours ? 'Book Online' : 'View Hours') + ')');
+    } else {
+      stickyClosed.style.display = 'none';
+      console.log('🔲 Sticky closed button: HIDDEN');
+    }
+  }
+  
+  console.log('✅ updateHoursDisplay completed');
+}
+
+/* === INCOMING CALL CORRELATION WEBHOOK === */
+(function(){
+  const INCOMING_CALL_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/659e20267a7740aea22340e2f63e12fd/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sa4qKODOby6WgW80SBuxvUxmRljASZfVTYTA-6vgPzo";
+  
+  // Expose global function for PBX to call
+  window.correlateIncomingCall = function(callerID, internalNumber) {
+    const sessionId = localStorage.getItem("eek_session_id");
+    const lastCallAttemptId = localStorage.getItem("eek_last_call_attempt_id");
+    const lastCallTimestamp = localStorage.getItem("eek_last_call_timestamp");
+    const gclid = localStorage.getItem("eek_last_gclid"); // Enhanced: Include stored GCLID
+    
+    if (!sessionId) return; // No session to correlate
+    
+    const payload = {
+      eventType: "incoming_call_correlation",
+      timestamp: new Date().toISOString(),
+      sessionId: sessionId,
+      callerID: callerID,
+      internalNumber: internalNumber,
+      lastCallAttemptId: lastCallAttemptId,
+      lastCallTimestamp: lastCallTimestamp,
+      gclid: gclid, // Enhanced: Include GCLID for correlation
+      correlationSuccess: true
+    };
+    
+    fetch(INCOMING_CALL_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload),
+      keepalive: true,
+      mode: "no-cors"
+    }).then(() => {
+      console.log('Call correlated with GCLID:', gclid);
+    }).catch(() => {});
+  };
+})();
+
+/* === ENHANCED CALL-CLICK WEBHOOK WITH GCLID === */
+(function(){
+  const CALL_CLICK_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/659e20267a7740aea22340e2f63e12fd/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sa4qKODOby6WgW80SBuxvUxmRljASZfVTYTA-6vgPzo";
+
+  function getOrCreateSessionId(){
+    let sid = localStorage.getItem("eek_session_id");
+    if (!sid){
+      sid = "session_" + Date.now() + "_" + Math.random().toString(36).slice(2,11);
+      localStorage.setItem("eek_session_id", sid);
+    }
+    return sid;
+  }
+
+  function getUTM(){
+    const q = new URLSearchParams(location.search);
+    return {
+      source: q.get("utm_source") || null,
+      medium: q.get("utm_medium") || null,
+      campaign: q.get("utm_campaign") || null,
+      term: q.get("utm_term") || null,
+      content: q.get("utm_content") || null,
+      gclid: q.get("gclid") || null,
+      msclkid: q.get("msclkid") || null,
+      fbclid: q.get("fbclid") || null,
+      rdtclid: q.get("rdtclid") || null
+    };
+  }
+
+  // Enhanced: Extract and persist GCLID for cross-session tracking
+  function getAndStoreGCLID(){
+    const urlParams = new URLSearchParams(location.search);
+    let gclid = urlParams.get("gclid");
+    
+    // If GCLID in URL, store it for persistent tracking
+    if (gclid) {
+      localStorage.setItem("eek_gclid", gclid);
+      localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
+      return gclid;
+    }
+    
+    // Otherwise, retrieve stored GCLID if available and not too old (30 days)
+    const storedGclid = localStorage.getItem("eek_gclid");
+    const storedTimestamp = localStorage.getItem("eek_gclid_timestamp");
+    
+    if (storedGclid && storedTimestamp) {
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      
+      if (new Date(storedTimestamp) > thirtyDaysAgo) {
+        return storedGclid;
+      } else {
+        // GCLID too old, remove it
+        localStorage.removeItem("eek_gclid");
+        localStorage.removeItem("eek_gclid_timestamp");
+      }
+    }
+    
+    return null;
+  }
+
+  function closestPlacement(el){
+    if (!el) return null;
+    if (el.id) return "#" + el.id;
+    const withId = el.closest("[id]");
+    return withId ? ("#" + withId.id) : null;
+  }
+
+  function sendCallClick(eventAction, eventCategory, anchorEl){
+    const callAttemptId = "call_" + Date.now() + "_" + Math.random().toString(36).slice(2,10);
+    const sessionId = getOrCreateSessionId();
+    const gclid = getAndStoreGCLID(); // Enhanced: Get persistent GCLID
+    
+    const payload = {
+      eventType: "call_click",
+      timestamp: new Date().toISOString(),
+      sessionId: sessionId,
+      callAttemptId: callAttemptId,
+      gclid: gclid, // Enhanced: Include GCLID in payload
+      phoneTarget: (anchorEl && anchorEl.getAttribute("href")) || "tel:0800769000",
+      button: {
+        eventAction: eventAction || "phone_call",
+        eventCategory: eventCategory || "Contact",
+        serviceType: (typeof getServiceType === "function") ? getServiceType(eventAction) : undefined,
+        placement: anchorEl ? closestPlacement(anchorEl) : null,
+        text: anchorEl ? (anchorEl.textContent || "").trim() : null
+      },
+      site: {
+        domain: location.hostname,
+        url: location.href,
+        path: location.pathname,
+        title: document.title,
+        referrer: document.referrer || null
+      },
+      utm: getUTM(),
+      device: {
+        userAgent: navigator.userAgent,
+        platform: navigator.platform || null,
+        language: navigator.language || null,
+        mobile: /Mobi|Android/i.test(navigator.userAgent),
+        screen: {
+          width: (window.screen && window.screen.width) || null,
+          height: (window.screen && window.screen.height) || null,
+          pixelRatio: window.devicePixelRatio || 1
+        }
+      },
+      status: "pending"
+    };
+
+    // Save for PBX correlation if needed
+    try {
+      localStorage.setItem("eek_last_call_attempt_id", callAttemptId);
+      localStorage.setItem("eek_last_call_timestamp", payload.timestamp);
+      // Enhanced: Store GCLID for correlation
+      if (gclid) {
+        localStorage.setItem("eek_last_gclid", gclid);
+      }
+    } catch (_) {}
+
+    // Use POST with JSON to match Power Automate configuration
+    fetch(CALL_CLICK_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload),
+      keepalive: true
+    }).then(response => {
+      console.log('Call click tracked with GCLID:', gclid, 'Status:', response.status);
+    }).catch(error => {
+      console.error('Call click failed:', error);
+    });
+  }
+
+  // Capture which <a href="tel:..."> was clicked BEFORE inline onclick runs
+  document.addEventListener("click", function(ev){
+    const a = ev.target && ev.target.closest && ev.target.closest('a[href^="tel:"]');
+    if (a) window.__eek_last_tel_anchor = a;
+  }, true);
+
+  // Wrap your existing trackConversion so call clicks also hit the webhook
+  const _origTrack = window.trackConversion || function(){};
+  window.trackConversion = function(eventAction, eventCategory){
+    try {
+      if (eventAction && /call/i.test(eventAction)){
+        sendCallClick(eventAction, eventCategory, window.__eek_last_tel_anchor || null);
+      }
+    } catch(_) {}
+    return _origTrack.apply(this, arguments);
+  };
+
+  // Enhanced: Track GCLID on page load for session correlation
+  window.addEventListener('load', function() {
+    const gclid = getAndStoreGCLID();
+    if (gclid) {
+      console.log('GCLID detected and stored for persistent tracking:', gclid);
+    }
+  });
+})();
+
+// Enhanced tracking function that includes Reddit Pixel with full event parameters
+function trackConversion(eventAction, eventCategory) {
+  const conversionId = 'eek_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  
+  const serviceValues = {
+    'inspection_call': 19900,
+    'breakdown_call': 28900,
+    'battery_call': 14900,
+    'fuel_drain_call': 39900,
+    'header_call': 25000,
+    'sticky_call': 25000,
+    'more_options_call': 25000,
+    'after_hours_emergency': 35000,
+    'breakdown_after_hours': 35000,
+    'battery_after_hours': 20000,
+    'fuel_drain_after_hours': 45000,
+    'inspection_after_hours': 25000
+  };
+  
+  const eventValue = serviceValues[eventAction] || 25000;
+  
+  if (typeof gtag !== 'undefined') {
+    gtag('event', eventAction, {
+      'event_category': eventCategory,
+      'event_label': 'Phone Call Click',
+      'value': eventValue / 100
+    });
+    gtag('event', 'conversion', {
+      'send_to': 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
+    });
+  }
+  
+  if (typeof rdt !== 'undefined') {
+    rdt('track', 'Lead', {
+      'customEventName': 'Phone_Call_Click',
+      'conversionId': conversionId,
+      'value': eventValue,
+      'currency': 'NZD',
+      'itemCount': 1,
+      'eventSource': eventAction,
+      'eventCategory': eventCategory,
+      'serviceType': getServiceType(eventAction)
+    });
+  }
+}
+
+function getServiceType(eventAction) {
+  const serviceMap = {
+    'inspection_call': 'Pre-Purchase Inspection',
+    'breakdown_call': 'Emergency Breakdown',
+    'battery_call': 'Battery Jump Start',
+    'fuel_drain_call': 'Wrong Fuel Rescue',
+    'header_call': 'General Inquiry',
+    'sticky_call': 'General Inquiry',
+    'more_options_call': 'General Inquiry',
+    'after_hours_emergency': 'After Hours Emergency',
+    'breakdown_after_hours': 'After Hours Breakdown',
+    'battery_after_hours': 'After Hours Battery',
+    'fuel_drain_after_hours': 'After Hours Fuel Drain',
+    'inspection_after_hours': 'After Hours Inspection'
+  };
+  return serviceMap[eventAction] || 'General Service';
+}
+
+// Initialize on page load
+window.addEventListener('load', function() {
+  console.log('🚀 Page loaded - initializing...');
+  
+  updatePhoneNumbers(); // Apply dynamic phone numbers first
+  updateServiceLinks(); // Add tracking parameters to booking links
+  handleServiceSelection(); // Set up click handlers for service cards
+  updateHoursDisplay(); // Initial check
+  
+  // Set up periodic checks every 5 minutes
+  setInterval(updateHoursDisplay, 5 * 60 * 1000);
+  
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'page_view', {
+      'page_title': document.title,
+      'page_location': window.location.href
+    });
+  }
+  
+  console.log('✅ Initialization complete');
+});
+
+let scrollTracked = false;
+window.addEventListener('scroll', function() {
+  if (!scrollTracked && window.scrollY > document.body.scrollHeight * 0.5) {
+    scrollTracked = true;
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'scroll_50_percent', {
+        'event_category': 'Engagement',
+        'event_label': 'Scrolled 50% of page'
+      });
+    }
+  }
+});
+
+// FIXED TOKEN PAYMENT FUNCTIONALITY
+(function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+
+  const box = document.getElementById('stripePaymentBlock');
+  const checkbox = document.getElementById('termsCheckbox');
+  const button = document.getElementById('payNowButton');
+  const sticky = document.getElementById('stripePaymentSticky');
+  const stickyCall = document.getElementById('stickyCallButton');
+  const stickyClosedButton = document.getElementById('stickyClosedButton');
+
+  if (token && box && checkbox && button && sticky) {
+    console.log('💳 Payment token detected, setting up payment UI');
+    
+    box.style.display = 'block';
+    sticky.style.display = 'inline-block';
+    
+    // Hide sticky call button for payment token users
+    if (stickyCall) {
+      stickyCall.style.display = 'none';
+    }
+    if (stickyClosedButton) {
+      stickyClosedButton.style.display = 'none';
+    }
+    
+    // Hide normal service buttons to force payment flow
+    const normalButtons = document.querySelectorAll('.normal-hours-btn');
+    normalButtons.forEach(btn => {
+      btn.style.display = 'none';
+    });
+
+    sticky.href = '#stripePaymentBlock';
+
+    checkbox.addEventListener('change', () => {
+      button.style.display = checkbox.checked ? 'inline-block' : 'none';
+    });
+
+    button.addEventListener('click', () => {
+      window.location.href = `https://buy.stripe.com/${token}`;
+    });
+    
+    console.log('💳 Payment UI setup complete');
+  }
+})();
+
+// Enable debug panel for testing (remove in production)
+// Uncomment the next line to show debug info
+// document.querySelector('.debug-info').style.display = 'block';
+</script>
 
 </body>
 </html>
