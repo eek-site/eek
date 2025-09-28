@@ -2287,6 +2287,78 @@ function isElementVisible(element) {
     }
 }
 
+// Build tracking parameters for service URLs
+function buildTrackingParams() {
+    const params = new URLSearchParams();
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Preserve payment token if present
+    const token = urlParams.get('token');
+    if (token) {
+        params.set('token', token);
+    }
+    
+    // Preserve GCLID if present
+    const gclid = urlParams.get('gclid');
+    if (gclid) {
+        params.set('gclid', gclid);
+    }
+    
+    // Preserve UTM parameters
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+        const value = urlParams.get(param);
+        if (value) {
+            params.set(param, value);
+        }
+    });
+    
+    // Add session ID for tracking continuity
+    const sessionId = localStorage.getItem("eek_session_id");
+    if (sessionId) {
+        params.set('session_id', sessionId);
+    }
+    
+    return params.toString();
+}
+
+// FIXED: Update service links with tracking parameters - EXCLUDE SERVICE SELECTION CARDS
+function updateServiceLinks() {
+    const trackingParams = buildTrackingParams();
+    
+    document.querySelectorAll('.service-link').forEach(link => {
+        const service = link.dataset.service;
+        if (service) {
+            const baseUrl = `/book-service?service=${service}`;
+            const fullUrl = trackingParams ? `${baseUrl}&${trackingParams}` : baseUrl;
+            
+            // CRITICAL FIX: Only update booking buttons, NEVER service selection cards
+            const isServiceSelectionCard = link.closest('#service-selection');
+            const isBookingButton = link.classList.contains('after-hours-btn') || link.closest('#winz-assistance');
+            
+            if (isServiceSelectionCard) {
+                // Service selection cards should ONLY scroll to anchors - never modify their href
+                console.log('🎯 Skipping service selection card:', service, '- keeping anchor behavior');
+                return; // Skip this element completely
+            } else if (isBookingButton) {
+                // Only actual booking buttons get booking URLs
+                link.href = fullUrl;
+                console.log('📅 Updated booking button:', service, 'to', fullUrl);
+            }
+        }
+    });
+    
+    // Update More Options link with tracking parameters
+    const moreOptionsLink = document.querySelector('.more-options-link, a[href*="more-options"]');
+    if (moreOptionsLink) {
+        const baseUrl = '/more-options';
+        const fullUrl = trackingParams ? `${baseUrl}?${trackingParams}` : baseUrl;
+        moreOptionsLink.href = fullUrl;
+        console.log('🔗 More Options link updated:', fullUrl);
+    }
+    
+    console.log('🔗 Service links updated with tracking parameters (service selection cards excluded):', trackingParams);
+}
+
 // === AUTO-INITIALIZE ON DOM CONTENT LOADED ===
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializePage);
@@ -2319,5 +2391,7 @@ window.addClickTrackingToElements = addClickTrackingToElements;
 window.getDisplayPhoneNumber = getDisplayPhoneNumber;
 window.getCurrentURLGCLID = getCurrentURLGCLID;
 window.getStoredGCLIDForTracking = getStoredGCLIDForTracking;
+window.buildTrackingParams = buildTrackingParams;
+window.updateServiceLinks = updateServiceLinks;
 
-console.log('📊 FIXED Enhanced tracking configuration loaded - service selection now only scrolls to anchors for tracking');
+console.log('📊 FIXED Enhanced tracking configuration loaded - service selection cards now properly excluded from booking redirects');
