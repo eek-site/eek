@@ -104,7 +104,7 @@ font-src 'self' data:;">
     <label style="font-size: 1.1em; display: inline-flex; align-items: center; gap: 10px; color: #333;">
       <input type="checkbox" id="termsCheckbox" style="transform: scale(1.5);" />
       <span>I agree to the Eek Mobile Mechanical terms of service 
-        <a href="https://www.eek.nz/terms" target="_blank" data-track="legal_terms" onclick="this.href='https://www.eek.nz/terms' + window.location.search" style="color: #ff5500; text-decoration: underline;">
+        <a href="https://www.eek.nz/terms" target="_blank" data-track="legal_terms" style="color: #ff5500; text-decoration: underline;">
           View terms of use
         </a>
       </span>
@@ -168,7 +168,7 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="breakdown_call">Call <span class="phone-display">0800 769 000</span></a>
-    <a href="#book-mechanic" class="cta-button after-hours-btn service-link" data-service="mechanic" data-track="breakdown_after_hours" style="background: #28a745; display: none;">Book Online</a>
+    <a href="#book-mechanic" class="cta-button after-hours-btn" data-service="mechanic" data-track="breakdown_after_hours" style="background: #28a745; display: none;">Book Online</a>
   </div>
 </div>
 
@@ -183,7 +183,7 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="battery_call">Call <span class="phone-display">0800 769 000</span></a>
-    <a href="#book-jumpstart" class="cta-button after-hours-btn service-link" data-service="jumpstart" data-track="battery_after_hours" style="background: #28a745; display: none;">Book Online</a>
+    <a href="#book-jumpstart" class="cta-button after-hours-btn" data-service="jumpstart" data-track="battery_after_hours" style="background: #28a745; display: none;">Book Online</a>
   </div>
 </div>
 
@@ -200,7 +200,7 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="fuel_drain_call">Call <span class="phone-display">0800 769 000</span></a>
-    <a href="#book-fuel-extraction" class="cta-button after-hours-btn service-link" data-service="fuel-extraction" data-track="fuel_drain_after_hours" style="background: #28a745; display: none;">Book Online</a>
+    <a href="#book-fuel-extraction" class="cta-button after-hours-btn" data-service="fuel-extraction" data-track="fuel_drain_after_hours" style="background: #28a745; display: none;">Book Online</a>
   </div>
 </div>
 
@@ -217,7 +217,7 @@ font-src 'self' data:;">
   </ul>
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" data-track="inspection_call">Call <span class="phone-display">0800 769 000</span></a>
-    <a href="#book-inspection" class="cta-button after-hours-btn service-link" data-service="inspection" data-track="inspection_after_hours" style="background: #28a745; display: none;">Book Online & Save</a>
+    <a href="#book-inspection" class="cta-button after-hours-btn" data-service="inspection" data-track="inspection_after_hours" style="background: #28a745; display: none;">Book Online & Save</a>
   </div>
 </div>
 
@@ -237,28 +237,16 @@ font-src 'self' data:;">
 
 <footer>
   &copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
-  <a href="https://www.eek.nz/privacy" target="_blank" data-track="footer_privacy" onclick="this.href='https://www.eek.nz/privacy' + window.location.search" style="color: #666; text-decoration: underline;">Privacy Policy</a> | 
-  <a href="/more-options" class="more-options-link" data-track="more_options_call" onclick="this.href='/more-options' + window.location.search" style="color: #666; text-decoration: underline;">More Options</a>
+  <a href="https://www.eek.nz/privacy" target="_blank" data-track="footer_privacy" style="color: #666; text-decoration: underline;">Privacy Policy</a> | 
+  <a href="/more-options" class="more-options-link" data-track="more_options_call" style="color: #666; text-decoration: underline;">More Options</a>
 </footer>
 
 <!-- Sticky call button (managed by master config) -->
 <a class="sticky-call phone-link" href="tel:0800769000" data-track="sticky_call" id="stickyCallButton">Call <span class="phone-display">Eek Now</span></a>
 <a class="sticky-call" href="#closedBanner" id="stickyClosedButton" data-track="customer_support" style="display: none; background: #666;">View Hours</a>
 
-<!-- MASTER CONFIG - HANDLES ALL TRACKING -->
+<!-- MASTER CONFIG - HANDLES ALL TRACKING AND INITIALIZATION -->
 <script src="eek-master-config.js"></script>
-
-<script>
-// Page-specific logic only - all tracking handled by master config
-window.addEventListener('load', function() {
-  console.log('Main page loaded - master config handling all tracking');
-  
-  // Set up service selection with booking URLs (handled by master config)
-  handleServiceSelection();
-  
-  console.log('Main page initialization complete');
-});
-</script>
 
 </body>
 </html>
