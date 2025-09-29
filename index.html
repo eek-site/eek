@@ -774,9 +774,10 @@ function handleServiceSelection() {
   });
 }
 
-// NEW: Track orange box service selection clicks
+// FIXED: Track orange box service selection clicks - now uses same webhook as first visit
 function trackServiceSelection() {
-  const SERVICE_SELECTION_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/659e20267a7740aea22340e2f63e12fd/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sa4qKODOby6WgW80SBuxvUxmRljASZfVTYTA-6vgPzo";
+  // CHANGED: Using the same webhook URL as first visit
+  const SERVICE_SELECTION_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
   
   document.querySelectorAll('.keyword-item').forEach(item => {
     item.addEventListener('click', function(e) {
@@ -1110,14 +1111,15 @@ async function updateHoursDisplay() {
 
 /* === INCOMING CALL CORRELATION WEBHOOK === */
 (function(){
-  const INCOMING_CALL_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/659e20267a7740aea22340e2f63e12fd/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sa4qKODOby6WgW80SBuxvUxmRljASZfVTYTA-6vgPzo";
+  // CHANGED: Using the same webhook URL as first visit
+  const INCOMING_CALL_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
   
   // Expose global function for PBX to call
   window.correlateIncomingCall = function(callerID, internalNumber) {
     const sessionId = localStorage.getItem("eek_session_id");
     const lastCallAttemptId = localStorage.getItem("eek_last_call_attempt_id");
     const lastCallTimestamp = localStorage.getItem("eek_last_call_timestamp");
-    const gclid = localStorage.getItem("eek_last_gclid"); // Enhanced: Include stored GCLID
+    const gclid = localStorage.getItem("eek_last_gclid");
     
     if (!sessionId) return; // No session to correlate
     
@@ -1129,7 +1131,7 @@ async function updateHoursDisplay() {
       internalNumber: internalNumber,
       lastCallAttemptId: lastCallAttemptId,
       lastCallTimestamp: lastCallTimestamp,
-      gclid: gclid, // Enhanced: Include GCLID for correlation
+      gclid: gclid,
       correlationSuccess: true
     };
     
@@ -1139,17 +1141,17 @@ async function updateHoursDisplay() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(payload),
-      keepalive: true,
-      mode: "no-cors"
+      keepalive: true
     }).then(() => {
-      console.log('Call correlated with GCLID:', gclid);
+      console.log('✅ Call correlated with GCLID:', gclid);
     }).catch(() => {});
   };
 })();
 
 /* === ENHANCED CALL-CLICK WEBHOOK WITH GCLID === */
 (function(){
-  const CALL_CLICK_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/659e20267a7740aea22340e2f63e12fd/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sa4qKODOby6WgW80SBuxvUxmRljASZfVTYTA-6vgPzo";
+  // CHANGED: Using the same webhook URL as first visit
+  const CALL_CLICK_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
 
   function getOrCreateSessionId(){
     let sid = localStorage.getItem("eek_session_id");
@@ -1217,14 +1219,14 @@ async function updateHoursDisplay() {
   function sendCallClick(eventAction, eventCategory, anchorEl){
     const callAttemptId = "call_" + Date.now() + "_" + Math.random().toString(36).slice(2,10);
     const sessionId = getOrCreateSessionId();
-    const gclid = getAndStoreGCLID(); // Enhanced: Get persistent GCLID
+    const gclid = getAndStoreGCLID();
     
     const payload = {
       eventType: "call_click",
       timestamp: new Date().toISOString(),
       sessionId: sessionId,
       callAttemptId: callAttemptId,
-      gclid: gclid, // Enhanced: Include GCLID in payload
+      gclid: gclid,
       phoneTarget: (anchorEl && anchorEl.getAttribute("href")) || "tel:0800769000",
       button: {
         eventAction: eventAction || "phone_call",
@@ -1259,7 +1261,6 @@ async function updateHoursDisplay() {
     try {
       localStorage.setItem("eek_last_call_attempt_id", callAttemptId);
       localStorage.setItem("eek_last_call_timestamp", payload.timestamp);
-      // Enhanced: Store GCLID for correlation
       if (gclid) {
         localStorage.setItem("eek_last_gclid", gclid);
       }
@@ -1382,11 +1383,11 @@ function getServiceType(eventAction) {
 window.addEventListener('load', function() {
   console.log('🚀 Page loaded - initializing...');
   
-  updatePhoneNumbers(); // Apply dynamic phone numbers first
-  updateServiceLinks(); // Add tracking parameters to booking links
-  handleServiceSelection(); // Set up click handlers for service cards
-  trackServiceSelection(); // NEW: Set up tracking for orange box clicks
-  updateHoursDisplay(); // Initial check
+  updatePhoneNumbers();
+  updateServiceLinks();
+  handleServiceSelection();
+  trackServiceSelection();
+  updateHoursDisplay();
   
   // Set up periodic checks every 5 minutes
   setInterval(updateHoursDisplay, 5 * 60 * 1000);
