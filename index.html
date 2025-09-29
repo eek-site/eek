@@ -444,7 +444,6 @@ font-src 'self' data:;">
   <div class="business-name">Eek Mobile Mechanical</div>
   <h1>Mobile Mechanics NZ - 30-60 Minute Response</h1>
   <p class="tagline">Mobile Mechanic • Pre Purchase Inspections • Wrong Fuel Removal • Emergency Roadside Repairs • 30–60 Min Response</p>
-  <a class="cta-button phone-link" href="tel:0800769000" onclick="trackConversion('header_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
 </header>
 
 <div class="keywords-highlight" id="service-selection">
@@ -773,6 +772,92 @@ function handleServiceSelection() {
       }
     });
   });
+}
+
+// NEW: Track orange box service selection clicks
+function trackServiceSelection() {
+  const SERVICE_SELECTION_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/659e20267a7740aea22340e2f63e12fd/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sa4qKODOby6WgW80SBuxvUxmRljASZfVTYTA-6vgPzo";
+  
+  document.querySelectorAll('.keyword-item').forEach(item => {
+    item.addEventListener('click', function(e) {
+      const service = this.dataset.service;
+      const serviceName = this.querySelector('h4')?.textContent || 'Unknown';
+      const sessionId = localStorage.getItem("eek_session_id");
+      const gclid = localStorage.getItem("eek_gclid");
+      
+      // Get URL parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      
+      // Build payload
+      const payload = {
+        eventType: "service_selection",
+        timestamp: new Date().toISOString(),
+        sessionId: sessionId,
+        gclid: gclid,
+        service: {
+          code: service,
+          name: serviceName,
+          placement: "orange_service_card"
+        },
+        site: {
+          domain: location.hostname,
+          url: location.href,
+          path: location.pathname,
+          title: document.title
+        },
+        utm: {
+          source: urlParams.get("utm_source") || null,
+          medium: urlParams.get("utm_medium") || null,
+          campaign: urlParams.get("utm_campaign") || null,
+          term: urlParams.get("utm_term") || null,
+          content: urlParams.get("utm_content") || null,
+          gclid: gclid,
+          msclkid: urlParams.get("msclkid") || null,
+          fbclid: urlParams.get("fbclid") || null,
+          rdtclid: urlParams.get("rdtclid") || null
+        },
+        device: {
+          userAgent: navigator.userAgent,
+          platform: navigator.platform || null,
+          language: navigator.language || null,
+          mobile: /Mobi|Android/i.test(navigator.userAgent)
+        }
+      };
+      
+      console.log('🎯 SERVICE SELECTION TRACKED:', serviceName, payload);
+      
+      // Send webhook
+      fetch(SERVICE_SELECTION_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        keepalive: true
+      }).then(response => {
+        console.log('✅ Service selection webhook sent:', response.status, serviceName);
+      }).catch(error => {
+        console.error('❌ Service selection webhook failed:', error);
+      });
+      
+      // Track with analytics if available
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'service_card_click', {
+          'event_category': 'Service Selection',
+          'event_label': serviceName,
+          'service_code': service
+        });
+      }
+      
+      if (typeof rdt !== 'undefined') {
+        rdt('track', 'Custom', {
+          'customEventName': 'Service_Card_Click',
+          'serviceType': serviceName,
+          'serviceCode': service
+        });
+      }
+    });
+  });
+  
+  console.log('✅ Service selection tracking initialized for', document.querySelectorAll('.keyword-item').length, 'cards');
 }
 
 // Update all phone numbers on page load
@@ -1189,9 +1274,9 @@ async function updateHoursDisplay() {
       body: JSON.stringify(payload),
       keepalive: true
     }).then(response => {
-      console.log('Call click tracked with GCLID:', gclid, 'Status:', response.status);
+      console.log('✅ Call click tracked with GCLID:', gclid, 'Status:', response.status);
     }).catch(error => {
-      console.error('Call click failed:', error);
+      console.error('❌ Call click failed:', error);
     });
   }
 
@@ -1300,6 +1385,7 @@ window.addEventListener('load', function() {
   updatePhoneNumbers(); // Apply dynamic phone numbers first
   updateServiceLinks(); // Add tracking parameters to booking links
   handleServiceSelection(); // Set up click handlers for service cards
+  trackServiceSelection(); // NEW: Set up tracking for orange box clicks
   updateHoursDisplay(); // Initial check
   
   // Set up periodic checks every 5 minutes
