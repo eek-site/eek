@@ -756,10 +756,17 @@ function updateServiceLinks() {
 function handleServiceSelection() {
   document.querySelectorAll('.service-link').forEach(link => {
     link.addEventListener('click', function(e) {
-      const bookingUrl = this.dataset.bookingUrl;
+      // For anchor links within the page, let them work normally
+      const href = this.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        // Don't prevent default - allow normal anchor scrolling
+        console.log('🔗 Scrolling to anchor:', href);
+        return;
+      }
       
-      // Only redirect to booking for service cards (not already direct booking links)
-      if (bookingUrl && this.getAttribute('href').startsWith('#')) {
+      // For other cases, handle booking redirect
+      const bookingUrl = this.dataset.bookingUrl;
+      if (bookingUrl) {
         e.preventDefault();
         console.log('🎯 Redirecting to booking page:', bookingUrl);
         window.location.href = bookingUrl;
