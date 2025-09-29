@@ -94,15 +94,6 @@
     .loading-animation { display: inline-block; width: 20px; height: 20px; border: 3px solid #f3f3f3; border-top: 3px solid #ff5500; border-radius: 50%; animation: spin 1s linear infinite; margin-left: 10px; }
     @keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
     .processing-indicator { background: #d4edda; color: #155724; padding: 10px; border-radius: 8px; margin: 15px 0; display: none; }
-    .debug-panel { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; margin: 20px 0; font-family: monospace; font-size: 0.9em; text-align: left; max-height: 300px; overflow-y: auto; display: none; }
-    .debug-toggle { background: #6c757d; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 0.8em; margin: 10px 0; }
-    .debug-toggle:hover { background: #545b62; }
-    .data-source-indicator { background: #e3f2fd; padding: 10px; border-radius: 8px; margin: 10px 0; font-size: 0.9em; text-align: left; }
-    .data-source-indicator h4 { margin: 0 0 8px 0; color: #1976d2; }
-    .source-item { padding: 4px 0; }
-    .source-success { color: #28a745; }
-    .source-warning { color: #ffc107; }
-    .source-error { color: #dc3545; }
     @media (max-width:768px){
       .success-card{padding:30px 20px;margin:10px}
       h1{font-size:2em}
@@ -129,19 +120,6 @@
       <p class="subtitle" id="mainSubtitle">Your mobile mechanic is already on the way</p>
 
       <div class="processing-indicator" id="processingIndicator">✓ Booking data sent successfully</div>
-
-      <!-- Data Source Status -->
-      <div class="data-source-indicator" id="dataSourceStatus">
-        <h4>Data Retrieval Status</h4>
-        <div id="dataSourceList"></div>
-      </div>
-
-      <!-- Debug Panel -->
-      <button class="debug-toggle" onclick="toggleDebugPanel()">Show Debug Info</button>
-      <div class="debug-panel" id="debugPanel">
-        <h4>Received Data (for debugging):</h4>
-        <pre id="debugContent">Loading...</pre>
-      </div>
 
       <!-- Booking Details -->
       <div class="booking-details" id="bookingDetails">
@@ -240,7 +218,6 @@
 
     // Global store
     let bookingData = {};
-    let dataRetrievalStatus = [];
 
     // === HELPERS ===
     function coalesce(...vals){ for (const v of vals){ if (v !== undefined && v !== null && v !== '') return v; } return undefined; }
@@ -251,7 +228,11 @@
     function toCanonical(raw){
       const canonical = {};
       canonical.sessionId   = coalesce(raw.sessionId, raw.sid, `session_${Date.now()}`);
-      canonical.source      = coalesce(raw.source, 'thanks_page');
+      
+      // Set source based on GCLID availability
+      const gclid = coalesce(raw.gclid, localStorage.getItem("eek_gclid"));
+      canonical.source = gclid ? 'gclid' : 'organic';
+      
       canonical.formVersion = coalesce(raw.formVersion, '2.0');
 
       canonical.name   = cleanText(coalesce(raw.name, raw.customerName));
@@ -333,8 +314,6 @@
     // === ENHANCED DATA RETRIEVAL ===
     async function fetchBookingDataFromSharePoint(bookingId){
       console.log('🔍 Fetching booking from SharePoint…', bookingId);
-      dataRetrievalStatus.push({source: 'SharePoint', status: 'attempting', details: `Lookup ID: ${bookingId}`});
-      updateDataSourceDisplay();
       
       try{
         const res = await fetch(SHAREPOINT_LOOKUP_URL, {
@@ -350,30 +329,12 @@
           decoded.sharepointStatus = result.status;
           decoded.retrievedAt = new Date().toISOString();
           console.log('✅ SharePoint data retrieved successfully');
-          dataRetrievalStatus[dataRetrievalStatus.length - 1] = {
-            source: 'SharePoint', 
-            status: 'success', 
-            details: `Retrieved ${Object.keys(decoded).length} fields`
-          };
-          updateDataSourceDisplay();
           return decoded;
         }
         console.log('⚠️ SharePoint returned success=false or no bookingData');
-        dataRetrievalStatus[dataRetrievalStatus.length - 1] = {
-          source: 'SharePoint', 
-          status: 'warning', 
-          details: 'No booking data found'
-        };
-        updateDataSourceDisplay();
         return null;
       }catch(err){
         console.error('❌ SharePoint fetch error:', err);
-        dataRetrievalStatus[dataRetrievalStatus.length - 1] = {
-          source: 'SharePoint', 
-          status: 'error', 
-          details: err.message
-        };
-        updateDataSourceDisplay();
         return null;
       }
     }
@@ -387,14 +348,12 @@
       const params = new URLSearchParams(window.location.search);
       console.log('🔗 URL parameters found:', params.toString());
       
-      let urlParamCount = 0;
       // Handle encoded data blob
       const encoded = params.get('d');
       if (encoded){
         try{ 
           const decoded = JSON.parse(atob(encoded));
           Object.assign(data, decoded);
-          urlParamCount += Object.keys(decoded).length;
           console.log('✅ Decoded URL data blob');
         }catch(e){ 
           console.warn('⚠️ Legacy blob decode failed', e); 
@@ -405,16 +364,7 @@
       for (const [k,v] of params){
         if (k !== 'd' && k !== 'bookingId'){ 
           data[k] = decodeURIComponent(v);
-          urlParamCount++;
         }
-      }
-      
-      if (urlParamCount > 0) {
-        dataRetrievalStatus.push({
-          source: 'URL Parameters', 
-          status: 'success', 
-          details: `Found ${urlParamCount} parameters`
-        });
       }
       
       // 2. Session Storage (booking form data)
@@ -424,25 +374,9 @@
           const sessionData = JSON.parse(ss);
           Object.assign(data, sessionData);
           console.log('✅ Session storage data merged');
-          dataRetrievalStatus.push({
-            source: 'Session Storage', 
-            status: 'success', 
-            details: `Found ${Object.keys(sessionData).length} fields`
-          });
-        } else {
-          dataRetrievalStatus.push({
-            source: 'Session Storage', 
-            status: 'warning', 
-            details: 'No data found'
-          });
         }
       }catch(e){
         console.warn('⚠️ Session storage read failed', e);
-        dataRetrievalStatus.push({
-          source: 'Session Storage', 
-          status: 'error', 
-          details: e.message
-        });
       }
       
       // 3. Local Storage (persistent booking data)
@@ -452,25 +386,9 @@
           const localData = JSON.parse(ls);
           Object.assign(data, localData);
           console.log('✅ Local storage data merged');
-          dataRetrievalStatus.push({
-            source: 'Local Storage', 
-            status: 'success', 
-            details: `Found ${Object.keys(localData).length} fields`
-          });
-        } else {
-          dataRetrievalStatus.push({
-            source: 'Local Storage', 
-            status: 'warning', 
-            details: 'No data found'
-          });
         }
       }catch(e){
         console.warn('⚠️ Local storage read failed', e);
-        dataRetrievalStatus.push({
-          source: 'Local Storage', 
-          status: 'error', 
-          details: e.message
-        });
       }
       
       // 4. Google Tracking Data (GCLID and attribution)
@@ -478,17 +396,6 @@
       if (trackingData) {
         Object.assign(data, trackingData);
         console.log('✅ Google tracking data merged');
-        dataRetrievalStatus.push({
-          source: 'Google Tracking', 
-          status: 'success', 
-          details: `GCLID: ${trackingData.gclid ? 'Yes' : 'No'}, UTM: ${Object.keys(trackingData).filter(k => k.startsWith('utm_')).length} params`
-        });
-      } else {
-        dataRetrievalStatus.push({
-          source: 'Google Tracking', 
-          status: 'warning', 
-          details: 'No tracking data found'
-        });
       }
       
       // 5. Session ID continuity
@@ -496,11 +403,6 @@
       if (sessionId) {
         data.sessionId = sessionId;
         console.log('✅ Session ID preserved:', sessionId);
-        dataRetrievalStatus.push({
-          source: 'Session Continuity', 
-          status: 'success', 
-          details: `ID: ${sessionId.substring(0, 20)}...`
-        });
       }
       
       console.log('📋 Final comprehensive data object:', data);
@@ -578,20 +480,7 @@
       return sessionId;
     }
 
-    function updateDataSourceDisplay(){
-      const container = document.getElementById('dataSourceList');
-      if (!container) return;
-      
-      container.innerHTML = dataRetrievalStatus.map(item => {
-        const statusClass = item.status === 'success' ? 'source-success' : 
-                           item.status === 'warning' ? 'source-warning' : 'source-error';
-        const icon = item.status === 'success' ? '✅' : 
-                    item.status === 'warning' ? '⚠️' : '❌';
-        return `<div class="source-item ${statusClass}">${icon} ${item.source}: ${item.details}</div>`;
-      }).join('');
-    }
-
-    // === RENDERING ===
+    // Get Google tracking data from localStorage
     function addDetailRow(buf, label, value){
       if (value !== undefined && value !== null && String(value).trim() !== ''){
         buf.push(`<div class="detail-row"><span class="detail-label">${label}:</span><span class="detail-value">${value}</span></div>`);
@@ -652,10 +541,8 @@
       addDetailRow(rows, 'UTM Medium', data.utm_medium);
       addDetailRow(rows, 'UTM Campaign', data.utm_campaign);
 
-      // Meta
+      // Meta (Session ID only, no source/formVersion shown to customer)
       addDetailRow(rows, 'Session ID', data.sessionId);
-      addDetailRow(rows, 'Source', data.source);
-      addDetailRow(rows, 'Form Version', data.formVersion);
 
       content.innerHTML = rows.join('');
       container.style.display = rows.length ? 'block' : 'none';
@@ -818,20 +705,6 @@
       }
     }
 
-    // Debug panel
-    function toggleDebugPanel(){
-      const panel = document.getElementById('debugPanel');
-      const btn = document.querySelector('.debug-toggle');
-      if (panel.style.display === 'none' || panel.style.display === ''){
-        panel.style.display = 'block';
-        btn.textContent = 'Hide Debug Info';
-        document.getElementById('debugContent').textContent = JSON.stringify(bookingData, null, 2);
-      } else {
-        panel.style.display = 'none';
-        btn.textContent = 'Show Debug Info';
-      }
-    }
-
     // === BOOTSTRAP ===
     window.addEventListener('load', async () => {
       const params = new URLSearchParams(window.location.search);
@@ -843,9 +716,6 @@
       }else{
         bookingData = getComprehensiveBookingData();
       }
-
-      // Update final data source status
-      updateDataSourceDisplay();
 
       // Canonicalize once
       bookingData = toCanonical(bookingData);
@@ -860,9 +730,6 @@
 
       // Store for quick debugging
       try { sessionStorage.setItem('lastThanksPageData', JSON.stringify(bookingData)); } catch {}
-
-      // Optional: strip PII-ish query params after load (keeps page pretty; data already in memory)
-      // history.replaceState(null, '', window.location.pathname + (bookingId ? `?bookingId=${encodeURIComponent(bookingId)}` : ''));
     });
   </script>
 </body>
