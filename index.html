@@ -451,26 +451,26 @@ font-src 'self' data:;">
   <h2>🔧 Professional Mobile Mechanic Services</h2>
   <p>Eek Mobile Mechanical providing comprehensive mobile mechanic services across New Zealand</p>
   <div class="service-keywords">
-    <a href="#mobile-mechanic-breakdown" class="service-link" data-service="mechanic" style="text-decoration: none; color: inherit;">
-      <div class="keyword-item">
+    <a href="#mobile-mechanic-breakdown" style="text-decoration: none; color: inherit;">
+      <div class="keyword-item" data-service="emergency_breakdown">
         <h4>Emergency Breakdown</h4>
         <p>Professional mechanics arrive in 30-60 minutes anywhere in NZ</p>
       </div>
     </a>
-    <a href="#battery-jump-start" class="service-link" data-service="jumpstart" style="text-decoration: none; color: inherit;">
-      <div class="keyword-item">
+    <a href="#battery-jump-start" style="text-decoration: none; color: inherit;">
+      <div class="keyword-item" data-service="battery_jumpstart">
         <h4>Battery Jump Start</h4>
         <p>Dead battery? We'll get you started in 30-60 minutes</p>
       </div>
     </a>
-    <a href="#wrong-fuel-removal" class="service-link" data-service="fuel-extraction" style="text-decoration: none; color: inherit;">
-      <div class="keyword-item">
+    <a href="#wrong-fuel-removal" style="text-decoration: none; color: inherit;">
+      <div class="keyword-item" data-service="wrong_fuel">
         <h4>Wrong Fuel Removal</h4>
         <p>Emergency fuel rescue service - 30-60 minute response</p>
       </div>
     </a>
-    <a href="#pre-purchase-inspections" class="service-link" data-service="inspection" style="text-decoration: none; color: inherit;">
-      <div class="keyword-item">
+    <a href="#pre-purchase-inspections" style="text-decoration: none; color: inherit;">
+      <div class="keyword-item" data-service="pre_purchase">
         <h4>Pre Purchase Inspections</h4>
         <p>45-point certified inspection - 30-60 minute arrival</p>
       </div>
@@ -788,7 +788,7 @@ function updatePhoneNumbers() {
   document.querySelectorAll('.phone-display').forEach(span => {
     if (span.textContent.includes('769 000') || span.textContent.includes('769000') || span.textContent === 'Eek Now') {
       if (span.textContent === 'Eek Now') {
-        span.textContent = 'Eek Now'; // Keep this unchanged
+        span.textContent = 'Eek Now';
       } else {
         span.textContent = phoneData.display;
       }
@@ -1237,7 +1237,11 @@ function trackConversion(eventAction, eventCategory) {
     'breakdown_after_hours': 35000,
     'battery_after_hours': 20000,
     'fuel_drain_after_hours': 45000,
-    'inspection_after_hours': 25000
+    'inspection_after_hours': 25000,
+    'service_card_breakdown_call': 28900,
+    'service_card_battery_call': 14900,
+    'service_card_fuel_call': 39900,
+    'service_card_inspection_call': 19900
   };
   
   const eventValue = serviceValues[eventAction] || 25000;
@@ -1280,7 +1284,11 @@ function getServiceType(eventAction) {
     'breakdown_after_hours': 'After Hours Breakdown',
     'battery_after_hours': 'After Hours Battery',
     'fuel_drain_after_hours': 'After Hours Fuel Drain',
-    'inspection_after_hours': 'After Hours Inspection'
+    'inspection_after_hours': 'After Hours Inspection',
+    'service_card_breakdown_call': 'Service Card - Emergency Breakdown',
+    'service_card_battery_call': 'Service Card - Battery Jump Start',
+    'service_card_fuel_call': 'Service Card - Wrong Fuel Removal',
+    'service_card_inspection_call': 'Service Card - Pre Purchase Inspection'
   };
   return serviceMap[eventAction] || 'General Service';
 }
