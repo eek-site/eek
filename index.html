@@ -882,7 +882,7 @@ function updatePhoneNumbers() {
   });
 }
 
-// FIXED: Check system availability status with better error handling
+// Check system availability status with better error handling
 async function checkSystemStatus() {
   const debugSystemStatus = document.getElementById('debugSystemStatus');
   
@@ -896,7 +896,7 @@ async function checkSystemStatus() {
       },
       body: JSON.stringify({}),
       cache: "no-store",
-      timeout: 10000 // 10 second timeout
+      timeout: 10000
     });
     
     if (response.ok) {
@@ -927,6 +927,38 @@ async function checkSystemStatus() {
   
   // Default to active (phones visible) if check fails
   console.log('🔄 Defaulting to ACTIVE due to API failure');
+  return true;
+}
+
+// Check the new callflow toggle to determine if gclid override should apply
+async function checkGclidOverrideAllowed() {
+  try {
+    console.log('🔄 Checking gclid override permission...');
+    
+    const response = await fetch("https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f20c5153e8a4de0be50a17e2dab4254/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Zw5-_6YSCNPb2cfjjfa0Oj_Fpc7N9rhHfc6fPZZhX7g", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({}),
+      cache: "no-store",
+      timeout: 10000
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      const isActive = data.state === 'Active';
+      console.log('✅ GCLID override permission:', isActive ? 'ALLOWED' : 'BLOCKED');
+      return isActive;
+    } else {
+      console.warn('⚠️ GCLID override check returned non-OK status:', response.status);
+    }
+  } catch (error) {
+    console.error('❌ Error checking gclid override permission:', error);
+  }
+  
+  // Default to allowed if check fails
+  console.log('🔄 Defaulting to GCLID override ALLOWED due to API failure');
   return true;
 }
 
@@ -985,12 +1017,25 @@ async function updateHoursDisplay() {
     debugPaymentToken.textContent = hasPaymentToken ? 'YES' : 'NO';
   }
   
-  // For gclid or token users, always treat as system active (open for business)
+  // Check if gclid override is allowed
+  const gclidOverrideAllowed = await checkGclidOverrideAllowed();
+  
+  // For gclid or token users, check if override should apply
   let systemActive;
-  if (hasGclid || hasPaymentToken) {
+  if (hasPaymentToken) {
+    // Payment token always overrides
     systemActive = true;
-    console.log('🎯 GCLID or Token detected - forcing system active (always open)');
+    console.log('💳 Payment token detected - forcing system active');
+  } else if (hasGclid && gclidOverrideAllowed) {
+    // GCLID only overrides if the new API allows it
+    systemActive = true;
+    console.log('🎯 GCLID detected AND override allowed - forcing system active');
+  } else if (hasGclid && !gclidOverrideAllowed) {
+    // GCLID present but override blocked - use normal system status
+    systemActive = await checkSystemStatus();
+    console.log('🚫 GCLID detected BUT override BLOCKED - using normal system status');
   } else {
+    // No special parameters - check normal system status
     systemActive = await checkSystemStatus();
   }
   
