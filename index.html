@@ -569,11 +569,11 @@ font-src 'self' data:;">
 <a class="sticky-call" href="#closedBanner" id="stickyClosedButton" style="display: none; background: #666;">🕐 View Hours</a>
 
 <script>
-// IMMEDIATE FIRST VISIT TRACKING - NO DEPENDENCIES
+// IMMEDIATE FIRST VISIT TRACKING - BUT WAITS FOR COMPLETE DATA
 (function() {
   const FIRST_VISIT_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
   
-  console.log('🔥 FIRST VISIT SCRIPT EXECUTING IMMEDIATELY');
+  console.log('🔥 FIRST VISIT SCRIPT INITIALIZED');
   
   // Check if already sent this session
   if (sessionStorage.getItem("eek_first_visit_sent") === "1") {
@@ -603,64 +603,81 @@ font-src 'self' data:;">
     console.log('📋 Using stored GCLID:', gclid);
   }
   
-  // Build payload
-  const payload = {
-    eventType: "session_started",
-    timestamp: new Date().toISOString(),
-    sessionId: sessionId,
-    gclid: gclid,
-    site: {
-      domain: location.hostname,
-      url: location.href,
-      path: location.pathname,
-      query: location.search ? location.search.slice(1) : "",
-      title: document.title,
-      referrer: document.referrer || null
-    },
-    utm: {
-      source: urlParams.get("utm_source") || null,
-      medium: urlParams.get("utm_medium") || null,
-      campaign: urlParams.get("utm_campaign") || null,
-      term: urlParams.get("utm_term") || null,
-      content: urlParams.get("utm_content") || null,
+  // Store function to send tracking data - will be called AFTER updateHoursDisplay completes
+  window.sendFirstVisitTracking = function(trackingData) {
+    console.log('📤 SENDING FIRST VISIT TRACKING WITH COMPLETE DATA...');
+    
+    const payload = {
+      eventType: "session_started",
+      timestamp: new Date().toISOString(),
+      sessionId: sessionId,
       gclid: gclid,
-      msclkid: urlParams.get("msclkid") || null,
-      fbclid: urlParams.get("fbclid") || null,
-      rdtclid: urlParams.get("rdtclid") || null
-    },
-    device: {
-      userAgent: navigator.userAgent,
-      platform: navigator.platform || null,
-      language: navigator.language || null,
-      mobile: /Mobi|Android/i.test(navigator.userAgent),
-      screen: {
-        width: (window.screen && window.screen.width) || null,
-        height: (window.screen && window.screen.height) || null,
-        pixelRatio: window.devicePixelRatio || 1
+      apiStates: {
+        callflowState: trackingData.callflowState || 'unknown',
+        gclidOverrideState: trackingData.gclidOverrideState || 'unknown'
+      },
+      decisions: {
+        systemActive: trackingData.systemActive,
+        phoneNumbersVisible: trackingData.phoneNumbersVisible,
+        hasPaymentToken: trackingData.hasPaymentToken,
+        hasGclid: trackingData.hasGclid,
+        gclidOverrideAllowed: trackingData.gclidOverrideAllowed,
+        duringBusinessHours: trackingData.duringBusinessHours
+      },
+      site: {
+        domain: location.hostname,
+        url: location.href,
+        path: location.pathname,
+        query: location.search ? location.search.slice(1) : "",
+        title: document.title,
+        referrer: document.referrer || null
+      },
+      utm: {
+        source: urlParams.get("utm_source") || null,
+        medium: urlParams.get("utm_medium") || null,
+        campaign: urlParams.get("utm_campaign") || null,
+        term: urlParams.get("utm_term") || null,
+        content: urlParams.get("utm_content") || null,
+        gclid: gclid,
+        msclkid: urlParams.get("msclkid") || null,
+        fbclid: urlParams.get("fbclid") || null,
+        rdtclid: urlParams.get("rdtclid") || null
+      },
+      device: {
+        userAgent: navigator.userAgent,
+        platform: navigator.platform || null,
+        language: navigator.language || null,
+        mobile: /Mobi|Android/i.test(navigator.userAgent),
+        screen: {
+          width: (window.screen && window.screen.width) || null,
+          height: (window.screen && window.screen.height) || null,
+          pixelRatio: window.devicePixelRatio || 1
+        }
       }
-    }
+    };
+    
+    console.log('🚀 SENDING FIRST VISIT WEBHOOK NOW:', payload);
+    
+    fetch(FIRST_VISIT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true,
+      cache: "no-store"
+    }).then(response => {
+      console.log('✅ FIRST VISIT WEBHOOK SUCCESS:', response.status, response.statusText);
+      if (response.ok) {
+        sessionStorage.setItem("eek_first_visit_sent", "1");
+        console.log('✅ Marked as sent for this session');
+      } else {
+        console.error('❌ FIRST VISIT WEBHOOK FAILED:', response.status);
+      }
+    }).catch(error => {
+      console.error('❌ FIRST VISIT WEBHOOK ERROR:', error);
+    });
   };
   
-  console.log('🚀 SENDING FIRST VISIT WEBHOOK NOW:', payload);
-  
-  // Send webhook immediately
-  fetch(FIRST_VISIT_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-    keepalive: true,
-    cache: "no-store"
-  }).then(response => {
-    console.log('✅ FIRST VISIT WEBHOOK SUCCESS:', response.status, response.statusText);
-    if (response.ok) {
-      sessionStorage.setItem("eek_first_visit_sent", "1");
-      console.log('✅ Marked as sent for this session');
-    } else {
-      console.error('❌ FIRST VISIT WEBHOOK FAILED:', response.status);
-    }
-  }).catch(error => {
-    console.error('❌ FIRST VISIT WEBHOOK ERROR:', error);
-  });
+  console.log('✅ First visit tracking ready - waiting for updateHoursDisplay to complete');
 })();
 
 // Dynamic phone number based on traffic source
@@ -884,10 +901,16 @@ function updatePhoneNumbers() {
 
 // Check system availability status with better error handling
 async function checkSystemStatus() {
+  console.log('═══════════════════════════════════════════════════════');
+  console.log('🔄 checkSystemStatus() CALLED');
+  console.log('Call stack:', new Error().stack);
+  console.log('═══════════════════════════════════════════════════════');
+  
   const debugSystemStatus = document.getElementById('debugSystemStatus');
   
   try {
-    console.log('🔄 Checking system status...');
+    console.log('🌐 Making fetch request to system status API...');
+    console.log('URL: https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/...');
     
     const response = await fetch("https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/17b1d2990e6f4082a2b0d9c2f1a29025/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=bPyoxJ24kuxJZOyLGAclGaEuH6BHwUTFaGmYOwHofa8", {
       method: "POST",
@@ -899,10 +922,19 @@ async function checkSystemStatus() {
       timeout: 10000
     });
     
+    console.log('📥 Response received:', response.status, response.statusText);
+    
     if (response.ok) {
       const data = await response.json();
+      console.log('📦 Response data:', data);
       const isActive = data.state === 'Active';
+      
+      // Store state globally for tracking
+      window._eek_callflow_state = data.state;
+      console.log('💾 Stored callflow state:', window._eek_callflow_state);
+      
       console.log('✅ System status check successful:', isActive ? 'ACTIVE' : 'INACTIVE');
+      console.log('Returning:', isActive);
       
       if (debugSystemStatus) {
         debugSystemStatus.textContent = isActive ? 'ACTIVE' : 'INACTIVE';
@@ -912,6 +944,7 @@ async function checkSystemStatus() {
       return isActive;
     } else {
       console.warn('⚠️ System status API returned non-OK status:', response.status);
+      window._eek_callflow_state = 'error';
       if (debugSystemStatus) {
         debugSystemStatus.textContent = `ERROR (${response.status})`;
         debugSystemStatus.style.color = '#ff0';
@@ -919,6 +952,8 @@ async function checkSystemStatus() {
     }
   } catch (error) {
     console.error('❌ Error checking system status:', error);
+    console.error('Error details:', error.message, error.stack);
+    window._eek_callflow_state = 'error';
     if (debugSystemStatus) {
       debugSystemStatus.textContent = 'ERROR (Network)';
       debugSystemStatus.style.color = '#f00';
@@ -932,8 +967,15 @@ async function checkSystemStatus() {
 
 // Check the new callflow toggle to determine if gclid override should apply
 async function checkGclidOverrideAllowed() {
+  console.log('═══════════════════════════════════════════════════════');
+  console.log('🎯 checkGclidOverrideAllowed() CALLED');
+  console.log('Call stack:', new Error().stack);
+  console.log('═══════════════════════════════════════════════════════');
+  
   try {
-    console.log('🔄 Checking gclid override permission...');
+    console.log('🌐 Making fetch request to GCLID override permission API...');
+    console.log('URL: https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/...');
+    console.log('Workflow ID: 5f20c5153e8a4de0be50a17e2dab4254');
     
     const response = await fetch("https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f20c5153e8a4de0be50a17e2dab4254/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Zw5-_6YSCNPb2cfjjfa0Oj_Fpc7N9rhHfc6fPZZhX7g", {
       method: "POST",
@@ -945,16 +987,29 @@ async function checkGclidOverrideAllowed() {
       timeout: 10000
     });
     
+    console.log('📥 Response received:', response.status, response.statusText);
+    
     if (response.ok) {
       const data = await response.json();
+      console.log('📦 Response data:', data);
       const isActive = data.state === 'Active';
+      
+      // Store state globally for tracking
+      window._eek_gclid_override_state = data.state;
+      console.log('💾 Stored GCLID override state:', window._eek_gclid_override_state);
+      
       console.log('✅ GCLID override permission:', isActive ? 'ALLOWED' : 'BLOCKED');
+      console.log('Returning:', isActive);
       return isActive;
     } else {
       console.warn('⚠️ GCLID override check returned non-OK status:', response.status);
+      console.warn('Response details:', response);
+      window._eek_gclid_override_state = 'error';
     }
   } catch (error) {
     console.error('❌ Error checking gclid override permission:', error);
+    console.error('Error details:', error.message, error.stack);
+    window._eek_gclid_override_state = 'error';
   }
   
   // Default to allowed if check fails
@@ -1004,12 +1059,18 @@ function isWithinBusinessHours() {
 
 // FIXED: Update UI based on system status with proper logic
 async function updateHoursDisplay() {
-  console.log('🔄 Starting updateHoursDisplay...');
+  console.log('╔═══════════════════════════════════════════════════════════════╗');
+  console.log('║  updateHoursDisplay() STARTING                                ║');
+  console.log('╚═══════════════════════════════════════════════════════════════╝');
   
   // Check if payment token or gclid exists
   const urlParams = new URLSearchParams(window.location.search);
   const hasPaymentToken = urlParams.get('token');
   const hasGclid = urlParams.get('gclid');
+  
+  console.log('📋 URL Parameters:');
+  console.log('  - hasPaymentToken:', hasPaymentToken ? 'YES (' + hasPaymentToken + ')' : 'NO');
+  console.log('  - hasGclid:', hasGclid ? 'YES (' + hasGclid + ')' : 'NO');
   
   // Update debug info
   const debugPaymentToken = document.getElementById('debugPaymentToken');
@@ -1017,36 +1078,58 @@ async function updateHoursDisplay() {
     debugPaymentToken.textContent = hasPaymentToken ? 'YES' : 'NO';
   }
   
+  console.log('');
+  console.log('🔍 STARTING API CHECKS...');
+  console.log('─────────────────────────────────────────────────────────────');
+  
   // Check if gclid override is allowed
+  console.log('STEP 1: Calling checkGclidOverrideAllowed()...');
   const gclidOverrideAllowed = await checkGclidOverrideAllowed();
+  console.log('STEP 1 RESULT: gclidOverrideAllowed =', gclidOverrideAllowed);
+  console.log('');
   
   // For gclid or token users, check if override should apply
   let systemActive;
+  console.log('STEP 2: Determining systemActive based on conditions...');
+  
   if (hasPaymentToken) {
     // Payment token always overrides
     systemActive = true;
-    console.log('💳 Payment token detected - forcing system active');
+    console.log('  ✅ Payment token detected - forcing system active');
+    console.log('  Result: systemActive = true (NO API CALL NEEDED)');
   } else if (hasGclid && gclidOverrideAllowed) {
     // GCLID only overrides if the new API allows it
     systemActive = true;
-    console.log('🎯 GCLID detected AND override allowed - forcing system active');
+    console.log('  ✅ GCLID detected AND override allowed - forcing system active');
+    console.log('  Result: systemActive = true (NO API CALL NEEDED)');
   } else if (hasGclid && !gclidOverrideAllowed) {
     // GCLID present but override blocked - use normal system status
+    console.log('  🚫 GCLID detected BUT override BLOCKED - checking normal system status');
+    console.log('  Calling checkSystemStatus()...');
     systemActive = await checkSystemStatus();
-    console.log('🚫 GCLID detected BUT override BLOCKED - using normal system status');
+    console.log('  Result: systemActive =', systemActive);
   } else {
     // No special parameters - check normal system status
+    console.log('  📍 No special parameters - checking normal system status');
+    console.log('  Calling checkSystemStatus()...');
     systemActive = await checkSystemStatus();
+    console.log('  Result: systemActive =', systemActive);
   }
+  
+  console.log('');
+  console.log('STEP 2 COMPLETE: systemActive =', systemActive);
+  console.log('─────────────────────────────────────────────────────────────');
   
   const duringBusinessHours = isWithinBusinessHours();
   
-  console.log('📊 Status Summary:', {
-    systemActive,
-    duringBusinessHours,
-    hasPaymentToken: !!hasPaymentToken,
-    hasGclid: !!hasGclid
-  });
+  console.log('');
+  console.log('📊 FINAL STATUS SUMMARY:');
+  console.log('  - systemActive:', systemActive);
+  console.log('  - duringBusinessHours:', duringBusinessHours);
+  console.log('  - hasPaymentToken:', !!hasPaymentToken);
+  console.log('  - hasGclid:', !!hasGclid);
+  console.log('  - gclidOverrideAllowed:', gclidOverrideAllowed);
+  console.log('');
   
   // Banner logic - hide for payment token or gclid users
   const closedBanner = document.getElementById('closedBanner');
@@ -1152,6 +1235,27 @@ async function updateHoursDisplay() {
   }
   
   console.log('✅ updateHoursDisplay completed');
+  
+  // SEND FIRST VISIT TRACKING WITH COMPLETE DATA
+  if (typeof window.sendFirstVisitTracking === 'function') {
+    console.log('📊 Preparing tracking data to send...');
+    
+    const trackingData = {
+      callflowState: window._eek_callflow_state || 'unknown',
+      gclidOverrideState: window._eek_gclid_override_state || 'unknown',
+      systemActive: systemActive,
+      phoneNumbersVisible: systemActive,
+      hasPaymentToken: !!hasPaymentToken,
+      hasGclid: !!hasGclid,
+      gclidOverrideAllowed: gclidOverrideAllowed,
+      duringBusinessHours: duringBusinessHours
+    };
+    
+    console.log('📤 Sending tracking data:', trackingData);
+    window.sendFirstVisitTracking(trackingData);
+  } else {
+    console.warn('⚠️ sendFirstVisitTracking function not available');
+  }
 }
 
 /* === INCOMING CALL CORRELATION WEBHOOK === */
