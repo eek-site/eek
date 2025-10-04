@@ -997,7 +997,7 @@ async function updateHoursDisplay() {
   
   const urlParams = new URLSearchParams(window.location.search);
   const hasPaymentToken = urlParams.get('token');
-  const hasGclid = urlParams.get('gclid');
+  const hasGclid = urlParams.get('gclid') || urlParams.get('gbraid');
   
   const debugPaymentToken = document.getElementById('debugPaymentToken');
   if (debugPaymentToken) debugPaymentToken.textContent = hasPaymentToken ? 'YES' : 'NO';
