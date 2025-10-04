@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -206,7 +207,7 @@
 <div class="booking-container">
   <div class="booking-header">
     <h2>Don't Buy a Lemon! Book Your Pre Purchase Inspection</h2>
-    <p>Professional 45-point certified inspection • Mobile service anywhere in NZ</p>
+    <p>Professional 45-point certified inspection • Mobile service anywhere in NZ • $289 flat rate</p>
     <div class="service-stats">
       <div class="stats-grid">
         <div class="stat-item"><span class="stat-number">20%</span>of vehicles rejected</div>
@@ -302,7 +303,7 @@
           <li><strong>45-point inspection checklist</strong></li>
           <li><strong>Written inspection report</strong> with photos</li>
           <li><strong>Professional recommendation</strong> on purchase decision</li>
-          <li><strong>Transparent pricing</strong> calculated based on your location and vehicle</li>
+          <li><strong>Flat rate pricing: $289</strong> (plus vehicle type addon if applicable)</li>
         </ul>
       </div>
 
@@ -319,7 +320,7 @@
         <h4>Timing Information</h4>
         <p><strong>Weekdays (Mon–Fri):</strong> 10:00 AM – 4:00 PM with <strong>90-minute windows</strong></p>
         <p><strong>Weekends (Sat–Sun):</strong> 10:00 AM – 12:00 PM with <strong>90-minute window</strong></p>
-        <p>Prices will be calculated based on your specific location and vehicle details.</p>
+        <p><strong>Flat Rate: $289</strong> (plus vehicle type addon if applicable)</p>
       </div>
 
       <div class="calendar-container">
@@ -406,7 +407,7 @@
             I agree to the <a href="https://eek.nz/terms" target="_blank">Eek Mobile Mechanical Terms of Service</a> and understand that:
             <ul style="margin:10px 0;padding-left:20px;">
               <li>Comprehensive certified mechanical inspection</li>
-              <li>Price calculated based on location and vehicle type</li>
+              <li>Flat rate pricing: $289 (plus vehicle type addon if applicable)</li>
               <li>All arrival windows are 90 minutes within the published hours</li>
               <li>Written report provided within 24 hours</li>
               <li>Cancellations must be made at least 2 hours in advance</li>
@@ -434,7 +435,7 @@ function extractGCLID(urlParams) {
 
 console.log('🚀 === PRE-PURCHASE INSPECTION FORM LOADED === 🚀');
 console.log('📌 Service: Pre-Purchase Vehicle Inspection');
-console.log('💵 Base pricing - Weekday: $199, Weekend: $289');
+console.log('💵 Flat rate pricing: $289');
 console.log('🌐 Current URL:', window.location.href);
 console.log('📅 Loading date/time selector...');
 
@@ -647,7 +648,7 @@ let vehicleTypeAddon = 0;
 let calculatedPrice = null;
 
 const BASE_PRICING = {
-  weekday: 199,
+  weekday: 289,
   weekend: 289
 };
 
@@ -710,7 +711,7 @@ function buildInspectionData(status) {
   }
 
   if (status === BOOKING_STATUS.VEHICLE_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.PAYMENT_PENDING) {
-    const basePrice = calculatedPrice || (isWeekendNZ(selectedDate || nowNZ()) ? BASE_PRICING.weekend : BASE_PRICING.weekday);
+    const basePrice = calculatedPrice || BASE_PRICING.weekday;
     baseData.selectedVehicleType = selectedVehicleType;
     baseData.vehicleTypeAddon = vehicleTypeAddon;
     baseData.basePrice = basePrice;
@@ -883,7 +884,7 @@ function showTimeWindows(){
   const isWeekend = isWeekendNZ(selectedDate);
   const slots = [];
   
-  const basePrice = calculatedPrice || (isWeekend ? BASE_PRICING.weekend : BASE_PRICING.weekday);
+  const basePrice = calculatedPrice || BASE_PRICING.weekday;
 
   if (isWeekend){
     slots.push({
@@ -940,7 +941,7 @@ function updateSummary(){
   if (selectedTimeWindow){
     base = selectedTimeWindow.price;
   } else {
-    base = calculatedPrice || (isWeekendNZ(selectedDate || nowNZ()) ? BASE_PRICING.weekend : BASE_PRICING.weekday);
+    base = calculatedPrice || BASE_PRICING.weekday;
   }
   const total = base + vehicleTypeAddon;
   
@@ -985,8 +986,7 @@ function buildRedirectUrl(){
   if (sessionId) params.append('session_id', sessionId);
   if (gclid) params.append('gclid', gclid);
 
-  let base = selectedTimeWindow ? selectedTimeWindow.price
-    : (calculatedPrice || (isWeekendNZ(selectedDate || nowNZ()) ? BASE_PRICING.weekend : BASE_PRICING.weekday));
+  let base = selectedTimeWindow ? selectedTimeWindow.price : (calculatedPrice || BASE_PRICING.weekday);
   const total = base + vehicleTypeAddon;
 
   params.append('price', total);
@@ -1029,8 +1029,7 @@ async function generatePaymentLink(){
   const sellerName = sanitizeText(document.getElementById('sellerNameInput').value);
   const sellerPhone = sanitizePhone(document.getElementById('sellerPhoneInput').value);
 
-  let base = selectedTimeWindow ? selectedTimeWindow.price
-    : (calculatedPrice || (isWeekendNZ(selectedDate || nowNZ()) ? BASE_PRICING.weekend : BASE_PRICING.weekday));
+  let base = selectedTimeWindow ? selectedTimeWindow.price : (calculatedPrice || BASE_PRICING.weekday);
   const total = base + vehicleTypeAddon;
   
   console.log('💰 Price calculation:');
@@ -1147,3 +1146,4 @@ function hideNotification(node) {
 </script>
 </body>
 </html>
+```
