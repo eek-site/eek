@@ -566,6 +566,11 @@ font-src 'self' data:;">
 <a class="sticky-call" href="#closedBanner" id="stickyClosedButton" style="display: none; background: #666;">🕐 View Hours</a>
 
 <script>
+// CENTRALIZED GCLID EXTRACTION UTILITY
+function extractGCLID(urlParams) {
+  return urlParams.get('gclid') || urlParams.get('gbraid') || urlParams.get('wbraid') || null;
+}
+
 // IMMEDIATE FIRST VISIT TRACKING - NO DEPENDENCIES
 (function() {
   const FIRST_VISIT_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
@@ -589,11 +594,11 @@ font-src 'self' data:;">
   }
   
   const urlParams = new URLSearchParams(location.search);
-  let gclid = urlParams.get("gclid");
+  let gclid = extractGCLID(urlParams);
   if (gclid) {
     localStorage.setItem("eek_gclid", gclid);
     localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
-    console.log('✅ GCLID captured and stored:', gclid);
+    console.log('✅ GCLID/GBRAID/WBRAID captured and stored:', gclid);
   } else {
     gclid = localStorage.getItem("eek_gclid");
     console.log('📋 Using stored GCLID:', gclid);
@@ -720,8 +725,8 @@ const EEK_CALLFLOW_STATE_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d
 
 async function fetchStatesOnce(force = false) {
   const now = Date.now();
-  if (!force && eekStatesFetchPromise) return eekStatesFetchPromise;         // de-dupe in-flight
-  if (!force && now - (window.eek_states.lastFetched || 0) < 30_000) {       // throttle 30s
+  if (!force && eekStatesFetchPromise) return eekStatesFetchPromise;
+  if (!force && now - (window.eek_states.lastFetched || 0) < 30_000) {
     return window.eek_states;
   }
 
@@ -753,7 +758,7 @@ async function fetchStatesOnce(force = false) {
   return eekStatesFetchPromise;
 }
 
-function startStatePoller(intervalMs = 300_000) { // 5 min default
+function startStatePoller(intervalMs = 300_000) {
   fetchStatesOnce(true).then(() => {
     document.dispatchEvent(new CustomEvent("eek:state:update", { detail: window.eek_states }));
   });
@@ -766,7 +771,7 @@ function startStatePoller(intervalMs = 300_000) { // 5 min default
 // Dynamic phone number based on traffic source
 function getDisplayPhoneNumber() {
   const urlParams = new URLSearchParams(window.location.search);
-  const gclid = urlParams.get('gclid');
+  const gclid = extractGCLID(urlParams);
   
   if (gclid) {
     localStorage.setItem('eek_phone_preference', 'tracking');
@@ -791,7 +796,7 @@ function buildTrackingParams() {
   const token = urlParams.get('token');
   if (token) params.set('token', token);
   
-  const gclid = urlParams.get('gclid');
+  const gclid = extractGCLID(urlParams);
   if (gclid) params.set('gclid', gclid);
   
   ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
@@ -853,7 +858,7 @@ function handleServiceSelection() {
   });
 }
 
-// FIXED: Track orange box service selection clicks - now uses same webhook as first visit
+// Track orange box service selection clicks
 function trackServiceSelection() {
   const SERVICE_SELECTION_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
   
@@ -954,7 +959,6 @@ async function checkSystemStatus() {
     debugSystemStatus.textContent = isActive ? 'ACTIVE' : 'INACTIVE';
     debugSystemStatus.style.color = isActive ? '#0f0' : '#f00';
   }
-  // Default to ACTIVE if state unknown
   if (states.callflowState == null) {
     console.log('🔄 Defaulting to ACTIVE due to missing callflow state');
     return true;
@@ -991,18 +995,17 @@ function isWithinBusinessHours() {
   return isOpen;
 }
 
-// FIXED: Update UI based on system status with proper logic + GCLID state requirement
+// Update UI based on system status with proper logic + GCLID state requirement
 async function updateHoursDisplay() {
   console.log('🔄 Starting updateHoursDisplay...');
   
   const urlParams = new URLSearchParams(window.location.search);
   const hasPaymentToken = urlParams.get('token');
-  const hasGclid = urlParams.get('gclid') || urlParams.get('gbraid');
+  const hasGclid = extractGCLID(urlParams);
   
   const debugPaymentToken = document.getElementById('debugPaymentToken');
   if (debugPaymentToken) debugPaymentToken.textContent = hasPaymentToken ? 'YES' : 'NO';
   
-  // get cached states (refreshed by poller)
   const states = await fetchStatesOnce(false);
   
   let systemActive;
@@ -1121,7 +1124,7 @@ async function updateHoursDisplay() {
     const sessionId = localStorage.getItem("eek_session_id");
     const lastCallAttemptId = localStorage.getItem("eek_last_call_attempt_id");
     const lastCallTimestamp = localStorage.getItem("eek_last_call_timestamp");
-    const gclid = localStorage.getItem("eek_last_gclid");
+    const gclid = localStorage.getItem("eek_gclid");
     
     if (!sessionId) return;
     
@@ -1148,7 +1151,7 @@ async function updateHoursDisplay() {
   };
 })();
 
-/* === ENHANCED CALL-CLICK WEBHOOK WITH GCLID === */
+/* === ENHANCED CALL-CLICK WEBHOOK WITH GCLID/GBRAID/WBRAID === */
 (function(){
   const CALL_CLICK_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
 
@@ -1163,13 +1166,14 @@ async function updateHoursDisplay() {
 
   function getUTM(){
     const q = new URLSearchParams(location.search);
+    const gclid = extractGCLID(q);
     return {
       source: q.get("utm_source") || null,
       medium: q.get("utm_medium") || null,
       campaign: q.get("utm_campaign") || null,
       term: q.get("utm_term") || null,
       content: q.get("utm_content") || null,
-      gclid: q.get("gclid") || null,
+      gclid: gclid,
       msclkid: q.get("msclkid") || null,
       fbclid: q.get("fbclid") || null,
       rdtclid: q.get("rdtclid") || null
@@ -1178,7 +1182,7 @@ async function updateHoursDisplay() {
 
   function getAndStoreGCLID(){
     const urlParams = new URLSearchParams(location.search);
-    let gclid = urlParams.get("gclid");
+    let gclid = extractGCLID(urlParams);
     if (gclid) {
       localStorage.setItem("eek_gclid", gclid);
       localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
@@ -1259,7 +1263,7 @@ async function updateHoursDisplay() {
       body: JSON.stringify(payload),
       keepalive: true
     }).then(response => {
-      console.log('✅ Call click tracked with GCLID:', gclid, 'Status:', response.status);
+      console.log('✅ Call click tracked with GCLID/GBRAID/WBRAID:', gclid, 'Status:', response.status);
     }).catch(error => {
       console.error('❌ Call click failed:', error);
     });
@@ -1282,7 +1286,7 @@ async function updateHoursDisplay() {
 
   window.addEventListener('load', function() {
     const gclid = getAndStoreGCLID();
-    if (gclid) console.log('GCLID detected and stored for persistent tracking:', gclid);
+    if (gclid) console.log('GCLID/GBRAID/WBRAID detected and stored for persistent tracking:', gclid);
   });
 })();
 
@@ -1362,14 +1366,13 @@ function getServiceType(eventAction) {
 window.addEventListener('load', function() {
   console.log('🚀 Page loaded - initializing...');
   
-  startStatePoller(5 * 60 * 1000); // keep states fresh without double-hitting
+  startStatePoller(5 * 60 * 1000);
   updatePhoneNumbers();
   updateServiceLinks();
   handleServiceSelection();
   trackServiceSelection();
   updateHoursDisplay();
   
-  // Set up periodic checks every 5 minutes (UI refresh)
   setInterval(updateHoursDisplay, 5 * 60 * 1000);
   
   if (typeof gtag !== 'undefined') {
@@ -1395,7 +1398,7 @@ window.addEventListener('scroll', function() {
   }
 });
 
-// FIXED TOKEN PAYMENT FUNCTIONALITY
+// TOKEN PAYMENT FUNCTIONALITY
 (function () {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('token');
@@ -1432,9 +1435,6 @@ window.addEventListener('scroll', function() {
     console.log('💳 Payment UI setup complete');
   }
 })();
-
-// Enable debug panel for testing (remove in production)
-// document.querySelector('.debug-info').style.display = 'block';
 </script>
 
 </body>
