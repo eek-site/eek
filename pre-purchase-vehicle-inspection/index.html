@@ -87,7 +87,6 @@
     .day:hover{background:#f0f0f0}
     .day.disabled,.day.past{color:#ccc;cursor:not-allowed}
     .day.selected{background:var(--brand);color:#fff}
-    /* Remove any date price chips entirely */
     .day .price-chip{display:none!important}
 
     .time-windows{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px;margin:20px 0}
@@ -103,7 +102,6 @@
     .time-window.priority .price-big{color:var(--ok)}
     .price-big.calculating{color:var(--muted);font-size:1em}
 
-    /* Vehicle picker */
     .vehicle-types{
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
@@ -202,7 +200,7 @@
 </header>
 
 <div class="breadcrumb">
-  <a href="/">Home</a> > Don't Buy a Lemon - Pre Purchase Inspection
+  <a href="/" class="tracking-link">Home</a> > Don't Buy a Lemon - Pre Purchase Inspection
 </div>
 
 <div class="booking-container">
@@ -429,35 +427,169 @@
 </div>
 
 <script>
+// CENTRALIZED GCLID EXTRACTION UTILITY (supports gclid, gbraid, wbraid)
+function extractGCLID(urlParams) {
+  return urlParams.get('gclid') || urlParams.get('gbraid') || urlParams.get('wbraid') || null;
+}
+
 console.log('🚀 === PRE-PURCHASE INSPECTION FORM LOADED === 🚀');
 console.log('📌 Service: Pre-Purchase Vehicle Inspection');
 console.log('💵 Base pricing - Weekday: $199, Weekend: $289');
 console.log('🌐 Current URL:', window.location.href);
 console.log('📅 Loading date/time selector...');
 
+// === TRACKING INITIALIZATION ===
+let sessionId = null;
+let gclid = null;
+let utmData = {};
+
+function initializeTracking() {
+  console.log('📊 Initializing tracking system...');
+  
+  sessionId = getOrCreateSessionId();
+  gclid = getGCLID();
+  utmData = getUTMData();
+  
+  console.log('✅ Tracking system initialized');
+  console.log('📊 Session ID:', sessionId);
+  console.log('📊 GCLID/GBRAID/WBRAID:', gclid || 'None');
+  console.log('📊 UTM Data:', utmData);
+}
+
+function getOrCreateSessionId() {
+  let sid = localStorage.getItem("eek_session_id");
+  
+  if (!sid) {
+    const urlParams = new URLSearchParams(window.location.search);
+    sid = urlParams.get('session_id');
+    
+    if (sid) {
+      localStorage.setItem("eek_session_id", sid);
+      console.log('🔄 Session ID restored from URL');
+    } else {
+      sid = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem("eek_session_id", sid);
+      console.log('🆕 New session ID created');
+    }
+  } else {
+    console.log('✅ Existing session ID found');
+  }
+  
+  return sid;
+}
+
+function getGCLID() {
+  const urlParams = new URLSearchParams(window.location.search);
+  let gclidValue = extractGCLID(urlParams);
+  
+  if (gclidValue) {
+    localStorage.setItem("eek_gclid", gclidValue);
+    localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
+    console.log('✅ GCLID/GBRAID/WBRAID captured from URL:', gclidValue);
+    return gclidValue;
+  }
+  
+  const storedGclid = localStorage.getItem("eek_gclid");
+  const storedTimestamp = localStorage.getItem("eek_gclid_timestamp");
+  
+  if (storedGclid && storedTimestamp) {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    if (new Date(storedTimestamp) > thirtyDaysAgo) {
+      console.log('📋 Using stored GCLID/GBRAID/WBRAID:', storedGclid);
+      return storedGclid;
+    } else {
+      localStorage.removeItem("eek_gclid");
+      localStorage.removeItem("eek_gclid_timestamp");
+      console.log('⚠️ GCLID/GBRAID/WBRAID expired and removed');
+    }
+  }
+  
+  return null;
+}
+
+function getUTMData() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const utm = {};
+  const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+  
+  utmParams.forEach(param => {
+    const value = urlParams.get(param);
+    if (value) {
+      utm[param] = value;
+      localStorage.setItem(`eek_${param}`, value);
+    }
+  });
+  
+  utmParams.forEach(param => {
+    if (!utm[param]) {
+      const stored = localStorage.getItem(`eek_${param}`);
+      if (stored) {
+        utm[param] = stored;
+      }
+    }
+  });
+  
+  return utm;
+}
+
+function appendTrackingParams(url) {
+  if (url.startsWith('tel:') || url.startsWith('mailto:') || url.startsWith('http')) {
+    return url;
+  }
+  
+  const params = new URLSearchParams();
+  
+  if (sessionId) params.set('session_id', sessionId);
+  if (gclid) params.set('gclid', gclid);
+  
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+    const value = utmData[param];
+    if (value) params.set(param, value);
+  });
+  
+  const paramString = params.toString();
+  if (!paramString) return url;
+  
+  const separator = url.includes('?') ? '&' : '?';
+  return url + separator + paramString;
+}
+
+function updateAllTrackingLinks() {
+  console.log('🔗 Updating all navigation links with tracking parameters...');
+  
+  document.querySelectorAll('.tracking-link').forEach(link => {
+    const originalHref = link.getAttribute('href');
+    if (originalHref && !originalHref.startsWith('tel:') && !originalHref.startsWith('mailto:')) {
+      const updatedHref = appendTrackingParams(originalHref);
+      link.setAttribute('href', updatedHref);
+      console.log(`🔗 Updated link: ${originalHref} → ${updatedHref}`);
+    }
+  });
+  
+  console.log('✅ All tracking links updated');
+}
+
 // === BOOKING STATUS CONSTANTS ===
-// Standardized booking status values for consistent tracking
 const BOOKING_STATUS = {
-  INITIAL: 'booking_started',           // Form loaded, user started entering details
-  DETAILS_COMPLETE: 'details_complete', // Step 1 completed, moving to step 2
-  TIME_SELECTED: 'time_selected',       // Step 2 completed, moving to step 3
-  VEHICLE_SELECTED: 'vehicle_selected', // Step 3 completed, moving to step 4
-  TERMS_ACCEPTED: 'terms_accepted',     // Step 4, terms accepted, about to generate payment
-  PAYMENT_PENDING: 'payment_pending'    // Payment link generated, awaiting payment
+  INITIAL: 'booking_started',
+  DETAILS_COMPLETE: 'details_complete',
+  TIME_SELECTED: 'time_selected',
+  VEHICLE_SELECTED: 'vehicle_selected',
+  TERMS_ACCEPTED: 'terms_accepted',
+  PAYMENT_PENDING: 'payment_pending'
 };
 
-// === COLOR CODING SYSTEM ===
-// Visual status indicators for tracking customer journey progression
 const STATUS_COLORS = {
-  'booking_started': '#007bff',     // Blue - Initial engagement
-  'details_complete': '#28a745',    // Green - Progress made
-  'time_selected': '#fd7e14',       // Orange - Getting close
-  'vehicle_selected': '#6f42c1',    // Purple - Almost there
-  'terms_accepted': '#20c997',      // Teal - Ready to commit
-  'payment_pending': '#dc3545'      // Red - Critical action needed
+  'booking_started': '#007bff',
+  'details_complete': '#28a745',
+  'time_selected': '#fd7e14',
+  'vehicle_selected': '#6f42c1',
+  'terms_accepted': '#20c997',
+  'payment_pending': '#dc3545'
 };
 
-// Human-readable status descriptions
 const STATUS_DESCRIPTIONS = {
   'booking_started': 'Customer started inspection booking form',
   'details_complete': 'Customer completed contact, vehicle and seller details',
@@ -467,7 +599,7 @@ const STATUS_DESCRIPTIONS = {
   'payment_pending': 'Payment link generated, awaiting customer payment'
 };
 
-// --- NZ timezone helpers (force all "wall-clock" logic to Pacific/Auckland) ---
+// --- NZ timezone helpers ---
 const NZ_TZ = 'Pacific/Auckland';
 
 function nowNZ() {
@@ -480,7 +612,7 @@ function nowNZ() {
   return new Date(`${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}:${get('second')}`);
 }
 
-function nzDate(y, m /*0-11*/, d, hh=0, mm=0, ss=0) {
+function nzDate(y, m, d, hh=0, mm=0, ss=0) {
   const base = nowNZ();
   const dt = new Date(base);
   dt.setFullYear(y, m, d);
@@ -493,19 +625,19 @@ function isTodayNZ(d) {
   const n = nowNZ();
   return d.getFullYear()===n.getFullYear() && d.getMonth()===n.getMonth() && d.getDate()===n.getDate();
 }
+
 function isWeekendNZ(d){ const g=d.getDay(); return g===0 || g===6; }
 
 function fmtTimeNZ(d){
   return d.toLocaleTimeString('en-NZ', { timeZone: NZ_TZ, hour:'numeric', minute:'2-digit' });
 }
+
 function fmtDateNZ(d){
   return d.toLocaleDateString('en-NZ', { timeZone: NZ_TZ, weekday:'long', year:'numeric', month:'long', day:'numeric' });
 }
 
 // API URLs
 const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
-
-// For inspection booking updates
 const PRICING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
 
 let selectedDate = null;
@@ -514,36 +646,32 @@ let selectedVehicleType = 'standard';
 let vehicleTypeAddon = 0;
 let calculatedPrice = null;
 
-// Base pricing
 const BASE_PRICING = {
   weekday: 199,
   weekend: 289
 };
 
-// Helpers: normalization
+// Helpers
 function sanitizePhone(val){ return (val || '').replace(/\D/g,''); }
 function sanitizeRego(val){ return (val || '').toUpperCase().replace(/\s+/g,''); }
 function sanitizeText(val){ return (val || '').trim().replace(/\s+/g,' '); }
 
 // === CONSISTENT DATA BUILDER ===
-// Builds consistent data structure for all API calls
 function buildInspectionData(status) {
   const baseData = {
-    // Session and tracking
-    sessionId: window.sessionId,
+    sessionId: sessionId,
+    gclid: gclid,
     bookingStatus: status,
     statusColor: STATUS_COLORS[status] || '#6c757d',
     statusDescription: STATUS_DESCRIPTIONS[status] || 'Unknown status',
     timestamp: new Date().toISOString(),
     
-    // Customer information
     name: sanitizeText(document.getElementById('nameInput').value),
     phone: sanitizePhone(document.getElementById('phoneInput').value),
     email: document.getElementById('emailInput').value.trim(),
     location: sanitizeText(document.getElementById('locationInput').value),
     details: document.getElementById('detailsInput').value || '',
     
-    // Vehicle information
     rego: sanitizeRego(document.getElementById('regoInput').value),
     vehicleRego: sanitizeRego(document.getElementById('regoInput').value),
     year: document.getElementById('yearInput').value.trim(),
@@ -554,21 +682,26 @@ function buildInspectionData(status) {
     vehicleModel: sanitizeText(document.getElementById('modelInput').value),
     vehicleType: selectedVehicleType || 'standard',
     
-    // Seller information
     sellerName: sanitizeText(document.getElementById('sellerNameInput').value),
     sellerPhone: sanitizePhone(document.getElementById('sellerPhoneInput').value),
     
-    // Service information
     service: 'inspection',
     serviceCode: 'INSP',
     serviceTitle: 'Pre Purchase Vehicle Inspection',
     
-    // Source tracking
+    utm: {
+      source: utmData.utm_source || null,
+      medium: utmData.utm_medium || null,
+      campaign: utmData.utm_campaign || null,
+      term: utmData.utm_term || null,
+      content: utmData.utm_content || null,
+      gclid: gclid
+    },
+    
     source: 'inspection_booking_form',
-    formVersion: '2.0'
+    formVersion: '2.1'
   };
 
-  // Add service-specific data based on status
   if (status === BOOKING_STATUS.TIME_SELECTED || status === BOOKING_STATUS.VEHICLE_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.PAYMENT_PENDING) {
     baseData.scheduledDate = selectedDate ? fmtDateNZ(selectedDate) : '';
     baseData.scheduledDateISO = selectedDate ? selectedDate.toISOString() : '';
@@ -576,7 +709,6 @@ function buildInspectionData(status) {
     baseData.timeWindowId = selectedTimeWindow ? selectedTimeWindow.id : '';
   }
 
-  // Add vehicle type and pricing for later stages
   if (status === BOOKING_STATUS.VEHICLE_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.PAYMENT_PENDING) {
     const basePrice = calculatedPrice || (isWeekendNZ(selectedDate || nowNZ()) ? BASE_PRICING.weekend : BASE_PRICING.weekday);
     baseData.selectedVehicleType = selectedVehicleType;
@@ -590,12 +722,9 @@ function buildInspectionData(status) {
   return baseData;
 }
 
-// === CONSISTENT API CALLER ===
-// Sends booking data to appropriate API with consistent structure
 async function sendInspectionUpdate(status) {
   const data = buildInspectionData(status);
   
-  // Enhanced console logging with color coding
   console.log(`%c📡 INSPECTION STATUS UPDATE: ${status.toUpperCase()}`, `color: ${STATUS_COLORS[status]}; font-weight: bold; font-size: 14px;`);
   console.log(`%c${STATUS_DESCRIPTIONS[status]}`, `color: ${STATUS_COLORS[status]}; font-style: italic;`);
   console.log('📊 Complete inspection data:', data);
@@ -617,7 +746,8 @@ async function sendInspectionUpdate(status) {
 // Initialize
 document.addEventListener('DOMContentLoaded', function(){
   console.log('🚀 === INSPECTION FORM INITIALIZED === 🚀');
-  window.sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  initializeTracking();
+  updateAllTrackingLinks();
   sendInspectionUpdate(BOOKING_STATUS.INITIAL);
 });
 
@@ -656,11 +786,7 @@ async function goToStep2(){
   if (!sellerPhone){ showNotification('Missing Seller Phone', "Please enter the seller's phone number", 'error'); document.getElementById('sellerPhoneInput').focus(); return; }
   if (!phoneRegex.test(sellerPhone) || sellerPhone.replace(/\D/g,'').length < 9){ showNotification('Invalid Seller Phone', 'Please enter a valid seller phone number', 'error'); document.getElementById('sellerPhoneInput').focus(); return; }
 
-  // Send details complete update
   await sendInspectionUpdate(BOOKING_STATUS.DETAILS_COMPLETE);
-
-  const btn = document.getElementById('nextBtn');
-  console.log('💰 Using hardcoded pricing - Weekday: $199, Weekend: $289');
 
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step2').classList.add('active');
@@ -682,9 +808,7 @@ async function goToStep3(){
   
   console.log('✅ Date selected:', fmtDateNZ(selectedDate));
   console.log('✅ Time selected:', selectedTimeWindow.range);
-  console.log('📊 Moving to vehicle type selection');
   
-  // Send time selected update
   await sendInspectionUpdate(BOOKING_STATUS.TIME_SELECTED);
   
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
@@ -695,7 +819,6 @@ async function goToStep3(){
 }
 
 async function goToStep4(){
-  // Send vehicle selected update
   await sendInspectionUpdate(BOOKING_STATUS.VEHICLE_SELECTED);
   
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
@@ -760,11 +883,9 @@ function showTimeWindows(){
   const isWeekend = isWeekendNZ(selectedDate);
   const slots = [];
   
-  // Use calculated price if available, otherwise use base pricing
   const basePrice = calculatedPrice || (isWeekend ? BASE_PRICING.weekend : BASE_PRICING.weekday);
 
   if (isWeekend){
-    // Weekend: single 90-min window
     slots.push({
       id:'we-10-1130',
       title:'Standard',
@@ -774,7 +895,6 @@ function showTimeWindows(){
       css:''
     });
   } else {
-    // Weekday: three 90-min windows
     slots.push({id:'wd-10-1130', title:'Standard', range:'10:00 AM – 11:30 AM (90-minute arrival window)', desc:'Weekday standard window', price:basePrice, css:''});
     slots.push({id:'wd-12-130',  title:'Standard', range:'12:00 PM – 1:30 PM (90-minute arrival window)', desc:'Weekday standard window', price:basePrice, css:''});
     slots.push({id:'wd-2-330', title:'Standard', range:'2:00 PM – 3:30 PM (90-minute arrival window)', desc:'Weekday standard window', price:basePrice, css:''});
@@ -820,7 +940,6 @@ function updateSummary(){
   if (selectedTimeWindow){
     base = selectedTimeWindow.price;
   } else {
-    // Use calculated price or base pricing
     base = calculatedPrice || (isWeekendNZ(selectedDate || nowNZ()) ? BASE_PRICING.weekend : BASE_PRICING.weekday);
   }
   const total = base + vehicleTypeAddon;
@@ -863,6 +982,9 @@ function buildRedirectUrl(){
   params.append('serviceCode', 'INSP');
   params.append('serviceTitle', 'Pre Purchase Vehicle Inspection');
 
+  if (sessionId) params.append('session_id', sessionId);
+  if (gclid) params.append('gclid', gclid);
+
   let base = selectedTimeWindow ? selectedTimeWindow.price
     : (calculatedPrice || (isWeekendNZ(selectedDate || nowNZ()) ? BASE_PRICING.weekend : BASE_PRICING.weekday));
   const total = base + vehicleTypeAddon;
@@ -893,7 +1015,6 @@ async function generatePaymentLink(){
   console.log('✅ Terms accepted, preparing payment link');
   btn.disabled = true; btn.classList.add('processing'); btn.textContent='Generating Link';
 
-  // Send terms accepted update
   await sendInspectionUpdate(BOOKING_STATUS.TERMS_ACCEPTED);
 
   const customerName = sanitizeText(document.getElementById('nameInput').value);
@@ -916,11 +1037,7 @@ async function generatePaymentLink(){
   console.log('  Base price:', base);
   console.log('  Vehicle addon:', vehicleTypeAddon);
   console.log('  Total:', total);
-  console.log('👤 Customer:', customerName, '|', phone);
-  console.log('🚗 Vehicle:', vehicleDescription);
-  console.log('👥 Seller:', sellerName);
 
-  // Send final update before payment
   await sendInspectionUpdate(BOOKING_STATUS.PAYMENT_PENDING);
 
   console.log('💳 === GENERATING STRIPE PAYMENT LINK === 💳');
@@ -945,7 +1062,9 @@ async function generatePaymentLink(){
       bookingDateTime: nowNZ().toLocaleString('en-NZ', { timeZone: NZ_TZ }),
       scheduledDate: selectedDate ? fmtDateNZ(selectedDate) : '',
       scheduledTime: selectedTimeWindow ? selectedTimeWindow.range : '',
-      urgencyLevel: 'Scheduled'
+      urgencyLevel: 'Scheduled',
+      sessionId: sessionId,
+      gclid: gclid
     }
   };
 
