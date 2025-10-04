@@ -451,10 +451,10 @@
             <h2>🚨 Need Immediate Help?</h2>
             <p>Get emergency mobile mechanical assistance or speak with our dispatch team</p>
             <div class="emergency-buttons">
-                <a href="/rescue-me" class="emergency-btn normal-hours-btn" data-track="emergency_rescue" onclick="trackInteraction(this)">🚨 Emergency Service</a>
+                <a href="/rescue-me" class="emergency-btn normal-hours-btn tracking-link" data-track="emergency_rescue" onclick="trackInteraction(this)">🚨 Emergency Service</a>
                 <a href="tel:0800769000" class="emergency-btn phone-link normal-hours-btn" data-track="more_options_call" onclick="trackInteraction(this)">📞 Call <span class="phone-display">0800 769 000</span></a>
-                <a href="/find-me" class="emergency-btn normal-hours-btn" data-track="find_me_tool" onclick="trackInteraction(this)">📍 Find Me Tool</a>
-                <a href="/book-service" class="emergency-btn after-hours-btn" data-track="book_online_after_hours" onclick="trackInteraction(this)" style="background: rgba(40,167,69,0.25); display: none;">📅 Book Online Service</a>
+                <a href="/find-me" class="emergency-btn normal-hours-btn tracking-link" data-track="find_me_tool" onclick="trackInteraction(this)">📍 Find Me Tool</a>
+                <a href="/book-service" class="emergency-btn after-hours-btn tracking-link" data-track="book_online_after_hours" onclick="trackInteraction(this)" style="background: rgba(40,167,69,0.25); display: none;">📅 Book Online Service</a>
             </div>
         </div>
         
@@ -470,11 +470,11 @@
                     <h3>👥 For Customers</h3>
                     <p>Service requests, support, and assistance</p>
                     <div class="contact-buttons">
-                        <a href="/rescue-me" class="contact-btn normal-hours-btn" data-track="customer_emergency" onclick="trackInteraction(this)">🚨 Emergency Service</a>
+                        <a href="/rescue-me" class="contact-btn normal-hours-btn tracking-link" data-track="customer_emergency" onclick="trackInteraction(this)">🚨 Emergency Service</a>
                         <a href="tel:0800769000" class="contact-btn phone-link normal-hours-btn" data-track="customer_call" onclick="trackInteraction(this)">📞 Call <span class="phone-display">0800 769 000</span></a>
-                        <a href="/customer-escalation" class="contact-btn normal-hours-btn" data-track="customer_support" onclick="trackInteraction(this)">💬 Customer Support</a>
-                        <a href="/find-me" class="contact-btn normal-hours-btn" data-track="customer_find_me" onclick="trackInteraction(this)">📍 Find Me Tool</a>
-                        <a href="/book-service" class="contact-btn after-hours-btn" data-track="customer_book_online" onclick="trackInteraction(this)" style="display: none;">📅 Book Online Service</a>
+                        <a href="/customer-escalation" class="contact-btn normal-hours-btn tracking-link" data-track="customer_support" onclick="trackInteraction(this)">💬 Customer Support</a>
+                        <a href="/find-me" class="contact-btn normal-hours-btn tracking-link" data-track="customer_find_me" onclick="trackInteraction(this)">📍 Find Me Tool</a>
+                        <a href="/book-service" class="contact-btn after-hours-btn tracking-link" data-track="customer_book_online" onclick="trackInteraction(this)" style="display: none;">📅 Book Online Service</a>
                     </div>
                 </div>
                 
@@ -482,8 +482,8 @@
                     <h3>🤝 For Suppliers & Partners</h3>
                     <p>Business partnerships and supplier relations</p>
                     <div class="contact-buttons">
-                        <a href="/supplier" class="contact-btn" data-track="supplier_portal" onclick="trackInteraction(this)">🤝 Official Supplier Portal</a>
-                        <a href="/supplier-relations" class="contact-btn" data-track="supplier_relations" onclick="trackInteraction(this)">📝 Supplier Relations</a>
+                        <a href="/supplier" class="contact-btn tracking-link" data-track="supplier_portal" onclick="trackInteraction(this)">🤝 Official Supplier Portal</a>
+                        <a href="/supplier-relations" class="contact-btn tracking-link" data-track="supplier_relations" onclick="trackInteraction(this)">📝 Supplier Relations</a>
                     </div>
                 </div>
                 
@@ -491,7 +491,7 @@
                     <h3>💼 Employment & Careers</h3>
                     <p>Join our team as a mobile technician</p>
                     <div class="contact-buttons">
-                        <a href="/apply" class="contact-btn" data-track="employment_apply" onclick="trackInteraction(this)">📝 Apply to Work</a>
+                        <a href="/apply" class="contact-btn tracking-link" data-track="employment_apply" onclick="trackInteraction(this)">📝 Apply to Work</a>
                     </div>
                 </div>
             </div>
@@ -503,11 +503,11 @@
                 <h3>🛡️ Legal & Compliance Center</h3>
                 <p>Terms, policies, privacy matters, and legal authority access</p>
                 <div class="legal-buttons">
-                    <a href="/terms" class="legal-btn" data-track="legal_terms" onclick="trackInteraction(this)">📋 End User Terms</a>
-                    <a href="/supplier-terms" class="legal-btn" data-track="legal_supplier_terms" onclick="trackInteraction(this)">📋 Supplier Terms</a>
-                    <a href="/privacy" class="legal-btn" data-track="legal_privacy" onclick="trackInteraction(this)">🔒 Privacy Policy</a>
-                    <a href="/privacy-report" class="legal-btn" data-track="legal_privacy_report" onclick="trackInteraction(this)">🚨 Privacy Report</a>
-                    <a href="/mjuris" class="legal-btn" data-track="legal_authority" onclick="trackInteraction(this)">⚖️ Legal Authority</a>
+                    <a href="/terms" class="legal-btn tracking-link" data-track="legal_terms" onclick="trackInteraction(this)">📋 End User Terms</a>
+                    <a href="/supplier-terms" class="legal-btn tracking-link" data-track="legal_supplier_terms" onclick="trackInteraction(this)">📋 Supplier Terms</a>
+                    <a href="/privacy" class="legal-btn tracking-link" data-track="legal_privacy" onclick="trackInteraction(this)">🔒 Privacy Policy</a>
+                    <a href="/privacy-report" class="legal-btn tracking-link" data-track="legal_privacy_report" onclick="trackInteraction(this)">🚨 Privacy Report</a>
+                    <a href="/mjuris" class="legal-btn tracking-link" data-track="legal_authority" onclick="trackInteraction(this)">⚖️ Legal Authority</a>
                 </div>
             </div>
         </div>
@@ -523,51 +523,59 @@
                 <div class="utility-card">
                     <h3>🗺️ Navigation Help</h3>
                     <p>Find your current location or get directions for our mobile technicians.</p>
-                    <a href="/map" data-track="utility_maps" onclick="trackInteraction(this)">Open Maps</a>
+                    <a href="/map" class="tracking-link" data-track="utility_maps" onclick="trackInteraction(this)">Open Maps</a>
                 </div>
             </div>
         </div>
         
         <div class="footer-nav">
-            <a href="/" data-track="footer_home" onclick="trackInteraction(this)">🏠 Homepage</a>
-            <a href="/privacy" data-track="footer_privacy" onclick="trackInteraction(this)">Privacy Policy</a>
+            <a href="/" class="tracking-link" data-track="footer_home" onclick="trackInteraction(this)">🏠 Homepage</a>
+            <a href="/privacy" class="tracking-link" data-track="footer_privacy" onclick="trackInteraction(this)">Privacy Policy</a>
         </div>
     </div>
 
     <script>
+        // CENTRALIZED GCLID EXTRACTION UTILITY (supports gclid, gbraid, wbraid)
+        function extractGCLID(urlParams) {
+            return urlParams.get('gclid') || urlParams.get('gbraid') || urlParams.get('wbraid') || null;
+        }
+
         // === INITIALIZATION AND TRACKING ===
         console.log('🚀 === MORE OPTIONS PAGE INITIALIZED === 🚀');
 
         // API Endpoints
         const TRACKING_API_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
-        const SYSTEM_STATUS_API_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/17b1d2990e6f4082a2b0d9c2f1a29025/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=bPyoxJ24kuxJZOyLGAclGaEuH6BHwUTFaGmYOwHofa8";
+        const GCLID_STATE_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f20c5153e8a4de0be50a17e2dab4254/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Zw5-_6YSCNPb2cfjjfa0Oj_Fpc7N9rhHfc6fPZZhX7g";
+        const CALLFLOW_STATE_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/17b1d2990e6f4082a2b0d9c2f1a29025/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=bPyoxJ24kuxJZOyLGAclGaEuH6BHwUTFaGmYOwHofa8";
 
         let sessionId = null;
         let gclid = null;
         let utmData = {};
         let hasPaymentToken = false;
+        let gclidState = null;
+        let callflowState = null;
 
         // === SYSTEM STATUS AND BUSINESS HOURS ===
         async function checkSystemStatus() {
             const debugSystemStatus = document.getElementById('debugSystemStatus');
             
             try {
-                console.log('🔄 Checking system status...');
+                console.log('🔄 Checking callflow status...');
                 
-                const response = await fetch(SYSTEM_STATUS_API_URL, {
+                const response = await fetch(CALLFLOW_STATE_URL, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({}),
-                    cache: "no-store",
-                    timeout: 10000
+                    cache: "no-store"
                 });
                 
                 if (response.ok) {
                     const data = await response.json();
-                    const isActive = data.state === 'Active';
-                    console.log('✅ System status check successful:', isActive ? 'ACTIVE' : 'INACTIVE');
+                    callflowState = data.state || data;
+                    const isActive = callflowState === 'Active' || callflowState === true;
+                    console.log('✅ Callflow status check successful:', isActive ? 'ACTIVE' : 'INACTIVE');
                     
                     if (debugSystemStatus) {
                         debugSystemStatus.textContent = isActive ? 'ACTIVE' : 'INACTIVE';
@@ -576,14 +584,14 @@
                     
                     return isActive;
                 } else {
-                    console.warn('⚠️ System status API returned non-OK status:', response.status);
+                    console.warn('⚠️ Callflow status API returned non-OK status:', response.status);
                     if (debugSystemStatus) {
                         debugSystemStatus.textContent = `ERROR (${response.status})`;
                         debugSystemStatus.style.color = '#ff0';
                     }
                 }
             } catch (error) {
-                console.error('❌ Error checking system status:', error);
+                console.error('❌ Error checking callflow status:', error);
                 if (debugSystemStatus) {
                     debugSystemStatus.textContent = 'ERROR (Network)';
                     debugSystemStatus.style.color = '#f00';
@@ -593,6 +601,34 @@
             // Default to active if check fails
             console.log('🔄 Defaulting to ACTIVE due to API failure');
             return true;
+        }
+
+        async function checkGCLIDState() {
+            try {
+                console.log('🔄 Checking GCLID state...');
+                
+                const response = await fetch(GCLID_STATE_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({}),
+                    cache: "no-store"
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    gclidState = data.state || data;
+                    console.log('✅ GCLID state check successful:', gclidState);
+                    return gclidState;
+                } else {
+                    console.warn('⚠️ GCLID state API returned non-OK status:', response.status);
+                }
+            } catch (error) {
+                console.error('❌ Error checking GCLID state:', error);
+            }
+            
+            return null;
         }
 
         function isWithinBusinessHours() {
@@ -635,23 +671,27 @@
             // Check if payment token or gclid exists in CURRENT URL (priority)
             const urlParams = new URLSearchParams(window.location.search);
             hasPaymentToken = !!urlParams.get('token');
-            const currentGclid = urlParams.get('gclid');
+            const currentGclid = extractGCLID(urlParams);
             
             // Use current URL GCLID if present, otherwise use stored session GCLID
             const effectiveGclid = currentGclid || gclid;
+            
+            // Check GCLID state
+            await checkGCLIDState();
             
             console.log('🔍 URL Analysis:', {
                 hasTokenInURL: hasPaymentToken,
                 hasGclidInURL: !!currentGclid,
                 hasStoredGclid: !!gclid,
-                effectiveGclid: !!effectiveGclid
+                effectiveGclid: !!effectiveGclid,
+                gclidState: gclidState
             });
             
-            // For gclid or token users, always treat as system active (open for business)
+            // For gclid (with Active state) or token users, always treat as system active
             let systemActive;
-            if (effectiveGclid || hasPaymentToken) {
+            if ((effectiveGclid && gclidState === 'Active') || hasPaymentToken) {
                 systemActive = true;
-                console.log('🎯 GCLID or Token detected - forcing system active (always open)');
+                console.log('🎯 GCLID+Active or Token detected - forcing system active');
             } else {
                 systemActive = await checkSystemStatus();
             }
@@ -662,21 +702,23 @@
                 systemActive,
                 duringBusinessHours,
                 hasPaymentToken,
-                hasGclid: !!effectiveGclid
+                hasGclid: !!effectiveGclid,
+                gclidState,
+                callflowState
             });
             
-            // Banner logic - hide for payment token or gclid users
+            // Banner logic - hide for payment token or gclid+Active users
             const closedBanner = document.getElementById('closedBanner');
             const closedTitle = document.getElementById('closedTitle');
             const afterHoursMessage = document.getElementById('afterHoursMessage');
             const tempUnavailableMessage = document.getElementById('tempUnavailableMessage');
             
-            if (hasPaymentToken || effectiveGclid) {
-                // Hide closed banner for payment flow or gclid traffic
+            if (hasPaymentToken || (effectiveGclid && gclidState === 'Active')) {
+                // Hide closed banner for payment flow or gclid+Active traffic
                 if (closedBanner) {
                     closedBanner.style.display = 'none';
                 }
-                console.log('💳🎯 Payment token or GCLID detected - hiding closed banner');
+                console.log('💳🎯 Payment token or GCLID+Active detected - hiding closed banner');
             } else {
                 // Normal banner logic for direct visitors
                 if (closedBanner) {
@@ -731,7 +773,7 @@
             // Get or create session ID
             sessionId = getOrCreateSessionId();
             
-            // Capture GCLID from URL or localStorage
+            // Capture GCLID from URL or localStorage (supports gclid, gbraid, wbraid)
             gclid = getGCLID();
             
             // Capture UTM parameters
@@ -745,7 +787,7 @@
             
             console.log('✅ Tracking system initialized');
             console.log('📊 Session ID:', sessionId);
-            console.log('📊 GCLID:', gclid || 'None');
+            console.log('📊 GCLID/GBRAID/WBRAID:', gclid || 'None');
             console.log('📊 UTM Data:', utmData);
         }
 
@@ -775,15 +817,15 @@
 
         function getGCLID() {
             const urlParams = new URLSearchParams(window.location.search);
-            let gclidValue = urlParams.get('gclid');
+            let gclidValue = extractGCLID(urlParams);
             
-            // If GCLID in URL, store it
+            // If GCLID/GBRAID/WBRAID in URL, store it
             if (gclidValue) {
                 localStorage.setItem("eek_gclid", gclidValue);
                 localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
                 // Store phone preference for GCLID users
                 localStorage.setItem("eek_phone_preference", "tracking");
-                console.log('✅ GCLID captured from URL:', gclidValue);
+                console.log('✅ GCLID/GBRAID/WBRAID captured from URL:', gclidValue);
                 return gclidValue;
             }
             
@@ -796,14 +838,14 @@
                 thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
                 
                 if (new Date(storedTimestamp) > thirtyDaysAgo) {
-                    console.log('📋 Using stored GCLID:', storedGclid);
+                    console.log('📋 Using stored GCLID/GBRAID/WBRAID:', storedGclid);
                     return storedGclid;
                 } else {
                     // GCLID expired
                     localStorage.removeItem("eek_gclid");
                     localStorage.removeItem("eek_gclid_timestamp");
                     localStorage.removeItem("eek_phone_preference");
-                    console.log('⚠️ GCLID expired and removed');
+                    console.log('⚠️ GCLID/GBRAID/WBRAID expired and removed');
                 }
             }
             
@@ -853,6 +895,65 @@
             }
         }
 
+        // === TRACKING PARAMETER PRESERVATION ===
+        function appendTrackingParams(url) {
+            // Don't modify external URLs or phone/mailto links
+            if (url.startsWith('tel:') || url.startsWith('mailto:') || url.startsWith('http')) {
+                return url;
+            }
+            
+            const params = new URLSearchParams();
+            
+            // Add session ID
+            if (sessionId) {
+                params.set('session_id', sessionId);
+            }
+            
+            // Add GCLID/GBRAID/WBRAID
+            if (gclid) {
+                params.set('gclid', gclid);
+            }
+            
+            // Add UTM parameters
+            ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+                const value = utmData[param];
+                if (value) {
+                    params.set(param, value);
+                }
+            });
+            
+            // Add payment token if present
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            if (token) {
+                params.set('token', token);
+            }
+            
+            const paramString = params.toString();
+            if (!paramString) {
+                return url;
+            }
+            
+            // Handle URLs with existing query strings
+            const separator = url.includes('?') ? '&' : '?';
+            return url + separator + paramString;
+        }
+
+        function updateAllTrackingLinks() {
+            console.log('🔗 Updating all navigation links with tracking parameters...');
+            
+            document.querySelectorAll('.tracking-link').forEach(link => {
+                const originalHref = link.getAttribute('href');
+                if (originalHref && !originalHref.startsWith('tel:') && !originalHref.startsWith('mailto:')) {
+                    const updatedHref = appendTrackingParams(originalHref);
+                    link.setAttribute('href', updatedHref);
+                    console.log(`🔗 Updated link: ${originalHref} → ${updatedHref}`);
+                }
+            });
+            
+            console.log('✅ All tracking links updated');
+        }
+
         // === PHONE NUMBER DYNAMIC DISPLAY ===
         function updatePhoneNumbers() {
             // Check if traffic comes from Google Ads or stored preference
@@ -889,9 +990,11 @@
                 timestamp: new Date().toISOString(),
                 sessionId: sessionId,
                 gclid: gclid,
+                gclidState: gclidState,
+                callflowState: callflowState,
                 
                 // Page context
-                page: {
+                site: {
                     title: document.title,
                     url: window.location.href,
                     path: window.location.pathname,
@@ -899,7 +1002,14 @@
                 },
                 
                 // UTM tracking
-                utm: utmData,
+                utm: {
+                    source: utmData.utm_source || null,
+                    medium: utmData.utm_medium || null,
+                    campaign: utmData.utm_campaign || null,
+                    term: utmData.utm_term || null,
+                    content: utmData.utm_content || null,
+                    gclid: gclid
+                },
                 
                 // Device info
                 device: {
@@ -916,7 +1026,7 @@
                 
                 // Source tracking
                 source: 'more_options_page',
-                formVersion: '2.1',
+                formVersion: '2.2',
                 
                 // Additional data
                 ...additionalData
@@ -1054,6 +1164,9 @@
             
             // Update phone numbers based on traffic source
             updatePhoneNumbers();
+            
+            // Update all navigation links with tracking parameters
+            updateAllTrackingLinks();
             
             // Check for payment token and show payment banner
             const urlParams = new URLSearchParams(window.location.search);
