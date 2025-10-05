@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -730,6 +729,7 @@ function buildInspectionData(status) {
     model: sanitizeText(document.getElementById('modelInput').value),
     vehicleModel: sanitizeText(document.getElementById('modelInput').value),
     vehicleType: selectedVehicleType || 'standard',
+    batteryVoltage: '',
     
     sellerName: sanitizeText(document.getElementById('sellerNameInput').value),
     sellerPhone: sanitizePhone(document.getElementById('sellerPhoneInput').value),
@@ -738,6 +738,11 @@ function buildInspectionData(status) {
     serviceCode: selectedService === 'basic' ? 'INSP_BASIC' : 'INSP_COMP',
     serviceTitle: selectedService === 'basic' ? 'Basic Mechanical Inspection' : 'Comprehensive Pre-Purchase Report',
     serviceTier: selectedService,
+    
+    urgencyLevel: 'Scheduled',
+    emergencyType: '',
+    quoteReference: '',
+    isWinz: 'false',
     
     utm: {
       source: utmData.utm_source || null,
@@ -759,6 +764,7 @@ function buildInspectionData(status) {
   if (status === BOOKING_STATUS.TIME_SELECTED || status === BOOKING_STATUS.VEHICLE_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.PAYMENT_PENDING) {
     baseData.scheduledDate = selectedDate ? fmtDateNZ(selectedDate) : '';
     baseData.scheduledDateISO = selectedDate ? selectedDate.toISOString() : '';
+    baseData.scheduledDateNZ = selectedDate ? selectedDate.toLocaleString('sv-SE', { timeZone: NZ_TZ, hour12: false }) : '';
     baseData.timeWindow = selectedTimeWindow ? selectedTimeWindow.range : '';
     baseData.timeWindowId = selectedTimeWindow ? selectedTimeWindow.id : '';
   }
@@ -769,6 +775,7 @@ function buildInspectionData(status) {
     baseData.totalPrice = selectedServicePrice + vehicleTypeAddon;
     baseData.calculatedPrice = selectedServicePrice + vehicleTypeAddon;
     baseData.finalPrice = selectedServicePrice + vehicleTypeAddon;
+    baseData.price = String(selectedServicePrice + vehicleTypeAddon);
   }
 
   return baseData;
@@ -1137,9 +1144,17 @@ async function generatePaymentLink(){
     description: `${serviceTitle} - ${vehicleDescription} - ${location}`,
     redirectUrl: buildRedirectUrl(),
     customerData: {
-      name: customerName, phone, email, location,
-      vehicleRego: rego, vehicleYear: year, vehicleMake: make, vehicleModel: model, vehicleDescription,
-      sellerName, sellerPhone,
+      name: customerName, 
+      phone, 
+      email, 
+      location,
+      vehicleRego: rego, 
+      vehicleYear: year, 
+      vehicleMake: make, 
+      vehicleModel: model, 
+      vehicleDescription,
+      sellerName, 
+      sellerPhone,
       service: selectedService === 'basic' ? 'inspection_basic' : 'inspection_comprehensive',
       serviceCode: selectedService === 'basic' ? 'INSP_BASIC' : 'INSP_COMP',
       serviceTitle: serviceTitle,
@@ -1149,11 +1164,20 @@ async function generatePaymentLink(){
       basePrice: selectedServicePrice,
       vehicleType: selectedVehicleType,
       vehicleAddon: vehicleTypeAddon,
+      vehicleTypeAddon: vehicleTypeAddon,
       bookingDateTime: nowNZ().toLocaleString('en-NZ', { timeZone: NZ_TZ }),
       scheduledDate: selectedDate ? fmtDateNZ(selectedDate) : '',
+      scheduledDateNZ: selectedDate ? selectedDate.toLocaleString('sv-SE', { timeZone: NZ_TZ, hour12: false }) : '',
       scheduledTime: selectedTimeWindow ? selectedTimeWindow.range : '',
+      timeWindow: selectedTimeWindow ? selectedTimeWindow.range : '',
       urgencyLevel: 'Scheduled',
+      batteryVoltage: '',
+      emergencyType: '',
+      quoteReference: '',
+      isWinzService: '',
       sessionId: sessionId,
+      bookingSource: '',
+      formVersion: '3.0',
       gclid: gclid
     }
   };
@@ -1237,4 +1261,3 @@ function hideNotification(node) {
 </script>
 </body>
 </html>
-```
