@@ -283,6 +283,10 @@ GitHub Pages will automatically serve this for any 404 errors.
             // Customer support and escalation forms
             '/customer-escalation': 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUQ0JBUlZHTDNBQkNESTBSTUJRWFFGTlZWRy4u',
             '/dispute-form': 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUQ0JBUlZHTDNBQkNESTBSTUJRWFFGTlZWRy4u',
+            '/disputes-tribunal': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUODNFNFRRQTQ4UU9ETkdRMk1BWEwyM1VSRC4u',
+            '/tribunal': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUODNFNFRRQTQ4UU9ETkdRMk1BWEwyM1VSRC4u',
+            '/authorize': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNDlJVldJUlJKOVRJTVJUVThTRk40N0JPRC4u',
+            '/third-party': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNDlJVldJUlJKOVRJTVJUVThTRk40N0JPRC4u',
             '/helper-form': 'https://form.jotform.com/251017058434047',
             '/triage': 'https://forms.office.com/r/hLJkX3NeLq',
             '/job': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNU1UVUNVOEMwMzFSMjBEVlVHRDlIVlBBNC4u&lang=en',
@@ -315,7 +319,9 @@ GitHub Pages will automatically serve this for any 404 errors.
             '/Rescue-Me': 'https://forms.office.com/r/sdf0YirK6s',
             '/CC': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUOTk5T0ZQNzFUTFg0TUZMTk01WTlKVk8xMy4u',
             '/Thanks': 'https://www.eek.nz/thanks',
-            '/THANKS': 'https://www.eek.nz/thanks'
+            '/THANKS': 'https://www.eek.nz/thanks',
+            '/Authorize': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNDlJVldJUlJKOVRJTVJUVThTRk40N0JPRC4u',
+            '/AUTHORIZE': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNDlJVldJUlJKOVRJTVJUVThTRk40N0JPRC4u'
         };
 
         function handleRedirect() {
@@ -440,6 +446,12 @@ GitHub Pages will automatically serve this for any 404 errors.
                 return {
                     title: 'Customer Support',
                     description: 'Connecting you to our customer care team. We\'re here to resolve any concerns quickly and fairly.'
+                };
+            }
+            if (path === '/authorize' || path === '/third-party' || path.toLowerCase() === '/authorize' || path.toLowerCase() === '/third-party') {
+                return {
+                    title: 'Third Party Authorization',
+                    description: 'Taking you to our secure Privacy Act 2020 compliant form to authorize someone to act on your behalf. Your privacy rights are protected.'
                 };
             }
             if (path === '/supplier-relations') {
