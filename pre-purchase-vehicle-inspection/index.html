@@ -189,7 +189,7 @@
   </style>
 </head>
 <body>
-<header>
+<header id="mainHeader">
   <img src="/lemon.png" alt="Don't buy a lemon! Eek Mobile Mechanical Pre Purchase Vehicle Inspection" />
   <div class="business-name">Eek Mobile Mechanical</div>
   <h1>Don't Buy a Lemon! Get a Pre Purchase Vehicle Inspection Today</h1>
@@ -217,11 +217,11 @@
   </div>
 </header>
 
-<div class="breadcrumb">
+<div class="breadcrumb" id="mainBreadcrumb">
   <a href="/" class="tracking-link">Home</a> > Don't Buy a Lemon - Pre Purchase Inspection
 </div>
 
-<div class="availability-banner">
+<div class="availability-banner" id="mainBanner">
   <h3>Same-Day & Weekend Inspections Available</h3>
   <p>Don't wait days for other services - get your inspection done today</p>
   <div class="availability-grid">
@@ -733,6 +733,18 @@ function showStep(stepNum) {
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step' + stepNum).classList.add('active');
   updateProgress(stepNum);
+  
+  // Hide main header/banner after step 1
+  if (stepNum > 1) {
+    document.getElementById('mainHeader').style.display = 'none';
+    document.getElementById('mainBreadcrumb').style.display = 'none';
+    document.getElementById('mainBanner').style.display = 'none';
+  } else {
+    document.getElementById('mainHeader').style.display = 'block';
+    document.getElementById('mainBreadcrumb').style.display = 'block';
+    document.getElementById('mainBanner').style.display = 'block';
+  }
+  
   window.scrollTo(0, 0);
 }
 
