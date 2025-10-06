@@ -1,24 +1,27 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Don't Buy a Lemon! Pre Purchase Vehicle Inspection - Eek Mobile Mechanical</title>
-  <meta name="description" content="Book a comprehensive pre-purchase vehicle inspection. Mobile service anywhere in New Zealand. Don't buy a lemon! 20% of vehicles we inspect are rejected." />
-  <meta name="keywords" content="pre purchase inspection, vehicle inspection, mobile mechanic, car inspection NZ, don't buy a lemon" />
+  <meta name="description" content="Same-day & weekend vehicle inspections. 600+ workshop locations nationwide. Report delivered within 90 minutes. Don't buy a lemon!" />
+  <meta name="keywords" content="pre purchase inspection, vehicle inspection, same day inspection, weekend inspection, car inspection NZ, don't buy a lemon" />
 
   <!-- Security Headers -->
-  <meta http-equiv="Content-Security-Policy"
-    content="
-      default-src 'self';
-      script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net;
-      style-src 'self' 'unsafe-inline';
-      img-src 'self' data: https:;
-      connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com;
-      frame-src 'self' https://www.googletagmanager.com https://www.google.com;
-    ">
+
+<meta http-equiv="Content-Security-Policy"
+content="
+default-src 'self';
+script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net;
+style-src 'self' 'unsafe-inline';
+img-src 'self' data: https:;
+connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com;
+frame-src 'self' https://www.googletagmanager.com https://www.google.com;
+">
 
   <!-- Reddit Pixel -->
+
   <script>
     !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
     (window,document);
@@ -27,7 +30,9 @@
   </script>
 
   <!-- Google Analytics -->
+
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
+
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);} 
@@ -47,6 +52,11 @@
     .business-name{font-size:2.2em;font-weight:700;color:var(--brand);margin:.3em 0;text-shadow:1px 1px 2px rgba(0,0,0,.08)}
     header img{max-width:250px;height:auto;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1)}
     h1{font-size:1.8em;margin:.5em 0 .2em}
+
+    .hero-badges{display:flex;justify-content:center;gap:20px;margin:20px 0;flex-wrap:wrap}
+    .hero-badge{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:15px 25px;border-radius:8px;font-weight:700;font-size:1.1em;box-shadow:0 4px 12px rgba(255,85,0,.3)}
+    .hero-badge.network{background:linear-gradient(135deg,#28a745,#20c997)}
+    .hero-badge-number{display:block;font-size:1.8em;margin-bottom:5px}
 
     .breadcrumb{background:#e8f4f8;padding:10px 20px;margin:0;text-align:left;font-size:.9em}
     .breadcrumb a{color:var(--brand);text-decoration:none}
@@ -97,23 +107,17 @@
     .location-input:focus,.details-input:focus{border-color:var(--brand);outline:none}
     .details-input{height:120px;resize:vertical}
 
-    .calendar-container{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
-    .calendar{border:2px solid #ddd;border-radius:8px;padding:15px}
-    .calendar h4{margin:0 0 15px 0;text-align:center}
-    .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
-    .day-header{text-align:center;font-weight:700;padding:8px 4px;font-size:.9em;color:#666}
-    .day{position:relative;text-align:center;padding:10px 4px;cursor:pointer;border-radius:6px;font-size:.95em;transition:all .2s}
-    .day:hover{background:#f0f0f0}
-    .day.disabled,.day.past{color:#ccc;cursor:not-allowed}
-    .day.selected{background:var(--brand);color:#fff}
-
-    .time-windows{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px;margin:20px 0}
-    .time-window{border:2px solid #ddd;border-radius:12px;padding:20px;cursor:pointer;text-align:center;transition:all .3s;background:#fff}
-    .time-window:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,85,0,.15)}
-    .time-window.selected{background:linear-gradient(135deg,#fff5f0,#ffe5d9);border-color:var(--brand);border-width:3px}
-    .time-window-title{font-size:1.2em;font-weight:700;margin-bottom:8px}
-    .time-window-range{color:var(--brand);font-size:1.05em;margin-bottom:10px;font-weight:600}
-    .time-window-description{font-size:.95em;color:#666;line-height:1.4}
+    .day-selector{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin:30px 0}
+    .day-button{background:#fff;border:3px solid #ddd;border-radius:16px;padding:30px;cursor:pointer;text-align:center;transition:all .3s ease;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+    .day-button:hover{transform:translateY(-4px);border-color:var(--brand);box-shadow:0 8px 24px rgba(255,85,0,.2)}
+    .day-button.selected{border-color:var(--brand);background:linear-gradient(135deg,#fff5f0,#ffe8df);box-shadow:0 8px 24px rgba(255,85,0,.25)}
+    .day-button.today{border-color:var(--ok);background:linear-gradient(135deg,#f0fff4,#e8ffed)}
+    .day-button.today::before{content:'AVAILABLE NOW';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:4px 16px;border-radius:20px;font-size:.75em;font-weight:700;letter-spacing:.5px}
+    .day-button.today.selected{border-color:var(--ok);background:linear-gradient(135deg,#e1ffe6,#d4f8db)}
+    .day-button{position:relative}
+    .day-title{font-size:1.6em;font-weight:800;margin-bottom:10px;color:#333}
+    .day-date{font-size:1.1em;color:var(--brand);margin-bottom:10px;font-weight:600}
+    .day-description{font-size:.95em;color:#666;line-height:1.4}
 
     .vehicle-types{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:20px 0}
     .vehicle-type{position:relative;background:#fff;border:2px solid #ddd;border-radius:12px;padding:20px;text-align:left;cursor:pointer;transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease, background .2s ease;box-shadow:0 2px 6px rgba(0,0,0,.05)}
@@ -169,24 +173,53 @@
     .info-box ul{margin:10px 0;padding-left:20px}
     .info-box li{margin:8px 0;line-height:1.5}
 
+    .urgency-box{background:#fff5f0;border:3px solid var(--brand);border-radius:12px;padding:20px;margin:20px 0;text-align:left}
+    .urgency-box h4{margin:0 0 15px 0;color:var(--brand);font-size:1.3em}
+    .urgency-box ul{margin:10px 0;padding-left:20px}
+    .urgency-box li{margin:10px 0;line-height:1.6;font-size:1.05em}
+    .urgency-box strong{color:var(--brand)}
+
+    .competitive-advantage{background:#f0fff4;border:3px solid #28a745;border-radius:12px;padding:25px;margin:20px 0}
+    .competitive-advantage h4{margin:0 0 15px 0;color:#28a745;font-size:1.3em}
+    .advantage-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-top:15px}
+    .advantage-item{text-align:center;padding:15px;background:rgba(40,167,69,.1);border-radius:8px}
+    .advantage-number{font-size:2em;font-weight:900;color:#28a745;display:block;margin-bottom:5px}
+    .advantage-label{font-size:.9em;color:#155724;font-weight:600}
+
     @media (max-width: 768px) {
       .booking-steps{padding:20px}
       .business-name{font-size:1.8em}
       .stats-grid{grid-template-columns:repeat(2,1fr)}
-      .calendar-container{grid-template-columns:1fr}
-      .time-windows{grid-template-columns:1fr}
+      .day-selector{grid-template-columns:1fr}
       .service-selector{grid-template-columns:1fr}
+      .hero-badges{flex-direction:column;gap:10px}
       .notification{top:10px;right:10px;left:10px;max-width:none;transform:translateY(-100px)}
       .notification.show{transform:translateY(0)}
     }
   </style>
+
 </head>
 <body>
 <header>
   <img src="/lemon.png" alt="Don't buy a lemon! Eek Mobile Mechanical Pre Purchase Vehicle Inspection" />
   <div class="business-name">Eek Mobile Mechanical</div>
   <h1>Don't Buy a Lemon! Pre Purchase Vehicle Inspection</h1>
-  <p style="font-size:1.1em;color:#666;margin:10px 0;">Avoid costly mistakes with our professional vehicle inspection</p>
+  <p style="font-size:1.1em;color:#666;margin:10px 0;">Same-day & weekend inspections available nationwide</p>
+
+  <div class="hero-badges">
+    <div class="hero-badge network">
+      <span class="hero-badge-number">600+</span>
+      Workshop Locations
+    </div>
+    <div class="hero-badge">
+      <span class="hero-badge-number">Today</span>
+      Same-Day Service
+    </div>
+    <div class="hero-badge">
+      <span class="hero-badge-number">60-90min</span>
+      Report Delivery
+    </div>
+  </div>
 </header>
 
 <div class="breadcrumb">
@@ -195,8 +228,8 @@
 
 <div class="booking-container">
   <div class="booking-header">
-    <h2>Don't Buy a Lemon! Book Your Pre Purchase Inspection</h2>
-    <p>Professional certified inspection • Mobile service anywhere in NZ</p>
+    <h2>Book Your Pre Purchase Inspection - Today or This Weekend</h2>
+    <p>Professional inspection at workshop nearest you • Report delivered within 90 minutes</p>
     <div class="service-stats">
       <div class="stats-grid">
         <div class="stat-item"><span class="stat-number">20%</span>of vehicles rejected</div>
@@ -210,7 +243,7 @@
   <div class="progress-bar">
     <div class="progress-step active" id="step1-progress"><span>Service</span></div>
     <div class="progress-step" id="step2-progress"><span>Details</span></div>
-    <div class="progress-step" id="step3-progress"><span>Scheduling</span></div>
+    <div class="progress-step" id="step3-progress"><span>When</span></div>
     <div class="progress-step" id="step4-progress"><span>Vehicle</span></div>
     <div class="progress-step" id="step5-progress"><span>Confirm</span></div>
   </div>
@@ -220,249 +253,296 @@
     <div class="step active" id="step1">
       <h3>Step 1: Choose Your Inspection Service</h3>
 
-      <div class="comparison-note">
-        <strong>Why most buyers choose the Comprehensive Report:</strong> Our data shows that 68% of vehicles have hidden issues not visible in a basic inspection. The comprehensive report includes recalls (40% of vehicles affected), maintenance history analysis, and professional valuation - potentially saving you $5,000+ on a bad purchase.
+```
+  <div class="competitive-advantage">
+    <h4>Why Choose Eek Mobile Mechanical?</h4>
+    <div class="advantage-grid">
+      <div class="advantage-item">
+        <span class="advantage-number">600+</span>
+        <span class="advantage-label">Workshop Locations</span>
       </div>
+      <div class="advantage-item">
+        <span class="advantage-number">Same Day</span>
+        <span class="advantage-label">Today & Weekends</span>
+      </div>
+      <div class="advantage-item">
+        <span class="advantage-number">60-90min</span>
+        <span class="advantage-label">Report Delivery</span>
+      </div>
+      <div class="advantage-item">
+        <span class="advantage-number">10min</span>
+        <span class="advantage-label">Average Distance</span>
+      </div>
+    </div>
+    <p style="margin-top:15px;text-align:center;color:#155724;font-size:1.05em;">While other services require advance booking and weekday-only appointments, we're available when you need us.</p>
+  </div>
 
-      <div class="service-selector">
-        <div class="service-option" onclick="selectService('basic', 299, this)">
-          <div class="service-title">Basic Mechanical</div>
-          <div class="service-price">$299</div>
-          <div class="service-description">Physical inspection only - perfect if you just need the mechanical basics checked</div>
-          <ul class="service-features">
-            <li>44-point mechanical inspection</li>
-            <li>Photo documentation</li>
-            <li>Basic checklist report (2 pages)</li>
-            <li>Pass/fail assessment</li>
-            <li>Same-day turnaround</li>
-          </ul>
-          <div style="margin-top:15px;padding:10px;background:#fff3cd;border-radius:6px;font-size:.85em;color:#856404;">
-            <strong>Note:</strong> Does not include recalls, valuation, or buy recommendation
-          </div>
+  <div class="urgency-box">
+    <h4>Real Customer Scenarios - Why Speed Matters:</h4>
+    <ul>
+      <li><strong>Out-of-town buyer:</strong> "Flying to Auckland tomorrow to see the car - needed the inspection done today so I don't waste the trip"</li>
+      <li><strong>Multiple buyers:</strong> "Seller had 3 other people interested - couldn't wait for a Tuesday appointment next week"</li>
+      <li><strong>Weekend purchase:</strong> "Found my dream car on Saturday morning - other services don't work weekends"</li>
+      <li><strong>Fast decision needed:</strong> "Taking time off work to complete the purchase - needed the report within hours, not days"</li>
+    </ul>
+  </div>
+
+  <div class="comparison-note">
+    <strong>Why most buyers choose the Comprehensive Report:</strong> Our data shows that 68% of vehicles have hidden issues not visible in a basic inspection. The comprehensive report includes recalls (40% of vehicles affected), maintenance history analysis, and professional valuation - potentially saving you $5,000+ on a bad purchase.
+  </div>
+
+  <div class="service-selector">
+    <div class="service-option" onclick="selectService('basic', 299, this)">
+      <div class="service-title">Basic Mechanical</div>
+      <div class="service-price">$299</div>
+      <div class="service-description">Quick mechanical assessment - perfect if you just need the basics checked</div>
+      <ul class="service-features">
+        <li>44-point mechanical inspection</li>
+        <li>Photo documentation</li>
+        <li>Basic checklist report</li>
+        <li>Pass/fail assessment</li>
+        <li><strong>Report delivered immediately</strong></li>
+      </ul>
+      <div style="margin-top:15px;padding:10px;background:#fff3cd;border-radius:6px;font-size:.85em;color:#856404;">
+        <strong>Note:</strong> Does not include recalls, valuation, or buy recommendation
+      </div>
+    </div>
+
+    <div class="service-option recommended selected" onclick="selectService('comprehensive', 599, this)">
+      <div class="service-title">Comprehensive Report</div>
+      <div class="service-price">$599</div>
+      <div class="service-description">Complete professional analysis - everything you need to make an informed decision</div>
+      <ul class="service-features">
+        <li><strong>Everything in Basic, PLUS:</strong></li>
+        <li>Executive summary with BUY/DON'T BUY recommendation</li>
+        <li>Professional price guide & valuation</li>
+        <li>Full CarJam background check analysis</li>
+        <li>Comprehensive recall search & summary</li>
+        <li>Age-appropriate maintenance requirements</li>
+        <li>Owner interview & verification</li>
+        <li>10+ page detailed written report</li>
+        <li><strong>Report delivered within 60-90 minutes</strong></li>
+      </ul>
+      <div class="service-savings">
+        Could save you $5,000+ by avoiding a lemon. Most buyers recover the inspection cost in negotiation alone.
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <h4>Real Customer Success Stories:</h4>
+    <ul>
+      <li><strong>Sarah, Auckland:</strong> "The comprehensive report revealed $4,200 in upcoming repairs the seller didn't disclose. I negotiated $3,500 off the price - paid for itself 6x over!"</li>
+      <li><strong>Mike, Wellington:</strong> "The recall check found 3 unaddressed safety recalls. Dealership fixed them for free before I bought. Worth every cent."</li>
+      <li><strong>Emma, Christchurch:</strong> "The report told me NOT to buy. Saved me from a car with serious frame damage. Best $599 I ever spent."</li>
+    </ul>
+  </div>
+
+  <div style="text-align:center;margin:30px 0;">
+    <button class="button" onclick="goToStep2()">Continue with Selected Service</button>
+  </div>
+</div>
+
+<!-- Step 2: Details -->
+<div class="step" id="step2">
+  <h3>Step 2: Your Details & Vehicle Information</h3>
+
+  <div class="timing-notice">
+    <h4>How Our Service Works:</h4>
+    <p><strong>1.</strong> You book and pay for the inspection</p>
+    <p><strong>2.</strong> We contact you within 30 minutes to confirm</p>
+    <p><strong>3.</strong> We assign the nearest workshop (typically within 10 minutes of vehicle location)</p>
+    <p><strong>4.</strong> We coordinate with the vehicle owner to arrange drop-off at the workshop</p>
+    <p><strong>5.</strong> Inspection completed same day</p>
+    <p id="reportTimingStep2"></p>
+  </div>
+
+  <div style="background:#fff3cd;border:2px solid #ffeaa7;border-radius:12px;padding:20px;margin-bottom:20px;text-align:left;">
+    <h4 style="margin:0 0 10px 0;color:#856404;">Why You Need This Inspection</h4>
+    <ul style="margin:0;padding-left:20px;color:#856404;">
+      <li><strong>1 in 5 vehicles</strong> we inspect have serious issues (20% rejection rate)</li>
+      <li><strong>Nearly 40%</strong> of used cars have unaddressed safety recalls</li>
+      <li><strong>25% have electrical problems</strong> that can cost thousands</li>
+      <li><strong>39% of buyers overpay</strong> without a professional inspection</li>
+    </ul>
+  </div>
+
+  <div style="background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:20px;">
+    <h4 style="margin:0 0 15px 0;color:#333;">Your Information</h4>
+    <div class="contact-info">
+      <label for="nameInput">Full Name (required)</label>
+      <input type="text" id="nameInput" placeholder="John Smith" required autocomplete="name"/>
+      <label for="phoneInput">Phone Number (required)</label>
+      <input type="tel" id="phoneInput" placeholder="021 234 5678" required inputmode="tel" autocomplete="tel"/>
+      <label for="emailInput">Email Address (required)</label>
+      <input type="email" id="emailInput" placeholder="your.email@example.com" required autocomplete="email"/>
+    </div>
+  </div>
+
+  <div style="background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:20px;">
+    <h4 style="margin:0 0 15px 0;color:#333;">Vehicle Information</h4>
+    <div class="contact-info">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+        <div>
+          <label for="regoInput">Registration Number</label>
+          <input type="text" id="regoInput" placeholder="ABC123" style="text-transform:uppercase;" autocapitalize="characters" spellcheck="false"/>
         </div>
-
-        <div class="service-option recommended selected" onclick="selectService('comprehensive', 599, this)">
-          <div class="service-title">Comprehensive Report</div>
-          <div class="service-price">$599</div>
-          <div class="service-description">Complete professional analysis - everything you need to make an informed decision</div>
-          <ul class="service-features">
-            <li><strong>Everything in Basic, PLUS:</strong></li>
-            <li>Executive summary with BUY/DON'T BUY recommendation</li>
-            <li>Professional price guide & valuation</li>
-            <li>Full CarJam background check analysis</li>
-            <li>Comprehensive recall search & summary</li>
-            <li>Age-appropriate maintenance requirements</li>
-            <li>Owner interview & verification</li>
-            <li>10+ page detailed written report</li>
-            <li>Full sourced references with disclaimers</li>
-          </ul>
-          <div class="service-savings">
-            Could save you $5,000+ by avoiding a lemon. Most buyers recover the inspection cost in negotiation alone.
-          </div>
+        <div>
+          <label for="yearInput">Year</label>
+          <input type="text" id="yearInput" placeholder="2018" maxlength="4" pattern="\\d{4}" inputmode="numeric"/>
         </div>
       </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+        <div>
+          <label for="makeInput">Make</label>
+          <input type="text" id="makeInput" placeholder="Toyota" autocomplete="organization"/>
+        </div>
+        <div>
+          <label for="modelInput">Model</label>
+          <input type="text" id="modelInput" placeholder="Corolla"/>
+        </div>
+      </div>
+    </div>
+  </div>
 
-      <div class="info-box">
-        <h4>Real Customer Scenarios:</h4>
-        <ul>
-          <li><strong>Sarah, Auckland:</strong> "The comprehensive report revealed $4,200 in upcoming repairs the seller didn't disclose. I negotiated $3,500 off the price - paid for itself 6x over!"</li>
-          <li><strong>Mike, Wellington:</strong> "The recall check found 3 unaddressed safety recalls. Dealership fixed them for free before I bought. Worth every cent."</li>
-          <li><strong>Emma, Christchurch:</strong> "The report told me NOT to buy. Saved me from a car with serious frame damage. Best $599 I ever spent."</li>
+  <div style="background:#e8f4f8;padding:15px;border-radius:8px;margin-bottom:20px;">
+    <h4 style="margin:0 0 15px 0;color:#333;">Vehicle Owner/Seller Information</h4>
+    <div class="contact-info">
+      <label for="sellerNameInput">Owner/Seller Name (required)</label>
+      <input type="text" id="sellerNameInput" placeholder="Seller's full name or dealership name" required/>
+      <label for="sellerPhoneInput">Owner/Seller Phone Number (required)</label>
+      <input type="tel" id="sellerPhoneInput" placeholder="021 987 6543" required inputmode="tel" autocomplete="tel"/>
+    </div>
+    <p style="color:#0c5460;font-size:.9em;margin:10px 0;">We'll coordinate with the owner to arrange drop-off at the nearest workshop</p>
+  </div>
+
+  <label for="locationInput" style="display:block;margin-bottom:8px;font-weight:700;">Where is the vehicle currently located?</label>
+  <input type="text" class="location-input" id="locationInput" placeholder="Enter address, suburb, or region (e.g. Auckland CBD, Christchurch, Wellington)" required/>
+  <p style="color:#28a745;font-weight:600;margin:10px 0;">With 600+ workshop locations, we'll assign you to the nearest one - typically within 10 minutes</p>
+
+  <label for="detailsInput" style="display:block;margin-bottom:8px;margin-top:15px;font-weight:700;">Additional details or concerns:</label>
+  <textarea class="details-input" id="detailsInput" placeholder="e.g., Any specific concerns, known issues, why you're interested in this vehicle, etc."></textarea>
+
+  <div style="text-align:center;margin:20px 0;">
+    <button class="button secondary" onclick="goToStep1()">Back</button>
+    <button class="button" onclick="goToStep3()">Next: Select Day</button>
+  </div>
+</div>
+
+<!-- Step 3: Day Selection -->
+<div class="step" id="step3">
+  <h3>Step 3: When do you need this inspection?</h3>
+
+  <div class="urgency-box">
+    <h4>Why Our Availability Matters:</h4>
+    <ul>
+      <li><strong>Most competitors:</strong> Require 24-48 hour advance booking and weekday-only appointments</li>
+      <li><strong>We're different:</strong> Available today and weekends when you need us</li>
+      <li><strong>600+ workshops:</strong> Always a location ready to inspect your vehicle</li>
+    </ul>
+  </div>
+
+  <div class="timing-notice">
+    <h4>What Happens After You Select Your Day:</h4>
+    <p><strong>We contact you within 30 minutes</strong> to confirm your booking</p>
+    <p><strong>We coordinate with the vehicle owner</strong> to arrange workshop drop-off</p>
+    <p><strong>Inspection happens same day</strong> at the assigned workshop</p>
+    <p id="reportTimingStep3"></p>
+  </div>
+
+  <h4 style="margin:25px 0 15px 0;text-align:center;color:#333;">Select your inspection day:</h4>
+  <div class="day-selector" id="daySelector">
+    <!-- Day buttons populated by JavaScript -->
+  </div>
+
+  <div style="margin:20px 0;">
+    <button class="button secondary" onclick="goToStep2()">Back</button>
+    <button class="button" id="confirmDayBtn" onclick="goToStep4()" disabled>Continue</button>
+  </div>
+</div>
+
+<!-- Step 4: Vehicle Type -->
+<div class="step" id="step4">
+  <h3>Step 4: Vehicle Type</h3>
+  <p style="color:#666;margin-bottom:25px;">Select your vehicle type for accurate inspection pricing:</p>
+
+  <div class="vehicle-types">
+    <div class="vehicle-type popular selected" onclick="selectVehicleType('standard', 0, this)">
+      <div class="vehicle-type-title">Standard Vehicle</div>
+      <div class="vehicle-type-subtitle">Cars, SUVs, Utes under 3500kg</div>
+      <div class="vehicle-note" style="color:#28a745;font-weight:700;">Standard inspection pricing</div>
+    </div>
+
+    <div class="vehicle-type" onclick="selectVehicleType('commercial', 39, this)">
+      <div class="vehicle-type-title">Commercial Vehicle</div>
+      <div class="vehicle-type-subtitle">Vans, trucks, heavy vehicles &gt; 3500kg</div>
+      <div class="vehicle-note">Additional inspection time required (+$39)</div>
+    </div>
+
+    <div class="vehicle-type" onclick="selectVehicleType('specialty', 129, this)">
+      <div class="vehicle-type-title">Classic/Specialty Vehicle</div>
+      <div class="vehicle-type-subtitle">Classics, modified, imports</div>
+      <div class="vehicle-note">Specialist expertise required (+$129)</div>
+    </div>
+  </div>
+
+  <div style="margin:20px 0;">
+    <button class="button secondary" onclick="goToStep3()">Back</button>
+    <button class="button" onclick="goToStep5()">Continue to Review</button>
+  </div>
+</div>
+
+<!-- Step 5: Confirm -->
+<div class="step" id="step5">
+  <h3>Step 5: Review and Confirm</h3>
+
+  <div class="reservation-summary">
+    <h4>Your Inspection Booking</h4>
+    <div class="summary-item"><span>Service:</span><strong id="summaryService"></strong></div>
+    <div class="summary-item"><span>Vehicle Location:</span><strong id="summaryLocation"></strong></div>
+    <div class="summary-item"><span>Your Phone:</span><strong id="summaryPhone"></strong></div>
+    <div class="summary-item"><span>Inspection Day:</span><strong id="summaryDate"></strong></div>
+    <div class="summary-item"><span>Vehicle Type:</span><strong id="summaryVehicle"></strong></div>
+    <div class="summary-item" style="border-top:2px solid #dee2e6;margin-top:10px;padding-top:10px;font-size:1.2em;"><span>Total Fee:</span><strong id="summaryPrice" style="font-size:1.3em;"></strong></div>
+  </div>
+
+  <div class="timing-notice" style="background:#e8f8ff;border-color:#bee5eb;">
+    <h4>What Happens Next?</h4>
+    <p><strong>1.</strong> Click "Generate Payment Link" to create your secure payment link</p>
+    <p><strong>2.</strong> Complete payment through Stripe's secure checkout</p>
+    <p><strong>3.</strong> We contact you within 30 minutes to confirm</p>
+    <p><strong>4.</strong> We coordinate with vehicle owner for workshop drop-off</p>
+    <p><strong>5.</strong> Inspection completed same day at nearest workshop</p>
+    <p id="reportTimingStep5"></p>
+  </div>
+
+  <div class="terms-section">
+    <h4>Terms and Conditions</h4>
+    <div class="terms-checkbox">
+      <input type="checkbox" id="termsAgree" onchange="toggleBookingButton()" />
+      <div class="terms-text">
+        I agree to the <a href="https://eek.nz/terms" target="_blank">Eek Mobile Mechanical Terms of Service</a> and understand that:
+        <ul style="margin:10px 0;padding-left:20px;">
+          <li>Professional inspection completed at assigned workshop location</li>
+          <li>Vehicle owner/seller responsible for bringing vehicle to workshop</li>
+          <li id="termsReportNote"></li>
+          <li>Inspection typically completed within 10km of vehicle location</li>
+          <li>Cancellations must be made at least 2 hours in advance</li>
         </ul>
       </div>
-
-      <div style="text-align:center;margin:30px 0;">
-        <button class="button" onclick="goToStep2()">Continue with Selected Service</button>
-      </div>
     </div>
+  </div>
 
-    <!-- Step 2: Details -->
-    <div class="step" id="step2">
-      <h3>Step 2: Your Details & Vehicle Information</h3>
-
-      <div style="background:#fff3cd;border:2px solid #ffeaa7;border-radius:12px;padding:20px;margin-bottom:20px;text-align:left;">
-        <h4 style="margin:0 0 10px 0;color:#856404;">Why You Need This Inspection</h4>
-        <ul style="margin:0;padding-left:20px;color:#856404;">
-          <li><strong>1 in 5 vehicles</strong> we inspect have serious issues (20% rejection rate)</li>
-          <li><strong>Nearly 40%</strong> of used cars have unaddressed safety recalls</li>
-          <li><strong>25% have electrical problems</strong> that can cost thousands</li>
-          <li><strong>39% of buyers overpay</strong> without a professional inspection</li>
-        </ul>
-      </div>
-
-      <div style="background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:20px;">
-        <h4 style="margin:0 0 15px 0;color:#333;">Your Information</h4>
-        <div class="contact-info">
-          <label for="nameInput">Full Name (required)</label>
-          <input type="text" id="nameInput" placeholder="John Smith" required autocomplete="name"/>
-          <label for="phoneInput">Phone Number (required)</label>
-          <input type="tel" id="phoneInput" placeholder="021 234 5678" required inputmode="tel" autocomplete="tel"/>
-          <label for="emailInput">Email Address (required)</label>
-          <input type="email" id="emailInput" placeholder="your.email@example.com" required autocomplete="email"/>
-        </div>
-      </div>
-
-      <div style="background:#f8f9fa;padding:15px;border-radius:8px;margin-bottom:20px;">
-        <h4 style="margin:0 0 15px 0;color:#333;">Vehicle Information</h4>
-        <div class="contact-info">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
-            <div>
-              <label for="regoInput">Registration Number</label>
-              <input type="text" id="regoInput" placeholder="ABC123" style="text-transform:uppercase;" autocapitalize="characters" spellcheck="false"/>
-            </div>
-            <div>
-              <label for="yearInput">Year</label>
-              <input type="text" id="yearInput" placeholder="2018" maxlength="4" pattern="\\d{4}" inputmode="numeric"/>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
-            <div>
-              <label for="makeInput">Make</label>
-              <input type="text" id="makeInput" placeholder="Toyota" autocomplete="organization"/>
-            </div>
-            <div>
-              <label for="modelInput">Model</label>
-              <input type="text" id="modelInput" placeholder="Corolla"/>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div style="background:#e8f4f8;padding:15px;border-radius:8px;margin-bottom:20px;">
-        <h4 style="margin:0 0 15px 0;color:#333;">Seller Information</h4>
-        <div class="contact-info">
-          <label for="sellerNameInput">Seller Name (required for inspection)</label>
-          <input type="text" id="sellerNameInput" placeholder="Seller's full name or dealership name" required/>
-          <label for="sellerPhoneInput">Seller Phone Number (required for inspection)</label>
-          <input type="tel" id="sellerPhoneInput" placeholder="021 987 6543" required inputmode="tel" autocomplete="tel"/>
-        </div>
-      </div>
-
-      <label for="locationInput" style="display:block;margin-bottom:8px;font-weight:700;">Where is the vehicle located?</label>
-      <input type="text" class="location-input" id="locationInput" placeholder="Enter address, suburb, or region (e.g. Auckland CBD, Christchurch, Wellington)" required/>
-
-      <label for="detailsInput" style="display:block;margin-bottom:8px;margin-top:15px;font-weight:700;">Vehicle and inspection details:</label>
-      <textarea class="details-input" id="detailsInput" placeholder="e.g., Any specific concerns, known issues, why you're interested in this vehicle, etc."></textarea>
-
-      <p style="color:#666;margin:10px 0;">We service all of New Zealand. Our mobile mechanics will come to any location - dealership, private seller, or anywhere else.</p>
-
-      <div style="text-align:center;margin:20px 0;">
-        <button class="button secondary" onclick="goToStep1()">Back</button>
-        <button class="button" onclick="goToStep3()">Next: Select Time</button>
-      </div>
+  <div style="text-align:center;margin:20px 0;">
+    <div style="display:flex;justify-content:center;gap:15px;flex-wrap:wrap;">
+      <button class="button secondary" onclick="goToStep4()">Back to Selection</button>
+      <button class="button" id="generatePaymentBtn" onclick="generatePaymentLink()" disabled>Generate Payment Link</button>
     </div>
+    <p style="margin:15px 0;color:#666;font-size:.9em;">Secure payment processing powered by Stripe</p>
+  </div>
+</div>
+```
 
-    <!-- Step 3: Scheduling -->
-    <div class="step" id="step3">
-      <h3>Step 3: Select your preferred date and time</h3>
-
-      <div class="timing-notice">
-        <h4>Timing Information</h4>
-        <p><strong>Weekdays (Mon–Fri):</strong> 10:00 AM – 4:00 PM with <strong>90-minute windows</strong></p>
-        <p><strong>Weekends (Sat–Sun):</strong> 10:00 AM – 12:00 PM with <strong>90-minute window</strong></p>
-        <p id="serviceTimingNote"></p>
-      </div>
-
-      <div class="calendar-container">
-        <div class="calendar" id="currentCalendar">
-          <h4 id="currentMonth"></h4>
-          <div class="calendar-grid"></div>
-        </div>
-        <div class="calendar" id="nextCalendar">
-          <h4 id="nextMonth"></h4>
-          <div class="calendar-grid"></div>
-        </div>
-      </div>
-
-      <div id="timeWindowContainer" style="display:none;">
-        <h4 style="margin:25px 0 15px 0;">Select your preferred time window for <span id="selectedDateDisplay"></span>:</h4>
-        <div class="time-windows" id="timeWindows"></div>
-      </div>
-
-      <div style="margin:20px 0%;">
-        <button class="button secondary" onclick="goToStep2()">Back</button>
-        <button class="button" id="confirmTimeBtn" onclick="goToStep4()" disabled>Continue</button>
-      </div>
-    </div>
-
-    <!-- Step 4: Vehicle Type -->
-    <div class="step" id="step4">
-      <h3>Step 4: Vehicle Type</h3>
-      <p style="color:#666;margin-bottom:25px;">Select your vehicle type for accurate inspection pricing:</p>
-
-      <div class="vehicle-types">
-        <div class="vehicle-type popular selected" onclick="selectVehicleType('standard', 0, this)">
-          <div class="vehicle-type-title">Standard Vehicle</div>
-          <div class="vehicle-type-subtitle">Cars, SUVs, Utes under 3500kg</div>
-          <div class="vehicle-note" style="color:#28a745;font-weight:700;">Standard inspection</div>
-        </div>
-
-        <div class="vehicle-type" onclick="selectVehicleType('commercial', 39, this)">
-          <div class="vehicle-type-title">Commercial Vehicle</div>
-          <div class="vehicle-type-subtitle">Vans, trucks, heavy vehicles &gt; 3500kg</div>
-          <div class="vehicle-note">Additional inspection time required (+$39)</div>
-        </div>
-
-        <div class="vehicle-type" onclick="selectVehicleType('specialty', 129, this)">
-          <div class="vehicle-type-title">Classic/Specialty Vehicle</div>
-          <div class="vehicle-type-subtitle">Classics, modified, imports</div>
-          <div class="vehicle-note">Specialist expertise required (+$129)</div>
-        </div>
-      </div>
-
-      <div style="margin:20px 0%;">
-        <button class="button secondary" onclick="goToStep3()">Back</button>
-        <button class="button" onclick="goToStep5()">Continue to Review</button>
-      </div>
-    </div>
-
-    <!-- Step 5: Confirm -->
-    <div class="step" id="step5">
-      <h3>Step 5: Review and confirm</h3>
-
-      <div class="reservation-summary">
-        <h4>Your Inspection Booking</h4>
-        <div class="summary-item"><span>Service:</span><strong id="summaryService"></strong></div>
-        <div class="summary-item"><span>Location:</span><strong id="summaryLocation"></strong></div>
-        <div class="summary-item"><span>Phone:</span><strong id="summaryPhone"></strong></div>
-        <div class="summary-item"><span>Date:</span><strong id="summaryDate"></strong></div>
-        <div class="summary-item"><span>Time Window:</span><strong id="summaryTime"></strong></div>
-        <div class="summary-item"><span>Vehicle Type:</span><strong id="summaryVehicle"></strong></div>
-        <div class="summary-item" style="border-top:2px solid #dee2e6;margin-top:10px;padding-top:10px;font-size:1.2em;"><span>Total Fee:</span><strong id="summaryPrice" style="font-size:1.3em;"></strong></div>
-      </div>
-
-      <div class="timing-notice" style="background:#e8f8ff;border-color:#bee5eb;">
-        <h4>What happens next?</h4>
-        <p>1. Click "Generate Payment Link" to create your secure payment link</p>
-        <p>2. Complete payment through Stripe's secure checkout</p>
-        <p>3. Receive SMS confirmation with your booking details</p>
-        <p id="reportTimingNote"></p>
-      </div>
-
-      <div class="terms-section">
-        <h4>Terms and Conditions</h4>
-        <div class="terms-checkbox">
-          <input type="checkbox" id="termsAgree" onchange="toggleBookingButton()" />
-          <div class="terms-text">
-            I agree to the <a href="https://eek.nz/terms" target="_blank">Eek Mobile Mechanical Terms of Service</a> and understand that:
-            <ul style="margin:10px 0;padding-left:20px;">
-              <li>Professional certified mechanical inspection by contracted technician</li>
-              <li>All arrival windows are 90 minutes within the published hours</li>
-              <li id="termsReportNote"></li>
-              <li>Cancellations must be made at least 2 hours in advance</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div style="text-align:center;margin:20px 0;">
-        <div style="display:flex;justify-content:center;gap:15px;flex-wrap:wrap;">
-          <button class="button secondary" onclick="goToStep4()">Back to Selection</button>
-          <button class="button" id="generatePaymentBtn" onclick="generatePaymentLink()" disabled>Generate Payment Link</button>
-        </div>
-        <p style="margin:15px 0;color:#666;font-size:.9em;">Secure payment processing powered by Stripe</p>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -472,9 +552,11 @@ function extractGCLID(urlParams) {
   return urlParams.get('gclid') || urlParams.get('gbraid') || urlParams.get('wbraid') || null;
 }
 
-console.log('🚀 === PRE-PURCHASE INSPECTION FORM LOADED === 🚀');
+console.log('🚀 === PRE-PURCHASE INSPECTION FORM V2 LOADED === 🚀');
 console.log('📌 Service: Pre-Purchase Vehicle Inspection');
 console.log('💵 Pricing - Basic: $299, Comprehensive: $599');
+console.log('📍 Model: 600+ Workshop Locations (Not Mobile)');
+console.log('📅 Scheduling: Today/Saturday/Sunday Only');
 console.log('🌐 Current URL:', window.location.href);
 
 // === TRACKING INITIALIZATION ===
@@ -615,7 +697,7 @@ const BOOKING_STATUS = {
   INITIAL: 'booking_started',
   SERVICE_SELECTED: 'service_selected',
   DETAILS_COMPLETE: 'details_complete',
-  TIME_SELECTED: 'time_selected',
+  DAY_SELECTED: 'day_selected',
   VEHICLE_SELECTED: 'vehicle_selected',
   TERMS_ACCEPTED: 'terms_accepted',
   PAYMENT_PENDING: 'payment_pending'
@@ -625,7 +707,7 @@ const STATUS_COLORS = {
   'booking_started': '#007bff',
   'service_selected': '#17a2b8',
   'details_complete': '#28a745',
-  'time_selected': '#fd7e14',
+  'day_selected': '#fd7e14',
   'vehicle_selected': '#6f42c1',
   'terms_accepted': '#20c997',
   'payment_pending': '#dc3545'
@@ -635,7 +717,7 @@ const STATUS_DESCRIPTIONS = {
   'booking_started': 'Customer started inspection booking form',
   'service_selected': 'Customer selected inspection service tier',
   'details_complete': 'Customer completed contact, vehicle and seller details',
-  'time_selected': 'Customer selected inspection date and time',
+  'day_selected': 'Customer selected inspection day (today/weekend)',
   'vehicle_selected': 'Customer selected vehicle type for pricing',
   'terms_accepted': 'Customer accepted terms and conditions',
   'payment_pending': 'Payment link generated, awaiting customer payment'
@@ -654,26 +736,6 @@ function nowNZ() {
   return new Date(`${get('year')}-${get('month')}-${get('day')}T${get('hour')}:${get('minute')}:${get('second')}`);
 }
 
-function nzDate(y, m, d, hh=0, mm=0, ss=0) {
-  const base = nowNZ();
-  const dt = new Date(base);
-  dt.setFullYear(y, m, d);
-  dt.setHours(hh, mm, ss, 0);
-  return dt;
-}
-
-function isTodayNZ(d) {
-  if (!d) return false;
-  const n = nowNZ();
-  return d.getFullYear()===n.getFullYear() && d.getMonth()===n.getMonth() && d.getDate()===n.getDate();
-}
-
-function isWeekendNZ(d){ const g=d.getDay(); return g===0 || g===6; }
-
-function fmtTimeNZ(d){
-  return d.toLocaleTimeString('en-NZ', { timeZone: NZ_TZ, hour:'numeric', minute:'2-digit' });
-}
-
 function fmtDateNZ(d){
   return d.toLocaleDateString('en-NZ', { timeZone: NZ_TZ, weekday:'long', year:'numeric', month:'long', day:'numeric' });
 }
@@ -684,8 +746,8 @@ const PRICING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.enviro
 
 let selectedService = 'comprehensive';
 let selectedServicePrice = 599;
-let selectedDate = null;
-let selectedTimeWindow = null;
+let selectedDay = null;
+let selectedDayLabel = null;
 let selectedVehicleType = 'standard';
 let vehicleTypeAddon = 0;
 
@@ -702,6 +764,29 @@ function selectService(type, price, element) {
   selectedServicePrice = price;
   
   console.log('📋 Service selected:', type, '- $' + price);
+  updateReportTimingNotes();
+}
+
+function updateReportTimingNotes() {
+  const basicText = 'Basic: Report delivered immediately after inspection';
+  const compText = 'Comprehensive: Full report delivered within 60-90 minutes';
+  
+  const step2Note = document.getElementById('reportTimingStep2');
+  const step3Note = document.getElementById('reportTimingStep3');
+  const step5Note = document.getElementById('reportTimingStep5');
+  const termsNote = document.getElementById('termsReportNote');
+  
+  if (selectedService === 'basic') {
+    if (step2Note) step2Note.innerHTML = '<p><strong>6.</strong> Basic report delivered immediately</p>';
+    if (step3Note) step3Note.innerHTML = '<p><strong>Basic service:</strong> Report delivered immediately after inspection</p>';
+    if (step5Note) step5Note.innerHTML = '<p><strong>6.</strong> Basic report delivered immediately after inspection</p>';
+    if (termsNote) termsNote.textContent = 'Basic report delivered immediately after inspection completion';
+  } else {
+    if (step2Note) step2Note.innerHTML = '<p><strong>6.</strong> Comprehensive report delivered within 60-90 minutes</p>';
+    if (step3Note) step3Note.innerHTML = '<p><strong>Comprehensive service:</strong> Full report delivered within 60-90 minutes</p>';
+    if (step5Note) step5Note.innerHTML = '<p><strong>6.</strong> Comprehensive report delivered within 60-90 minutes</p>';
+    if (termsNote) termsNote.textContent = 'Comprehensive report with full analysis delivered within 60-90 minutes';
+  }
 }
 
 // === CONSISTENT DATA BUILDER ===
@@ -739,7 +824,7 @@ function buildInspectionData(status) {
     serviceTitle: selectedService === 'basic' ? 'Basic Mechanical Inspection' : 'Comprehensive Pre-Purchase Report',
     serviceTier: selectedService,
     
-    urgencyLevel: 'Scheduled',
+    urgencyLevel: 'Same-Day',
     emergencyType: '',
     quoteReference: '',
     isWinz: 'false',
@@ -753,20 +838,20 @@ function buildInspectionData(status) {
       gclid: gclid
     },
     
-    source: 'inspection_booking_form',
-    formVersion: '3.0'
+    source: 'inspection_booking_form_v2',
+    formVersion: '2.0'
   };
 
-  if (status === BOOKING_STATUS.SERVICE_SELECTED || status === BOOKING_STATUS.DETAILS_COMPLETE || status === BOOKING_STATUS.TIME_SELECTED || status === BOOKING_STATUS.VEHICLE_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.PAYMENT_PENDING) {
+  if (status === BOOKING_STATUS.SERVICE_SELECTED || status === BOOKING_STATUS.DETAILS_COMPLETE || status === BOOKING_STATUS.DAY_SELECTED || status === BOOKING_STATUS.VEHICLE_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.PAYMENT_PENDING) {
     baseData.basePrice = selectedServicePrice;
   }
 
-  if (status === BOOKING_STATUS.TIME_SELECTED || status === BOOKING_STATUS.VEHICLE_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.PAYMENT_PENDING) {
-    baseData.scheduledDate = selectedDate ? fmtDateNZ(selectedDate) : '';
-    baseData.scheduledDateISO = selectedDate ? selectedDate.toISOString() : '';
-    baseData.scheduledDateNZ = selectedDate ? selectedDate.toLocaleString('sv-SE', { timeZone: NZ_TZ, hour12: false }) : '';
-    baseData.timeWindow = selectedTimeWindow ? selectedTimeWindow.range : '';
-    baseData.timeWindowId = selectedTimeWindow ? selectedTimeWindow.id : '';
+  if (status === BOOKING_STATUS.DAY_SELECTED || status === BOOKING_STATUS.VEHICLE_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.PAYMENT_PENDING) {
+    baseData.scheduledDay = selectedDayLabel || '';
+    baseData.scheduledDate = selectedDay ? fmtDateNZ(selectedDay) : '';
+    baseData.scheduledDateISO = selectedDay ? selectedDay.toISOString() : '';
+    baseData.scheduledDateNZ = selectedDay ? selectedDay.toLocaleString('sv-SE', { timeZone: NZ_TZ, hour12: false }) : '';
+    baseData.timeWindow = 'Same-day arrival';
   }
 
   if (status === BOOKING_STATUS.VEHICLE_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.PAYMENT_PENDING) {
@@ -804,23 +889,13 @@ async function sendInspectionUpdate(status) {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function(){
-  console.log('🚀 === INSPECTION FORM INITIALIZED === 🚀');
+  console.log('🚀 === INSPECTION FORM V2 INITIALIZED === 🚀');
   initializeTracking();
   updateAllTrackingLinks();
   sendInspectionUpdate(BOOKING_STATUS.INITIAL);
-  
-  // Update service timing note
-  updateServiceTimingNote();
+  updateReportTimingNotes();
+  initializeDaySelector();
 });
-
-function updateServiceTimingNote() {
-  const note = document.getElementById('serviceTimingNote');
-  if (selectedService === 'basic') {
-    note.innerHTML = '<strong>Basic Mechanical:</strong> Same-day inspection, report delivered within 2 hours';
-  } else {
-    note.innerHTML = '<strong>Comprehensive Report:</strong> Inspection completed same-day, full report delivered within 24 hours';
-  }
-}
 
 // Navigation
 function goToStep1(){
@@ -842,7 +917,7 @@ async function goToStep2(){
   document.getElementById('step1-progress').classList.remove('active');
   document.getElementById('step2-progress').classList.add('active');
   
-  updateServiceTimingNote();
+  updateReportTimingNotes();
 }
 
 async function goToStep3(){
@@ -876,23 +951,21 @@ async function goToStep3(){
   document.getElementById('step2-progress').classList.add('completed');
   document.getElementById('step2-progress').classList.remove('active');
   document.getElementById('step3-progress').classList.add('active');
-  
-  initializeCalendars();
 }
 
 async function goToStep4(){
   console.log('📅 === STEP 3 → STEP 4 TRANSITION === 📅');
   
-  if (!selectedDate || !selectedTimeWindow){ 
-    console.log('⚠️ Missing date or time selection');
-    showNotification('Selection Required', 'Please select a date and time', 'error'); 
+  if (!selectedDay){ 
+    console.log('⚠️ No day selected');
+    showNotification('Selection Required', 'Please select a day for your inspection', 'error'); 
     return; 
   }
   
-  console.log('✅ Date selected:', fmtDateNZ(selectedDate));
-  console.log('✅ Time selected:', selectedTimeWindow.range);
+  console.log('✅ Day selected:', selectedDayLabel);
+  console.log('✅ Date:', fmtDateNZ(selectedDay));
   
-  await sendInspectionUpdate(BOOKING_STATUS.TIME_SELECTED);
+  await sendInspectionUpdate(BOOKING_STATUS.DAY_SELECTED);
   
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step4').classList.add('active');
@@ -912,87 +985,67 @@ async function goToStep5(){
   updateSummary();
 }
 
-/* Calendar */
-function generateCalendar(month, year, containerId){
-  const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-  const dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  const firstDay = new Date(year,month,1).getDay();
-  const daysInMonth = new Date(year,month+1,0).getDate();
-  const today = nowNZ(); today.setHours(0,0,0,0);
-
-  const container = document.getElementById(containerId);
-  const grid = container.querySelector('.calendar-grid');
-  const header = container.querySelector('h4');
-
-  header.textContent = `${monthNames[month]} ${year}`;
-  grid.innerHTML = '';
-
-  dayNames.forEach(d => { const el = document.createElement('div'); el.className='day-header'; el.textContent=d; grid.appendChild(el); });
-  for (let i=0;i<firstDay;i++){ const empty=document.createElement('div'); empty.className='day disabled'; grid.appendChild(empty); }
-
-  for (let day=1; day<=daysInMonth; day++){
-    const d = nzDate(year,month,day);
-    const el = document.createElement('div'); el.className='day'; el.textContent=day;
-    if (d < today){ el.classList.add('past'); grid.appendChild(el); continue; }
-    el.onclick = () => selectDate(year,month,day,el);
-    grid.appendChild(el);
-  }
-}
-
-function initializeCalendars(){
+// Day Selector Logic
+function initializeDaySelector() {
   const today = nowNZ();
-  const cm = today.getMonth(), cy = today.getFullYear();
-  const nm = cm===11 ? 0 : cm+1, ny = cm===11 ? cy+1 : cy;
-  generateCalendar(cm, cy, 'currentCalendar');
-  generateCalendar(nm, ny, 'nextCalendar');
-}
-
-function selectDate(year, month, day, element){
-  document.querySelectorAll('.day.selected').forEach(el => el.classList.remove('selected'));
-  element.classList.add('selected');
-  selectedDate = nzDate(year,month,day);
-  showTimeWindows();
-  document.getElementById('selectedDateDisplay').textContent = fmtDateNZ(selectedDate);
-}
-
-/* Time windows */
-function showTimeWindows(){
-  const container = document.getElementById('timeWindowContainer');
-  const windowsDiv = document.getElementById('timeWindows');
-  container.style.display = 'block';
-  selectedTimeWindow = null;
-  document.getElementById('confirmTimeBtn').disabled = false;
-
-  const isWeekend = isWeekendNZ(selectedDate);
-  const slots = [];
-
-  if (isWeekend){
-    slots.push({
-      id:'we-10-1130',
-      title:'Weekend Window',
-      range:'10:00 AM – 11:30 AM (90-minute arrival window)',
-      desc:'Weekend availability'
-    });
-  } else {
-    slots.push({id:'wd-10-1130', title:'Morning', range:'10:00 AM – 11:30 AM (90-minute arrival window)', desc:'Morning availability'});
-    slots.push({id:'wd-12-130',  title:'Midday', range:'12:00 PM – 1:30 PM (90-minute arrival window)', desc:'Midday availability'});
-    slots.push({id:'wd-2-330', title:'Afternoon', range:'2:00 PM – 3:30 PM (90-minute arrival window)', desc:'Afternoon availability'});
+  const dayOfWeek = today.getDay(); // 0 = Sunday, 6 = Saturday
+  const selector = document.getElementById('daySelector');
+  
+  selector.innerHTML = '';
+  
+  // Helper to get next occurrence of a day
+  function getNextDay(targetDay) {
+    const result = new Date(today);
+    const daysToAdd = (targetDay - dayOfWeek + 7) % 7;
+    result.setDate(result.getDate() + daysToAdd);
+    return result;
   }
-
-  windowsDiv.innerHTML = slots.map(w => `
-    <div class="time-window" data-slot="${w.id}"
-         onclick="selectTimeWindow('${w.id}','${w.title}','${w.range}',this)">
-      <div class="time-window-title">${w.title}</div>
-      <div class="time-window-range">${w.range}</div>
-      <div class="time-window-description">${w.desc}</div>
-    </div>
-  `).join('');
+  
+  // Monday-Friday: Show only TODAY
+  if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+    addDayButton('Today', today, 'Inspection completed today', true);
+  }
+  // Saturday: Show TODAY and SUNDAY
+  else if (dayOfWeek === 6) {
+    addDayButton('Today (Saturday)', today, 'Inspection completed today', true);
+    const sunday = getNextDay(0);
+    addDayButton('Sunday', sunday, 'Inspection completed Sunday', false);
+  }
+  // Sunday: Show only TODAY
+  else if (dayOfWeek === 0) {
+    addDayButton('Today (Sunday)', today, 'Inspection completed today', true);
+  }
 }
 
-function selectTimeWindow(id,title,range,element){
-  document.querySelectorAll('.time-window.selected').forEach(el => el.classList.remove('selected'));
+function addDayButton(label, date, description, isToday) {
+  const selector = document.getElementById('daySelector');
+  const button = document.createElement('div');
+  button.className = 'day-button' + (isToday ? ' today' : '');
+  button.onclick = () => selectDay(label, date, button);
+  
+  const dateStr = date.toLocaleDateString('en-NZ', { 
+    timeZone: NZ_TZ, 
+    weekday: 'long', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+  
+  button.innerHTML = `
+    <div class="day-title">${label}</div>
+    <div class="day-date">${dateStr}</div>
+    <div class="day-description">${description}</div>
+  `;
+  
+  selector.appendChild(button);
+}
+
+function selectDay(label, date, element) {
+  document.querySelectorAll('.day-button').forEach(el => el.classList.remove('selected'));
   element.classList.add('selected');
-  selectedTimeWindow = {id,title,range};
+  selectedDay = date;
+  selectedDayLabel = label;
+  document.getElementById('confirmDayBtn').disabled = false;
+  console.log('✅ Day selected:', label, '-', fmtDateNZ(date));
 }
 
 function selectVehicleType(type, addon, el){
@@ -1015,10 +1068,9 @@ function updateSummary(){
   document.getElementById('summaryLocation').textContent = location;
   document.getElementById('summaryPhone').textContent = phone;
 
-  if (selectedDate){
-    document.getElementById('summaryDate').textContent = fmtDateNZ(selectedDate);
+  if (selectedDay){
+    document.getElementById('summaryDate').textContent = selectedDayLabel + ' - ' + fmtDateNZ(selectedDay);
   }
-  document.getElementById('summaryTime').textContent = selectedTimeWindow ? selectedTimeWindow.range : 'Not selected';
 
   const total = selectedServicePrice + vehicleTypeAddon;
   
@@ -1030,21 +1082,7 @@ function updateSummary(){
   document.getElementById('summaryVehicle').textContent = vehicleNames[selectedVehicleType];
   document.getElementById('summaryPrice').textContent = `$${total}`;
   
-  // Update report timing note
-  const reportNote = document.getElementById('reportTimingNote');
-  if (selectedService === 'basic') {
-    reportNote.textContent = '4. Receive basic inspection report within 2 hours of completion';
-  } else {
-    reportNote.textContent = '4. Receive comprehensive 10+ page report within 24 hours';
-  }
-  
-  // Update terms report note
-  const termsNote = document.getElementById('termsReportNote');
-  if (selectedService === 'basic') {
-    termsNote.textContent = 'Basic report delivered within 2 hours';
-  } else {
-    termsNote.textContent = 'Comprehensive report with full analysis delivered within 24 hours';
-  }
+  updateReportTimingNotes();
 }
 
 function toggleBookingButton(){
@@ -1087,10 +1125,10 @@ function buildRedirectUrl(){
   params.append('vehicleType', selectedVehicleType);
   params.append('vehicleAddon', vehicleTypeAddon);
   params.append('details', document.getElementById('detailsInput').value || '');
-  params.append('scheduledDate', selectedDate ? fmtDateNZ(selectedDate) : '');
-  params.append('scheduledDateNZ', selectedDate ? selectedDate.toLocaleString('sv-SE', { timeZone: NZ_TZ, hour12: false }) : '');
-  params.append('timeWindow', selectedTimeWindow ? selectedTimeWindow.range : '');
-  params.append('urgencyLevel', 'Scheduled');
+  params.append('scheduledDay', selectedDayLabel || '');
+  params.append('scheduledDate', selectedDay ? fmtDateNZ(selectedDay) : '');
+  params.append('scheduledDateNZ', selectedDay ? selectedDay.toLocaleString('sv-SE', { timeZone: NZ_TZ, hour12: false }) : '');
+  params.append('urgencyLevel', 'Same-Day');
   params.append('bookingTime', new Date().toISOString());
   
   return `${baseUrl}?${params.toString()}`;
@@ -1166,18 +1204,17 @@ async function generatePaymentLink(){
       vehicleAddon: vehicleTypeAddon,
       vehicleTypeAddon: vehicleTypeAddon,
       bookingDateTime: nowNZ().toLocaleString('en-NZ', { timeZone: NZ_TZ }),
-      scheduledDate: selectedDate ? fmtDateNZ(selectedDate) : '',
-      scheduledDateNZ: selectedDate ? selectedDate.toLocaleString('sv-SE', { timeZone: NZ_TZ, hour12: false }) : '',
-      scheduledTime: selectedTimeWindow ? selectedTimeWindow.range : '',
-      timeWindow: selectedTimeWindow ? selectedTimeWindow.range : '',
-      urgencyLevel: 'Scheduled',
+      scheduledDay: selectedDayLabel || '',
+      scheduledDate: selectedDay ? fmtDateNZ(selectedDay) : '',
+      scheduledDateNZ: selectedDay ? selectedDay.toLocaleString('sv-SE', { timeZone: NZ_TZ, hour12: false }) : '',
+      urgencyLevel: 'Same-Day',
       batteryVoltage: '',
       emergencyType: '',
       quoteReference: '',
       isWinzService: '',
       sessionId: sessionId,
-      bookingSource: '',
-      formVersion: '3.0',
+      bookingSource: 'v2_workshop_network',
+      formVersion: '2.0',
       gclid: gclid
     }
   };
@@ -1196,7 +1233,7 @@ async function generatePaymentLink(){
           <a href="${result.url}" class="button" style="background:#28a745;font-size:1.2em;padding:15px 30px;display:inline-block;margin:10px 0;">
             Complete Payment ($${total})
           </a>
-          <p style="color:#666;font-size:.9em;margin-top:15px;">After payment, you'll receive an SMS confirmation to ${phone} with your booking details.</p>`;
+          <p style="color:#666;font-size:.9em;margin-top:15px;">After payment, we'll contact you within 30 minutes to confirm and coordinate with the vehicle owner.</p>`;
         btn.parentElement.appendChild(successDiv);
         setTimeout(()=>{ window.location.href = result.url; },3000);
       } else { throw new Error('No payment URL received'); }
@@ -1259,5 +1296,6 @@ function hideNotification(node) {
   setTimeout(() => { if (target.parentNode) target.parentNode.removeChild(target); }, 400);
 }
 </script>
+
 </body>
 </html>
