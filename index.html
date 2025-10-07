@@ -1637,9 +1637,17 @@ window.addEventListener('scroll', function() {
     const normalButtons = document.querySelectorAll('.normal-hours-btn');
     normalButtons.forEach(btn => { if (btn.style) btn.style.display = 'none'; });
     
+    // Hide header
+    const header = document.querySelector('header');
+    if (header) header.style.display = 'none';
+    
     // Hide mega call banner
     const megaBanner = document.querySelector('.mega-call-banner');
     if (megaBanner) megaBanner.style.display = 'none';
+    
+    // Hide social proof box
+    const socialProof = document.querySelector('.social-proof-box');
+    if (socialProof) socialProof.style.display = 'none';
     
     // Hide all phone links and displays
     document.querySelectorAll('.phone-link, .phone-display').forEach(el => {
