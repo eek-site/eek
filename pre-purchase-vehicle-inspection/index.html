@@ -161,12 +161,6 @@
     .button.processing::after{content:'...';animation:dots 1.5s steps(3,end) infinite}
     @keyframes dots{0%,20%{content:'.'}40%{content:'..'}60%,100%{content:'...'}}
 
-    .cta-phone{background:#28a745;color:#fff;padding:20px;border-radius:12px;text-align:center;margin:25px 0;border:3px solid #20a03a;}
-    .cta-phone h4{margin:0 0 15px 0;color:#fff;font-size:1.2em;}
-    .cta-phone a{background:#fff;color:#28a745;padding:14px 28px;border-radius:8px;font-size:1.2em;font-weight:700;text-decoration:none;display:inline-block;transition:all .2s;min-height:44px;}
-    .cta-phone a:hover{transform:scale(1.05);box-shadow:0 4px 12px rgba(255,255,255,.4)}
-    .cta-phone p{margin:10px 0 0 0;color:rgba(255,255,255,.9);font-size:.9em;}
-
     .terms-section{background:#f8f9fa;border-radius:8px;padding:20px;margin:20px 0;text-align:left}
     .terms-checkbox{display:flex;align-items:flex-start;gap:10px;margin:15px 0}
     .terms-checkbox input{margin-top:4px;transform:scale(1.3);min-width:20px;min-height:20px;}
@@ -229,7 +223,7 @@
         <div style="color:rgba(255,255,255,.95);font-size:.95em;margin-top:8px;">electrical problems</div>
       </div>
       <div>
-        <div style="font-size:2.5em;font-weight:900;color:#fff;line-height:1;">$5,000</div>
+        <div style="font-size:2.5em;font-weight:900;color:#fff;line-height:1;">$3,200</div>
         <div style="color:rgba(255,255,255,.95);font-size:.95em;margin-top:8px;">average savings</div>
       </div>
     </div>
@@ -317,7 +311,7 @@
           </div>
           
           <div class="service-savings">
-            Saves $5,000+ on average by avoiding bad purchases
+            Saves $3,200+ on average by avoiding bad purchases
           </div>
         </div>
       </div>
@@ -340,7 +334,7 @@
 
       <div class="info-box">
         <h4>Why this inspection matters:</h4>
-        <p>20% of vehicles we inspect are rejected • 40% have unaddressed safety recalls • 25% have electrical problems • Buyers save an average of $5,000 by avoiding bad purchases</p>
+        <p>20% of vehicles we inspect are rejected • 40% have unaddressed safety recalls • 25% have electrical problems • Buyers save an average of $3,200 by avoiding bad purchases</p>
       </div>
 
       <div class="contact-info">
@@ -358,12 +352,6 @@
         <div class="input-wrapper">
           <input type="email" id="emailInput" placeholder="your.email@example.com" required autocomplete="email"/>
         </div>
-      </div>
-
-      <div class="cta-phone">
-        <h4>Prefer to Book by Phone?</h4>
-        <a href="tel:0800769000">📞 Call 0800 769 000</a>
-        <p>Available 7 days, 8am-8pm NZ time</p>
       </div>
 
       <div style="text-align:center;margin:20px 0;">
@@ -430,7 +418,7 @@
 
       <div class="highlight-box">
         <h4>What happens next:</h4>
-        <p>We contact the seller to arrange workshop drop-off. Legitimate sellers cooperate immediately - they know their vehicle will pass. If a seller refuses, that's a massive red flag: they're hiding something expensive. When that happens, we give you full store credit to use on your next inspection. You just avoided a $10,000+ mistake for free.</p>
+        <p>We contact the seller to arrange workshop drop-off. Legitimate sellers cooperate immediately - they know their vehicle will pass. If a seller refuses, that's a red flag: they're likely hiding something costly. When that happens, we give you full store credit to use on your next inspection. You just avoided a major expense.</p>
       </div>
 
       <div class="contact-info">
@@ -487,27 +475,25 @@
       
       <div style="background:linear-gradient(135deg,#28a745,#20c997);border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;color:#fff;">
         <h2 style="margin:0 0 10px 0;font-size:1.6em;">95% Of Vehicles Are Standard Pricing</h2>
-        <p style="margin:0;font-size:1.05em;opacity:.95;">No hidden fees. Most cars, SUVs, and utes are included in the base price. Only large commercial or specialty vehicles cost extra.</p>
+        <p style="margin:0;font-size:1.05em;opacity:.95;">No hidden fees. Most cars, SUVs, utes, and motorhomes are included in the base price. Only specialty vehicles cost extra.</p>
       </div>
 
       <div class="vehicle-types">
         <div class="vehicle-type popular selected" onclick="selectVehicleType('standard', 0, this)">
           <div class="vehicle-type-title">Standard Vehicle</div>
-          <div class="vehicle-type-subtitle">Cars, SUVs, Utes under 3500kg</div>
+          <div class="vehicle-type-subtitle">Cars, SUVs, utes, motorhomes with standard license</div>
           <div class="vehicle-note" style="color:#28a745;font-weight:700;">No additional fee</div>
-        </div>
-
-        <div class="vehicle-type" onclick="selectVehicleType('commercial', 39, this)">
-          <div class="vehicle-type-title">Commercial Vehicle</div>
-          <div class="vehicle-type-subtitle">Vans, trucks, heavy vehicles > 3500kg</div>
-          <div class="vehicle-note">Additional inspection time (+$39)</div>
         </div>
 
         <div class="vehicle-type" onclick="selectVehicleType('specialty', 129, this)">
           <div class="vehicle-type-title">Classic/Specialty</div>
-          <div class="vehicle-type-subtitle">Classics, modified, imports</div>
+          <div class="vehicle-type-subtitle">Classics, modified vehicles, rare imports</div>
           <div class="vehicle-note">Specialist expertise (+$129)</div>
         </div>
+      </div>
+
+      <div style="background:#f8f9fa;border-radius:8px;padding:15px;margin:20px 0;text-align:left;">
+        <p style="margin:0;color:#495057;font-size:.9em;line-height:1.5;"><strong>Note:</strong> We inspect vehicles with standard licenses. Heavy truck (HT) licenses and commercial trucks requiring special licenses are not available for inspection through this service.</p>
       </div>
 
       <div style="text-align:center;margin:20px 0;">
@@ -523,7 +509,7 @@
       </div>
       
       <div style="background:linear-gradient(135deg,#dc3545,#c82333);border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;color:#fff;">
-        <h2 style="margin:0 0 10px 0;font-size:1.6em;">$599 Today Could Save You $5,000 Tomorrow</h2>
+        <h2 style="margin:0 0 10px 0;font-size:1.6em;">$599 Today Could Save You $3,200 Tomorrow</h2>
         <p style="margin:0;font-size:1.05em;opacity:.95;">25% of vehicles have electrical problems costing thousands. 40% have unaddressed recalls. Know what you're buying before you pay.</p>
       </div>
 
@@ -587,7 +573,7 @@
     <h2 style="color:#dc3545;margin:0 0 15px 0;font-size:1.8em;">Wait! Don't Risk Buying a Lemon</h2>
     <p style="font-size:1.15em;margin:0 0 20px 0;line-height:1.5;">Complete your booking in the next <strong>30 minutes</strong> and save <strong id="exitDiscount">$40</strong> on your inspection.</p>
     <div style="background:#fff3cd;padding:15px;border-radius:8px;margin:0 0 20px 0;">
-      <p style="margin:0;color:#856404;font-size:.95em;">⚠️ <strong>1 in 5 vehicles</strong> we inspect gets rejected. Don't gamble $10,000+ on a bad car.</p>
+      <p style="margin:0;color:#856404;font-size:.95em;">⚠️ <strong>1 in 5 vehicles</strong> we inspect gets rejected. Don't gamble with a bad car.</p>
     </div>
     <button class="button" onclick="closeExitPopup()" style="font-size:1.2em;padding:16px 32px;">Continue Booking & Save <span id="exitDiscountBtn">$40</span> →</button>
     <p style="margin:15px 0 0 0;color:#999;font-size:.85em;">Limited time offer - expires in 30 minutes</p>
@@ -888,7 +874,7 @@ function buildInspectionData(status) {
     },
     
     source: 'inspection_booking_form',
-    formVersion: '5.0'
+    formVersion: '5.1'
   };
 }
 
@@ -1105,7 +1091,7 @@ function selectVehicleType(type, addon, el){
 
 function updateSummary(){
   const serviceNames = {'basic': 'Basic Mechanical', 'comprehensive': 'Comprehensive Report'};
-  const vehicleNames = {'standard': 'Standard Vehicle', 'commercial': 'Commercial (+$39)', 'specialty': 'Classic/Specialty (+$129)'};
+  const vehicleNames = {'standard': 'Standard Vehicle', 'specialty': 'Classic/Specialty (+$129)'};
   
   document.getElementById('summaryService').textContent = serviceNames[selectedService];
   document.getElementById('summaryPhone').textContent = document.getElementById('phoneInput').value;
@@ -1174,7 +1160,7 @@ async function generatePaymentLink(){
   }catch(err){
     console.error(err);
     btn.disabled=false; btn.classList.remove('processing'); btn.textContent='Secure My Inspection Now →';
-    showNotification('Connection Error', 'Unable to generate link. Please call 0800 769 000', 'error');
+    showNotification('Connection Error', 'Unable to generate link. Please try again', 'error');
   }
 }
 
@@ -1192,7 +1178,7 @@ function showNotification(title, message, type = 'info') {
 
 // INITIALIZE
 document.addEventListener('DOMContentLoaded', function(){
-  console.log('✅ Optimized 7-Step Form Initialized');
+  console.log('✅ Optimized 7-Step Form Initialized (v5.1)');
   initializeTracking();
   sendInspectionUpdate(BOOKING_STATUS.INITIAL);
   initializeDaySelector();
