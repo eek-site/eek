@@ -659,6 +659,9 @@ font-src 'self' data:;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
       📞 CALL NOW - <span class="phone-display">0800 769 000</span>
     </a>
+    <a class="cta-button after-hours-btn service-link" data-service="mechanic" style="background: #28a745; display: none;">
+      📅 BOOK YOUR SLOT NOW
+    </a>
   </div>
 </div>
 
@@ -687,6 +690,9 @@ font-src 'self' data:;">
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
       📞 CALL NOW - <span class="phone-display">0800 769 000</span>
+    </a>
+    <a class="cta-button after-hours-btn service-link" data-service="jumpstart" style="background: #28a745; display: none;">
+      📅 BOOK YOUR TIME SLOT
     </a>
   </div>
 </div>
@@ -717,6 +723,9 @@ font-src 'self' data:;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
       📞 EMERGENCY - <span class="phone-display">0800 769 000</span>
     </a>
+    <a class="cta-button after-hours-btn service-link" data-service="fuel-extraction" style="background: #28a745; display: none;">
+      📅 BOOK FUEL RESCUE NOW
+    </a>
   </div>
 </div>
 
@@ -745,6 +754,9 @@ font-src 'self' data:;">
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
     <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
       📞 CALL - <span class="phone-display">0800 769 000</span>
+    </a>
+    <a class="cta-button after-hours-btn service-link" data-service="inspection" style="background: #28a745; display: none;">
+      📅 BOOK SAME-DAY INSPECTION
     </a>
   </div>
 </div>
@@ -1621,8 +1633,29 @@ window.addEventListener('scroll', function() {
     if (stickyCall) stickyCall.style.display = 'none';
     if (stickyClosedButton) stickyClosedButton.style.display = 'none';
     
+    // Hide ALL call buttons
     const normalButtons = document.querySelectorAll('.normal-hours-btn');
     normalButtons.forEach(btn => { if (btn.style) btn.style.display = 'none'; });
+    
+    // Hide mega call banner
+    const megaBanner = document.querySelector('.mega-call-banner');
+    if (megaBanner) megaBanner.style.display = 'none';
+    
+    // Hide all phone links and displays
+    document.querySelectorAll('.phone-link, .phone-display').forEach(el => {
+      if (el.style) el.style.display = 'none';
+    });
+    
+    // Hide service selection orange boxes
+    const serviceSelection = document.getElementById('service-selection');
+    if (serviceSelection) serviceSelection.style.display = 'none';
+    
+    // Hide all service sections (breakdown, battery, fuel, inspection) except reviews
+    document.querySelectorAll('.services').forEach(section => {
+      if (section.id && section.id !== 'customer-reviews') {
+        section.style.display = 'none';
+      }
+    });
 
     sticky.href = '#stripePaymentBlock';
 
