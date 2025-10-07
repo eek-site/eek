@@ -1633,6 +1633,11 @@ window.addEventListener('scroll', function() {
     if (stickyCall) stickyCall.style.display = 'none';
     if (stickyClosedButton) stickyClosedButton.style.display = 'none';
     
+    // Hide ALL sticky call buttons (multiple selectors)
+    document.querySelectorAll('.sticky-call, #stickyCallButton, #stickyClosedButton').forEach(el => {
+      if (el.style) el.style.display = 'none';
+    });
+    
     // Hide ALL call buttons
     const normalButtons = document.querySelectorAll('.normal-hours-btn');
     normalButtons.forEach(btn => { if (btn.style) btn.style.display = 'none'; });
@@ -1641,13 +1646,18 @@ window.addEventListener('scroll', function() {
     const header = document.querySelector('header');
     if (header) header.style.display = 'none';
     
-    // Hide mega call banner
-    const megaBanner = document.querySelector('.mega-call-banner');
-    if (megaBanner) megaBanner.style.display = 'none';
+    // Hide mega call banner (multiple selectors to be sure)
+    document.querySelectorAll('.mega-call-banner, .normal-hours-only').forEach(el => {
+      if (el.style) el.style.display = 'none';
+    });
     
     // Hide social proof box
     const socialProof = document.querySelector('.social-proof-box');
     if (socialProof) socialProof.style.display = 'none';
+    
+    // Hide phones busy banner
+    const phonesBusyBanner = document.getElementById('phonesBusyBanner');
+    if (phonesBusyBanner) phonesBusyBanner.style.display = 'none';
     
     // Hide all phone links and displays
     document.querySelectorAll('.phone-link, .phone-display').forEach(el => {
@@ -1675,7 +1685,7 @@ window.addEventListener('scroll', function() {
       window.location.href = `https://buy.stripe.com/${token}`;
     });
     
-    console.log('💳 Payment UI setup complete');
+    console.log('💳 Payment UI setup complete - all distractions hidden');
   }
 })();
 </script>
