@@ -145,6 +145,25 @@ font-src 'self' data:;">
       color: #333;
       text-align: center;
     }
+    
+    /* Payment mode overrides */
+    body.payment-mode .sticky-call {
+      display: none !important;
+      visibility: hidden !important;
+    }
+    
+    body.payment-mode .normal-hours-only,
+    body.payment-mode .normal-hours-btn,
+    body.payment-mode .phone-link,
+    body.payment-mode .phone-display,
+    body.payment-mode header,
+    body.payment-mode .mega-call-banner,
+    body.payment-mode .social-proof-box,
+    body.payment-mode #service-selection,
+    body.payment-mode #phonesBusyBanner {
+      display: none !important;
+    }
+    
     header {
       background: #ffffff;
       padding: 20px;
@@ -1621,21 +1640,22 @@ window.addEventListener('scroll', function() {
   const checkbox = document.getElementById('termsCheckbox');
   const button = document.getElementById('payNowButton');
   const sticky = document.getElementById('stripePaymentSticky');
-  const stickyCall = document.getElementById('stickyCallButton');
-  const stickyClosedButton = document.getElementById('stickyClosedButton');
 
   if (token && box && checkbox && button && sticky) {
     console.log('💳 Payment token detected, setting up payment UI');
     
+    // Add payment mode class to body for CSS targeting
+    document.body.classList.add('payment-mode');
+    
     box.style.display = 'block';
     sticky.style.display = 'inline-block';
     
-    if (stickyCall) stickyCall.style.display = 'none';
-    if (stickyClosedButton) stickyClosedButton.style.display = 'none';
-    
-    // Hide ALL sticky call buttons (multiple selectors)
+    // Hide ALL sticky buttons with force
     document.querySelectorAll('.sticky-call, #stickyCallButton, #stickyClosedButton').forEach(el => {
-      if (el.style) el.style.display = 'none';
+      if (el) {
+        el.style.display = 'none';
+        el.style.visibility = 'hidden';
+      }
     });
     
     // Hide ALL call buttons
