@@ -509,7 +509,7 @@
       </div>
       
       <div style="background:linear-gradient(135deg,#dc3545,#c82333);border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;color:#fff;">
-        <h2 style="margin:0 0 10px 0;font-size:1.6em;">$599 Today Could Save You $3,200 Tomorrow</h2>
+        <h2 style="margin:0 0 10px 0;font-size:1.6em;"><span id="dynamicPrice">$599</span> Today Could Save You $3,200 Tomorrow</h2>
         <p style="margin:0;font-size:1.05em;opacity:.95;">25% of vehicles have electrical problems costing thousands. 40% have unaddressed recalls. Know what you're buying before you pay.</p>
       </div>
 
@@ -519,12 +519,12 @@
           <div class="trust-badge-text">Secure Payment</div>
         </div>
         <div class="trust-badge">
-          <div class="trust-badge-icon">✓</div>
-          <div class="trust-badge-text">7,829+ Inspections</div>
+          <div class="trust-badge-icon">⏱️</div>
+          <div class="trust-badge-text">60-90min Report</div>
         </div>
         <div class="trust-badge">
-          <div class="trust-badge-icon">⭐</div>
-          <div class="trust-badge-text">95% ASE Certified</div>
+          <div class="trust-badge-icon">🏆</div>
+          <div class="trust-badge-text">Workshop Hoist Inspection</div>
         </div>
       </div>
 
@@ -1093,12 +1093,17 @@ function updateSummary(){
   const serviceNames = {'basic': 'Basic Mechanical', 'comprehensive': 'Comprehensive Report'};
   const vehicleNames = {'standard': 'Standard Vehicle', 'specialty': 'Classic/Specialty (+$129)'};
   
+  const totalPrice = selectedServicePrice + vehicleTypeAddon;
+  
   document.getElementById('summaryService').textContent = serviceNames[selectedService];
   document.getElementById('summaryPhone').textContent = document.getElementById('phoneInput').value;
   document.getElementById('summaryLocation').textContent = document.getElementById('locationInput').value;
   document.getElementById('summaryDate').textContent = selectedDayString;
   document.getElementById('summaryVehicle').textContent = vehicleNames[selectedVehicleType];
-  document.getElementById('summaryPrice').textContent = `$${selectedServicePrice + vehicleTypeAddon}`;
+  document.getElementById('summaryPrice').textContent = `$${totalPrice}`;
+  
+  // Update dynamic price in red block
+  document.getElementById('dynamicPrice').textContent = `$${totalPrice}`;
   
   document.getElementById('reportTimingNote').innerHTML = selectedService === 'basic' ? '<strong>5.</strong> Report delivered immediately' : '<strong>5.</strong> Report within 60-90 minutes';
 }
