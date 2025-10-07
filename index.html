@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mobile Mechanics NZ - 30-60 Minute Response | Eek Mobile Mechanical</title>
-  <meta name="description" content="Eek Mobile Mechanical offers nationwide mobile mechanic services including pre-purchase inspections, wrong fuel rescue, jump starts, and roadside repairs. Target arrival: 30-60 minutes NZ-wide. Call 0800 769 000 now." />
+  <title>Mobile Mechanics NZ - 30 Min Dispatch | Eek Mobile Mechanical</title>
+  <meta name="description" content="Eek Mobile Mechanical - Call now for immediate dispatch. Mobile mechanics arrive in 30 minutes across NZ. Pre-purchase inspections from $199, wrong fuel rescue, jump starts, roadside repairs. Call 0800 769 000." />
   <meta name="keywords" content="mobile mechanic, mobile mechanics NZ, roadside mechanic, jump start service, fuel drain, wrong fuel, pre purchase inspection, emergency mechanic, mobile car repair, NZ mechanics" />
-  <meta property="og:title" content="Mobile Mechanics NZ - 30-60 Minute Response | Eek Mobile Mechanical" />
-  <meta property="og:description" content="Nationwide mobile mechanic service – inspections, battery help, fuel rescue, roadside repairs. 30-60 minute average arrival time. Call 0800 769 000." />
+  <meta property="og:title" content="Mobile Mechanics NZ - 30 Min Dispatch | Eek Mobile Mechanical" />
+  <meta property="og:description" content="Call now - mechanics dispatched in 30 minutes. Emergency roadside service across New Zealand. 0800 769 000" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.eek.nz" />
   <meta property="og:image" content="https://www.eek.nz/og-image.jpg" />
@@ -29,7 +29,6 @@ font-src 'self' data:;">
     !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
     (window,document);
     
-    // Helper functions to extract user data if available
     function getEmailFromForm() {
       const urlParams = new URLSearchParams(window.location.search);
       const emailParam = urlParams.get('email');
@@ -88,7 +87,7 @@ font-src 'self' data:;">
     rdt('track', 'PageVisit');
   </script>
 
-  <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -175,7 +174,6 @@ font-src 'self' data:;">
       color: #666;
     }
 
-    /* After Hours Emergency Banner */
     .after-hours-banner {
       background: linear-gradient(135deg, #ff3333, #ff5500);
       color: white;
@@ -190,6 +188,11 @@ font-src 'self' data:;">
     @keyframes pulse {
       0%, 100% { box-shadow: 0 4px 12px rgba(255,51,51,0.3); }
       50% { box-shadow: 0 4px 20px rgba(255,51,51,0.5); }
+    }
+
+    @keyframes pulse-green {
+      0%, 100% { box-shadow: 0 8px 24px rgba(40,167,69,0.4); }
+      50% { box-shadow: 0 8px 32px rgba(40,167,69,0.6); }
     }
 
     .after-hours-banner h2 {
@@ -223,29 +226,69 @@ font-src 'self' data:;">
       box-shadow: 0 6px 12px rgba(0,0,0,0.2);
     }
 
-    .hours-section {
-      background: #e8f4f8;
-      padding: 15px;
-      margin: 20px auto;
-      border-radius: 8px;
-      border-left: 4px solid #ff5500;
+    /* MEGA CALL NOW SECTION */
+    .mega-call-banner {
+      background: linear-gradient(135deg, #ff5500, #ff7733);
+      color: white;
+      padding: 35px 25px;
+      margin: 25px auto;
       max-width: 800px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(255,85,0,0.4);
+      animation: pulse-orange 2.5s infinite;
     }
-    .hours-section h3 {
-      margin: 0 0 10px 0;
-      color: #333;
+
+    @keyframes pulse-orange {
+      0%, 100% { 
+        box-shadow: 0 8px 24px rgba(255,85,0,0.4);
+        transform: scale(1);
+      }
+      50% { 
+        box-shadow: 0 12px 36px rgba(255,85,0,0.6);
+        transform: scale(1.02);
+      }
     }
-    .hours-text {
-      font-size: 1.1em;
-      color: #555;
-      font-weight: bold;
+
+    .mega-call-banner h2 {
+      margin: 0 0 15px 0;
+      font-size: 2.2em;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
     }
-    .after-hours-text {
-      font-size: 1em;
-      color: #ff3333;
-      font-weight: bold;
+
+    .mega-call-banner p {
       margin: 10px 0;
+      font-size: 1.3em;
+      opacity: 0.95;
     }
+
+    .mega-phone-button {
+      display: block;
+      background: white;
+      color: #ff5500;
+      padding: 25px;
+      margin: 20px auto;
+      font-size: 2.8em;
+      font-weight: 900;
+      text-decoration: none;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      transition: all 0.3s ease;
+      max-width: 500px;
+    }
+
+    .mega-phone-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+    }
+
+    .urgency-text {
+      font-size: 1.1em;
+      margin: 15px 0 0 0;
+      opacity: 0.9;
+      font-weight: 600;
+    }
+
     .cta-button {
       display: inline-block;
       background-color: #ff5500;
@@ -256,7 +299,15 @@ font-src 'self' data:;">
       border-radius: 8px;
       text-decoration: none;
       box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      font-weight: 700;
     }
+    
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+    
     .services {
       background: #ffffff;
       margin: 20px auto;
@@ -267,6 +318,7 @@ font-src 'self' data:;">
     }
     .services h2 {
       color: #222;
+      font-size: 1.9em;
     }
     .services ul {
       list-style: none;
@@ -319,7 +371,6 @@ font-src 'self' data:;">
       opacity: 0.9;
     }
 
-    /* RevU widget container styling */
     .services [data-bid] {
       max-height: 400px;
       overflow-y: auto;
@@ -330,7 +381,6 @@ font-src 'self' data:;">
       margin-top: 15px;
     }
 
-    /* Style the RevU widget content */
     .services [data-bid] * {
       max-width: 100% !important;
       box-sizing: border-box;
@@ -353,10 +403,56 @@ font-src 'self' data:;">
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
       text-decoration: none;
       z-index: 999;
+      font-weight: 700;
     }
     .sticky-payment {
       right: 150px;
       display: none;
+    }
+
+    /* Book Now Urgent Styling */
+    .book-now-urgent {
+      background: linear-gradient(135deg, #28a745, #20c997) !important;
+      color: white !important;
+      padding: 18px 35px !important;
+      font-size: 1.3em !important;
+      border-radius: 12px !important;
+      text-decoration: none !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      box-shadow: 0 8px 24px rgba(40,167,69,0.4) !important;
+      font-weight: 800 !important;
+      animation: pulse-green 2s infinite !important;
+      border: 3px solid #fff !important;
+    }
+
+    .book-now-urgent:hover {
+      transform: translateY(-3px) !important;
+      box-shadow: 0 12px 32px rgba(40,167,69,0.5) !important;
+    }
+
+    .social-proof-box {
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 800px;
+      border-radius: 12px;
+    }
+
+    .social-proof-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .stat-big {
+      font-size: 2.5em;
+      color: #ff5500;
+      font-weight: 900;
+      display: block;
     }
 
     @media (max-width: 768px) {
@@ -372,12 +468,20 @@ font-src 'self' data:;">
         margin: 0 10px;
       }
       
-      .hours-section, .keywords-highlight, .services {
+      .services, .keywords-highlight, .mega-call-banner, .social-proof-box {
         margin: 20px 10px;
+      }
+      
+      .mega-phone-button {
+        font-size: 2em;
+        padding: 20px;
+      }
+
+      .mega-call-banner h2 {
+        font-size: 1.7em;
       }
     }
 
-    /* Debug styles - remove in production */
     .debug-info {
       position: fixed;
       top: 10px;
@@ -388,7 +492,7 @@ font-src 'self' data:;">
       font-size: 12px;
       border-radius: 5px;
       z-index: 9999;
-      display: none; /* Change to 'block' to enable debugging */
+      display: none;
     }
   </style>
 </head>
@@ -402,20 +506,27 @@ font-src 'self' data:;">
   <div>Payment Token: <span id="debugPaymentToken">No</span></div>
 </div>
 
-<!-- Business Closed Banner (hidden by default) -->
+<!-- Business Closed Banner -->
 <div id="closedBanner" class="after-hours-banner" style="display: none; background: linear-gradient(135deg, #666, #888);">
   <h2 id="closedTitle">🕐 CURRENTLY CLOSED</h2>
   <div id="afterHoursMessage">
     <p><strong>Business Hours:</strong></p>
     <p>Monday - Friday: 7:00 AM - 5:00 PM</p>
     <p>Saturday - Sunday: 7:00 AM - 12:00 PM</p>
-    <p>Please call during business hours or book online for next available service</p>
+    <p>Book online now for next available service</p>
   </div>
   <div id="tempUnavailableMessage" style="display: none;">
-    <p><strong>We're currently experiencing high demand</strong></p>
-    <p>Our mechanics are fully dispatched on emergency calls</p>
-    <p>Please book online for the next available appointment or try calling again shortly</p>
-    <a href="#service-selection" class="emergency-btn" style="background: rgba(255,255,255,0.25); margin-top: 10px;">📅 Book Online Now</a>
+    <div style="background:rgba(255,255,255,0.2);padding:20px;border-radius:12px;margin:15px 0;">
+      <h3 style="margin:0 0 15px 0;font-size:1.5em;">📱 Lines Busy - Book Online Instead</h3>
+      <p style="font-size:1.2em;margin:12px 0;"><strong>All mechanics currently on emergency calls</strong></p>
+      <p style="font-size:1.15em;margin:10px 0;">✅ Book online now - next mechanic dispatched to you</p>
+      <p style="font-size:1.15em;margin:10px 0;">✅ Skip the phone queue completely</p>
+      <p style="font-size:1.15em;margin:10px 0;">✅ <strong>Lock in your time slot before they fill up</strong></p>
+    </div>
+    <a href="#service-selection" class="emergency-btn" style="background:#28a745;font-size:1.5em;padding:20px 40px;margin-top:15px;border:3px solid white;animation:pulse-green 2s infinite;">
+      📅 BOOK YOUR SLOT NOW
+    </a>
+    <p style="margin-top:20px;font-size:1.1em;opacity:0.95;"><strong>Most bookings completed in under 2 minutes</strong></p>
   </div>
 </div>
 
@@ -441,105 +552,203 @@ font-src 'self' data:;">
 <header>
   <img src="brand-image.png" alt="Eek Mobile Mechanical - Mobile Mechanic Services" />
   <div class="business-name">Eek Mobile Mechanical</div>
-  <h1>Mobile Mechanics NZ - 30-60 Minute Response</h1>
-  <p class="tagline">Mobile Mechanic • Pre Purchase Inspections • Wrong Fuel Removal • Emergency Roadside Repairs • 30–60 Min Response</p>
+  <h1>Mobile Mechanics NZ - Most Jobs Dispatched in Under 30 Minutes</h1>
+  <p class="tagline">Emergency Roadside Service • Pre-Purchase Inspections • Wrong Fuel Rescue • Fast Professional Response</p>
 </header>
 
+<!-- MEGA CALL NOW BANNER -->
+<div class="mega-call-banner normal-hours-only">
+  <h2>⚡ CALL NOW - MECHANIC DISPATCHED IMMEDIATELY</h2>
+  <p><strong>Real mechanic answers in under 60 seconds</strong></p>
+  <p>Most jobs dispatched in under 30 minutes or less</p>
+  
+  <a href="tel:0800769000" class="mega-phone-button phone-link" onclick="trackConversion('mega_banner_call', 'Contact')">
+    📞 <span class="phone-display">0800 769 000</span>
+  </a>
+  
+  <p class="urgency-text">✓ Real mechanic answers • Most jobs dispatched in under 30 minutes</p>
+</div>
+
+<!-- Phones Busy Banner -->
+<div id="phonesBusyBanner" style="display:none;position:sticky;top:0;background:linear-gradient(135deg,#28a745,#20c997);color:#fff;padding:18px;text-align:center;z-index:998;box-shadow:0 4px 12px rgba(40,167,69,0.3);">
+  <strong style="font-size:1.3em;">📱 All lines busy - All mechanics currently dispatched</strong>
+  <span style="margin:0 15px;">→</span>
+  <a href="#service-selection" style="background:rgba(255,255,255,0.3);color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:800;border:2px solid white;font-size:1.1em;">
+    📅 Book Online Now - Skip the Queue
+  </a>
+</div>
+
+<!-- Social Proof -->
+<div class="social-proof-box">
+  <h3 style="margin:0 0 15px 0;color:#856404;font-size:1.4em;">✅ New Zealand's Fastest Mobile Mechanics</h3>
+  <div class="social-proof-grid">
+    <div>
+      <span class="stat-big">150+</span>
+      <span style="color:#666;font-size:1.1em;">Emergency calls this week</span>
+    </div>
+    <div>
+      <span class="stat-big">97%</span>
+      <span style="color:#666;font-size:1.1em;">First-call resolution</span>
+    </div>
+    <div>
+      <span class="stat-big">4.9★</span>
+      <span style="color:#666;font-size:1.1em;">Customer rating</span>
+    </div>
+    <div>
+      <span class="stat-big">&lt;30min</span>
+      <span style="color:#666;font-size:1.1em;">Most jobs dispatched</span>
+    </div>
+  </div>
+</div>
+
 <div class="keywords-highlight" id="service-selection">
-  <h2>🔧 Professional Mobile Mechanic Services</h2>
-  <p>Eek Mobile Mechanical providing comprehensive mobile mechanic services across New Zealand</p>
+  <h2>🔧 Choose Your Emergency Service</h2>
+  <p>Fast mobile mechanic dispatch across all of New Zealand</p>
   <div class="service-keywords">
     <a href="#mobile-mechanic-breakdown" style="text-decoration: none; color: inherit;">
       <div class="keyword-item" data-service="emergency_breakdown">
-        <h4>Emergency Breakdown</h4>
-        <p>Professional mechanics arrive in 30-60 minutes anywhere in NZ</p>
+        <h4>🚨 Emergency Breakdown</h4>
+        <p>Most jobs dispatched in under 30 minutes</p>
       </div>
     </a>
     <a href="#battery-jump-start" style="text-decoration: none; color: inherit;">
       <div class="keyword-item" data-service="battery_jumpstart">
-        <h4>Battery Jump Start</h4>
-        <p>Dead battery? We'll get you started in 30-60 minutes</p>
+        <h4>🔋 Dead Battery</h4>
+        <p>Jump start service - fast dispatch</p>
       </div>
     </a>
     <a href="#wrong-fuel-removal" style="text-decoration: none; color: inherit;">
       <div class="keyword-item" data-service="wrong_fuel">
-        <h4>Wrong Fuel Removal</h4>
-        <p>Emergency fuel rescue service - 30-60 minute response</p>
+        <h4>⛽ Wrong Fuel Emergency</h4>
+        <p>DON'T START - we'll fix it fast</p>
       </div>
     </a>
     <a href="#pre-purchase-inspections" style="text-decoration: none; color: inherit;">
       <div class="keyword-item" data-service="pre_purchase">
-        <h4>Pre Purchase Inspections</h4>
-        <p>45-point certified inspection - 30-60 minute arrival</p>
+        <h4>🔍 Pre-Purchase Inspection</h4>
+        <p>Same-day service - 600+ workshops nationwide</p>
       </div>
     </a>
-
   </div>
 </div>
 
 <div class="services" id="mobile-mechanic-breakdown">
-  <h2>Mobile Mechanic Emergency Breakdown Service – Target Arrival: 30–60 Minutes</h2>
-  <p>Engine won't start? Warning lights? Our professional mobile mechanic team arrives fast and diagnoses the issue on-site anywhere in New Zealand.</p>
-  <ul>
-    <li>🛠️ Professional mobile mechanic fault detection & diagnostic scanning</li>
-    <li>🔍 On-site assessment and minor repairs</li>
-    <li>📍 Mobile mechanic coverage anywhere in NZ—city or rural</li>
-    <li>🧰 Mobile mechanics arrive equipped with full professional toolkits</li>
-    <li>📞 Real-time communication with mobile mechanic support staff</li>
-    <li>⏱️ Target arrival: 30–60 minutes nationwide</li>
+  <h2>🚨 Stranded? Dead Battery? Engine Won't Start?</h2>
+  <p style="color:#dc3545;font-weight:800;margin:15px 0;font-size:1.3em;">⚡ CALL NOW - Most jobs dispatched in under 30 minutes</p>
+  <p style="font-size:1.15em;line-height:1.6;">Emergency roadside breakdowns solved fast. Our mobile mechanics arrive equipped with professional diagnostic tools and can fix most problems on-site.</p>
+  <ul style="text-align:left;max-width:600px;margin:20px auto;">
+    <li>🛠️ Professional diagnostic scanning & fault detection</li>
+    <li>🔍 On-site repairs for most common issues</li>
+    <li>📍 Coverage across all NZ - city and rural</li>
+    <li>🧰 Fully equipped mobile workshop</li>
+    <li>📞 Real-time updates from dispatch team</li>
+    <li>⚡ <strong>Most jobs dispatched in under 30 minutes</strong></li>
   </ul>
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn service-link" data-service="mechanic" style="background: #28a745; display: none;">📅 Book Online</a>
+  
+  <div class="after-hours-btn" style="background:#e8f4f8;border:3px solid #17a2b8;padding:20px;margin:20px 0;border-radius:12px;display:none;">
+    <h4 style="margin:0 0 12px 0;color:#0c5460;font-size:1.3em;">📅 Why Book Online:</h4>
+    <ul style="margin:0;padding-left:20px;color:#0c5460;text-align:left;font-size:1.1em;">
+      <li><strong>Guaranteed time slot</strong> - lock in your booking</li>
+      <li><strong>Priority dispatch</strong> - pre-booked jobs processed first</li>
+      <li><strong>Skip the queue</strong> - no phone wait times</li>
+      <li><strong>2-minute booking</strong> - faster than calling</li>
+    </ul>
+  </div>
+  
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('breakdown_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
+      📞 CALL NOW - <span class="phone-display">0800 769 000</span>
+    </a>
   </div>
 </div>
 
 <div class="services" id="battery-jump-start">
-  <h2>Mobile Mechanic Battery Service – Jump Start in 30–60 Minutes</h2>
-  <p>Dead battery? Our professional mobile mechanic team comes to you and performs a safe, professional jump-start service.</p>
-  <ul>
-    <li>🔋 Mobile mechanic service compatible with all makes/models</li>
-    <li>⚡ Includes battery voltage & health check by qualified mechanics</li>
-    <li>🧰 Safe jump-start equipment & professional procedures</li>
-    <li>📍 Mobile mechanic service at your location—home or roadside</li>
+  <h2>🔋 Dead Battery? We'll Start Your Car Fast</h2>
+  <p style="color:#ff5500;font-weight:800;margin:15px 0;font-size:1.25em;">⚡ 3 mobile mechanics available in your area right now</p>
+  <p style="font-size:1.15em;line-height:1.6;">Stranded with a flat battery? Call now and we'll have you started and back on the road. Professional jump-start service with battery health check included.</p>
+  <ul style="text-align:left;max-width:600px;margin:20px auto;">
+    <li>🔋 Works with all vehicle makes and models</li>
+    <li>⚡ Professional-grade jump start equipment</li>
+    <li>🔍 FREE battery voltage and health check</li>
+    <li>📍 Come to you - home, work, or roadside</li>
+    <li>⏱️ <strong>Most jobs dispatched in under 30 minutes</strong></li>
   </ul>
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn service-link" data-service="jumpstart" style="background: #28a745; display: none;">📅 Book Online</a>
+  
+  <div class="after-hours-btn" style="background:#e8f4f8;border:3px solid #17a2b8;padding:20px;margin:20px 0;border-radius:12px;display:none;">
+    <h4 style="margin:0 0 12px 0;color:#0c5460;font-size:1.3em;">📅 Online Booking Benefits:</h4>
+    <ul style="margin:0;padding-left:20px;color:#0c5460;text-align:left;font-size:1.1em;">
+      <li><strong>Guaranteed time slot</strong> - no uncertainty</li>
+      <li><strong>Skip phone queues</strong> - book in 90 seconds</li>
+      <li><strong>Priority service</strong> - pre-booked jobs first</li>
+      <li><strong>Easy and fast</strong> - done from your phone</li>
+    </ul>
+  </div>
+  
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('battery_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
+      📞 CALL NOW - <span class="phone-display">0800 769 000</span>
+    </a>
   </div>
 </div>
 
 <div class="services" id="wrong-fuel-removal">
-  <h2>Wrong Fuel Removal – Petrol and Diesel Removal Emergency Service – Target Arrival: 30–60 Minutes</h2>
-  <p>Filled with petrol instead of diesel? Our mobile mechanic specialists provide immediate wrong fuel removal and petrol and diesel removal services. Don't start the engine!</p>
-  <ul>
-    <li>⛽ Professional petrol and diesel removal on-site</li>
-    <li>🧯 Fully insured wrong fuel removal process</li>
-    <li>🛻 No towing needed, saves time & money</li>
-    <li>📍 Trusted mobile mechanic wrong fuel rescue NZ-wide</li>
-    <li>🚨 Emergency petrol and diesel removal service</li>
-    <li>⏱️ Target arrival: 30–60 minutes nationwide</li>
+  <h2>⛽ Put Petrol in Diesel? STOP - Don't Start the Engine</h2>
+  <p style="color:#dc3545;font-weight:800;margin:15px 0;font-size:1.3em;">⚠️ DON'T START YOUR CAR - Call us immediately</p>
+  <p style="font-size:1.15em;line-height:1.6;">Put the wrong fuel in? Don't panic. Our wrong fuel specialists can drain and flush your system on-site - no expensive tow truck needed.</p>
+  <ul style="text-align:left;max-width:600px;margin:20px auto;">
+    <li>⛽ Professional petrol/diesel removal on-site</li>
+    <li>🧯 Fully insured fuel contamination service</li>
+    <li>🚫 NO towing required - saves you hundreds</li>
+    <li>📍 Emergency fuel rescue anywhere in NZ</li>
+    <li>⚡ <strong>Priority dispatch for wrong fuel emergencies</strong></li>
+    <li>💰 <strong>Professional service - cheaper than engine damage</strong></li>
   </ul>
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn service-link" data-service="fuel-extraction" style="background: #28a745; display: none;">📅 Book Online</a>
+  
+  <div class="after-hours-btn" style="background:#e8f4f8;border:3px solid #17a2b8;padding:20px;margin:20px 0;border-radius:12px;display:none;">
+    <h4 style="margin:0 0 12px 0;color:#0c5460;font-size:1.3em;">📅 Book Online:</h4>
+    <ul style="margin:0;padding-left:20px;color:#0c5460;text-align:left;font-size:1.1em;">
+      <li><strong>Guaranteed response time</strong></li>
+      <li><strong>Skip the phone wait</strong> - book instantly</li>
+      <li><strong>Lock in your slot</strong> before they fill</li>
+      <li><strong>2-minute booking process</strong></li>
+    </ul>
+  </div>
+  
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('fuel_drain_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
+      📞 EMERGENCY - <span class="phone-display">0800 769 000</span>
+    </a>
   </div>
 </div>
 
 <div class="services" id="pre-purchase-inspections">
-  <h2>Pre Purchase Vehicle Inspections – Target Arrival: 30–60 Minutes</h2>
-  <p>Need peace of mind before buying a car? Our certified mobile mechanic team performs comprehensive pre purchase vehicle inspections at any location across New Zealand.</p>
-  <ul>
-    <li>🧾 Comprehensive 45-point certified mechanical inspection</li>
-    <li>📍 Inspection at seller or dealership location</li>
-    <li>💸 From $199 - best prices when you book ahead!</li>
-    <li>⏱️ Nationwide mobile mechanic dispatch in 30–60 minutes</li>
-    <li>📅 Save money by booking online in advance</li>
-    <li>✅ Written report with price recommendation & upcoming cost estimates</li>
+  <h2>🔍 Pre-Purchase Car Inspection - Same-Day Service</h2>
+  <p style="color:#28a745;font-weight:800;margin:15px 0;font-size:1.25em;">🏆 600+ workshop locations - inspections completed today, not next week</p>
+  <p style="font-size:1.15em;line-height:1.6;">Buying a used car? Get peace of mind with our certified 45-point mechanical inspection. We come to the seller's location anywhere in NZ.</p>
+  <ul style="text-align:left;max-width:600px;margin:20px auto;">
+    <li>🧾 Comprehensive 45-point certified inspection</li>
+    <li>📍 We come to seller or dealership location</li>
+    <li>🏆 <strong>600+ workshops nationwide - same-day service available</strong></li>
+    <li>⏱️ <strong>Inspections completed today - not 2-3 days like competitors</strong></li>
+    <li>📅 <strong>Book online for guaranteed time slot</strong></li>
+    <li>✅ Detailed written report with price recommendation</li>
+    <li>🔧 Estimates for upcoming maintenance costs</li>
   </ul>
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 15px;">
-    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')">📞 Call <span class="phone-display">0800 769 000</span></a>
-    <a class="cta-button after-hours-btn service-link" data-service="inspection" style="background: #28a745; display: none;">📅 Book Online & Save</a>
+  
+  <div class="after-hours-btn" style="background:#e8f4f8;border:3px solid #17a2b8;padding:20px;margin:20px 0;border-radius:12px;display:none;">
+    <h4 style="margin:0 0 12px 0;color:#0c5460;font-size:1.3em;">📅 Online Booking Advantages:</h4>
+    <ul style="margin:0;padding-left:20px;color:#0c5460;text-align:left;font-size:1.1em;">
+      <li><strong>Same-day service available</strong> - 600+ workshops nationwide</li>
+      <li><strong>Choose your time slot</strong> - we work around you</li>
+      <li><strong>Guaranteed booking</strong> - slots fill fast</li>
+      <li><strong>Book in under 2 minutes</strong></li>
+    </ul>
+  </div>
+  
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
+    <a class="cta-button normal-hours-btn phone-link" href="tel:0800769000" onclick="trackConversion('inspection_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
+      📞 CALL - <span class="phone-display">0800 769 000</span>
+    </a>
   </div>
 </div>
 
@@ -548,7 +757,6 @@ font-src 'self' data:;">
   <h2>⭐ What Customers Say</h2>
   <p>Real, verified reviews from clients across New Zealand.</p>
   
-  <!-- RevU Banner Widget -->
   <div data-bid="157676" data-url="https://app.revu.cloud" data-aid="23788">
     <script src="https://widget.reviewability.com/js/widgetAdv.min.js" async></script>
   </div>
@@ -562,8 +770,10 @@ font-src 'self' data:;">
   <a href="/more-options" class="more-options-link" style="color: #666; text-decoration: underline;">More Options</a>
 </footer>
 
-<a class="sticky-call phone-link" href="tel:0800769000" onclick="trackConversion('sticky_call', 'Contact')" id="stickyCallButton">📞 Call <span class="phone-display">Eek Now</span></a>
-<a class="sticky-call" href="#closedBanner" id="stickyClosedButton" style="display: none; background: #666;">🕐 View Hours</a>
+<a class="sticky-call phone-link normal-hours-only" href="tel:0800769000" onclick="trackConversion('sticky_call', 'Contact')" id="stickyCallButton">
+  📞 Call <span class="phone-display">Now</span>
+</a>
+<a class="sticky-call" href="#service-selection" id="stickyClosedButton" style="display: none; background: #28a745;">📅 Book Now</a>
 
 <script>
 // CENTRALIZED GCLID EXTRACTION UTILITY
@@ -852,6 +1062,23 @@ function handleServiceSelection() {
       if (bookingUrl) {
         e.preventDefault();
         console.log('🎯 Redirecting to booking page:', bookingUrl);
+        
+        // Track the booking click
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'book_now_click', {
+            'event_category': 'Booking',
+            'event_label': this.dataset.service || 'unknown',
+            'value': 1
+          });
+        }
+        
+        if (typeof rdt !== 'undefined') {
+          rdt('track', 'Custom', {
+            'customEventName': 'Book_Now_Click',
+            'serviceType': this.dataset.service || 'unknown'
+          });
+        }
+        
         window.location.href = bookingUrl;
       }
     });
@@ -940,9 +1167,9 @@ function updatePhoneNumbers() {
   });
   
   document.querySelectorAll('.phone-display').forEach(span => {
-    if (span.textContent.includes('769 000') || span.textContent.includes('769000') || span.textContent === 'Eek Now') {
-      if (span.textContent === 'Eek Now') {
-        span.textContent = 'Eek Now';
+    if (span.textContent.includes('769 000') || span.textContent.includes('769000') || span.textContent === 'Eek Now' || span.textContent === 'Now') {
+      if (span.textContent === 'Now' || span.textContent === 'Eek Now') {
+        span.textContent = 'Now';
       } else {
         span.textContent = phoneData.display;
       }
@@ -995,7 +1222,7 @@ function isWithinBusinessHours() {
   return isOpen;
 }
 
-// Update UI based on system status with proper logic + GCLID state requirement
+// Update UI based on system status
 async function updateHoursDisplay() {
   console.log('🔄 Starting updateHoursDisplay...');
   
@@ -1027,93 +1254,87 @@ async function updateHoursDisplay() {
     callflowState: states.callflowState
   });
   
-  const closedBanner = document.getElementById('closedBanner');
-  const closedTitle = document.getElementById('closedTitle');
-  const afterHoursMessage = document.getElementById('afterHoursMessage');
-  const tempUnavailableMessage = document.getElementById('tempUnavailableMessage');
+  // Show/hide based on system state
+  const normalElements = document.querySelectorAll('.normal-hours-btn, .normal-hours-only');
+  const afterHoursElements = document.querySelectorAll('.after-hours-btn');
   
-  if (hasPaymentToken || (hasGclid && states.gclidState === 'Active')) {
+  if (systemActive) {
+    // PHONES ARE ON - Show call buttons, hide booking
+    normalElements.forEach(el => {
+      if (el.style) el.style.display = '';
+    });
+    afterHoursElements.forEach(el => {
+      if (el.style) el.style.display = 'none';
+    });
+    
+    const closedBanner = document.getElementById('closedBanner');
+    const phonesBusyBanner = document.getElementById('phonesBusyBanner');
     if (closedBanner) closedBanner.style.display = 'none';
-    console.log('💳🎯 Payment token or (GCLID + Active) detected - hiding closed banner');
+    if (phonesBusyBanner) phonesBusyBanner.style.display = 'none';
+    
+    const stickyCall = document.getElementById('stickyCallButton');
+    const stickyClosed = document.getElementById('stickyClosedButton');
+    if (stickyCall) stickyCall.style.display = 'inline-block';
+    if (stickyClosed) stickyClosed.style.display = 'none';
+    
+    console.log('✅ PHONES ON - Showing call buttons');
   } else {
-    if (closedBanner) {
-      if (!systemActive) {
+    // PHONES ARE OFF - Show booking buttons, hide call
+    normalElements.forEach(el => {
+      if (el.style) el.style.display = 'none';
+    });
+    afterHoursElements.forEach(el => {
+      if (el.style) el.style.display = 'block';
+    });
+    
+    const closedBanner = document.getElementById('closedBanner');
+    const closedTitle = document.getElementById('closedTitle');
+    const afterHoursMessage = document.getElementById('afterHoursMessage');
+    const tempUnavailableMessage = document.getElementById('tempUnavailableMessage');
+    const phonesBusyBanner = document.getElementById('phonesBusyBanner');
+    
+    // Show appropriate banner
+    if (duringBusinessHours) {
+      if (phonesBusyBanner) phonesBusyBanner.style.display = 'block';
+      if (closedBanner) {
         closedBanner.style.display = 'block';
-        
-        if (duringBusinessHours) {
-          closedTitle.innerHTML = '🚧 PHONE LINES BUSY';
-          closedBanner.style.background = 'linear-gradient(135deg, #ff8c00, #ff6b00)';
-          afterHoursMessage.style.display = 'none';
-          tempUnavailableMessage.style.display = 'block';
-          console.log('🚧 Showing "BUSY" banner (system inactive during business hours)');
-        } else {
-          closedTitle.innerHTML = '🕐 CURRENTLY CLOSED';
-          closedBanner.style.background = 'linear-gradient(135deg, #666, #888)';
-          afterHoursMessage.style.display = 'block';
-          tempUnavailableMessage.style.display = 'none';
-          console.log('🕐 Showing "CLOSED" banner (system inactive outside business hours)');
-        }
-      } else {
-        closedBanner.style.display = 'none';
-        console.log('✅ Hiding banner (system active)');
+        if (closedTitle) closedTitle.innerHTML = '🚧 PHONE LINES BUSY';
+        if (afterHoursMessage) afterHoursMessage.style.display = 'none';
+        if (tempUnavailableMessage) tempUnavailableMessage.style.display = 'block';
+      }
+    } else {
+      if (phonesBusyBanner) phonesBusyBanner.style.display = 'none';
+      if (closedBanner) {
+        closedBanner.style.display = 'block';
+        if (closedTitle) closedTitle.innerHTML = '🕐 CURRENTLY CLOSED';
+        if (afterHoursMessage) afterHoursMessage.style.display = 'block';
+        if (tempUnavailableMessage) tempUnavailableMessage.style.display = 'none';
       }
     }
-  }
-  
-  const headerButton = document.querySelector('header .cta-button');
-  if (headerButton) {
-    const shouldShow = systemActive;
-    headerButton.style.display = shouldShow ? 'inline-block' : 'none';
-    console.log('📞 Header button:', shouldShow ? 'VISIBLE' : 'HIDDEN');
-  }
-  
-  const normalButtons = document.querySelectorAll('.normal-hours-btn');
-  const afterHoursButtons = document.querySelectorAll('.after-hours-btn');
-  
-  const showNormalButtons = systemActive;
-  const showAfterHoursButtons = !systemActive;
-  
-  normalButtons.forEach(btn => { btn.style.display = showNormalButtons ? 'inline-block' : 'none'; });
-  afterHoursButtons.forEach(btn => { btn.style.display = showAfterHoursButtons ? 'inline-block' : 'none'; });
-  
-  console.log('🔘 Service buttons - Normal:', showNormalButtons ? 'VISIBLE' : 'HIDDEN', 
-              'After-hours:', showAfterHoursButtons ? 'VISIBLE' : 'HIDDEN');
-  
-  const stickyCall = document.getElementById('stickyCallButton');
-  const stickyClosed = document.getElementById('stickyClosedButton');
-  
-  if (stickyCall) {
-    if (hasPaymentToken) {
-      stickyCall.style.display = 'none';
-      console.log('📱 Sticky call button: HIDDEN (payment token detected)');
-    } else {
-      const shouldShowSticky = systemActive;
-      stickyCall.style.display = shouldShowSticky ? 'inline-block' : 'none';
-      console.log('📱 Sticky call button:', shouldShowSticky ? 'VISIBLE' : 'HIDDEN');
-    }
-  }
-  
-  if (stickyClosed) {
-    if (!systemActive && !hasPaymentToken && !(hasGclid && states.gclidState === 'Active')) {
+    
+    // Update sticky button
+    const stickyCall = document.getElementById('stickyCallButton');
+    const stickyClosed = document.getElementById('stickyClosedButton');
+    if (stickyCall) stickyCall.style.display = 'none';
+    if (stickyClosed) {
       stickyClosed.style.display = 'inline-block';
-      if (duringBusinessHours) {
-        stickyClosed.innerHTML = '📅 Book Online';
-        stickyClosed.style.background = '#ff8c00';
-        stickyClosed.href = '#service-selection';
-      } else {
-        stickyClosed.innerHTML = '🕐 View Hours';
-        stickyClosed.style.background = '#666';
-        stickyClosed.href = '#closedBanner';
-      }
-      console.log('🔲 Sticky closed button: VISIBLE (' + 
-                  (duringBusinessHours ? 'Book Online' : 'View Hours') + ')');
-    } else {
-      stickyClosed.style.display = 'none';
-      console.log('🔲 Sticky closed button: HIDDEN');
+      stickyClosed.innerHTML = '📅 Book Now';
     }
+    
+    // Add urgency badges to service cards
+    document.querySelectorAll('.keyword-item').forEach(item => {
+      if (!item.querySelector('.urgency-badge')) {
+        const badge = document.createElement('div');
+        badge.className = 'urgency-badge';
+        badge.innerHTML = '<span style="background:#dc3545;color:#fff;padding:6px 12px;border-radius:20px;font-size:0.85em;font-weight:700;display:inline-block;margin-top:10px;">⚡ BOOK NOW - LIMITED SLOTS</span>';
+        item.appendChild(badge);
+      }
+    });
+    
+    console.log('📅 PHONES OFF - Showing booking buttons');
   }
   
-  console.log('✅ updateHoursDisplay completed');
+  console.log('✅ updateHoursDisplay completed - System is', systemActive ? 'ACTIVE' : 'INACTIVE');
 }
 
 /* === INCOMING CALL CORRELATION WEBHOOK === */
@@ -1290,7 +1511,7 @@ async function updateHoursDisplay() {
   });
 })();
 
-// Enhanced tracking function that includes Reddit Pixel with full event parameters
+// Enhanced tracking function
 function trackConversion(eventAction, eventCategory) {
   const conversionId = 'eek_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
   
@@ -1302,15 +1523,7 @@ function trackConversion(eventAction, eventCategory) {
     'header_call': 25000,
     'sticky_call': 25000,
     'more_options_call': 25000,
-    'after_hours_emergency': 35000,
-    'breakdown_after_hours': 35000,
-    'battery_after_hours': 20000,
-    'fuel_drain_after_hours': 45000,
-    'inspection_after_hours': 25000,
-    'service_card_breakdown_call': 28900,
-    'service_card_battery_call': 14900,
-    'service_card_fuel_call': 39900,
-    'service_card_inspection_call': 19900
+    'mega_banner_call': 25000
   };
   
   const eventValue = serviceValues[eventAction] || 25000;
@@ -1348,16 +1561,8 @@ function getServiceType(eventAction) {
     'fuel_drain_call': 'Wrong Fuel Rescue',
     'header_call': 'General Inquiry',
     'sticky_call': 'General Inquiry',
-    'more_options_call': 'General Inquiry',
-    'after_hours_emergency': 'After Hours Emergency',
-    'breakdown_after_hours': 'After Hours Breakdown',
-    'battery_after_hours': 'After Hours Battery',
-    'fuel_drain_after_hours': 'After Hours Inspection',
-    'inspection_after_hours': 'After Hours Inspection',
-    'service_card_breakdown_call': 'Service Card - Emergency Breakdown',
-    'service_card_battery_call': 'Service Card - Battery Jump Start',
-    'service_card_fuel_call': 'Service Card - Wrong Fuel Removal',
-    'service_card_inspection_call': 'Service Card - Pre Purchase Inspection'
+    'mega_banner_call': 'Mega Banner Call',
+    'more_options_call': 'General Inquiry'
   };
   return serviceMap[eventAction] || 'General Service';
 }
@@ -1420,7 +1625,7 @@ window.addEventListener('scroll', function() {
     if (stickyClosedButton) stickyClosedButton.style.display = 'none';
     
     const normalButtons = document.querySelectorAll('.normal-hours-btn');
-    normalButtons.forEach(btn => { btn.style.display = 'none'; });
+    normalButtons.forEach(btn => { if (btn.style) btn.style.display = 'none'; });
 
     sticky.href = '#stripePaymentBlock';
 
