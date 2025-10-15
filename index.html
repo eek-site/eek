@@ -157,7 +157,6 @@ font-src 'self' data:;">
     body.payment-mode .phone-link,
     body.payment-mode .phone-display,
     body.payment-mode header,
-    body.payment-mode .mega-call-banner,
     body.payment-mode .social-proof-box,
     body.payment-mode #service-selection,
     body.payment-mode #phonesBusyBanner {
@@ -245,68 +244,6 @@ font-src 'self' data:;">
       box-shadow: 0 6px 12px rgba(0,0,0,0.2);
     }
 
-    /* MEGA CALL NOW SECTION */
-    .mega-call-banner {
-      background: linear-gradient(135deg, #ff5500, #ff7733);
-      color: white;
-      padding: 35px 25px;
-      margin: 25px auto;
-      max-width: 800px;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(255,85,0,0.4);
-      animation: pulse-orange 2.5s infinite;
-    }
-
-    @keyframes pulse-orange {
-      0%, 100% { 
-        box-shadow: 0 8px 24px rgba(255,85,0,0.4);
-        transform: scale(1);
-      }
-      50% { 
-        box-shadow: 0 12px 36px rgba(255,85,0,0.6);
-        transform: scale(1.02);
-      }
-    }
-
-    .mega-call-banner h2 {
-      margin: 0 0 15px 0;
-      font-size: 2.2em;
-      color: white;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-    }
-
-    .mega-call-banner p {
-      margin: 10px 0;
-      font-size: 1.3em;
-      opacity: 0.95;
-    }
-
-    .mega-phone-button {
-      display: block;
-      background: white;
-      color: #ff5500;
-      padding: 25px;
-      margin: 20px auto;
-      font-size: 2.8em;
-      font-weight: 900;
-      text-decoration: none;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-      transition: all 0.3s ease;
-      max-width: 500px;
-    }
-
-    .mega-phone-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 12px 32px rgba(0,0,0,0.4);
-    }
-
-    .urgency-text {
-      font-size: 1.1em;
-      margin: 15px 0 0 0;
-      opacity: 0.9;
-      font-weight: 600;
-    }
 
     .cta-button {
       display: inline-block;
@@ -487,17 +424,8 @@ font-src 'self' data:;">
         margin: 0 10px;
       }
       
-      .services, .keywords-highlight, .mega-call-banner, .social-proof-box {
+      .services, .keywords-highlight, .social-proof-box {
         margin: 20px 10px;
-      }
-      
-      .mega-phone-button {
-        font-size: 2em;
-        padding: 20px;
-      }
-
-      .mega-call-banner h2 {
-        font-size: 1.7em;
       }
     }
 
@@ -575,18 +503,6 @@ font-src 'self' data:;">
   <p class="tagline">Emergency Roadside Service • Pre-Purchase Inspections • Wrong Fuel Rescue • Fast Professional Response</p>
 </header>
 
-<!-- MEGA CALL NOW BANNER -->
-<div class="mega-call-banner normal-hours-only">
-  <h2>⚡ CALL NOW - MECHANIC DISPATCHED IMMEDIATELY</h2>
-  <p><strong>Real mechanic answers in under 60 seconds</strong></p>
-  <p>Most jobs dispatched in under 30 minutes or less</p>
-  
-  <a href="tel:0800769000" class="mega-phone-button phone-link" onclick="trackConversion('mega_banner_call', 'Contact')">
-    📞 <span class="phone-display">0800 769 000</span>
-  </a>
-  
-  <p class="urgency-text">✓ Real mechanic answers • Most jobs dispatched in under 30 minutes</p>
-</div>
 
 <!-- Phones Busy Banner -->
 <div id="phonesBusyBanner" style="display:none;position:sticky;top:0;background:linear-gradient(135deg,#28a745,#20c997);color:#fff;padding:18px;text-align:center;z-index:998;box-shadow:0 4px 12px rgba(40,167,69,0.3);">
@@ -1666,8 +1582,8 @@ window.addEventListener('scroll', function() {
     const header = document.querySelector('header');
     if (header) header.style.display = 'none';
     
-    // Hide mega call banner (multiple selectors to be sure)
-    document.querySelectorAll('.mega-call-banner, .normal-hours-only').forEach(el => {
+    // Hide normal hours elements
+    document.querySelectorAll('.normal-hours-only').forEach(el => {
       if (el.style) el.style.display = 'none';
     });
     
