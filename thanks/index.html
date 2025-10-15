@@ -42,6 +42,52 @@
   
   <!-- Centralized Tracking Management -->
   <script src="/tracking-manager.js"></script>
+  
+  <!-- Service Selection Modal -->
+  <div id="serviceModal" class="service-modal" style="display: none;">
+    <div class="service-modal-content">
+      <div class="service-modal-header">
+        <h3>🚨 What's Your Emergency?</h3>
+        <p>Select your service so we can dispatch the right mechanic</p>
+        <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
+      </div>
+      <div class="service-modal-body">
+        <div class="service-options">
+          <button class="service-option" onclick="selectService('emergency_breakdown')" data-service="emergency_breakdown">
+            <span class="service-icon">🚨</span>
+            <div class="service-details">
+              <h4>Emergency Breakdown</h4>
+              <p>Engine won't start, stranded, mechanical issues</p>
+            </div>
+          </button>
+          
+          <button class="service-option" onclick="selectService('battery_jumpstart')" data-service="battery_jumpstart">
+            <span class="service-icon">🔋</span>
+            <div class="service-details">
+              <h4>Dead Battery</h4>
+              <p>Jump start service, battery replacement</p>
+            </div>
+          </button>
+          
+          <button class="service-option" onclick="selectService('wrong_fuel')" data-service="wrong_fuel">
+            <span class="service-icon">⛽</span>
+            <div class="service-details">
+              <h4>Wrong Fuel Emergency</h4>
+              <p>Petrol in diesel or diesel in petrol</p>
+            </div>
+          </button>
+          
+          <button class="service-option" onclick="selectService('pre_purchase')" data-service="pre_purchase">
+            <span class="service-icon">🔍</span>
+            <div class="service-details">
+              <h4>Pre-Purchase Inspection</h4>
+              <p>45-point vehicle inspection</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <style>
@@ -112,6 +158,126 @@
       .detail-label{min-width:unset}
       .detail-value{text-align:left}
     }
+
+    /* Service Selection Modal Styles */
+    .service-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      backdrop-filter: blur(5px);
+    }
+
+    .service-modal-content {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .service-modal-header {
+      background: linear-gradient(135deg, #ff5500, #e04a00);
+      color: white;
+      padding: 20px;
+      border-radius: 12px 12px 0 0;
+      position: relative;
+    }
+
+    .service-modal-header h3 {
+      margin: 0 0 5px 0;
+      font-size: 1.5em;
+    }
+
+    .service-modal-header p {
+      margin: 0;
+      opacity: 0.9;
+    }
+
+    .service-modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 2em;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .service-modal-body {
+      padding: 0;
+    }
+
+    .service-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .service-option {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      border: none;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .service-option:hover {
+      background: #f8f9fa;
+      transform: translateX(5px);
+    }
+
+    .service-option:last-child {
+      border-bottom: none;
+    }
+
+    .service-icon {
+      font-size: 2em;
+      margin-right: 15px;
+      min-width: 50px;
+    }
+
+    .service-details h4 {
+      margin: 0 0 5px 0;
+      color: #333;
+      font-size: 1.2em;
+    }
+
+    .service-details p {
+      margin: 0;
+      color: #666;
+      font-size: 0.9em;
+    }
   </style>
 </head>
 <body>
@@ -162,7 +328,7 @@
           <h3>📞 Need Help?</h3>
           <p>If you need assistance with the WINZ process or haven't received your quote</p>
           <div class="contact-buttons">
-            <a href="tel:0800769000" class="btn btn-winz" onclick="trackCall('winz_quote_help')">📞 Call Eek: 0800 769 000</a>
+            <a href="javascript:void(0)" class="btn btn-winz phone-link" onclick="openServiceModal(); trackCall('winz_quote_help')">📞 Call Eek</a>
             <a href="tel:0800559009" class="btn btn-primary" onclick="trackCall('winz_help')">📞 Call WINZ: 0800 559 009</a>
           </div>
         </div>
@@ -190,7 +356,7 @@
           <h3>📞 Need Immediate Assistance?</h3>
           <p>Our dispatch team is standing by if you need to update your location or have urgent questions</p>
           <div class="contact-buttons">
-            <a href="tel:0800769000" class="btn btn-primary" onclick="trackCall('thanks_page_call')">📞 Call 0800 769 000</a>
+            <a href="javascript:void(0)" class="btn btn-primary phone-link" onclick="openServiceModal(); trackCall('thanks_page_call')">📞 Call Now</a>
           </div>
         </div>
       </div>
@@ -738,6 +904,114 @@
 
       // Store for quick debugging
       try { sessionStorage.setItem('lastThanksPageData', JSON.stringify(bookingData)); } catch {}
+    });
+
+    // Service Selection Modal Functions
+    function openServiceModal() {
+      const modal = document.getElementById('serviceModal');
+      if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeServiceModal() {
+      const modal = document.getElementById('serviceModal');
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    }
+
+    function selectService(serviceType) {
+      // Track the service selection
+      if (window.trackingManager) {
+        window.trackingManager.trackServiceSelection(serviceType);
+      }
+      
+      const serviceNames = {
+        'emergency_breakdown': 'Emergency Breakdown',
+        'battery_jumpstart': 'Dead Battery',
+        'wrong_fuel': 'Wrong Fuel Emergency',
+        'pre_purchase': 'Pre-Purchase Inspection'
+      };
+      
+      const serviceName = serviceNames[serviceType] || 'Service';
+      
+      // Get the phone number from centralized phone manager
+      const phoneData = window.phoneManager ? window.phoneManager.getModalPhoneNumber() : { tel: 'tel:0800769000', display: '0800 769 000' };
+      const phoneHref = phoneData.tel;
+      const phoneNumber = phoneData.display;
+      
+      // Update modal to show phone number and call option
+      const modalContent = document.querySelector('.service-modal-content');
+      
+      if (phoneHref && phoneNumber) {
+        modalContent.innerHTML = `
+          <div class="service-modal-header">
+            <h3>📞 Ready to Call</h3>
+            <p>Call now for ${serviceName} service</p>
+            <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
+          </div>
+          <div class="service-modal-body">
+            <div style="text-align: center; padding: 20px;">
+              <div id="phoneNumberDisplay" style="font-size: 2em; margin-bottom: 20px; color: #ff5500; font-weight: bold; display: none;">
+                ${phoneNumber}
+              </div>
+              <p style="margin-bottom: 30px; color: #666;">
+                Our dispatch team is ready to help with your ${serviceName.toLowerCase()} request
+              </p>
+              <a href="${phoneHref}" class="cta-button" style="display: inline-block; background: #ff5500; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 1.2em; font-weight: bold; margin: 10px;" onclick="showPhoneNumber()">
+                📞 Call Now
+              </a>
+              <button onclick="openServiceModal()" style="display: block; margin: 20px auto 0; background: none; border: 1px solid #ddd; padding: 10px 20px; border-radius: 6px; cursor: pointer; color: #666;">
+                ← Back to Services
+              </button>
+            </div>
+          </div>
+        `;
+      } else {
+        // Fallback if no phone number available
+        modalContent.innerHTML = `
+          <div class="service-modal-header">
+            <h3>📞 Service Selected</h3>
+            <p>${serviceName} service selected</p>
+            <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
+          </div>
+          <div class="service-modal-body">
+            <div style="text-align: center; padding: 20px;">
+              <p style="margin-bottom: 30px; color: #666;">
+                Please use the main call button to contact us for ${serviceName.toLowerCase()} service
+              </p>
+              <button onclick="openServiceModal()" style="display: block; margin: 20px auto 0; background: none; border: 1px solid #ddd; padding: 10px 20px; border-radius: 6px; cursor: pointer; color: #666;">
+                ← Back to Services
+              </button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function showPhoneNumber() {
+      const phoneDisplay = document.getElementById('phoneNumberDisplay');
+      if (phoneDisplay) {
+        phoneDisplay.style.display = 'block';
+      }
+    }
+
+    // Close modal when clicking outside
+    document.addEventListener('click', function(event) {
+      const modal = document.getElementById('serviceModal');
+      if (event.target === modal) {
+        closeServiceModal();
+      }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeServiceModal();
+      }
     });
   </script>
 </body>
