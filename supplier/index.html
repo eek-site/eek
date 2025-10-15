@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Supplier Portal - Join Eek Mobile Mechanical Network | NZ-Wide Coverage</title>
-  <meta name="description" content="Join Eek Mobile Mechanical's nationwide supplier network. Provide mobile mechanic services, trailer repairs, inspections, and roadside assistance across New Zealand. Apply to become a certified supplier today." />
+  <meta name="description" content="Join Eek Mobile Mechanical's nationwide supplier network with 353+ vetted mechanics. Provide mobile mechanic services, trailer repairs, inspections, and roadside assistance across New Zealand. Apply to become a certified supplier today." />
   <meta name="keywords" content="mobile mechanic supplier, roadside assistance contractor, trailer repair network, mechanic partnership NZ, automotive service provider, mobile repair franchise" />
   <meta property="og:title" content="Supplier Portal - Join Eek Mobile Mechanical Network" />
   <meta property="og:description" content="Partner with Eek Mobile Mechanical to provide mobile mechanic services nationwide. Fast dispatch, competitive rates, and growing demand." />
@@ -114,6 +114,76 @@
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   
   <style>
+    :root {
+      /* Brand Colors */
+      --primary: #ff5500;
+      --primary-light: #ff7733;
+      --primary-dark: #e04400;
+      --secondary: #28a745;
+      --secondary-light: #20c997;
+      --accent: #17a2b8;
+      --danger: #dc3545;
+      --warning: #ffc107;
+      --info: #17a2b8;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      
+      /* Neutral Colors */
+      --white: #ffffff;
+      --gray-100: #f8f9fa;
+      --gray-200: #e9ecef;
+      --gray-300: #dee2e6;
+      --gray-400: #ced4da;
+      --gray-500: #adb5bd;
+      --gray-600: #6c757d;
+      --gray-700: #495057;
+      --gray-800: #343a40;
+      --gray-900: #212529;
+      
+      /* Typography */
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      --font-size-base: 1rem;
+      --font-size-sm: 0.875rem;
+      --font-size-lg: 1.125rem;
+      --font-size-xl: 1.25rem;
+      --font-size-2xl: 1.5rem;
+      --font-size-3xl: 1.875rem;
+      --font-size-4xl: 2.25rem;
+      
+      /* Spacing */
+      --spacing-1: 0.25rem;
+      --spacing-2: 0.5rem;
+      --spacing-3: 0.75rem;
+      --spacing-4: 1rem;
+      --spacing-5: 1.25rem;
+      --spacing-6: 1.5rem;
+      --spacing-8: 2rem;
+      --spacing-10: 2.5rem;
+      --spacing-12: 3rem;
+      --spacing-16: 4rem;
+      --spacing-20: 5rem;
+      
+      /* Border Radius */
+      --border-radius-sm: 0.25rem;
+      --border-radius: 0.5rem;
+      --border-radius-lg: 0.75rem;
+      --border-radius-xl: 1rem;
+      --border-radius-2xl: 1.5rem;
+      --border-radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      
+      /* Transitions */
+      --transition-fast: 0.15s ease-in-out;
+      --transition: 0.3s ease-in-out;
+      --transition-slow: 0.5s ease-in-out;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -121,10 +191,11 @@
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      color: #333;
+      font-family: var(--font-family);
+      background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
+      color: var(--gray-800);
       line-height: 1.6;
+      font-size: var(--font-size-base);
     }
 
     .container {
@@ -135,11 +206,12 @@
 
     /* Header */
     .header {
-      background: linear-gradient(135deg, #ff5500 0%, #ff7700 100%);
-      color: white;
-      padding: 60px 0;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: var(--white);
+      padding: var(--spacing-20) 0;
       position: relative;
       overflow: hidden;
+      box-shadow: var(--shadow-xl);
     }
 
     .header::before {
@@ -494,7 +566,7 @@
   <div class="container">
     <div class="header-content">
       <h1>Join the Eek Supplier Network</h1>
-      <p class="subtitle">Partner with New Zealand's fastest-growing mobile mechanic service</p>
+      <p class="subtitle">Partner with New Zealand's fastest-growing mobile mechanic service - 353+ vetted mechanics nationwide</p>
       <a href="#application" class="cta-button" data-track="header_apply_now" onclick="trackInteraction(this)">Apply Now</a>
     </div>
   </div>
@@ -517,6 +589,45 @@
   <div class="container">
     <h2 class="section-title">Service Areas We Need Suppliers For</h2>
     <p class="section-subtitle">Eek Mobile Mechanical is rapidly expanding across New Zealand. We need reliable, skilled suppliers to help deliver our signature 30-60 minute response times nationwide.</p>
+    
+    <!-- Business Model Explanation -->
+    <div style="background: linear-gradient(135deg, var(--info), var(--accent)); color: var(--white); padding: var(--spacing-12); border-radius: var(--border-radius-2xl); margin: var(--spacing-8) 0; box-shadow: var(--shadow-lg);">
+      <h3 style="color: var(--white); margin-bottom: var(--spacing-6); font-size: var(--font-size-3xl); text-align: center;">How Our Business Model Works</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-6);">
+        <div style="background: rgba(255,255,255,0.1); padding: var(--spacing-6); border-radius: var(--border-radius-xl); backdrop-filter: blur(10px);">
+          <h4 style="color: var(--white); margin-bottom: var(--spacing-4); font-size: var(--font-size-xl);">🎯 Customer Calls Us</h4>
+          <p style="color: rgba(255,255,255,0.9); margin-bottom: var(--spacing-4);">Customers call 0800 769 000 or book online. They select their service (breakdown, battery, wrong fuel, etc.) and provide their location.</p>
+        </div>
+        <div style="background: rgba(255,255,255,0.1); padding: var(--spacing-6); border-radius: var(--border-radius-xl); backdrop-filter: blur(10px);">
+          <h4 style="color: var(--white); margin-bottom: var(--spacing-4); font-size: var(--font-size-xl);">📍 We Find You</h4>
+          <p style="color: rgba(255,255,255,0.9); margin-bottom: var(--spacing-4);">Our dispatch system finds the closest available mechanic (typically within 10 minutes) and sends you the job details via SMS.</p>
+        </div>
+        <div style="background: rgba(255,255,255,0.1); padding: var(--spacing-6); border-radius: var(--border-radius-xl); backdrop-filter: blur(10px);">
+          <h4 style="color: var(--white); margin-bottom: var(--spacing-4); font-size: var(--font-size-xl);">🔧 You Complete the Job</h4>
+          <p style="color: rgba(255,255,255,0.9); margin-bottom: var(--spacing-4);">You arrive, complete the service, and invoice us directly. We handle all customer communication and payment processing.</p>
+        </div>
+        <div style="background: rgba(255,255,255,0.1); padding: var(--spacing-6); border-radius: var(--border-radius-xl); backdrop-filter: blur(10px);">
+          <h4 style="color: var(--white); margin-bottom: var(--spacing-4); font-size: var(--font-size-xl);">💰 You Get Paid</h4>
+          <p style="color: rgba(255,255,255,0.9); margin-bottom: var(--spacing-4);">We pay you within 7 days via bank transfer. No chasing customers for payment - we handle all the admin.</p>
+        </div>
+      </div>
+      <div style="text-align: center; margin-top: var(--spacing-8);">
+        <p style="font-size: var(--font-size-lg); color: rgba(255,255,255,0.9); margin-bottom: var(--spacing-4);">
+          <strong>Simple, transparent, and profitable.</strong> You focus on the work, we handle the rest.
+        </p>
+        <div style="display: flex; gap: var(--spacing-4); justify-content: center; flex-wrap: wrap;">
+          <span style="background: rgba(255,255,255,0.2); padding: var(--spacing-2) var(--spacing-4); border-radius: var(--border-radius-full); font-size: var(--font-size-sm);">
+            ✅ 353+ mechanics nationwide
+          </span>
+          <span style="background: rgba(255,255,255,0.2); padding: var(--spacing-2) var(--spacing-4); border-radius: var(--border-radius-full); font-size: var(--font-size-sm);">
+            ✅ 30-60 minute response times
+          </span>
+          <span style="background: rgba(255,255,255,0.2); padding: var(--spacing-2) var(--spacing-4); border-radius: var(--border-radius-full); font-size: var(--font-size-sm);">
+            ✅ 7-day payment terms
+          </span>
+        </div>
+      </div>
+    </div>
     
     <div class="services-grid">
       <div class="service-card">
@@ -795,43 +906,43 @@
 <section id="benefits" class="section">
   <div class="container">
     <h2 class="section-title">Why Partner With Eek?</h2>
-    <p class="section-subtitle">Join New Zealand's fastest-growing mobile mechanic network and grow your business with us.</p>
+    <p class="section-subtitle">Join New Zealand's fastest-growing mobile mechanic network with 353+ vetted mechanics and grow your business with us.</p>
     
     <div class="services-grid">
       <div class="service-card">
         <span class="service-icon">📈</span>
         <h3>Growing Demand</h3>
-        <p>Benefit from our expanding customer base and increasing demand for mobile services across New Zealand.</p>
+        <p>Benefit from our expanding customer base and increasing demand for mobile services across New Zealand. We're competing with AA's $864M+ revenue by supporting local mechanics.</p>
       </div>
 
       <div class="service-card">
         <span class="service-icon">💰</span>
         <h3>Competitive Rates</h3>
-        <p>Fair compensation structure with prompt payment terms and opportunities for performance bonuses.</p>
+        <p>Fair compensation structure with prompt 7-day payment terms. No chasing customers for payment - we handle all the admin and invoicing.</p>
       </div>
 
       <div class="service-card">
         <span class="service-icon">🎯</span>
         <h3>Consistent Work</h3>
-        <p>Steady stream of jobs through our centralized dispatch system and growing customer network.</p>
+        <p>Steady stream of jobs through our centralized dispatch system. Most jobs are within 10 minutes of your location, maximizing efficiency.</p>
       </div>
 
       <div class="service-card">
         <span class="service-icon">🛠️</span>
-        <h3>Support & Training</h3>
-        <p>Ongoing training, technical support, and access to our supplier resource center.</p>
+        <h3>Full Support</h3>
+        <p>We handle customer communication, payment processing, and dispute resolution. You focus on the work, we handle the rest.</p>
       </div>
 
       <div class="service-card">
         <span class="service-icon">🏷️</span>
         <h3>Brand Recognition</h3>
-        <p>Leverage the growing Eek brand and our marketing efforts to build your local reputation.</p>
+        <p>Leverage the growing Eek brand and our marketing efforts. We're building a premium service that supports local family-owned garages.</p>
       </div>
 
       <div class="service-card">
         <span class="service-icon">📱</span>
         <h3>Modern Technology</h3>
-        <p>Access to our advanced dispatch system, mobile app, and digital payment processing.</p>
+        <p>Access to our advanced dispatch system, real-time job updates, and digital payment processing. All jobs sent via SMS with customer details.</p>
       </div>
     </div>
   </div>
