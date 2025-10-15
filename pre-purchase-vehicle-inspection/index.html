@@ -39,23 +39,194 @@
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
   <style>
-    :root{
-      --brand:#ff5500; --brand2:#ff7733; --ok:#28a745; --warn:#ff9500; --danger:#dc3545; --muted:#6c757d;
+    :root {
+      /* Brand Colors */
+      --primary: #ff5500;
+      --primary-light: #ff7733;
+      --primary-dark: #e04400;
+      --secondary: #28a745;
+      --secondary-light: #20c997;
+      --accent: #17a2b8;
+      --danger: #dc3545;
+      --warning: #ffc107;
+      --success: #28a745;
+      
+      /* Neutral Colors */
+      --white: #ffffff;
+      --gray-50: #f8f9fa;
+      --gray-100: #f5f5f5;
+      --gray-200: #e9ecef;
+      --gray-300: #dee2e6;
+      --gray-400: #ced4da;
+      --gray-500: #adb5bd;
+      --gray-600: #6c757d;
+      --gray-700: #495057;
+      --gray-800: #343a40;
+      --gray-900: #212529;
+      
+      /* Typography */
+      --font-primary: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+      --font-heading: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+      
+      /* Spacing */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      --space-2xl: 3rem;
+      --space-3xl: 4rem;
+      
+      /* Border Radius */
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-2xl: 1.5rem;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      
+      /* Transitions */
+      --transition-fast: 150ms ease-in-out;
+      --transition-normal: 300ms ease-in-out;
+      --transition-slow: 500ms ease-in-out;
     }
-    body{font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;background:#f5f5f5;margin:0;padding:0 0 80px 0;color:#333;text-align:center}
-    header{background:#fff;padding:20px 20px 30px 20px;box-shadow:0 2px 4px rgba(0,0,0,.1)}
-    .business-name{font-size:2.2em;font-weight:700;color:var(--brand);margin:.3em 0;text-shadow:1px 1px 2px rgba(0,0,0,.08)}
-    header img{max-width:250px;height:auto;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1)}
-    h1{font-size:1.8em;margin:.5em 0 .2em}
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-primary);
+      background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+      margin: 0;
+      padding: 0 0 80px 0;
+      color: var(--gray-800);
+      text-align: center;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    header {
+      background: var(--white);
+      padding: var(--space-2xl) var(--space-xl);
+      max-width: 1200px;
+      margin: 0 auto var(--space-xl);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+    }
+    
+    .business-name {
+      font-size: clamp(2rem, 5vw, 2.5rem);
+      font-weight: 800;
+      color: var(--primary);
+      margin: var(--space-lg) 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+      letter-spacing: -0.02em;
+    }
+    
+    header img {
+      max-width: min(250px, 80vw);
+      height: auto;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+      transition: transform var(--transition-normal);
+    }
+    
+    header img:hover {
+      transform: translateY(-2px);
+    }
+    
+    h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      margin: var(--space-lg) 0 var(--space-md);
+      color: var(--gray-800);
+      font-weight: 700;
+      line-height: 1.2;
+    }
 
     .breadcrumb{background:#e8f4f8;padding:10px 20px;margin:0;text-align:left;font-size:.9em}
     .breadcrumb a{color:var(--brand);text-decoration:none}
     .breadcrumb a:hover{text-decoration:underline}
 
-    .booking-container{max-width:960px;margin:20px auto;background:#fff;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);overflow:hidden}
-    .booking-header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:30px;text-align:center}
-    .booking-header h2{margin:0 0 10px 0;font-size:2em}
-    .booking-header p{margin:0;font-size:1.1em;opacity:.95}
+    .booking-container {
+      max-width: 1200px;
+      margin: var(--space-xl) auto;
+      background: var(--white);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .booking-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+    
+    .booking-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: var(--white);
+      padding: var(--space-2xl);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .booking-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+    
+    .booking-header h2 {
+      margin: 0 0 var(--space-md) 0;
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 800;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+      position: relative;
+      z-index: 1;
+    }
+    
+    .booking-header p {
+      margin: 0;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      opacity: 0.95;
+      position: relative;
+      z-index: 1;
+    }
 
     .availability-banner{background:#28a745;color:#fff;padding:20px;margin-bottom:0;text-align:center}
     .availability-banner h3{margin:0 0 10px 0;font-size:1.6em;font-weight:800}
