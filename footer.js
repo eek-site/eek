@@ -134,10 +134,10 @@ class FooterManager {
           <div class="eek-footer-content">
             <div class="eek-footer-section">
               <h4>🔧 Eek Mechanical</h4>
-              <p>New Zealand's fastest-growing mobile mechanic service</p>
-              <p>353+ vetted mechanics nationwide</p>
-              <p>Supporting local communities across New Zealand</p>
+              <p><strong>353+ local mechanics vs $864M+ corporate profits</strong></p>
+              <p>Supporting family-owned garages across New Zealand</p>
               <p>Emergency roadside assistance & workshop services</p>
+              <p style="color: #ff5500; font-weight: 600; margin-top: 10px;">Your choice: Feed corporate greed or support your community</p>
             </div>
             
             <div class="eek-footer-section">
