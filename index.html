@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mobile Mechanics NZ - 30 Min Dispatch | Eek Mechanical</title>
-  <meta name="description" content="Eek Mechanical - Call now for immediate dispatch. Mobile mechanics arrive in 30 minutes across NZ. Pre-purchase inspections from $199, wrong fuel rescue, jump starts, roadside repairs. Call 0800 769 000." />
+  <meta name="description" content="Eek Mechanical - Call now for immediate dispatch. Mobile mechanics arrive in 30 minutes across NZ. Pre-purchase inspections from $199, wrong fuel rescue, jump starts, roadside repairs." />
   <meta name="keywords" content="mobile mechanic, mobile mechanics NZ, roadside mechanic, jump start service, fuel drain, wrong fuel, pre purchase inspection, emergency mechanic, mobile car repair, NZ mechanics" />
   <meta property="og:title" content="Mobile Mechanics NZ - 30 Min Dispatch | Eek Mechanical" />
-  <meta property="og:description" content="Call now - mechanics dispatched in 30 minutes. Emergency roadside service across New Zealand. 0800 769 000" />
+  <meta property="og:description" content="Call now - mechanics dispatched in 30 minutes. Emergency roadside service across New Zealand." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.eek.nz" />
   <meta property="og:image" content="https://www.eek.nz/og-image.jpg" />
@@ -96,6 +96,9 @@ font-src 'self' data:;">
     gtag('config', 'AW-17084465163');
     gtag('config', 'G-DQNKF1YLWR');
   </script>
+  
+  <!-- Centralized Phone Number Management -->
+  <script src="/phone-manager.js"></script>
 
   <script type="application/ld+json">
   {
@@ -1166,7 +1169,7 @@ font-src 'self' data:;">
   
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
     <a class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('fuel_drain_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
-      📞 EMERGENCY
+      📞 CALL NOW
     </a>
     <a class="cta-button after-hours-btn service-link" data-service="fuel-extraction" style="background: #28a745; display: none;">
       📅 BOOK FUEL RESCUE NOW
@@ -1198,7 +1201,7 @@ font-src 'self' data:;">
   
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
     <a class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('inspection_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
-      📞 CALL
+      📞 CALL NOW
     </a>
     <a class="cta-button after-hours-btn service-link" data-service="inspection" style="background: #28a745; display: none;">
       📅 BOOK SAME-DAY INSPECTION
@@ -1224,7 +1227,7 @@ font-src 'self' data:;">
   <a href="/more-options" class="more-options-link" style="color: #666; text-decoration: underline;">More Options</a>
 </footer>
 
-<a class="sticky-call phone-link normal-hours-only" href="tel:0800769000" onclick="openServiceModal(); return false;" id="stickyCallButton">
+<a class="sticky-call phone-link normal-hours-only" href="#" onclick="openServiceModal(); return false;" id="stickyCallButton">
   📞 Call <span class="phone-display">Now</span>
 </a>
 <a class="sticky-call" href="#service-selection" id="stickyClosedButton" style="display: none; background: #28a745;">📅 Book Now</a>
@@ -2263,10 +2266,10 @@ function selectService(serviceType) {
   
   const serviceName = serviceNames[serviceType] || 'Service';
   
-  // Get the phone number from the existing sticky call button (preserves Google ads logic)
-  const stickyButton = document.getElementById('stickyCallButton');
-  const phoneHref = stickyButton ? stickyButton.href : '';
-  const phoneNumber = phoneHref ? phoneHref.replace('tel:', '') : '';
+  // Get the phone number from centralized phone manager
+  const phoneData = window.phoneManager ? window.phoneManager.getModalPhoneNumber() : { tel: 'tel:0800769000', display: '0800 769 000' };
+  const phoneHref = phoneData.tel;
+  const phoneNumber = phoneData.display;
   
   // Update modal to show phone number and call option
   const modalContent = document.querySelector('.service-modal-content');

@@ -30,6 +30,9 @@
         gtag('config', 'AW-17084465163');
         gtag('config', 'G-DQNKF1YLWR');
     </script>
+    
+    <!-- Centralized Phone Number Management -->
+    <script src="/phone-manager.js"></script>
 
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
@@ -1524,10 +1527,10 @@
             
             const serviceName = serviceNames[serviceType] || 'Service';
             
-            // Get the phone number from existing phone links
-            const phoneLink = document.querySelector('.phone-link');
-            const phoneHref = phoneLink ? phoneLink.href : '';
-            const phoneNumber = phoneHref ? phoneHref.replace('tel:', '') : '';
+            // Get the phone number from centralized phone manager
+            const phoneData = window.phoneManager ? window.phoneManager.getModalPhoneNumber() : { tel: 'tel:0800769000', display: '0800 769 000' };
+            const phoneHref = phoneData.tel;
+            const phoneNumber = phoneData.display;
             
             // Update modal to show phone number and call option
             const modalContent = document.querySelector('.service-modal-content');

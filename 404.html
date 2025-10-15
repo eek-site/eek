@@ -332,13 +332,16 @@ GitHub Pages will automatically serve this for any 404 errors.
             
             <div class="manual-link">
                 <a href="https://www.eek.nz" class="cta-button">🏠 Go to Homepage</a>
-                <a href="tel:0800769000" class="cta-button">📞 Call 0800 769 000</a>
+                <a href="#" class="cta-button phone-link">📞 Call <span class="phone-display">Now</span></a>
             </div>
         </div>
     </div>
 
-    <script>
-        // REAL redirect database - keeps ALL internal redirects working
+  <!-- Centralized Phone Number Management -->
+  <script src="/phone-manager.js"></script>
+  
+  <script>
+    // REAL redirect database - keeps ALL internal redirects working
         const redirectDatabase = {
             // Application and availability forms
             '/apply': 'https://forms.office.com/r/XLdGk4wDYY',
