@@ -99,6 +99,9 @@ font-src 'self' data:;">
   
   <!-- Centralized Phone Number Management -->
   <script src="/phone-manager.js"></script>
+  
+  <!-- Centralized Tracking Management -->
+  <script src="/tracking-manager.js"></script>
 
   <script type="application/ld+json">
   {
@@ -2014,60 +2017,12 @@ async function updateHoursDisplay() {
   });
 })();
 
-// Enhanced tracking function
+// Legacy tracking function - now handled by centralized tracking manager
+// Kept for backward compatibility
 function trackConversion(eventAction, eventCategory) {
-  const conversionId = 'eek_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-  
-  const serviceValues = {
-    'inspection_call': 19900,
-    'breakdown_call': 28900,
-    'battery_call': 14900,
-    'fuel_drain_call': 39900,
-    'header_call': 25000,
-    'sticky_call': 25000,
-    'more_options_call': 25000,
-    'mega_banner_call': 25000
-  };
-  
-  const eventValue = serviceValues[eventAction] || 25000;
-  
-  if (typeof gtag !== 'undefined') {
-    gtag('event', eventAction, {
-      'event_category': eventCategory,
-      'event_label': 'Phone Call Click',
-      'value': eventValue / 100
-    });
-    gtag('event', 'conversion', {
-      'send_to': 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
-    });
+  if (window.trackingManager) {
+    window.trackingManager.trackConversion(eventAction, eventCategory);
   }
-  
-  if (typeof rdt !== 'undefined') {
-    rdt('track', 'Lead', {
-      'customEventName': 'Phone_Call_Click',
-      'conversionId': conversionId,
-      'value': eventValue,
-      'currency': 'NZD',
-      'itemCount': 1,
-      'eventSource': eventAction,
-      'eventCategory': eventCategory,
-      'serviceType': getServiceType(eventAction)
-    });
-  }
-}
-
-function getServiceType(eventAction) {
-  const serviceMap = {
-    'inspection_call': 'Pre-Purchase Inspection',
-    'breakdown_call': 'Emergency Breakdown',
-    'battery_call': 'Battery Jump Start',
-    'fuel_drain_call': 'Wrong Fuel Rescue',
-    'header_call': 'General Inquiry',
-    'sticky_call': 'General Inquiry',
-    'mega_banner_call': 'Mega Banner Call',
-    'more_options_call': 'General Inquiry'
-  };
-  return serviceMap[eventAction] || 'General Service';
 }
 
 // Initialize on page load
@@ -2083,27 +2038,7 @@ window.addEventListener('load', function() {
   
   setInterval(updateHoursDisplay, 5 * 60 * 1000);
   
-  if (typeof gtag !== 'undefined') {
-    gtag('event', 'page_view', {
-      'page_title': document.title,
-      'page_location': window.location.href
-    });
-  }
-  
   console.log('✅ Initialization complete');
-});
-
-let scrollTracked = false;
-window.addEventListener('scroll', function() {
-  if (!scrollTracked && window.scrollY > document.body.scrollHeight * 0.5) {
-    scrollTracked = true;
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'scroll_50_percent', {
-        'event_category': 'Engagement',
-        'event_label': 'Scrolled 50% of page'
-      });
-    }
-  }
 });
 
 // TOKEN PAYMENT FUNCTIONALITY
@@ -2255,7 +2190,9 @@ function showPhoneNumber() {
 
 function selectService(serviceType) {
   // Track the service selection
-  trackConversion('sticky_call_service_selection', serviceType);
+  if (window.trackingManager) {
+    window.trackingManager.trackServiceSelection(serviceType);
+  }
   
   const serviceNames = {
     'emergency_breakdown': 'Emergency Breakdown',
