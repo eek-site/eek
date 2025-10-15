@@ -41,10 +41,12 @@
     .breadcrumb a:hover{text-decoration:underline}
 
     .booking-container{max-width:900px;margin:20px auto;background:#fff;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);overflow:hidden}
-    .booking-header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:30px;text-align:center}
+    .booking-header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:40px 30px;text-align:center;position:relative;overflow:hidden}
+    .booking-header::before{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;animation:float 20s infinite linear}
     .booking-header.winz{background:linear-gradient(135deg,var(--purple),#5a32a3)}
-    .booking-header h2{margin:0 0 10px 0;font-size:2em}
-    .booking-header p{margin:0;font-size:1.1em;opacity:.95}
+    .booking-header h2{margin:0 0 10px 0;font-size:2.2em;text-shadow:2px 2px 4px rgba(0,0,0,0.3)}
+    .booking-header p{margin:0;font-size:1.2em;opacity:.95;font-weight:500}
+    @keyframes float{0%{transform:translateX(0) translateY(0)}100%{transform:translateX(-100px) translateY(-100px)}}
     .service-stats{background:rgba(255,255,255,.15);padding:15px;border-radius:8px;margin-top:15px}
     .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:15px;text-align:center}
     .stat-item{font-size:.9em}.stat-number{font-size:1.8em;font-weight:700;display:block}
