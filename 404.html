@@ -20,6 +20,76 @@ GitHub Pages will automatically serve this for any 404 errors.
     </script>
     
     <style>
+        :root {
+            /* Brand Colors */
+            --primary: #ff5500;
+            --primary-light: #ff7733;
+            --primary-dark: #e04400;
+            --secondary: #28a745;
+            --secondary-light: #20c997;
+            --accent: #17a2b8;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            
+            /* Neutral Colors */
+            --white: #ffffff;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            
+            /* Typography */
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-base: 1rem;
+            --font-size-sm: 0.875rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-size-4xl: 2.25rem;
+            
+            /* Spacing */
+            --spacing-1: 0.25rem;
+            --spacing-2: 0.5rem;
+            --spacing-3: 0.75rem;
+            --spacing-4: 1rem;
+            --spacing-5: 1.25rem;
+            --spacing-6: 1.5rem;
+            --spacing-8: 2rem;
+            --spacing-10: 2.5rem;
+            --spacing-12: 3rem;
+            --spacing-16: 4rem;
+            --spacing-20: 5rem;
+            
+            /* Border Radius */
+            --border-radius-sm: 0.25rem;
+            --border-radius: 0.5rem;
+            --border-radius-lg: 0.75rem;
+            --border-radius-xl: 1rem;
+            --border-radius-2xl: 1.5rem;
+            --border-radius-full: 9999px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            /* Transitions */
+            --transition-fast: 0.15s ease-in-out;
+            --transition: 0.3s ease-in-out;
+            --transition-slow: 0.5s ease-in-out;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -27,47 +97,47 @@ GitHub Pages will automatically serve this for any 404 errors.
         }
         
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f5f5f5;
+            font-family: var(--font-family);
+            background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #333;
-            padding: 20px;
+            color: var(--gray-800);
+            padding: var(--spacing-5);
         }
         
         .container {
             text-align: center;
             max-width: 700px;
-            padding: 40px;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: var(--spacing-12);
+            background: var(--white);
+            border-radius: var(--border-radius-2xl);
+            box-shadow: var(--shadow-xl);
             width: 100%;
         }
         
         .logo {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: var(--font-size-4xl);
+            margin-bottom: var(--spacing-3);
             font-weight: bold;
-            color: #333;
+            color: var(--primary);
         }
         
         .brand-tagline {
-            color: #666;
-            font-size: 1.1em;
-            margin-bottom: 30px;
+            color: var(--gray-600);
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-8);
         }
         
         .spinner {
             width: 60px;
             height: 60px;
-            border: 4px solid #f5f5f5;
-            border-top: 4px solid #ff5500;
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 20px auto;
+            margin: var(--spacing-5) auto;
         }
         
         @keyframes spin {
@@ -76,38 +146,40 @@ GitHub Pages will automatically serve this for any 404 errors.
         }
         
         .message {
-            font-size: 1.2em;
-            margin: 20px 0;
-            color: #333;
+            font-size: var(--font-size-xl);
+            margin: var(--spacing-5) 0;
+            color: var(--gray-800);
         }
         
         .countdown {
-            font-size: 2em;
+            font-size: var(--font-size-3xl);
             font-weight: bold;
-            margin: 20px 0;
-            color: #ff5500;
+            margin: var(--spacing-5) 0;
+            color: var(--primary);
         }
         
         .manual-link {
-            margin-top: 30px;
+            margin-top: var(--spacing-8);
         }
         
         .manual-link a, .cta-button {
-            background-color: #ff5500;
-            color: white;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: var(--white);
             text-decoration: none;
-            padding: 15px 25px;
-            border-radius: 8px;
-            font-size: 1.2em;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            padding: var(--spacing-4) var(--spacing-6);
+            border-radius: var(--border-radius-xl);
+            font-size: var(--font-size-xl);
+            box-shadow: var(--shadow-lg);
             display: inline-block;
-            transition: all 0.3s ease;
-            margin: 0 7px;
+            transition: var(--transition);
+            margin: 0 var(--spacing-2);
+            font-weight: 600;
         }
         
         .manual-link a:hover, .cta-button:hover {
-            background-color: #e64a00;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
             transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
         }
         
         .error-container {
@@ -212,7 +284,7 @@ GitHub Pages will automatically serve this for any 404 errors.
 <body>
     <div class="container">
         <div class="logo">🔧 Eek Mobile Mechanical</div>
-        <div class="brand-tagline">Looking for the page you requested...</div>
+        <div class="brand-tagline">353+ Vetted Mechanics Nationwide • Looking for the page you requested...</div>
         
         <div id="loadingContainer">
             <div class="spinner"></div>
@@ -220,23 +292,23 @@ GitHub Pages will automatically serve this for any 404 errors.
             <div class="countdown" id="countdown" style="display: none;">3</div>
             
             <!-- Trust indicators -->
-            <div style="margin-top: 30px; padding: 20px; background: #f0f8ff; border-radius: 8px; border-left: 4px solid #007acc;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap;">
+            <div style="margin-top: var(--spacing-8); padding: var(--spacing-6); background: linear-gradient(135deg, var(--info), var(--accent)); border-radius: var(--border-radius-xl); color: var(--white);">
+                <div style="display: flex; align-items: center; justify-content: center; gap: var(--spacing-8); flex-wrap: wrap;">
                     <div style="text-align: center;">
-                        <div style="font-size: 1.5em; color: #007acc;">🔒</div>
-                        <small style="color: #666;">Secure Connection</small>
+                        <div style="font-size: var(--font-size-3xl); color: var(--white);">🔒</div>
+                        <small style="color: rgba(255,255,255,0.9);">Secure Connection</small>
                     </div>
                     <div style="text-align: center;">
-                        <div style="font-size: 1.5em; color: #28a745;">✅</div>
-                        <small style="color: #666;">Verified Service</small>
+                        <div style="font-size: var(--font-size-3xl); color: var(--white);">✅</div>
+                        <small style="color: rgba(255,255,255,0.9);">353+ Vetted Mechanics</small>
                     </div>
                     <div style="text-align: center;">
-                        <div style="font-size: 1.5em; color: #ff6b35;">⚡</div>
-                        <small style="color: #666;">Fast Response</small>
+                        <div style="font-size: var(--font-size-3xl); color: var(--white);">⚡</div>
+                        <small style="color: rgba(255,255,255,0.9);">30min Response</small>
                     </div>
                 </div>
-                <p style="text-align: center; margin-top: 15px; color: #555; font-size: 0.9em;">
-                    <strong>Your safety is our priority.</strong> You're being connected to official Eek Mechanical services with bank-level security.
+                <p style="text-align: center; margin-top: var(--spacing-4); color: rgba(255,255,255,0.9); font-size: var(--font-size-sm);">
+                    <strong>Your safety is our priority.</strong> You're being connected to official Eek Mobile Mechanical services with 353+ vetted mechanics nationwide.
                 </p>
             </div>
         </div>
