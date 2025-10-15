@@ -327,6 +327,16 @@ GitHub Pages will automatically serve this for any 404 errors.
         function handleRedirect() {
             const currentPath = window.location.pathname;
             
+            // Handle trackable URLs with dynamic job IDs - this creates a Power Automate run link
+            if (currentPath.startsWith('/trackable/')) {
+                const jobId = currentPath.replace('/trackable/', '');
+                // This will redirect to Power Automate login if customer clicks it (they won't have access)
+                // But for internal staff, it goes directly to the workflow run
+                const powerAutomateUrl = `https://make.powerautomate.com/manage/environments/Default/flows/${jobId}`;
+                performRedirect(powerAutomateUrl, currentPath);
+                return;
+            }
+            
             // Check for exact match
             if (redirectDatabase[currentPath]) {
                 performRedirect(redirectDatabase[currentPath], currentPath);
@@ -399,6 +409,14 @@ GitHub Pages will automatically serve this for any 404 errors.
         }
         
         function getServiceInfo(url, path) {
+            // Handle trackable URLs
+            if (path.startsWith('/trackable/')) {
+                return {
+                    title: 'Job Tracking Access',
+                    description: 'Connecting you to the secure job tracking portal. Staff can view full details, customers will be prompted to log in.'
+                };
+            }
+            
             // Customer-friendly explanations for each service
             if (path === '/apply') {
                 return {
