@@ -136,6 +136,7 @@ class FooterManager {
               <h4>🔧 Eek Mechanical</h4>
               <p>New Zealand's fastest-growing mobile mechanic service</p>
               <p>353+ vetted mechanics nationwide</p>
+              <p>Supporting local communities across New Zealand</p>
               <p>Emergency roadside assistance & workshop services</p>
             </div>
             
