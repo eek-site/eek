@@ -740,6 +740,166 @@ font-src 'self' data:;">
       }
     }
 
+    /* Service Selection Modal */
+    .service-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .service-modal-content {
+      background: white;
+      border-radius: 16px;
+      max-width: 500px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .service-modal-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 24px;
+      border-radius: 16px 16px 0 0;
+      position: relative;
+    }
+
+    .service-modal-header h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.5em;
+      font-weight: 700;
+    }
+
+    .service-modal-header p {
+      margin: 0;
+      opacity: 0.9;
+      font-size: 1em;
+    }
+
+    .service-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      font-size: 24px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease;
+    }
+
+    .service-modal-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .service-modal-body {
+      padding: 24px;
+    }
+
+    .service-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .service-option {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+      width: 100%;
+    }
+
+    .service-option:hover {
+      border-color: var(--primary);
+      background: #fff5f0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 85, 0, 0.15);
+    }
+
+    .service-option:active {
+      transform: translateY(0);
+    }
+
+    .service-icon {
+      font-size: 2em;
+      flex-shrink: 0;
+    }
+
+    .service-details h4 {
+      margin: 0 0 4px 0;
+      font-size: 1.1em;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .service-details p {
+      margin: 0;
+      font-size: 0.9em;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 480px) {
+      .service-modal {
+        padding: 10px;
+      }
+      
+      .service-modal-content {
+        max-height: 90vh;
+      }
+      
+      .service-modal-header {
+        padding: 20px;
+      }
+      
+      .service-modal-body {
+        padding: 20px;
+      }
+      
+      .service-option {
+        padding: 14px;
+        gap: 12px;
+      }
+      
+      .service-icon {
+        font-size: 1.8em;
+      }
+    }
+
     .debug-info {
       position: fixed;
       top: 10px;
@@ -1068,6 +1228,52 @@ font-src 'self' data:;">
   📞 Call <span class="phone-display">Now</span>
 </a>
 <a class="sticky-call" href="#service-selection" id="stickyClosedButton" style="display: none; background: #28a745;">📅 Book Now</a>
+
+<!-- Service Selection Modal -->
+<div id="serviceModal" class="service-modal" style="display: none;">
+  <div class="service-modal-content">
+    <div class="service-modal-header">
+      <h3>🚨 What's Your Emergency?</h3>
+      <p>Select your service so we can dispatch the right mechanic</p>
+      <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
+    </div>
+    <div class="service-modal-body">
+      <div class="service-options">
+        <button class="service-option" onclick="selectService('emergency_breakdown')" data-service="emergency_breakdown">
+          <span class="service-icon">🚨</span>
+          <div class="service-details">
+            <h4>Emergency Breakdown</h4>
+            <p>Engine won't start, stranded, mechanical issues</p>
+          </div>
+        </button>
+        
+        <button class="service-option" onclick="selectService('battery_jumpstart')" data-service="battery_jumpstart">
+          <span class="service-icon">🔋</span>
+          <div class="service-details">
+            <h4>Dead Battery</h4>
+            <p>Jump start service, battery replacement</p>
+          </div>
+        </button>
+        
+        <button class="service-option" onclick="selectService('wrong_fuel')" data-service="wrong_fuel">
+          <span class="service-icon">⛽</span>
+          <div class="service-details">
+            <h4>Wrong Fuel Emergency</h4>
+            <p>Petrol in diesel or diesel in petrol</p>
+          </div>
+        </button>
+        
+        <button class="service-option" onclick="selectService('pre_purchase')" data-service="pre_purchase">
+          <span class="service-icon">🔍</span>
+          <div class="service-details">
+            <h4>Pre-Purchase Inspection</h4>
+            <p>45-point vehicle inspection</p>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 // CENTRALIZED GCLID EXTRACTION UTILITY
@@ -1974,6 +2180,82 @@ window.addEventListener('scroll', function() {
     console.log('💳 Payment UI setup complete - all distractions hidden');
   }
 })();
+
+// Service Selection Modal Functions
+function openServiceModal() {
+  const modal = document.getElementById('serviceModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  }
+}
+
+function closeServiceModal() {
+  const modal = document.getElementById('serviceModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = ''; // Restore scrolling
+  }
+}
+
+function selectService(serviceType) {
+  // Track the service selection
+  trackConversion('sticky_call_service_selection', serviceType);
+  
+  // Close the modal
+  closeServiceModal();
+  
+  // Redirect to phone call with service context
+  const phoneNumber = '0800769000';
+  const serviceNames = {
+    'emergency_breakdown': 'Emergency Breakdown',
+    'battery_jumpstart': 'Dead Battery',
+    'wrong_fuel': 'Wrong Fuel Emergency',
+    'pre_purchase': 'Pre-Purchase Inspection'
+  };
+  
+  const serviceName = serviceNames[serviceType] || 'Service';
+  
+  // Show a brief confirmation before calling
+  const originalText = document.querySelector('#stickyCallButton .phone-display').textContent;
+  document.querySelector('#stickyCallButton .phone-display').textContent = `Calling for ${serviceName}...`;
+  
+  // Make the call
+  window.location.href = `tel:${phoneNumber}`;
+  
+  // Reset button text after a delay
+  setTimeout(() => {
+    document.querySelector('#stickyCallButton .phone-display').textContent = originalText;
+  }, 3000);
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+  const modal = document.getElementById('serviceModal');
+  if (event.target === modal) {
+    closeServiceModal();
+  }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    closeServiceModal();
+  }
+});
+
+// Initialize sticky call button to open modal
+document.addEventListener('DOMContentLoaded', function() {
+  const stickyCallButton = document.getElementById('stickyCallButton');
+  if (stickyCallButton) {
+    stickyCallButton.href = 'javascript:void(0)';
+    stickyCallButton.onclick = function(e) {
+      e.preventDefault();
+      openServiceModal();
+      return false;
+    };
+  }
+});
 </script>
 
 </body>
