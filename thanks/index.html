@@ -1035,6 +1035,87 @@
       }
     }
 
+    function trackGoogleAdsConversion(canon, price) {
+      const serviceType = canon.service || canon.emergencyType || 'general_inquiry';
+      const transactionId = canon.sessionId || canon.quoteReference || `eek_${Date.now()}`;
+      
+      console.log('🎯 Tracking Google Ads conversion:', {
+        serviceType,
+        price,
+        transactionId,
+        gclid: canon.gclid ? 'present' : 'none'
+      });
+      
+      // Map service types to conversion actions and their default values
+      const conversionActions = {
+        'pre_purchase': {
+          sendTo: 'AW-17084465163/1g-rCLPD_K0bEIuAwdI_',
+          defaultValue: 299.0,
+          hasValue: true
+        },
+        'emergency_breakdown': {
+          sendTo: 'AW-17084465163/NjGJCNuy_K0bEIuAwdI_',
+          defaultValue: 249.0,
+          hasValue: false // No value in your snippet
+        },
+        'battery_jumpstart': {
+          sendTo: 'AW-17084465163/hwbkCJ3D6a0bEIuAwdI_',
+          defaultValue: 149.0,
+          hasValue: false // No value in your snippet
+        },
+        'wrong_fuel': {
+          sendTo: 'AW-17084465163/ZoV3CIjH8a0bEIuAwdI_',
+          defaultValue: 399.0,
+          hasValue: true
+        },
+        'general_inquiry': {
+          sendTo: 'AW-17084465163/NjGJCNuy_K0bEIuAwdI_',
+          defaultValue: 249.0,
+          hasValue: false
+        }
+      };
+      
+      const conversionConfig = conversionActions[serviceType] || conversionActions['general_inquiry'];
+      const sendTo = conversionConfig.sendTo;
+      
+      // Determine the value to send
+      let conversionValue = price;
+      if (conversionConfig.hasValue && price > 0) {
+        // Use actual price for services that track value
+        conversionValue = price;
+      } else if (conversionConfig.hasValue) {
+        // Use default value if no price provided
+        conversionValue = conversionConfig.defaultValue;
+      }
+      
+      // Track the conversion
+      if (typeof gtag !== 'undefined') {
+        const conversionData = {
+          'send_to': sendTo,
+          'transaction_id': transactionId,
+          'gclid': canon.gclid
+        };
+        
+        // Only add value and currency if the conversion action expects it
+        if (conversionConfig.hasValue) {
+          conversionData.value = conversionValue;
+          conversionData.currency = 'NZD';
+        }
+        
+        gtag('event', 'conversion', conversionData);
+        
+        console.log('✅ Google Ads conversion tracked:', {
+          sendTo,
+          value: conversionConfig.hasValue ? conversionValue : 'not tracked',
+          currency: conversionConfig.hasValue ? 'NZD' : 'not tracked',
+          transactionId,
+          gclid: canon.gclid ? 'present' : 'none'
+        });
+      } else {
+        console.warn('⚠️ gtag not available - Google Ads conversion not tracked');
+      }
+    }
+
     function trackConversion(canon){
       const isWinz = isWinzQuote(canon);
       const price = parseFloat(canon.price) || 0;
@@ -1058,6 +1139,7 @@
             session_id: canon.sessionId
           });
         }else if (price > 0){
+          // Google Analytics purchase event
           gtag('event','purchase',{
             transaction_id: canon.sessionId || String(Date.now()), 
             value: price, 
@@ -1071,6 +1153,9 @@
             gclid: canon.gclid,
             session_id: canon.sessionId
           });
+          
+          // Google Ads conversion tracking
+          trackGoogleAdsConversion(canon, price);
         }
       }
       
