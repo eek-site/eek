@@ -1224,7 +1224,7 @@ font-src 'self' data:;">
   <a href="/more-options" class="more-options-link" style="color: #666; text-decoration: underline;">More Options</a>
 </footer>
 
-<a class="sticky-call phone-link normal-hours-only" href="tel:0800769000" onclick="trackConversion('sticky_call', 'Contact')" id="stickyCallButton">
+<a class="sticky-call phone-link normal-hours-only" href="tel:0800769000" onclick="openServiceModal(); return false;" id="stickyCallButton">
   📞 Call <span class="phone-display">Now</span>
 </a>
 <a class="sticky-call" href="#service-selection" id="stickyClosedButton" style="display: none; background: #28a745;">📅 Book Now</a>
@@ -2185,6 +2185,51 @@ window.addEventListener('scroll', function() {
 function openServiceModal() {
   const modal = document.getElementById('serviceModal');
   if (modal) {
+    // Reset modal to service selection
+    const modalContent = document.querySelector('.service-modal-content');
+    modalContent.innerHTML = `
+      <div class="service-modal-header">
+        <h3>🚨 What's Your Emergency?</h3>
+        <p>Select your service so we can dispatch the right mechanic</p>
+        <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
+      </div>
+      <div class="service-modal-body">
+        <div class="service-options">
+          <button class="service-option" onclick="selectService('emergency_breakdown')" data-service="emergency_breakdown">
+            <span class="service-icon">🚨</span>
+            <div class="service-details">
+              <h4>Emergency Breakdown</h4>
+              <p>Engine won't start, stranded, mechanical issues</p>
+            </div>
+          </button>
+          
+          <button class="service-option" onclick="selectService('battery_jumpstart')" data-service="battery_jumpstart">
+            <span class="service-icon">🔋</span>
+            <div class="service-details">
+              <h4>Dead Battery</h4>
+              <p>Jump start service, battery replacement</p>
+            </div>
+          </button>
+          
+          <button class="service-option" onclick="selectService('wrong_fuel')" data-service="wrong_fuel">
+            <span class="service-icon">⛽</span>
+            <div class="service-details">
+              <h4>Wrong Fuel Emergency</h4>
+              <p>Petrol in diesel or diesel in petrol</p>
+            </div>
+          </button>
+          
+          <button class="service-option" onclick="selectService('pre_purchase')" data-service="pre_purchase">
+            <span class="service-icon">🔍</span>
+            <div class="service-details">
+              <h4>Pre-Purchase Inspection</h4>
+              <p>45-point vehicle inspection</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    `;
+    
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden'; // Prevent background scrolling
   }
@@ -2202,11 +2247,6 @@ function selectService(serviceType) {
   // Track the service selection
   trackConversion('sticky_call_service_selection', serviceType);
   
-  // Close the modal
-  closeServiceModal();
-  
-  // Redirect to phone call with service context
-  const phoneNumber = '0800769000';
   const serviceNames = {
     'emergency_breakdown': 'Emergency Breakdown',
     'battery_jumpstart': 'Dead Battery',
@@ -2216,17 +2256,58 @@ function selectService(serviceType) {
   
   const serviceName = serviceNames[serviceType] || 'Service';
   
-  // Show a brief confirmation before calling
-  const originalText = document.querySelector('#stickyCallButton .phone-display').textContent;
-  document.querySelector('#stickyCallButton .phone-display').textContent = `Calling for ${serviceName}...`;
+  // Get the phone number from the existing sticky call button (preserves Google ads logic)
+  const stickyButton = document.getElementById('stickyCallButton');
+  const phoneHref = stickyButton ? stickyButton.href : '';
+  const phoneNumber = phoneHref ? phoneHref.replace('tel:', '') : '';
   
-  // Make the call
-  window.location.href = `tel:${phoneNumber}`;
+  // Update modal to show phone number and call option
+  const modalContent = document.querySelector('.service-modal-content');
   
-  // Reset button text after a delay
-  setTimeout(() => {
-    document.querySelector('#stickyCallButton .phone-display').textContent = originalText;
-  }, 3000);
+  if (phoneHref && phoneNumber) {
+    modalContent.innerHTML = `
+      <div class="service-modal-header">
+        <h3>📞 Ready to Call</h3>
+        <p>Call now for ${serviceName} service</p>
+        <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
+      </div>
+      <div class="service-modal-body">
+        <div style="text-align: center; padding: 20px;">
+          <div style="font-size: 2em; margin-bottom: 20px; color: var(--primary); font-weight: bold;">
+            ${phoneNumber}
+          </div>
+          <p style="margin-bottom: 30px; color: #666;">
+            Our dispatch team is ready to help with your ${serviceName.toLowerCase()} request
+          </p>
+          <a href="${phoneHref}" class="cta-button" style="display: inline-block; background: var(--primary); color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 1.2em; font-weight: bold; margin: 10px;">
+            📞 Call Now
+          </a>
+          <button onclick="openServiceModal()" style="display: block; margin: 20px auto 0; background: none; border: 1px solid #ddd; padding: 10px 20px; border-radius: 6px; cursor: pointer; color: #666;">
+            ← Back to Services
+          </button>
+        </div>
+      </div>
+    `;
+  } else {
+    // Fallback if no phone number available
+    modalContent.innerHTML = `
+      <div class="service-modal-header">
+        <h3>📞 Service Selected</h3>
+        <p>${serviceName} service selected</p>
+        <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
+      </div>
+      <div class="service-modal-body">
+        <div style="text-align: center; padding: 20px;">
+          <p style="margin-bottom: 30px; color: #666;">
+            Please use the main call button to contact us for ${serviceName.toLowerCase()} service
+          </p>
+          <button onclick="openServiceModal()" style="display: block; margin: 20px auto 0; background: none; border: 1px solid #ddd; padding: 10px 20px; border-radius: 6px; cursor: pointer; color: #666;">
+            ← Back to Services
+          </button>
+        </div>
+      </div>
+    `;
+  }
 }
 
 // Close modal when clicking outside
@@ -2246,15 +2327,8 @@ document.addEventListener('keydown', function(event) {
 
 // Initialize sticky call button to open modal
 document.addEventListener('DOMContentLoaded', function() {
-  const stickyCallButton = document.getElementById('stickyCallButton');
-  if (stickyCallButton) {
-    stickyCallButton.href = 'javascript:void(0)';
-    stickyCallButton.onclick = function(e) {
-      e.preventDefault();
-      openServiceModal();
-      return false;
-    };
-  }
+  // Button is already set up with onclick="openServiceModal()" in HTML
+  console.log('Service selection modal initialized');
 });
 </script>
 
