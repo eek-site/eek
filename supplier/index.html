@@ -570,7 +570,7 @@
 
 <header class="header">
   <div class="container">
-    <img src="/brand-image.png" alt="Eek Mechanical - Emergency Roadside Services" style="max-width: 300px; height: auto; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 20px;" />
+    <img src="/brand-image.png" alt="Eek Mechanical - Emergency Roadside Services" style="max-width: 300px; height: auto; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 0 auto 20px auto; display: block;" />
     <div class="header-content">
       <h1>Join the Eek Supplier Network</h1>
       <p class="subtitle">Partner with New Zealand's fastest-growing mobile mechanic service - 353+ vetted mechanics nationwide</p>
@@ -1355,9 +1355,9 @@
     // Update all phone links
     document.querySelectorAll('.phone-link').forEach(link => {
       link.href = phoneData.tel;
-      // Update display text if it contains phone number
-      if (link.textContent.includes('0800')) {
-        link.textContent = link.textContent.replace(/0800 \d{3} \d{3}/, phoneData.display);
+      // Never show phone numbers in display text - only show "Call Now"
+      if (link.textContent.includes('0800') || link.textContent.includes('+64')) {
+        link.textContent = link.textContent.replace(/0800 \d{3} \d{3}|\+64 \d \d{3} \d{3} \d{3}/, 'Now');
       }
     });
     

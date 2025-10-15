@@ -861,7 +861,7 @@ font-src 'self' data:;">
     }
 
     .service-icon {
-      font-size: 2em;
+        font-size: 2em;
       flex-shrink: 0;
     }
 
@@ -891,7 +891,7 @@ font-src 'self' data:;">
       .service-modal-header {
         padding: 20px;
       }
-      
+
       .service-modal-body {
         padding: 20px;
       }
@@ -1664,23 +1664,10 @@ function trackServiceSelection() {
   console.log('✅ Service selection tracking initialized for', document.querySelectorAll('.keyword-item').length, 'cards');
 }
 
-// Update all phone numbers on page load
+// Legacy function - now handled by centralized phone manager
 function updatePhoneNumbers() {
-  const phoneData = getDisplayPhoneNumber();
-  
-  document.querySelectorAll('.phone-link').forEach(link => {
-    link.href = phoneData.tel;
-  });
-  
-  document.querySelectorAll('.phone-display').forEach(span => {
-    if (span.textContent.includes('769 000') || span.textContent.includes('769000') || span.textContent === 'Eek Now' || span.textContent === 'Now') {
-      if (span.textContent === 'Now' || span.textContent === 'Eek Now') {
-        span.textContent = 'Now';
-      } else {
-        span.textContent = phoneData.display;
-      }
-    }
-  });
+  // Phone numbers are now handled by phone-manager.js
+  // This function is kept for backward compatibility
 }
 
 // checkSystemStatus now reads from cached callflow state

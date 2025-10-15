@@ -103,10 +103,11 @@ class PhoneManager {
         phoneLinks.forEach(link => {
             link.href = phoneData.tel;
             
-            // Update display text if it contains a phone number
+            // Never show phone numbers in display text - only show "Call Now"
             const textContent = link.textContent;
             if (textContent && (textContent.includes('0800') || textContent.includes('+64'))) {
-                link.textContent = textContent.replace(/\b0800\s?\d{3}\s?\d{3}\b|\+64\s?\d\s?\d{3}\s?\d{3}\s?\d{3}\b/g, phoneData.display);
+                // Replace any phone number with "Now" to keep it as "Call Now"
+                link.textContent = textContent.replace(/\b0800\s?\d{3}\s?\d{3}\b|\+64\s?\d\s?\d{3}\s?\d{3}\s?\d{3}\b/g, 'Now');
             }
         });
     }
@@ -116,11 +117,10 @@ class PhoneManager {
      */
     updatePhoneDisplays() {
         const phoneDisplays = document.querySelectorAll('.phone-display');
-        const context = this.getPageContext();
-        const phoneData = this.getPhoneNumber(context);
         
         phoneDisplays.forEach(display => {
-            display.textContent = phoneData.display;
+            // Never show phone numbers - only show "Now" for "Call Now" buttons
+            display.textContent = 'Now';
         });
     }
 
@@ -152,8 +152,8 @@ class PhoneManager {
         
         textNodes.forEach(textNode => {
             textNode.textContent = textNode.textContent
-                .replace(/0800\s?769\s?000/g, phoneData.display)
-                .replace(/0800769000/g, phoneData.display.replace(/\s/g, ''));
+                .replace(/0800\s?769\s?000/g, 'Now')
+                .replace(/0800769000/g, 'Now');
         });
     }
 
