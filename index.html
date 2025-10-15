@@ -1033,8 +1033,8 @@ font-src 'self' data:;">
   <p>353+ vetted mechanics nationwide - Fast mobile mechanic dispatch across all of New Zealand</p>
   
   <!-- Urgency Banner -->
-  <div style="background: linear-gradient(135deg, #dc3545, #c82333); color: white; padding: 15px; border-radius: 12px; margin: 20px 0; text-align: center; box-shadow: 0 4px 12px rgba(220,53,69,0.3);">
-    <strong style="font-size: 1.2em;">⚡ URGENT? Call 0800 769 000 NOW for immediate dispatch</strong>
+  <div onclick="openServiceModal()" style="background: linear-gradient(135deg, #dc3545, #c82333); color: white; padding: 15px; border-radius: 12px; margin: 20px 0; text-align: center; box-shadow: 0 4px 12px rgba(220,53,69,0.3); cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(220,53,69,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(220,53,69,0.3)'">
+    <strong style="font-size: 1.2em;">⚡ URGENT? Call NOW for immediate dispatch</strong>
   </div>
   
   <div class="service-keywords">
@@ -2243,6 +2243,13 @@ function closeServiceModal() {
   }
 }
 
+function showPhoneNumber() {
+  const phoneDisplay = document.getElementById('phoneNumberDisplay');
+  if (phoneDisplay) {
+    phoneDisplay.style.display = 'block';
+  }
+}
+
 function selectService(serviceType) {
   // Track the service selection
   trackConversion('sticky_call_service_selection', serviceType);
@@ -2273,13 +2280,13 @@ function selectService(serviceType) {
       </div>
       <div class="service-modal-body">
         <div style="text-align: center; padding: 20px;">
-          <div style="font-size: 2em; margin-bottom: 20px; color: var(--primary); font-weight: bold;">
+          <div id="phoneNumberDisplay" style="font-size: 2em; margin-bottom: 20px; color: var(--primary); font-weight: bold; display: none;">
             ${phoneNumber}
           </div>
           <p style="margin-bottom: 30px; color: #666;">
             Our dispatch team is ready to help with your ${serviceName.toLowerCase()} request
           </p>
-          <a href="${phoneHref}" class="cta-button" style="display: inline-block; background: var(--primary); color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 1.2em; font-weight: bold; margin: 10px;">
+          <a href="${phoneHref}" class="cta-button" style="display: inline-block; background: var(--primary); color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 1.2em; font-weight: bold; margin: 10px;" onclick="showPhoneNumber()">
             📞 Call Now
           </a>
           <button onclick="openServiceModal()" style="display: block; margin: 20px auto 0; background: none; border: 1px solid #ddd; padding: 10px 20px; border-radius: 6px; cursor: pointer; color: #666;">
