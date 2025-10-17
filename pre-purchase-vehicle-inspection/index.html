@@ -318,47 +318,15 @@
 
       <!-- Step 5: Preferred Time -->
       <div class="step" id="step5">
-        <h3>Preferred Inspection Time</h3>
-        <p>When would you like the inspection completed?</p>
+        <h3>When would you like the inspection?</h3>
+        <p>Select your preferred day for the inspection</p>
         
-        <form onsubmit="return false;">
-          <div class="form-group">
-            <label class="form-label">Preferred Date *</label>
-            <div class="day-selector" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--space-md);margin:var(--space-lg) 0;">
-              <label class="day-option" style="background:var(--gray-50);padding:var(--space-lg);border-radius:var(--radius-lg);text-align:center;cursor:pointer;border:2px solid var(--gray-200);transition:all var(--transition-normal);">
-                <input type="radio" name="preferredDate" value="today" style="margin-right:var(--space-sm);">
-                <strong>Today</strong><br>
-                <small>Same day service</small>
-              </label>
-              <label class="day-option" style="background:var(--gray-50);padding:var(--space-lg);border-radius:var(--radius-lg);text-align:center;cursor:pointer;border:2px solid var(--gray-200);transition:all var(--transition-normal);">
-                <input type="radio" name="preferredDate" value="tomorrow" style="margin-right:var(--space-sm);">
-                <strong>Tomorrow</strong><br>
-                <small>Next day service</small>
-              </label>
-              <label class="day-option" style="background:var(--gray-50);padding:var(--space-lg);border-radius:var(--radius-lg);text-align:center;cursor:pointer;border:2px solid var(--gray-200);transition:all var(--transition-normal);">
-                <input type="radio" name="preferredDate" value="weekend" style="margin-right:var(--space-sm);">
-                <strong>Weekend</strong><br>
-                <small>Saturday or Sunday</small>
-              </label>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="preferredTime" class="form-label">Preferred Time</label>
-            <select id="preferredTime" name="preferredTime" class="form-select">
-              <option value="">Select Time</option>
-              <option value="morning">Morning (8am - 12pm)</option>
-              <option value="afternoon">Afternoon (12pm - 5pm)</option>
-              <option value="evening">Evening (5pm - 8pm)</option>
-              <option value="anytime">Anytime</option>
-            </select>
-          </div>
-          
-          <div class="form-group">
-            <label for="specialInstructions" class="form-label">Special Instructions</label>
-            <textarea id="specialInstructions" name="specialInstructions" class="form-textarea" placeholder="Any special requirements or notes for the inspector"></textarea>
-          </div>
-        </form>
+        <div id="daySelector" class="day-selector"></div>
+        
+        <div style="text-align:center;margin:20px 0;">
+          <button class="button secondary" onclick="goToPreviousStep()">← Back</button>
+          <button class="button" id="confirmDayBtn" onclick="goToNextStep()" disabled>Continue to Vehicle Type →</button>
+        </div>
       </div>
 
       <!-- Step 6: Inspection Type -->
