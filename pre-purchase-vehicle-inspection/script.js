@@ -9,24 +9,11 @@ let bookingData = {};
 
 // Service options
 const services = {
-  basic: {
-    id: 'basic',
-    name: 'Basic Inspection',
-    price: 199,
-    features: [
-      'Engine & transmission check',
-      'Brake system inspection',
-      'Tire condition assessment',
-      'Basic safety check',
-      'Written report within 90 minutes'
-    ]
-  },
   comprehensive: {
     id: 'comprehensive',
     name: 'Comprehensive Inspection',
     price: 299,
     features: [
-      'Everything in Basic',
       'Detailed engine diagnostics',
       'Suspension & steering check',
       'Electrical system test',
