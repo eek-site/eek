@@ -658,8 +658,7 @@ const serviceConfigs = {
 };
 
 // Globals
-const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
-const PRICING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
+const TRACKING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
 const PAYMENT_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
 const WINZ_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95fc801df59b4250a48919ace91c0276/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mFpTX4gPrz1u1DbdfF3YqHBnAsW3pnAAj-GWXWvBYYc';
 
@@ -770,7 +769,7 @@ async function sendBookingUpdate(status) {
   console.log('📊 Complete booking data:', data);
   
   try {
-    const response = await fetch(PRICING_API_URL, {
+    const response = await fetch(TRACKING_API_URL, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data)
@@ -1352,11 +1351,11 @@ async function generatePaymentLink(){
   };
 
   console.log('💳 PAYMENT LINK GENERATION - Starting...');
-  console.log('💳 Payment API URL:', POWER_AUTOMATE_URL);
+  console.log('💳 Payment API URL:', PAYMENT_API_URL);
   console.log('💳 Booking data:', bookingData);
 
   try{
-    const response = await fetch(POWER_AUTOMATE_URL,{
+    const response = await fetch(PAYMENT_API_URL,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify(bookingData)
