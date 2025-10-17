@@ -764,12 +764,12 @@
     .trust-badge-icon{font-size:2em;margin-bottom:8px;}
     .trust-badge-text{font-size:.9em;color:#495057;font-weight:600;}
 
-    .button{background:var(--brand);color:#fff;padding:14px 28px;border:none;border-radius:8px;cursor:pointer;font-size:1.05em;text-decoration:none;display:inline-block;transition:all .2s;margin:10px 5px;font-weight:600;min-height:44px;min-width:44px;}
+    .button{background:var(--brand);color:#fff;padding:14px 28px;border:none;border-radius:8px;cursor:pointer;font-size:1.05em;text-decoration:none;display:inline-block;transition:all .2s;margin:10px 5px;font-weight:600;min-height:44px;min-width:44px;opacity:1;visibility:visible;}
     .button:hover{background:#e04400;transform:translateY(-1px);box-shadow:0 4px 12px rgba(255,85,0,.3)}
-    .button.secondary{background:var(--muted)}
+    .button.secondary{background:var(--muted);opacity:1;visibility:visible;}
     .button.secondary:hover{background:#545b62}
-    .button:disabled{background:#ccc;cursor:not-allowed;transform:none;box-shadow:none}
-    .button.processing{background:var(--muted);position:relative}
+    .button:disabled{background:#ccc;cursor:not-allowed;transform:none;box-shadow:none;opacity:1;visibility:visible;}
+    .button.processing{background:var(--muted);position:relative;opacity:1;visibility:visible;}
     .button.processing::after{content:'...';animation:dots 1.5s steps(3,end) infinite}
     @keyframes dots{0%,20%{content:'.'}40%{content:'..'}60%,100%{content:'...'}}
 
@@ -1005,6 +1005,22 @@
         min-width: 120px !important;
         margin: 5px !important;
       }
+      
+      /* Force all continue buttons to be visible */
+      .button[onclick*="goToStep"] {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: inline-block !important;
+      }
+      
+      /* Main continue button mobile styles */
+      #main-continue-btn {
+        min-width: 90vw !important;
+        font-size: 1.2em !important;
+        padding: 20px 30px !important;
+        display: block !important;
+        margin: 20px auto !important;
+      }
     }
   </style>
 </head>
@@ -1017,9 +1033,9 @@
   <!-- URGENT: Enhanced Value Proposition with Emotional Triggers -->
   <div style="background:linear-gradient(135deg,#dc3545,#c82333);border-radius:20px;padding:35px;margin:30px auto;max-width:900px;box-shadow:0 12px 40px rgba(220,53,69,.4);border:4px solid #fff;position:relative;overflow:hidden;">
     <!-- Urgency Badge -->
-    <div style="position:absolute;top:-15px;left:50%;transform:translateX(-50%);background:#ffc107;color:#000;padding:12px 35px;border-radius:25px;font-size:.9em;font-weight:800;letter-spacing:.5px;box-shadow:0 4px 15px rgba(255,193,7,.4);border:3px solid #fff;z-index:10;">
+    <div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);background:#ffc107;color:#000;padding:12px 35px;border-radius:25px;font-size:.9em;font-weight:800;letter-spacing:.5px;box-shadow:0 8px 25px rgba(255,193,7,.6), 0 4px 15px rgba(0,0,0,.2);border:3px solid #fff;z-index:10;animation:float 3s ease-in-out infinite;">
       🔥 URGENT: Limited Same-Day Slots Available
-    </div>
+      </div>
     
     <!-- Background Pattern -->
     <div style="position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,0.1) 0%,transparent 70%);animation:float 6s ease-in-out infinite;"></div>
@@ -1041,13 +1057,13 @@
           <div style="font-size:3em;margin-bottom:15px;">🔍</div>
           <div style="color:rgba(255,255,255,.95);font-size:1.2em;font-weight:700;margin-bottom:10px;">Hidden Issues</div>
           <div style="color:rgba(255,255,255,.8);font-size:0.9em;">Reveal problems not visible during test drive</div>
-        </div>
+      </div>
         
         <div style="background:rgba(255,255,255,0.2);padding:25px;border-radius:15px;backdrop-filter:blur(15px);border:3px solid rgba(255,255,255,0.3);position:relative;overflow:hidden;">
           <div style="font-size:3em;margin-bottom:15px;">🛡️</div>
           <div style="color:rgba(255,255,255,.95);font-size:1.2em;font-weight:700;margin-bottom:10px;">Safety Check</div>
           <div style="color:rgba(255,255,255,.8);font-size:0.9em;">Ensure brakes, tires & suspension are safe</div>
-        </div>
+      </div>
         
         <div style="background:rgba(255,255,255,0.2);padding:25px;border-radius:15px;backdrop-filter:blur(15px);border:3px solid rgba(255,255,255,0.3);position:relative;overflow:hidden;">
           <div style="font-size:3em;margin-bottom:15px;">💰</div>
@@ -1150,7 +1166,7 @@
         <p style="color: #333; font-style: italic; margin: 0 0 10px 0; font-size: 0.95em;">"Inspection done same day, report in 90 minutes. Other services wanted 3 days!"</p>
         <div style="color: #666; font-size: 0.9em; font-weight: 600;">- Mike T., Wellington</div>
       </div>
-    </div>
+      </div>
     <p style="color: #666; font-size: 0.9em; margin: 0; font-weight: 600;">
       <strong>Professional workshop hoist inspection</strong> - We catch what mobile services miss
     </p>
@@ -1173,6 +1189,14 @@
     <div class="progress-step" id="step7-progress"><span>Confirm</span></div>
   </div>
 
+  <!-- Main Continue Button -->
+  <div style="text-align:center;margin:40px 0;">
+    <button onclick="openServiceSelectionModal()" id="main-continue-btn" style="background:linear-gradient(135deg,#ff5500,#ff7733);color:#fff;padding:25px 50px;font-size:1.5em;font-weight:800;border-radius:15px;border:4px solid #fff;min-width:350px;display:inline-block;text-decoration:none;transition:all 0.3s ease;cursor:pointer;box-shadow:0 8px 30px rgba(255,85,0,0.4);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 12px 40px rgba(255,85,0,0.6)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 30px rgba(255,85,0,0.4)'">
+      🔧 CHOOSE YOUR INSPECTION SERVICE
+    </button>
+    <p style="margin-top:20px;color:#666;font-size:1.1em;font-weight:600;">✅ Same-day & weekend inspections available</p>
+  </div>
+
   <div class="booking-steps">
     <!-- Step 1: Service Selection - Clean Mobile Design -->
     <div class="step active" id="step1">
@@ -1188,15 +1212,15 @@
           🔧 CHOOSE YOUR SERVICE
         </button>
         <p style="margin-top:15px;color:#666;font-size:1em;font-weight:600;">✅ Same-day & weekend inspections available</p>
-      </div>
+        </div>
 
       <!-- Selected Service Display -->
       <div id="selected-service-display" style="display:none;background:#f8f9fa;border:2px solid #e9ecef;border-radius:15px;padding:25px;margin:20px 0;text-align:center;">
         <h3 style="margin:0 0 10px 0;color:#333;font-size:1.4em;font-weight:700;">Selected Service</h3>
         <div id="selected-service-info"></div>
         <button onclick="openServiceSelectionModal()" style="background:#6c757d;color:#fff;padding:10px 20px;border:none;border-radius:8px;font-size:0.9em;font-weight:600;cursor:pointer;margin-top:15px;">Change Selection</button>
-      </div>
-
+          </div>
+          
       <!-- Selection Required Message -->
       <div id="selection-required" style="display:none;background:#fff3cd;border:2px solid #ffc107;border-radius:12px;padding:15px;margin:20px 0;text-align:center;">
         <p style="margin:0;color:#856404;font-weight:600;font-size:1.1em;">⚠️ Please select a service option to continue</p>
