@@ -402,14 +402,15 @@ function showStep(stepNum) {
   const floatingPrevBtn = document.getElementById('floatingPrevBtn');
   
   if (stepNum === 1) {
-    // Step 1: Show service selection floating button and continue button
+    // Step 1: Show service selection button, continue button only if service selected
     console.log('🔘 STEP 1 - Setting button visibility');
     if (continueBtn) continueBtn.style.display = 'none';
     if (prevBtn) prevBtn.style.display = 'none';
     if (floatingServiceBtn) floatingServiceBtn.style.display = 'flex';
     if (floatingContinueBtn) {
-      floatingContinueBtn.style.display = 'flex';
-      console.log('🔘 Floating continue button set to display: flex');
+      // Only show continue button if a service is selected
+      floatingContinueBtn.style.display = selectedService ? 'flex' : 'none';
+      console.log(`🔘 Floating continue button set to display: ${selectedService ? 'flex' : 'none'}`);
     }
     if (floatingPrevBtn) floatingPrevBtn.style.display = 'none';
   } else {
@@ -509,6 +510,12 @@ function updateContinueButton() {
   if (floatingButton) {
     floatingButton.disabled = !canContinue;
     floatingButton.textContent = buttonText;
+    
+    // For step 1, only show if service is selected
+    if (currentStep === 1) {
+      floatingButton.style.display = selectedService ? 'flex' : 'none';
+    }
+    
     console.log(`🔘 Floating button updated - Disabled: ${floatingButton.disabled}, Text: ${floatingButton.textContent}, Display: ${floatingButton.style.display}`);
   }
 }
@@ -569,8 +576,26 @@ function collectFormData() {
     return;
   }
   
-  const formData = new FormData(currentStepElement);
-  const data = Object.fromEntries(formData.entries());
+  // Collect form data safely
+  let data = {};
+  try {
+    if (currentStepElement && currentStepElement.tagName === 'FORM') {
+      const formData = new FormData(currentStepElement);
+      data = Object.fromEntries(formData.entries());
+    } else {
+      // If not a form, collect data manually from input elements
+      const inputs = currentStepElement?.querySelectorAll('input, select, textarea');
+      if (inputs) {
+        inputs.forEach(input => {
+          if (input.name && input.value) {
+            data[input.name] = input.value;
+          }
+        });
+      }
+    }
+  } catch (error) {
+    console.warn('Form data collection error:', error);
+  }
   
   console.log('📝 Collecting form data from step', currentStep, ':', data);
   
