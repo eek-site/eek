@@ -378,14 +378,51 @@ async function completeBooking() {
     countryCode: 'Unknown'
   };
   
-  // Prepare booking data
+  // Prepare booking data in the format expected by the original API
   const finalBookingData = {
-    ...bookingData,
-    service: selectedService,
-    price: selectedServicePrice,
+    // Customer information
+    name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
+    phone: bookingData.phone || '',
+    email: bookingData.email || '',
+    location: bookingData.address || '',
+    
+    // Service information
+    service: selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive',
+    serviceCode: selectedService.id === 'basic' ? 'INSP_BASIC' : 'INSP_COMP',
+    serviceTitle: selectedService.id === 'basic' ? 'Basic Mechanical Inspection' : 'Comprehensive Pre-Purchase Report',
+    serviceTier: selectedService.id,
+    basePrice: selectedServicePrice,
+    
+    // Vehicle information
+    vehicleMake: bookingData.make || '',
+    vehicleModel: bookingData.model || '',
+    vehicleYear: bookingData.year || '',
+    vehicleType: bookingData.vehicleType || '',
+    odometer: bookingData.odometer || '',
+    
+    // Seller information
+    sellerName: bookingData.sellerName || '',
+    sellerPhone: bookingData.sellerPhone || '',
+    suburb: bookingData.suburb || '',
+    city: bookingData.city || '',
+    
+    // Scheduling
+    preferredDate: bookingData.preferredDate || '',
+    preferredTime: bookingData.preferredTime || '',
+    specialInstructions: bookingData.specialInstructions || '',
+    inspectionType: bookingData.inspectionType || '',
+    
+    // Terms and marketing
+    termsAccepted: bookingData.termsAccepted || false,
+    marketingConsent: bookingData.marketingConsent || false,
+    
+    // Timestamps
     timestamp: new Date().toISOString(),
+    scheduledDate: new Date().toISOString(),
+    scheduledDateISO: new Date().toISOString(),
+    
+    // Location data
     location: {
-      // Basic location info
       country: geo.country || 'Unknown',
       countryCode: geo.countryCode || geo.country || 'Unknown',
       region: geo.region || 'Unknown',
@@ -393,18 +430,12 @@ async function completeBooking() {
       city: geo.city || 'Unknown',
       postalCode: geo.postalCode || 'Unknown',
       continent: geo.continent || 'Unknown',
-      
-      // Coordinates
       coordinates: {
         latitude: geo.latitude || null,
         longitude: geo.longitude || null,
         accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
       },
-      
-      // Timezone
       timezone: geo.timezone || 'Unknown',
-      
-      // Raw CF_GEO data for debugging
       raw: geo
     }
   };
@@ -438,7 +469,7 @@ async function completeBooking() {
 
 // Submit booking to API
 async function submitBooking(data) {
-  const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com/api/data/v9.2/contacts';
+  const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
   
   try {
     const response = await fetch(POWER_AUTOMATE_URL, {
