@@ -246,9 +246,20 @@
 
       <!-- Step 2: Your Information -->
       <div class="step" id="step2">
-        <h3>Your Information</h3>
-        <p>Tell us about yourself so we can contact you</p>
+        <div style="text-align:center;margin:0 0 20px 0;">
+          <img src="/sweet-ride.png" alt="Professional vehicle inspection" style="max-width:300px;height:auto;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);" />
+        </div>
         
+        <div style="background:linear-gradient(135deg,#ff5500,#ff7733);border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;color:#fff;">
+          <h2 style="margin:0 0 10px 0;font-size:1.6em;">We Inspect Today - Not Next Week</h2>
+          <p style="margin:0;font-size:1.05em;opacity:.95;">Other inspection services make you wait 2-3 days. We inspect same-day and deliver your report within 90 minutes. Don't lose the car while waiting.</p>
+        </div>
+
+        <div class="info-box">
+          <h4>Why this inspection matters:</h4>
+          <p>20% of vehicles we inspect are rejected • 40% have unaddressed safety recalls • 25% have electrical problems • Buyers save an average of $3,200 by avoiding bad purchases</p>
+        </div>
+
         <!-- Warning message for incomplete form -->
         <div id="form-warning" class="form-warning" style="display: none; background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 12px; border-radius: 8px; margin: 15px 0; font-weight: 500;">
           ⚠️ Please fill in all required fields before continuing
@@ -280,87 +291,95 @@
 
       <!-- Step 3: Vehicle Information -->
       <div class="step" id="step3">
-        <h3>Vehicle Information</h3>
-        <p>Tell us about the vehicle you want inspected</p>
+        <div style="text-align:center;margin:0 0 20px 0;">
+          <img src="/sweet-ride.png" alt="Professional vehicle inspection" style="max-width:300px;height:auto;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);" />
+        </div>
         
-        <div class="form-group">
-          <label class="form-label">Vehicle Type *</label>
-          <div id="vehicleTypes" class="vehicle-types-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:var(--space-md);margin:var(--space-lg) 0;">
-            <!-- Vehicle types will be populated by JavaScript -->
-          </div>
+        <div style="background:linear-gradient(135deg,#17a2b8,#20c997);border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;color:#fff;">
+          <h2 style="margin:0 0 10px 0;font-size:1.6em;">Workshop Hoist Inspection - Not Driveway Mobile</h2>
+          <p style="margin:0;font-size:1.05em;opacity:.95;">Mobile inspections can't see rust, exhaust leaks, or undercarriage damage. Our workshop hoists catch what mobile services miss. We assign a workshop within 10 minutes of the vehicle.</p>
         </div>
         
         <form onsubmit="return false;">
           <div class="form-group">
-            <label for="make" class="form-label">Make *</label>
-            <input type="text" id="make" name="make" class="form-input" required placeholder="e.g., Toyota, Ford, Honda">
+            <label for="vehicleRego" class="form-label">Registration</label>
+            <input type="text" id="vehicleRego" name="vehicleRego" class="form-input" placeholder="ABC123" style="text-transform:uppercase;" autocapitalize="characters" spellcheck="false">
           </div>
           
           <div class="form-group">
-            <label for="model" class="form-label">Model *</label>
-            <input type="text" id="model" name="model" class="form-input" required placeholder="e.g., Corolla, Ranger, Civic">
+            <label for="year" class="form-label">Year</label>
+            <input type="text" id="year" name="year" class="form-input" placeholder="2018" maxlength="4" pattern="\\d{4}" inputmode="numeric">
           </div>
           
           <div class="form-group">
-            <label for="year" class="form-label">Year *</label>
-            <input type="number" id="year" name="year" class="form-input" required min="1990" max="2024" placeholder="e.g., 2020">
+            <label for="make" class="form-label">Make</label>
+            <input type="text" id="make" name="make" class="form-input" placeholder="Toyota">
           </div>
           
+          <div class="form-group">
+            <label for="model" class="form-label">Model</label>
+            <input type="text" id="model" name="model" class="form-input" placeholder="Corolla">
+          </div>
+          
+          <div class="form-group">
+            <label for="location" class="form-label">Where is the vehicle located? *</label>
+            <input type="text" id="location" name="location" class="form-input" placeholder="Auckland CBD, Christchurch, Wellington..." required>
+            <p style="color:#666;margin:-10px 0 15px 0;font-size:.9em;"><strong>600+ workshops nationwide.</strong> We'll assign you to the closest one (typically within 10 minutes).</p>
+          </div>
         </form>
       </div>
 
       <!-- Step 4: Seller Information -->
       <div class="step" id="step4">
-        <h3>Seller Information</h3>
-        <p>Where is the vehicle located for inspection?</p>
+        <div style="text-align:center;margin:0 0 20px 0;">
+          <img src="/sweet-ride.png" alt="Professional vehicle inspection" style="max-width:300px;height:auto;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);" />
+        </div>
+        
+        <div style="background:linear-gradient(135deg,#fd7e14,#ffc107);border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;color:#fff;">
+          <h2 style="margin:0 0 10px 0;font-size:1.6em;">If The Seller Refuses, The Car Is Probably A Lemon</h2>
+          <p style="margin:0;font-size:1.05em;opacity:.95;">Honest sellers always cooperate. If they refuse our workshop inspection, we give you a full store credit to use on your next vehicle. You either get a thorough inspection, or you get your money back to avoid a lemon. Win-win.</p>
+        </div>
+
+        <div class="highlight-box">
+          <h4>What happens next:</h4>
+          <p>We contact the seller to arrange workshop drop-off. Legitimate sellers cooperate immediately - they know their vehicle will pass. If a seller refuses, that's a red flag: they're likely hiding something costly. When that happens, we give you full store credit to use on your next inspection. You just avoided a major expense.</p>
+        </div>
         
         <form onsubmit="return false;">
           <div class="form-group">
             <label for="sellerName" class="form-label">Seller Name *</label>
-            <input type="text" id="sellerName" name="sellerName" class="form-input" required placeholder="e.g., John Smith or ABC Motors">
+            <input type="text" id="sellerName" name="sellerName" class="form-input" required placeholder="Seller's name or dealership">
           </div>
           
           <div class="form-group">
             <label for="sellerPhone" class="form-label">Seller Phone *</label>
-            <input type="tel" id="sellerPhone" name="sellerPhone" class="form-input" required placeholder="e.g., 021 123 4567">
+            <input type="tel" id="sellerPhone" name="sellerPhone" class="form-input" required placeholder="021 987 6543" inputmode="tel">
           </div>
           
           <div class="form-group">
-            <label for="address" class="form-label">Inspection Address *</label>
-            <textarea id="address" name="address" class="form-textarea" required placeholder="Full address where the vehicle will be inspected"></textarea>
-          </div>
-          
-          <div class="form-group">
-            <label for="suburb" class="form-label">Suburb *</label>
-            <input type="text" id="suburb" name="suburb" class="form-input" required placeholder="e.g., Ponsonby, Newmarket">
-          </div>
-          
-          <div class="form-group">
-            <label for="city" class="form-label">City *</label>
-            <select id="city" name="city" class="form-select" required>
-              <option value="">Select City</option>
-              <option value="Auckland">Auckland</option>
-              <option value="Wellington">Wellington</option>
-              <option value="Christchurch">Christchurch</option>
-              <option value="Hamilton">Hamilton</option>
-              <option value="Tauranga">Tauranga</option>
-              <option value="Napier">Napier</option>
-              <option value="Hastings">Hastings</option>
-              <option value="Dunedin">Dunedin</option>
-              <option value="Palmerston North">Palmerston North</option>
-              <option value="Nelson">Nelson</option>
-              <option value="Rotorua">Rotorua</option>
-              <option value="New Plymouth">New Plymouth</option>
-              <option value="Whangarei">Whangarei</option>
-              <option value="Invercargill">Invercargill</option>
-              <option value="Other">Other</option>
-            </select>
+            <label for="specialInstructions" class="form-label">Additional details (optional)</label>
+            <textarea id="specialInstructions" name="specialInstructions" class="form-textarea" placeholder="Any specific concerns, known issues, traveling from out of town..."></textarea>
           </div>
         </form>
       </div>
 
       <!-- Step 5: Preferred Time -->
       <div class="step" id="step5">
+        <div style="text-align:center;margin:0 0 20px 0;">
+          <img src="/sweet-ride.png" alt="Professional vehicle inspection" style="max-width:300px;height:auto;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);" />
+        </div>
+        
+        <div style="background:linear-gradient(135deg,#6f42c1,#e83e8c);border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;color:#fff;">
+          <h2 style="margin:0 0 10px 0;font-size:1.6em;">Saturday & Sunday Available - Other Services Aren't</h2>
+          <p style="margin:0;font-size:1.05em;opacity:.95;">Found the perfect car on the weekend? Don't wait until Monday while another buyer snaps it up. We inspect Saturdays and Sundays.</p>
+        </div>
+
+        <div class="competitor-box">
+          <h4>Our Availability Advantage:</h4>
+          <p><strong>Other services:</strong> 24-48 hour advance booking, weekday-only, no weekends</p>
+          <p><strong>We're available:</strong> Same-day bookings, Saturday & Sunday service</p>
+        </div>
+
         <h3>When would you like the inspection?</h3>
         <p>Select your preferred day for the inspection</p>
         
@@ -372,54 +391,95 @@
         </div>
       </div>
 
-      <!-- Step 6: Inspection Type -->
+      <!-- Step 6: Vehicle Type -->
       <div class="step" id="step6">
-        <h3>Inspection Type</h3>
-        <p>Choose the type of inspection you need</p>
+        <div style="text-align:center;margin:0 0 20px 0;">
+          <img src="/sweet-ride.png" alt="Professional vehicle inspection" style="max-width:300px;height:auto;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);" />
+        </div>
         
-        <form onsubmit="return false;">
-          <div class="form-group">
-            <label class="form-label">Inspection Type *</label>
-            <div class="inspection-types" style="display:grid;grid-template-columns:1fr;gap:var(--space-md);margin:var(--space-lg) 0;">
-              <label class="inspection-option" style="background:var(--gray-50);padding:var(--space-lg);border-radius:var(--radius-lg);cursor:pointer;border:2px solid var(--gray-200);transition:all var(--transition-normal);">
-                <input type="radio" name="inspectionType" value="standard" style="margin-right:var(--space-sm);">
-                <strong>Standard Inspection</strong><br>
-                <small>Comprehensive vehicle check including engine, brakes, suspension, and safety systems</small>
-              </label>
-              <label class="inspection-option" style="background:var(--gray-50);padding:var(--space-lg);border-radius:var(--radius-lg);cursor:pointer;border:2px solid var(--gray-200);transition:all var(--transition-normal);">
-                <input type="radio" name="inspectionType" value="premium" style="margin-right:var(--space-sm);">
-                <strong>Premium Inspection</strong><br>
-                <small>Everything in standard plus paint condition, interior assessment, and detailed diagnostics</small>
-              </label>
-            </div>
+        <div style="background:linear-gradient(135deg,#28a745,#20c997);border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;color:#fff;">
+          <h2 style="margin:0 0 10px 0;font-size:1.6em;">95% Of Vehicles Are Standard Pricing</h2>
+          <p style="margin:0;font-size:1.05em;opacity:.95;">No hidden fees. Most cars, SUVs, utes, and motorhomes are included in the base price. Only specialty vehicles cost extra.</p>
+        </div>
+
+        <div class="vehicle-types">
+          <div class="vehicle-type popular selected" onclick="selectVehicleType('standard', 0, this)">
+            <div class="vehicle-type-title">Standard Vehicle</div>
+            <div class="vehicle-type-subtitle">Cars, SUVs, utes, motorhomes with standard license</div>
+            <div class="vehicle-note" style="color:#28a745;font-weight:700;">No additional fee</div>
           </div>
-        </form>
+
+          <div class="vehicle-type" onclick="selectVehicleType('specialty', 129, this)">
+            <div class="vehicle-type-title">Classic/Specialty</div>
+            <div class="vehicle-type-subtitle">Classics, modified vehicles, rare imports</div>
+            <div class="vehicle-note">Specialist expertise (+$129)</div>
+          </div>
+        </div>
+
+        <div style="background:#f8f9fa;border-radius:8px;padding:15px;margin:20px 0;text-align:left;">
+          <p style="margin:0;color:#495057;font-size:.9em;line-height:1.5;"><strong>Note:</strong> We inspect vehicles with standard licenses. Heavy truck (HT) licenses and commercial trucks requiring special licenses are not available for inspection through this service.</p>
+        </div>
       </div>
 
       <!-- Step 7: Confirmation -->
       <div class="step" id="step7">
-        <h3>Confirm Your Booking</h3>
-        <p>Review your details and complete your booking</p>
+        <div style="text-align:center;margin:0 0 20px 0;">
+          <img src="/sweet-ride.png" alt="Professional vehicle inspection" style="max-width:300px;height:auto;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);" />
+        </div>
         
-        <div class="booking-summary" style="background:var(--gray-50);padding:var(--space-xl);border-radius:var(--radius-lg);margin:var(--space-lg) 0;">
-          <h4>Booking Summary</h4>
-          <div id="booking-summary-content">
-            <!-- Summary will be populated by JavaScript -->
+        <div style="background:linear-gradient(135deg,#dc3545,#c82333);border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;color:#fff;">
+          <h2 style="margin:0 0 10px 0;font-size:1.6em;"><span id="dynamicPrice">$599</span> Today Could Save You $3,200 Tomorrow</h2>
+          <p style="margin:0;font-size:1.05em;opacity:.95;">25% of vehicles have electrical problems costing thousands. 40% have unaddressed recalls. Know what you're buying before you pay.</p>
+        </div>
+
+        <div class="trust-badges">
+          <div class="trust-badge">
+            <div class="trust-badge-icon">🔒</div>
+            <div class="trust-badge-text">Secure Payment</div>
+          </div>
+          <div class="trust-badge">
+            <div class="trust-badge-icon">⏱️</div>
+            <div class="trust-badge-text">60-90min Report</div>
+          </div>
+          <div class="trust-badge">
+            <div class="trust-badge-icon">🏆</div>
+            <div class="trust-badge-text">Workshop Hoist Inspection</div>
           </div>
         </div>
-        
-        <div class="form-group">
-          <label class="form-label">
-            <input type="checkbox" id="termsAccepted" name="termsAccepted" required style="margin-right:var(--space-sm);">
-            I agree to the <a href="/terms" target="_blank">Terms and Conditions</a> and <a href="/privacy" target="_blank">Privacy Policy</a> *
-          </label>
+
+        <div class="reservation-summary">
+          <h4>Your Inspection Booking</h4>
+          <div class="summary-item"><span>Service:</span><strong id="summaryService"></strong></div>
+          <div class="summary-item"><span>Your Phone:</span><strong id="summaryPhone"></strong></div>
+          <div class="summary-item"><span>Vehicle Location:</span><strong id="summaryLocation"></strong></div>
+          <div class="summary-item"><span>Inspection Day:</span><strong id="summaryDate"></strong></div>
+          <div class="summary-item"><span>Vehicle Type:</span><strong id="summaryVehicle"></strong></div>
+          <div class="summary-item" style="border-top:2px solid #bee5eb;margin-top:10px;padding-top:10px;font-size:1.15em;"><span>Total Fee:</span><strong id="summaryPrice" style="font-size:1.4em;"></strong></div>
         </div>
-        
-        <div class="form-group">
-          <label class="form-label">
-            <input type="checkbox" id="marketingConsent" name="marketingConsent" style="margin-right:var(--space-sm);">
-            I would like to receive updates about Eek Mechanical services
-          </label>
+
+        <div class="info-box">
+          <h4>What Happens Next:</h4>
+          <p><strong>1.</strong> Complete payment through secure Stripe checkout</p>
+          <p><strong>2.</strong> We contact you within 30 minutes to confirm</p>
+          <p><strong>3.</strong> We coordinate with vehicle owner for workshop drop-off</p>
+          <p><strong>4.</strong> Inspection completed on your selected day</p>
+          <p id="reportTimingNote"><strong>5.</strong> Report delivered within 60-90 minutes</p>
+        </div>
+
+        <div class="terms-section">
+          <h4>Terms and Conditions</h4>
+          <div class="terms-checkbox">
+            <input type="checkbox" id="termsAgree" onchange="toggleBookingButton()" />
+            <div class="terms-text">
+              I understand the <a href="https://eek.nz/terms" target="_blank">booking policies</a> - inspection is at assigned workshop, vehicle owner brings vehicle, and inspection fee is non-refundable once service is completed.
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:center;margin:20px 0;">
+          <button class="button secondary" onclick="goToPreviousStep()">← Back</button>
+          <button class="button" id="generatePaymentBtn" onclick="generatePaymentLink()" disabled style="font-size:1.15em;padding:16px 32px;">Secure My Inspection Now →</button>
+          <p style="margin:15px 0;color:#666;font-size:.9em;">🔒 Secure payment processing powered by Stripe</p>
         </div>
       </div>
     </div>
