@@ -220,14 +220,25 @@ function showStep(stepNum) {
   const continueBtn = document.getElementById('continueBtn');
   const prevBtn = document.getElementById('prevBtn');
   
+  // Show/hide floating buttons
+  const floatingServiceBtn = document.getElementById('floatingServiceBtn');
+  const floatingContinueBtn = document.getElementById('floatingContinueBtn');
+  const floatingPrevBtn = document.getElementById('floatingPrevBtn');
+  
   if (stepNum === 1) {
-    // Step 1: Hide continue button, service selection handles progression
+    // Step 1: Show service selection floating button
     if (continueBtn) continueBtn.style.display = 'none';
     if (prevBtn) prevBtn.style.display = 'none';
+    if (floatingServiceBtn) floatingServiceBtn.style.display = 'flex';
+    if (floatingContinueBtn) floatingContinueBtn.style.display = 'none';
+    if (floatingPrevBtn) floatingPrevBtn.style.display = 'none';
   } else {
-    // Other steps: Show navigation buttons
+    // Other steps: Show floating navigation buttons
     if (continueBtn) continueBtn.style.display = 'block';
     if (prevBtn) prevBtn.style.display = stepNum > 1 ? 'block' : 'none';
+    if (floatingServiceBtn) floatingServiceBtn.style.display = 'none';
+    if (floatingContinueBtn) floatingContinueBtn.style.display = 'flex';
+    if (floatingPrevBtn) floatingPrevBtn.style.display = stepNum > 1 ? 'flex' : 'none';
   }
   
   currentStep = stepNum;
@@ -268,7 +279,7 @@ function validateForm() {
 // Continue button functions
 function updateContinueButton() {
   const button = document.getElementById('continueBtn');
-  if (!button) return;
+  const floatingButton = document.getElementById('floatingContinueBtn');
   
   let canContinue = false;
   
@@ -296,8 +307,17 @@ function updateContinueButton() {
       break;
   }
   
-  button.disabled = !canContinue;
-  button.textContent = currentStep === 7 ? 'Complete Booking' : 'Continue';
+  const buttonText = currentStep === 7 ? 'Complete Booking' : 'Continue';
+  
+  if (button) {
+    button.disabled = !canContinue;
+    button.textContent = buttonText;
+  }
+  
+  if (floatingButton) {
+    floatingButton.disabled = !canContinue;
+    floatingButton.textContent = buttonText;
+  }
 }
 
 function goToNextStep() {

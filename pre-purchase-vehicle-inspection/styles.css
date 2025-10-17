@@ -729,11 +729,89 @@ h1 {
   }
 }
 
+/* Floating Action Buttons */
+.floating-btn {
+  position: fixed;
+  bottom: var(--space-lg);
+  right: var(--space-lg);
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: var(--white);
+  font-size: clamp(1rem, 2.5vw, 1.1rem);
+  padding: var(--space-lg) var(--space-xl);
+  border-radius: 50px;
+  box-shadow: var(--shadow-xl);
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-weight: 600;
+  min-width: 200px;
+  justify-content: center;
+}
+
+.floating-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  color: var(--white);
+  text-decoration: none;
+}
+
+.floating-btn.secondary {
+  background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+  right: 220px;
+}
+
+.floating-btn.secondary:hover {
+  background: linear-gradient(135deg, var(--secondary-light), var(--secondary));
+}
+
+.floating-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.floating-btn:disabled:hover {
+  transform: none;
+  box-shadow: var(--shadow-xl);
+}
+
+/* Mobile floating buttons */
+@media (max-width: 768px) {
+  .floating-btn {
+    bottom: var(--space-md);
+    right: var(--space-md);
+    left: var(--space-md);
+    text-align: center;
+    border-radius: var(--radius-xl);
+    min-width: auto;
+  }
+  
+  .floating-btn.secondary {
+    right: var(--space-md);
+    left: var(--space-md);
+    bottom: calc(var(--space-md) + 70px);
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-btn {
+    font-size: 0.9rem;
+    padding: var(--space-md) var(--space-lg);
+  }
+}
+
 /* Print Styles */
 @media print {
   .modal,
   .notification,
-  .btn {
+  .btn,
+  .floating-btn {
     display: none !important;
   }
   
