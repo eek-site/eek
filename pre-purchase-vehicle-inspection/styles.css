@@ -795,7 +795,24 @@ h1 {
   .floating-btn.secondary {
     right: var(--space-md);
     left: var(--space-md);
-    bottom: calc(var(--space-md) + 70px);
+    bottom: var(--space-md);
+  }
+  
+  /* Step 2 navigation buttons - mobile order and colors */
+  #step2 .floating-btn {
+    position: static;
+    margin: 10px 0;
+    width: 100%;
+  }
+  
+  #step2 .floating-btn:first-child {
+    background: #28a745 !important;
+    order: 1;
+  }
+  
+  #step2 .floating-btn.secondary {
+    background: #ff5500 !important;
+    order: 2;
   }
 }
 
