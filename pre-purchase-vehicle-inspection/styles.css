@@ -767,7 +767,7 @@ h1 {
 .floating-btn:hover {
   transform: translateY(-4px) scale(1.05);
   box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  background: linear-gradient(135deg, #20c997, #28a745);
   color: var(--white);
   text-decoration: none;
 }

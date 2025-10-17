@@ -258,7 +258,10 @@ function selectService(serviceId) {
   updateContinueButton();
   
   console.log(`🔘 SERVICE SELECTED - ${selectedService.name}, Price: $${selectedServicePrice}`);
-  console.log(`🔘 Current step: ${currentStep}, About to call showStep(1)`);
+  console.log(`🔘 Current step: ${currentStep}, About to call showStep(2)`);
+  
+  // Move to Step 2 after service selection
+  showStep(2);
   
   // Track service selection
   if (typeof gtag !== 'undefined') {
