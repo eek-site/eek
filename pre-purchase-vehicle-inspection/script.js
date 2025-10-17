@@ -176,6 +176,19 @@ function initializeApp() {
   
   // Setup countdown timer
   setupCountdownTimer();
+  
+  // Debug: Check floating button visibility
+  console.log('🔍 DEBUG: Checking floating button visibility on init');
+  const floatingContinueBtn = document.getElementById('floatingContinueBtn');
+  const floatingPrevBtn = document.getElementById('floatingPrevBtn');
+  console.log('🔍 floatingContinueBtn:', floatingContinueBtn);
+  console.log('🔍 floatingPrevBtn:', floatingPrevBtn);
+  if (floatingContinueBtn) {
+    console.log('🔍 floatingContinueBtn display:', floatingContinueBtn.style.display);
+  }
+  if (floatingPrevBtn) {
+    console.log('🔍 floatingPrevBtn display:', floatingPrevBtn.style.display);
+  }
 }
 
 // Setup event listeners
