@@ -228,18 +228,11 @@ function setupEventListeners() {
     try {
       if (e.target?.matches('.form-input, .form-select, .form-textarea')) {
         console.log(`🔍 INPUT CHANGE - Field: ${e.target.name || e.target.id}, Value: "${e.target.value}"`);
-        const isValid = validateForm();
-        console.log(`🔍 INPUT CHANGE - Form valid: ${isValid}`);
         
-        // Force update continue button immediately
-        updateContinueButton();
-        
-        // If form is valid on Step 2, force another update
-        if (isValid && currentStep === 2) {
-          console.log(`🔍 INPUT CHANGE - Form is valid on Step 2, forcing button update`);
-          setTimeout(() => {
-            updateContinueButton();
-          }, 50);
+        // Only validate and update for Step 2
+        if (currentStep === 2) {
+          validateForm();
+          updateContinueButton();
         }
       }
     } catch (error) {
@@ -453,15 +446,6 @@ function showStep(stepNum) {
   
   currentStep = stepNum;
   updateContinueButton();
-  
-  // Force validation update for Step 2
-  if (stepNum === 2) {
-    console.log('🔍 STEP 2 - Forcing validation update');
-    setTimeout(() => {
-      validateForm();
-      updateContinueButton();
-    }, 100);
-  }
 }
 
 function updateProgressBar(stepNum) {
@@ -547,11 +531,8 @@ function validateForm() {
     }
   }
   
-  // If form becomes valid, immediately update continue button
-  if (isValid && currentStep === 2) {
-    console.log(`🔍 FORM BECAME VALID - Updating continue button immediately`);
-    updateContinueButton();
-  }
+  // Note: Don't call updateContinueButton() here to avoid loops
+  // The input event listener will handle button updates
   
   return isValid;
 }
