@@ -568,6 +568,14 @@ function updateContinueButton() {
       break;
     case 7:
       canContinue = true;
+      // Disable button initially on step 7 until terms are accepted
+      if (floatingButton) {
+        floatingButton.disabled = true;
+        floatingButton.style.opacity = '0.5';
+        floatingButton.style.cursor = 'not-allowed';
+      }
+      // Call toggleBookingButton to set up the terms checkbox listener
+      setTimeout(() => toggleBookingButton(), 100);
       break;
   }
   
@@ -1464,19 +1472,33 @@ function updateSummary() {
 // === BOOKING BUTTON TOGGLE ===
 function toggleBookingButton() {
   const termsCheckbox = document.getElementById('termsAgree');
-  const bookingButton = document.getElementById('generatePaymentBtn');
+  const floatingButton = document.getElementById('floatingContinueBtn');
   
-  if (termsCheckbox && bookingButton) {
-    bookingButton.disabled = !termsCheckbox.checked;
+  if (termsCheckbox && floatingButton) {
+    floatingButton.disabled = !termsCheckbox.checked;
+    if (termsCheckbox.checked) {
+      floatingButton.style.opacity = '1';
+      floatingButton.style.cursor = 'pointer';
+    } else {
+      floatingButton.style.opacity = '0.5';
+      floatingButton.style.cursor = 'not-allowed';
+    }
   }
 }
 
 // === PAYMENT GENERATION ===
 async function generatePaymentLink() {
-  const bookingButton = document.getElementById('generatePaymentBtn');
-  if (bookingButton) {
-    bookingButton.disabled = true;
-    bookingButton.textContent = 'Generating Payment...';
+  // Check if terms are accepted
+  const termsCheckbox = document.getElementById('termsAgree');
+  if (!termsCheckbox || !termsCheckbox.checked) {
+    alert('Please accept the terms and conditions before proceeding');
+    return;
+  }
+
+  const floatingButton = document.getElementById('floatingContinueBtn');
+  if (floatingButton) {
+    floatingButton.disabled = true;
+    floatingButton.textContent = 'Generating Payment...';
   }
   
   try {
@@ -1507,9 +1529,11 @@ async function generatePaymentLink() {
     console.error('Payment generation error:', error);
     showNotification('Error generating payment link. Please try again.', 'error');
     
-    if (bookingButton) {
-      bookingButton.disabled = false;
-      bookingButton.textContent = 'Secure My Inspection Now →';
+    if (floatingButton) {
+      floatingButton.disabled = false;
+      floatingButton.textContent = 'Secure My Inspection Now →';
+      floatingButton.style.opacity = '1';
+      floatingButton.style.cursor = 'pointer';
     }
   }
 }
