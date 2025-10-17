@@ -320,8 +320,8 @@ h1 {
 }
 
 .progress-step.active::before {
-  background: var(--primary);
-  box-shadow: 0 0 0 3px rgba(255,85,0,0.2);
+  background: #28a745;
+  box-shadow: 0 0 0 3px rgba(40,167,69,0.2);
 }
 
 .progress-step.completed::before {
@@ -338,7 +338,7 @@ h1 {
 }
 
 .progress-step.active span {
-  color: var(--primary);
+  color: #28a745;
   font-weight: 700;
 }
 
