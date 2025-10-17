@@ -65,6 +65,7 @@ const vehicleTypes = [
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('🚀 PRE-PURCHASE INSPECTION SCRIPT v2.1 - Continue Button Fix Applied');
   initializeTracking();
   initializeApp();
   setupEventListeners();
@@ -240,6 +241,9 @@ function selectService(serviceId) {
   updateSelectedServiceDisplay();
   updateContinueButton();
   
+  console.log(`🔘 SERVICE SELECTED - ${selectedService.name}, Price: $${selectedServicePrice}`);
+  console.log(`🔘 Current step: ${currentStep}, About to call showStep(1)`);
+  
   // Track service selection
   if (typeof gtag !== 'undefined') {
     gtag('event', 'service_selection', {
@@ -396,10 +400,14 @@ function showStep(stepNum) {
   
   if (stepNum === 1) {
     // Step 1: Show service selection floating button and continue button
+    console.log('🔘 STEP 1 - Setting button visibility');
     if (continueBtn) continueBtn.style.display = 'none';
     if (prevBtn) prevBtn.style.display = 'none';
     if (floatingServiceBtn) floatingServiceBtn.style.display = 'flex';
-    if (floatingContinueBtn) floatingContinueBtn.style.display = 'flex';
+    if (floatingContinueBtn) {
+      floatingContinueBtn.style.display = 'flex';
+      console.log('🔘 Floating continue button set to display: flex');
+    }
     if (floatingPrevBtn) floatingPrevBtn.style.display = 'none';
   } else {
     // Other steps: Show floating navigation buttons
@@ -486,14 +494,19 @@ function updateContinueButton() {
   
   const buttonText = currentStep === 7 ? 'Complete Booking' : 'Continue';
   
+  console.log(`🔘 UPDATE CONTINUE BUTTON - Step: ${currentStep}, CanContinue: ${canContinue}, SelectedService: ${selectedService?.name || 'null'}`);
+  console.log(`🔘 Button elements - Regular: ${!!button}, Floating: ${!!floatingButton}`);
+  
   if (button) {
     button.disabled = !canContinue;
     button.textContent = buttonText;
+    console.log(`🔘 Regular button updated - Disabled: ${button.disabled}, Text: ${button.textContent}`);
   }
   
   if (floatingButton) {
     floatingButton.disabled = !canContinue;
     floatingButton.textContent = buttonText;
+    console.log(`🔘 Floating button updated - Disabled: ${floatingButton.disabled}, Text: ${floatingButton.textContent}, Display: ${floatingButton.style.display}`);
   }
 }
 
