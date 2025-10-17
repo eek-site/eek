@@ -993,6 +993,7 @@ window.testBooking = async function() {
 
 // === STEP TRACKING SYSTEM ===
 async function sendStepTracking(status) {
+  const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
   const data = buildStepData(status);
   
   console.log(`📡 INSPECTION STEP UPDATE: ${status.toUpperCase()}`);
