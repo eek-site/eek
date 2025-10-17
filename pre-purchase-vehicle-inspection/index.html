@@ -543,6 +543,27 @@
     ← Previous
   </button>
 
+  <!-- Exit Intent Popup -->
+  <div id="exitIntentModal" class="exit-intent-modal" style="display:none;">
+    <div class="exit-intent-content">
+      <div class="exit-intent-header">
+        <h3>Wait! Don't Risk Buying a Lemon</h3>
+        <button class="exit-intent-close" onclick="closeExitIntent()">×</button>
+      </div>
+      <div class="exit-intent-body">
+        <p>20% of vehicles we inspect are rejected. Don't lose thousands on hidden problems.</p>
+        <div class="exit-intent-offer">
+          <div class="offer-text">Get 10% off your inspection today</div>
+          <div class="offer-code">Use code: <strong>SAVE10</strong></div>
+        </div>
+        <div class="exit-intent-actions">
+          <button class="button" onclick="applyDiscount()">Apply Discount & Continue</button>
+          <button class="button secondary" onclick="closeExitIntent()">No Thanks</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="script.js?v=2.3"></script>
 </body>
 </html>

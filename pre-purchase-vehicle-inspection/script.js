@@ -101,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initializeDaySelector();
   initializeApp();
   setupEventListeners();
+  setupExitIntent();
   updateContinueButton();
   
   // Send initial page load tracking
@@ -471,6 +472,11 @@ function showStep(stepNum) {
   
   currentStep = stepNum;
   updateContinueButton();
+  
+  // Update summary if on step 7
+  if (stepNum === 7) {
+    updateSummary();
+  }
 }
 
 function updateProgressBar(stepNum) {
@@ -1394,6 +1400,162 @@ function getDayName(date) {
   return date.toLocaleDateString('en-NZ', { timeZone: 'Pacific/Auckland', weekday: 'long' });
 }
 
+// === VEHICLE TYPE SELECTION ===
+function selectVehicleType(type, addon, element) {
+  document.querySelectorAll('.vehicle-type.selected').forEach(el => el.classList.remove('selected'));
+  element.classList.add('selected');
+  selectedVehicleType = type;
+  vehicleTypeAddon = addon;
+  updateSummary();
+}
+
+// === SUMMARY UPDATES ===
+function updateSummary() {
+  if (currentStep !== 7) return;
+  
+  // Update service
+  const serviceElement = document.getElementById('summaryService');
+  if (serviceElement && selectedService) {
+    serviceElement.textContent = selectedService.name;
+  }
+  
+  // Update phone
+  const phoneElement = document.getElementById('summaryPhone');
+  if (phoneElement) {
+    const phone = document.getElementById('phone')?.value || '';
+    phoneElement.textContent = phone || 'Not provided';
+  }
+  
+  // Update location
+  const locationElement = document.getElementById('summaryLocation');
+  if (locationElement) {
+    const location = document.getElementById('location')?.value || '';
+    locationElement.textContent = location || 'Not provided';
+  }
+  
+  // Update date
+  const dateElement = document.getElementById('summaryDate');
+  if (dateElement) {
+    dateElement.textContent = selectedDayString || 'Not selected';
+  }
+  
+  // Update vehicle type
+  const vehicleElement = document.getElementById('summaryVehicle');
+  if (vehicleElement) {
+    const vehicleTypeText = selectedVehicleType === 'specialty' ? 'Classic/Specialty (+$129)' : 'Standard Vehicle';
+    vehicleElement.textContent = vehicleTypeText;
+  }
+  
+  // Update price
+  const priceElement = document.getElementById('summaryPrice');
+  const dynamicPriceElement = document.getElementById('dynamicPrice');
+  if (priceElement && selectedService) {
+    const totalPrice = selectedService.price + vehicleTypeAddon;
+    priceElement.textContent = `$${totalPrice}`;
+    if (dynamicPriceElement) {
+      dynamicPriceElement.textContent = `$${totalPrice}`;
+    }
+  }
+}
+
+// === BOOKING BUTTON TOGGLE ===
+function toggleBookingButton() {
+  const termsCheckbox = document.getElementById('termsAgree');
+  const bookingButton = document.getElementById('generatePaymentBtn');
+  
+  if (termsCheckbox && bookingButton) {
+    bookingButton.disabled = !termsCheckbox.checked;
+  }
+}
+
+// === PAYMENT GENERATION ===
+async function generatePaymentLink() {
+  const bookingButton = document.getElementById('generatePaymentBtn');
+  if (bookingButton) {
+    bookingButton.disabled = true;
+    bookingButton.textContent = 'Generating Payment...';
+  }
+  
+  try {
+    // Collect all form data
+    const formData = buildInspectionData('inspection_booking_completed');
+    
+    // Send to Power Automate
+    const response = await fetch(POWER_AUTOMATE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData)
+    });
+    
+    if (response.ok) {
+      const result = await response.json();
+      if (result.paymentUrl) {
+        // Redirect to payment
+        window.location.href = result.paymentUrl;
+      } else {
+        showNotification('Payment link generated successfully!', 'success');
+      }
+    } else {
+      throw new Error('Failed to generate payment link');
+    }
+  } catch (error) {
+    console.error('Payment generation error:', error);
+    showNotification('Error generating payment link. Please try again.', 'error');
+    
+    if (bookingButton) {
+      bookingButton.disabled = false;
+      bookingButton.textContent = 'Secure My Inspection Now →';
+    }
+  }
+}
+
+// === EXIT INTENT FUNCTIONS ===
+function closeExitIntent() {
+  const modal = document.getElementById('exitIntentModal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+function applyDiscount() {
+  // Apply 10% discount
+  if (selectedService) {
+    const originalPrice = selectedService.price;
+    const discountedPrice = Math.round(originalPrice * 0.9);
+    
+    // Update price display
+    const priceElement = document.getElementById('summaryPrice');
+    const dynamicPriceElement = document.getElementById('dynamicPrice');
+    if (priceElement) {
+      priceElement.textContent = `$${discountedPrice} (10% off)`;
+    }
+    if (dynamicPriceElement) {
+      dynamicPriceElement.textContent = `$${discountedPrice}`;
+    }
+    
+    showNotification('10% discount applied!', 'success');
+  }
+  
+  closeExitIntent();
+}
+
+// === EXIT INTENT DETECTION ===
+function setupExitIntent() {
+  let exitIntentShown = false;
+  
+  document.addEventListener('mouseleave', function(e) {
+    if (e.clientY <= 0 && !exitIntentShown && currentStep > 1) {
+      exitIntentShown = true;
+      const modal = document.getElementById('exitIntentModal');
+      if (modal) {
+        modal.style.display = 'flex';
+      }
+    }
+  });
+}
+
 // Export functions for global access
 window.openServiceSelectionModal = openServiceSelectionModal;
 window.closeServiceModal = closeServiceModal;
@@ -1401,4 +1563,9 @@ window.goToNextStep = goToNextStep;
 window.goToPreviousStep = goToPreviousStep;
 window.selectDay = selectDay;
 window.initializeDaySelector = initializeDaySelector;
+window.selectVehicleType = selectVehicleType;
+window.toggleBookingButton = toggleBookingButton;
+window.generatePaymentLink = generatePaymentLink;
+window.closeExitIntent = closeExitIntent;
+window.applyDiscount = applyDiscount;
 
