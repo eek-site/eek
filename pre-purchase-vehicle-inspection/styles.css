@@ -781,6 +781,26 @@ h1 {
   box-shadow: var(--shadow-xl);
 }
 
+/* Step 2 navigation buttons - desktop */
+#step2 .floating-btn {
+  position: static;
+  margin: 10px 0;
+  width: 100%;
+  min-width: auto;
+}
+
+#step2 .continue-btn {
+  background: #28a745 !important;
+  color: white !important;
+  order: 1;
+}
+
+#step2 .previous-btn {
+  background: #ff5500 !important;
+  color: white !important;
+  order: 2;
+}
+
 /* Mobile floating buttons */
 @media (max-width: 768px) {
   .floating-btn {
@@ -805,13 +825,15 @@ h1 {
     width: 100%;
   }
   
-  #step2 .floating-btn:first-child {
+  #step2 .continue-btn {
     background: #28a745 !important;
+    color: white !important;
     order: 1;
   }
   
-  #step2 .floating-btn.secondary {
+  #step2 .previous-btn {
     background: #ff5500 !important;
+    color: white !important;
     order: 2;
   }
 }
