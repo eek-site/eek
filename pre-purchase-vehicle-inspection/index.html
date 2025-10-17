@@ -173,8 +173,8 @@
 
     <!-- Progress Bar -->
     <div class="progress-bar">
-      <div class="progress-step" id="step1-progress"><span>Service</span></div>
-      <div class="progress-step active" id="step2-progress"><span>Your Info</span></div>
+      <div class="progress-step active" id="step1-progress"><span>Service</span></div>
+      <div class="progress-step" id="step2-progress"><span>Your Info</span></div>
       <div class="progress-step" id="step3-progress"><span>Vehicle</span></div>
       <div class="progress-step" id="step4-progress"><span>Seller</span></div>
       <div class="progress-step" id="step5-progress"><span>When</span></div>
@@ -459,15 +459,15 @@
   <div id="footer-container"></div>
 
   <!-- Floating Action Buttons -->
-  <button class="floating-btn" id="floatingServiceBtn" onclick="openServiceSelectionModal()" style="display: none;">
+  <button class="floating-btn" id="floatingServiceBtn" onclick="openServiceSelectionModal()" style="display: flex;">
     🔧 Choose Service
   </button>
   
-  <button class="floating-btn" id="floatingContinueBtn" onclick="goToNextStep(); window.scrollTo(0,0);" style="display: flex;">
+  <button class="floating-btn" id="floatingContinueBtn" onclick="goToNextStep(); window.scrollTo(0,0);" style="display: none;">
     Continue →
   </button>
   
-  <button class="floating-btn secondary" id="floatingPrevBtn" onclick="goToPreviousStep(); window.scrollTo(0,0);" style="display: flex;">
+  <button class="floating-btn secondary" id="floatingPrevBtn" onclick="goToPreviousStep(); window.scrollTo(0,0);" style="display: none;">
     ← Previous
   </button>
 
