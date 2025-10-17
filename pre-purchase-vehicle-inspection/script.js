@@ -722,7 +722,6 @@ async function completeBooking() {
     vehicleModel: bookingData.model || '',
     vehicleYear: bookingData.year || '',
     vehicleType: bookingData.vehicleType || '',
-    odometer: bookingData.odometer || '',
     vehicleRego: bookingData.vehicleRego || '',
     make: bookingData.make || '', // Add make field for compatibility
     model: bookingData.model || '', // Add model field for compatibility
@@ -1167,7 +1166,6 @@ function buildStepData(status) {
     vehicleModel: bookingData.model || '',
     vehicleYear: bookingData.year || '',
     vehicleType: bookingData.vehicleType || '',
-    odometer: bookingData.odometer || '',
     vehicleRego: bookingData.vehicleRego || '',
     make: bookingData.make || '',
     model: bookingData.model || '',
