@@ -518,6 +518,131 @@ h1 {
   color: var(--gray-700);
 }
 
+/* Service Selector */
+.service-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-xl);
+  margin: var(--space-xl) 0;
+}
+
+.service-option {
+  background: var(--white);
+  border: 3px solid var(--gray-300);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+
+.service-option:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-lg);
+}
+
+.service-option.selected {
+  border-color: var(--primary);
+  background: linear-gradient(135deg, #fff5f0, #ffe8df);
+  box-shadow: var(--shadow-lg);
+}
+
+.service-option.recommended {
+  border-color: var(--secondary);
+  background: linear-gradient(135deg, #f0fff4, #e8ffed);
+}
+
+.service-option.recommended::before {
+  content: 'MOST POPULAR';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--secondary);
+  color: var(--white);
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.service-option.recommended.selected {
+  border-color: var(--secondary);
+  background: linear-gradient(135deg, #e1ffe6, #d4f8db);
+}
+
+.service-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: var(--space-sm);
+  color: var(--gray-800);
+}
+
+.service-price {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--primary);
+  margin: var(--space-md) 0;
+}
+
+.service-option.recommended .service-price {
+  color: var(--secondary);
+}
+
+.service-description {
+  color: var(--gray-600);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: var(--space-lg);
+}
+
+.service-features {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-lg) 0;
+}
+
+.service-features li {
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: flex-start;
+  font-size: 0.9rem;
+}
+
+.service-features li:last-child {
+  border-bottom: none;
+}
+
+.service-features li::before {
+  content: '✓';
+  color: var(--secondary);
+  font-weight: 700;
+  margin-right: var(--space-sm);
+  font-size: 1.2em;
+  flex-shrink: 0;
+}
+
+.service-option.recommended .service-features li::before {
+  color: var(--secondary);
+}
+
+.service-savings {
+  background: #fff3cd;
+  border: 2px solid #ffc107;
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-top: var(--space-md);
+  font-size: 0.9rem;
+  color: #856404;
+  font-weight: 600;
+  text-align: center;
+}
+
 /* Day Selector */
 .day-selector {
   display: grid;
