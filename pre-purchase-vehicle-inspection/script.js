@@ -507,6 +507,20 @@ function validateForm() {
   
   console.log(`🔍 VALIDATE FORM RESULT - Step: ${currentStep}, IsValid: ${isValid}`);
   
+  // Update warning message for Step 2
+  if (currentStep === 2) {
+    const warningElement = document.getElementById('form-warning');
+    if (warningElement) {
+      if (isValid) {
+        warningElement.style.display = 'none';
+        console.log(`🔍 FORM VALID - Hiding warning message`);
+      } else {
+        warningElement.style.display = 'block';
+        console.log(`🔍 FORM INVALID - Showing warning message`);
+      }
+    }
+  }
+  
   // If form becomes valid, immediately update continue button
   if (isValid && currentStep === 2) {
     console.log(`🔍 FORM BECAME VALID - Updating continue button immediately`);
@@ -560,7 +574,8 @@ function updateContinueButton() {
   }
   
   if (floatingButton) {
-    floatingButton.disabled = !canContinue;
+    // Always enable the button - no more disabling
+    floatingButton.disabled = false;
     floatingButton.textContent = buttonText;
     
     // For step 1, always hide the continue button
@@ -577,8 +592,16 @@ function goToNextStep() {
     // Collect form data
     collectFormData();
     
-    // Validate current step
+    // Validate current step - show warning instead of preventing navigation
     if (!validateForm()) {
+      // Show warning message for Step 2
+      if (currentStep === 2) {
+        const warningElement = document.getElementById('form-warning');
+        if (warningElement) {
+          warningElement.style.display = 'block';
+          warningElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
       showNotification('Please fill in all required fields', 'error');
       return;
     }
