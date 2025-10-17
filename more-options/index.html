@@ -1209,6 +1209,20 @@
 
         // === EVENT TRACKING ===
         function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
+            // 🆕 ENHANCED GEOLOCATION DATA - ALL AVAILABLE FIELDS
+            const geo = window.CF_GEO || {
+                country: 'Unknown',
+                city: 'Unknown', 
+                region: 'Unknown',
+                postalCode: 'Unknown',
+                latitude: null,
+                longitude: null,
+                timezone: 'Unknown',
+                continent: 'Unknown',
+                regionCode: 'Unknown',
+                countryCode: 'Unknown'
+            };
+            
             return {
                 eventType: eventType,
                 eventAction: eventAction,
@@ -1217,6 +1231,31 @@
                 gclid: gclid,
                 gclidState: gclidState,
                 callflowState: callflowState,
+                
+                // 🆕 COMPREHENSIVE LOCATION DATA
+                location: {
+                    // Basic location info
+                    country: geo.country || 'Unknown',
+                    countryCode: geo.countryCode || geo.country || 'Unknown',
+                    region: geo.region || 'Unknown',
+                    regionCode: geo.regionCode || 'Unknown',
+                    city: geo.city || 'Unknown',
+                    postalCode: geo.postalCode || 'Unknown',
+                    continent: geo.continent || 'Unknown',
+                    
+                    // Coordinates
+                    coordinates: {
+                        latitude: geo.latitude || null,
+                        longitude: geo.longitude || null,
+                        accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+                    },
+                    
+                    // Timezone
+                    timezone: geo.timezone || 'Unknown',
+                    
+                    // Raw CF_GEO data for debugging
+                    raw: geo
+                },
                 
                 // Page context
                 site: {
