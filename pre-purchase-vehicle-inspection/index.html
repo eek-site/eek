@@ -170,7 +170,7 @@
         <h3>Your Information</h3>
         <p>Tell us about yourself so we can contact you</p>
         
-        <form>
+        <form onsubmit="return false;">
           <div class="form-group">
             <label for="firstName" class="form-label">First Name *</label>
             <input type="text" id="firstName" name="firstName" class="form-input" required>
@@ -205,7 +205,7 @@
           </div>
         </div>
         
-        <form>
+        <form onsubmit="return false;">
           <div class="form-group">
             <label for="make" class="form-label">Make *</label>
             <input type="text" id="make" name="make" class="form-input" required placeholder="e.g., Toyota, Ford, Honda">
@@ -233,7 +233,7 @@
         <h3>Seller Information</h3>
         <p>Where is the vehicle located for inspection?</p>
         
-        <form>
+        <form onsubmit="return false;">
           <div class="form-group">
             <label for="sellerName" class="form-label">Seller Name *</label>
             <input type="text" id="sellerName" name="sellerName" class="form-input" required placeholder="e.g., John Smith or ABC Motors">
@@ -283,7 +283,7 @@
         <h3>Preferred Inspection Time</h3>
         <p>When would you like the inspection completed?</p>
         
-        <form>
+        <form onsubmit="return false;">
           <div class="form-group">
             <label class="form-label">Preferred Date *</label>
             <div class="day-selector" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--space-md);margin:var(--space-lg) 0;">
@@ -328,7 +328,7 @@
         <h3>Inspection Type</h3>
         <p>Choose the type of inspection you need</p>
         
-        <form>
+        <form onsubmit="return false;">
           <div class="form-group">
             <label class="form-label">Inspection Type *</label>
             <div class="inspection-types" style="display:grid;grid-template-columns:1fr;gap:var(--space-md);margin:var(--space-lg) 0;">
