@@ -465,19 +465,25 @@ function validateForm() {
   const requiredFields = currentStepElement.querySelectorAll('[required]');
   let isValid = true;
   
+  console.log(`🔍 VALIDATE FORM - Step: ${currentStep}, Required fields: ${requiredFields.length}`);
+  
   try {
     requiredFields.forEach(field => {
+      console.log(`🔍 Field: ${field.name || field.id}, Value: "${field.value}", Required: ${field.required}`);
       if (!field.value.trim()) {
         isValid = false;
         field.classList.add('error');
+        console.log(`🔍 Field ${field.name || field.id} is empty - marking as invalid`);
       } else {
         field.classList.remove('error');
+        console.log(`🔍 Field ${field.name || field.id} is valid`);
       }
     });
   } catch (error) {
     console.warn('Form validation error:', error);
   }
   
+  console.log(`🔍 VALIDATE FORM RESULT - Step: ${currentStep}, IsValid: ${isValid}`);
   return isValid;
 }
 

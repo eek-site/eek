@@ -732,7 +732,7 @@ h1 {
 /* Floating Action Buttons */
 .floating-btn {
   position: fixed;
-  bottom: var(--space-lg);
+  bottom: calc(var(--space-lg) + 80px);
   right: var(--space-lg);
   background: linear-gradient(135deg, #28a745, #20c997);
   color: var(--white);
@@ -774,7 +774,7 @@ h1 {
 
 .floating-btn.secondary {
   background: linear-gradient(135deg, #ff5500, #ff7733);
-  bottom: calc(var(--space-lg) + 80px);
+  bottom: var(--space-lg);
   right: var(--space-lg);
 }
 
@@ -805,10 +805,16 @@ h1 {
     min-width: auto;
   }
   
+  .floating-btn {
+    bottom: calc(var(--space-md) + 80px);
+    right: var(--space-md);
+    left: var(--space-md);
+  }
+  
   .floating-btn.secondary {
     right: var(--space-md);
     left: var(--space-md);
-    bottom: calc(var(--space-md) + 80px);
+    bottom: var(--space-md);
   }
 }
 
