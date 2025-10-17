@@ -227,7 +227,9 @@ function setupEventListeners() {
   document.addEventListener('input', function(e) {
     try {
       if (e.target?.matches('.form-input, .form-select, .form-textarea')) {
+        console.log(`🔍 INPUT CHANGE - Field: ${e.target.name || e.target.id}, Value: "${e.target.value}"`);
         validateForm();
+        updateContinueButton();
       }
     } catch (error) {
       console.warn('Form validation error:', error);
@@ -440,6 +442,15 @@ function showStep(stepNum) {
   
   currentStep = stepNum;
   updateContinueButton();
+  
+  // Force validation update for Step 2
+  if (stepNum === 2) {
+    console.log('🔍 STEP 2 - Forcing validation update');
+    setTimeout(() => {
+      validateForm();
+      updateContinueButton();
+    }, 100);
+  }
 }
 
 function updateProgressBar(stepNum) {
@@ -522,6 +533,7 @@ function updateContinueButton() {
   
   console.log(`🔘 UPDATE CONTINUE BUTTON - Step: ${currentStep}, CanContinue: ${canContinue}, SelectedService: ${selectedService?.name || 'null'}`);
   console.log(`🔘 Button elements - Regular: ${!!button}, Floating: ${!!floatingButton}`);
+  console.log(`🔘 Floating button disabled state: ${floatingButton?.disabled}, display: ${floatingButton?.style.display}`);
   
   if (button) {
     button.disabled = !canContinue;
