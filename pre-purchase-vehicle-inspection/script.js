@@ -228,7 +228,8 @@ function setupEventListeners() {
     try {
       if (e.target?.matches('.form-input, .form-select, .form-textarea')) {
         console.log(`🔍 INPUT CHANGE - Field: ${e.target.name || e.target.id}, Value: "${e.target.value}"`);
-        validateForm();
+        const isValid = validateForm();
+        console.log(`🔍 INPUT CHANGE - Form valid: ${isValid}`);
         updateContinueButton();
       }
     } catch (error) {
@@ -495,6 +496,13 @@ function validateForm() {
   }
   
   console.log(`🔍 VALIDATE FORM RESULT - Step: ${currentStep}, IsValid: ${isValid}`);
+  
+  // If form becomes valid, immediately update continue button
+  if (isValid && currentStep === 2) {
+    console.log(`🔍 FORM BECAME VALID - Updating continue button immediately`);
+    updateContinueButton();
+  }
+  
   return isValid;
 }
 
