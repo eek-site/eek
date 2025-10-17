@@ -503,13 +503,20 @@ function goToPreviousStep() {
 // Form data collection
 function collectFormData() {
   const currentStepElement = document.getElementById(`step${currentStep}`);
-  if (!currentStepElement) return;
+  if (!currentStepElement) {
+    console.warn('⚠️ No current step element found for data collection');
+    return;
+  }
   
   const formData = new FormData(currentStepElement);
   const data = Object.fromEntries(formData.entries());
   
+  console.log('📝 Collecting form data from step', currentStep, ':', data);
+  
   // Merge with existing booking data
   bookingData = { ...bookingData, ...data };
+  
+  console.log('📋 Updated booking data:', bookingData);
 }
 
 // Complete booking
@@ -537,7 +544,7 @@ async function completeBooking() {
   // Get comprehensive tracking data
   const trackingData = window.enhancedTracking ? window.enhancedTracking.getTrackingData() : {};
   
-  // Prepare booking data in the format expected by the original API
+  // Prepare booking data in the format expected by the Power Automate flow
   const finalBookingData = {
     // Customer information
     name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
@@ -551,6 +558,7 @@ async function completeBooking() {
     serviceTitle: selectedService.id === 'basic' ? 'Basic Mechanical Inspection' : 'Comprehensive Pre-Purchase Report',
     serviceTier: selectedService.id,
     basePrice: selectedServicePrice,
+    price: selectedServicePrice, // Add price field for compatibility
     
     // Vehicle information
     vehicleMake: bookingData.make || '',
@@ -559,6 +567,10 @@ async function completeBooking() {
     vehicleType: bookingData.vehicleType || '',
     odometer: bookingData.odometer || '',
     vehicleRego: bookingData.vehicleRego || '',
+    make: bookingData.make || '', // Add make field for compatibility
+    model: bookingData.model || '', // Add model field for compatibility
+    year: bookingData.year || '', // Add year field for compatibility
+    rego: bookingData.vehicleRego || '', // Add rego field for compatibility
     
     // Seller information
     sellerName: bookingData.sellerName || '',
@@ -672,8 +684,14 @@ async function completeBooking() {
   button.textContent = 'Processing...';
   
   try {
+    // Debug: Log the data being sent
+    console.log('🚀 SENDING BOOKING DATA TO API:', finalBookingData);
+    console.log('📊 Data size:', JSON.stringify(finalBookingData).length, 'characters');
+    
     // Submit booking
     const response = await submitBooking(finalBookingData);
+    
+    console.log('📥 API Response:', response);
     
     if (response.success) {
       // Track successful booking completion
@@ -729,23 +747,40 @@ async function completeBooking() {
 async function submitBooking(data) {
   const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
   
+  console.log('🌐 API URL:', POWER_AUTOMATE_URL);
+  console.log('📤 Request Headers:', {
+    'Content-Type': 'application/json',
+    'User-Agent': navigator.userAgent
+  });
+  
   try {
     const response = await fetch(POWER_AUTOMATE_URL, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'User-Agent': navigator.userAgent
       },
       body: JSON.stringify(data)
     });
     
+    console.log('📡 Response Status:', response.status, response.statusText);
+    console.log('📡 Response Headers:', Object.fromEntries(response.headers.entries()));
+    
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      console.error('❌ API Error Response:', errorText);
+      throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
     }
     
     const result = await response.json();
+    console.log('✅ API Success Response:', result);
     return { success: true, data: result };
   } catch (error) {
-    console.error('API Error:', error);
+    console.error('❌ API Error Details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
     return { success: false, message: error.message };
   }
 }
@@ -849,6 +884,34 @@ document.addEventListener('keydown', function(e) {
     closeServiceModal();
   }
 });
+
+// Test function for API debugging
+window.testAPI = async function() {
+  console.log('🧪 Testing API connection...');
+  
+  const testData = {
+    name: 'Test User',
+    phone: '0211234567',
+    email: 'test@example.com',
+    service: 'inspection_basic',
+    serviceTitle: 'Basic Mechanical Inspection',
+    basePrice: 299,
+    eventType: 'test_booking',
+    sessionId: 'test_' + Date.now(),
+    timestamp: new Date().toISOString()
+  };
+  
+  console.log('📤 Sending test data:', testData);
+  
+  try {
+    const response = await submitBooking(testData);
+    console.log('✅ Test API Response:', response);
+    return response;
+  } catch (error) {
+    console.error('❌ Test API Error:', error);
+    return { success: false, error: error.message };
+  }
+};
 
 // Export functions for global access
 window.openServiceSelectionModal = openServiceSelectionModal;

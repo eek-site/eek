@@ -479,16 +479,38 @@ class EnhancedTrackingManager {
             ...additionalData
         };
 
+        console.log('📊 SENDING TRACKING DATA:', {
+            eventType: eventType,
+            payload: trackingPayload,
+            payloadSize: JSON.stringify(trackingPayload).length
+        });
+
         try {
-            await fetch(POWER_AUTOMATE_URL, {
+            const response = await fetch(POWER_AUTOMATE_URL, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'User-Agent': navigator.userAgent
                 },
                 body: JSON.stringify(trackingPayload)
             });
+            
+            console.log('📡 Tracking API Response:', {
+                status: response.status,
+                statusText: response.statusText,
+                ok: response.ok
+            });
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ Tracking API Error Response:', errorText);
+            }
         } catch (error) {
-            console.error('Tracking API Error:', error);
+            console.error('❌ Tracking API Error:', {
+                message: error.message,
+                stack: error.stack,
+                name: error.name
+            });
         }
     }
 
