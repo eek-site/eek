@@ -1486,6 +1486,153 @@ function toggleBookingButton() {
   }
 }
 
+// === DATA COLLECTION FOR PAYMENT ===
+function buildInspectionData(status) {
+  const trackingData = window.enhancedTracking ? window.enhancedTracking.getTrackingData() : {};
+  const geo = window.CF_GEO || {};
+  
+  return {
+    // Basic info
+    sessionId: sessionId,
+    gclid: gclid,
+    bookingStatus: status,
+    timestamp: new Date().toISOString(),
+    pageType: 'inspection',
+    
+    // Customer information
+    name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
+    phone: bookingData.phone || '',
+    email: bookingData.email || '',
+    location: bookingData.address || '',
+    
+    // Service information
+    service: selectedService ? (selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive') : '',
+    serviceCode: selectedService ? (selectedService.id === 'basic' ? 'INSP_BASIC' : 'INSP_COMP') : '',
+    serviceTitle: selectedService ? selectedService.name : '',
+    serviceTier: selectedService ? selectedService.id : '',
+    basePrice: selectedServicePrice || 0,
+    price: selectedServicePrice || 0,
+    
+    // Vehicle information
+    vehicleMake: bookingData.make || '',
+    vehicleModel: bookingData.model || '',
+    vehicleYear: bookingData.year || '',
+    vehicleType: bookingData.vehicleType || '',
+    vehicleRego: bookingData.vehicleRego || '',
+    make: bookingData.make || '',
+    model: bookingData.model || '',
+    year: bookingData.year || '',
+    rego: bookingData.vehicleRego || '',
+    
+    // Seller information
+    sellerName: bookingData.sellerName || '',
+    sellerPhone: bookingData.sellerPhone || '',
+    suburb: bookingData.suburb || '',
+    city: bookingData.city || '',
+    
+    // Scheduling
+    preferredDate: bookingData.preferredDate || '',
+    preferredTime: bookingData.preferredTime || '',
+    specialInstructions: bookingData.specialInstructions || '',
+    inspectionType: bookingData.inspectionType || '',
+    
+    // Terms and marketing
+    termsAccepted: bookingData.termsAccepted || false,
+    marketingConsent: bookingData.marketingConsent || false,
+    
+    // Step information
+    currentStep: currentStep,
+    totalSteps: 7,
+    stepProgress: Math.round((currentStep / 7) * 100),
+    
+    // Page source data
+    pageSource: {
+      type: trackingData.pageSource?.type || 'direct',
+      detail: trackingData.pageSource?.detail || 'Direct visit',
+      referrer: trackingData.pageSource?.referrer || '',
+      utm: {
+        source: trackingData.pageSource?.utm?.source || '',
+        medium: trackingData.pageSource?.utm?.medium || '',
+        campaign: trackingData.pageSource?.utm?.campaign || '',
+        term: trackingData.pageSource?.utm?.term || '',
+        content: trackingData.pageSource?.utm?.content || ''
+      },
+      clickIds: {
+        gclid: trackingData.pageSource?.clickIds?.gclid || '',
+        fbclid: trackingData.pageSource?.clickIds?.fbclid || '',
+        msclkid: trackingData.pageSource?.clickIds?.msclkid || ''
+      }
+    },
+    
+    // Device and engagement data
+    device: {
+      userAgent: navigator.userAgent,
+      platform: navigator.platform || 'Unknown',
+      language: navigator.language || 'en',
+      screenResolution: `${screen.width}x${screen.height}`,
+      viewportSize: `${window.innerWidth}x${window.innerHeight}`,
+      colorDepth: screen.colorDepth || 24,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown',
+      cookieEnabled: navigator.cookieEnabled,
+      doNotTrack: navigator.doNotTrack || 'unspecified'
+    },
+    
+    engagement: {
+      pageViews: trackingData.engagement?.pageViews || 1,
+      sessionDuration: trackingData.engagement?.sessionDuration || 0,
+      scrollDepth: trackingData.engagement?.scrollDepth || 0,
+      formInteractions: trackingData.engagement?.formInteractions || 0,
+      buttonClicks: trackingData.engagement?.buttonClicks || 0
+    },
+    
+    // User journey data
+    userJourney: {
+      pageHistory: trackingData.userJourney?.pageHistory || [],
+      totalPages: trackingData.userJourney?.totalPages || 1,
+      sessionDuration: trackingData.userJourney?.sessionDuration || 0,
+      entryPage: trackingData.userJourney?.entryPage || window.location.href,
+      previousPage: trackingData.userJourney?.previousPage || ''
+    },
+    
+    // UTM data
+    utm: {
+      source: utmData.utm_source || '',
+      medium: utmData.utm_medium || '',
+      campaign: utmData.utm_campaign || '',
+      term: utmData.utm_term || '',
+      content: utmData.utm_content || '',
+      gclid: gclid || ''
+    },
+    
+    // Page data
+    pageUrl: trackingData.pageUrl || window.location.href,
+    pagePath: trackingData.pagePath || window.location.pathname,
+    pageTitle: trackingData.pageTitle || document.title,
+    
+    // Geolocation data
+    location: {
+      country: geo.country || 'Unknown',
+      countryCode: geo.countryCode || geo.country || 'Unknown',
+      region: geo.region || 'Unknown',
+      regionCode: geo.regionCode || 'Unknown',
+      city: geo.city || 'Unknown',
+      postalCode: geo.postalCode || 'Unknown',
+      continent: geo.continent || 'Unknown',
+      coordinates: {
+        latitude: geo.latitude || null,
+        longitude: geo.longitude || null,
+        accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+      },
+      timezone: geo.timezone || 'Unknown',
+      raw: geo
+    },
+    
+    // Source tracking
+    source: 'inspection_form',
+    formVersion: '1.0'
+  };
+}
+
 // === PAYMENT GENERATION ===
 async function generatePaymentLink() {
   // Check if terms are accepted
@@ -1622,6 +1769,7 @@ window.selectDay = selectDay;
 window.initializeDaySelector = initializeDaySelector;
 window.selectVehicleType = selectVehicleType;
 window.toggleBookingButton = toggleBookingButton;
+window.buildInspectionData = buildInspectionData;
 window.generatePaymentLink = generatePaymentLink;
 window.closeExitIntent = closeExitIntent;
 window.applyDiscount = applyDiscount;
