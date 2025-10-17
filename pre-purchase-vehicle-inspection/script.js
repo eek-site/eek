@@ -12,6 +12,9 @@ let sessionId = null;
 let gclid = null;
 let utmData = {};
 
+// API Configuration
+const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
+
 // === BOOKING STATUS CONSTANTS ===
 const BOOKING_STATUS = {
   INITIAL: 'inspection_page_loaded',
@@ -789,8 +792,6 @@ async function completeBooking() {
 
 // Submit booking to API
 async function submitBooking(data) {
-  const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
-  
   console.log('🌐 API URL:', POWER_AUTOMATE_URL);
   console.log('📤 Request Headers:', {
     'Content-Type': 'application/json',
@@ -993,7 +994,6 @@ window.testBooking = async function() {
 
 // === STEP TRACKING SYSTEM ===
 async function sendStepTracking(status) {
-  const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
   const data = buildStepData(status);
   
   console.log(`📡 INSPECTION STEP UPDATE: ${status.toUpperCase()}`);
