@@ -121,6 +121,12 @@ function selectService(serviceId) {
   
   updateSelectedServiceDisplay();
   updateContinueButton();
+  
+  // Close modal and advance to next step
+  closeServiceModal();
+  setTimeout(() => {
+    showStep(2);
+  }, 300); // Small delay to allow modal close animation
 }
 
 function updateSelectedServiceDisplay() {
@@ -224,6 +230,20 @@ function showStep(stepNum) {
     document.getElementById('mainBanner').style.display = 'none';
   } else {
     document.getElementById('mainBanner').style.display = 'block';
+  }
+  
+  // Show/hide navigation buttons
+  const continueBtn = document.getElementById('continueBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  
+  if (stepNum === 1) {
+    // Step 1: Hide continue button, service selection handles progression
+    if (continueBtn) continueBtn.style.display = 'none';
+    if (prevBtn) prevBtn.style.display = 'none';
+  } else {
+    // Other steps: Show navigation buttons
+    if (continueBtn) continueBtn.style.display = 'block';
+    if (prevBtn) prevBtn.style.display = stepNum > 1 ? 'block' : 'none';
   }
   
   currentStep = stepNum;
@@ -505,3 +525,4 @@ window.openServiceSelectionModal = openServiceSelectionModal;
 window.closeServiceModal = closeServiceModal;
 window.goToNextStep = goToNextStep;
 window.goToPreviousStep = goToPreviousStep;
+
