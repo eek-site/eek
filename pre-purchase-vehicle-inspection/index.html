@@ -176,71 +176,9 @@
           <h2 style="margin:0 0 10px 0;color:#0c5460;font-size:1.6em;">1 in 5 Vehicles We Inspect Get Rejected</h2>
           <p style="margin:0;color:#0c5460;font-size:1.05em;">Don't lose $3,200 on hidden repairs. Choose Comprehensive for detailed analysis, professional valuation, and credit protection if it's a lemon.</p>
         </div>
-
-        <div class="service-selector">
-          <div class="service-option" onclick="selectService('basic', 299, this)">
-            <div class="service-title">Basic Mechanical</div>
-            <div class="service-price">$299</div>
-            <div class="service-description">Quick mechanical assessment</div>
-            <ul class="service-features">
-              <li>44-point mechanical inspection by A-grade mechanic</li>
-              <li>Full pre-purchase inspection standards</li>
-              <li>Pass/fail assessment with detailed report</li>
-              <li>Engine & transmission check</li>
-              <li>Brake system inspection</li>
-              <li>Steering & suspension check</li>
-              <li>Electrical system basic test</li>
-              <li>Exhaust system check</li>
-              <li>Fluid levels inspection</li>
-              <li>Basic safety assessment</li>
-              <li>Report delivered immediately</li>
-              <li>Perfect for Dealer Inspections</li>
-            </ul>
-          </div>
-
-          <div class="service-option recommended selected" onclick="selectService('comprehensive', 599, this)">
-            <div class="service-title">Comprehensive Report</div>
-            <div class="service-price">$599</div>
-            <div class="service-description">Complete professional analysis</div>
-            <ul class="service-features">
-              <li>Everything in Basic, PLUS:</li>
-              <li>BUY/DON'T BUY recommendation</li>
-              <li>Professional vehicle valuation</li>
-              <li>Complete ownership history analysis</li>
-              <li>WOF inspection history review</li>
-              <li>Odometer verification & usage patterns</li>
-              <li>Road User Charges compliance check</li>
-              <li>Insurance write-off & stolen vehicle status</li>
-              <li>Finance owing verification</li>
-              <li>Service history & maintenance records</li>
-              <li>Running costs analysis</li>
-              <li>Safety features & ratings verification</li>
-              <li>Model-specific known issues research</li>
-              <li>Immediate cost estimates</li>
-              <li>Seller & mechanic interviews</li>
-              <li>Online research & market analysis</li>
-              <li>25+ page comprehensive report</li>
-              <li>Digital report delivery</li>
-              <li>30-day support included</li>
-              <li>Complete data protection - RECOMMENDED</li>
-            </ul>
-            
-            <div style="background:#d4edda;border:3px solid #28a745;border-radius:12px;padding:18px;margin-top:20px;text-align:left;">
-              <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
-                <div style="background:#28a745;color:#fff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:900;flex-shrink:0;">✓</div>
-                <div style="font-weight:800;font-size:1.1em;color:#155724;">Protected If It's A Lemon</div>
-              </div>
-              <p style="margin:0;font-size:.95em;color:#155724;line-height:1.5;">If the mechanic identifies it's a lemon during inspection, we issue a <strong>$300 store credit</strong> (keeping only the $299 inspection cost). Use the credit on your next vehicle. You never lose money on a bad car.</p>
-            </div>
-            
-            <div class="service-savings">
-              Saves $3,200+ on average by avoiding bad purchases
-            </div>
-          </div>
-        </div>
-
-        <div style="text-align:center;margin:30px 0;">
-          <button class="button" onclick="goToNextStep()">See Availability →</button>
+        
+        <div style="text-align:center;margin:40px 0;">
+          <button class="button" onclick="openServiceSelectionModal()">Choose Service →</button>
         </div>
       </div>
 
@@ -324,7 +262,7 @@
           <div class="form-group">
             <label for="location" class="form-label">Where is the vehicle located? *</label>
             <input type="text" id="location" name="location" class="form-input" placeholder="Auckland CBD, Christchurch, Wellington..." required>
-            <p style="color:#666;margin:-10px 0 15px 0;font-size:.9em;"><strong>600+ workshops nationwide.</strong> We'll assign you to the closest one (typically within 10 minutes).</p>
+            <p style="color:#666;margin:10px 0 15px 0;font-size:.9em;"><strong>600+ workshops nationwide.</strong> We'll assign you to the closest one (typically within 10 minutes).</p>
           </div>
         </form>
       </div>
@@ -335,15 +273,6 @@
           <img src="/sweet-ride.png" alt="Professional vehicle inspection" style="max-width:300px;height:auto;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);" />
         </div>
         
-        <div style="background:linear-gradient(135deg,#fd7e14,#ffc107);border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;color:#fff;">
-          <h2 style="margin:0 0 10px 0;font-size:1.6em;">If The Seller Refuses, The Car Is Probably A Lemon</h2>
-          <p style="margin:0;font-size:1.05em;opacity:.95;">Honest sellers always cooperate. If they refuse our workshop inspection, we give you a full store credit to use on your next vehicle. You either get a thorough inspection, or you get your money back to avoid a lemon. Win-win.</p>
-        </div>
-
-        <div class="highlight-box">
-          <h4>What happens next:</h4>
-          <p>We contact the seller to arrange workshop drop-off. Legitimate sellers cooperate immediately - they know their vehicle will pass. If a seller refuses, that's a red flag: they're likely hiding something costly. When that happens, we give you full store credit to use on your next inspection. You just avoided a major expense.</p>
-        </div>
         
         <form onsubmit="return false;">
           <div class="form-group">
@@ -372,35 +301,31 @@
         <div style="background:linear-gradient(135deg,#6f42c1,#e83e8c);border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;color:#fff;">
           <h2 style="margin:0 0 10px 0;font-size:1.6em;">Saturday & Sunday Available - Other Services Aren't</h2>
           <p style="margin:0;font-size:1.05em;opacity:.95;">Found the perfect car on the weekend? Don't wait until Monday while another buyer snaps it up. We inspect Saturdays and Sundays.</p>
-        </div>
+            </div>
 
         <div class="competitor-box">
           <h4>Our Availability Advantage:</h4>
           <p><strong>Other services:</strong> 24-48 hour advance booking, weekday-only, no weekends</p>
           <p><strong>We're available:</strong> Same-day bookings, Saturday & Sunday service</p>
-        </div>
-
+          </div>
+          
         <h3>When would you like the inspection?</h3>
         <p>Select your preferred day for the inspection</p>
         
         <div id="daySelector" class="day-selector"></div>
         
-        <div style="text-align:center;margin:20px 0;">
-          <button class="button secondary" onclick="goToPreviousStep()">← Back</button>
-          <button class="button" id="confirmDayBtn" onclick="goToNextStep()" disabled>Continue to Vehicle Type →</button>
-        </div>
-      </div>
-
+          </div>
+          
       <!-- Step 6: Vehicle Type -->
       <div class="step" id="step6">
         <div style="text-align:center;margin:0 0 20px 0;">
           <img src="/sweet-ride.png" alt="Professional vehicle inspection" style="max-width:300px;height:auto;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);" />
-        </div>
+          </div>
         
         <div style="background:linear-gradient(135deg,#28a745,#20c997);border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;color:#fff;">
           <h2 style="margin:0 0 10px 0;font-size:1.6em;">95% Of Vehicles Are Standard Pricing</h2>
           <p style="margin:0;font-size:1.05em;opacity:.95;">No hidden fees. Most cars, SUVs, utes, and motorhomes are included in the base price. Only specialty vehicles cost extra.</p>
-        </div>
+      </div>
 
         <div class="vehicle-types">
           <div class="vehicle-type popular selected" onclick="selectVehicleType('standard', 0, this)">
@@ -413,8 +338,8 @@
             <div class="vehicle-type-title">Classic/Specialty</div>
             <div class="vehicle-type-subtitle">Classics, modified vehicles, rare imports</div>
             <div class="vehicle-note">Specialist expertise (+$129)</div>
+            </div>
           </div>
-        </div>
 
         <div style="background:#f8f9fa;border-radius:8px;padding:15px;margin:20px 0;text-align:left;">
           <p style="margin:0;color:#495057;font-size:.9em;line-height:1.5;"><strong>Note:</strong> We inspect vehicles with standard licenses. Heavy truck (HT) licenses and commercial trucks requiring special licenses are not available for inspection through this service.</p>
@@ -446,7 +371,7 @@
             <div class="trust-badge-text">Workshop Hoist Inspection</div>
           </div>
         </div>
-
+        
         <div class="reservation-summary">
           <h4>Your Inspection Booking</h4>
           <div class="summary-item"><span>Service:</span><strong id="summaryService"></strong></div>
@@ -475,12 +400,7 @@
             </div>
           </div>
         </div>
-
-        <div style="text-align:center;margin:20px 0;">
-          <button class="button secondary" onclick="goToPreviousStep()">← Back</button>
-          <button class="button" id="generatePaymentBtn" onclick="generatePaymentLink()" disabled style="font-size:1.15em;padding:16px 32px;">Secure My Inspection Now →</button>
-          <p style="margin:15px 0;color:#666;font-size:.9em;">🔒 Secure payment processing powered by Stripe</p>
-        </div>
+        
       </div>
     </div>
 
@@ -540,7 +460,7 @@
   </button>
   
   <button class="floating-btn secondary" id="floatingPrevBtn" onclick="goToPreviousStep(); window.scrollTo(0,0);" style="display: none;">
-    ← Previous
+    ← Back
   </button>
 
   <!-- Exit Intent Popup -->

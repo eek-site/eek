@@ -477,6 +477,9 @@ function showStep(stepNum) {
   if (stepNum === 7) {
     updateSummary();
   }
+  
+  // Update floating button text based on step
+  updateFloatingButtonText(stepNum);
 }
 
 function updateProgressBar(stepNum) {
@@ -1539,6 +1542,36 @@ function applyDiscount() {
   }
   
   closeExitIntent();
+}
+
+// === FLOATING BUTTON TEXT UPDATES ===
+function updateFloatingButtonText(stepNum) {
+  const continueBtn = document.getElementById('floatingContinueBtn');
+  
+  if (continueBtn) {
+    switch(stepNum) {
+      case 2:
+        continueBtn.textContent = 'Continue →';
+        break;
+      case 3:
+        continueBtn.textContent = 'Continue →';
+        break;
+      case 4:
+        continueBtn.textContent = 'Continue →';
+        break;
+      case 5:
+        continueBtn.textContent = 'Continue to Vehicle Type →';
+        break;
+      case 6:
+        continueBtn.textContent = 'Continue →';
+        break;
+      case 7:
+        continueBtn.textContent = 'Secure My Inspection Now →';
+        break;
+      default:
+        continueBtn.textContent = 'Continue →';
+    }
+  }
 }
 
 // === EXIT INTENT DETECTION ===
