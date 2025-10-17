@@ -9,29 +9,26 @@ let bookingData = {};
 
 // Service options
 const services = {
-  comprehensive: {
-    id: 'comprehensive',
-    name: 'Comprehensive Inspection',
+  basic: {
+    id: 'basic',
+    name: 'Basic Mechanical Inspection',
     price: 299,
     features: [
-      'Detailed engine diagnostics',
-      'Suspension & steering check',
-      'Electrical system test',
-      'Road test included',
-      'Detailed written report'
+      '44-point mechanical inspection by A-grade mechanic',
+      'Full pre-purchase inspection standards',
+      'Pass/fail assessment with detailed report',
+      'Perfect for Dealer Inspections'
     ]
   },
-  premium: {
-    id: 'premium',
-    name: 'Premium Inspection',
-    price: 399,
+  comprehensive: {
+    id: 'comprehensive',
+    name: 'Comprehensive Report',
+    price: 599,
     features: [
-      'Everything in Comprehensive',
-      'Full diagnostic scan',
-      'Paint & body condition check',
-      'Interior condition assessment',
-      'Service history analysis',
-      'Priority same-day service'
+      'Everything in Basic, PLUS:',
+      'Finance owing check',
+      'Insurance history verification',
+      'Complete protection - RECOMMENDED'
     ]
   }
 };
