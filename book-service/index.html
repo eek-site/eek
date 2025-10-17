@@ -660,7 +660,7 @@ const serviceConfigs = {
 // Globals
 const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
 const PRICING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
-const PAYMENT_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c8ac1b8ac2574f66ad4efcdc23165379/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
+const PAYMENT_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
 const WINZ_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95fc801df59b4250a48919ace91c0276/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mFpTX4gPrz1u1DbdfF3YqHBnAsW3pnAAj-GWXWvBYYc';
 
 let selectedUrgency = null;
@@ -1327,7 +1327,7 @@ async function generatePaymentLink(){
     description: `${window.currentConfig.title} - ${vehicleDescription} - ${location}`,
     redirectUrl: buildRedirectUrl(),
     
-    // Customer data (flattened to root level)
+    // Customer data
     customerName: customerName,
     customerPhone: phone,
     customerEmail: email,
@@ -1342,25 +1342,24 @@ async function generatePaymentLink(){
     vehicleDescription: vehicleDescription,
     
     // Service data
-      service: window.currentService,
-      serviceCode: window.currentConfig.serviceCode,
-      serviceTitle: window.currentConfig.title,
-      details: document.getElementById('detailsInput').value || 'No additional details provided',
-      price: `${total}`,
+    service: window.currentService,
+    serviceCode: window.currentConfig.serviceCode,
+    serviceTitle: window.currentConfig.title,
+    details: document.getElementById('detailsInput').value || 'No additional details provided',
+    price: `${total}`,
     basePrice: window.currentConfig.basePrice || total,
     
     // Booking data
-      bookingDateTime: nowNZ().toLocaleString('en-NZ',{ timeZone:NZ_TZ }),
-      scheduledDate: fmtDateNZ(nowNZ()),
+    bookingDateTime: nowNZ().toLocaleString('en-NZ',{ timeZone:NZ_TZ }),
+    scheduledDate: fmtDateNZ(nowNZ()),
     scheduledDateISO: nowNZ().toISOString(),
-      scheduledTime: selectedUrgencyDetails.time || '',
+    scheduledTime: selectedUrgencyDetails.time || '',
     timeWindow: selectedUrgencyDetails.time || '',
-      urgencyLevel: selectedUrgency || 'emergency',
+    urgencyLevel: selectedUrgency || 'emergency',
     urgencyTitle: selectedUrgencyDetails.title || '',
     
     // Tracking data
-      gclid: gclid,
-      sessionId: sessionId,
+    sessionId: sessionId,
     bookingSource: 'website',
     formVersion: '2.0',
     
@@ -1372,97 +1371,7 @@ async function generatePaymentLink(){
     isWinzService: window.currentConfig.isWinz ? 'true' : 'false',
     sellerName: '',
     sellerPhone: '',
-    vehicleTypeAddon: '',
-      
-      // Booking status
-      bookingStatus: 'NEW',
-      eventType: 'emergency_booking_completed',
-      
-      // Page source data
-      pageSource: {
-        type: trackingData.pageSource?.type || 'direct',
-        detail: trackingData.pageSource?.detail || 'Direct visit',
-        referrer: trackingData.pageSource?.referrer || '',
-        utm: {
-          source: trackingData.pageSource?.utm?.source || '',
-          medium: trackingData.pageSource?.utm?.medium || '',
-          campaign: trackingData.pageSource?.utm?.campaign || '',
-          term: trackingData.pageSource?.utm?.term || '',
-          content: trackingData.pageSource?.utm?.content || ''
-        },
-        clickIds: {
-          gclid: trackingData.pageSource?.clickIds?.gclid || '',
-          fbclid: trackingData.pageSource?.clickIds?.fbclid || '',
-          msclkid: trackingData.pageSource?.clickIds?.msclkid || ''
-        }
-      },
-      
-      // Device and engagement data
-      device: {
-        userAgent: trackingData.userAgent || navigator.userAgent || '',
-        screenResolution: trackingData.screenResolution || `${screen.width}x${screen.height}`,
-        viewportSize: trackingData.viewportSize || `${window.innerWidth}x${window.innerHeight}`,
-        language: trackingData.language || navigator.language || '',
-        timezone: trackingData.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || ''
-      },
-      
-      engagement: {
-        timeOnPage: trackingData.engagement?.timeOnPage || 0,
-        scrollDepth: trackingData.engagement?.scrollDepth || 0,
-        clicks: trackingData.engagement?.clicks || 0,
-        formInteractions: trackingData.engagement?.formInteractions || 0,
-        buttonClicks: trackingData.engagement?.buttonClicks || 0
-      },
-      
-      // User journey data
-      userJourney: {
-        pageHistory: trackingData.userJourney?.pageHistory || [],
-        totalPages: trackingData.userJourney?.totalPages || 1,
-        sessionDuration: trackingData.userJourney?.sessionDuration || 0,
-        entryPage: trackingData.userJourney?.entryPage || window.location.href,
-        previousPage: trackingData.userJourney?.previousPage || ''
-      },
-      
-      // UTM data
-      utm: {
-        source: trackingData.pageSource?.utm?.source || '',
-        medium: trackingData.pageSource?.utm?.medium || '',
-        campaign: trackingData.pageSource?.utm?.campaign || '',
-        term: trackingData.pageSource?.utm?.term || '',
-        content: trackingData.pageSource?.utm?.content || '',
-        gclid: gclid || ''
-      },
-      
-      // Page data
-      pageUrl: trackingData.pageUrl || window.location.href,
-      pagePath: trackingData.pagePath || window.location.pathname,
-      pageTitle: trackingData.pageTitle || document.title,
-      pageType: trackingData.pageType || 'emergency',
-      
-      // Timestamps
-      timestamp: new Date().toISOString(),
-      scheduledDateISO: new Date().toISOString(),
-      
-      // Geolocation data
-      location: {
-        country: geo.country || 'Unknown',
-        countryCode: geo.countryCode || geo.country || 'Unknown',
-        region: geo.region || 'Unknown',
-        regionCode: geo.regionCode || 'Unknown',
-        city: geo.city || 'Unknown',
-        postalCode: geo.postalCode || 'Unknown',
-        continent: geo.continent || 'Unknown',
-        coordinates: {
-          latitude: geo.latitude || null,
-          longitude: geo.longitude || null,
-          accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
-        },
-        timezone: geo.timezone || 'Unknown',
-        raw: geo
-      },
-      
-    // Battery voltage for jump start service
-      ...(window.currentService === 'jumpstart' ? { batteryVoltage: (selectedVoltageId === '12v' ? '12V' : '24V') } : {})
+    vehicleTypeAddon: ''
   };
 
   console.log('💳 PAYMENT LINK GENERATION - Starting...');
