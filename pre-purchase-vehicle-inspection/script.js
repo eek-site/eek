@@ -65,7 +65,10 @@ const vehicleTypes = [
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀 PRE-PURCHASE INSPECTION SCRIPT v2.1 - Continue Button Fix Applied');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v2.1 - Continue Button Fix Applied 🚀🚀🚀');
+  console.log('🔧 DEBUGGING ENABLED - Check for continue button issues');
+  console.log('📅 Script loaded at:', new Date().toISOString());
+  
   initializeTracking();
   initializeApp();
   setupEventListeners();
