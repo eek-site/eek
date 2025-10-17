@@ -160,24 +160,42 @@ function initializeApp() {
 function setupEventListeners() {
   // Service selection
   document.addEventListener('click', function(e) {
-    if (e.target.closest('.service-option')) {
-      const serviceId = e.target.closest('.service-option').dataset.service;
-      selectService(serviceId);
+    try {
+      const serviceOption = e.target?.closest('.service-option');
+      if (serviceOption) {
+        const serviceId = serviceOption.dataset?.service;
+        if (serviceId) {
+          selectService(serviceId);
+        }
+      }
+    } catch (error) {
+      console.warn('Service selection error:', error);
     }
   });
   
   // Vehicle type selection
   document.addEventListener('click', function(e) {
-    if (e.target.closest('.vehicle-type-option')) {
-      const vehicleType = e.target.closest('.vehicle-type-option').dataset.type;
-      selectVehicleType(vehicleType);
+    try {
+      const vehicleTypeOption = e.target?.closest('.vehicle-type-option');
+      if (vehicleTypeOption) {
+        const vehicleType = vehicleTypeOption.dataset?.type;
+        if (vehicleType) {
+          selectVehicleType(vehicleType);
+        }
+      }
+    } catch (error) {
+      console.warn('Vehicle type selection error:', error);
     }
   });
   
   // Form validation
   document.addEventListener('input', function(e) {
-    if (e.target.matches('.form-input, .form-select, .form-textarea')) {
-      validateForm();
+    try {
+      if (e.target?.matches('.form-input, .form-select, .form-textarea')) {
+        validateForm();
+      }
+    } catch (error) {
+      console.warn('Form validation error:', error);
     }
   });
 }
@@ -188,11 +206,18 @@ function selectService(serviceId) {
   selectedServicePrice = selectedService.price;
   
   // Update UI
-  document.querySelectorAll('.service-option').forEach(option => {
-    option.classList.remove('selected');
-  });
-  
-  document.querySelector(`[data-service="${serviceId}"]`).classList.add('selected');
+  try {
+    document.querySelectorAll('.service-option').forEach(option => {
+      option.classList.remove('selected');
+    });
+    
+    const selectedElement = document.querySelector(`[data-service="${serviceId}"]`);
+    if (selectedElement) {
+      selectedElement.classList.add('selected');
+    }
+  } catch (error) {
+    console.warn('Service UI update error:', error);
+  }
   
   updateSelectedServiceDisplay();
   updateContinueButton();
@@ -284,11 +309,18 @@ function selectVehicleType(type) {
   bookingData.vehicleType = type;
   
   // Update UI
-  document.querySelectorAll('.vehicle-type-option').forEach(option => {
-    option.classList.remove('selected');
-  });
-  
-  document.querySelector(`[data-type="${type}"]`).classList.add('selected');
+  try {
+    document.querySelectorAll('.vehicle-type-option').forEach(option => {
+      option.classList.remove('selected');
+    });
+    
+    const selectedElement = document.querySelector(`[data-type="${type}"]`);
+    if (selectedElement) {
+      selectedElement.classList.add('selected');
+    }
+  } catch (error) {
+    console.warn('Vehicle type UI update error:', error);
+  }
   
   updateContinueButton();
 }
@@ -308,9 +340,13 @@ function renderVehicleTypes() {
 // Step navigation
 function showStep(stepNum) {
   // Hide all steps
-  document.querySelectorAll('.step').forEach(step => {
-    step.classList.remove('active');
-  });
+  try {
+    document.querySelectorAll('.step').forEach(step => {
+      step.classList.remove('active');
+    });
+  } catch (error) {
+    console.warn('Step hiding error:', error);
+  }
   
   // Show current step
   const currentStepElement = document.getElementById(`step${stepNum}`);
@@ -358,14 +394,18 @@ function showStep(stepNum) {
 }
 
 function updateProgressBar(stepNum) {
-  document.querySelectorAll('.progress-step').forEach((step, index) => {
-    step.classList.remove('active', 'completed');
-    if (index + 1 < stepNum) {
-      step.classList.add('completed');
-    } else if (index + 1 === stepNum) {
-      step.classList.add('active');
-    }
-  });
+  try {
+    document.querySelectorAll('.progress-step').forEach((step, index) => {
+      step.classList.remove('active', 'completed');
+      if (index + 1 < stepNum) {
+        step.classList.add('completed');
+      } else if (index + 1 === stepNum) {
+        step.classList.add('active');
+      }
+    });
+  } catch (error) {
+    console.warn('Progress bar update error:', error);
+  }
 }
 
 // Form validation
@@ -376,14 +416,18 @@ function validateForm() {
   const requiredFields = currentStepElement.querySelectorAll('[required]');
   let isValid = true;
   
-  requiredFields.forEach(field => {
-    if (!field.value.trim()) {
-      isValid = false;
-      field.classList.add('error');
-    } else {
-      field.classList.remove('error');
-    }
-  });
+  try {
+    requiredFields.forEach(field => {
+      if (!field.value.trim()) {
+        isValid = false;
+        field.classList.add('error');
+      } else {
+        field.classList.remove('error');
+      }
+    });
+  } catch (error) {
+    console.warn('Form validation error:', error);
+  }
   
   return isValid;
 }

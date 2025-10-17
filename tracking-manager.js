@@ -96,10 +96,16 @@ class TrackingManager {
     setupServiceSelectionTracking() {
         // Track service card clicks
         document.addEventListener('click', (event) => {
-            const serviceCard = event.target.closest('[data-service]');
-            if (serviceCard) {
-                const serviceName = serviceCard.dataset.service;
-                this.trackServiceCardClick(serviceName);
+            try {
+                const serviceCard = event.target?.closest('[data-service]');
+                if (serviceCard) {
+                    const serviceName = serviceCard.dataset?.service;
+                    if (serviceName) {
+                        this.trackServiceCardClick(serviceName);
+                    }
+                }
+            } catch (error) {
+                console.warn('Service selection tracking error:', error);
             }
         });
     }
@@ -110,10 +116,14 @@ class TrackingManager {
     setupBookingTracking() {
         // Track booking button clicks
         document.addEventListener('click', (event) => {
-            const bookingBtn = event.target.closest('.booking-btn, [data-track*="book"]');
-            if (bookingBtn) {
-                const serviceType = bookingBtn.dataset.service || 'unknown';
-                this.trackBookingClick(serviceType);
+            try {
+                const bookingBtn = event.target?.closest('.booking-btn, [data-track*="book"]');
+                if (bookingBtn) {
+                    const serviceType = bookingBtn.dataset?.service || 'unknown';
+                    this.trackBookingClick(serviceType);
+                }
+            } catch (error) {
+                console.warn('Booking tracking error:', error);
             }
         });
     }
@@ -124,10 +134,14 @@ class TrackingManager {
     setupPhoneCallTracking() {
         // Track phone link clicks
         document.addEventListener('click', (event) => {
-            const phoneLink = event.target.closest('.phone-link, [href^="tel:"]');
-            if (phoneLink) {
-                const eventAction = phoneLink.dataset.track || 'phone_call';
-                this.trackConversion(eventAction, 'Contact');
+            try {
+                const phoneLink = event.target?.closest('.phone-link, [href^="tel:"]');
+                if (phoneLink) {
+                    const eventAction = phoneLink.dataset?.track || 'phone_call';
+                    this.trackConversion(eventAction, 'Contact');
+                }
+            } catch (error) {
+                console.warn('Phone call tracking error:', error);
             }
         });
     }

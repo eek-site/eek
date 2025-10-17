@@ -321,24 +321,36 @@ class EnhancedTrackingManager {
      */
     trackFormInteractions() {
         document.addEventListener('focus', (event) => {
-            if (event.target.matches('input, textarea, select')) {
-                this.trackingData.engagement.formInteractions++;
-                this.trackEvent('form_focus', 'Form', event.target.name || event.target.id);
+            try {
+                if (event.target?.matches('input, textarea, select')) {
+                    this.trackingData.engagement.formInteractions++;
+                    this.trackEvent('form_focus', 'Form', event.target.name || event.target.id);
+                }
+            } catch (error) {
+                console.warn('Form focus tracking error:', error);
             }
         });
 
         document.addEventListener('blur', (event) => {
-            if (event.target.matches('input, textarea, select')) {
-                this.trackEvent('form_blur', 'Form', event.target.name || event.target.id);
+            try {
+                if (event.target?.matches('input, textarea, select')) {
+                    this.trackEvent('form_blur', 'Form', event.target.name || event.target.id);
+                }
+            } catch (error) {
+                console.warn('Form blur tracking error:', error);
             }
         });
 
         document.addEventListener('submit', (event) => {
-            this.trackEvent('form_submit', 'Form', event.target.id || 'unknown_form');
-            this.sendTrackingData('form_submit', {
-                formId: event.target.id,
-                formData: new FormData(event.target)
-            });
+            try {
+                this.trackEvent('form_submit', 'Form', event.target?.id || 'unknown_form');
+                this.sendTrackingData('form_submit', {
+                    formId: event.target?.id,
+                    formData: event.target ? new FormData(event.target) : null
+                });
+            } catch (error) {
+                console.warn('Form submit tracking error:', error);
+            }
         });
     }
 
@@ -347,17 +359,21 @@ class EnhancedTrackingManager {
      */
     trackButtonClicks() {
         document.addEventListener('click', (event) => {
-            this.trackingData.engagement.clicks++;
-            
-            if (event.target.matches('button, a, [role="button"]')) {
-                this.trackingData.engagement.buttonClicks++;
-                const buttonText = event.target.textContent?.trim() || event.target.alt || 'unknown';
-                const buttonClass = event.target.className || 'no-class';
+            try {
+                this.trackingData.engagement.clicks++;
                 
-                this.trackEvent('button_click', 'Interaction', buttonText, {
-                    button_class: buttonClass,
-                    button_id: event.target.id || 'no-id'
-                });
+                if (event.target?.matches('button, a, [role="button"]')) {
+                    this.trackingData.engagement.buttonClicks++;
+                    const buttonText = event.target.textContent?.trim() || event.target.alt || 'unknown';
+                    const buttonClass = event.target.className || 'no-class';
+                    
+                    this.trackEvent('button_click', 'Interaction', buttonText, {
+                        button_class: buttonClass,
+                        button_id: event.target.id || 'no-id'
+                    });
+                }
+            } catch (error) {
+                console.warn('Button click tracking error:', error);
             }
         });
     }
