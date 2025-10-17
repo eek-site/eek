@@ -223,7 +223,8 @@ function setupEventListeners() {
     }
   });
   
-  // Form validation
+  // Form validation with debounce to prevent loops
+  let validationTimeout;
   document.addEventListener('input', function(e) {
     try {
       if (e.target?.matches('.form-input, .form-select, .form-textarea')) {
@@ -231,8 +232,12 @@ function setupEventListeners() {
         
         // Only validate and update for Step 2
         if (currentStep === 2) {
-          validateForm();
-          updateContinueButton();
+          // Clear previous timeout to debounce validation
+          clearTimeout(validationTimeout);
+          validationTimeout = setTimeout(() => {
+            validateForm();
+            updateContinueButton();
+          }, 100);
         }
       }
     } catch (error) {
@@ -516,14 +521,14 @@ function validateForm() {
         });
         
         if (emptyFields.length > 0) {
-          // Create warning message with anchor links
+          // Create warning message with simple text (no HTML to avoid event loops)
           let warningText = '⚠️ Please fill in all required fields: ';
           emptyFields.forEach((field, index) => {
             if (index > 0) warningText += ', ';
-            warningText += `<a href="#${field.name}" onclick="document.getElementById('${field.name}').focus(); return false;" style="color: #856404; text-decoration: underline;">${field.label}</a>`;
+            warningText += field.label;
           });
           
-          warningElement.innerHTML = warningText;
+          warningElement.textContent = warningText;
           warningElement.style.display = 'block';
           console.log(`🔍 FORM INVALID - Showing warning message with ${emptyFields.length} empty fields`);
         }
@@ -622,14 +627,14 @@ function goToNextStep() {
           });
           
           if (emptyFields.length > 0) {
-            // Create warning message with anchor links
+            // Create warning message with simple text (no HTML to avoid event loops)
             let warningText = '⚠️ Please fill in all required fields: ';
             emptyFields.forEach((field, index) => {
               if (index > 0) warningText += ', ';
-              warningText += `<a href="#${field.name}" onclick="document.getElementById('${field.name}').focus(); return false;" style="color: #856404; text-decoration: underline;">${field.label}</a>`;
+              warningText += field.label;
             });
             
-            warningElement.innerHTML = warningText;
+            warningElement.textContent = warningText;
             warningElement.style.display = 'block';
             warningElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
             
