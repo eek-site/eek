@@ -7,6 +7,11 @@ let selectedService = null;
 let selectedServicePrice = 0;
 let bookingData = {};
 
+// Tracking variables
+let sessionId = null;
+let gclid = null;
+let utmData = {};
+
 // Service options
 const services = {
   basic: {
@@ -45,10 +50,86 @@ const vehicleTypes = [
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
+  initializeTracking();
   initializeApp();
   setupEventListeners();
   updateContinueButton();
 });
+
+// Initialize tracking
+function initializeTracking() {
+  sessionId = getOrCreateSessionId();
+  gclid = getGCLID();
+  utmData = getUTMData();
+  
+  console.log('🔍 Tracking initialized - Session:', sessionId, 'GCLID:', gclid);
+  console.log('🔍 UTM Data:', utmData);
+  
+  // Track page visit
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'page_view', {
+      page_title: 'Pre Purchase Inspection',
+      page_location: window.location.href
+    });
+  }
+}
+
+// Session management
+function getOrCreateSessionId() {
+  let sid = localStorage.getItem("eek_session_id");
+  if (!sid) {
+    sid = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem("eek_session_id", sid);
+  }
+  return sid;
+}
+
+// GCLID extraction and storage
+function getGCLID() {
+  const urlParams = new URLSearchParams(window.location.search);
+  let gclidValue = extractGCLID(urlParams);
+  
+  if (gclidValue) {
+    localStorage.setItem("eek_gclid", gclidValue);
+    localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
+    return gclidValue;
+  }
+  
+  const storedGclid = localStorage.getItem("eek_gclid");
+  const storedTimestamp = localStorage.getItem("eek_gclid_timestamp");
+  if (storedGclid && storedTimestamp) {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    if (new Date(storedTimestamp) > thirtyDaysAgo) return storedGclid;
+    localStorage.removeItem("eek_gclid");
+    localStorage.removeItem("eek_gclid_timestamp");
+  }
+  return null;
+}
+
+function extractGCLID(urlParams) {
+  return urlParams.get('gclid') || urlParams.get('gbraid') || urlParams.get('wbraid') || null;
+}
+
+// UTM parameter extraction
+function getUTMData() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const utm = {};
+  const utmParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'];
+  
+  utmParams.forEach(param => {
+    const value = urlParams.get(param);
+    if (value) {
+      utm[param] = value;
+      localStorage.setItem(`eek_${param}`, value);
+    } else {
+      const stored = localStorage.getItem(`eek_${param}`);
+      if (stored) utm[param] = stored;
+    }
+  });
+  
+  return utm;
+}
 
 // Initialize application
 function initializeApp() {
@@ -105,6 +186,16 @@ function selectService(serviceId) {
   
   updateSelectedServiceDisplay();
   updateContinueButton();
+  
+  // Track service selection
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'service_selection', {
+      service_name: selectedService.name,
+      service_id: serviceId,
+      service_price: selectedServicePrice,
+      event_category: 'pre_purchase_inspection'
+    });
+  }
   
   // Close modal and advance to next step
   closeServiceModal();
@@ -416,12 +507,24 @@ async function completeBooking() {
     termsAccepted: bookingData.termsAccepted || false,
     marketingConsent: bookingData.marketingConsent || false,
     
+    // Tracking data
+    sessionId: sessionId,
+    gclid: gclid,
+    utm: {
+      source: utmData.utm_source || null,
+      medium: utmData.utm_medium || null,
+      campaign: utmData.utm_campaign || null,
+      term: utmData.utm_term || null,
+      content: utmData.utm_content || null,
+      gclid: gclid
+    },
+    
     // Timestamps
     timestamp: new Date().toISOString(),
     scheduledDate: new Date().toISOString(),
     scheduledDateISO: new Date().toISOString(),
     
-    // Location data
+    // Geolocation data
     location: {
       country: geo.country || 'Unknown',
       countryCode: geo.countryCode || geo.country || 'Unknown',
@@ -449,6 +552,17 @@ async function completeBooking() {
     const response = await submitBooking(finalBookingData);
     
     if (response.success) {
+      // Track successful booking completion
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'booking_completed', {
+          service_name: selectedService.name,
+          service_price: selectedServicePrice,
+          event_category: 'pre_purchase_inspection',
+          value: selectedServicePrice,
+          currency: 'NZD'
+        });
+      }
+      
       showNotification('Booking submitted successfully!', 'success');
       
       // Redirect to payment or confirmation
