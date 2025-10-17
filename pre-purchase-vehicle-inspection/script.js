@@ -642,8 +642,8 @@ function goToNextStep() {
     
     showStep(currentStep + 1);
   } else {
-    // Complete booking
-    completeBooking();
+    // Generate payment link for step 7
+    generatePaymentLink();
   }
 }
 
