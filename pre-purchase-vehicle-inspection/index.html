@@ -11,11 +11,13 @@
   <meta http-equiv="Content-Security-Policy"
     content="
       default-src 'self';
-      script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net;
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net https://eek.nz;
       style-src 'self' 'unsafe-inline';
       img-src 'self' data: https:;
-      connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com;
+      connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com https://eek.nz;
       frame-src 'self' https://www.googletagmanager.com https://www.google.com;
+      object-src 'none';
+      base-uri 'self';
     ">
 
   <!-- Reddit Pixel -->
@@ -1033,9 +1035,9 @@
   <!-- URGENT: Enhanced Value Proposition with Emotional Triggers -->
   <div style="background:linear-gradient(135deg,#dc3545,#c82333);border-radius:20px;padding:35px;margin:30px auto;max-width:900px;box-shadow:0 12px 40px rgba(220,53,69,.4);border:4px solid #fff;position:relative;overflow:hidden;">
     <!-- Urgency Badge -->
-    <div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);background:#ffc107;color:#000;padding:12px 35px;border-radius:25px;font-size:.9em;font-weight:800;letter-spacing:.5px;box-shadow:0 8px 25px rgba(255,193,7,.6), 0 4px 15px rgba(0,0,0,.2);border:3px solid #fff;z-index:10;animation:float 3s ease-in-out infinite;">
+    <div style="position:absolute;top:-15px;left:50%;transform:translateX(-50%);background:#ffc107;color:#000;padding:12px 35px;border-radius:25px;font-size:.9em;font-weight:800;letter-spacing:.5px;box-shadow:0 8px 25px rgba(255,193,7,.6), 0 4px 15px rgba(0,0,0,.2);border:3px solid #fff;z-index:10;width:fit-content;max-width:90%;">
       🔥 URGENT: Limited Same-Day Slots Available
-      </div>
+    </div>
     
     <!-- Background Pattern -->
     <div style="position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(255,255,255,0.1) 0%,transparent 70%);animation:float 6s ease-in-out infinite;"></div>
