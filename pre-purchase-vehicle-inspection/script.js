@@ -515,8 +515,34 @@ function validateForm() {
         warningElement.style.display = 'none';
         console.log(`🔍 FORM VALID - Hiding warning message`);
       } else {
-        warningElement.style.display = 'block';
-        console.log(`🔍 FORM INVALID - Showing warning message`);
+        // Find empty required fields and create anchor links
+        const emptyFields = [];
+        const requiredFields = document.querySelectorAll('#step2 [required]');
+        
+        requiredFields.forEach(field => {
+          if (!field.value.trim()) {
+            const fieldName = field.name || field.id;
+            const fieldLabel = field.previousElementSibling?.textContent?.replace('*', '').trim() || fieldName;
+            emptyFields.push({
+              name: fieldName,
+              label: fieldLabel,
+              element: field
+            });
+          }
+        });
+        
+        if (emptyFields.length > 0) {
+          // Create warning message with anchor links
+          let warningText = '⚠️ Please fill in all required fields: ';
+          emptyFields.forEach((field, index) => {
+            if (index > 0) warningText += ', ';
+            warningText += `<a href="#${field.name}" onclick="document.getElementById('${field.name}').focus(); return false;" style="color: #856404; text-decoration: underline;">${field.label}</a>`;
+          });
+          
+          warningElement.innerHTML = warningText;
+          warningElement.style.display = 'block';
+          console.log(`🔍 FORM INVALID - Showing warning message with ${emptyFields.length} empty fields`);
+        }
       }
     }
   }
@@ -594,12 +620,45 @@ function goToNextStep() {
     
     // Validate current step - show warning instead of preventing navigation
     if (!validateForm()) {
-      // Show warning message for Step 2
+      // Show warning message for Step 2 with anchor links
       if (currentStep === 2) {
         const warningElement = document.getElementById('form-warning');
         if (warningElement) {
-          warningElement.style.display = 'block';
-          warningElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Find empty required fields and create anchor links
+          const emptyFields = [];
+          const requiredFields = document.querySelectorAll('#step2 [required]');
+          
+          requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+              const fieldName = field.name || field.id;
+              const fieldLabel = field.previousElementSibling?.textContent?.replace('*', '').trim() || fieldName;
+              emptyFields.push({
+                name: fieldName,
+                label: fieldLabel,
+                element: field
+              });
+            }
+          });
+          
+          if (emptyFields.length > 0) {
+            // Create warning message with anchor links
+            let warningText = '⚠️ Please fill in all required fields: ';
+            emptyFields.forEach((field, index) => {
+              if (index > 0) warningText += ', ';
+              warningText += `<a href="#${field.name}" onclick="document.getElementById('${field.name}').focus(); return false;" style="color: #856404; text-decoration: underline;">${field.label}</a>`;
+            });
+            
+            warningElement.innerHTML = warningText;
+            warningElement.style.display = 'block';
+            warningElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Focus on the first empty field
+            if (emptyFields[0]) {
+              setTimeout(() => {
+                emptyFields[0].element.focus();
+              }, 500);
+            }
+          }
         }
       }
       showNotification('Please fill in all required fields', 'error');
