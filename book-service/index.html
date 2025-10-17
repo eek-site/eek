@@ -660,6 +660,7 @@ const serviceConfigs = {
 // Globals
 const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
 const PRICING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
+const PAYMENT_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c8ac1b8ac2574f66ad4efcdc23165379/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
 const WINZ_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95fc801df59b4250a48919ace91c0276/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mFpTX4gPrz1u1DbdfF3YqHBnAsW3pnAAj-GWXWvBYYc';
 
 let selectedUrgency = null;
@@ -1431,16 +1432,25 @@ async function generatePaymentLink(){
     }
   };
 
+  console.log('💳 PAYMENT LINK GENERATION - Starting...');
+  console.log('💳 Payment API URL:', PAYMENT_API_URL);
+  console.log('💳 Booking data:', bookingData);
+  
   try{
-    const response = await fetch(POWER_AUTOMATE_URL,{
+    const response = await fetch(PAYMENT_API_URL,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify(bookingData)
     });
+    
+    console.log('💳 Payment API Response:', response.status, response.statusText);
 
     if (response.ok){
       const result = await response.json();
+      console.log('💳 Payment API Result:', result);
+      
       if (result.url){
+        console.log('✅ Payment link generated successfully:', result.url);
         btn.classList.remove('processing');
         btn.style.display='none';
         const successDiv = document.createElement('div');
@@ -1455,10 +1465,13 @@ async function generatePaymentLink(){
         btn.parentElement.appendChild(successDiv);
         setTimeout(()=>{ window.location.href = result.url; },3000);
       } else {
+        console.error('❌ No payment URL in response:', result);
         throw new Error('No payment URL received');
       }
     } else {
-      throw new Error('Server returned '+response.status);
+      const errorText = await response.text();
+      console.error('❌ Payment API Error Response:', response.status, errorText);
+      throw new Error('Server returned '+response.status + ': ' + errorText);
     }
   }catch(err){
     console.error('Error generating payment link:', err);
