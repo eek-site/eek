@@ -268,11 +268,11 @@ function selectService(serviceId) {
     });
   }
   
-  // Close modal and stay on step 1 to show continue button
+  // Close modal and advance to step 2
   closeServiceModal();
   setTimeout(() => {
-    // Stay on step 1 but update the UI to show continue button
-    showStep(1);
+    // Advance to step 2 after service selection
+    showStep(2);
     // Send step tracking
     sendStepTracking(BOOKING_STATUS.SERVICE_SELECTED);
   }, 300); // Small delay to allow modal close animation
@@ -402,15 +402,15 @@ function showStep(stepNum) {
   const floatingPrevBtn = document.getElementById('floatingPrevBtn');
   
   if (stepNum === 1) {
-    // Step 1: Show service selection button, continue button only if service selected
+    // Step 1: Show only service selection button, hide continue button completely
     console.log('🔘 STEP 1 - Setting button visibility');
     if (continueBtn) continueBtn.style.display = 'none';
     if (prevBtn) prevBtn.style.display = 'none';
     if (floatingServiceBtn) floatingServiceBtn.style.display = 'flex';
     if (floatingContinueBtn) {
-      // Only show continue button if a service is selected
-      floatingContinueBtn.style.display = selectedService ? 'flex' : 'none';
-      console.log(`🔘 Floating continue button set to display: ${selectedService ? 'flex' : 'none'}`);
+      // Hide continue button completely on step 1
+      floatingContinueBtn.style.display = 'none';
+      console.log('🔘 Floating continue button hidden on step 1');
     }
     if (floatingPrevBtn) floatingPrevBtn.style.display = 'none';
   } else {
@@ -511,9 +511,9 @@ function updateContinueButton() {
     floatingButton.disabled = !canContinue;
     floatingButton.textContent = buttonText;
     
-    // For step 1, only show if service is selected
+    // For step 1, always hide the continue button
     if (currentStep === 1) {
-      floatingButton.style.display = selectedService ? 'flex' : 'none';
+      floatingButton.style.display = 'none';
     }
     
     console.log(`🔘 Floating button updated - Disabled: ${floatingButton.disabled}, Text: ${floatingButton.textContent}, Display: ${floatingButton.style.display}`);
