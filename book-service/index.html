@@ -1321,57 +1321,49 @@ async function generatePaymentLink(){
   const geo = window.CF_GEO || {};
   
   const bookingData = {
-    // Payment fields
+    // Root level fields
     amount: total * 100,
     currency: 'NZD',
     description: `${window.currentConfig.title} - ${vehicleDescription} - ${location}`,
     redirectUrl: buildRedirectUrl(),
-    
-    // Customer data
-    customerName: customerName,
-    customerPhone: phone,
-    customerEmail: email,
-    location: location,
-    
-    // Vehicle data
     rego: rego || 'Not provided',
-    vehicleRego: rego,
-    vehicleYear: year,
-    vehicleMake: make,
-    vehicleModel: model,
-    vehicleDescription: vehicleDescription,
     
-    // Service data
-    service: window.currentService,
-    serviceCode: window.currentConfig.serviceCode,
-    serviceTitle: window.currentConfig.title,
-    details: document.getElementById('detailsInput').value || 'No additional details provided',
-    price: `${total}`,
-    basePrice: window.currentConfig.basePrice || total,
-    
-    // Booking data
-    bookingDateTime: nowNZ().toLocaleString('en-NZ',{ timeZone:NZ_TZ }),
-    scheduledDate: fmtDateNZ(nowNZ()),
-    scheduledDateISO: nowNZ().toISOString(),
-    scheduledTime: selectedUrgencyDetails.time || '',
-    timeWindow: selectedUrgencyDetails.time || '',
-    urgencyLevel: selectedUrgency || 'emergency',
-    urgencyTitle: selectedUrgencyDetails.title || '',
-    
-    // Tracking data
-    sessionId: sessionId,
-    bookingSource: 'website',
-    formVersion: '2.0',
-    
-    // Additional fields
-    batteryVoltage: window.currentService === 'jumpstart' ? (selectedVoltageId === '12v' ? '12V' : '24V') : '',
-    vehicleType: '',
-    emergencyType: selectedEmergencyType || '',
-    quoteReference: '',
-    isWinzService: window.currentConfig.isWinz ? 'true' : 'false',
-    sellerName: '',
-    sellerPhone: '',
-    vehicleTypeAddon: ''
+    // Customer data object
+    customerData: {
+      name: customerName,
+      phone: phone,
+      email: email,
+      location: location,
+      vehicleRego: rego,
+      vehicleYear: year,
+      vehicleMake: make,
+      vehicleModel: model,
+      vehicleDescription: vehicleDescription,
+      sellerName: '',
+      sellerPhone: '',
+      service: window.currentService,
+      serviceCode: window.currentConfig.serviceCode,
+      serviceTitle: window.currentConfig.title,
+      details: document.getElementById('detailsInput').value || 'No additional details provided',
+      price: `${total}`,
+      bookingDateTime: nowNZ().toLocaleString('en-NZ',{ timeZone:NZ_TZ }),
+      scheduledDate: fmtDateNZ(nowNZ()),
+      scheduledTime: selectedUrgencyDetails.time || '',
+      urgencyLevel: selectedUrgency || 'emergency',
+      batteryVoltage: window.currentService === 'jumpstart' ? (selectedVoltageId === '12v' ? '12V' : '24V') : '',
+      vehicleType: '',
+      emergencyType: selectedEmergencyType || '',
+      quoteReference: '',
+      isWinzService: window.currentConfig.isWinz ? 'true' : 'false',
+      sessionId: sessionId,
+      bookingSource: 'website',
+      formVersion: '2.0',
+      vehicleTypeAddon: '',
+      basePrice: window.currentConfig.basePrice || total,
+      scheduledDateISO: nowNZ().toISOString(),
+      timeWindow: selectedUrgencyDetails.time || '',
+      urgencyTitle: selectedUrgencyDetails.title || ''
+    }
   };
 
   console.log('💳 PAYMENT LINK GENERATION - Starting...');
