@@ -69,7 +69,17 @@ function initializeTracking() {
   if (typeof gtag !== 'undefined') {
     gtag('event', 'page_view', {
       page_title: 'Pre Purchase Inspection',
-      page_location: window.location.href
+      page_location: window.location.href,
+      page_type: 'inspection',
+      source_type: window.enhancedTracking?.getTrackingData()?.pageSource?.type || 'unknown'
+    });
+  }
+  
+  // Track inspection page visit with enhanced data
+  if (window.enhancedTracking) {
+    window.enhancedTracking.trackEvent('inspection_page_visit', 'Service', 'Pre Purchase Inspection', {
+      service_type: 'inspection',
+      page_type: 'inspection'
     });
   }
 }
@@ -193,7 +203,18 @@ function selectService(serviceId) {
       service_name: selectedService.name,
       service_id: serviceId,
       service_price: selectedServicePrice,
-      event_category: 'pre_purchase_inspection'
+      event_category: 'pre_purchase_inspection',
+      page_type: 'inspection',
+      source_type: window.enhancedTracking?.getTrackingData()?.pageSource?.type || 'unknown'
+    });
+  }
+  
+  // Track with enhanced tracking system
+  if (window.enhancedTracking) {
+    window.enhancedTracking.trackEvent('inspection_service_selection', 'Service Selection', selectedService.name, {
+      service_id: serviceId,
+      service_price: selectedServicePrice,
+      service_type: 'inspection'
     });
   }
   
@@ -559,7 +580,27 @@ async function completeBooking() {
           service_price: selectedServicePrice,
           event_category: 'pre_purchase_inspection',
           value: selectedServicePrice,
+          currency: 'NZD',
+          page_type: 'inspection',
+          source_type: window.enhancedTracking?.getTrackingData()?.pageSource?.type || 'unknown'
+        });
+      }
+      
+      // Track with enhanced tracking system
+      if (window.enhancedTracking) {
+        window.enhancedTracking.trackEvent('inspection_booking_completed', 'Conversion', selectedService.name, {
+          service_id: selectedService.id,
+          service_price: selectedServicePrice,
+          service_type: 'inspection',
+          conversion_value: selectedServicePrice,
           currency: 'NZD'
+        });
+        
+        // Send comprehensive booking data to API
+        window.enhancedTracking.sendTrackingData('inspection_booking_completed', {
+          service: selectedService,
+          price: selectedServicePrice,
+          bookingData: finalBookingData
         });
       }
       

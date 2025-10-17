@@ -343,6 +343,9 @@ GitHub Pages will automatically serve this for any 404 errors.
   <!-- Centralized Tracking Management -->
   <script src="/tracking-manager.js"></script>
   
+  <!-- Enhanced Tracking System -->
+  <script src="/enhanced-tracking.js"></script>
+  
   <!-- Centralized Footer Management -->
   <script src="/footer.js"></script>
   
@@ -447,6 +450,15 @@ GitHub Pages will automatically serve this for any 404 errors.
             // Fire Reddit Pixel purchase event for /job path
             if (originalPath === '/job' || originalPath.toLowerCase() === '/job') {
                 fireRedditPurchaseEvent();
+            }
+            
+            // Track redirect with enhanced tracking
+            if (window.enhancedTracking) {
+                window.enhancedTracking.trackEvent('404_redirect', 'Navigation', originalPath, {
+                    redirect_url: url,
+                    original_path: originalPath,
+                    redirect_type: '404_redirect'
+                });
             }
             
             // Determine what type of service they're accessing
@@ -624,6 +636,14 @@ GitHub Pages will automatically serve this for any 404 errors.
             document.getElementById('loadingContainer').style.display = 'none';
             document.getElementById('errorContainer').classList.add('show');
             
+            // Track 404 error page view
+            if (window.enhancedTracking) {
+                window.enhancedTracking.trackEvent('404_error_page', 'Error', path, {
+                    error_path: path,
+                    error_type: '404_not_found'
+                });
+            }
+            
             // Generate public-facing suggestions - only show main pages, not internal forms or private pages
             const suggestionsList = document.getElementById('suggestionsList');
             const suggestions = [
@@ -636,12 +656,22 @@ GitHub Pages will automatically serve this for any 404 errors.
             
             suggestionsList.innerHTML = suggestions.map(s => `
                 <li>
-                    <a href="${s.url}">
+                    <a href="${s.url}" onclick="track404Suggestion('${s.title}', '${s.url}')">
                         <strong>${s.title}</strong><br>
                         <small>${s.desc}</small>
                     </a>
                 </li>
             `).join('');
+        }
+        
+        function track404Suggestion(title, url) {
+            if (window.enhancedTracking) {
+                window.enhancedTracking.trackEvent('404_suggestion_click', 'Navigation', title, {
+                    suggestion_title: title,
+                    suggestion_url: url,
+                    source: '404_error_page'
+                });
+            }
         }
         
         // Initialize
