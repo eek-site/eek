@@ -734,7 +734,7 @@ h1 {
   position: fixed;
   bottom: var(--space-lg);
   right: var(--space-lg);
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  background: linear-gradient(135deg, #28a745, #20c997);
   color: var(--white);
   font-size: clamp(1rem, 2.5vw, 1.1rem);
   padding: var(--space-lg) var(--space-xl);
