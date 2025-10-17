@@ -223,22 +223,13 @@ function setupEventListeners() {
     }
   });
   
-  // Form validation with debounce to prevent loops
-  let validationTimeout;
+  // Simple form validation - no complex logic to avoid loops
   document.addEventListener('input', function(e) {
     try {
-      if (e.target?.matches('.form-input, .form-select, .form-textarea')) {
+      if (e.target?.matches('.form-input, .form-select, .form-textarea') && currentStep === 2) {
         console.log(`🔍 INPUT CHANGE - Field: ${e.target.name || e.target.id}, Value: "${e.target.value}"`);
-        
-        // Only validate and update for Step 2
-        if (currentStep === 2) {
-          // Clear previous timeout to debounce validation
-          clearTimeout(validationTimeout);
-          validationTimeout = setTimeout(() => {
-            validateForm();
-            updateContinueButton();
-          }, 100);
-        }
+        // Just update the button - no complex validation
+        updateContinueButton();
       }
     } catch (error) {
       console.warn('Form validation error:', error);
@@ -496,48 +487,17 @@ function validateForm() {
   
   console.log(`🔍 VALIDATE FORM RESULT - Step: ${currentStep}, IsValid: ${isValid}`);
   
-  // Update warning message for Step 2
+  // Simple warning message update - no complex logic
   if (currentStep === 2) {
     const warningElement = document.getElementById('form-warning');
     if (warningElement) {
       if (isValid) {
         warningElement.style.display = 'none';
-        console.log(`🔍 FORM VALID - Hiding warning message`);
       } else {
-        // Find empty required fields and create anchor links
-        const emptyFields = [];
-        const requiredFields = document.querySelectorAll('#step2 [required]');
-        
-        requiredFields.forEach(field => {
-          if (!field.value.trim()) {
-            const fieldName = field.name || field.id;
-            const fieldLabel = field.previousElementSibling?.textContent?.replace('*', '').trim() || fieldName;
-            emptyFields.push({
-              name: fieldName,
-              label: fieldLabel,
-              element: field
-            });
-          }
-        });
-        
-        if (emptyFields.length > 0) {
-          // Create warning message with simple text (no HTML to avoid event loops)
-          let warningText = '⚠️ Please fill in all required fields: ';
-          emptyFields.forEach((field, index) => {
-            if (index > 0) warningText += ', ';
-            warningText += field.label;
-          });
-          
-          warningElement.textContent = warningText;
-          warningElement.style.display = 'block';
-          console.log(`🔍 FORM INVALID - Showing warning message with ${emptyFields.length} empty fields`);
-        }
+        warningElement.style.display = 'block';
       }
     }
   }
-  
-  // Note: Don't call updateContinueButton() here to avoid loops
-  // The input event listener will handle button updates
   
   return isValid;
 }
@@ -604,47 +564,14 @@ function goToNextStep() {
     // Collect form data
     collectFormData();
     
-    // Validate current step - show warning instead of preventing navigation
+    // Validate current step - simple validation
     if (!validateForm()) {
-      // Show warning message for Step 2 with anchor links
+      // Show simple warning message
       if (currentStep === 2) {
         const warningElement = document.getElementById('form-warning');
         if (warningElement) {
-          // Find empty required fields and create anchor links
-          const emptyFields = [];
-          const requiredFields = document.querySelectorAll('#step2 [required]');
-          
-          requiredFields.forEach(field => {
-            if (!field.value.trim()) {
-              const fieldName = field.name || field.id;
-              const fieldLabel = field.previousElementSibling?.textContent?.replace('*', '').trim() || fieldName;
-              emptyFields.push({
-                name: fieldName,
-                label: fieldLabel,
-                element: field
-              });
-            }
-          });
-          
-          if (emptyFields.length > 0) {
-            // Create warning message with simple text (no HTML to avoid event loops)
-            let warningText = '⚠️ Please fill in all required fields: ';
-            emptyFields.forEach((field, index) => {
-              if (index > 0) warningText += ', ';
-              warningText += field.label;
-            });
-            
-            warningElement.textContent = warningText;
-            warningElement.style.display = 'block';
-            warningElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            
-            // Focus on the first empty field
-            if (emptyFields[0]) {
-              setTimeout(() => {
-                emptyFields[0].element.focus();
-              }, 500);
-            }
-          }
+          warningElement.style.display = 'block';
+          warningElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
       }
       showNotification('Please fill in all required fields', 'error');
