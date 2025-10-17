@@ -731,7 +731,8 @@
         console.log('✅ Session ID preserved:', sessionId);
       }
       
-      // 🆕 ENHANCED GEOLOCATION DATA - ALL AVAILABLE FIELDS
+      // Get comprehensive tracking data from enhanced tracking system
+      const enhancedTrackingData = window.enhancedTracking ? window.enhancedTracking.getTrackingData() : {};
       const geo = window.CF_GEO || {
         country: 'Unknown',
         city: 'Unknown', 
@@ -745,6 +746,62 @@
         countryCode: 'Unknown'
       };
       
+      // Add all comprehensive data points expected by Power Automate template
+      data.bookingStatus = 'PAID';
+      data.eventType = 'payment_confirmed';
+      
+      // Page source data
+      data.pageSource = {
+        type: enhancedTrackingData.pageSource?.type || 'direct',
+        detail: enhancedTrackingData.pageSource?.detail || 'Direct visit',
+        referrer: enhancedTrackingData.pageSource?.referrer || '',
+        utm: {
+          source: enhancedTrackingData.pageSource?.utm?.source || '',
+          medium: enhancedTrackingData.pageSource?.utm?.medium || '',
+          campaign: enhancedTrackingData.pageSource?.utm?.campaign || '',
+          term: enhancedTrackingData.pageSource?.utm?.term || '',
+          content: enhancedTrackingData.pageSource?.utm?.content || ''
+        },
+        clickIds: {
+          gclid: enhancedTrackingData.pageSource?.clickIds?.gclid || '',
+          fbclid: enhancedTrackingData.pageSource?.clickIds?.fbclid || '',
+          msclkid: enhancedTrackingData.pageSource?.clickIds?.msclkid || ''
+        }
+      };
+      
+      // Device and engagement data
+      data.device = {
+        userAgent: enhancedTrackingData.userAgent || navigator.userAgent || '',
+        screenResolution: enhancedTrackingData.screenResolution || `${screen.width}x${screen.height}`,
+        viewportSize: enhancedTrackingData.viewportSize || `${window.innerWidth}x${window.innerHeight}`,
+        language: enhancedTrackingData.language || navigator.language || '',
+        timezone: enhancedTrackingData.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+      };
+      
+      data.engagement = {
+        timeOnPage: enhancedTrackingData.engagement?.timeOnPage || 0,
+        scrollDepth: enhancedTrackingData.engagement?.scrollDepth || 0,
+        clicks: enhancedTrackingData.engagement?.clicks || 0,
+        formInteractions: enhancedTrackingData.engagement?.formInteractions || 0,
+        buttonClicks: enhancedTrackingData.engagement?.buttonClicks || 0
+      };
+      
+      // User journey data
+      data.userJourney = {
+        pageHistory: enhancedTrackingData.userJourney?.pageHistory || [],
+        totalPages: enhancedTrackingData.userJourney?.totalPages || 1,
+        sessionDuration: enhancedTrackingData.userJourney?.sessionDuration || 0,
+        entryPage: enhancedTrackingData.userJourney?.entryPage || window.location.href,
+        previousPage: enhancedTrackingData.userJourney?.previousPage || ''
+      };
+      
+      // Page data
+      data.pageUrl = enhancedTrackingData.pageUrl || window.location.href;
+      data.pagePath = enhancedTrackingData.pagePath || window.location.pathname;
+      data.pageTitle = enhancedTrackingData.pageTitle || document.title;
+      data.pageType = enhancedTrackingData.pageType || 'thanks';
+      
+      // Enhanced geolocation data
       data.location = {
         // Basic location info
         country: geo.country || 'Unknown',

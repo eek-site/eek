@@ -490,6 +490,9 @@ async function completeBooking() {
     countryCode: 'Unknown'
   };
   
+  // Get comprehensive tracking data
+  const trackingData = window.enhancedTracking ? window.enhancedTracking.getTrackingData() : {};
+  
   // Prepare booking data in the format expected by the original API
   const finalBookingData = {
     // Customer information
@@ -511,6 +514,7 @@ async function completeBooking() {
     vehicleYear: bookingData.year || '',
     vehicleType: bookingData.vehicleType || '',
     odometer: bookingData.odometer || '',
+    vehicleRego: bookingData.vehicleRego || '',
     
     // Seller information
     sellerName: bookingData.sellerName || '',
@@ -528,17 +532,72 @@ async function completeBooking() {
     termsAccepted: bookingData.termsAccepted || false,
     marketingConsent: bookingData.marketingConsent || false,
     
+    // Booking status
+    bookingStatus: 'NEW',
+    eventType: 'inspection_booking_completed',
+    
+    // Page source data
+    pageSource: {
+      type: trackingData.pageSource?.type || 'direct',
+      detail: trackingData.pageSource?.detail || 'Direct visit',
+      referrer: trackingData.pageSource?.referrer || '',
+      utm: {
+        source: trackingData.pageSource?.utm?.source || '',
+        medium: trackingData.pageSource?.utm?.medium || '',
+        campaign: trackingData.pageSource?.utm?.campaign || '',
+        term: trackingData.pageSource?.utm?.term || '',
+        content: trackingData.pageSource?.utm?.content || ''
+      },
+      clickIds: {
+        gclid: trackingData.pageSource?.clickIds?.gclid || '',
+        fbclid: trackingData.pageSource?.clickIds?.fbclid || '',
+        msclkid: trackingData.pageSource?.clickIds?.msclkid || ''
+      }
+    },
+    
+    // Device and engagement data
+    device: {
+      userAgent: trackingData.userAgent || navigator.userAgent || '',
+      screenResolution: trackingData.screenResolution || `${screen.width}x${screen.height}`,
+      viewportSize: trackingData.viewportSize || `${window.innerWidth}x${window.innerHeight}`,
+      language: trackingData.language || navigator.language || '',
+      timezone: trackingData.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+    },
+    
+    engagement: {
+      timeOnPage: trackingData.engagement?.timeOnPage || 0,
+      scrollDepth: trackingData.engagement?.scrollDepth || 0,
+      clicks: trackingData.engagement?.clicks || 0,
+      formInteractions: trackingData.engagement?.formInteractions || 0,
+      buttonClicks: trackingData.engagement?.buttonClicks || 0
+    },
+    
+    // User journey data
+    userJourney: {
+      pageHistory: trackingData.userJourney?.pageHistory || [],
+      totalPages: trackingData.userJourney?.totalPages || 1,
+      sessionDuration: trackingData.userJourney?.sessionDuration || 0,
+      entryPage: trackingData.userJourney?.entryPage || window.location.href,
+      previousPage: trackingData.userJourney?.previousPage || ''
+    },
+    
     // Tracking data
     sessionId: sessionId,
     gclid: gclid,
     utm: {
-      source: utmData.utm_source || null,
-      medium: utmData.utm_medium || null,
-      campaign: utmData.utm_campaign || null,
-      term: utmData.utm_term || null,
-      content: utmData.utm_content || null,
-      gclid: gclid
+      source: utmData.utm_source || '',
+      medium: utmData.utm_medium || '',
+      campaign: utmData.utm_campaign || '',
+      term: utmData.utm_term || '',
+      content: utmData.utm_content || '',
+      gclid: gclid || ''
     },
+    
+    // Page data
+    pageUrl: trackingData.pageUrl || window.location.href,
+    pagePath: trackingData.pagePath || window.location.pathname,
+    pageTitle: trackingData.pageTitle || document.title,
+    pageType: trackingData.pageType || 'inspection',
     
     // Timestamps
     timestamp: new Date().toISOString(),
