@@ -1321,26 +1321,21 @@ async function generatePaymentLink(){
   const geo = window.CF_GEO || {};
   
   const bookingData = {
-    // Root level fields
+    rego: rego || 'Not provided',
     amount: total * 100,
     currency: 'NZD',
     description: `${window.currentConfig.title} - ${vehicleDescription} - ${location}`,
     redirectUrl: buildRedirectUrl(),
-    rego: rego || 'Not provided',
-    
-    // Customer data object
     customerData: {
-      name: customerName,
-      phone: phone,
-      email: email,
-      location: location,
-      vehicleRego: rego,
-      vehicleYear: year,
-      vehicleMake: make,
-      vehicleModel: model,
-      vehicleDescription: vehicleDescription,
-      sellerName: '',
-      sellerPhone: '',
+      name: customerName, 
+      phone, 
+      email, 
+      location,
+      vehicleRego: rego, 
+      vehicleYear: year, 
+      vehicleMake: make, 
+      vehicleModel: model, 
+      vehicleDescription,
       service: window.currentService,
       serviceCode: window.currentConfig.serviceCode,
       serviceTitle: window.currentConfig.title,
@@ -1350,28 +1345,18 @@ async function generatePaymentLink(){
       scheduledDate: fmtDateNZ(nowNZ()),
       scheduledTime: selectedUrgencyDetails.time || '',
       urgencyLevel: selectedUrgency || 'emergency',
-      batteryVoltage: window.currentService === 'jumpstart' ? (selectedVoltageId === '12v' ? '12V' : '24V') : '',
-      vehicleType: '',
-      emergencyType: selectedEmergencyType || '',
-      quoteReference: '',
-      isWinzService: window.currentConfig.isWinz ? 'true' : 'false',
+      gclid: gclid,
       sessionId: sessionId,
-      bookingSource: 'website',
-      formVersion: '2.0',
-      vehicleTypeAddon: '',
-      basePrice: window.currentConfig.basePrice || total,
-      scheduledDateISO: nowNZ().toISOString(),
-      timeWindow: selectedUrgencyDetails.time || '',
-      urgencyTitle: selectedUrgencyDetails.title || ''
+      ...(window.currentService === 'jumpstart' ? { batteryVoltage: (selectedVoltageId === '12v' ? '12V' : '24V') } : {})
     }
   };
 
   console.log('💳 PAYMENT LINK GENERATION - Starting...');
-  console.log('💳 Payment API URL:', PAYMENT_API_URL);
+  console.log('💳 Payment API URL:', POWER_AUTOMATE_URL);
   console.log('💳 Booking data:', bookingData);
 
   try{
-    const response = await fetch(PAYMENT_API_URL,{
+    const response = await fetch(POWER_AUTOMATE_URL,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify(bookingData)
