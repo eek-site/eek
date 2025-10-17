@@ -230,7 +230,17 @@ function setupEventListeners() {
         console.log(`🔍 INPUT CHANGE - Field: ${e.target.name || e.target.id}, Value: "${e.target.value}"`);
         const isValid = validateForm();
         console.log(`🔍 INPUT CHANGE - Form valid: ${isValid}`);
+        
+        // Force update continue button immediately
         updateContinueButton();
+        
+        // If form is valid on Step 2, force another update
+        if (isValid && currentStep === 2) {
+          console.log(`🔍 INPUT CHANGE - Form is valid on Step 2, forcing button update`);
+          setTimeout(() => {
+            updateContinueButton();
+          }, 50);
+        }
       }
     } catch (error) {
       console.warn('Form validation error:', error);
