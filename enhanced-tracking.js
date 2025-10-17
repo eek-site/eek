@@ -24,6 +24,8 @@ class EnhancedTrackingManager {
      * Initialize comprehensive tracking
      */
     initializeTracking() {
+        console.log('🚀 Starting Enhanced Tracking initialization...');
+        
         this.trackPageView();
         this.trackPageSource();
         this.trackUserJourney();
@@ -38,6 +40,7 @@ class EnhancedTrackingManager {
         console.log('🚀 Enhanced Tracking initialized');
         console.log('📊 Page Source:', this.pageSource);
         console.log('🆔 Session ID:', this.sessionId);
+        console.log('📊 Tracking Data:', this.trackingData);
     }
 
     /**
@@ -227,6 +230,8 @@ class EnhancedTrackingManager {
      * Track page view with enhanced data
      */
     trackPageView() {
+        console.log('📊 Tracking page view...');
+        
         if (typeof gtag !== 'undefined') {
             gtag('event', 'page_view', {
                 page_title: this.trackingData.pageTitle,
@@ -249,6 +254,7 @@ class EnhancedTrackingManager {
         }
 
         // Send to Power Automate API
+        console.log('📤 Sending page view to API...');
         this.sendTrackingData('page_view');
     }
 

@@ -12,6 +12,18 @@ let sessionId = null;
 let gclid = null;
 let utmData = {};
 
+// === BOOKING STATUS CONSTANTS ===
+const BOOKING_STATUS = {
+  INITIAL: 'inspection_page_loaded',
+  SERVICE_SELECTED: 'service_selected',
+  CUSTOMER_INFO: 'customer_info_complete',
+  VEHICLE_INFO: 'vehicle_info_complete',
+  SELLER_INFO: 'seller_info_complete',
+  TIME_SELECTED: 'time_selected',
+  INSPECTION_TYPE: 'inspection_type_selected',
+  BOOKING_COMPLETE: 'inspection_booking_completed'
+};
+
 // Service options
 const services = {
   basic: {
@@ -54,6 +66,9 @@ document.addEventListener('DOMContentLoaded', function() {
   initializeApp();
   setupEventListeners();
   updateContinueButton();
+  
+  // Send initial page load tracking
+  sendStepTracking(BOOKING_STATUS.INITIAL);
 });
 
 // Initialize tracking
@@ -247,6 +262,8 @@ function selectService(serviceId) {
   closeServiceModal();
   setTimeout(() => {
     showStep(2);
+    // Send step tracking
+    sendStepTracking(BOOKING_STATUS.SERVICE_SELECTED);
   }, 300); // Small delay to allow modal close animation
 }
 
@@ -487,6 +504,30 @@ function goToNextStep() {
       return;
     }
     
+    // Send step tracking based on current step
+    let stepStatus;
+    switch (currentStep) {
+      case 2:
+        stepStatus = BOOKING_STATUS.CUSTOMER_INFO;
+        break;
+      case 3:
+        stepStatus = BOOKING_STATUS.VEHICLE_INFO;
+        break;
+      case 4:
+        stepStatus = BOOKING_STATUS.SELLER_INFO;
+        break;
+      case 5:
+        stepStatus = BOOKING_STATUS.TIME_SELECTED;
+        break;
+      case 6:
+        stepStatus = BOOKING_STATUS.INSPECTION_TYPE;
+        break;
+    }
+    
+    if (stepStatus) {
+      sendStepTracking(stepStatus);
+    }
+    
     showStep(currentStep + 1);
   } else {
     // Complete booking
@@ -684,6 +725,9 @@ async function completeBooking() {
   button.textContent = 'Processing...';
   
   try {
+    // Send final step tracking
+    await sendStepTracking(BOOKING_STATUS.BOOKING_COMPLETE);
+    
     // Debug: Log the data being sent
     console.log('🚀 SENDING BOOKING DATA TO API:', finalBookingData);
     console.log('📊 Data size:', JSON.stringify(finalBookingData).length, 'characters');
@@ -912,6 +956,214 @@ window.testAPI = async function() {
     return { success: false, error: error.message };
   }
 };
+
+// Test function to simulate a booking completion
+window.testBooking = async function() {
+  console.log('🧪 Testing booking completion...');
+  
+  // Set up test data
+  selectedService = services.basic;
+  selectedServicePrice = 299;
+  bookingData = {
+    firstName: 'Test',
+    lastName: 'User',
+    phone: '0211234567',
+    email: 'test@example.com',
+    make: 'Toyota',
+    model: 'Corolla',
+    year: '2020',
+    vehicleType: 'car',
+    sellerName: 'Test Seller',
+    sellerPhone: '0219876543',
+    address: '123 Test Street',
+    suburb: 'Test Suburb',
+    city: 'Auckland',
+    preferredDate: 'today',
+    preferredTime: 'morning',
+    inspectionType: 'standard',
+    termsAccepted: true
+  };
+  
+  console.log('📋 Test booking data:', bookingData);
+  console.log('🔧 Selected service:', selectedService);
+  
+  // Call complete booking
+  await completeBooking();
+};
+
+// === STEP TRACKING SYSTEM ===
+async function sendStepTracking(status) {
+  const data = buildStepData(status);
+  
+  console.log(`📡 INSPECTION STEP UPDATE: ${status.toUpperCase()}`);
+  console.log('📊 Step data:', data);
+  
+  try {
+    const response = await fetch(POWER_AUTOMATE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': navigator.userAgent
+      },
+      body: JSON.stringify(data)
+    });
+    
+    console.log(`✅ Step API Response: ${response.status}`);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ Step API Error Response:', errorText);
+    }
+    
+    return response;
+  } catch (error) {
+    console.error('❌ Step API Error:', error);
+    return null;
+  }
+}
+
+function buildStepData(status) {
+  const trackingData = window.enhancedTracking ? window.enhancedTracking.getTrackingData() : {};
+  const geo = window.CF_GEO || {};
+  
+  return {
+    // Basic info
+    sessionId: sessionId,
+    gclid: gclid,
+    bookingStatus: status,
+    timestamp: new Date().toISOString(),
+    pageType: 'inspection',
+    
+    // Customer information
+    name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
+    phone: bookingData.phone || '',
+    email: bookingData.email || '',
+    location: bookingData.address || '',
+    
+    // Service information
+    service: selectedService ? (selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive') : '',
+    serviceCode: selectedService ? (selectedService.id === 'basic' ? 'INSP_BASIC' : 'INSP_COMP') : '',
+    serviceTitle: selectedService ? selectedService.name : '',
+    serviceTier: selectedService ? selectedService.id : '',
+    basePrice: selectedServicePrice || 0,
+    price: selectedServicePrice || 0,
+    
+    // Vehicle information
+    vehicleMake: bookingData.make || '',
+    vehicleModel: bookingData.model || '',
+    vehicleYear: bookingData.year || '',
+    vehicleType: bookingData.vehicleType || '',
+    odometer: bookingData.odometer || '',
+    vehicleRego: bookingData.vehicleRego || '',
+    make: bookingData.make || '',
+    model: bookingData.model || '',
+    year: bookingData.year || '',
+    rego: bookingData.vehicleRego || '',
+    
+    // Seller information
+    sellerName: bookingData.sellerName || '',
+    sellerPhone: bookingData.sellerPhone || '',
+    suburb: bookingData.suburb || '',
+    city: bookingData.city || '',
+    
+    // Scheduling
+    preferredDate: bookingData.preferredDate || '',
+    preferredTime: bookingData.preferredTime || '',
+    specialInstructions: bookingData.specialInstructions || '',
+    inspectionType: bookingData.inspectionType || '',
+    
+    // Terms and marketing
+    termsAccepted: bookingData.termsAccepted || false,
+    marketingConsent: bookingData.marketingConsent || false,
+    
+    // Step information
+    currentStep: currentStep,
+    totalSteps: 7,
+    stepProgress: Math.round((currentStep / 7) * 100),
+    
+    // Page source data
+    pageSource: {
+      type: trackingData.pageSource?.type || 'direct',
+      detail: trackingData.pageSource?.detail || 'Direct visit',
+      referrer: trackingData.pageSource?.referrer || '',
+      utm: {
+        source: trackingData.pageSource?.utm?.source || '',
+        medium: trackingData.pageSource?.utm?.medium || '',
+        campaign: trackingData.pageSource?.utm?.campaign || '',
+        term: trackingData.pageSource?.utm?.term || '',
+        content: trackingData.pageSource?.utm?.content || ''
+      },
+      clickIds: {
+        gclid: trackingData.pageSource?.clickIds?.gclid || '',
+        fbclid: trackingData.pageSource?.clickIds?.fbclid || '',
+        msclkid: trackingData.pageSource?.clickIds?.msclkid || ''
+      }
+    },
+    
+    // Device and engagement data
+    device: {
+      userAgent: trackingData.userAgent || navigator.userAgent || '',
+      screenResolution: trackingData.screenResolution || `${screen.width}x${screen.height}`,
+      viewportSize: trackingData.viewportSize || `${window.innerWidth}x${window.innerHeight}`,
+      language: trackingData.language || navigator.language || '',
+      timezone: trackingData.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+    },
+    
+    engagement: {
+      timeOnPage: trackingData.engagement?.timeOnPage || 0,
+      scrollDepth: trackingData.engagement?.scrollDepth || 0,
+      clicks: trackingData.engagement?.clicks || 0,
+      formInteractions: trackingData.engagement?.formInteractions || 0,
+      buttonClicks: trackingData.engagement?.buttonClicks || 0
+    },
+    
+    // User journey data
+    userJourney: {
+      pageHistory: trackingData.userJourney?.pageHistory || [],
+      totalPages: trackingData.userJourney?.totalPages || 1,
+      sessionDuration: trackingData.userJourney?.sessionDuration || 0,
+      entryPage: trackingData.userJourney?.entryPage || window.location.href,
+      previousPage: trackingData.userJourney?.previousPage || ''
+    },
+    
+    // UTM data
+    utm: {
+      source: utmData.utm_source || '',
+      medium: utmData.utm_medium || '',
+      campaign: utmData.utm_campaign || '',
+      term: utmData.utm_term || '',
+      content: utmData.utm_content || '',
+      gclid: gclid || ''
+    },
+    
+    // Page data
+    pageUrl: trackingData.pageUrl || window.location.href,
+    pagePath: trackingData.pagePath || window.location.pathname,
+    pageTitle: trackingData.pageTitle || document.title,
+    
+    // Geolocation data
+    location: {
+      country: geo.country || 'Unknown',
+      countryCode: geo.countryCode || geo.country || 'Unknown',
+      region: geo.region || 'Unknown',
+      regionCode: geo.regionCode || 'Unknown',
+      city: geo.city || 'Unknown',
+      postalCode: geo.postalCode || 'Unknown',
+      continent: geo.continent || 'Unknown',
+      coordinates: {
+        latitude: geo.latitude || null,
+        longitude: geo.longitude || null,
+        accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+      },
+      timezone: geo.timezone || 'Unknown',
+      raw: geo
+    },
+    
+    // Source tracking
+    source: 'inspection_form',
+    formVersion: '1.0'
+  };
+}
 
 // Export functions for global access
 window.openServiceSelectionModal = openServiceSelectionModal;
