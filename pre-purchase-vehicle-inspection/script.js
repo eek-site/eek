@@ -5,6 +5,10 @@
 let currentStep = 1;
 let selectedService = null;
 let selectedServicePrice = 0;
+let selectedDay = null;
+let selectedDayString = '';
+let selectedVehicleType = 'standard';
+let vehicleTypeAddon = 0;
 let bookingData = {};
 
 // Tracking variables
@@ -94,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('📅 Script loaded at:', new Date().toISOString());
   
   initializeTracking();
+  initializeDaySelector();
   initializeApp();
   setupEventListeners();
   updateContinueButton();
@@ -1277,9 +1282,123 @@ function buildStepData(status) {
   };
 }
 
+// === DAY SELECTION FUNCTIONS ===
+function initializeDaySelector() {
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+  const container = document.getElementById('daySelector');
+  if (!container) return;
+  
+  let options = [];
+  
+  if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+    // Weekday - show today, Saturday, Sunday
+    const todayDate = new Date(today);
+    options.push({
+      day: todayDate, 
+      title: 'Today', 
+      subtitle: getDayName(todayDate), 
+      description: 'Same day service', 
+      featured: true
+    });
+    
+    const daysUntilSaturday = (6 - dayOfWeek + 7) % 7 || 7;
+    const saturdayDate = new Date(today);
+    saturdayDate.setDate(saturdayDate.getDate() + daysUntilSaturday);
+    options.push({
+      day: saturdayDate, 
+      title: 'Saturday', 
+      subtitle: saturdayDate.toLocaleDateString('en-NZ', {timeZone: 'Pacific/Auckland', month: 'long', day: 'numeric'}), 
+      description: 'Weekend inspection', 
+      featured: false
+    });
+    
+    const daysUntilSunday = (7 - dayOfWeek + 7) % 7 || 7;
+    const sundayDate = new Date(today);
+    sundayDate.setDate(sundayDate.getDate() + daysUntilSunday);
+    options.push({
+      day: sundayDate, 
+      title: 'Sunday', 
+      subtitle: sundayDate.toLocaleDateString('en-NZ', {timeZone: 'Pacific/Auckland', month: 'long', day: 'numeric'}), 
+      description: 'Weekend inspection', 
+      featured: false
+    });
+  } else if (dayOfWeek === 6) {
+    // Saturday - show today (Saturday), tomorrow (Sunday)
+    const todayDate = new Date(today);
+    options.push({
+      day: todayDate, 
+      title: 'Today', 
+      subtitle: 'Saturday', 
+      description: 'Weekend inspection', 
+      featured: true
+    });
+    const sundayDate = new Date(today);
+    sundayDate.setDate(sundayDate.getDate() + 1);
+    options.push({
+      day: sundayDate, 
+      title: 'Tomorrow', 
+      subtitle: 'Sunday', 
+      description: 'Weekend inspection', 
+      featured: false
+    });
+  } else {
+    // Sunday - show today (Sunday), tomorrow (Monday)
+    const todayDate = new Date(today);
+    options.push({
+      day: todayDate, 
+      title: 'Today', 
+      subtitle: 'Sunday', 
+      description: 'Weekend inspection', 
+      featured: true
+    });
+    const mondayDate = new Date(today);
+    mondayDate.setDate(mondayDate.getDate() + 1);
+    options.push({
+      day: mondayDate, 
+      title: 'Tomorrow', 
+      subtitle: 'Monday', 
+      description: 'Next available weekday inspection', 
+      featured: false
+    });
+  }
+  
+  container.innerHTML = options.map((opt, idx) => {
+    const featuredClass = opt.featured ? 'featured' : '';
+    const selectedClass = idx === 0 ? 'selected' : '';
+    return `<div class="day-option ${featuredClass} ${selectedClass}" data-day="${opt.day.toISOString()}" data-string="${formatDate(opt.day)}" onclick="selectDay('${opt.day.toISOString()}', '${formatDate(opt.day)}', this)">
+      <div class="day-title">${opt.title}</div>
+      <div class="day-subtitle">${opt.subtitle}</div>
+      <div class="day-description">${opt.description}</div>
+    </div>`;
+  }).join('');
+  
+  if (options.length > 0) {
+    selectedDay = options[0].day;
+    selectedDayString = formatDate(options[0].day);
+    const confirmBtn = document.getElementById('confirmDayBtn');
+    if (confirmBtn) confirmBtn.disabled = false;
+  }
+}
+
+function selectDay(dayISO, dayString, element) {
+  document.querySelectorAll('.day-option.selected').forEach(el => el.classList.remove('selected'));
+  element.classList.add('selected');
+  selectedDay = new Date(dayISO);
+  selectedDayString = dayString;
+  const confirmBtn = document.getElementById('confirmDayBtn');
+  if (confirmBtn) confirmBtn.disabled = false;
+}
+
+function getDayName(date) {
+  return date.toLocaleDateString('en-NZ', { timeZone: 'Pacific/Auckland', weekday: 'long' });
+}
+
 // Export functions for global access
 window.openServiceSelectionModal = openServiceSelectionModal;
 window.closeServiceModal = closeServiceModal;
 window.goToNextStep = goToNextStep;
 window.goToPreviousStep = goToPreviousStep;
+window.selectDay = selectDay;
+window.initializeDaySelector = initializeDaySelector;
 
