@@ -478,6 +478,46 @@ h1 {
   min-height: 100px;
 }
 
+/* Vehicle Type Options */
+.vehicle-type-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-md);
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  background: var(--white);
+  text-align: center;
+  min-height: 80px;
+  justify-content: center;
+}
+
+.vehicle-type-option:hover {
+  border-color: var(--primary);
+  background: var(--gray-50);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.vehicle-type-option.selected {
+  border-color: var(--primary);
+  background: linear-gradient(135deg, #fff5f0, #ffe8df);
+  box-shadow: var(--shadow-md);
+}
+
+.vehicle-icon {
+  font-size: 2rem;
+  margin-bottom: var(--space-sm);
+}
+
+.vehicle-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
 /* Buttons */
 .btn {
   display: inline-block;
