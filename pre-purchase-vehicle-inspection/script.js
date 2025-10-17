@@ -261,10 +261,11 @@ function selectService(serviceId) {
     });
   }
   
-  // Close modal and advance to next step
+  // Close modal and stay on step 1 to show continue button
   closeServiceModal();
   setTimeout(() => {
-    showStep(2);
+    // Stay on step 1 but update the UI to show continue button
+    showStep(1);
     // Send step tracking
     sendStepTracking(BOOKING_STATUS.SERVICE_SELECTED);
   }, 300); // Small delay to allow modal close animation
@@ -394,11 +395,11 @@ function showStep(stepNum) {
   const floatingPrevBtn = document.getElementById('floatingPrevBtn');
   
   if (stepNum === 1) {
-    // Step 1: Show service selection floating button
+    // Step 1: Show service selection floating button and continue button
     if (continueBtn) continueBtn.style.display = 'none';
     if (prevBtn) prevBtn.style.display = 'none';
     if (floatingServiceBtn) floatingServiceBtn.style.display = 'flex';
-    if (floatingContinueBtn) floatingContinueBtn.style.display = 'none';
+    if (floatingContinueBtn) floatingContinueBtn.style.display = 'flex';
     if (floatingPrevBtn) floatingPrevBtn.style.display = 'none';
   } else {
     // Other steps: Show floating navigation buttons
