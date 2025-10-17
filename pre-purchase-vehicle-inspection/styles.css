@@ -795,7 +795,8 @@ h1 {
   order: 1;
 }
 
-#step2 .previous-btn {
+#step2 .previous-btn,
+#step2 .floating-btn.secondary {
   background: #ff5500 !important;
   color: white !important;
   order: 2;
@@ -831,7 +832,8 @@ h1 {
     order: 1;
   }
   
-  #step2 .previous-btn {
+  #step2 .previous-btn,
+  #step2 .floating-btn.secondary {
     background: #ff5500 !important;
     color: white !important;
     order: 2;
