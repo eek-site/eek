@@ -283,9 +283,13 @@ window.footerManager = new FooterManager();
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Footer.js v2.1: DOM loaded, initializing footer...');
+    console.log('🔧 Footer.js v2.1: About to call autoInitialize...');
     window.footerManager.autoInitialize();
+    console.log('🔧 Footer.js v2.1: autoInitialize call completed');
   });
 } else {
   console.log('🚀 Footer.js v2.1: DOM already ready, initializing footer...');
+  console.log('🔧 Footer.js v2.1: About to call autoInitialize...');
   window.footerManager.autoInitialize();
+  console.log('🔧 Footer.js v2.1: autoInitialize call completed');
 }
