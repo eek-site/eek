@@ -249,10 +249,9 @@ class FooterManager {
     } catch (error) {
       console.error('❌ Footer.js: Error during initialization:', error);
       console.error('❌ Footer.js: Error stack:', error.stack);
-  }
+    }
 
-
-  // Initialize phone manager if available
+    // Initialize phone manager if available
     if (window.phoneManager && typeof window.phoneManager.updatePhoneLinks === 'function') {
       window.phoneManager.updatePhoneLinks();
     }
