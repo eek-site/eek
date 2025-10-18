@@ -83,6 +83,8 @@ class FooterManager {
           padding: 0 20px !important;
           position: relative !important;
           z-index: 1 !important;
+          background: transparent !important;
+          border-radius: 0 !important;
         }
         
         .eek-footer-content {
