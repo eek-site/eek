@@ -2238,7 +2238,14 @@ function selectService(serviceType) {
   const serviceName = serviceNames[serviceType] || 'Service';
   
   // Get the phone number from centralized phone manager
-  const phoneData = window.phoneManager ? window.phoneManager.getModalPhoneNumber() : { tel: 'tel:0800769000', display: '0800 769 000' };
+  let phoneData;
+  if (window.phoneManager && typeof window.phoneManager.getModalPhoneNumber === 'function') {
+    phoneData = window.phoneManager.getModalPhoneNumber();
+  } else if (window.unifiedTracking && typeof window.unifiedTracking.getModalPhoneNumber === 'function') {
+    phoneData = window.unifiedTracking.getModalPhoneNumber();
+  } else {
+    phoneData = { tel: 'tel:0800769000', display: '0800 769 000' };
+  }
   const phoneHref = phoneData.tel;
   const phoneNumber = phoneData.display;
   

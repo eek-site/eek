@@ -506,7 +506,9 @@ class UnifiedTrackingSystem {
      * Track service selection (compatibility method)
      */
     trackServiceSelection(serviceType) {
-        this.trackEvent('service_selection', 'Service Selection', serviceType);
+        this.trackEvent('service_selection', 'Service Selection', serviceType, {
+            service_type: serviceType
+        });
     }
 
     /**
@@ -514,6 +516,13 @@ class UnifiedTrackingSystem {
      */
     updatePhoneLinks() {
         this.updatePhoneNumbers();
+    }
+
+    /**
+     * Get modal phone number (compatibility method)
+     */
+    getModalPhoneNumber() {
+        return this.PHONE_NUMBERS.main;
     }
 
     /**
