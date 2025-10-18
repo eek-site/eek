@@ -43,8 +43,8 @@
   <!-- Centralized Tracking Management -->
   <script src="/tracking-manager.js"></script>
   
-  <!-- Enhanced Tracking System -->
-  <script src="/enhanced-tracking.js"></script>
+  <!-- Unified Tracking System -->
+  <script src="/unified-tracking.js"></script>
   
   <!-- Centralized Footer Management -->
   <script src="/footer.js"></script>
@@ -388,12 +388,87 @@
     // === INITIALIZATION ===
     console.log('🚀 === THANKS PAGE INITIALIZED (Enhanced Data Retention & Protection) === 🚀');
 
-    // Power Automate URLs
-    const PAYMENT_CONFIRMED_WEBHOOK_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
+    // Power Automate URLs for payment confirmation
+    const PAYMENT_CONFIRMED_WEBHOOK_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c8ac1b8ac2574f66ad4efcdc23165379/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kg6bffZKUQzUVR7jzpdTRaeudIa_T99V1hpzb_VlXPk';
     const SHAREPOINT_LOOKUP_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c35b9414a0be42f88182ae7e6e409f1d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2ztt24wScLuAfifD0pjzovseRDKXBAEtCQtScGMgPqQ';
 
     // Global store
     let bookingData = {};
+
+    // === HELPERS ===
+    function coalesce(...vals){ for (const v of vals){ if (v !== undefined && v !== null && v !== '') return v; } return undefined; }
+    function sanitizePhone(v){ return (v||'').replace(/\D/g,''); }
+    function cleanText(v){ return (v||'').toString().trim().replace(/\s+/g,' '); }
+
+    // Canonicalizer
+    function toCanonical(raw){
+      const canonical = {};
+      canonical.sessionId   = coalesce(raw.sessionId, raw.sid, `session_${Date.now()}`);
+      
+      // Set source based on GCLID availability
+      const gclid = coalesce(raw.gclid, localStorage.getItem("eek_gclid"));
+      canonical.source = gclid ? 'gclid' : 'organic';
+      
+      canonical.formVersion = coalesce(raw.formVersion, '2.0');
+
+      canonical.name   = cleanText(coalesce(raw.name, raw.customerName));
+      canonical.phone  = sanitizePhone(coalesce(raw.phone, raw.customerPhone));
+      canonical.email  = cleanText(coalesce(raw.email, raw.customerEmail));
+      canonical.location = cleanText(raw.location);
+
+      canonical.rego   = cleanText(coalesce(raw.rego, raw.vehicleRego));
+      canonical.year   = cleanText(coalesce(raw.year, raw.vehicleYear));
+      canonical.make   = cleanText(coalesce(raw.make, raw.vehicleMake));
+      canonical.model  = cleanText(coalesce(raw.model, raw.vehicleModel));
+      canonical.vehicleType  = cleanText(raw.vehicleType);
+      canonical.vehicleAddon = coalesce(raw.vehicleAddon, '');
+
+      canonical.batteryVoltage = cleanText(coalesce(raw.batteryVoltage, raw.selectedVoltage));
+
+      canonical.sellerName  = cleanText(raw.sellerName);
+      canonical.sellerPhone = sanitizePhone(raw.sellerPhone);
+
+      canonical.service      = cleanText(coalesce(raw.service, raw.serviceType));
+      canonical.serviceCode  = cleanText(raw.serviceCode);
+      canonical.serviceTitle = cleanText(coalesce(raw.serviceTitle, (raw.service === 'inspection' ? 'Pre Purchase Vehicle Inspection' : 'Mobile Mechanic Service')));
+
+      canonical.scheduledDate   = cleanText(coalesce(raw.scheduledDate));
+      canonical.scheduledDateNZ = cleanText(coalesce(raw.scheduledDateNZ));
+      canonical.timeWindow      = cleanText(coalesce(raw.timeWindow, raw.selectedTime));
+      canonical.urgencyLevel    = cleanText(coalesce(raw.urgencyLevel, raw.selectedUrgency));
+
+      canonical.price   = String(coalesce(raw.price, raw.finalPrice, raw.calculatedPrice, ''));
+      canonical.details = cleanText(coalesce(raw.details, raw.description));
+
+      canonical.emergencyType  = cleanText(raw.emergencyType);
+      canonical.quoteReference = cleanText(raw.quoteReference);
+      canonical.isWinz         = coalesce(raw.isWinz, (raw.serviceCode === 'WINZ'), (raw.service || '').toLowerCase() === 'winz') ? 'true' : 'false';
+
+      canonical.bookingTime    = coalesce(raw.bookingTime, new Date().toISOString());
+
+      // Enhanced: Include Google tracking data
+      canonical.gclid = coalesce(raw.gclid, localStorage.getItem("eek_gclid"));
+      canonical.utm_source = coalesce(raw.utm_source, localStorage.getItem("eek_utm_source"));
+      canonical.utm_medium = coalesce(raw.utm_medium, localStorage.getItem("eek_utm_medium"));
+      canonical.utm_campaign = coalesce(raw.utm_campaign, localStorage.getItem("eek_utm_campaign"));
+      canonical.utm_term = coalesce(raw.utm_term, localStorage.getItem("eek_utm_term"));
+      canonical.utm_content = coalesce(raw.utm_content, localStorage.getItem("eek_utm_content"));
+
+      canonical.sharepointId   = cleanText(raw.sharepointId);
+      canonical._raw = raw;
+      return canonical;
+    }
+
+    function isWinzQuote(data){
+      return [
+        (data.service || '').toLowerCase() === 'winz',
+        (data.serviceCode || '').toUpperCase() === 'WINZ',
+        !!data.emergencyType,
+        !!(data.quoteReference && data.quoteReference.toUpperCase().includes('WINZ')),
+        (data.serviceTitle || '').toLowerCase().includes('winz'),
+        String(data.isWinz) === 'true'
+      ].some(Boolean);
+    }
 
     // === ENHANCED IDEMPOTENCY PROTECTION ===
     class SubmissionGuard {
@@ -673,6 +748,77 @@
       }
     }
 
+    // Get Google tracking data from localStorage
+    function getGoogleTrackingData(){
+      const trackingData = {};
+      
+      // GCLID with timestamp validation
+      const gclid = localStorage.getItem("eek_gclid");
+      const gclidTimestamp = localStorage.getItem("eek_gclid_timestamp");
+      
+      if (gclid && gclidTimestamp) {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        
+        if (new Date(gclidTimestamp) > thirtyDaysAgo) {
+          trackingData.gclid = gclid;
+          trackingData.gclidTimestamp = gclidTimestamp;
+          console.log('📊 Valid GCLID found:', gclid);
+        } else {
+          console.log('⚠️ GCLID expired, removing');
+          localStorage.removeItem("eek_gclid");
+          localStorage.removeItem("eek_gclid_timestamp");
+        }
+      }
+      
+      // UTM parameters
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+        const value = localStorage.getItem(`eek_${param}`);
+        if (value) {
+          trackingData[param] = value;
+        }
+      });
+      
+      // Last call attempt data for correlation
+      const lastCallId = localStorage.getItem("eek_last_call_attempt_id");
+      const lastCallTimestamp = localStorage.getItem("eek_last_call_timestamp");
+      const lastCallGclid = localStorage.getItem("eek_last_gclid");
+      
+      if (lastCallId) {
+        trackingData.lastCallAttemptId = lastCallId;
+        trackingData.lastCallTimestamp = lastCallTimestamp;
+        trackingData.lastCallGclid = lastCallGclid;
+        console.log('📞 Call tracking data found');
+      }
+      
+      return Object.keys(trackingData).length > 0 ? trackingData : null;
+    }
+
+    // Get session ID with fallback creation
+    function getSessionId(){
+      let sessionId = localStorage.getItem("eek_session_id");
+      
+      if (!sessionId) {
+        // Try to get from URL parameters
+        const params = new URLSearchParams(window.location.search);
+        sessionId = params.get('session_id');
+        
+        if (sessionId) {
+          localStorage.setItem("eek_session_id", sessionId);
+          console.log('🔄 Session ID restored from URL');
+        } else {
+          // Create new session ID as last resort
+          sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+          localStorage.setItem("eek_session_id", sessionId);
+          console.log('🆕 New session ID created');
+        }
+      } else {
+        console.log('✅ Existing session ID found');
+      }
+      
+      return sessionId;
+    }
+
     function getComprehensiveBookingData(){
       console.log('📊 Building comprehensive booking data from all sources...');
       const data = {};
@@ -731,8 +877,8 @@
         console.log('✅ Session ID preserved:', sessionId);
       }
       
-      // Get comprehensive tracking data from enhanced tracking system
-      const enhancedTrackingData = window.enhancedTracking ? window.enhancedTracking.getTrackingData() : {};
+      // Get comprehensive tracking data from unified tracking system
+      const enhancedTrackingData = window.unifiedTracking ? window.unifiedTracking.getTrackingData() : {};
       const geo = window.CF_GEO || {
         country: 'Unknown',
         city: 'Unknown', 
@@ -1050,6 +1196,7 @@
       const bookingId = guardCheck.bookingId;
       console.log(`✅ Proceeding with submission for ${bookingId}`);
 
+      // Prepare payload for payment confirmed webhook
       const payload = {
         ...canon,
         idempotencyKey: bookingId,
@@ -1275,6 +1422,106 @@
             eventSource:'thanks_page',
             gclid: canon.gclid
           });
+        }
+      }
+    }
+
+    // Get Google tracking data from localStorage
+    function addDetailRow(buf, label, value){
+      if (value !== undefined && value !== null && String(value).trim() !== ''){
+        buf.push(`<div class="detail-row"><span class="detail-label">${label}:</span><span class="detail-value">${value}</span></div>`);
+      }
+    }
+
+    function displayBookingDetails(data){
+      const container = document.getElementById('bookingDetails');
+      const content = document.getElementById('detailsContent');
+      const rows = [];
+
+      // Customer
+      addDetailRow(rows, 'Name', data.name);
+      addDetailRow(rows, 'Phone', data.phone);
+      addDetailRow(rows, 'Email', data.email);
+
+      // Service
+      addDetailRow(rows, 'Service', data.serviceTitle || data.service);
+      addDetailRow(rows, 'Service Code', data.serviceCode);
+      addDetailRow(rows, 'Location', data.location);
+
+      // Vehicle
+      addDetailRow(rows, 'Registration', data.rego);
+      const vehicleLine = [data.year, data.make, data.model].filter(Boolean).join(' ');
+      addDetailRow(rows, 'Vehicle', vehicleLine);
+      addDetailRow(rows, 'Battery Type', data.batteryVoltage);
+      addDetailRow(rows, 'Vehicle Type', data.vehicleType);
+      addDetailRow(rows, 'Vehicle Addon', data.vehicleAddon ? `$${data.vehicleAddon}` : '');
+
+      // WINZ specifics
+      if (isWinzQuote(data)){
+        addDetailRow(rows, 'Emergency Type', data.emergencyType);
+        addDetailRow(rows, 'Quote Reference', data.quoteReference);
+        addDetailRow(rows, 'Quote Amount', data.price ? `$${data.price}` : '');
+      }
+
+      // Seller (inspection)
+      addDetailRow(rows, 'Seller Name', data.sellerName);
+      addDetailRow(rows, 'Seller Phone', data.sellerPhone);
+
+      // Schedule
+      addDetailRow(rows, 'Scheduled Date', data.scheduledDate);
+      addDetailRow(rows, 'Time Window', data.timeWindow);
+      addDetailRow(rows, 'Urgency Level', data.urgencyLevel);
+
+      // Payment (non-WINZ)
+      if (!isWinzQuote(data)){
+        addDetailRow(rows, 'Amount Paid', data.price ? `$${data.price}` : '');
+      }
+
+      // Extra
+      addDetailRow(rows, 'Details', data.details);
+      addDetailRow(rows, 'Booking Time', data.bookingTime);
+
+      // Enhanced: Google tracking data
+      addDetailRow(rows, 'GCLID', data.gclid);
+      addDetailRow(rows, 'UTM Source', data.utm_source);
+      addDetailRow(rows, 'UTM Medium', data.utm_medium);
+      addDetailRow(rows, 'UTM Campaign', data.utm_campaign);
+
+      // Meta (Session ID only, no source/formVersion shown to customer)
+      addDetailRow(rows, 'Session ID', data.sessionId);
+
+      content.innerHTML = rows.join('');
+      container.style.display = rows.length ? 'block' : 'none';
+    }
+
+    function displayContent(canon){
+      const winz = isWinzQuote(canon);
+      const successCard = document.getElementById('successCard');
+      const successIcon = document.getElementById('successIcon');
+      const mainTitle = document.getElementById('mainTitle');
+      const mainSubtitle = document.getElementById('mainSubtitle');
+      const winzSection = document.getElementById('winzSection');
+      const paymentSection = document.getElementById('paymentSection');
+      const bookingDetails = document.getElementById('bookingDetails');
+
+      displayBookingDetails(canon);
+
+      if (winz){
+        successCard.classList.add('winz');
+        successIcon.classList.add('winz');
+        successIcon.textContent = '📋';
+        mainTitle.classList.add('winz');
+        mainTitle.textContent = 'WINZ Quote Generated!';
+        mainSubtitle.textContent = 'Your quote has been sent to your email and phone';
+        bookingDetails.classList.add('winz');
+        winzSection.style.display = 'block';
+        paymentSection.style.display = 'none';
+        document.title = 'WINZ Quote Generated - Eek Mobile Mechanical';
+      }else{
+        winzSection.style.display = 'none';
+        paymentSection.style.display = 'block';
+        if (canon.serviceTitle){
+          document.getElementById('serviceTypeText').textContent = `Your ${canon.serviceTitle} is now being processed`;
         }
       }
     }

@@ -740,14 +740,14 @@ async function completeBooking() {
     price: selectedServicePrice, // Add price field for compatibility
     
     // Vehicle information
-    vehicleMake: bookingData.make || '',
-    vehicleModel: bookingData.model || '',
-    vehicleYear: bookingData.year || '',
+    vehicleMake: bookingData.vehicleMake || '',
+    vehicleModel: bookingData.vehicleModel || '',
+    vehicleYear: bookingData.vehicleYear || '',
     vehicleType: bookingData.vehicleType || '',
     vehicleRego: bookingData.vehicleRego || '',
-    make: bookingData.make || '', // Add make field for compatibility
-    model: bookingData.model || '', // Add model field for compatibility
-    year: bookingData.year || '', // Add year field for compatibility
+    make: bookingData.vehicleMake || '', // Add make field for compatibility
+    model: bookingData.vehicleModel || '', // Add model field for compatibility
+    year: bookingData.vehicleYear || '', // Add year field for compatibility
     rego: bookingData.vehicleRego || '', // Add rego field for compatibility
     
     // Seller information
