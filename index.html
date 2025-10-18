@@ -1532,18 +1532,18 @@ function getDisplayPhoneNumber() {
   const gclid = extractGCLID(urlParams);
   
   if (gclid) {
-    localStorage.setItem('eek_phone_preference', 'tracking');
-    return {
-      tel: 'tel:0800447153',
-      display: '0800 447 153'
-    };
-  }
-  
-  localStorage.setItem('eek_phone_preference', 'default');
+  localStorage.setItem('eek_phone_preference', 'tracking');
   return {
-    tel: 'tel:0800769000', 
-    display: '0800 769 000'
+    tel: 'tel:0800447153',
+    display: 'Call Now'
   };
+}
+
+localStorage.setItem('eek_phone_preference', 'default');
+return {
+  tel: 'tel:0800769000', 
+  display: 'Call Now'
+};
 }
 
 // Build tracking parameters for service URLs
@@ -2244,7 +2244,7 @@ function selectService(serviceType) {
   } else if (window.unifiedTracking && typeof window.unifiedTracking.getModalPhoneNumber === 'function') {
     phoneData = window.unifiedTracking.getModalPhoneNumber();
   } else {
-    phoneData = { tel: 'tel:0800769000', display: '0800 769 000' };
+    phoneData = { tel: 'tel:0800769000', display: 'Call Now' };
   }
   const phoneHref = phoneData.tel;
   const phoneNumber = phoneData.display;
