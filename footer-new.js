@@ -12,7 +12,7 @@ class FooterManager {
   generateFooter() {
     return `
       <footer class="eek-footer">
-        <div class="container">
+        <div class="eek-footer-wrapper">
           <div class="eek-footer-content">
             <div class="eek-footer-section">
               <h4>🔧 Eek Mechanical</h4>
@@ -77,23 +77,12 @@ class FooterManager {
           pointer-events: none;
         }
         
-        .eek-footer .container {
+        .eek-footer-wrapper {
           max-width: 1200px !important;
           margin: 0 auto !important;
           padding: 0 20px !important;
           position: relative !important;
           z-index: 1 !important;
-          background: transparent !important;
-          border-radius: 0 !important;
-        }
-        
-        /* Ultra-specific override for container inside footer */
-        footer.eek-footer .container,
-        .eek-footer .container,
-        html body footer.eek-footer .container {
-          background: transparent !important;
-          border-radius: 0 !important;
-          box-shadow: none !important;
         }
         
         .eek-footer-content {
@@ -195,16 +184,8 @@ class FooterManager {
     footer.innerHTML = this.generateFooter();
     document.body.appendChild(footer.firstElementChild);
     
-    // Force-apply styles to override page CSS
-    setTimeout(() => {
-      const footerContainer = document.querySelector('.eek-footer .container');
-      if (footerContainer) {
-        footerContainer.style.setProperty('background', 'transparent', 'important');
-        footerContainer.style.setProperty('border-radius', '0', 'important');
-        footerContainer.style.setProperty('box-shadow', 'none', 'important');
-        console.log('🔧 Footer container styles force-applied');
-      }
-    }, 100);
+    // Footer injected successfully
+    console.log('✅ Footer injected with new wrapper structure');
   }
 
   // Initialize the footer
