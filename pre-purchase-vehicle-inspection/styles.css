@@ -58,6 +58,31 @@
   --transition-slow: 0.5s ease-in-out;
 }
 
+/* Multicolour Separator Bars - Consistent Theme Element */
+.separator-bar {
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 2px;
+  margin: var(--space-lg) 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.separator-bar-thick {
+  height: 8px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 4px;
+  margin: var(--space-xl) 0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.separator-bar-thin {
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 1px;
+  margin: var(--space-md) 0;
+  opacity: 0.8;
+}
+
 /* Reset and Base Styles */
 * {
   box-sizing: border-box;
