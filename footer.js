@@ -207,25 +207,43 @@ class FooterManager {
 
   // Initialize footer on page
   initialize(pageType = 'default') {
+    console.log('🔧 Footer.js: Starting initialization with pageType:', pageType);
+    
     // Add CSS to head
     if (!document.getElementById('eek-footer-css')) {
+      console.log('🎨 Footer.js: Adding CSS to head');
       const style = document.createElement('style');
       style.id = 'eek-footer-css';
       style.textContent = this.footerCSS;
       document.head.appendChild(style);
+    } else {
+      console.log('🎨 Footer.js: CSS already exists');
     }
 
     // Add footer to page
     const footerHTML = this.getPageSpecificFooter(pageType);
+    console.log('📄 Footer.js: Generated footer HTML length:', footerHTML.length);
     
     // Remove existing footer if present
     const existingFooter = document.querySelector('footer, .footer, .eek-footer');
     if (existingFooter) {
+      console.log('🗑️ Footer.js: Removing existing footer:', existingFooter);
       existingFooter.remove();
+    } else {
+      console.log('✅ Footer.js: No existing footer found');
     }
 
     // Add new footer before closing body tag
+    console.log('➕ Footer.js: Injecting new footer into body');
     document.body.insertAdjacentHTML('beforeend', footerHTML);
+    
+    // Verify footer was added
+    const newFooter = document.querySelector('.eek-footer');
+    if (newFooter) {
+      console.log('✅ Footer.js: Footer successfully injected:', newFooter);
+    } else {
+      console.log('❌ Footer.js: Footer injection failed - no .eek-footer found');
+    }
 
     // Initialize phone manager if available
     if (window.phoneManager && typeof window.phoneManager.updatePhoneLinks === 'function') {
