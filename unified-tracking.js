@@ -98,7 +98,7 @@ class UnifiedTrackingSystem {
 
         // Phone number management
         this.PHONE_NUMBERS = {
-            main: { tel: 'tel:+6498724612', display: '+64 9 872 4612' },
+            main: { tel: 'tel:0800769000', display: '0800 769 000' },
             tracking: { tel: 'tel:0800447153', display: '0800 447 153' },
             emergency: { tel: 'tel:0800769000', display: '0800 769 000' },
             winz: { tel: 'tel:0800559009', display: '0800 559 009' }
