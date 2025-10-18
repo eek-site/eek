@@ -1703,7 +1703,7 @@ function trackServiceSelection() {
     });
   });
   
-  console.log('✅ Service selection tracking initialized for', document.querySelectorAll('.keyword-item').length, 'cards');
+  console.log('✅ Service selection tracking v2.1 initialized for', document.querySelectorAll('.keyword-item').length, 'cards');
 }
 
 // Legacy function - now handled by centralized phone manager
@@ -1869,7 +1869,7 @@ async function updateHoursDisplay() {
     console.log('📅 PHONES OFF - Showing booking buttons');
   }
   
-  console.log('✅ updateHoursDisplay completed - System is', systemActive ? 'ACTIVE' : 'INACTIVE');
+  console.log('✅ updateHoursDisplay v2.1 completed - System is', systemActive ? 'ACTIVE' : 'INACTIVE');
 }
 
 /* === INCOMING CALL CORRELATION WEBHOOK === */
@@ -2067,7 +2067,7 @@ window.addEventListener('load', function() {
   
   setInterval(updateHoursDisplay, 5 * 60 * 1000);
   
-  console.log('✅ Initialization complete');
+  console.log('✅ Initialization v2.1 complete');
 });
 
 // TOKEN PAYMENT FUNCTIONALITY
@@ -2316,7 +2316,7 @@ document.addEventListener('keydown', function(event) {
 // Initialize sticky call button to open modal
 document.addEventListener('DOMContentLoaded', function() {
   // Button is already set up with onclick="openServiceModal()" in HTML
-  console.log('Service selection modal initialized');
+  console.log('Service selection modal v2.1 initialized');
 });
 </script>
 

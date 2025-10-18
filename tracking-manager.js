@@ -58,7 +58,7 @@ class TrackingManager {
         this.setupServiceSelectionTracking();
         this.setupBookingTracking();
         this.setupPhoneCallTracking();
-        console.log('✅ Tracking Manager initialized');
+        console.log('✅ Tracking Manager v2.1 initialized');
     }
 
     /**

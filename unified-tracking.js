@@ -129,7 +129,7 @@ class UnifiedTrackingSystem {
      * Initialize comprehensive tracking
      */
     initializeTracking() {
-        console.log('🚀 Unified Tracking System initialized');
+        console.log('🚀 Unified Tracking System v2.1 initialized');
         
         this.trackPageView();
         this.trackPageSource();
