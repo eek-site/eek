@@ -155,7 +155,7 @@ class FooterManager {
   // Initialize footer on page
   initialize(pageType = 'default') {
     try {
-      console.log('🔧 Footer.js v2.3: Starting initialization with pageType:', pageType);
+      console.log('🔧 Footer.js: Starting initialization with pageType:', pageType);
       
       // Add CSS to head
       if (!document.getElementById('eek-footer-css')) {
@@ -234,14 +234,14 @@ window.footerManager = new FooterManager();
 // Auto-initialize when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Footer.js v2.3: DOM loaded, initializing footer...');
-    console.log('🔧 Footer.js v2.3: About to call autoInitialize...');
+    console.log('🚀 Footer.js: DOM loaded, initializing footer...');
+    console.log('🔧 Footer.js: About to call autoInitialize...');
     window.footerManager.autoInitialize();
-    console.log('🔧 Footer.js v2.3: autoInitialize call completed');
+    console.log('🔧 Footer.js: autoInitialize call completed');
   });
 } else {
-  console.log('🚀 Footer.js v2.3: DOM already ready, initializing footer...');
-  console.log('🔧 Footer.js v2.3: About to call autoInitialize...');
+  console.log('🚀 Footer.js: DOM already ready, initializing footer...');
+  console.log('🔧 Footer.js: About to call autoInitialize...');
   window.footerManager.autoInitialize();
-  console.log('🔧 Footer.js v2.3: autoInitialize call completed');
+  console.log('🔧 Footer.js: autoInitialize call completed');
 }
