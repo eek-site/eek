@@ -1661,17 +1661,31 @@ async function generatePaymentLink() {
       body: JSON.stringify(formData)
     });
     
-    if (response.ok) {
-      const result = await response.json();
-      if (result.paymentUrl) {
-        // Redirect to payment
-        window.location.href = result.paymentUrl;
+      if (response.ok) {
+        const responseText = await response.text();
+        console.log('🔍 Payment API Response:', responseText);
+        
+        if (responseText.trim()) {
+          try {
+            const result = JSON.parse(responseText);
+            if (result.paymentUrl) {
+              // Redirect to payment
+              window.location.href = result.paymentUrl;
+            } else {
+              showNotification('Payment link generated successfully!', 'success');
+            }
+          } catch (parseError) {
+            console.error('JSON Parse Error:', parseError);
+            throw new Error('Invalid response format from payment API');
+          }
+        } else {
+          throw new Error('Empty response from payment API');
+        }
       } else {
-        showNotification('Payment link generated successfully!', 'success');
+        const errorText = await response.text();
+        console.error('Payment API Error Response:', errorText);
+        throw new Error(`Payment API error: ${response.status} - ${errorText}`);
       }
-    } else {
-      throw new Error('Failed to generate payment link');
-    }
   } catch (error) {
     console.error('Payment generation error:', error);
     showNotification('Error generating payment link. Please try again.', 'error');
