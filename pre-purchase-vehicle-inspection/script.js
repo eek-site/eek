@@ -93,7 +93,7 @@ const vehicleTypes = [
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v2.4 - Payment Generation Fixed 🚀🚀🚀');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v2.5 - Payment Redirect Fixed 🚀🚀🚀');
   console.log('🔧 DEBUGGING ENABLED - Check for continue button issues');
   console.log('📅 Script loaded at:', new Date().toISOString());
   
@@ -1591,9 +1591,9 @@ async function generatePaymentLink() {
         if (responseText.trim()) {
           try {
             const result = JSON.parse(responseText);
-            if (result.paymentUrl) {
+            if (result.url) {
               // Redirect to payment
-              window.location.href = result.paymentUrl;
+              window.location.href = result.url;
             } else {
               showNotification('Payment link generated successfully!', 'success');
             }
