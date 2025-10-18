@@ -101,10 +101,16 @@ GitHub Pages will automatically serve this for any 404 errors.
             background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
             min-height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
             color: var(--gray-800);
             padding: var(--spacing-5);
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .container {
@@ -282,7 +288,8 @@ GitHub Pages will automatically serve this for any 404 errors.
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="main-content">
+        <div class="container">
         <img src="/brand-image.png" alt="Eek Mechanical - Emergency Roadside Services" style="max-width: 300px; height: auto; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 0 auto 20px auto; display: block;" />
         <div class="logo">🔧 Eek Mechanical</div>
         <div class="brand-tagline">353+ Vetted Mechanics Nationwide • Looking for the page you requested...</div>
@@ -332,10 +339,14 @@ GitHub Pages will automatically serve this for any 404 errors.
             
             <div class="manual-link">
                 <a href="https://www.eek.nz" class="cta-button">🏠 Go to Homepage</a>
-                <a href="#" class="cta-button phone-link">📞 Call <span class="phone-display">Now</span></a>
+                <a href="javascript:void(0)" class="cta-button" onclick="openServiceModal()">📞 Call Now</a>
             </div>
         </div>
+        </div>
     </div>
+
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
 
   <!-- Centralized Phone Number Management -->
   <script src="/phone-manager.js"></script>
@@ -648,7 +659,7 @@ GitHub Pages will automatically serve this for any 404 errors.
             const suggestionsList = document.getElementById('suggestionsList');
             const suggestions = [
                 { url: 'https://www.eek.nz/', title: '🏠 Homepage', desc: 'Main Eek Mechanical website' },
-                { url: '#', title: '📞 Call Now', desc: 'Speak directly with our dispatch team' },
+                { url: 'javascript:void(0)', title: '📞 Call Now', desc: 'Speak directly with our dispatch team', onclick: 'openServiceModal()' },
                 { url: 'https://www.eek.nz/more-options', title: '📋 More Options', desc: 'Complete directory of all services and forms' },
                 { url: 'https://www.eek.nz/supplier', title: '🤝 Supplier Portal', desc: 'Official supplier partnership portal' },
                 { url: 'https://www.eek.nz/mjuris', title: '⚖️ Legal Authority', desc: 'Legal enforcement and compliance matters' }
@@ -656,7 +667,7 @@ GitHub Pages will automatically serve this for any 404 errors.
             
             suggestionsList.innerHTML = suggestions.map(s => `
                 <li>
-                    <a href="${s.url}" onclick="track404Suggestion('${s.title}', '${s.url}')">
+                    <a href="${s.url}" onclick="track404Suggestion('${s.title}', '${s.url}'); ${s.onclick || ''}">
                         <strong>${s.title}</strong><br>
                         <small>${s.desc}</small>
                     </a>
