@@ -98,10 +98,10 @@ class UnifiedTrackingSystem {
 
         // Phone number management
         this.PHONE_NUMBERS = {
-            main: { tel: 'tel:0800769000', display: '0800 769 000' },
-            tracking: { tel: 'tel:0800447153', display: '0800 447 153' },
-            emergency: { tel: 'tel:0800769000', display: '0800 769 000' },
-            winz: { tel: 'tel:0800559009', display: '0800 559 009' }
+            main: { tel: 'tel:0800769000', display: 'Call Now' },
+            tracking: { tel: 'tel:0800447153', display: 'Call Now' },
+            emergency: { tel: 'tel:0800769000', display: 'Call Now' },
+            winz: { tel: 'tel:0800559009', display: 'Call Now' }
         };
 
         // Initialize tracking
@@ -522,7 +522,14 @@ class UnifiedTrackingSystem {
      * Get modal phone number (compatibility method)
      */
     getModalPhoneNumber() {
-        return this.PHONE_NUMBERS.main;
+        // Check if this is Google Ads traffic (has GCLID)
+        const hasGclid = !!this.trackingData.pageSource?.clickIds?.gclid;
+        
+        if (hasGclid) {
+            return this.PHONE_NUMBERS.tracking; // 0800 447 153
+        } else {
+            return this.PHONE_NUMBERS.main; // 0800 769 000
+        }
     }
 
     /**
