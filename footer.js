@@ -38,6 +38,24 @@ class FooterManager {
           background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
           background-color: #1e3a5f !important;
         }
+        
+        /* Ultra-specific selectors for stubborn pages */
+        html body div footer.eek-footer {
+          background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
+          background-color: #1e3a5f !important;
+        }
+        
+        /* Override any possible conflicting styles */
+        .eek-footer[class*="footer"] {
+          background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
+          background-color: #1e3a5f !important;
+        }
+        
+        /* Force override with maximum specificity */
+        html body div.container footer.eek-footer {
+          background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
+          background-color: #1e3a5f !important;
+        }
 
       .eek-footer::before {
         content: '';
@@ -225,7 +243,7 @@ class FooterManager {
   // Initialize footer on page
   initialize(pageType = 'default') {
     try {
-      console.log('🔧 Footer.js v2.5: Starting initialization with pageType:', pageType);
+      console.log('🔧 Footer.js v2.6: Starting initialization with pageType:', pageType);
       
       // Add CSS to head
       if (!document.getElementById('eek-footer-css')) {
@@ -260,6 +278,13 @@ class FooterManager {
       const newFooter = document.querySelector('.eek-footer');
       if (newFooter) {
         console.log('✅ Footer.js: Footer successfully injected:', newFooter);
+        
+        // Force apply background styles as backup
+        setTimeout(() => {
+          newFooter.style.setProperty('background', 'linear-gradient(135deg, #1e3a5f, #2c5282)', 'important');
+          newFooter.style.setProperty('background-color', '#1e3a5f', 'important');
+          console.log('🎨 Footer.js: Force-applied background styles as backup');
+        }, 100);
       } else {
         console.log('❌ Footer.js: Footer injection failed - no .eek-footer found');
       }
@@ -299,14 +324,14 @@ window.footerManager = new FooterManager();
 // Auto-initialize when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Footer.js v2.5: DOM loaded, initializing footer...');
-    console.log('🔧 Footer.js v2.5: About to call autoInitialize...');
+    console.log('🚀 Footer.js v2.6: DOM loaded, initializing footer...');
+    console.log('🔧 Footer.js v2.6: About to call autoInitialize...');
     window.footerManager.autoInitialize();
-    console.log('🔧 Footer.js v2.5: autoInitialize call completed');
+    console.log('🔧 Footer.js v2.6: autoInitialize call completed');
   });
 } else {
-  console.log('🚀 Footer.js v2.5: DOM already ready, initializing footer...');
-  console.log('🔧 Footer.js v2.5: About to call autoInitialize...');
+  console.log('🚀 Footer.js v2.6: DOM already ready, initializing footer...');
+  console.log('🔧 Footer.js v2.6: About to call autoInitialize...');
   window.footerManager.autoInitialize();
-  console.log('🔧 Footer.js v2.5: autoInitialize call completed');
+  console.log('🔧 Footer.js v2.6: autoInitialize call completed');
 }
