@@ -12,15 +12,30 @@ class FooterManager {
   generateFooterCSS() {
     return `
       /* Centralized Footer Styles */
-      .eek-footer {
-        background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
-        color: white !important;
-        padding: 40px 0 20px 0 !important;
-        margin-top: 60px !important;
-        border-top: 3px solid #ff5500 !important;
-        position: relative !important;
-        overflow: hidden !important;
-      }
+        .eek-footer {
+          background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
+          background-color: #1e3a5f !important;
+          color: white !important;
+          padding: 40px 0 20px 0 !important;
+          margin-top: 60px !important;
+          border-top: 3px solid #ff5500 !important;
+          position: relative !important;
+          overflow: hidden !important;
+        }
+        
+        /* Force override any conflicting styles */
+        footer.eek-footer {
+          background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
+          background-color: #1e3a5f !important;
+          color: white !important;
+        }
+        
+        /* Override any inline styles */
+        .eek-footer[style] {
+          background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
+          background-color: #1e3a5f !important;
+          color: white !important;
+        }
 
       .eek-footer::before {
         content: '';
@@ -208,7 +223,7 @@ class FooterManager {
   // Initialize footer on page
   initialize(pageType = 'default') {
     try {
-      console.log('🔧 Footer.js v2.2: Starting initialization with pageType:', pageType);
+      console.log('🔧 Footer.js v2.3: Starting initialization with pageType:', pageType);
       
       // Add CSS to head
       if (!document.getElementById('eek-footer-css')) {
@@ -243,15 +258,45 @@ class FooterManager {
       const newFooter = document.querySelector('.eek-footer');
       if (newFooter) {
         console.log('✅ Footer.js: Footer successfully injected:', newFooter);
+        
+        // Force apply styles immediately after injection
+        this.forceApplyStyles(newFooter);
       } else {
         console.log('❌ Footer.js: Footer injection failed - no .eek-footer found');
       }
     } catch (error) {
       console.error('❌ Footer.js: Error during initialization:', error);
       console.error('❌ Footer.js: Error stack:', error.stack);
-    }
+  }
 
-    // Initialize phone manager if available
+  // Force apply styles to footer element
+  forceApplyStyles(footerElement) {
+    try {
+      console.log('🎨 Footer.js: Force applying styles to footer element');
+      
+      // Set inline styles to override any CSS conflicts
+      footerElement.style.setProperty('background', 'linear-gradient(135deg, #1e3a5f, #2c5282)', 'important');
+      footerElement.style.setProperty('background-color', '#1e3a5f', 'important');
+      footerElement.style.setProperty('color', 'white', 'important');
+      footerElement.style.setProperty('padding', '40px 0 20px 0', 'important');
+      footerElement.style.setProperty('margin-top', '60px', 'important');
+      footerElement.style.setProperty('border-top', '3px solid #ff5500', 'important');
+      footerElement.style.setProperty('position', 'relative', 'important');
+      footerElement.style.setProperty('overflow', 'hidden', 'important');
+      
+      // Force all child elements to inherit white text
+      const allElements = footerElement.querySelectorAll('*');
+      allElements.forEach(el => {
+        el.style.setProperty('color', 'white', 'important');
+      });
+      
+      console.log('✅ Footer.js: Styles force-applied successfully');
+    } catch (error) {
+      console.error('❌ Footer.js: Error force-applying styles:', error);
+    }
+  }
+
+  // Initialize phone manager if available
     if (window.phoneManager && typeof window.phoneManager.updatePhoneLinks === 'function') {
       window.phoneManager.updatePhoneLinks();
     }
@@ -282,14 +327,14 @@ window.footerManager = new FooterManager();
 // Auto-initialize when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Footer.js v2.2: DOM loaded, initializing footer...');
-    console.log('🔧 Footer.js v2.2: About to call autoInitialize...');
+    console.log('🚀 Footer.js v2.3: DOM loaded, initializing footer...');
+    console.log('🔧 Footer.js v2.3: About to call autoInitialize...');
     window.footerManager.autoInitialize();
-    console.log('🔧 Footer.js v2.2: autoInitialize call completed');
+    console.log('🔧 Footer.js v2.3: autoInitialize call completed');
   });
 } else {
-  console.log('🚀 Footer.js v2.2: DOM already ready, initializing footer...');
-  console.log('🔧 Footer.js v2.2: About to call autoInitialize...');
+  console.log('🚀 Footer.js v2.3: DOM already ready, initializing footer...');
+  console.log('🔧 Footer.js v2.3: About to call autoInitialize...');
   window.footerManager.autoInitialize();
-  console.log('🔧 Footer.js v2.2: autoInitialize call completed');
+  console.log('🔧 Footer.js v2.3: autoInitialize call completed');
 }
