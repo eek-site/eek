@@ -45,10 +45,12 @@ class FooterManager {
       }
 
       .eek-footer-content {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 30px;
-        margin-bottom: 30px;
+        display: grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+        gap: 30px !important;
+        margin-bottom: 30px !important;
+        visibility: visible !important;
+        opacity: 1 !important;
       }
 
       .eek-footer-section h4 {
@@ -64,6 +66,8 @@ class FooterManager {
         text-decoration: none !important;
         margin-bottom: 8px !important;
         display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
       }
 
       .eek-footer-section a:hover {
