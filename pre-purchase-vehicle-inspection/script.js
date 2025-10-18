@@ -35,7 +35,7 @@ const BOOKING_STATUS = {
 const services = {
   basic: {
     id: 'basic',
-    name: 'Basic Mechanical Inspection',
+    name: 'Basic Inspection',
     price: 299,
     features: [
       '44-point mechanical inspection by A-grade mechanic',
@@ -54,7 +54,7 @@ const services = {
   },
   comprehensive: {
     id: 'comprehensive',
-    name: 'Comprehensive Report',
+    name: 'Comprehensive Inspection',
     price: 599,
     features: [
       'Everything in Basic, PLUS:',
@@ -734,7 +734,7 @@ async function completeBooking() {
     // Service information
     service: selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive',
     serviceCode: selectedService.id === 'basic' ? 'INSP_BASIC' : 'INSP_COMP',
-    serviceTitle: selectedService.id === 'basic' ? 'Basic Mechanical Inspection' : 'Comprehensive Pre-Purchase Report',
+    serviceTitle: selectedService.id === 'basic' ? 'Basic Inspection' : 'Comprehensive Inspection',
     serviceTier: selectedService.id,
     basePrice: selectedServicePrice,
     price: selectedServicePrice, // Add price field for compatibility
