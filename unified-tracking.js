@@ -503,6 +503,20 @@ class UnifiedTrackingSystem {
     }
 
     /**
+     * Track service selection (compatibility method)
+     */
+    trackServiceSelection(serviceType) {
+        this.trackEvent('service_selection', 'Service Selection', serviceType);
+    }
+
+    /**
+     * Update phone links (compatibility method)
+     */
+    updatePhoneLinks() {
+        this.updatePhoneNumbers();
+    }
+
+    /**
      * Track scroll behavior
      */
     trackScrollBehavior() {

@@ -2219,8 +2219,13 @@ function showPhoneNumber() {
 
 function selectService(serviceType) {
   // Track the service selection
-  if (window.trackingManager) {
+  if (window.trackingManager && typeof window.trackingManager.trackServiceSelection === 'function') {
     window.trackingManager.trackServiceSelection(serviceType);
+  } else if (window.unifiedTracking) {
+    window.unifiedTracking.trackEvent('service_selection', {
+      serviceType: serviceType,
+      category: 'Service Selection'
+    });
   }
   
   const serviceNames = {

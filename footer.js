@@ -228,12 +228,12 @@ class FooterManager {
     document.body.insertAdjacentHTML('beforeend', footerHTML);
 
     // Initialize phone manager if available
-    if (window.phoneManager) {
+    if (window.phoneManager && typeof window.phoneManager.updatePhoneLinks === 'function') {
       window.phoneManager.updatePhoneLinks();
     }
 
-    // Initialize tracking if available
-    if (window.trackingManager) {
+    // Initialize unified tracking if available
+    if (window.unifiedTracking) {
       // Footer links are already set up with tracking
     }
   }
