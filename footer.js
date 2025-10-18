@@ -1,61 +1,25 @@
 /**
- * Centralized Footer System for Eek Mechanical
- * Provides consistent footer across all pages
+ * Centralized Footer Management System
+ * Handles dynamic footer injection across all pages
  */
 
 class FooterManager {
   constructor() {
-    this.footerHTML = this.generateFooterHTML();
-    this.footerCSS = this.generateFooterCSS();
+    this.initialized = false;
   }
 
   generateFooterCSS() {
     return `
       /* Centralized Footer Styles */
-        .eek-footer {
-          background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
-          background-color: #1e3a5f !important;
-          color: white !important;
-          padding: 40px 0 20px 0 !important;
-          margin-top: 60px !important;
-          border-top: 3px solid #ff5500 !important;
-          position: relative !important;
-          overflow: hidden !important;
-        }
-        
-        /* More specific selectors to override any conflicting styles */
-        footer.eek-footer {
-          background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
-          background-color: #1e3a5f !important;
-        }
-        
-        body footer.eek-footer {
-          background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
-          background-color: #1e3a5f !important;
-        }
-        
-        html body footer.eek-footer {
-          background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
-          background-color: #1e3a5f !important;
-        }
-        
-        /* Ultra-specific selectors for stubborn pages */
-        html body div footer.eek-footer {
-          background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
-          background-color: #1e3a5f !important;
-        }
-        
-        /* Override any possible conflicting styles */
-        .eek-footer[class*="footer"] {
-          background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
-          background-color: #1e3a5f !important;
-        }
-        
-        /* Force override with maximum specificity */
-        html body div.container footer.eek-footer {
-          background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
-          background-color: #1e3a5f !important;
-        }
+      .eek-footer {
+        background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
+        color: white !important;
+        padding: 40px 0 20px 0 !important;
+        margin-top: 60px !important;
+        border-top: 3px solid #ff5500 !important;
+        position: relative !important;
+        overflow: hidden !important;
+      }
 
       .eek-footer::before {
         content: '';
@@ -96,167 +60,109 @@ class FooterManager {
 
       .eek-footer-section p,
       .eek-footer-section a {
-        color: #b8d4e8 !important;
+        color: white !important;
         text-decoration: none !important;
-        line-height: 1.6 !important;
-        margin: 5px 0 !important;
-        transition: color 0.3s ease !important;
+        margin-bottom: 8px !important;
+        display: block !important;
       }
 
       .eek-footer-section a:hover {
-        color: #ffffff;
-        text-decoration: underline;
+        color: #ff5500 !important;
+        text-decoration: underline !important;
       }
 
       .eek-footer-bottom {
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
         padding-top: 20px;
+        margin-top: 20px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8) !important;
         font-size: 0.9em;
-        color: #b8d4e8;
       }
 
-      .eek-footer-bottom .company-info {
-        margin-bottom: 10px;
+      .eek-footer-bottom a {
+        color: rgba(255, 255, 255, 0.8) !important;
+        text-decoration: none !important;
+        margin: 0 10px !important;
       }
 
-      .eek-footer-bottom .legal-links {
-        margin-top: 15px;
-      }
-
-      .eek-footer-bottom .legal-links a {
-        color: #b8d4e8;
-        text-decoration: none;
-        margin: 0 15px;
-        transition: color 0.3s ease;
-      }
-
-      .eek-footer-bottom .legal-links a:hover {
-        color: #ff5500;
-      }
-
-      .eek-footer .phone-link {
+      .eek-footer-bottom a:hover {
         color: #ff5500 !important;
-        font-weight: 600;
+        text-decoration: underline !important;
       }
 
-      .eek-footer .phone-link:hover {
-        color: #ff7700 !important;
-      }
-
-      /* Mobile Responsive */
       @media (max-width: 768px) {
-        .eek-footer {
-          padding: 30px 0 15px 0;
-        }
-        
         .eek-footer-content {
           grid-template-columns: 1fr;
           gap: 20px;
         }
         
-        .eek-footer-bottom .legal-links a {
-          display: block;
-          margin: 5px 0;
+        .eek-footer .container {
+          padding: 0 15px;
         }
       }
     `;
   }
 
-  generateFooterHTML() {
-    return `
+  getPageSpecificFooter(pageType = 'default') {
+    const baseFooter = `
       <footer class="eek-footer">
         <div class="container">
           <div class="eek-footer-content">
             <div class="eek-footer-section">
               <h4>🔧 Eek Mechanical</h4>
-              <p><strong>353+ local mechanics vs $864M+ corporate profits</strong></p>
+              <p>353+ local mechanics vs $864M+ corporate profits</p>
               <p>Supporting family-owned garages across New Zealand</p>
               <p>Emergency roadside assistance & workshop services</p>
-              <p style="color: #ff5500; font-weight: 600; margin-top: 10px;">Your choice: Feed corporate greed or support your community</p>
+              <p>Your choice: Feed corporate greed or support your community</p>
             </div>
             
             <div class="eek-footer-section">
               <h4>📞 Contact Us</h4>
-              <p><a href="#" class="phone-link" onclick="openServiceModal(); return false;">📞 Call Now</a></p>
-              <p><a href="/book-service/">Book Service Online</a></p>
-              <p><a href="/more-options/">More Options</a></p>
+              <a href="javascript:void(0)" onclick="openServiceModal()">Call Now</a>
+              <a href="/book-service">Book Service Online</a>
+              <a href="/more-options">More Options</a>
             </div>
             
             <div class="eek-footer-section">
               <h4>🏢 Business</h4>
-              <p><a href="/supplier/">Join Our Network</a></p>
-              <p><a href="/pre-purchase-vehicle-inspection/">Pre-Purchase Inspections</a></p>
-              <p><a href="/mjuris/">Legal Portal</a></p>
+              <a href="/supplier">Join Our Network</a>
+              <a href="/pre-purchase-vehicle-inspection">Pre-Purchase Inspections</a>
+              <a href="/mjuris">Legal Portal</a>
             </div>
           </div>
           
           <div class="eek-footer-bottom">
-            <div class="company-info">
-              <strong>&copy; 2025 Eek Mechanical Ltd.</strong> All rights reserved.<br>
-              Company No: 9365185 | NZBN: 9429053064165
-            </div>
-            
-            <div class="legal-links">
-              <a href="/privacy" data-track="footer_privacy" onclick="trackInteraction(this)">Privacy Policy</a>
-              <a href="/terms" data-track="footer_terms" onclick="trackInteraction(this)">Terms of Service</a>
-              <a href="/" data-track="footer_home" onclick="trackInteraction(this)">Homepage</a>
+            <p>© 2025 Eek Mechanical Ltd. All rights reserved.</p>
+            <p>Company No: 9365185 | NZBN: 9429053064165</p>
+            <div>
+              <a href="/privacy">Privacy Policy</a>
+              <a href="/terms">Terms of Service</a>
+              <a href="/">Homepage</a>
             </div>
           </div>
         </div>
       </footer>
     `;
-  }
 
-  // Get page-specific footer content
-  getPageSpecificFooter(pageType) {
-    const baseFooter = this.generateFooterHTML();
-    
-    switch(pageType) {
-      case 'supplier':
-        return baseFooter.replace(
-          '<p><a href="#" class="phone-link" onclick="openServiceModal(); return false;">📞 Call Now</a></p>',
-          '<p><a href="tel:+6498724612" class="phone-link">📞 +64 9 872 4612</a></p>'
-        );
-      
-      case 'legal':
-        return baseFooter.replace(
-          '<div class="eek-footer-section">',
-          '<div class="eek-footer-section">' +
-          '<h4>⚖️ Legal Services</h4>' +
-          '<p><a href="/disputes-tribunal">Disputes Tribunal</a></p>' +
-          '<p><a href="/authorize">Privacy Authorization</a></p>' +
-          '</div>' +
-          '<div class="eek-footer-section">'
-        );
-      
-      case 'booking':
-        return baseFooter.replace(
-          '<p><a href="/book-service/">Book Service Online</a></p>',
-          '<p><strong>Currently Booking:</strong> Emergency Service</p>'
-        );
-      
-      default:
-        return baseFooter;
-    }
+    return baseFooter;
   }
 
   // Initialize footer on page
   initialize(pageType = 'default') {
     try {
-      console.log('🔧 Footer.js v2.6: Starting initialization with pageType:', pageType);
+      console.log('🔧 Footer.js v2.3: Starting initialization with pageType:', pageType);
       
       // Add CSS to head
       if (!document.getElementById('eek-footer-css')) {
         console.log('🎨 Footer.js: Adding CSS to head');
         const style = document.createElement('style');
         style.id = 'eek-footer-css';
-        style.textContent = this.footerCSS;
+        style.textContent = this.generateFooterCSS();
         document.head.appendChild(style);
-      } else {
-        console.log('🎨 Footer.js: CSS already exists');
       }
-
-      // Add footer to page
+      
+      // Get page-specific footer
       console.log('📄 Footer.js: Getting page-specific footer...');
       const footerHTML = this.getPageSpecificFooter(pageType);
       console.log('📄 Footer.js: Generated footer HTML length:', footerHTML.length);
@@ -278,13 +184,6 @@ class FooterManager {
       const newFooter = document.querySelector('.eek-footer');
       if (newFooter) {
         console.log('✅ Footer.js: Footer successfully injected:', newFooter);
-        
-        // Force apply background styles as backup
-        setTimeout(() => {
-          newFooter.style.setProperty('background', 'linear-gradient(135deg, #1e3a5f, #2c5282)', 'important');
-          newFooter.style.setProperty('background-color', '#1e3a5f', 'important');
-          console.log('🎨 Footer.js: Force-applied background styles as backup');
-        }, 100);
       } else {
         console.log('❌ Footer.js: Footer injection failed - no .eek-footer found');
       }
@@ -308,12 +207,19 @@ class FooterManager {
   autoInitialize() {
     const path = window.location.pathname;
     let pageType = 'default';
-
-    if (path.includes('/supplier')) pageType = 'supplier';
-    else if (path.includes('/mjuris')) pageType = 'legal';
-    else if (path.includes('/book-service')) pageType = 'booking';
-    else if (path.includes('/pre-purchase')) pageType = 'inspection';
-
+    
+    if (path.includes('/supplier')) {
+      pageType = 'supplier';
+    } else if (path.includes('/pre-purchase')) {
+      pageType = 'inspection';
+    } else if (path.includes('/thanks')) {
+      pageType = 'thanks';
+    } else if (path.includes('/404')) {
+      pageType = '404';
+    } else if (path.includes('/more-options')) {
+      pageType = 'more-options';
+    }
+    
     this.initialize(pageType);
   }
 }
@@ -324,14 +230,14 @@ window.footerManager = new FooterManager();
 // Auto-initialize when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Footer.js v2.6: DOM loaded, initializing footer...');
-    console.log('🔧 Footer.js v2.6: About to call autoInitialize...');
+    console.log('🚀 Footer.js v2.3: DOM loaded, initializing footer...');
+    console.log('🔧 Footer.js v2.3: About to call autoInitialize...');
     window.footerManager.autoInitialize();
-    console.log('🔧 Footer.js v2.6: autoInitialize call completed');
+    console.log('🔧 Footer.js v2.3: autoInitialize call completed');
   });
 } else {
-  console.log('🚀 Footer.js v2.6: DOM already ready, initializing footer...');
-  console.log('🔧 Footer.js v2.6: About to call autoInitialize...');
+  console.log('🚀 Footer.js v2.3: DOM already ready, initializing footer...');
+  console.log('🔧 Footer.js v2.3: About to call autoInitialize...');
   window.footerManager.autoInitialize();
-  console.log('🔧 Footer.js v2.6: autoInitialize call completed');
+  console.log('🔧 Footer.js v2.3: autoInitialize call completed');
 }
