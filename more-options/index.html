@@ -1193,9 +1193,15 @@
                 showTrackingNumber = true;
             }
             
-            const phoneData = showTrackingNumber ? 
-                { tel: 'tel:0800447153', display: '0800 447 153' } :
-                { tel: 'tel:0800769000', display: '0800 769 000' };
+            // Use unified tracking system for phone numbers
+            let phoneData;
+            if (window.unifiedTracking && typeof window.unifiedTracking.getModalPhoneNumber === 'function') {
+                phoneData = window.unifiedTracking.getModalPhoneNumber();
+            } else if (showTrackingNumber) {
+                phoneData = { tel: 'tel:0800447153', display: 'Call Now' };
+            } else {
+                phoneData = { tel: 'tel:0800769000', display: 'Call Now' };
+            }
             
             // Update all phone links
             document.querySelectorAll('.phone-link').forEach(link => {
@@ -1573,7 +1579,14 @@
             const serviceName = serviceNames[serviceType] || 'Service';
             
             // Get the phone number from centralized phone manager
-            const phoneData = window.phoneManager ? window.phoneManager.getModalPhoneNumber() : { tel: 'tel:0800769000', display: '0800 769 000' };
+            let phoneData;
+            if (window.phoneManager && typeof window.phoneManager.getModalPhoneNumber === 'function') {
+                phoneData = window.phoneManager.getModalPhoneNumber();
+            } else if (window.unifiedTracking && typeof window.unifiedTracking.getModalPhoneNumber === 'function') {
+                phoneData = window.unifiedTracking.getModalPhoneNumber();
+            } else {
+                phoneData = { tel: 'tel:0800769000', display: 'Call Now' };
+            }
             const phoneHref = phoneData.tel;
             const phoneNumber = phoneData.display;
             
