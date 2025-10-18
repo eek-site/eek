@@ -627,12 +627,178 @@ class UnifiedTrackingSystem {
     }
 
     /**
+     * Detect device platform for email template
+     */
+    detectDevicePlatform() {
+        const userAgent = navigator.userAgent.toLowerCase();
+        if (userAgent.includes('mobile') || userAgent.includes('android') || userAgent.includes('iphone')) {
+            return 'Mobile';
+        } else if (userAgent.includes('tablet') || userAgent.includes('ipad')) {
+            return 'Tablet';
+        } else {
+            return 'Desktop';
+        }
+    }
+
+    /**
+     * Calculate session duration
+     */
+    calculateSessionDuration() {
+        const sessionStart = localStorage.getItem('eek_session_start');
+        if (sessionStart) {
+            return Math.floor((Date.now() - parseInt(sessionStart)) / 1000);
+        }
+        return 0;
+    }
+
+    /**
+     * Calculate step progress percentage
+     */
+    calculateStepProgress() {
+        const currentStep = this.trackingData.currentStep || 1;
+        const totalSteps = this.trackingData.totalSteps || 5;
+        return Math.round((currentStep / totalSteps) * 100);
+    }
+
+    /**
      * Send tracking data to Power Automate API
      */
     async sendTrackingData(eventType, additionalData = {}) {
+        // Create payload that matches Power Automate email template expectations
         const trackingPayload = {
-            ...this.trackingData,
-            [this.STANDARD_FIELDS.eventType]: eventType,
+            // Core fields that the email template expects
+            name: this.trackingData[this.STANDARD_FIELDS.firstName] && this.trackingData[this.STANDARD_FIELDS.lastName] 
+                ? `${this.trackingData[this.STANDARD_FIELDS.firstName]} ${this.trackingData[this.STANDARD_FIELDS.lastName]}`.trim()
+                : this.trackingData[this.STANDARD_FIELDS.fullName] || '',
+            phone: this.trackingData[this.STANDARD_FIELDS.phone] || '',
+            email: this.trackingData[this.STANDARD_FIELDS.email] || '',
+            location: this.trackingData[this.STANDARD_FIELDS.address] || this.trackingData[this.STANDARD_FIELDS.city] || '',
+            
+            // Vehicle information
+            vehicleRego: this.trackingData[this.STANDARD_FIELDS.vehicleRego] || '',
+            rego: this.trackingData[this.STANDARD_FIELDS.vehicleRego] || '', // Backward compatibility
+            vehicleYear: this.trackingData[this.STANDARD_FIELDS.vehicleYear] || '',
+            year: this.trackingData[this.STANDARD_FIELDS.vehicleYear] || '', // Backward compatibility
+            vehicleMake: this.trackingData[this.STANDARD_FIELDS.vehicleMake] || '',
+            make: this.trackingData[this.STANDARD_FIELDS.vehicleMake] || '', // Backward compatibility
+            vehicleModel: this.trackingData[this.STANDARD_FIELDS.vehicleModel] || '',
+            model: this.trackingData[this.STANDARD_FIELDS.vehicleModel] || '', // Backward compatibility
+            vehicleType: this.trackingData[this.STANDARD_FIELDS.vehicleType] || '',
+            batteryVoltage: this.trackingData[this.STANDARD_FIELDS.batteryVoltage] || '',
+            selectedVoltage: this.trackingData[this.STANDARD_FIELDS.batteryVoltage] || '', // Backward compatibility
+            
+            // Service information
+            service: this.trackingData[this.STANDARD_FIELDS.serviceType] || '',
+            serviceType: this.trackingData[this.STANDARD_FIELDS.serviceType] || '',
+            serviceCode: this.trackingData[this.STANDARD_FIELDS.serviceCode] || '',
+            serviceTitle: this.trackingData[this.STANDARD_FIELDS.serviceTitle] || '',
+            emergencyType: this.trackingData[this.STANDARD_FIELDS.emergencyType] || '',
+            urgencyLevel: this.trackingData[this.STANDARD_FIELDS.urgencyLevel] || '',
+            scheduledDate: this.trackingData[this.STANDARD_FIELDS.scheduledDate] || '',
+            timeWindow: this.trackingData[this.STANDARD_FIELDS.timeWindow] || '',
+            selectedTime: this.trackingData[this.STANDARD_FIELDS.timeWindow] || '', // Backward compatibility
+            selectedUrgency: this.trackingData[this.STANDARD_FIELDS.urgencyLevel] || '', // Backward compatibility
+            
+            // Pricing
+            price: this.trackingData[this.STANDARD_FIELDS.price] || this.trackingData[this.STANDARD_FIELDS.finalPrice] || this.trackingData[this.STANDARD_FIELDS.calculatedPrice] || '',
+            basePrice: this.trackingData[this.STANDARD_FIELDS.price] || this.trackingData[this.STANDARD_FIELDS.finalPrice] || this.trackingData[this.STANDARD_FIELDS.calculatedPrice] || '',
+            finalPrice: this.trackingData[this.STANDARD_FIELDS.finalPrice] || '',
+            calculatedPrice: this.trackingData[this.STANDARD_FIELDS.calculatedPrice] || '',
+            
+            // Details
+            details: this.trackingData[this.STANDARD_FIELDS.details] || '',
+            description: this.trackingData[this.STANDARD_FIELDS.description] || '',
+            
+            // Seller information
+            sellerName: this.trackingData[this.STANDARD_FIELDS.sellerName] || '',
+            sellerPhone: this.trackingData[this.STANDARD_FIELDS.sellerPhone] || '',
+            
+            // WINZ fields
+            isWinz: this.trackingData[this.STANDARD_FIELDS.isWinz] || false,
+            quoteReference: this.trackingData[this.STANDARD_FIELDS.quoteReference] || '',
+            
+            // Booking status and event type
+            bookingStatus: this.trackingData[this.STANDARD_FIELDS.bookingStatus] || 'NEW',
+            eventType: eventType,
+            
+            // Session and tracking
+            sessionId: this.trackingData[this.STANDARD_FIELDS.sessionId] || '',
+            gclid: this.trackingData.pageSource?.clickIds?.gclid || '',
+            gclidState: this.trackingData.pageSource?.clickIds?.gclid ? 'Active' : 'Inactive',
+            
+            // UTM parameters
+            utm: {
+                source: this.trackingData.pageSource?.utm?.source || '',
+                medium: this.trackingData.pageSource?.utm?.medium || '',
+                campaign: this.trackingData.pageSource?.utm?.campaign || '',
+                term: this.trackingData.pageSource?.utm?.term || '',
+                content: this.trackingData.pageSource?.utm?.content || ''
+            },
+            
+            // Page source information
+            pageSource: {
+                type: this.trackingData.pageSource?.type || 'direct',
+                detail: this.trackingData.pageSource?.detail || 'Direct visit',
+                referrer: this.trackingData.pageSource?.referrer || '',
+                utm: this.trackingData.pageSource?.utm || {},
+                clickIds: this.trackingData.pageSource?.clickIds || {}
+            },
+            
+            // Device information
+            device: {
+                userAgent: this.trackingData[this.STANDARD_FIELDS.userAgent] || navigator.userAgent,
+                screenResolution: this.trackingData[this.STANDARD_FIELDS.screenResolution] || `${screen.width}x${screen.height}`,
+                viewportSize: this.trackingData[this.STANDARD_FIELDS.viewportSize] || `${window.innerWidth}x${window.innerHeight}`,
+                language: this.trackingData[this.STANDARD_FIELDS.language] || navigator.language,
+                timezone: this.trackingData[this.STANDARD_FIELDS.timezone] || Intl.DateTimeFormat().resolvedOptions().timeZone,
+                platform: this.detectDevicePlatform()
+            },
+            
+            // Location information
+            location: {
+                country: this.trackingData.location?.country || 'Unknown',
+                region: this.trackingData.location?.region || 'Unknown',
+                city: this.trackingData.location?.city || 'Unknown',
+                postalCode: this.trackingData.location?.postalCode || 'Unknown',
+                coordinates: {
+                    latitude: this.trackingData.location?.coordinates?.latitude || null,
+                    longitude: this.trackingData.location?.coordinates?.longitude || null,
+                    accuracy: this.trackingData.location?.coordinates?.accuracy || null
+                }
+            },
+            
+            // Engagement data
+            engagement: {
+                timeOnPage: this.trackingData.engagement?.timeOnPage || 0,
+                scrollDepth: this.trackingData.engagement?.scrollDepth || 0,
+                clicks: this.trackingData.engagement?.clicks || 0,
+                formInteractions: this.trackingData.engagement?.formInteractions || 0,
+                buttonClicks: this.trackingData.engagement?.buttonClicks || 0
+            },
+            
+            // User journey
+            userJourney: {
+                pageHistory: this.trackingData.userJourney || [],
+                totalPages: this.trackingData.userJourney?.length || 1,
+                sessionDuration: this.calculateSessionDuration(),
+                entryPage: this.trackingData.userJourney?.[0]?.url || window.location.href,
+                previousPage: this.trackingData.userJourney?.[this.trackingData.userJourney?.length - 2]?.url || ''
+            },
+            
+            // Progress tracking
+            currentStep: this.trackingData.currentStep || 1,
+            totalSteps: this.trackingData.totalSteps || 5,
+            stepProgress: this.calculateStepProgress(),
+            
+            // Terms and consent
+            termsAccepted: this.trackingData.termsAccepted || false,
+            marketingConsent: this.trackingData.marketingConsent || false,
+            
+            // Timestamps
+            timestamp: new Date().toISOString(),
+            bookingTime: this.trackingData[this.STANDARD_FIELDS.bookingTime] || new Date().toISOString(),
+            
+            // Additional data
             ...additionalData
         };
 
