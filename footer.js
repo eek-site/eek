@@ -13,13 +13,13 @@ class FooterManager {
     return `
       /* Centralized Footer Styles */
       .eek-footer {
-        background: linear-gradient(135deg, #1e3a5f, #2c5282);
-        color: white;
-        padding: 40px 0 20px 0;
-        margin-top: 60px;
-        border-top: 3px solid #ff5500;
-        position: relative;
-        overflow: hidden;
+        background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
+        color: white !important;
+        padding: 40px 0 20px 0 !important;
+        margin-top: 60px !important;
+        border-top: 3px solid #ff5500 !important;
+        position: relative !important;
+        overflow: hidden !important;
       }
 
       .eek-footer::before {
@@ -53,19 +53,19 @@ class FooterManager {
       }
 
       .eek-footer-section h4 {
-        color: #ff5500;
-        margin-bottom: 15px;
-        font-size: 1.1em;
-        font-weight: 600;
+        color: #ff5500 !important;
+        margin-bottom: 15px !important;
+        font-size: 1.1em !important;
+        font-weight: 600 !important;
       }
 
       .eek-footer-section p,
       .eek-footer-section a {
-        color: #b8d4e8;
-        text-decoration: none;
-        line-height: 1.6;
-        margin: 5px 0;
-        transition: color 0.3s ease;
+        color: #b8d4e8 !important;
+        text-decoration: none !important;
+        line-height: 1.6 !important;
+        margin: 5px 0 !important;
+        transition: color 0.3s ease !important;
       }
 
       .eek-footer-section a:hover {
