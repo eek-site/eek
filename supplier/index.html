@@ -593,7 +593,7 @@
       <a href="#benefits" data-track="nav_benefits" onclick="trackInteraction(this)">Benefits</a>
       <a href="#existing-suppliers" data-track="nav_existing_suppliers" onclick="trackInteraction(this)">Current Suppliers</a>
       <a href="#application" data-track="nav_application" onclick="trackInteraction(this)">Apply</a>
-      <a href="tel:+6498724612" class="phone-link" data-track="nav_phone_call" onclick="trackInteraction(this)">+64 9 872 4612</a>
+      <a href="/supplier-relations" data-track="nav_supplier_relations" onclick="trackInteraction(this)">Contact Forms</a>
     </div>
   </div>
 </nav>
@@ -788,14 +788,13 @@
           <li>Account management</li>
         </ul>
         <div style="margin-top: 20px;">
-          <a href="tel:+6498724612" 
-             class="phone-link"
+          <a href="/supplier-relations" 
              style="background: #007bff; color: white; padding: 12px 24px; border-radius: 25px; text-decoration: none; font-weight: 500; transition: all 0.3s ease; display: inline-block;"
-             data-track="existing_supplier_support_call"
+             data-track="existing_supplier_support_form"
              onclick="trackInteraction(this)"
              onmouseover="this.style.background='#0056b3'"
              onmouseout="this.style.background='#007bff'">
-            Call Support
+            Contact Support
           </a>
         </div>
       </div>
@@ -860,14 +859,13 @@
            onmouseout="this.style.background='rgba(255,255,255,0.2)'">
           Upload Documents
         </a>
-        <a href="tel:+6498724612" 
-           class="phone-link"
+        <a href="/supplier-relations" 
            style="background: rgba(255,255,255,0.2); color: white; padding: 12px 25px; border-radius: 25px; text-decoration: none; border: 2px solid rgba(255,255,255,0.3); transition: all 0.3s ease;"
            data-track="existing_supplier_support_quick"
            onclick="trackInteraction(this)"
            onmouseover="this.style.background='rgba(255,255,255,0.3)'"
            onmouseout="this.style.background='rgba(255,255,255,0.2)'">
-          Get Support
+          Contact Support
         </a>
       </div>
     </div>
@@ -1290,7 +1288,8 @@
     const isHighValue = trackingAction.includes('application') || 
                        trackingAction.includes('terms') ||
                        trackingAction.includes('call') ||
-                       trackingAction.includes('support');
+                       trackingAction.includes('support') ||
+                       trackingAction.includes('relations');
     
     // Build event payload
     const payload = buildTrackingPayload('supplier_interaction', trackingAction, {
@@ -1302,7 +1301,8 @@
         isHighValue: isHighValue
       },
       interactionType: element.href && element.href.startsWith('tel:') ? 'supplier_phone_call' : 
-                      element.href && element.href.startsWith('mailto:') ? 'supplier_email' : 'supplier_link_click',
+                      element.href && element.href.startsWith('mailto:') ? 'supplier_email' : 
+                      element.href && element.href.includes('supplier-relations') ? 'supplier_contact_form' : 'supplier_link_click',
       supplierContext: {
         type: supplierType,
         serviceInterest: serviceInterest,
@@ -1363,8 +1363,8 @@
       'supplier_application_proceed': 75000,
       'supplier_terms_review': 30000,
       'supplier_terms_link': 25000,
-      'nav_phone_call': 40000,
-      'existing_supplier_support_call': 35000,
+      'nav_supplier_relations': 40000,
+      'existing_supplier_support_form': 35000,
       'existing_supplier_upload': 20000,
       'existing_supplier_relations': 25000,
       'existing_supplier_resources': 15000,
@@ -1385,20 +1385,22 @@
     // Check if traffic comes from Google Ads
     const showTrackingNumber = !!gclid;
     
-    const phoneData = showTrackingNumber ? 
-      { tel: 'tel:0800447153', display: '0800 447 153' } :
-      { tel: 'tel:+6498724612', display: '+64 9 872 4612' };
+    // Suppliers use forms only - no phone contact
+    const phoneData = { 
+      tel: '/supplier-relations', 
+      display: 'Contact Forms' 
+    };
     
-    // Update all phone links
+    // Update all phone links to contact forms
     document.querySelectorAll('.phone-link').forEach(link => {
       link.href = phoneData.tel;
-      // Never show phone numbers in display text - only show "Call Now"
-      if (link.textContent.includes('0800') || link.textContent.includes('+64')) {
-        link.textContent = link.textContent.replace(/0800 \d{3} \d{3}|\+64 \d \d{3} \d{3} \d{3}/, 'Now');
+      // Update display text to show contact forms
+      if (link.textContent.includes('0800') || link.textContent.includes('+64') || link.textContent.includes('Call')) {
+        link.textContent = 'Contact Forms';
       }
     });
     
-    console.log('📞 Supplier portal phone numbers updated:', phoneData.display);
+    console.log('📋 Supplier portal contact links updated:', phoneData.display);
   }
 
   // === APPLICATION FORM ENHANCEMENT ===
