@@ -123,13 +123,13 @@ function initializeTracking() {
       page_title: 'Pre Purchase Inspection',
       page_location: window.location.href,
       page_type: 'inspection',
-      source_type: window.enhancedTracking?.getTrackingData()?.pageSource?.type || 'unknown'
+      source_type: window.unifiedTracking?.getTrackingData()?.pageSource?.type || 'unknown'
     });
   }
   
   // Track inspection page visit with enhanced data
-  if (window.enhancedTracking) {
-    window.enhancedTracking.trackEvent('inspection_page_visit', 'Service', 'Pre Purchase Inspection', {
+  if (window.unifiedTracking) {
+    window.unifiedTracking.trackEvent('inspection_page_visit', 'Service', 'Pre Purchase Inspection', {
       service_type: 'inspection',
       page_type: 'inspection'
     });
@@ -303,13 +303,25 @@ function selectService(serviceId) {
       service_price: selectedServicePrice,
       event_category: 'pre_purchase_inspection',
       page_type: 'inspection',
-      source_type: window.enhancedTracking?.getTrackingData()?.pageSource?.type || 'unknown'
+      source_type: window.unifiedTracking?.getTrackingData()?.pageSource?.type || 'unknown'
     });
   }
   
-  // Track with enhanced tracking system
-  if (window.enhancedTracking) {
-    window.enhancedTracking.trackEvent('inspection_service_selection', 'Service Selection', selectedService.name, {
+  // Track with unified tracking system
+  if (window.unifiedTracking) {
+    // Update tracking data with service selection
+    window.unifiedTracking.batchUpdateTrackingData({
+      'serviceType': selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive',
+      'serviceTitle': selectedService.name,
+      'serviceCode': selectedService.id === 'basic' ? 'INSP_BASIC' : 'INSP_COMP',
+      'price': selectedServicePrice,
+      'basePrice': selectedServicePrice,
+      'bookingStatus': 'SERVICE_SELECTED',
+      'eventType': 'service_selection'
+    }, 'inspection_service_selection');
+    
+    // Also track as an event
+    window.unifiedTracking.trackEvent('inspection_service_selection', 'Service Selection', selectedService.name, {
       service_id: serviceId,
       service_price: selectedServicePrice,
       service_type: 'inspection'
@@ -721,7 +733,7 @@ async function completeBooking() {
   };
   
   // Get comprehensive tracking data
-  const trackingData = window.enhancedTracking ? window.enhancedTracking.getTrackingData() : {};
+  const trackingData = window.unifiedTracking ? window.unifiedTracking.getTrackingData() : {};
   
   // Prepare booking data in the format expected by the Power Automate flow
   const finalBookingData = {
@@ -884,13 +896,13 @@ async function completeBooking() {
           value: selectedServicePrice,
           currency: 'NZD',
           page_type: 'inspection',
-          source_type: window.enhancedTracking?.getTrackingData()?.pageSource?.type || 'unknown'
+          source_type: window.unifiedTracking?.getTrackingData()?.pageSource?.type || 'unknown'
         });
       }
       
-      // Track with enhanced tracking system
-      if (window.enhancedTracking) {
-        window.enhancedTracking.trackEvent('inspection_booking_completed', 'Conversion', selectedService.name, {
+      // Track with unified tracking system
+      if (window.unifiedTracking) {
+        window.unifiedTracking.trackEvent('inspection_booking_completed', 'Conversion', selectedService.name, {
           service_id: selectedService.id,
           service_price: selectedServicePrice,
           service_type: 'inspection',
@@ -899,7 +911,7 @@ async function completeBooking() {
         });
         
         // Send comprehensive booking data to API
-        window.enhancedTracking.sendTrackingData('inspection_booking_completed', {
+        window.unifiedTracking.sendTrackingData('inspection_booking_completed', {
           service: selectedService,
           price: selectedServicePrice,
           bookingData: finalBookingData
@@ -1158,7 +1170,7 @@ async function sendStepTracking(status) {
 }
 
 function buildStepData(status) {
-  const trackingData = window.enhancedTracking ? window.enhancedTracking.getTrackingData() : {};
+  const trackingData = window.unifiedTracking ? window.unifiedTracking.getTrackingData() : {};
   const geo = window.CF_GEO || {};
   
   return {
@@ -1488,7 +1500,7 @@ function toggleBookingButton() {
 
 // === DATA COLLECTION FOR PAYMENT ===
 function buildInspectionData(status) {
-  const trackingData = window.enhancedTracking ? window.enhancedTracking.getTrackingData() : {};
+  const trackingData = window.unifiedTracking ? window.unifiedTracking.getTrackingData() : {};
   const geo = window.CF_GEO || {};
   
   // Calculate amount in cents for Stripe
