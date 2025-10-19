@@ -196,13 +196,28 @@ function selectService(serviceType) {
   let phoneData;
   let phoneSource = 'fallback';
   
+  console.log('🔍 Phone manager check:', {
+    phoneManagerExists: !!window.phoneManager,
+    getModalPhoneNumberExists: !!(window.phoneManager && typeof window.phoneManager.getModalPhoneNumber === 'function'),
+    unifiedTrackingExists: !!window.unifiedTracking,
+    getModalPhoneNumberUnifiedExists: !!(window.unifiedTracking && typeof window.unifiedTracking.getModalPhoneNumber === 'function')
+  });
+  
   if (window.phoneManager && typeof window.phoneManager.getModalPhoneNumber === 'function') {
     phoneData = window.phoneManager.getModalPhoneNumber();
     phoneSource = 'phoneManager';
     
-    // Track phone manager context
-    const context = window.phoneManager.getPageContext();
-    const isGoogleAds = window.phoneManager.isGoogleAdsTraffic();
+    // Track phone manager context - safely check for methods
+    let context = 'unknown';
+    let isGoogleAds = false;
+    
+    if (typeof window.phoneManager.getPageContext === 'function') {
+      context = window.phoneManager.getPageContext();
+    }
+    
+    if (typeof window.phoneManager.isGoogleAdsTraffic === 'function') {
+      isGoogleAds = window.phoneManager.isGoogleAdsTraffic();
+    }
     
     // Track phone number selection
     trackModalEvent('phone_number_selected', {
@@ -246,6 +261,8 @@ function selectService(serviceType) {
   
   // Update modal to show phone number and call option
   const modalContent = document.querySelector('.service-modal-content');
+  
+  console.log('📞 Phone data for modal:', { phoneHref, phoneNumber, serviceType });
   
   if (phoneHref && phoneNumber) {
     modalContent.innerHTML = `
@@ -323,42 +340,86 @@ function trackBackButtonClick(serviceType) {
 
 // Post-job redirect handling
 function handlePostJobRedirect() {
-  // Determine if user is a supplier or customer
-  const isSupplier = isSupplierPage();
-  const redirectUrl = isSupplier ? 'https://www.eek.nz/supplier-relations' : 'https://www.eek.nz/customer-escalation';
-  
   // Track the post-job selection
   trackModalEvent('post_job_selected', {
     action: 'select_post_job',
     serviceType: 'post_job',
     serviceName: 'Post-Job Support',
-    userType: isSupplier ? 'supplier' : 'customer',
-    redirectUrl: redirectUrl,
     trigger: 'service_button_click',
     value: 1
   });
   
-  // Show redirect confirmation in modal
+  // Show submenu with customer/supplier options
   const modalContent = document.querySelector('.service-modal-content');
   modalContent.innerHTML = `
     <div class="service-modal-header">
       <h3>📋 Post-Job Support</h3>
-      <p>Redirecting to ${isSupplier ? 'Supplier Relations' : 'Customer Escalation'}</p>
+      <p>Are you a customer or supplier?</p>
+      <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
+    </div>
+    <div class="service-modal-body">
+      <div class="service-options">
+        <button class="service-option" onclick="selectPostJobType('customer')" data-type="customer">
+          <span class="service-icon">👤</span>
+          <div class="service-details">
+            <h4>Customer</h4>
+            <p>Need help with a completed job or have a complaint?</p>
+          </div>
+        </button>
+        
+        <button class="service-option" onclick="selectPostJobType('supplier')" data-type="supplier">
+          <span class="service-icon">🏢</span>
+          <div class="service-details">
+            <h4>Supplier</h4>
+            <p>Need support with supplier relations or account issues?</p>
+          </div>
+        </button>
+      </div>
+      <div style="text-align: center; margin-top: 20px;">
+        <button onclick="trackBackButtonClick('post_job'); openServiceModal();" style="display: inline-block; background: none; border: 1px solid #ddd; padding: 10px 20px; border-radius: 6px; cursor: pointer; color: #666;">
+          ← Back to Services
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// Handle post-job type selection (customer or supplier)
+function selectPostJobType(userType) {
+  const redirectUrl = userType === 'supplier' ? 'https://www.eek.nz/supplier-relations' : 'https://www.eek.nz/customer-escalation';
+  const pageName = userType === 'supplier' ? 'Supplier Relations' : 'Customer Escalation';
+  
+  // Track the user type selection
+  trackModalEvent('post_job_type_selected', {
+    action: 'select_user_type',
+    serviceType: 'post_job',
+    userType: userType,
+    redirectUrl: redirectUrl,
+    trigger: 'user_type_button_click',
+    value: 1
+  });
+  
+  // Show redirect confirmation
+  const modalContent = document.querySelector('.service-modal-content');
+  modalContent.innerHTML = `
+    <div class="service-modal-header">
+      <h3>📋 ${pageName}</h3>
+      <p>Redirecting to ${pageName.toLowerCase()} page...</p>
       <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
     </div>
     <div class="service-modal-body">
       <div style="text-align: center; padding: 20px;">
         <div style="font-size: 3em; margin-bottom: 20px;">⏳</div>
         <p style="margin-bottom: 30px; color: #666; font-size: 1.1em;">
-          Taking you to the ${isSupplier ? 'supplier relations' : 'customer escalation'} page...
+          Taking you to the ${pageName.toLowerCase()} page...
         </p>
         <div style="margin-bottom: 20px;">
-          <a href="${redirectUrl}" class="cta-button" style="display: inline-block; background: var(--primary, #ff5500); color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 1.2em; font-weight: bold; margin: 10px;" onclick="trackPostJobRedirect('${isSupplier ? 'supplier' : 'customer'}')">
-            Continue to ${isSupplier ? 'Supplier Relations' : 'Customer Escalation'}
+          <a href="${redirectUrl}" class="cta-button" style="display: inline-block; background: var(--primary, #ff5500); color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 1.2em; font-weight: bold; margin: 10px;" onclick="trackPostJobRedirect('${userType}')">
+            Continue to ${pageName}
           </a>
         </div>
-        <button onclick="trackBackButtonClick('post_job'); openServiceModal();" style="display: block; margin: 20px auto 0; background: none; border: 1px solid #ddd; padding: 10px 20px; border-radius: 6px; cursor: pointer; color: #666;">
-          ← Back to Services
+        <button onclick="trackBackButtonClick('post_job'); handlePostJobRedirect();" style="display: block; margin: 20px auto 0; background: none; border: 1px solid #ddd; padding: 10px 20px; border-radius: 6px; cursor: pointer; color: #666;">
+          ← Back to User Type Selection
         </button>
       </div>
     </div>
@@ -366,7 +427,7 @@ function handlePostJobRedirect() {
   
   // Auto-redirect after 3 seconds
   setTimeout(() => {
-    trackPostJobRedirect(isSupplier ? 'supplier' : 'customer');
+    trackPostJobRedirect(userType);
     window.location.href = redirectUrl;
   }, 3000);
 }

@@ -1850,8 +1850,18 @@ async function updateHoursDisplay() {
 // Legacy tracking function - now handled by centralized tracking manager
 // Kept for backward compatibility
 function trackConversion(eventAction, eventCategory) {
-  if (window.trackingManager) {
+  if (window.trackingManager && typeof window.trackingManager.trackConversion === 'function') {
     window.trackingManager.trackConversion(eventAction, eventCategory);
+  } else {
+    // Fallback to unified tracking if available
+    if (window.unifiedTracking && typeof window.unifiedTracking.trackEvent === 'function') {
+      window.unifiedTracking.trackEvent('conversion', {
+        eventAction: eventAction,
+        eventCategory: eventCategory,
+        source: 'legacy_trackConversion'
+      });
+    }
+    console.warn('trackConversion called but trackingManager not ready:', eventAction, eventCategory);
   }
 }
 
