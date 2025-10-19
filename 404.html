@@ -11,7 +11,7 @@ GitHub Pages will automatically serve this for any 404 errors.
     <title>Redirecting... | Eek Mechanical</title>
     
     <!-- Call Modal Styles -->
-    <link rel="stylesheet" href="call-modal.css">
+    <link rel="stylesheet" href="call-modal.css?v=20250119">
     
     <!-- Reddit Pixel -->
     <script>
@@ -701,12 +701,12 @@ GitHub Pages will automatically serve this for any 404 errors.
     </script>
 
     <!-- Call Modal Scripts -->
-    <script src="call-modal.js"></script>
+        <script src="call-modal.js?v=20250119"></script>
 
     <!-- Include Modal HTML -->
     <script>
         // Load modal HTML dynamically
-        fetch('call-modal.html')
+        fetch('call-modal.html?v=20250119')
             .then(response => response.text())
             .then(html => {
                 document.body.insertAdjacentHTML('beforeend', html);
