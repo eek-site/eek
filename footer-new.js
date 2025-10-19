@@ -196,7 +196,9 @@ class FooterManager {
     }
 
     try {
-      console.log('🚀 Initializing Eek Footer...');
+      console.log('🚀 Initializing Eek Footer v2.0 (NEW WRAPPER)...');
+      console.log('🔍 Page URL:', window.location.href);
+      console.log('🔍 Page path:', window.location.pathname);
       
       // Inject CSS
       this.injectCSS();
@@ -205,7 +207,7 @@ class FooterManager {
       this.injectFooter();
       
       this.isInitialized = true;
-      console.log('✅ Footer initialized successfully');
+      console.log('✅ Footer initialized successfully with new wrapper structure');
       
     } catch (error) {
       console.error('❌ Footer initialization failed:', error);
