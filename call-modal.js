@@ -262,9 +262,10 @@ function selectService(serviceType) {
   // Update modal to show phone number and call option
   const modalContent = document.querySelector('.service-modal-content');
   
-  console.log('📞 Phone data for modal:', { phoneHref, phoneNumber, serviceType });
+  console.log('📞 Phone data for modal:', { phoneHref, phoneNumber, serviceType, phoneData });
   
   if (phoneHref && phoneNumber) {
+    console.log('✅ Setting modal content with phone data');
     modalContent.innerHTML = `
       <div class="service-modal-header">
         <h3>📞 Ready to Call</h3>
@@ -273,13 +274,13 @@ function selectService(serviceType) {
       </div>
       <div class="service-modal-body">
         <div style="text-align: center; padding: 20px;">
-          <div id="phoneNumberDisplay" style="font-size: 2em; margin-bottom: 20px; color: var(--primary, #ff5500); font-weight: bold; display: none;">
+          <div id="phoneNumberDisplay" style="font-size: 2em; margin-bottom: 20px; color: var(--primary, #ff5500); font-weight: bold; display: block;">
             ${phoneNumber}
           </div>
           <p style="margin-bottom: 30px; color: #666;">
             Our dispatch team is ready to help with your ${serviceName.toLowerCase()} request
           </p>
-          <a href="${phoneHref}" class="cta-button" style="display: inline-block; background: var(--primary, #ff5500); color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 1.2em; font-weight: bold; margin: 10px;" onclick="trackCallButtonClick('${serviceType}', '${phoneHref}'); showPhoneNumber();">
+          <a href="${phoneHref}" class="cta-button" style="display: inline-block; background: var(--primary, #ff5500); color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 1.2em; font-weight: bold; margin: 10px;" onclick="trackCallButtonClick('${serviceType}', '${phoneHref}');">
             📞 Call Now
           </a>
           <button onclick="trackBackButtonClick('${serviceType}'); openServiceModal();" style="display: block; margin: 20px auto 0; background: none; border: 1px solid #ddd; padding: 10px 20px; border-radius: 6px; cursor: pointer; color: #666;">
@@ -289,6 +290,7 @@ function selectService(serviceType) {
       </div>
     `;
   } else {
+    console.log('❌ No phone data available, using fallback');
     // Track fallback scenario
     trackModalEvent('modal_fallback', {
       action: 'no_phone_available',
