@@ -111,6 +111,14 @@ class UnifiedTrackingSystem {
         this.trackingData = this.initializeTrackingData();
         this.engagement = this.initializeEngagement();
         
+        // Initialize persistent data management
+        this.lastSentData = this.loadLastSentData();
+        this.significantEvents = new Set([
+            'page_view', 'form_submit', 'booking_completed', 'payment_confirmed',
+            'service_selection', 'customer_info_complete', 'vehicle_info_complete',
+            'inspection_booking_completed', 'conversion', 'lead_captured'
+        ]);
+        
         this.init();
     }
 
@@ -143,7 +151,63 @@ class UnifiedTrackingSystem {
         this.setupAPITracking();
         this.updatePhoneNumbers();
         
+        // Retry location detection after CF_GEO loads
+        this.retryLocationDetection();
+        
         console.log('📊 Tracking Data:', this.trackingData);
+    }
+
+    /**
+     * Retry location detection if CF_GEO wasn't available initially
+     */
+    retryLocationDetection() {
+        let attempts = 0;
+        const maxAttempts = 10;
+        
+        const checkLocation = () => {
+            attempts++;
+            
+            if (window.CF_GEO && window.CF_GEO.country) {
+                console.log('🌍 CF_GEO loaded, updating location data');
+                this.updateLocationData();
+                return;
+            }
+            
+            if (attempts < maxAttempts) {
+                setTimeout(checkLocation, 500); // Check every 500ms
+            } else {
+                console.log('🌍 CF_GEO not available after 5 seconds, using defaults');
+            }
+        };
+        
+        // Start checking after 100ms
+        setTimeout(checkLocation, 100);
+    }
+
+    /**
+     * Update location data when CF_GEO becomes available
+     */
+    updateLocationData() {
+        const geo = window.CF_GEO;
+        
+        if (this.trackingData.location) {
+            this.trackingData.location[this.STANDARD_FIELDS.country] = geo.country || 'New Zealand';
+            this.trackingData.location.countryCode = geo.countryCode || 'NZ';
+            this.trackingData.location[this.STANDARD_FIELDS.region] = geo.region || 'Auckland';
+            this.trackingData.location.regionCode = geo.regionCode || 'AUK';
+            this.trackingData.location[this.STANDARD_FIELDS.city] = geo.city || 'Auckland';
+            this.trackingData.location[this.STANDARD_FIELDS.postalCode] = geo.postalCode || 'Unknown';
+            this.trackingData.location.continent = geo.continent || 'Oceania';
+            this.trackingData.location[this.STANDARD_FIELDS.coordinates] = {
+                latitude: geo.latitude || -36.8485,
+                longitude: geo.longitude || 174.7633,
+                accuracy: geo.latitude && geo.longitude ? 'IP-based' : 'Default'
+            };
+            this.trackingData.location[this.STANDARD_FIELDS.timezone] = geo.timezone || 'Pacific/Auckland';
+            this.trackingData.location.raw = geo;
+            
+            console.log('🌍 Updated location data:', this.trackingData.location);
+        }
     }
 
     /**
@@ -263,7 +327,12 @@ class UnifiedTrackingSystem {
      * Initialize comprehensive tracking data with standardized fields
      */
     initializeTrackingData() {
+        // Wait for CF_GEO to be available, with fallback
         const geo = window.CF_GEO || {};
+        
+        // Debug logging for location data
+        console.log('🌍 CF_GEO Data:', geo);
+        console.log('🌍 Geo available:', !!window.CF_GEO);
         
         return {
             // Session data
@@ -284,21 +353,21 @@ class UnifiedTrackingSystem {
             [this.STANDARD_FIELDS.language]: navigator.language,
             [this.STANDARD_FIELDS.timezone]: Intl.DateTimeFormat().resolvedOptions().timeZone,
             
-            // Geolocation data
+            // Geolocation data - with better fallbacks
             location: {
-                [this.STANDARD_FIELDS.country]: geo.country || 'Unknown',
-                countryCode: geo.countryCode || 'Unknown',
-                [this.STANDARD_FIELDS.region]: geo.region || 'Unknown',
-                regionCode: geo.regionCode || 'Unknown',
-                [this.STANDARD_FIELDS.city]: geo.city || 'Unknown',
+                [this.STANDARD_FIELDS.country]: geo.country || 'New Zealand', // Default to NZ
+                countryCode: geo.countryCode || 'NZ',
+                [this.STANDARD_FIELDS.region]: geo.region || 'Auckland', // Default to Auckland
+                regionCode: geo.regionCode || 'AUK',
+                [this.STANDARD_FIELDS.city]: geo.city || 'Auckland', // Default to Auckland
                 [this.STANDARD_FIELDS.postalCode]: geo.postalCode || 'Unknown',
-                continent: geo.continent || 'Unknown',
+                continent: geo.continent || 'Oceania',
                 [this.STANDARD_FIELDS.coordinates]: {
-                    latitude: geo.latitude || null,
-                    longitude: geo.longitude || null,
-                    accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+                    latitude: geo.latitude || -36.8485, // Auckland coordinates as fallback
+                    longitude: geo.longitude || 174.7633,
+                    accuracy: geo.latitude && geo.longitude ? 'IP-based' : 'Default'
                 },
-                [this.STANDARD_FIELDS.timezone]: geo.timezone || 'Unknown',
+                [this.STANDARD_FIELDS.timezone]: geo.timezone || 'Pacific/Auckland',
                 raw: geo
             },
             
@@ -413,28 +482,34 @@ class UnifiedTrackingSystem {
      * Track engagement metrics
      */
     trackEngagement() {
-        // Track scroll depth
+        // Track scroll depth with throttling
         let maxScroll = 0;
+        let scrollTimeout;
+        
         window.addEventListener('scroll', () => {
-            const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
-            if (scrollPercent > maxScroll) {
-                maxScroll = scrollPercent;
-                this.trackingData.engagement.scrollDepth = scrollPercent;
-                
-                // Track milestone scrolls
-                if (scrollPercent >= 25 && scrollPercent < 50) {
-                    this.trackEvent('scroll_25_percent', 'Engagement', 'Scrolled 25%');
-                } else if (scrollPercent >= 50 && scrollPercent < 75) {
-                    this.trackEvent('scroll_50_percent', 'Engagement', 'Scrolled 50%');
-                } else if (scrollPercent >= 75 && scrollPercent < 90) {
-                    this.trackEvent('scroll_75_percent', 'Engagement', 'Scrolled 75%');
-                } else if (scrollPercent >= 90) {
-                    this.trackEvent('scroll_90_percent', 'Engagement', 'Scrolled 90%');
+            // Throttle scroll tracking to reduce API calls
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+                if (scrollPercent > maxScroll) {
+                    maxScroll = scrollPercent;
+                    this.trackingData.engagement.scrollDepth = scrollPercent;
+                    
+                    // Only track milestone scrolls, not every scroll
+                    if (scrollPercent >= 25 && scrollPercent < 50 && maxScroll < 25) {
+                        this.trackEvent('scroll_25_percent', 'Engagement', 'Scrolled 25%');
+                    } else if (scrollPercent >= 50 && scrollPercent < 75 && maxScroll < 50) {
+                        this.trackEvent('scroll_50_percent', 'Engagement', 'Scrolled 50%');
+                    } else if (scrollPercent >= 75 && scrollPercent < 90 && maxScroll < 75) {
+                        this.trackEvent('scroll_75_percent', 'Engagement', 'Scrolled 75%');
+                    } else if (scrollPercent >= 90 && maxScroll < 90) {
+                        this.trackEvent('scroll_90_percent', 'Engagement', 'Scrolled 90%');
+                    }
                 }
-            }
+            }, 500); // Throttle to 500ms
         });
 
-        // Track time on page
+        // Track time on page with less frequent updates
         setInterval(() => {
             this.trackingData.engagement.timeOnPage += 1;
         }, 1000);
@@ -581,15 +656,24 @@ class UnifiedTrackingSystem {
      * Setup API tracking
      */
     setupAPITracking() {
-        // Send tracking data on page unload
+        // Send tracking data on page unload only if there are meaningful changes
         window.addEventListener('beforeunload', () => {
-            this.sendTrackingData('page_exit', {
-                timeOnPage: this.trackingData.engagement.timeOnPage,
-                scrollDepth: this.trackingData.engagement.scrollDepth,
-                clicks: this.trackingData.engagement.clicks,
-                formInteractions: this.trackingData.engagement.formInteractions,
-                buttonClicks: this.trackingData.engagement.buttonClicks
-            });
+            // Only send if user spent meaningful time on page or had significant engagement
+            const timeOnPage = this.trackingData.engagement.timeOnPage;
+            const scrollDepth = this.trackingData.engagement.scrollDepth;
+            const clicks = this.trackingData.engagement.clicks;
+            
+            if (timeOnPage > 30 || scrollDepth > 25 || clicks > 3) {
+                this.sendTrackingData('page_exit', {
+                    timeOnPage: timeOnPage,
+                    scrollDepth: scrollDepth,
+                    clicks: clicks,
+                    formInteractions: this.trackingData.engagement.formInteractions,
+                    buttonClicks: this.trackingData.engagement.buttonClicks
+                });
+            } else {
+                console.log('📊 Skipping page exit tracking - insufficient engagement');
+            }
         });
     }
 
@@ -691,9 +775,189 @@ class UnifiedTrackingSystem {
     }
 
     /**
+     * Load last sent data from localStorage for comparison
+     */
+    loadLastSentData() {
+        try {
+            const stored = localStorage.getItem('eek_last_sent_data');
+            return stored ? JSON.parse(stored) : {};
+        } catch (error) {
+            console.warn('Failed to load last sent data:', error);
+            return {};
+        }
+    }
+
+    /**
+     * Save current data as last sent data
+     */
+    saveLastSentData(data) {
+        try {
+            // Only store essential fields to minimize storage
+            const essentialData = {
+                sessionId: data.sessionId,
+                gclid: data.gclid,
+                gclidState: data.gclidState,
+                pageSource: data.pageSource,
+                location: data.location,
+                utm: data.utm,
+                device: data.device,
+                userJourney: data.userJourney,
+                timestamp: data.timestamp,
+                eventType: data.eventType
+            };
+            localStorage.setItem('eek_last_sent_data', JSON.stringify(essentialData));
+        } catch (error) {
+            console.warn('Failed to save last sent data:', error);
+        }
+    }
+
+    /**
+     * Determine if tracking data should be sent based on changes
+     */
+    shouldSendTrackingData(eventType, additionalData = {}) {
+        // Always send significant events
+        if (this.significantEvents.has(eventType)) {
+            console.log('📊 Sending significant event:', eventType);
+            return true;
+        }
+
+        // Check for meaningful changes in persistent data
+        const currentData = this.getCurrentTrackingData();
+        const hasLocationChange = this.hasLocationChanged(currentData);
+        const hasEngagementChange = this.hasEngagementChanged(currentData);
+        const hasCustomerDataChange = this.hasCustomerDataChanged(currentData);
+        const hasServiceDataChange = this.hasServiceDataChanged(currentData);
+
+        if (hasLocationChange || hasEngagementChange || hasCustomerDataChange || hasServiceDataChange) {
+            console.log('📊 Sending due to data changes:', {
+                location: hasLocationChange,
+                engagement: hasEngagementChange,
+                customer: hasCustomerDataChange,
+                service: hasServiceDataChange
+            });
+            return true;
+        }
+
+        // Send if it's been more than 5 minutes since last send
+        const lastSent = this.lastSentData.timestamp;
+        if (lastSent) {
+            const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+            if (new Date(lastSent) < fiveMinutesAgo) {
+                console.log('📊 Sending due to time threshold (5 minutes)');
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get current tracking data for comparison
+     */
+    getCurrentTrackingData() {
+        return {
+            sessionId: this.trackingData[this.STANDARD_FIELDS.sessionId],
+            gclid: this.trackingData.pageSource?.clickIds?.gclid,
+            gclidState: this.trackingData.pageSource?.clickIds?.gclid ? 'Active' : 'Inactive',
+            pageSource: this.trackingData.pageSource,
+            location: this.trackingData.location,
+            utm: this.trackingData.utm,
+            device: {
+                userAgent: this.trackingData[this.STANDARD_FIELDS.userAgent],
+                screenResolution: this.trackingData[this.STANDARD_FIELDS.screenResolution],
+                viewportSize: this.trackingData[this.STANDARD_FIELDS.viewportSize],
+                language: this.trackingData[this.STANDARD_FIELDS.language],
+                timezone: this.trackingData[this.STANDARD_FIELDS.timezone],
+                platform: this.detectDevicePlatform()
+            },
+            userJourney: this.trackingData.userJourney,
+            engagement: this.trackingData.engagement,
+            customer: {
+                name: this.trackingData[this.STANDARD_FIELDS.fullName] || '',
+                phone: this.trackingData[this.STANDARD_FIELDS.phone] || '',
+                email: this.trackingData[this.STANDARD_FIELDS.email] || ''
+            },
+            service: {
+                serviceType: this.trackingData[this.STANDARD_FIELDS.serviceType] || '',
+                serviceTitle: this.trackingData[this.STANDARD_FIELDS.serviceTitle] || '',
+                price: this.trackingData[this.STANDARD_FIELDS.price] || ''
+            },
+            timestamp: new Date().toISOString()
+        };
+    }
+
+    /**
+     * Check if location data has changed significantly
+     */
+    hasLocationChanged(currentData) {
+        const lastLocation = this.lastSentData.location;
+        if (!lastLocation) return true;
+
+        const currentLocation = currentData.location;
+        return (
+            lastLocation.country !== currentLocation.country ||
+            lastLocation.region !== currentLocation.region ||
+            lastLocation.city !== currentLocation.city ||
+            lastLocation.coordinates?.latitude !== currentLocation.coordinates?.latitude ||
+            lastLocation.coordinates?.longitude !== currentLocation.coordinates?.longitude
+        );
+    }
+
+    /**
+     * Check if engagement data has changed significantly
+     */
+    hasEngagementChanged(currentData) {
+        const lastEngagement = this.lastSentData.engagement;
+        if (!lastEngagement) return true;
+
+        const currentEngagement = currentData.engagement;
+        return (
+            Math.abs((lastEngagement.scrollDepth || 0) - (currentEngagement.scrollDepth || 0)) > 25 ||
+            Math.abs((lastEngagement.timeOnPage || 0) - (currentEngagement.timeOnPage || 0)) > 30 ||
+            Math.abs((lastEngagement.clicks || 0) - (currentEngagement.clicks || 0)) > 5
+        );
+    }
+
+    /**
+     * Check if customer data has changed
+     */
+    hasCustomerDataChanged(currentData) {
+        const lastCustomer = this.lastSentData.customer;
+        if (!lastCustomer) return false; // Don't send for empty customer data
+
+        const currentCustomer = currentData.customer;
+        return (
+            lastCustomer.name !== currentCustomer.name ||
+            lastCustomer.phone !== currentCustomer.phone ||
+            lastCustomer.email !== currentCustomer.email
+        );
+    }
+
+    /**
+     * Check if service data has changed
+     */
+    hasServiceDataChanged(currentData) {
+        const lastService = this.lastSentData.service;
+        if (!lastService) return false; // Don't send for empty service data
+
+        const currentService = currentData.service;
+        return (
+            lastService.serviceType !== currentService.serviceType ||
+            lastService.serviceTitle !== currentService.serviceTitle ||
+            lastService.price !== currentService.price
+        );
+    }
+
+    /**
      * Send tracking data to Power Automate API
      */
     async sendTrackingData(eventType, additionalData = {}) {
+        // Check if this is a significant change that warrants sending
+        if (!this.shouldSendTrackingData(eventType, additionalData)) {
+            console.log('📊 Skipping tracking data send - no significant changes');
+            return;
+        }
+
         // Create payload that matches Power Automate email template expectations
         const trackingPayload = {
             // Core fields that the email template expects
@@ -837,6 +1101,13 @@ class UnifiedTrackingSystem {
             payload: trackingPayload,
             payloadSize: JSON.stringify(trackingPayload).length
         });
+        
+        // Debug Google Ads data
+        console.log('🎯 Google Ads Debug:', {
+            gclid: trackingPayload.gclid,
+            utm: trackingPayload.utm,
+            pageSource: trackingPayload.pageSource
+        });
 
         try {
             const response = await fetch(this.API_ENDPOINTS.tracking, {
@@ -857,6 +1128,10 @@ class UnifiedTrackingSystem {
             if (!response.ok) {
                 const errorText = await response.text();
                 console.error('❌ Tracking API Error Response:', errorText);
+            } else {
+                // Save current data as last sent data after successful send
+                this.saveLastSentData(trackingPayload);
+                console.log('💾 Saved tracking data for future comparison');
             }
         } catch (error) {
             console.error('❌ Tracking API Error:', {
@@ -970,6 +1245,58 @@ class UnifiedTrackingSystem {
      */
     getStandardFields() {
         return this.STANDARD_FIELDS;
+    }
+
+    /**
+     * Update tracking data and send if significant changes
+     */
+    updateTrackingData(fieldName, value, eventType = 'data_update') {
+        if (this.STANDARD_FIELDS[fieldName]) {
+            this.trackingData[this.STANDARD_FIELDS[fieldName]] = value;
+            console.log(`📊 Updated ${fieldName}:`, value);
+            
+            // Send immediately for significant data changes
+            if (this.isSignificantField(fieldName)) {
+                this.sendTrackingData(eventType, {
+                    fieldName: fieldName,
+                    value: value
+                });
+            }
+        } else {
+            console.warn(`Unknown field: ${fieldName}`);
+        }
+    }
+
+    /**
+     * Check if a field is significant enough to trigger immediate send
+     */
+    isSignificantField(fieldName) {
+        const significantFields = [
+            'fullName', 'phone', 'email', 'vehicleRego', 'vehicleYear', 
+            'vehicleMake', 'vehicleModel', 'serviceType', 'serviceTitle', 
+            'price', 'bookingStatus', 'eventType'
+        ];
+        return significantFields.includes(fieldName);
+    }
+
+    /**
+     * Batch update multiple fields and send once
+     */
+    batchUpdateTrackingData(updates, eventType = 'batch_update') {
+        let hasSignificantChanges = false;
+        
+        for (const [fieldName, value] of Object.entries(updates)) {
+            if (this.STANDARD_FIELDS[fieldName]) {
+                this.trackingData[this.STANDARD_FIELDS[fieldName]] = value;
+                if (this.isSignificantField(fieldName)) {
+                    hasSignificantChanges = true;
+                }
+            }
+        }
+        
+        if (hasSignificantChanges) {
+            this.sendTrackingData(eventType, updates);
+        }
     }
 }
 
