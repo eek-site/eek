@@ -16,8 +16,14 @@ let sessionId = null;
 let gclid = null;
 let utmData = {};
 
-// API Configuration
-const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
+// API Configuration - Separate endpoints for tracking vs payment
+const API_ENDPOINTS = {
+    tracking: 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4',
+    payment: 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q'
+};
+
+// Backward compatibility
+const POWER_AUTOMATE_URL = API_ENDPOINTS.payment;
 
 // === BOOKING STATUS CONSTANTS ===
 const BOOKING_STATUS = {
@@ -230,7 +236,7 @@ function setupEventListeners() {
       if (serviceOption) {
         const serviceId = serviceOption.dataset?.service;
         if (serviceId) {
-          selectService(serviceId);
+          selectInspectionService(serviceId);
         }
       }
     } catch (error) {
@@ -265,10 +271,75 @@ function setupEventListeners() {
       console.warn('Form validation error:', error);
     }
   });
+
+  // Enter-to-continue (ignore Shift+Enter and textareas)
+  document.addEventListener('keydown', function(e) {
+    try {
+      const target = e.target;
+      const isTextarea = target && target.tagName === 'TEXTAREA';
+      if (e.key === 'Enter' && !e.shiftKey && !isTextarea) {
+        e.preventDefault();
+        // Only attempt to continue if not on step 1
+        if (currentStep > 1) {
+          goToNextStep();
+        }
+      }
+    } catch (error) {
+      console.warn('Enter-to-continue error:', error);
+    }
+  });
+
+  // Mobile swipe navigation (left = next, right = back)
+  (function initSwipeNavigation() {
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+    const container = document.querySelector('.booking-container') || document.body;
+    const horizontalThreshold = 60; // px
+    const verticalTolerance = 50; // px
+
+    function onTouchStart(ev) {
+      const t = ev.changedTouches && ev.changedTouches[0];
+      if (!t) return;
+      touchStartX = t.clientX;
+      touchStartY = t.clientY;
+      touchEndX = touchStartX;
+      touchEndY = touchStartY;
+    }
+    function onTouchMove(ev) {
+      const t = ev.changedTouches && ev.changedTouches[0];
+      if (!t) return;
+      touchEndX = t.clientX;
+      touchEndY = t.clientY;
+    }
+    function onTouchEnd() {
+      const dx = touchEndX - touchStartX;
+      const dy = touchEndY - touchStartY;
+      if (Math.abs(dy) > verticalTolerance) return; // ignore vertical scrolls
+
+      // Ignore if focused element is typing (to avoid interfering with form input)
+      const active = document.activeElement;
+      const isTyping = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA');
+      if (isTyping) return;
+
+      if (dx <= -horizontalThreshold) {
+        // swipe left → next
+        if (currentStep < 7) goToNextStep();
+      } else if (dx >= horizontalThreshold) {
+        // swipe right → back
+        if (currentStep > 1) goToPreviousStep();
+      }
+    }
+
+    container.addEventListener('touchstart', onTouchStart, { passive: true });
+    container.addEventListener('touchmove', onTouchMove, { passive: true });
+    container.addEventListener('touchend', onTouchEnd, { passive: true });
+  })();
 }
 
 // Service selection functions
-function selectService(serviceId) {
+function selectInspectionService(serviceId) {
   selectedService = services[serviceId];
   selectedServicePrice = selectedService.price;
   
@@ -497,6 +568,52 @@ function showStep(stepNum) {
   
   // Update navigation button text based on step
   updateNavigationButtonText(stepNum);
+
+  // Mobile UX: scroll to top of the container and focus first field
+  try {
+    const bookingContainer = document.querySelector('.booking-container');
+    if (bookingContainer) {
+      bookingContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Focus the first enabled input/select/textarea in the step
+    const activeStep = document.getElementById(`step${stepNum}`);
+    const firstFocusable = activeStep?.querySelector('[autofocus], input:not([type=hidden]):not([disabled]), select:not([disabled]), textarea:not([disabled])');
+    if (firstFocusable && typeof firstFocusable.focus === 'function') {
+      setTimeout(() => firstFocusable.focus(), 100);
+    }
+  } catch (e) {
+    console.warn('Focus/scroll error:', e);
+  }
+
+  // Ensure inline step controls are present for easier reach on mobile
+  ensureInlineControls(stepNum);
+}
+
+// Inject inline Continue/Back buttons inside the active step for easier mobile reach
+function ensureInlineControls(stepNum) {
+  const stepEl = document.getElementById(`step${stepNum}`);
+  if (!stepEl) return;
+  let controls = stepEl.querySelector('.inline-step-controls');
+  if (!controls) {
+    controls = document.createElement('div');
+    controls.className = 'inline-step-controls';
+    controls.innerHTML = `
+      <div class="inline-controls-buttons">
+        <button type="button" class="btn btn-secondary inline-back" onclick="goToPreviousStep()">← Back</button>
+        <button type="button" class="btn btn-primary inline-continue" onclick="goToNextStep()">Continue →</button>
+      </div>
+    `;
+    stepEl.appendChild(controls);
+  }
+  // Hide back on first step
+  const backBtn = controls.querySelector('.inline-back');
+  if (backBtn) backBtn.style.display = stepNum > 1 ? 'inline-block' : 'none';
+  // Update continue label on final step
+  const continueBtn = controls.querySelector('.inline-continue');
+  if (continueBtn) continueBtn.textContent = stepNum === 7 ? 'Secure My Inspection Now →' : 'Continue →';
 }
 
 function updateProgressBar(stepNum) {
@@ -551,6 +668,17 @@ function validateForm() {
       } else {
         warningElement.style.display = 'block';
       }
+    }
+  }
+
+  // Mobile UX: scroll to first invalid field
+  if (!isValid) {
+    const firstInvalid = currentStepElement.querySelector('[required].error, [required]:invalid');
+    if (firstInvalid) {
+      try {
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => firstInvalid.focus && firstInvalid.focus(), 150);
+      } catch (e) {}
     }
   }
   
@@ -952,14 +1080,14 @@ async function completeBooking() {
 
 // Submit booking to API
 async function submitBooking(data) {
-  console.log('🌐 API URL:', POWER_AUTOMATE_URL);
+  console.log('🌐 API URL:', API_ENDPOINTS.payment);
   console.log('📤 Request Headers:', {
     'Content-Type': 'application/json',
     'User-Agent': navigator.userAgent
   });
   
   try {
-    const response = await fetch(POWER_AUTOMATE_URL, {
+    const response = await fetch(API_ENDPOINTS.payment, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1160,7 +1288,8 @@ async function sendStepTracking(status) {
   console.log('📊 Step data:', data);
   
   try {
-    const response = await fetch(POWER_AUTOMATE_URL, {
+    // Use TRACKING API for step updates, not payment API
+    const response = await fetch(API_ENDPOINTS.tracking, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1601,8 +1730,8 @@ async function generatePaymentLink() {
     // Collect all form data
     const formData = buildInspectionData('inspection_booking_completed');
     
-    // Send to Power Automate
-    const response = await fetch(POWER_AUTOMATE_URL, {
+    // Send to Power Automate PAYMENT API for final booking
+    const response = await fetch(API_ENDPOINTS.payment, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

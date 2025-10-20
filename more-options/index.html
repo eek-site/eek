@@ -14,7 +14,7 @@
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
 
     <!-- Call Modal Styles -->
-    <link rel="stylesheet" href="../call-modal.css?v=20250119">
+    <link rel="stylesheet" href="../call-modal.css?v={{ site.version }}">
 
     <!-- Reddit Pixel -->
     <script>
@@ -35,16 +35,16 @@
     </script>
     
     <!-- Centralized Phone Number Management -->
-  <script src="/phone-manager.js?v=20250115"></script>
+  <script src="/phone-manager.js?v={{ site.version }}"></script>
   
   <!-- Centralized Tracking Management -->
-  <script src="/tracking-manager.js?v=20250115"></script>
+  <script src="/tracking-manager.js?v={{ site.version }}"></script>
   
   <!-- Unified Tracking System -->
-  <script src="/unified-tracking.js?v=20250124"></script>
+  <script src="/unified-tracking.js?v={{ site.version }}"></script>
   
   <!-- Centralized Footer Management -->
-  <script src="/footer-new.js?v=20250121"></script>
+  <script src="/footer-new.js?v={{ site.version }}"></script>
 
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
@@ -1370,12 +1370,12 @@
     <!-- Service Selection Modal - loaded from call-modal.html -->
 
     <!-- Call Modal Scripts -->
-        <script src="../call-modal.js?v=20250119"></script>
+        <script src="../call-modal.js?v={{ site.version }}"></script>
 
     <!-- Include Modal HTML -->
     <script>
         // Load modal HTML dynamically
-        fetch('../call-modal.html?v=20250119')
+        fetch('../call-modal.html?v={{ site.version }}')
             .then(response => response.text())
             .then(html => {
                 document.body.insertAdjacentHTML('beforeend', html);

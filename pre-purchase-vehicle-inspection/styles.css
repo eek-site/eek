@@ -92,7 +92,7 @@ body {
   font-family: var(--font-primary);
   background: var(--gray-100);
   margin: 0;
-  padding: 0 0 100px 0;
+  padding: 0 0 calc(100px + env(safe-area-inset-bottom, 0px)) 0;
   color: var(--gray-900);
   line-height: 1.6;
 }
@@ -386,6 +386,18 @@ h1 {
   display: block;
 }
 
+/* Inline step controls for easier mobile reach */
+.inline-step-controls {
+  margin-top: var(--space-xl);
+}
+.inline-controls-buttons {
+  display: flex;
+  gap: var(--space-md);
+}
+.inline-controls-buttons .btn {
+  flex: 1;
+}
+
 .step h3 {
   color: var(--primary);
   margin-bottom: var(--space-lg);
@@ -471,7 +483,7 @@ h1 {
 .form-select,
 .form-textarea {
   width: 100%;
-  padding: var(--space-md);
+  padding: var(--space-lg);
   border: 2px solid var(--gray-300);
   border-radius: var(--radius-md);
   font-size: 1rem;
@@ -1162,6 +1174,7 @@ h1 {
   background: rgba(0,0,0,0.5);
   z-index: 1000;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .modal.show {
@@ -1179,6 +1192,40 @@ h1 {
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: var(--shadow-xl);
+}
+
+/* Mobile full-screen modal for better UX */
+@media (max-width: 640px) {
+  .modal.show {
+    padding: 0;
+  }
+  .modal-content {
+    max-width: 100vw;
+    width: 100vw;
+    max-height: 100dvh;
+    height: 100dvh;
+    min-height: -webkit-fill-available;
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .modal-header {
+    border-radius: 0 0 0 0;
+    padding: calc(var(--space-lg) + env(safe-area-inset-top, 0px)) var(--space-xl) var(--space-lg) var(--space-xl);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  .modal-body {
+    padding: var(--space-lg) var(--space-xl) calc(var(--space-xl) + env(safe-area-inset-bottom, 0px)) var(--space-xl);
+    flex: 1;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .modal-close {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .modal-header {
@@ -1383,6 +1430,7 @@ h1 {
   cursor: pointer;
   transition: all var(--transition-normal);
   min-height: 48px;
+  min-width: 120px;
 }
 
 .nav-back {
