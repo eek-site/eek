@@ -386,6 +386,18 @@ h1 {
   display: block;
 }
 
+/* Inline step controls for easier mobile reach */
+.inline-step-controls {
+  margin-top: var(--space-xl);
+}
+.inline-controls-buttons {
+  display: flex;
+  gap: var(--space-md);
+}
+.inline-controls-buttons .btn {
+  flex: 1;
+}
+
 .step h3 {
   color: var(--primary);
   margin-bottom: var(--space-lg);

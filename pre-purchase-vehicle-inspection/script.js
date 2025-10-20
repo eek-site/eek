@@ -282,6 +282,54 @@ function setupEventListeners() {
       console.warn('Enter-to-continue error:', error);
     }
   });
+
+  // Mobile swipe navigation (left = next, right = back)
+  (function initSwipeNavigation() {
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+    const container = document.querySelector('.booking-container') || document.body;
+    const horizontalThreshold = 60; // px
+    const verticalTolerance = 50; // px
+
+    function onTouchStart(ev) {
+      const t = ev.changedTouches && ev.changedTouches[0];
+      if (!t) return;
+      touchStartX = t.clientX;
+      touchStartY = t.clientY;
+      touchEndX = touchStartX;
+      touchEndY = touchStartY;
+    }
+    function onTouchMove(ev) {
+      const t = ev.changedTouches && ev.changedTouches[0];
+      if (!t) return;
+      touchEndX = t.clientX;
+      touchEndY = t.clientY;
+    }
+    function onTouchEnd() {
+      const dx = touchEndX - touchStartX;
+      const dy = touchEndY - touchStartY;
+      if (Math.abs(dy) > verticalTolerance) return; // ignore vertical scrolls
+
+      // Ignore if focused element is typing (to avoid interfering with form input)
+      const active = document.activeElement;
+      const isTyping = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA');
+      if (isTyping) return;
+
+      if (dx <= -horizontalThreshold) {
+        // swipe left → next
+        if (currentStep < 7) goToNextStep();
+      } else if (dx >= horizontalThreshold) {
+        // swipe right → back
+        if (currentStep > 1) goToPreviousStep();
+      }
+    }
+
+    container.addEventListener('touchstart', onTouchStart, { passive: true });
+    container.addEventListener('touchmove', onTouchMove, { passive: true });
+    container.addEventListener('touchend', onTouchEnd, { passive: true });
+  })();
 }
 
 // Service selection functions
@@ -533,6 +581,33 @@ function showStep(stepNum) {
   } catch (e) {
     console.warn('Focus/scroll error:', e);
   }
+
+  // Ensure inline step controls are present for easier reach on mobile
+  ensureInlineControls(stepNum);
+}
+
+// Inject inline Continue/Back buttons inside the active step for easier mobile reach
+function ensureInlineControls(stepNum) {
+  const stepEl = document.getElementById(`step${stepNum}`);
+  if (!stepEl) return;
+  let controls = stepEl.querySelector('.inline-step-controls');
+  if (!controls) {
+    controls = document.createElement('div');
+    controls.className = 'inline-step-controls';
+    controls.innerHTML = `
+      <div class="inline-controls-buttons">
+        <button type="button" class="btn btn-secondary inline-back" onclick="goToPreviousStep()">← Back</button>
+        <button type="button" class="btn btn-primary inline-continue" onclick="goToNextStep()">Continue →</button>
+      </div>
+    `;
+    stepEl.appendChild(controls);
+  }
+  // Hide back on first step
+  const backBtn = controls.querySelector('.inline-back');
+  if (backBtn) backBtn.style.display = stepNum > 1 ? 'inline-block' : 'none';
+  // Update continue label on final step
+  const continueBtn = controls.querySelector('.inline-continue');
+  if (continueBtn) continueBtn.textContent = stepNum === 7 ? 'Secure My Inspection Now →' : 'Continue →';
 }
 
 function updateProgressBar(stepNum) {
