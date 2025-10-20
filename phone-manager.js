@@ -103,13 +103,9 @@ class PhoneManager {
         phoneLinks.forEach(link => {
             link.href = phoneData.tel;
             
-            // Only replace phone numbers in display text if it's not an after-hours element
+            // Never show phone numbers in display text - only show "Call Now"
             const textContent = link.textContent;
-            const isAfterHoursElement = link.classList.contains('after-hours-btn') || 
-                                      link.closest('#closedBanner') || 
-                                      link.closest('#phonesBusyBanner');
-            
-            if (textContent && (textContent.includes('0800') || textContent.includes('+64')) && !isAfterHoursElement) {
+            if (textContent && (textContent.includes('0800') || textContent.includes('+64'))) {
                 // Replace any phone number with "Now" to keep it as "Call Now"
                 link.textContent = textContent.replace(/\b0800\s?\d{3}\s?\d{3}\b|\+64\s?\d\s?\d{3}\s?\d{3}\s?\d{3}\b/g, 'Now');
             }
@@ -150,16 +146,7 @@ class PhoneManager {
         let node;
         while (node = walker.nextNode()) {
             if (node.textContent.includes('0800 769 000') || node.textContent.includes('0800769000')) {
-                // Check if this text node is inside an after-hours element
-                const isInAfterHoursElement = node.parentElement && (
-                    node.parentElement.closest('#closedBanner') ||
-                    node.parentElement.closest('#phonesBusyBanner') ||
-                    node.parentElement.classList.contains('after-hours-btn')
-                );
-                
-                if (!isInAfterHoursElement) {
-                    textNodes.push(node);
-                }
+                textNodes.push(node);
             }
         }
         
