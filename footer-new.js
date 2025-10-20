@@ -188,13 +188,13 @@ class FooterManager {
     if (!document.querySelector('link[href*="call-modal.css"]')) {
       const link = document.createElement('link');
       link.rel = 'stylesheet';
-      link.href = '/call-modal.css?v=20250121';
+      link.href = '/call-modal.css?v=20250125';
       document.head.appendChild(link);
     }
 
     // Load call-modal.js
     const script = document.createElement('script');
-    script.src = '/call-modal.js?v=20250121';
+    script.src = '/call-modal.js?v=20250125';
     script.onload = () => {
       console.log('✅ Call modal scripts loaded successfully');
     };
