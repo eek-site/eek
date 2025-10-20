@@ -1,0 +1,53 @@
+<!-- Service Selection Modal -->
+<div id="serviceModal" class="service-modal" style="display: none;">
+  <div class="service-modal-content">
+    <div class="service-modal-header">
+      <h3>🚨 What's Your Emergency?</h3>
+      <p>Select your service so we can dispatch the right mechanic</p>
+      <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
+    </div>
+    <div class="service-modal-body">
+      <div class="service-options">
+        <button class="service-option" onclick="selectService('emergency_breakdown')" data-service="emergency_breakdown">
+          <span class="service-icon">🚨</span>
+          <div class="service-details">
+            <h4>Emergency Breakdown</h4>
+            <p>Engine won't start, stranded, mechanical issues</p>
+          </div>
+        </button>
+        
+        <button class="service-option" onclick="selectService('battery_jumpstart')" data-service="battery_jumpstart">
+          <span class="service-icon">🔋</span>
+          <div class="service-details">
+            <h4>Dead Battery</h4>
+            <p>Jump start service, battery replacement</p>
+          </div>
+        </button>
+        
+        <button class="service-option" onclick="selectService('wrong_fuel')" data-service="wrong_fuel">
+          <span class="service-icon">⛽</span>
+          <div class="service-details">
+            <h4>Wrong Fuel Emergency</h4>
+            <p>Petrol in diesel or diesel in petrol</p>
+          </div>
+        </button>
+        
+        <button class="service-option" onclick="selectService('pre_purchase')" data-service="pre_purchase">
+          <span class="service-icon">🔍</span>
+          <div class="service-details">
+            <h4>Pre-Purchase Inspection</h4>
+            <p>45-point vehicle inspection</p>
+          </div>
+        </button>
+        
+        <button class="service-option" onclick="selectService('post_job')" data-service="post_job">
+          <span class="service-icon">📋</span>
+          <div class="service-details">
+            <h4>Post-Job Support</h4>
+            <p>Customer escalation or supplier relations</p>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

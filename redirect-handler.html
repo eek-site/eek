@@ -207,7 +207,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="logo">🔧 Eek Mobile Mechanical</div>
+        <div class="logo">🔧 Eek Mechanical</div>
         <div class="brand-tagline">Looking for the page you requested...</div>
         
         <div id="loadingContainer">
@@ -229,7 +229,7 @@
             
             <div class="manual-link">
                 <a href="https://eek.nz" class="cta-button">📞 Go to Homepage</a>
-                <a href="tel:0800769000" class="cta-button" style="margin-left: 15px;">📞 Call 0800 769 000</a>
+                <a href="#" class="cta-button phone-link" style="margin-left: 15px;">📞 Call <span class="phone-display">Now</span></a>
             </div>
         </div>
         
@@ -238,6 +238,15 @@
         </div>
     </div>
 
+    <!-- Centralized Phone Number Management -->
+    <script src="/phone-manager.js"></script>
+    
+    <!-- Centralized Tracking Management -->
+    <script src="/tracking-manager.js"></script>
+    
+    <!-- Centralized Footer Management -->
+    <script src="/footer-new.js?v=20250121"></script>
+    
     <script>
         // Comprehensive redirect database - same as admin page
         const redirectDatabase = {
@@ -511,7 +520,7 @@
             suggestions.push({
                 url: 'https://eek.nz/',
                 title: '🏠 Homepage',
-                description: 'Main Eek Mobile Mechanical website'
+                description: 'Main Eek Mechanical website'
             });
             
             suggestions.push({
@@ -521,8 +530,8 @@
             });
             
             suggestions.push({
-                url: 'tel:0800769000',
-                title: '📞 Call 0800 769 000',
+                url: '#',
+                title: '📞 Call Now',
                 description: 'Speak directly with our dispatch team'
             });
             
