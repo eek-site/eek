@@ -15,9 +15,9 @@ class FooterManager {
         <div class="eek-footer-wrapper">
           <div class="eek-footer-content">
             <div class="eek-footer-section">
-              <h4>Eek Mechanical</h4>
-              <p>Professional mobile mechanic services across New Zealand</p>
-              <p>Jump Starts • Mobile Repairs • Pre-Purchase Inspections • Wrong Fuel Rescue</p>
+              <h4>Eek Mechanical Ltd</h4>
+              <p>Professional mobile mechanics</p>
+              <a href="/book-service">Book Online</a>
             </div>
             
             <div class="eek-footer-section">
@@ -178,6 +178,34 @@ class FooterManager {
     document.head.appendChild(style.firstElementChild);
   }
 
+  // Inject call modal scripts if not already loaded
+  injectCallModalScripts() {
+    // Check if call-modal.js is already loaded
+    if (window.openServiceModal) {
+      console.log('✅ Call modal scripts already loaded');
+      return;
+    }
+
+    // Load call-modal.css if not already loaded
+    if (!document.querySelector('link[href*="call-modal.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/call-modal.css?v=20250121';
+      document.head.appendChild(link);
+    }
+
+    // Load call-modal.js
+    const script = document.createElement('script');
+    script.src = '/call-modal.js?v=20250121';
+    script.onload = () => {
+      console.log('✅ Call modal scripts loaded successfully');
+    };
+    script.onerror = () => {
+      console.error('❌ Failed to load call modal scripts');
+    };
+    document.head.appendChild(script);
+  }
+
   // Inject footer into page
   injectFooter() {
     // Remove existing footer if any
@@ -209,6 +237,9 @@ class FooterManager {
       
       // Inject CSS
       this.injectCSS();
+      
+      // Inject call modal scripts
+      this.injectCallModalScripts();
       
       // Inject footer
       this.injectFooter();
