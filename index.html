@@ -2030,6 +2030,71 @@ function updateModalButtons() {
   });
 }
 
+// Handle More Info modal action - either call or book based on phone status
+function handleMoreInfoAction(serviceType) {
+  // Check if normal hours buttons are visible (indicates phones are on)
+  const normalButtons = document.querySelectorAll('.normal-hours-btn');
+  const isSystemActive = normalButtons.length > 0 && normalButtons[0].style.display !== 'none';
+  
+  // Close the modal first
+  closeMoreModal();
+  
+  if (isSystemActive) {
+    // Phones are on - open service modal for calling
+    openServiceModal();
+    
+    // Track the action
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'more_info_call_click', {
+        service_type: serviceType,
+        action: 'call',
+        source: 'more_info_modal',
+        event_category: 'engagement'
+      });
+    }
+    
+    // Track with unified tracking
+    if (window.unifiedTracking) {
+      window.unifiedTracking.trackEvent('more_info_call_click', 'Service', serviceType, {
+        action: 'call',
+        source: 'more_info_modal'
+      });
+    }
+  } else {
+    // Phones are off - redirect to booking page
+    const serviceMap = {
+      'jumpstarts': 'jump-start',
+      'repairs': 'mechanical-repair', 
+      'inspections': 'pre-purchase',
+      'fuel': 'fuel-extraction'
+    };
+    
+    const bookingService = serviceMap[serviceType] || 'jump-start';
+    const bookingUrl = `/book-service/?service=${bookingService}`;
+    
+    // Track the action
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'more_info_book_click', {
+        service_type: serviceType,
+        action: 'book',
+        source: 'more_info_modal',
+        event_category: 'conversion'
+      });
+    }
+    
+    // Track with unified tracking
+    if (window.unifiedTracking) {
+      window.unifiedTracking.trackEvent('more_info_book_click', 'Service', serviceType, {
+        action: 'book',
+        source: 'more_info_modal'
+      });
+    }
+    
+    // Redirect to booking
+    window.location.href = bookingUrl;
+  }
+}
+
 function closeMoreModal() {
   const modal = document.getElementById('moreInfoModal');
   if (modal) {
@@ -2082,7 +2147,7 @@ function getServiceData(serviceType) {
         </div>
         
         <div class="cta-section">
-          <a href="javascript:void(0)" onclick="closeMoreModal(); openServiceModal();" class="cta-button normal-hours-btn">📞 Call Now</a>
+          <a href="javascript:void(0)" onclick="handleMoreInfoAction('jumpstarts')" class="cta-button normal-hours-btn">📞 Call Now</a>
         </div>
       `
     },
@@ -2129,7 +2194,7 @@ function getServiceData(serviceType) {
         </div>
         
         <div class="cta-section">
-          <a href="javascript:void(0)" onclick="closeMoreModal(); openServiceModal();" class="cta-button normal-hours-btn">📞 Call Now</a>
+          <a href="javascript:void(0)" onclick="handleMoreInfoAction('repairs')" class="cta-button normal-hours-btn">📞 Call Now</a>
         </div>
       `
     },
@@ -2187,7 +2252,7 @@ function getServiceData(serviceType) {
         </div>
         
         <div class="cta-section">
-          <a href="javascript:void(0)" onclick="closeMoreModal(); openServiceModal();" class="cta-button normal-hours-btn">📞 Call Now</a>
+          <a href="javascript:void(0)" onclick="handleMoreInfoAction('inspections')" class="cta-button normal-hours-btn">📞 Call Now</a>
         </div>
       `
     },
@@ -2246,7 +2311,7 @@ function getServiceData(serviceType) {
         </div>
         
         <div class="cta-section">
-          <a href="javascript:void(0)" onclick="closeMoreModal(); openServiceModal();" class="cta-button normal-hours-btn">📞 Call Now</a>
+          <a href="javascript:void(0)" onclick="handleMoreInfoAction('fuel')" class="cta-button normal-hours-btn">📞 Call Now</a>
         </div>
       `
     }
