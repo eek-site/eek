@@ -16,8 +16,14 @@ let sessionId = null;
 let gclid = null;
 let utmData = {};
 
-// API Configuration
-const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
+// API Configuration - Separate endpoints for tracking vs payment
+const API_ENDPOINTS = {
+    tracking: 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4',
+    payment: 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q'
+};
+
+// Backward compatibility
+const POWER_AUTOMATE_URL = API_ENDPOINTS.payment;
 
 // === BOOKING STATUS CONSTANTS ===
 const BOOKING_STATUS = {
@@ -1074,14 +1080,14 @@ async function completeBooking() {
 
 // Submit booking to API
 async function submitBooking(data) {
-  console.log('🌐 API URL:', POWER_AUTOMATE_URL);
+  console.log('🌐 API URL:', API_ENDPOINTS.payment);
   console.log('📤 Request Headers:', {
     'Content-Type': 'application/json',
     'User-Agent': navigator.userAgent
   });
   
   try {
-    const response = await fetch(POWER_AUTOMATE_URL, {
+    const response = await fetch(API_ENDPOINTS.payment, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1282,7 +1288,8 @@ async function sendStepTracking(status) {
   console.log('📊 Step data:', data);
   
   try {
-    const response = await fetch(POWER_AUTOMATE_URL, {
+    // Use TRACKING API for step updates, not payment API
+    const response = await fetch(API_ENDPOINTS.tracking, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1723,8 +1730,8 @@ async function generatePaymentLink() {
     // Collect all form data
     const formData = buildInspectionData('inspection_booking_completed');
     
-    // Send to Power Automate
-    const response = await fetch(POWER_AUTOMATE_URL, {
+    // Send to Power Automate PAYMENT API for final booking
+    const response = await fetch(API_ENDPOINTS.payment, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
