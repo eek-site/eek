@@ -2005,6 +2005,25 @@ function openMoreModal(serviceType) {
   // Update button text based on phone system status
   updateModalButtons();
   
+  // Send unified tracking event for modal open
+  if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+    const serviceMap = {
+      'jumpstarts': { service: 'jump_start', serviceCode: 'JUMP', serviceTitle: 'Jump Start', price: 149 },
+      'repairs': { service: 'mechanical_repair', serviceCode: 'REPAIR', serviceTitle: 'Mobile Mechanical Repair', price: 249 },
+      'inspections': { service: 'inspection', serviceCode: 'INSP', serviceTitle: 'Pre-Purchase Inspection', price: 299 },
+      'fuel': { service: 'fuel_extraction', serviceCode: 'FUEL', serviceTitle: 'Wrong Fuel Rescue', price: 399 }
+    };
+    const svc = serviceMap[serviceType] || { service: serviceType, serviceCode: serviceType, serviceTitle: serviceData.title || 'Service', price: undefined };
+    window.unifiedTracking.sendTrackingData('more_info_open', {
+      service: svc.service,
+      serviceCode: svc.serviceCode,
+      serviceTitle: svc.serviceTitle,
+      price: svc.price,
+      basePrice: svc.price,
+      source: 'more_info_modal'
+    });
+  }
+  
   modal.style.display = 'flex';
   document.body.style.overflow = 'hidden';
 }
@@ -2039,6 +2058,15 @@ function handleMoreInfoAction(serviceType) {
   // Close the modal first
   closeMoreModal();
   
+  // Prepare unified tracking payload details
+  const serviceMap = {
+    'jumpstarts': { service: 'jump_start', serviceCode: 'JUMP', serviceTitle: 'Jump Start', price: 149 },
+    'repairs': { service: 'mechanical_repair', serviceCode: 'REPAIR', serviceTitle: 'Mobile Mechanical Repair', price: 249 },
+    'inspections': { service: 'inspection', serviceCode: 'INSP', serviceTitle: 'Pre-Purchase Inspection', price: 299 },
+    'fuel': { service: 'fuel_extraction', serviceCode: 'FUEL', serviceTitle: 'Wrong Fuel Rescue', price: 399 }
+  };
+  const svc = serviceMap[serviceType] || { service: serviceType, serviceCode: serviceType, serviceTitle: serviceType, price: undefined };
+
   if (isSystemActive) {
     // Phones are on - open service modal for calling
     openServiceModal();
@@ -2053,24 +2081,33 @@ function handleMoreInfoAction(serviceType) {
       });
     }
     
-    // Track with unified tracking
+    // Track with unified tracking (event + API payload)
     if (window.unifiedTracking) {
-      window.unifiedTracking.trackEvent('more_info_call_click', 'Service', serviceType, {
-        action: 'call',
-        source: 'more_info_modal'
-      });
+      window.unifiedTracking.trackEvent('more_info_call_click', 'Service', serviceType, { action: 'call', source: 'more_info_modal' });
+      if (typeof window.unifiedTracking.sendTrackingData === 'function') {
+        window.unifiedTracking.sendTrackingData('more_info_call_click', {
+          service: svc.service,
+          serviceCode: svc.serviceCode,
+          serviceTitle: svc.serviceTitle,
+          price: svc.price,
+          basePrice: svc.price,
+          bookingStatus: 'NEW',
+          action: 'call',
+          source: 'more_info_modal'
+        });
+      }
     }
   } else {
     // Phones are off - redirect to booking page
-    const serviceMap = {
+    const serviceSlugMap = {
       'jumpstarts': 'jump-start',
       'repairs': 'mechanical-repair', 
       'inspections': 'pre-purchase',
       'fuel': 'fuel-extraction'
     };
-    
-    const bookingService = serviceMap[serviceType] || 'jump-start';
-    const bookingUrl = `/book-service/?service=${bookingService}`;
+    const bookingService = serviceSlugMap[serviceType] || 'jump-start';
+    const trackingParams = (typeof buildTrackingParams === 'function') ? buildTrackingParams() : '';
+    const bookingUrl = trackingParams ? `/book-service/?service=${bookingService}&${trackingParams}` : `/book-service/?service=${bookingService}`;
     
     // Track the action
     if (typeof gtag !== 'undefined') {
@@ -2082,12 +2119,21 @@ function handleMoreInfoAction(serviceType) {
       });
     }
     
-    // Track with unified tracking
+    // Track with unified tracking (event + API payload)
     if (window.unifiedTracking) {
-      window.unifiedTracking.trackEvent('more_info_book_click', 'Service', serviceType, {
-        action: 'book',
-        source: 'more_info_modal'
-      });
+      window.unifiedTracking.trackEvent('more_info_book_click', 'Service', serviceType, { action: 'book', source: 'more_info_modal' });
+      if (typeof window.unifiedTracking.sendTrackingData === 'function') {
+        window.unifiedTracking.sendTrackingData('more_info_book_click', {
+          service: svc.service,
+          serviceCode: svc.serviceCode,
+          serviceTitle: svc.serviceTitle,
+          price: svc.price,
+          basePrice: svc.price,
+          bookingStatus: 'NEW',
+          action: 'book',
+          source: 'more_info_modal'
+        });
+      }
     }
     
     // Redirect to booking
