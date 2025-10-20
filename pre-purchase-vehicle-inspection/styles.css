@@ -92,7 +92,7 @@ body {
   font-family: var(--font-primary);
   background: var(--gray-100);
   margin: 0;
-  padding: 0 0 80px 0;
+  padding: 0 0 100px 0;
   color: var(--gray-900);
   line-height: 1.6;
 }
@@ -1358,99 +1358,73 @@ h1 {
   }
 }
 
-/* Floating Action Buttons */
-.floating-btn {
+/* Inline Step Navigation */
+.step-navigation {
   position: fixed;
-  bottom: calc(var(--space-lg) + 80px);
-  right: var(--space-lg);
-  background: linear-gradient(135deg, #28a745, #20c997);
-  color: var(--white);
-  font-size: clamp(1rem, 2.5vw, 1.1rem);
-  padding: var(--space-lg) var(--space-xl);
-  border-radius: 50px;
-  box-shadow: var(--shadow-xl);
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  z-index: 1000;
-  transition: all var(--transition-normal);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--white);
+  border-top: 1px solid var(--gray-200);
+  padding: var(--space-md);
   display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-  font-weight: 600;
-  min-width: 200px;
-  justify-content: center;
-}
-
-/* Floating button container for vertical stacking */
-.floating-buttons-container {
-  position: fixed;
-  bottom: var(--space-lg);
-  right: var(--space-lg);
-  display: flex;
-  flex-direction: column;
   gap: var(--space-md);
   z-index: 1000;
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
 }
 
-.floating-btn:hover {
-  transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-  background: linear-gradient(135deg, #20c997, #28a745);
+.nav-btn {
+  flex: 1;
+  padding: var(--space-lg);
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  min-height: 48px;
+}
+
+.nav-back {
+  background: var(--gray-100);
+  color: var(--gray-700);
+  border: 2px solid var(--gray-200);
+}
+
+.nav-back:hover {
+  background: var(--gray-200);
+  color: var(--gray-800);
+}
+
+.nav-continue {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
   color: var(--white);
-  text-decoration: none;
+  border: 2px solid var(--primary);
 }
 
-.floating-btn.secondary {
-  background: linear-gradient(135deg, #ff5500, #ff7733);
-  bottom: var(--space-lg);
-  right: var(--space-lg);
+.nav-continue:hover {
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
-.floating-btn.secondary:hover {
-  background: linear-gradient(135deg, #ff7733, #ff5500);
-}
-
-.floating-btn:disabled {
-  opacity: 0.6;
+.nav-continue:disabled {
+  background: var(--gray-300);
+  color: var(--gray-500);
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
-.floating-btn:disabled:hover {
-  transform: none;
-  box-shadow: var(--shadow-xl);
-}
-
-
-/* Mobile floating buttons */
+/* Mobile navigation */
 @media (max-width: 768px) {
-  .floating-btn {
-    bottom: var(--space-md);
-    right: var(--space-md);
-    left: var(--space-md);
-    text-align: center;
-    border-radius: var(--radius-xl);
-    min-width: auto;
+  .step-navigation {
+    padding: var(--space-sm) var(--space-md);
   }
   
-  .floating-btn {
-    bottom: calc(var(--space-md) + 80px);
-    right: var(--space-md);
-    left: var(--space-md);
-  }
-  
-  .floating-btn.secondary {
-    right: var(--space-md);
-    left: var(--space-md);
-    bottom: var(--space-md);
-  }
-}
-
-@media (max-width: 480px) {
-  .floating-btn {
-    font-size: 0.9rem;
+  .nav-btn {
     padding: var(--space-md) var(--space-lg);
+    font-size: 0.95rem;
   }
 }
 

@@ -399,18 +399,15 @@
   <!-- Footer will be loaded by footer.js -->
   <div id="footer-container"></div>
 
-  <!-- Floating Action Buttons -->
-  <button class="floating-btn" id="floatingServiceBtn" onclick="openServiceSelectionModal()" style="display: flex;">
-    🔧 Choose Service
-  </button>
-  
-  <button class="floating-btn" id="floatingContinueBtn" onclick="goToNextStep(); window.scrollTo(0,0);" style="display: none;">
-    Continue →
-  </button>
-  
-  <button class="floating-btn secondary" id="floatingPrevBtn" onclick="goToPreviousStep(); window.scrollTo(0,0);" style="display: none;">
-    ← Back
-  </button>
+  <!-- Inline Navigation Buttons -->
+  <div class="step-navigation" id="stepNavigation" style="display: none;">
+    <button class="nav-btn nav-back" onclick="goToPreviousStep()">
+      ← Back
+    </button>
+    <button class="nav-btn nav-continue" onclick="goToNextStep()">
+      Continue →
+    </button>
+  </div>
 
   <!-- Exit Intent Popup -->
   <div id="exitIntentModal" class="exit-intent-modal" style="display:none;">

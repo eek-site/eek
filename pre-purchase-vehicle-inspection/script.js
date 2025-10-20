@@ -456,30 +456,35 @@ function showStep(stepNum) {
   const continueBtn = document.getElementById('continueBtn');
   const prevBtn = document.getElementById('prevBtn');
   
-  // Show/hide floating buttons
-  const floatingServiceBtn = document.getElementById('floatingServiceBtn');
-  const floatingContinueBtn = document.getElementById('floatingContinueBtn');
-  const floatingPrevBtn = document.getElementById('floatingPrevBtn');
+  // Show/hide navigation buttons
+  const stepNav = document.getElementById('stepNavigation');
+  const navContinueBtn = document.querySelector('.nav-continue');
+  const navBackBtn = document.querySelector('.nav-back');
   
   if (stepNum === 1) {
-    // Step 1: Show only service selection button, hide continue button completely
-    console.log('🔘 STEP 1 - Setting button visibility');
+    // Step 1: Hide navigation, show service selection
+    if (stepNav) stepNav.style.display = 'none';
     if (continueBtn) continueBtn.style.display = 'none';
     if (prevBtn) prevBtn.style.display = 'none';
-    if (floatingServiceBtn) floatingServiceBtn.style.display = 'flex';
-    if (floatingContinueBtn) {
-      // Hide continue button completely on step 1
-      floatingContinueBtn.style.display = 'none';
-      console.log('🔘 Floating continue button hidden on step 1');
-    }
-    if (floatingPrevBtn) floatingPrevBtn.style.display = 'none';
   } else {
-    // Other steps: Show floating navigation buttons
+    // Other steps: Show navigation buttons
+    if (stepNav) stepNav.style.display = 'flex';
     if (continueBtn) continueBtn.style.display = 'block';
     if (prevBtn) prevBtn.style.display = stepNum > 1 ? 'block' : 'none';
-    if (floatingServiceBtn) floatingServiceBtn.style.display = 'none';
-    if (floatingContinueBtn) floatingContinueBtn.style.display = 'flex';
-    if (floatingPrevBtn) floatingPrevBtn.style.display = stepNum > 1 ? 'flex' : 'none';
+    
+    // Show/hide back button
+    if (navBackBtn) {
+      navBackBtn.style.display = stepNum > 1 ? 'block' : 'none';
+    }
+    
+    // Update continue button text for final step
+    if (navContinueBtn) {
+      if (stepNum === 7) {
+        navContinueBtn.textContent = 'Complete Booking →';
+      } else {
+        navContinueBtn.textContent = 'Continue →';
+      }
+    }
   }
   
   currentStep = stepNum;
@@ -490,8 +495,8 @@ function showStep(stepNum) {
     updateSummary();
   }
   
-  // Update floating button text based on step
-  updateFloatingButtonText(stepNum);
+  // Update navigation button text based on step
+  updateNavigationButtonText(stepNum);
 }
 
 function updateProgressBar(stepNum) {
@@ -555,7 +560,7 @@ function validateForm() {
 // Continue button functions
 function updateContinueButton() {
   const button = document.getElementById('continueBtn');
-  const floatingButton = document.getElementById('floatingContinueBtn');
+  const navButton = document.querySelector('.nav-continue');
   
   let canContinue = false;
   
@@ -581,10 +586,10 @@ function updateContinueButton() {
     case 7:
       canContinue = true;
       // Disable button initially on step 7 until terms are accepted
-      if (floatingButton) {
-        floatingButton.disabled = true;
-        floatingButton.style.opacity = '0.5';
-        floatingButton.style.cursor = 'not-allowed';
+      if (navButton) {
+        navButton.disabled = true;
+        navButton.style.opacity = '0.5';
+        navButton.style.cursor = 'not-allowed';
       }
       // Call toggleBookingButton to set up the terms checkbox listener
       setTimeout(() => toggleBookingButton(), 100);
@@ -594,8 +599,8 @@ function updateContinueButton() {
   const buttonText = currentStep === 7 ? 'Complete Booking' : 'Continue';
   
   console.log(`🔘 UPDATE CONTINUE BUTTON - Step: ${currentStep}, CanContinue: ${canContinue}, SelectedService: ${selectedService?.name || 'null'}`);
-  console.log(`🔘 Button elements - Regular: ${!!button}, Floating: ${!!floatingButton}`);
-  console.log(`🔘 Floating button disabled state: ${floatingButton?.disabled}, display: ${floatingButton?.style.display}`);
+  console.log(`🔘 Button elements - Regular: ${!!button}, Navigation: ${!!navButton}`);
+  console.log(`🔘 Navigation button disabled state: ${navButton?.disabled}, display: ${navButton?.style.display}`);
   
   if (button) {
     button.disabled = !canContinue;
@@ -603,17 +608,17 @@ function updateContinueButton() {
     console.log(`🔘 Regular button updated - Disabled: ${button.disabled}, Text: ${button.textContent}`);
   }
   
-  if (floatingButton) {
+  if (navButton) {
     // Always enable the button - no more disabling
-    floatingButton.disabled = false;
-    floatingButton.textContent = buttonText;
+    navButton.disabled = false;
+    navButton.textContent = buttonText;
     
     // For step 1, always hide the continue button
     if (currentStep === 1) {
-      floatingButton.style.display = 'none';
+      navButton.style.display = 'none';
     }
     
-    console.log(`🔘 Floating button updated - Disabled: ${floatingButton.disabled}, Text: ${floatingButton.textContent}, Display: ${floatingButton.style.display}`);
+    console.log(`🔘 Navigation button updated - Disabled: ${navButton.disabled}, Text: ${navButton.textContent}, Display: ${navButton.style.display}`);
   }
 }
 
@@ -1484,16 +1489,16 @@ function updateSummary() {
 // === BOOKING BUTTON TOGGLE ===
 function toggleBookingButton() {
   const termsCheckbox = document.getElementById('termsAgree');
-  const floatingButton = document.getElementById('floatingContinueBtn');
+  const navButton = document.querySelector('.nav-continue');
   
-  if (termsCheckbox && floatingButton) {
-    floatingButton.disabled = !termsCheckbox.checked;
+  if (termsCheckbox && navButton) {
+    navButton.disabled = !termsCheckbox.checked;
     if (termsCheckbox.checked) {
-      floatingButton.style.opacity = '1';
-      floatingButton.style.cursor = 'pointer';
+      navButton.style.opacity = '1';
+      navButton.style.cursor = 'pointer';
     } else {
-      floatingButton.style.opacity = '0.5';
-      floatingButton.style.cursor = 'not-allowed';
+      navButton.style.opacity = '0.5';
+      navButton.style.cursor = 'not-allowed';
     }
   }
 }
@@ -1577,10 +1582,10 @@ async function generatePaymentLink() {
     return;
   }
 
-  const floatingButton = document.getElementById('floatingContinueBtn');
-  if (floatingButton) {
-    floatingButton.disabled = true;
-    floatingButton.textContent = 'Generating Payment...';
+  const navButton = document.querySelector('.nav-continue');
+  if (navButton) {
+    navButton.disabled = true;
+    navButton.textContent = 'Generating Payment...';
   }
   
   try {
@@ -1625,11 +1630,11 @@ async function generatePaymentLink() {
     console.error('Payment generation error:', error);
     showNotification('Error generating payment link. Please try again.', 'error');
     
-    if (floatingButton) {
-      floatingButton.disabled = false;
-      floatingButton.textContent = 'Secure My Inspection Now →';
-      floatingButton.style.opacity = '1';
-      floatingButton.style.cursor = 'pointer';
+    if (navButton) {
+      navButton.disabled = false;
+      navButton.textContent = 'Secure My Inspection Now →';
+      navButton.style.opacity = '1';
+      navButton.style.cursor = 'pointer';
     }
   }
 }
@@ -1664,9 +1669,9 @@ function applyDiscount() {
   closeExitIntent();
 }
 
-// === FLOATING BUTTON TEXT UPDATES ===
-function updateFloatingButtonText(stepNum) {
-  const continueBtn = document.getElementById('floatingContinueBtn');
+// === NAVIGATION BUTTON TEXT UPDATES ===
+function updateNavigationButtonText(stepNum) {
+  const continueBtn = document.querySelector('.nav-continue');
   
   if (continueBtn) {
     switch(stepNum) {
