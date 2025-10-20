@@ -755,6 +755,145 @@ font-src 'self' data:;">
       }
     }
 
+    /* Service Selection Styles */
+    .service-selection {
+      background: var(--white);
+      margin: var(--space-xl) auto;
+      padding: var(--space-2xl);
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-lg);
+      max-width: 1200px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .service-selection::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+    
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-lg);
+      margin-top: var(--space-lg);
+    }
+    
+    .service-card {
+      background: var(--white);
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left var(--transition-slow);
+    }
+    
+    .service-card:hover::before {
+      left: 100%;
+    }
+    
+    .service-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--primary);
+    }
+    
+    .service-card.emergency {
+      border-left: 4px solid #dc3545;
+    }
+    
+    .service-card.battery {
+      border-left: 4px solid #ffc107;
+    }
+    
+    .service-card.fuel {
+      border-left: 4px solid #dc3545;
+    }
+    
+    .service-card.inspection {
+      border-left: 4px solid #28a745;
+    }
+    
+    .service-icon {
+      font-size: 3em;
+      margin-bottom: var(--space-md);
+    }
+    
+    .service-card h3 {
+      margin: 0 0 var(--space-sm) 0;
+      font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+      font-weight: 700;
+      color: var(--gray-800);
+    }
+    
+    .service-card p {
+      margin: 0 0 var(--space-md) 0;
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      color: var(--gray-600);
+      line-height: 1.5;
+    }
+    
+    .service-cta {
+      background: var(--gray-100);
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--radius-md);
+      font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+      font-weight: 600;
+      color: var(--gray-700);
+      display: inline-block;
+    }
+    
+    .service-card.emergency .service-cta {
+      background: rgba(220,53,69,0.1);
+      color: #dc3545;
+    }
+    
+    .service-card.battery .service-cta {
+      background: rgba(255,193,7,0.1);
+      color: #856404;
+    }
+    
+    .service-card.fuel .service-cta {
+      background: rgba(220,53,69,0.1);
+      color: #dc3545;
+    }
+    
+    .service-card.inspection .service-cta {
+      background: rgba(40,167,69,0.1);
+      color: #155724;
+    }
+    
+    /* Mobile Responsiveness for Service Cards */
+    @media (max-width: 768px) {
+      .service-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+      }
+      
+      .service-card {
+        padding: var(--space-lg);
+      }
+    }
+
     /* Service Selection Modal styles moved to call-modal.css */
 
     .debug-info {
@@ -843,7 +982,6 @@ font-src 'self' data:;">
 
 <!-- Social Proof -->
 <div class="social-proof-box">
-  <h3 style="margin:0 0 15px 0;color:#856404;font-size:1.4em;">✅ Supporting Local Communities Across New Zealand</h3>
   <div class="social-proof-grid">
     <div>
       <span class="stat-big">353+</span>
@@ -879,58 +1017,39 @@ font-src 'self' data:;">
         <small style="color: #666;">Local Experts</small>
       </div>
     </div>
-    <p style="color: #666; font-size: 0.9em; margin: 0;">
-      <strong>Supporting local family-owned garages</strong> - Why feed the $864M+ corporate machine when you can support family-owned garages that actually care about your community?
-    </p>
   </div>
 </div>
 
-<div class="keywords-highlight" id="service-selection">
-  <h2>🔧 Choose Your Emergency Service</h2>
-  <p>353+ vetted mechanics nationwide - Supporting local communities across all of New Zealand</p>
-  
-  <!-- Urgency Banner -->
-  <div onclick="openServiceModal()" style="background: linear-gradient(135deg, #dc3545, #c82333); color: white; padding: 15px; border-radius: 12px; margin: 20px 0; text-align: center; box-shadow: 0 4px 12px rgba(220,53,69,0.3); cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(220,53,69,0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(220,53,69,0.3)'">
-    <strong style="font-size: 1.2em;">⚡ URGENT? Call NOW for immediate dispatch</strong>
-  </div>
-  
-  <div class="service-keywords">
-    <a href="#mobile-mechanic-breakdown" style="text-decoration: none; color: inherit;">
-      <div class="keyword-item" data-service="emergency_breakdown" style="border-left: 4px solid #dc3545;">
-        <h4>🚨 Emergency Breakdown</h4>
-        <p>Most jobs dispatched in under 30 minutes</p>
-        <div style="background: rgba(220,53,69,0.1); padding: 8px; border-radius: 6px; margin-top: 8px; font-size: 0.9em; color: #dc3545;">
-          <strong>⚡ URGENT - Call Now</strong>
-        </div>
-      </div>
-    </a>
-    <a href="#battery-jump-start" style="text-decoration: none; color: inherit;">
-      <div class="keyword-item" data-service="battery_jumpstart" style="border-left: 4px solid #ffc107;">
-        <h4>🔋 Dead Battery</h4>
-        <p>Jump start service - fast dispatch</p>
-        <div style="background: rgba(255,193,7,0.1); padding: 8px; border-radius: 6px; margin-top: 8px; font-size: 0.9em; color: #856404;">
-          <strong>🔧 Professional Equipment</strong>
-        </div>
-      </div>
-    </a>
-    <a href="#wrong-fuel-removal" style="text-decoration: none; color: inherit;">
-      <div class="keyword-item" data-service="wrong_fuel" style="border-left: 4px solid #dc3545;">
-        <h4>⛽ Wrong Fuel Emergency</h4>
-        <p>DON'T START - we'll fix it fast</p>
-        <div style="background: rgba(220,53,69,0.1); padding: 8px; border-radius: 6px; margin-top: 8px; font-size: 0.9em; color: #dc3545;">
-          <strong>⚠️ STOP - Don't Start Engine</strong>
-        </div>
-      </div>
-    </a>
-    <a href="#pre-purchase-inspections" style="text-decoration: none; color: inherit;">
-      <div class="keyword-item" data-service="pre_purchase" style="border-left: 4px solid #28a745;">
-        <h4>🔍 Pre-Purchase Inspection</h4>
-        <p>Same-day service - 353+ vetted mechanics nationwide</p>
-        <div style="background: rgba(40,167,69,0.1); padding: 8px; border-radius: 6px; margin-top: 8px; font-size: 0.9em; color: #155724;">
-          <strong>📋 45-Point Inspection</strong>
-        </div>
-      </div>
-    </a>
+<!-- Service Selection -->
+<div class="service-selection" id="service-selection">
+  <div class="service-grid">
+    <div class="service-card emergency" onclick="openServiceModal()">
+      <div class="service-icon">🚨</div>
+      <h3>Emergency Breakdown</h3>
+      <p>Most jobs dispatched in under 30 minutes</p>
+      <div class="service-cta">⚡ URGENT - Call Now</div>
+    </div>
+    
+    <div class="service-card battery" onclick="openServiceModal()">
+      <div class="service-icon">🔋</div>
+      <h3>Dead Battery</h3>
+      <p>Jump start service - fast dispatch</p>
+      <div class="service-cta">🔧 Professional Equipment</div>
+    </div>
+    
+    <div class="service-card fuel" onclick="openServiceModal()">
+      <div class="service-icon">⛽</div>
+      <h3>Wrong Fuel Emergency</h3>
+      <p>DON'T START - we'll fix it fast</p>
+      <div class="service-cta">⚠️ STOP - Don't Start Engine</div>
+    </div>
+    
+    <div class="service-card inspection" onclick="openServiceModal()">
+      <div class="service-icon">🔍</div>
+      <h3>Pre-Purchase Inspection</h3>
+      <p>Same-day service - 353+ vetted mechanics nationwide</p>
+      <div class="service-cta">📋 45-Point Inspection</div>
+    </div>
   </div>
 </div>
 
@@ -1978,3 +2097,5 @@ window.addEventListener('load', function() {
 
 </body>
 </html>
+
+
