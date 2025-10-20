@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+
+# Block commit if JS/CSS changed but _config.yml (site.version) not staged
+
+changed_files=$(git diff --cached --name-only --diff-filter=ACMR)
+
+# Detect asset changes
+echo "$changed_files" | grep -E '\.(js|css)$' >/dev/null 2>&1
+assets_changed=$?
+
+# Check if _config.yml staged
+echo "$changed_files" | grep -E '^_config\.yml$' >/dev/null 2>&1
+config_staged=$?
+
+if [ $assets_changed -eq 0 ] && [ $config_staged -ne 0 ]; then
+  echo "\n❌ JS/CSS changes detected, but _config.yml (site.version) not staged."
+  echo "   Please bump 'version' in _config.yml (e.g., YYYYMMDD), stage it, and commit again.\n"
+  exit 1
+fi
+
+exit 0
+
+
