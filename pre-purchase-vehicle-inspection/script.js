@@ -230,7 +230,7 @@ function setupEventListeners() {
       if (serviceOption) {
         const serviceId = serviceOption.dataset?.service;
         if (serviceId) {
-          selectService(serviceId);
+          selectInspectionService(serviceId);
         }
       }
     } catch (error) {
@@ -268,7 +268,7 @@ function setupEventListeners() {
 }
 
 // Service selection functions
-function selectService(serviceId) {
+function selectInspectionService(serviceId) {
   selectedService = services[serviceId];
   selectedServicePrice = selectedService.price;
   
