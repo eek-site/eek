@@ -2105,13 +2105,7 @@ function handleMoreInfoAction(serviceType) {
       'inspections': 'inspection',
       'fuel': 'fuel-extraction'
     };
-    const serviceSlugMap = {
-      'jumpstarts': 'jumpstart',
-      'repairs': 'mechanic', 
-      'inspections': 'inspection',
-      'fuel': 'fuel-extraction'
-    };
-    const bookingService = serviceSlugMap[serviceType] || 'jump-start';
+    const bookingService = serviceSlugMap[serviceType] || 'jumpstart';
     const trackingParams = (typeof buildTrackingParams === 'function') ? buildTrackingParams() : '';
     const bookingUrl = trackingParams ? `/book-service/?service=${bookingService}&${trackingParams}` : `/book-service/?service=${bookingService}`;
     
