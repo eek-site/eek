@@ -265,6 +265,23 @@ function setupEventListeners() {
       console.warn('Form validation error:', error);
     }
   });
+
+  // Enter-to-continue (ignore Shift+Enter and textareas)
+  document.addEventListener('keydown', function(e) {
+    try {
+      const target = e.target;
+      const isTextarea = target && target.tagName === 'TEXTAREA';
+      if (e.key === 'Enter' && !e.shiftKey && !isTextarea) {
+        e.preventDefault();
+        // Only attempt to continue if not on step 1
+        if (currentStep > 1) {
+          goToNextStep();
+        }
+      }
+    } catch (error) {
+      console.warn('Enter-to-continue error:', error);
+    }
+  });
 }
 
 // Service selection functions
@@ -497,6 +514,25 @@ function showStep(stepNum) {
   
   // Update navigation button text based on step
   updateNavigationButtonText(stepNum);
+
+  // Mobile UX: scroll to top of the container and focus first field
+  try {
+    const bookingContainer = document.querySelector('.booking-container');
+    if (bookingContainer) {
+      bookingContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Focus the first enabled input/select/textarea in the step
+    const activeStep = document.getElementById(`step${stepNum}`);
+    const firstFocusable = activeStep?.querySelector('[autofocus], input:not([type=hidden]):not([disabled]), select:not([disabled]), textarea:not([disabled])');
+    if (firstFocusable && typeof firstFocusable.focus === 'function') {
+      setTimeout(() => firstFocusable.focus(), 100);
+    }
+  } catch (e) {
+    console.warn('Focus/scroll error:', e);
+  }
 }
 
 function updateProgressBar(stepNum) {
@@ -551,6 +587,17 @@ function validateForm() {
       } else {
         warningElement.style.display = 'block';
       }
+    }
+  }
+
+  // Mobile UX: scroll to first invalid field
+  if (!isValid) {
+    const firstInvalid = currentStepElement.querySelector('[required].error, [required]:invalid');
+    if (firstInvalid) {
+      try {
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => firstInvalid.focus && firstInvalid.focus(), 150);
+      } catch (e) {}
     }
   }
   
