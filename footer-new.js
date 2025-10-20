@@ -22,7 +22,7 @@ class FooterManager {
             
             <div class="eek-footer-section">
               <h4>Services</h4>
-              <a href="javascript:void(0)" onclick="openServiceModal()">Emergency Repairs</a>
+              <a href="javascript:void(0)" onclick="openServiceModal()">Contact Us</a>
               <a href="/pre-purchase-vehicle-inspection">Pre-Purchase Inspections</a>
               <a href="/book-service">Book Online</a>
             </div>
