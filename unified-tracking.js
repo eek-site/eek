@@ -1009,7 +1009,14 @@ class UnifiedTrackingSystem {
             
             // WINZ fields
             isWinz: this.trackingData[this.STANDARD_FIELDS.isWinz] || false,
+            isWinzService: this.trackingData[this.STANDARD_FIELDS.isWinz] || false,
             quoteReference: this.trackingData[this.STANDARD_FIELDS.quoteReference] || '',
+            
+            // Urgency and timing fields
+            urgencyLevel: this.trackingData[this.STANDARD_FIELDS.urgencyLevel] || 'standard',
+            urgencyTitle: this.getUrgencyTitle(this.trackingData[this.STANDARD_FIELDS.urgencyLevel] || 'standard'),
+            timeWindow: this.getTimeWindow(this.trackingData[this.STANDARD_FIELDS.urgencyLevel] || 'standard'),
+            emergencyType: this.getEmergencyType(this.trackingData[this.STANDARD_FIELDS.urgencyLevel] || 'standard'),
             
             // Booking status and event type - EXACT field names from template
             bookingStatus: this.trackingData[this.STANDARD_FIELDS.bookingStatus] || 'NEW',
@@ -1302,6 +1309,34 @@ class UnifiedTrackingSystem {
         if (hasSignificantChanges) {
             this.sendTrackingData(eventType, updates);
         }
+    }
+
+    // Helper methods for urgency mapping
+    getUrgencyTitle(urgencyLevel) {
+        const titles = {
+            'standard': 'Standard',
+            'urgent': 'Urgent',
+            'emergency': 'Emergency'
+        };
+        return titles[urgencyLevel] || 'Standard';
+    }
+
+    getTimeWindow(urgencyLevel) {
+        const windows = {
+            'standard': 'flexible',
+            'urgent': 'same-day',
+            'emergency': 'asap'
+        };
+        return windows[urgencyLevel] || 'flexible';
+    }
+
+    getEmergencyType(urgencyLevel) {
+        const types = {
+            'standard': '',
+            'urgent': 'urgent_inspection',
+            'emergency': 'emergency_inspection'
+        };
+        return types[urgencyLevel] || '';
     }
 }
 

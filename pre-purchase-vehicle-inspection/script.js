@@ -1352,6 +1352,12 @@ function buildStepData(status) {
     rego: bookingData.vehicleRego || '', // Template expects both
     batteryVoltage: bookingData.batteryVoltage || '',
     selectedVoltage: bookingData.batteryVoltage || '', // Template expects both
+    urgencyLevel: bookingData.urgencyLevel || 'standard',
+    urgencyTitle: getUrgencyTitle(bookingData.urgencyLevel || 'standard'),
+    timeWindow: getTimeWindow(bookingData.urgencyLevel || 'standard'),
+    emergencyType: getEmergencyType(bookingData.urgencyLevel || 'standard'),
+    quoteReference: bookingData.quoteReference || '',
+    isWinzService: bookingData.isWinzService === 'true' || false,
     
     // Seller information
     sellerName: bookingData.sellerName || '',
@@ -1646,6 +1652,34 @@ function toggleBookingButton() {
   }
 }
 
+// === HELPER FUNCTIONS FOR FIELD MAPPING ===
+function getUrgencyTitle(urgencyLevel) {
+  const titles = {
+    'standard': 'Standard',
+    'urgent': 'Urgent',
+    'emergency': 'Emergency'
+  };
+  return titles[urgencyLevel] || 'Standard';
+}
+
+function getTimeWindow(urgencyLevel) {
+  const windows = {
+    'standard': 'flexible',
+    'urgent': 'same-day',
+    'emergency': 'asap'
+  };
+  return windows[urgencyLevel] || 'flexible';
+}
+
+function getEmergencyType(urgencyLevel) {
+  const types = {
+    'standard': '',
+    'urgent': 'urgent_inspection',
+    'emergency': 'emergency_inspection'
+  };
+  return types[urgencyLevel] || '';
+}
+
 // === DATA COLLECTION FOR PAYMENT ===
 function buildInspectionData(status) {
   const trackingData = window.unifiedTracking ? window.unifiedTracking.getTrackingData() : {};
@@ -1700,13 +1734,13 @@ function buildInspectionData(status) {
       scheduledDateISO: bookingData.preferredDate ? new Date(bookingData.preferredDate).toISOString() : '',
       
       // Additional fields - EXACT field names from payment API
-      urgencyLevel: 'standard',
-      urgencyTitle: 'Standard',
-      timeWindow: 'flexible',
+      urgencyLevel: bookingData.urgencyLevel || 'standard',
+      urgencyTitle: getUrgencyTitle(bookingData.urgencyLevel || 'standard'),
+      timeWindow: getTimeWindow(bookingData.urgencyLevel || 'standard'),
       batteryVoltage: bookingData.batteryVoltage || '',
-      emergencyType: '',
-      quoteReference: '',
-      isWinzService: false,
+      emergencyType: getEmergencyType(bookingData.urgencyLevel || 'standard'),
+      quoteReference: bookingData.quoteReference || '',
+      isWinzService: bookingData.isWinzService === 'true' || false,
       vehicleTypeAddon: vehicleTypeAddon || 0,
       
       // Tracking - EXACT field names from payment API

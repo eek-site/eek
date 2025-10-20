@@ -260,6 +260,44 @@
             <label for="specialInstructions" class="form-label">Additional details (optional)</label>
             <textarea id="specialInstructions" name="specialInstructions" class="form-textarea" placeholder="Any specific concerns, known issues, traveling from out of town..."></textarea>
           </div>
+          
+          <div class="form-group">
+            <label for="batteryVoltage" class="form-label">Battery Voltage (if known)</label>
+            <select id="batteryVoltage" name="batteryVoltage" class="form-input">
+              <option value="">Not sure / Unknown</option>
+              <option value="12V">12V (Standard)</option>
+              <option value="24V">24V (Heavy Duty)</option>
+              <option value="6V">6V (Classic/Vintage)</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="urgencyLevel" class="form-label">Inspection Urgency</label>
+            <select id="urgencyLevel" name="urgencyLevel" class="form-input">
+              <option value="standard">Standard (1-2 days)</option>
+              <option value="urgent">Urgent (Same day)</option>
+              <option value="emergency">Emergency (ASAP)</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="quoteReference" class="form-label">Quote Reference (if applicable)</label>
+            <input type="text" id="quoteReference" name="quoteReference" class="form-input" placeholder="Quote #12345 or WINZ reference">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Service Type</label>
+            <div style="display: flex; gap: 15px; margin-top: 10px;">
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="radio" name="isWinzService" value="false" checked style="margin-right: 8px;">
+                <span>Standard Service</span>
+              </label>
+              <label style="display: flex; align-items: center; cursor: pointer;">
+                <input type="radio" name="isWinzService" value="true" style="margin-right: 8px;">
+                <span>WINZ/Work & Income</span>
+              </label>
+            </div>
+          </div>
         </form>
       </div>
 
