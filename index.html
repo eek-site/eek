@@ -578,12 +578,12 @@ font-src 'self' data:;">
       color: #999;
       padding: 20px 0;
     }
-    /* Sticky Call Button */
-    .sticky-call, .sticky-payment {
+    /* Sticky Payment Button */
+    .sticky-payment {
       position: fixed;
       bottom: var(--space-lg);
       right: var(--space-lg);
-      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
       color: var(--white);
       font-size: clamp(1rem, 2.5vw, 1.1rem);
       padding: var(--space-lg) var(--space-xl);
@@ -600,19 +600,9 @@ font-src 'self' data:;">
       gap: var(--space-sm);
     }
     
-    .sticky-call:hover, .sticky-payment:hover {
+    .sticky-payment:hover {
       transform: translateY(-4px) scale(1.05);
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-      background: linear-gradient(135deg, var(--primary-light), var(--primary));
-    }
-    
-    .sticky-payment {
-      right: 200px;
-      display: none;
-      background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
-    }
-    
-    .sticky-payment:hover {
       background: linear-gradient(135deg, var(--secondary-light), var(--secondary));
     }
 
@@ -725,17 +715,12 @@ font-src 'self' data:;">
         padding: var(--space-xl);
       }
       
-      .sticky-call, .sticky-payment {
+      .sticky-payment {
         bottom: var(--space-md);
         right: var(--space-md);
         left: var(--space-md);
         text-align: center;
         border-radius: var(--radius-xl);
-      }
-      
-      .sticky-payment {
-        right: var(--space-md);
-        left: auto;
       }
       
       .social-proof-grid {
@@ -749,150 +734,12 @@ font-src 'self' data:;">
         grid-template-columns: 1fr;
       }
       
-      .sticky-call, .sticky-payment {
+      .sticky-payment {
         font-size: 0.9rem;
         padding: var(--space-md) var(--space-lg);
       }
     }
 
-    /* Service Selection Styles */
-    .service-selection {
-      background: var(--white);
-      margin: var(--space-xl) auto;
-      padding: var(--space-2xl);
-      border-radius: var(--radius-2xl);
-      box-shadow: var(--shadow-lg);
-      max-width: 1200px;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .service-selection::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-    }
-    
-    .service-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: var(--space-lg);
-      margin-top: var(--space-lg);
-    }
-    
-    .service-card {
-      background: var(--white);
-      border: 2px solid var(--gray-200);
-      border-radius: var(--radius-xl);
-      padding: var(--space-xl);
-      text-align: center;
-      cursor: pointer;
-      transition: all var(--transition-normal);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .service-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: left var(--transition-slow);
-    }
-    
-    .service-card:hover::before {
-      left: 100%;
-    }
-    
-    .service-card:hover {
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: var(--shadow-xl);
-      border-color: var(--primary);
-    }
-    
-    .service-card.emergency {
-      border-left: 4px solid #dc3545;
-    }
-    
-    .service-card.battery {
-      border-left: 4px solid #ffc107;
-    }
-    
-    .service-card.fuel {
-      border-left: 4px solid #dc3545;
-    }
-    
-    .service-card.inspection {
-      border-left: 4px solid #28a745;
-    }
-    
-    .service-icon {
-      font-size: 3em;
-      margin-bottom: var(--space-md);
-    }
-    
-    .service-card h3 {
-      margin: 0 0 var(--space-sm) 0;
-      font-size: clamp(1.1rem, 2.5vw, 1.3rem);
-      font-weight: 700;
-      color: var(--gray-800);
-    }
-    
-    .service-card p {
-      margin: 0 0 var(--space-md) 0;
-      font-size: clamp(0.9rem, 2vw, 1rem);
-      color: var(--gray-600);
-      line-height: 1.5;
-    }
-    
-    .service-cta {
-      background: var(--gray-100);
-      padding: var(--space-sm) var(--space-md);
-      border-radius: var(--radius-md);
-      font-size: clamp(0.85rem, 1.8vw, 0.95rem);
-      font-weight: 600;
-      color: var(--gray-700);
-      display: inline-block;
-    }
-    
-    .service-card.emergency .service-cta {
-      background: rgba(220,53,69,0.1);
-      color: #dc3545;
-    }
-    
-    .service-card.battery .service-cta {
-      background: rgba(255,193,7,0.1);
-      color: #856404;
-    }
-    
-    .service-card.fuel .service-cta {
-      background: rgba(220,53,69,0.1);
-      color: #dc3545;
-    }
-    
-    .service-card.inspection .service-cta {
-      background: rgba(40,167,69,0.1);
-      color: #155724;
-    }
-    
-    /* Mobile Responsiveness for Service Cards */
-    @media (max-width: 768px) {
-      .service-grid {
-        grid-template-columns: 1fr;
-        gap: var(--space-md);
-      }
-      
-      .service-card {
-        padding: var(--space-lg);
-      }
-    }
 
     /* Service Selection Modal styles moved to call-modal.css */
 
@@ -980,78 +827,7 @@ font-src 'self' data:;">
   </a>
 </div>
 
-<!-- Social Proof -->
-<div class="social-proof-box">
-  <div class="social-proof-grid">
-    <div>
-      <span class="stat-big">353+</span>
-      <span style="color:#666;font-size:1.1em;">Vetted mechanics nationwide</span>
-    </div>
-    <div>
-      <span class="stat-big">97%</span>
-      <span style="color:#666;font-size:1.1em;">First-call resolution</span>
-    </div>
-    <div>
-      <span class="stat-big">4.9★</span>
-      <span style="color:#666;font-size:1.1em;">Customer rating</span>
-    </div>
-    <div>
-      <span class="stat-big">&lt;30min</span>
-      <span style="color:#666;font-size:1.1em;">Most jobs dispatched</span>
-    </div>
-  </div>
-  
-  <!-- Trust Indicators -->
-  <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 12px; margin-top: 20px; text-align: center;">
-    <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-bottom: 15px;">
-      <div style="text-align: center;">
-        <div style="font-size: 2em; color: #28a745;">🔒</div>
-        <small style="color: #666;">Fully Insured</small>
-      </div>
-      <div style="text-align: center;">
-        <div style="font-size: 2em; color: #17a2b8;">⚡</div>
-        <small style="color: #666;">24/7 Service</small>
-      </div>
-      <div style="text-align: center;">
-        <div style="font-size: 2em; color: #ffc107;">🏆</div>
-        <small style="color: #666;">Local Experts</small>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- Service Selection -->
-<div class="service-selection" id="service-selection">
-  <div class="service-grid">
-    <div class="service-card emergency" onclick="openServiceModal()">
-      <div class="service-icon">🚨</div>
-      <h3>Emergency Breakdown</h3>
-      <p>Most jobs dispatched in under 30 minutes</p>
-      <div class="service-cta">⚡ URGENT - Call Now</div>
-    </div>
-    
-    <div class="service-card battery" onclick="openServiceModal()">
-      <div class="service-icon">🔋</div>
-      <h3>Dead Battery</h3>
-      <p>Jump start service - fast dispatch</p>
-      <div class="service-cta">🔧 Professional Equipment</div>
-    </div>
-    
-    <div class="service-card fuel" onclick="openServiceModal()">
-      <div class="service-icon">⛽</div>
-      <h3>Wrong Fuel Emergency</h3>
-      <p>DON'T START - we'll fix it fast</p>
-      <div class="service-cta">⚠️ STOP - Don't Start Engine</div>
-    </div>
-    
-    <div class="service-card inspection" onclick="openServiceModal()">
-      <div class="service-icon">🔍</div>
-      <h3>Pre-Purchase Inspection</h3>
-      <p>Same-day service - 353+ vetted mechanics nationwide</p>
-      <div class="service-cta">📋 45-Point Inspection</div>
-    </div>
-  </div>
-</div>
 
 <div class="services" id="mobile-mechanic-breakdown">
   <h2>🚨 Stranded? Dead Battery? Engine Won't Start?</h2>
@@ -1196,10 +972,6 @@ font-src 'self' data:;">
 
 <!-- Footer will be added by footer.js -->
 
-<a class="sticky-call phone-link normal-hours-only" href="#" onclick="openServiceModal(); return false;" id="stickyCallButton">
-  📞 Call Now
-</a>
-<a class="sticky-call" href="#service-selection" id="stickyClosedButton" style="display: none; background: #28a745;">📅 Book Now</a>
 
 <!-- Service Selection Modal - loaded from call-modal.html -->
 
