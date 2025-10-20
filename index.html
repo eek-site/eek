@@ -2100,9 +2100,15 @@ function handleMoreInfoAction(serviceType) {
   } else {
     // Phones are off - redirect to booking page
     const serviceSlugMap = {
-      'jumpstarts': 'jump-start',
-      'repairs': 'mechanical-repair', 
-      'inspections': 'pre-purchase',
+      'jumpstarts': 'jumpstart',
+      'repairs': 'mechanic', 
+      'inspections': 'inspection',
+      'fuel': 'fuel-extraction'
+    };
+    const serviceSlugMap = {
+      'jumpstarts': 'jumpstart',
+      'repairs': 'mechanic', 
+      'inspections': 'inspection',
       'fuel': 'fuel-extraction'
     };
     const bookingService = serviceSlugMap[serviceType] || 'jump-start';

@@ -21,8 +21,8 @@ class FooterManager {
             
             <div class="eek-footer-section">
               <h4>Book Online</h4>
-              <a href="/book-service/?service=jump-start">Jump Starts</a>
-              <a href="/book-service/?service=mechanical-repair">Mobile Repairs</a>
+              <a href="/book-service/?service=jumpstart">Jump Starts</a>
+              <a href="/book-service/?service=mechanic">Mobile Repairs</a>
               <a href="/book-service/?service=inspection">Pre-Purchase Inspections</a>
               <a href="/book-service/?service=fuel-extraction">Wrong Fuel Rescue</a>
             </div>
