@@ -15,25 +15,23 @@ class FooterManager {
         <div class="eek-footer-wrapper">
           <div class="eek-footer-content">
             <div class="eek-footer-section">
-              <h4>🔧 Eek Mechanical</h4>
-              <p>353+ local mechanics vs $864M+ corporate profits</p>
-              <p>Supporting family-owned garages across New Zealand</p>
-              <p>Emergency roadside assistance & workshop services</p>
-              <p>Your choice: Feed corporate greed or support your community</p>
+              <h4>Eek Mechanical</h4>
+              <p>Professional mobile mechanic services across New Zealand</p>
+              <p>Emergency roadside assistance • Pre-purchase inspections</p>
             </div>
             
             <div class="eek-footer-section">
-              <h4>📞 Contact Us</h4>
-              <a href="javascript:void(0)" onclick="openServiceModal()">Call Now</a>
-              <a href="/book-service">Book Service Online</a>
-              <a href="/more-options">More Options</a>
-            </div>
-            
-            <div class="eek-footer-section">
-              <h4>🏢 Business</h4>
-              <a href="/supplier">Join Our Network</a>
+              <h4>Services</h4>
+              <a href="javascript:void(0)" onclick="openServiceModal()">Emergency Repairs</a>
               <a href="/pre-purchase-vehicle-inspection">Pre-Purchase Inspections</a>
-              <a href="/mjuris">Legal Portal</a>
+              <a href="/book-service">Book Online</a>
+            </div>
+            
+            <div class="eek-footer-section">
+              <h4>Contact</h4>
+              <p>📞 0800 769 000</p>
+              <p>24/7 Emergency Service</p>
+              <a href="/supplier">Join Our Network</a>
             </div>
           </div>
           
@@ -43,7 +41,6 @@ class FooterManager {
             <div>
               <a href="/privacy">Privacy Policy</a>
               <a href="/terms">Terms of Service</a>
-              <a href="/">Homepage</a>
             </div>
           </div>
         </div>
@@ -57,54 +54,46 @@ class FooterManager {
       <style id="eek-footer-styles">
         /* Eek Footer Styles */
         .eek-footer {
-          background: linear-gradient(135deg, #1e3a5f, #2c5282) !important;
+          background: #2c3e50 !important;
           color: white !important;
-          padding: 40px 0 20px 0 !important;
-          margin-top: 60px !important;
-          border-top: 3px solid #ff5500 !important;
-          position: relative !important;
-          overflow: hidden !important;
-        }
-        
-        .eek-footer::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: linear-gradient(45deg, rgba(255,85,0,0.1), rgba(255,85,0,0.05));
-          pointer-events: none;
+          padding: 30px 0 15px 0 !important;
+          margin-top: 40px !important;
+          border-top: 2px solid #ff5500 !important;
         }
         
         .eek-footer-wrapper {
           max-width: 1200px !important;
           margin: 0 auto !important;
-          padding: 0 20px !important;
-          position: relative !important;
-          z-index: 1 !important;
+          padding: 0 15px !important;
         }
         
         .eek-footer-content {
           display: grid !important;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
-          gap: 30px !important;
-          margin-bottom: 30px !important;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+          gap: 20px !important;
+          margin-bottom: 20px !important;
         }
         
         .eek-footer-section h4 {
           color: #ff5500 !important;
-          font-size: 1.2em !important;
-          margin-bottom: 15px !important;
+          font-size: 1.1em !important;
+          margin-bottom: 10px !important;
           font-weight: 600 !important;
         }
         
-        .eek-footer-section p,
+        .eek-footer-section p {
+          color: rgba(255,255,255,0.9) !important;
+          margin-bottom: 5px !important;
+          font-size: 0.9em !important;
+          line-height: 1.4 !important;
+        }
+        
         .eek-footer-section a {
-          color: white !important;
+          color: rgba(255,255,255,0.9) !important;
           text-decoration: none !important;
-          margin-bottom: 8px !important;
+          margin-bottom: 5px !important;
           display: block !important;
+          font-size: 0.9em !important;
           transition: color 0.3s ease !important;
         }
         
@@ -114,43 +103,60 @@ class FooterManager {
         
         .eek-footer-bottom {
           text-align: center !important;
-          padding-top: 20px !important;
+          padding-top: 15px !important;
           border-top: 1px solid rgba(255,255,255,0.2) !important;
         }
         
         .eek-footer-bottom p {
-          color: rgba(255,255,255,0.8) !important;
-          margin: 5px 0 !important;
-          font-size: 0.9em !important;
+          color: rgba(255,255,255,0.7) !important;
+          margin: 3px 0 !important;
+          font-size: 0.8em !important;
         }
         
         .eek-footer-bottom div {
-          margin-top: 15px !important;
+          margin-top: 10px !important;
         }
         
         .eek-footer-bottom div a {
-          color: rgba(255,255,255,0.8) !important;
-          margin: 0 10px !important;
-          font-size: 0.9em !important;
+          color: rgba(255,255,255,0.7) !important;
+          margin: 0 8px !important;
+          font-size: 0.8em !important;
         }
         
         .eek-footer-bottom div a:hover {
           color: #ff5500 !important;
         }
         
-        /* Responsive */
+        /* Mobile Responsive */
         @media (max-width: 768px) {
           .eek-footer {
-            padding: 30px 0 15px 0 !important;
+            padding: 20px 0 10px 0 !important;
+            margin-top: 30px !important;
           }
           
           .eek-footer-content {
             grid-template-columns: 1fr !important;
-            gap: 20px !important;
+            gap: 15px !important;
           }
           
           .eek-footer-section h4 {
-            font-size: 1.1em !important;
+            font-size: 1em !important;
+            margin-bottom: 8px !important;
+          }
+          
+          .eek-footer-section p,
+          .eek-footer-section a {
+            font-size: 0.85em !important;
+            margin-bottom: 4px !important;
+          }
+          
+          .eek-footer-bottom p {
+            font-size: 0.75em !important;
+          }
+          
+          .eek-footer-bottom div a {
+            font-size: 0.75em !important;
+            margin: 0 5px !important;
           }
         }
       </style>
