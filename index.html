@@ -741,6 +741,157 @@ font-src 'self' data:;">
     }
 
 
+    /* More Info Button Styles */
+    .more-info-btn {
+      background: #6c757d !important;
+      color: white !important;
+      border: none !important;
+      padding: 12px 24px !important;
+      border-radius: 8px !important;
+      font-size: 1.1em !important;
+      cursor: pointer !important;
+      transition: all 0.3s ease !important;
+      font-weight: 600 !important;
+    }
+    
+    .more-info-btn:hover {
+      background: #5a6268 !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+    }
+    
+    /* More Info Modal Styles */
+    .more-info-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .more-info-content {
+      background: white;
+      border-radius: 16px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: modalSlideIn 0.3s ease-out;
+    }
+    
+    .more-info-header {
+      background: linear-gradient(135deg, var(--primary, #ff5500), var(--primary-light, #ff7733));
+      color: white;
+      padding: 24px;
+      border-radius: 16px 16px 0 0;
+      position: relative;
+    }
+    
+    .more-info-header h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.5em;
+      font-weight: 700;
+    }
+    
+    .more-info-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      font-size: 24px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s ease;
+    }
+    
+    .more-info-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .more-info-body {
+      padding: 24px;
+    }
+    
+    .more-info-section {
+      margin-bottom: 24px;
+    }
+    
+    .more-info-section h4 {
+      color: var(--primary, #ff5500);
+      font-size: 1.2em;
+      margin: 0 0 12px 0;
+      font-weight: 700;
+    }
+    
+    .more-info-section ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    
+    .more-info-section li {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    
+    .pricing-box {
+      background: #f8f9fa;
+      border: 2px solid var(--primary, #ff5500);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin: 20px 0;
+    }
+    
+    .pricing-box h4 {
+      color: var(--primary, #ff5500);
+      margin: 0 0 10px 0;
+      font-size: 1.3em;
+    }
+    
+    .pricing-box .price {
+      font-size: 2em;
+      font-weight: 900;
+      color: var(--primary, #ff5500);
+      margin: 10px 0;
+    }
+    
+    .cta-section {
+      text-align: center;
+      margin-top: 24px;
+    }
+    
+    .cta-section .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--primary, #ff5500), var(--primary-light, #ff7733));
+      color: white;
+      padding: 15px 30px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.2em;
+      margin: 0 10px;
+      transition: all 0.3s ease;
+    }
+    
+    .cta-section .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 85, 0, 0.3);
+    }
+
     /* Service Selection Modal styles moved to call-modal.css */
 
     .debug-info {
@@ -814,7 +965,7 @@ font-src 'self' data:;">
   <img src="brand-image.png" alt="Eek Mechanical - Emergency Roadside Services" />
   <div class="business-name">Eek Mechanical</div>
   <h1>Eek Mechanical - Most Jobs Dispatched in Under 30 Minutes</h1>
-  <p class="tagline">353+ Vetted Mechanics Nationwide • Emergency Roadside Service • Pre-Purchase Inspections • Wrong Fuel Rescue</p>
+  <p class="tagline">Jump Starts - Mobile Mechanical Repairs - Pre-Purchase Inspections - Wrong Fuel Rescue</p>
 </header>
 
 
@@ -829,43 +980,11 @@ font-src 'self' data:;">
 
 
 
-<div class="services" id="mobile-mechanic-breakdown">
-  <h2>🚨 Stranded? Dead Battery? Engine Won't Start?</h2>
-  <p style="color:#dc3545;font-weight:800;margin:15px 0;font-size:1.3em;">⚡ CALL NOW - Most jobs dispatched in under 30 minutes</p>
-  <p style="font-size:1.15em;line-height:1.6;">Emergency roadside breakdowns solved fast. Our mobile mechanics arrive equipped with professional diagnostic tools and can fix most problems on-site.</p>
-  <ul style="text-align:left;max-width:600px;margin:20px auto;">
-    <li>🛠️ Professional diagnostic scanning & fault detection</li>
-    <li>🔍 On-site repairs for most common issues</li>
-    <li>📍 353+ mechanics across all NZ - city and rural</li>
-    <li>🧰 Fully equipped mobile workshop</li>
-    <li>📞 Real-time updates from dispatch team</li>
-    <li>⚡ <strong>Most jobs dispatched in under 30 minutes</strong></li>
-  </ul>
-  
-  <div class="after-hours-btn" style="background:#e8f4f8;border:3px solid #17a2b8;padding:20px;margin:20px 0;border-radius:12px;display:none;">
-    <h4 style="margin:0 0 12px 0;color:#0c5460;font-size:1.3em;">📅 Why Book Online:</h4>
-    <ul style="margin:0;padding-left:20px;color:#0c5460;text-align:left;font-size:1.1em;">
-      <li><strong>Guaranteed time slot</strong> - lock in your booking</li>
-      <li><strong>Priority dispatch</strong> - pre-booked jobs processed first</li>
-      <li><strong>Skip the queue</strong> - no phone wait times</li>
-      <li><strong>2-minute booking</strong> - faster than calling</li>
-    </ul>
-  </div>
-  
-  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
-    <a class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('breakdown_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
-      📞 CALL NOW
-    </a>
-    <a class="cta-button after-hours-btn service-link" data-service="mechanic" style="background: #28a745; display: none;">
-      📅 BOOK YOUR SLOT NOW
-    </a>
-  </div>
-</div>
-
-<div class="services" id="battery-jump-start">
-  <h2>🔋 Dead Battery? We'll Start Your Car Fast</h2>
-  <p style="color:#ff5500;font-weight:800;margin:15px 0;font-size:1.25em;">⚡ 353+ mechanics nationwide - typically within 10 minutes</p>
-  <p style="font-size:1.15em;line-height:1.6;">Stranded with a flat battery? Call now and we'll have you started and back on the road. Professional jump-start service with battery health check included.</p>
+<!-- Jump Starts Service -->
+<div class="services" id="jump-starts">
+  <h2>🔋 Jump Starts - Get Back on the Road Fast</h2>
+  <p style="color:#ff5500;font-weight:800;margin:15px 0;font-size:1.25em;">⚡ Professional jump start service - typically within 10 minutes</p>
+  <p style="font-size:1.15em;line-height:1.6;">Stranded with a flat battery? Our mobile mechanics arrive with professional-grade equipment to get you started and back on the road safely.</p>
   <ul style="text-align:left;max-width:600px;margin:20px auto;">
     <li>🔋 Works with all vehicle makes and models</li>
     <li>⚡ Professional-grade jump start equipment</li>
@@ -874,87 +993,83 @@ font-src 'self' data:;">
     <li>⏱️ <strong>Most jobs dispatched in under 30 minutes</strong></li>
   </ul>
   
-  <div class="after-hours-btn" style="background:#e8f4f8;border:3px solid #17a2b8;padding:20px;margin:20px 0;border-radius:12px;display:none;">
-    <h4 style="margin:0 0 12px 0;color:#0c5460;font-size:1.3em;">📅 Online Booking Benefits:</h4>
-    <ul style="margin:0;padding-left:20px;color:#0c5460;text-align:left;font-size:1.1em;">
-      <li><strong>Guaranteed time slot</strong> - no uncertainty</li>
-      <li><strong>Skip phone queues</strong> - book in 90 seconds</li>
-      <li><strong>Priority service</strong> - pre-booked jobs first</li>
-      <li><strong>Easy and fast</strong> - done from your phone</li>
-    </ul>
-  </div>
-  
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
-    <a class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('battery_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
+    <a class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('jumpstart_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
       📞 CALL NOW
     </a>
-    <a class="cta-button after-hours-btn service-link" data-service="jumpstart" style="background: #28a745; display: none;">
-      📅 BOOK YOUR TIME SLOT
-    </a>
+    <button class="more-info-btn" onclick="openMoreModal('jumpstarts')" style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1.1em; cursor: pointer; margin-left: 10px;">
+      ℹ️ More Info
+    </button>
   </div>
 </div>
 
-<div class="services" id="wrong-fuel-removal">
-  <h2>⛽ Put Petrol in Diesel? STOP - Don't Start the Engine</h2>
-  <p style="color:#dc3545;font-weight:800;margin:15px 0;font-size:1.3em;">⚠️ DON'T START YOUR CAR - Call us immediately</p>
-  <p style="font-size:1.15em;line-height:1.6;">Put the wrong fuel in? Don't panic. Our wrong fuel specialists can drain and flush your system on-site - no expensive tow truck needed.</p>
+<!-- Mobile Mechanical Repairs Service -->
+<div class="services" id="mobile-mechanical-repairs">
+  <h2>🛠️ Mobile Mechanical Repairs - Professional Service On-Site</h2>
+  <p style="color:#dc3545;font-weight:800;margin:15px 0;font-size:1.3em;">⚡ Most jobs dispatched in under 30 minutes</p>
+  <p style="font-size:1.15em;line-height:1.6;">Stranded? Engine won't start? Our mobile mechanics arrive equipped with professional diagnostic tools and can fix most problems on-site.</p>
   <ul style="text-align:left;max-width:600px;margin:20px auto;">
-    <li>⛽ Professional petrol/diesel removal service</li>
-    <li>🧯 Fully insured fuel contamination service</li>
-    <li>📍 353+ mechanics - emergency fuel rescue anywhere in NZ</li>
-    <li>⚡ <strong>Priority dispatch for wrong fuel emergencies</strong></li>
-    <li>💰 <strong>Professional service - cheaper than engine damage</strong></li>
+    <li>🛠️ Professional diagnostic scanning & fault detection</li>
+    <li>🔍 On-site repairs for most common issues</li>
+    <li>📍 Mobile mechanics across all NZ - city and rural</li>
+    <li>🧰 Fully equipped mobile workshop</li>
+    <li>📞 Real-time updates from dispatch team</li>
+    <li>⚡ <strong>Most jobs dispatched in under 30 minutes</strong></li>
   </ul>
   
-  <div class="after-hours-btn" style="background:#e8f4f8;border:3px solid #17a2b8;padding:20px;margin:20px 0;border-radius:12px;display:none;">
-    <h4 style="margin:0 0 12px 0;color:#0c5460;font-size:1.3em;">📅 Book Online:</h4>
-    <ul style="margin:0;padding-left:20px;color:#0c5460;text-align:left;font-size:1.1em;">
-      <li><strong>Guaranteed response time</strong></li>
-      <li><strong>Skip the phone wait</strong> - book instantly</li>
-      <li><strong>Lock in your slot</strong> before they fill</li>
-      <li><strong>2-minute booking process</strong></li>
-    </ul>
-  </div>
-  
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
-    <a class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('fuel_drain_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
+    <a class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('repairs_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
       📞 CALL NOW
     </a>
-    <a class="cta-button after-hours-btn service-link" data-service="fuel-extraction" style="background: #28a745; display: none;">
-      📅 BOOK FUEL RESCUE NOW
-    </a>
+    <button class="more-info-btn" onclick="openMoreModal('repairs')" style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1.1em; cursor: pointer; margin-left: 10px;">
+      ℹ️ More Info
+    </button>
   </div>
 </div>
 
+<!-- Pre-Purchase Inspections Service -->
 <div class="services" id="pre-purchase-inspections">
-  <h2>🔍 Pre-Purchase Car Inspection - Same-Day Service</h2>
-  <p style="color:#28a745;font-weight:800;margin:15px 0;font-size:1.25em;">🏆 353+ vetted mechanics - inspections completed today, not next week</p>
+  <h2>🔍 Pre-Purchase Inspections - Don't Buy a Lemon</h2>
+  <p style="color:#28a745;font-weight:800;margin:15px 0;font-size:1.25em;">🏆 Same-day service - inspections completed today, not next week</p>
   <p style="font-size:1.15em;line-height:1.6;">Buying a used car? Get peace of mind with our certified 45-point mechanical inspection. We come to the seller's location anywhere in NZ.</p>
   <ul style="text-align:left;max-width:600px;margin:20px auto;">
     <li>🧾 Comprehensive 45-point certified inspection</li>
-    <li>🏆 <strong>353+ vetted mechanics nationwide - same-day service available</strong></li>
+    <li>🏆 <strong>Same-day service available nationwide</strong></li>
     <li>⏱️ <strong>Inspections completed today - not 2-3 days like competitors</strong></li>
     <li>✅ Detailed written report with price recommendation</li>
     <li>🔧 Estimates for upcoming maintenance costs</li>
   </ul>
   
-  <div class="after-hours-btn" style="background:#e8f4f8;border:3px solid #17a2b8;padding:20px;margin:20px 0;border-radius:12px;display:none;">
-    <h4 style="margin:0 0 12px 0;color:#0c5460;font-size:1.3em;">📅 Online Booking Advantages:</h4>
-    <ul style="margin:0;padding-left:20px;color:#0c5460;text-align:left;font-size:1.1em;">
-      <li><strong>Same-day service available</strong> - 353+ vetted mechanics nationwide</li>
-      <li><strong>Choose your time slot</strong> - we work around you</li>
-      <li><strong>Guaranteed booking</strong> - slots fill fast</li>
-      <li><strong>Book in under 2 minutes</strong></li>
-    </ul>
-  </div>
-  
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
     <a class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('inspection_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
       📞 CALL NOW
     </a>
-    <a class="cta-button after-hours-btn service-link" data-service="inspection" style="background: #28a745; display: none;">
-      📅 BOOK SAME-DAY INSPECTION
+    <button class="more-info-btn" onclick="openMoreModal('inspections')" style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1.1em; cursor: pointer; margin-left: 10px;">
+      ℹ️ More Info
+    </button>
+  </div>
+</div>
+
+<!-- Wrong Fuel Rescue Service -->
+<div class="services" id="wrong-fuel-rescue">
+  <h2>⛽ Wrong Fuel Rescue - STOP - Don't Start the Engine</h2>
+  <p style="color:#dc3545;font-weight:800;margin:15px 0;font-size:1.3em;">⚠️ DON'T START YOUR CAR - Call us immediately</p>
+  <p style="font-size:1.15em;line-height:1.6;">Put the wrong fuel in? Don't panic. Our wrong fuel specialists can drain and flush your system on-site - no expensive tow truck needed.</p>
+  <ul style="text-align:left;max-width:600px;margin:20px auto;">
+    <li>⛽ Professional petrol/diesel removal service</li>
+    <li>🧯 Fully insured fuel contamination service</li>
+    <li>📍 Emergency fuel rescue anywhere in NZ</li>
+    <li>⚡ <strong>Priority dispatch for wrong fuel emergencies</strong></li>
+    <li>💰 <strong>Professional service - cheaper than engine damage</strong></li>
+  </ul>
+  
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
+    <a class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('fuel_drain_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
+      📞 CALL NOW
     </a>
+    <button class="more-info-btn" onclick="openMoreModal('fuel')" style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1.1em; cursor: pointer; margin-left: 10px;">
+      ℹ️ More Info
+    </button>
   </div>
 </div>
 
@@ -968,10 +1083,23 @@ font-src 'self' data:;">
   </div>
 </div>
 
-<a id="stripePaymentSticky" class="sticky-payment" href="#">💳 Make Payment</a>
+<a id="stripePaymentSticky" class="sticky-payment" href="#" style="display: none;">💳 Make Payment</a>
 
 <!-- Footer will be added by footer.js -->
 
+
+<!-- More Info Modal -->
+<div id="moreInfoModal" class="more-info-modal">
+  <div class="more-info-content">
+    <div class="more-info-header">
+      <h3 id="moreInfoTitle">Service Information</h3>
+      <button class="more-info-close" onclick="closeMoreModal()">&times;</button>
+    </div>
+    <div class="more-info-body" id="moreInfoBody">
+      <!-- Content will be populated by JavaScript -->
+    </div>
+  </div>
+</div>
 
 <!-- Service Selection Modal - loaded from call-modal.html -->
 
@@ -1782,6 +1910,11 @@ window.addEventListener('load', function() {
   const button = document.getElementById('payNowButton');
   const sticky = document.getElementById('stripePaymentSticky');
 
+  // Hide payment button by default
+  if (sticky) {
+    sticky.style.display = 'none';
+  }
+  
   if (token && box && checkbox && button && sticky) {
     console.log('💳 Payment token detected, setting up payment UI');
     
@@ -1849,6 +1982,262 @@ window.addEventListener('load', function() {
     console.log('💳 Payment UI setup complete - all distractions hidden');
   }
 })();
+
+// More Info Modal Functions
+function openMoreModal(serviceType) {
+  const modal = document.getElementById('moreInfoModal');
+  const title = document.getElementById('moreInfoTitle');
+  const body = document.getElementById('moreInfoBody');
+  
+  if (!modal || !title || !body) return;
+  
+  // Set title and content based on service type
+  const serviceData = getServiceData(serviceType);
+  title.textContent = serviceData.title;
+  body.innerHTML = serviceData.content;
+  
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMoreModal() {
+  const modal = document.getElementById('moreInfoModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+}
+
+function getServiceData(serviceType) {
+  const serviceData = {
+    jumpstarts: {
+      title: '🔋 Jump Start Service - Complete Information',
+      content: `
+        <div class="more-info-section">
+          <h4>🚀 Why Choose Our Jump Start Service?</h4>
+          <ul>
+            <li><strong>Professional Equipment:</strong> We use commercial-grade jump start packs that work with all vehicle types</li>
+            <li><strong>Battery Health Check:</strong> FREE battery voltage and condition assessment included</li>
+            <li><strong>All Vehicle Types:</strong> Cars, SUVs, utes, motorcycles, boats, and more</li>
+            <li><strong>Safe & Reliable:</strong> Our mechanics are trained in proper jump start procedures</li>
+            <li><strong>No Damage Risk:</strong> We know how to safely connect to modern vehicles with sensitive electronics</li>
+          </ul>
+        </div>
+        
+        <div class="more-info-section">
+          <h4>⚡ What Happens When You Call?</h4>
+          <ul>
+            <li><strong>Immediate Dispatch:</strong> We typically arrive within 10-30 minutes</li>
+            <li><strong>Professional Assessment:</strong> We check your battery condition and charging system</li>
+            <li><strong>Safe Jump Start:</strong> Proper connection and jump start procedure</li>
+            <li><strong>Battery Advice:</strong> We'll tell you if your battery needs replacement</li>
+            <li><strong>Follow-up:</strong> We ensure your vehicle starts reliably before leaving</li>
+          </ul>
+        </div>
+        
+        <div class="pricing-box">
+          <h4>💰 Transparent Pricing</h4>
+          <div class="price">From $89</div>
+          <p>Includes jump start, battery check, and 30-day warranty on service</p>
+        </div>
+        
+        <div class="more-info-section">
+          <h4>🛡️ Why This Service Matters</h4>
+          <ul>
+            <li><strong>Prevent Engine Damage:</strong> Improper jump starting can damage your vehicle's electronics</li>
+            <li><strong>Battery Replacement Guidance:</strong> We'll tell you if you need a new battery and why</li>
+            <li><strong>Peace of Mind:</strong> Professional service means no guesswork</li>
+            <li><strong>Time Saving:</strong> Get back on the road quickly and safely</li>
+          </ul>
+        </div>
+        
+        <div class="cta-section">
+          <a href="javascript:void(0)" onclick="closeMoreModal(); openServiceModal();" class="cta-button">📞 Call Now</a>
+        </div>
+      `
+    },
+    repairs: {
+      title: '🛠️ Mobile Mechanical Repairs - Complete Information',
+      content: `
+        <div class="more-info-section">
+          <h4>🚀 Why Choose Our Mobile Repair Service?</h4>
+          <ul>
+            <li><strong>Fully Equipped Workshop:</strong> Our mobile mechanics carry professional diagnostic tools and parts</li>
+            <li><strong>On-Site Repairs:</strong> Most common issues fixed where you are - no towing needed</li>
+            <li><strong>Professional Diagnostics:</strong> Computer scanning and fault detection capabilities</li>
+            <li><strong>Quality Parts:</strong> We use quality replacement parts with warranties</li>
+            <li><strong>Transparent Pricing:</strong> No hidden fees - you know the cost before we start</li>
+          </ul>
+        </div>
+        
+        <div class="more-info-section">
+          <h4>🔧 What We Can Fix On-Site</h4>
+          <ul>
+            <li><strong>Engine Issues:</strong> Starting problems, rough idle, stalling</li>
+            <li><strong>Electrical Problems:</strong> Battery, alternator, starter motor issues</li>
+            <li><strong>Brake Repairs:</strong> Pad replacement, brake fluid service</li>
+            <li><strong>Fluid Services:</strong> Oil changes, coolant, transmission fluid</li>
+            <li><strong>Minor Repairs:</strong> Belts, hoses, filters, and more</li>
+          </ul>
+        </div>
+        
+        <div class="more-info-section">
+          <h4>⚡ Our Process</h4>
+          <ul>
+            <li><strong>Diagnostic Scan:</strong> Computer diagnosis to identify the exact problem</li>
+            <li><strong>Clear Explanation:</strong> We explain what's wrong and what needs fixing</li>
+            <li><strong>Upfront Pricing:</strong> You approve the work before we start</li>
+            <li><strong>Quality Repair:</strong> Professional repair using quality parts</li>
+            <li><strong>Testing & Verification:</strong> We test the repair to ensure it works properly</li>
+          </ul>
+        </div>
+        
+        <div class="pricing-box">
+          <h4>💰 Transparent Pricing</h4>
+          <div class="price">From $120</div>
+          <p>Includes diagnostic, repair, and 90-day warranty on parts and labor</p>
+        </div>
+        
+        <div class="cta-section">
+          <a href="javascript:void(0)" onclick="closeMoreModal(); openServiceModal();" class="cta-button">📞 Call Now</a>
+        </div>
+      `
+    },
+    inspections: {
+      title: '🔍 Pre-Purchase Inspections - Complete Information',
+      content: `
+        <div class="more-info-section">
+          <h4>🚀 Why Our Inspection Service is Different</h4>
+          <ul>
+            <li><strong>Same-Day Service:</strong> Most competitors take 2-3 days - we inspect today</li>
+            <li><strong>Workshop Hoist Inspection:</strong> Not driveway mobile - we use proper workshop facilities</li>
+            <li><strong>45-Point Certified Check:</strong> Comprehensive inspection covering all major systems</li>
+            <li><strong>Professional Valuation:</strong> We tell you what the car is actually worth</li>
+            <li><strong>Detailed Report:</strong> Written report with photos and maintenance recommendations</li>
+          </ul>
+        </div>
+        
+        <div class="more-info-section">
+          <h4>🔍 What We Inspect</h4>
+          <ul>
+            <li><strong>Engine & Transmission:</strong> Performance, leaks, wear indicators</li>
+            <li><strong>Braking System:</strong> Pads, discs, fluid, ABS functionality</li>
+            <li><strong>Electrical Systems:</strong> Battery, alternator, lights, electronics</li>
+            <li><strong>Body & Chassis:</strong> Rust, accident damage, structural integrity</li>
+            <li><strong>Safety Systems:</strong> Airbags, seatbelts, safety recalls</li>
+          </ul>
+        </div>
+        
+        <div class="more-info-section">
+          <h4>💰 What You Get</h4>
+          <ul>
+            <li><strong>Detailed Written Report:</strong> Complete assessment with photos</li>
+            <li><strong>Price Recommendation:</strong> Fair market value assessment</li>
+            <li><strong>Maintenance Schedule:</strong> What needs fixing now vs later</li>
+            <li><strong>Safety Assessment:</strong> Is this car safe to drive?</li>
+            <li><strong>Negotiation Power:</strong> Use our report to negotiate a better price</li>
+          </ul>
+        </div>
+        
+        <div class="pricing-box">
+          <h4>💰 Transparent Pricing</h4>
+          <div class="price">From $299</div>
+          <p>Standard vehicles - includes full inspection and detailed report</p>
+          <p><strong>Specialty vehicles:</strong> +$129 (classics, modified, rare imports)</p>
+        </div>
+        
+        <div class="more-info-section">
+          <h4>🛡️ Why This Inspection Matters</h4>
+          <ul>
+            <li><strong>1 in 5 Cars Rejected:</strong> 20% of vehicles we inspect have major hidden problems</li>
+            <li><strong>Save Thousands:</strong> Avoid buying a car that needs expensive repairs</li>
+            <li><strong>Peace of Mind:</strong> Know exactly what you're buying</li>
+            <li><strong>Better Negotiation:</strong> Use our report to get a fair price</li>
+          </ul>
+        </div>
+        
+        <div class="cta-section">
+          <a href="javascript:void(0)" onclick="closeMoreModal(); openServiceModal();" class="cta-button">📞 Call Now</a>
+        </div>
+      `
+    },
+    fuel: {
+      title: '⛽ Wrong Fuel Rescue - Complete Information',
+      content: `
+        <div class="more-info-section">
+          <h4>🚨 Why This is an Emergency</h4>
+          <ul>
+            <li><strong>Engine Damage Risk:</strong> Starting the engine can cause thousands in damage</li>
+            <li><strong>Fuel System Contamination:</strong> Wrong fuel can damage injectors, pumps, and filters</li>
+            <li><strong>Immediate Action Required:</strong> The longer you wait, the more damage occurs</li>
+            <li><strong>Professional Equipment:</strong> We have specialized fuel removal equipment</li>
+            <li><strong>Fully Insured Service:</strong> We're covered for any accidental damage</li>
+          </ul>
+        </div>
+        
+        <div class="more-info-section">
+          <h4>⚡ What We Do</h4>
+          <ul>
+            <li><strong>Immediate Response:</strong> Priority dispatch for wrong fuel emergencies</li>
+            <li><strong>Professional Assessment:</strong> We determine the extent of contamination</li>
+            <li><strong>Complete Fuel Removal:</strong> Drain and flush the entire fuel system</li>
+            <li><strong>System Cleaning:</strong> Clean fuel lines, injectors, and filters</li>
+            <li><strong>Fresh Fuel Addition:</strong> Add the correct fuel and test the system</li>
+          </ul>
+        </div>
+        
+        <div class="more-info-section">
+          <h4>🛡️ Why Choose Our Service</h4>
+          <ul>
+            <li><strong>Specialized Equipment:</strong> Professional fuel removal and flushing equipment</li>
+            <li><strong>Experienced Technicians:</strong> We've handled hundreds of wrong fuel cases</li>
+            <li><strong>No Towing Required:</strong> We fix it on-site - no expensive tow truck needed</li>
+            <li><strong>Warranty on Work:</strong> 30-day warranty on our fuel system cleaning</li>
+            <li><strong>Insurance Coverage:</strong> Fully insured service for your peace of mind</li>
+          </ul>
+        </div>
+        
+        <div class="pricing-box">
+          <h4>💰 Transparent Pricing</h4>
+          <div class="price">From $199</div>
+          <p>Includes complete fuel removal, system cleaning, and fresh fuel</p>
+          <p><strong>Much cheaper than engine damage repair!</strong></p>
+        </div>
+        
+        <div class="more-info-section">
+          <h4>⚠️ What NOT to Do</h4>
+          <ul>
+            <li><strong>DON'T START THE ENGINE:</strong> This will circulate contaminated fuel through the system</li>
+            <li><strong>DON'T DRIVE THE CAR:</strong> Even if it starts, you risk serious damage</li>
+            <li><strong>DON'T WAIT:</strong> Call us immediately for the best outcome</li>
+            <li><strong>DON'T TRY DIY:</strong> This requires professional equipment and expertise</li>
+          </ul>
+        </div>
+        
+        <div class="cta-section">
+          <a href="javascript:void(0)" onclick="closeMoreModal(); openServiceModal();" class="cta-button">📞 Call Now</a>
+        </div>
+      `
+    }
+  };
+  
+  return serviceData[serviceType] || { title: 'Service Information', content: 'No information available.' };
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+  const modal = document.getElementById('moreInfoModal');
+  if (event.target === modal) {
+    closeMoreModal();
+  }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    closeMoreModal();
+  }
+});
 
 // Service Selection Modal functions moved to call-modal.js
 </script>
