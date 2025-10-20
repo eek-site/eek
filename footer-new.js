@@ -17,20 +17,20 @@ class FooterManager {
             <div class="eek-footer-section">
               <h4>Eek Mechanical</h4>
               <p>Professional mobile mechanic services across New Zealand</p>
-              <p>Emergency roadside assistance • Pre-purchase inspections</p>
+              <p>Jump Starts • Mobile Repairs • Pre-Purchase Inspections • Wrong Fuel Rescue</p>
             </div>
             
             <div class="eek-footer-section">
               <h4>Services</h4>
-              <a href="javascript:void(0)" onclick="openServiceModal()">Contact Us</a>
-              <a href="/pre-purchase-vehicle-inspection">Pre-Purchase Inspections</a>
-              <a href="/book-service">Book Online</a>
+              <a href="/book-service/?service=jump-start">Jump Starts</a>
+              <a href="/book-service/?service=mechanical-repair">Mobile Repairs</a>
+              <a href="/book-service/?service=pre-purchase">Pre-Purchase Inspections</a>
+              <a href="/book-service/?service=fuel-extraction">Wrong Fuel Rescue</a>
             </div>
             
             <div class="eek-footer-section">
               <h4>Contact</h4>
-              <p>📞 0800 769 000</p>
-              <p>24/7 Emergency Service</p>
+              <a href="javascript:void(0)" onclick="openServiceModal()">Contact Us</a>
               <a href="/supplier">Join Our Network</a>
             </div>
           </div>
@@ -39,6 +39,7 @@ class FooterManager {
             <p>© 2025 Eek Mechanical Ltd. All rights reserved.</p>
             <p>Company No: 9365185 | NZBN: 9429053064165</p>
             <div>
+              <a href="/more-options">More Options</a>
               <a href="/privacy">Privacy Policy</a>
               <a href="/terms">Terms of Service</a>
             </div>
