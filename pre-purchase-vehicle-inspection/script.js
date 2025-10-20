@@ -1317,20 +1317,22 @@ function buildStepData(status) {
   const geo = window.CF_GEO || {};
   
   return {
-    // Basic info
+    // Basic info - EXACT field names from Power Automate template
     sessionId: sessionId,
     gclid: gclid,
+    gclidState: gclid ? 'Active' : 'Inactive',
     bookingStatus: status,
+    eventType: status,
     timestamp: new Date().toISOString(),
     pageType: 'inspection',
     
-    // Customer information
+    // Customer information - EXACT field names from template
     name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
     phone: bookingData.phone || '',
     email: bookingData.email || '',
-    location: bookingData.address || '',
+    location: bookingData.address || bookingData.city || '',
     
-    // Service information
+    // Service information - EXACT field names from template
     service: selectedService ? (selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive') : '',
     serviceCode: selectedService ? (selectedService.id === 'basic' ? 'INSP_BASIC' : 'INSP_COMP') : '',
     serviceTitle: selectedService ? selectedService.name : '',
@@ -1338,16 +1340,18 @@ function buildStepData(status) {
     basePrice: selectedServicePrice || 0,
     price: selectedServicePrice || 0,
     
-    // Vehicle information
+    // Vehicle information - EXACT field names from template (both formats)
     vehicleMake: bookingData.make || '',
+    make: bookingData.make || '', // Template expects both
     vehicleModel: bookingData.model || '',
+    model: bookingData.model || '', // Template expects both
     vehicleYear: bookingData.year || '',
+    year: bookingData.year || '', // Template expects both
     vehicleType: bookingData.vehicleType || '',
     vehicleRego: bookingData.vehicleRego || '',
-    make: bookingData.make || '',
-    model: bookingData.model || '',
-    year: bookingData.year || '',
-    rego: bookingData.vehicleRego || '',
+    rego: bookingData.vehicleRego || '', // Template expects both
+    batteryVoltage: bookingData.batteryVoltage || '',
+    selectedVoltage: bookingData.batteryVoltage || '', // Template expects both
     
     // Seller information
     sellerName: bookingData.sellerName || '',
@@ -1361,16 +1365,16 @@ function buildStepData(status) {
     specialInstructions: bookingData.specialInstructions || '',
     inspectionType: bookingData.inspectionType || '',
     
-    // Terms and marketing
+    // Terms and marketing - EXACT field names from template
     termsAccepted: bookingData.termsAccepted || false,
     marketingConsent: bookingData.marketingConsent || false,
     
-    // Step information
+    // Step information - EXACT field names from template
     currentStep: currentStep,
     totalSteps: 7,
     stepProgress: Math.round((currentStep / 7) * 100),
     
-    // Page source data
+    // Page source data - EXACT structure from template
     pageSource: {
       type: trackingData.pageSource?.type || 'direct',
       detail: trackingData.pageSource?.detail || 'Direct visit',
@@ -1389,13 +1393,14 @@ function buildStepData(status) {
       }
     },
     
-    // Device and engagement data
+    // Device and engagement data - EXACT structure from template
     device: {
       userAgent: trackingData.userAgent || navigator.userAgent || '',
       screenResolution: trackingData.screenResolution || `${screen.width}x${screen.height}`,
       viewportSize: trackingData.viewportSize || `${window.innerWidth}x${window.innerHeight}`,
       language: trackingData.language || navigator.language || '',
-      timezone: trackingData.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+      timezone: trackingData.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || '',
+      platform: trackingData.device?.platform || 'Unknown'
     },
     
     engagement: {
@@ -1406,7 +1411,7 @@ function buildStepData(status) {
       buttonClicks: trackingData.engagement?.buttonClicks || 0
     },
     
-    // User journey data
+    // User journey data - EXACT structure from template
     userJourney: {
       pageHistory: trackingData.userJourney?.pageHistory || [],
       totalPages: trackingData.userJourney?.totalPages || 1,
@@ -1415,7 +1420,7 @@ function buildStepData(status) {
       previousPage: trackingData.userJourney?.previousPage || ''
     },
     
-    // UTM data
+    // UTM data - EXACT structure from template
     utm: {
       source: utmData.utm_source || '',
       medium: utmData.utm_medium || '',
@@ -1425,12 +1430,12 @@ function buildStepData(status) {
       gclid: gclid || ''
     },
     
-    // Page data
+    // Page data - EXACT field names from template
     pageUrl: trackingData.pageUrl || window.location.href,
     pagePath: trackingData.pagePath || window.location.pathname,
     pageTitle: trackingData.pageTitle || document.title,
     
-    // Geolocation data
+    // Geolocation data - EXACT structure from template
     location: {
       country: geo.country || 'Unknown',
       countryCode: geo.countryCode || geo.country || 'Unknown',
@@ -1653,21 +1658,22 @@ function buildInspectionData(status) {
   const vehicleDescription = `${bookingData.year || ''} ${bookingData.make || ''} ${bookingData.model || ''}`.trim();
   
   return {
-    // Top-level Stripe fields
+    // Top-level Stripe fields - EXACT format for payment API
     amount: amountInCents,
     currency: 'nzd',
     description: `Pre-Purchase Inspection - ${selectedService ? selectedService.name : 'Vehicle Inspection'}`,
     redirectUrl: `${window.location.origin}/pre-purchase-vehicle-inspection/confirmation?session=${sessionId}`,
+    rego: bookingData.vehicleRego || '', // Top-level rego field
     
-    // Nested customerData object
+    // Nested customerData object - EXACT structure for payment API
     customerData: {
-      // Basic customer info
+      // Basic customer info - EXACT field names from payment API
       name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
       phone: bookingData.phone || '',
       email: bookingData.email || '',
-      location: bookingData.address || '',
+      location: bookingData.address || bookingData.city || '',
       
-      // Vehicle information
+      // Vehicle information - EXACT field names from payment API
       vehicleRego: bookingData.vehicleRego || '',
       vehicleYear: bookingData.year || '',
       vehicleMake: bookingData.make || '',
@@ -1675,11 +1681,11 @@ function buildInspectionData(status) {
       vehicleDescription: vehicleDescription,
       vehicleType: bookingData.vehicleType || '',
       
-      // Seller information
+      // Seller information - EXACT field names from payment API
       sellerName: bookingData.sellerName || '',
       sellerPhone: bookingData.sellerPhone || '',
       
-      // Service information
+      // Service information - EXACT field names from payment API
       service: selectedService ? (selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive') : '',
       serviceCode: selectedService ? (selectedService.id === 'basic' ? 'INSP_BASIC' : 'INSP_COMP') : '',
       serviceTitle: selectedService ? selectedService.name : '',
@@ -1687,23 +1693,23 @@ function buildInspectionData(status) {
       price: selectedServicePrice || 0,
       basePrice: selectedServicePrice || 0,
       
-      // Scheduling
+      // Scheduling - EXACT field names from payment API
       bookingDateTime: new Date().toISOString(),
       scheduledDate: bookingData.preferredDate || '',
       scheduledTime: bookingData.preferredTime || '',
       scheduledDateISO: bookingData.preferredDate ? new Date(bookingData.preferredDate).toISOString() : '',
       
-      // Additional fields
+      // Additional fields - EXACT field names from payment API
       urgencyLevel: 'standard',
       urgencyTitle: 'Standard',
       timeWindow: 'flexible',
-      batteryVoltage: '',
+      batteryVoltage: bookingData.batteryVoltage || '',
       emergencyType: '',
       quoteReference: '',
       isWinzService: false,
-      vehicleTypeAddon: '',
+      vehicleTypeAddon: vehicleTypeAddon || 0,
       
-      // Tracking
+      // Tracking - EXACT field names from payment API
       sessionId: sessionId,
       bookingSource: 'inspection_form',
       formVersion: '1.0'

@@ -958,9 +958,9 @@ class UnifiedTrackingSystem {
             return;
         }
 
-        // Create payload that matches Power Automate email template expectations
+        // Create payload that matches Power Automate email template expectations EXACTLY
         const trackingPayload = {
-            // Core fields that the email template expects
+            // Core fields that the email template expects - EXACT field names
             name: this.trackingData[this.STANDARD_FIELDS.firstName] && this.trackingData[this.STANDARD_FIELDS.lastName] 
                 ? `${this.trackingData[this.STANDARD_FIELDS.firstName]} ${this.trackingData[this.STANDARD_FIELDS.lastName]}`.trim()
                 : this.trackingData[this.STANDARD_FIELDS.fullName] || '',
@@ -968,20 +968,20 @@ class UnifiedTrackingSystem {
             email: this.trackingData[this.STANDARD_FIELDS.email] || '',
             location: this.trackingData[this.STANDARD_FIELDS.address] || this.trackingData[this.STANDARD_FIELDS.city] || '',
             
-            // Vehicle information
+            // Vehicle information - EXACT field names from template
             vehicleRego: this.trackingData[this.STANDARD_FIELDS.vehicleRego] || '',
-            rego: this.trackingData[this.STANDARD_FIELDS.vehicleRego] || '', // Backward compatibility
+            rego: this.trackingData[this.STANDARD_FIELDS.vehicleRego] || '', // Template expects both
             vehicleYear: this.trackingData[this.STANDARD_FIELDS.vehicleYear] || '',
-            year: this.trackingData[this.STANDARD_FIELDS.vehicleYear] || '', // Backward compatibility
+            year: this.trackingData[this.STANDARD_FIELDS.vehicleYear] || '', // Template expects both
             vehicleMake: this.trackingData[this.STANDARD_FIELDS.vehicleMake] || '',
-            make: this.trackingData[this.STANDARD_FIELDS.vehicleMake] || '', // Backward compatibility
+            make: this.trackingData[this.STANDARD_FIELDS.vehicleMake] || '', // Template expects both
             vehicleModel: this.trackingData[this.STANDARD_FIELDS.vehicleModel] || '',
-            model: this.trackingData[this.STANDARD_FIELDS.vehicleModel] || '', // Backward compatibility
+            model: this.trackingData[this.STANDARD_FIELDS.vehicleModel] || '', // Template expects both
             vehicleType: this.trackingData[this.STANDARD_FIELDS.vehicleType] || '',
             batteryVoltage: this.trackingData[this.STANDARD_FIELDS.batteryVoltage] || '',
-            selectedVoltage: this.trackingData[this.STANDARD_FIELDS.batteryVoltage] || '', // Backward compatibility
+            selectedVoltage: this.trackingData[this.STANDARD_FIELDS.batteryVoltage] || '', // Template expects both
             
-            // Service information
+            // Service information - EXACT field names from template
             service: this.trackingData[this.STANDARD_FIELDS.serviceType] || '',
             serviceType: this.trackingData[this.STANDARD_FIELDS.serviceType] || '',
             serviceCode: this.trackingData[this.STANDARD_FIELDS.serviceCode] || '',
@@ -990,10 +990,10 @@ class UnifiedTrackingSystem {
             urgencyLevel: this.trackingData[this.STANDARD_FIELDS.urgencyLevel] || '',
             scheduledDate: this.trackingData[this.STANDARD_FIELDS.scheduledDate] || '',
             timeWindow: this.trackingData[this.STANDARD_FIELDS.timeWindow] || '',
-            selectedTime: this.trackingData[this.STANDARD_FIELDS.timeWindow] || '', // Backward compatibility
-            selectedUrgency: this.trackingData[this.STANDARD_FIELDS.urgencyLevel] || '', // Backward compatibility
+            selectedTime: this.trackingData[this.STANDARD_FIELDS.timeWindow] || '', // Template expects both
+            selectedUrgency: this.trackingData[this.STANDARD_FIELDS.urgencyLevel] || '', // Template expects both
             
-            // Pricing
+            // Pricing - EXACT field names from template
             price: this.trackingData[this.STANDARD_FIELDS.price] || this.trackingData[this.STANDARD_FIELDS.finalPrice] || this.trackingData[this.STANDARD_FIELDS.calculatedPrice] || '',
             basePrice: this.trackingData[this.STANDARD_FIELDS.price] || this.trackingData[this.STANDARD_FIELDS.finalPrice] || this.trackingData[this.STANDARD_FIELDS.calculatedPrice] || '',
             finalPrice: this.trackingData[this.STANDARD_FIELDS.finalPrice] || '',
@@ -1011,16 +1011,16 @@ class UnifiedTrackingSystem {
             isWinz: this.trackingData[this.STANDARD_FIELDS.isWinz] || false,
             quoteReference: this.trackingData[this.STANDARD_FIELDS.quoteReference] || '',
             
-            // Booking status and event type
+            // Booking status and event type - EXACT field names from template
             bookingStatus: this.trackingData[this.STANDARD_FIELDS.bookingStatus] || 'NEW',
             eventType: eventType,
             
-            // Session and tracking
+            // Session and tracking - EXACT field names from template
             sessionId: this.trackingData[this.STANDARD_FIELDS.sessionId] || '',
             gclid: this.trackingData.pageSource?.clickIds?.gclid || '',
             gclidState: this.trackingData.pageSource?.clickIds?.gclid ? 'Active' : 'Inactive',
             
-            // UTM parameters
+            // UTM parameters - EXACT structure from template
             utm: {
                 source: this.trackingData.pageSource?.utm?.source || '',
                 medium: this.trackingData.pageSource?.utm?.medium || '',
@@ -1029,7 +1029,7 @@ class UnifiedTrackingSystem {
                 content: this.trackingData.pageSource?.utm?.content || ''
             },
             
-            // Page source information
+            // Page source information - EXACT structure from template
             pageSource: {
                 type: this.trackingData.pageSource?.type || 'direct',
                 detail: this.trackingData.pageSource?.detail || 'Direct visit',
@@ -1038,7 +1038,7 @@ class UnifiedTrackingSystem {
                 clickIds: this.trackingData.pageSource?.clickIds || {}
             },
             
-            // Device information
+            // Device information - EXACT structure from template
             device: {
                 userAgent: this.trackingData[this.STANDARD_FIELDS.userAgent] || navigator.userAgent,
                 screenResolution: this.trackingData[this.STANDARD_FIELDS.screenResolution] || `${screen.width}x${screen.height}`,
@@ -1048,7 +1048,7 @@ class UnifiedTrackingSystem {
                 platform: this.detectDevicePlatform()
             },
             
-            // Location information
+            // Location information - EXACT structure from template
             location: {
                 country: this.trackingData.location?.country || 'Unknown',
                 region: this.trackingData.location?.region || 'Unknown',
@@ -1061,7 +1061,7 @@ class UnifiedTrackingSystem {
                 }
             },
             
-            // Engagement data
+            // Engagement data - EXACT structure from template
             engagement: {
                 timeOnPage: this.trackingData.engagement?.timeOnPage || 0,
                 scrollDepth: this.trackingData.engagement?.scrollDepth || 0,
@@ -1070,7 +1070,7 @@ class UnifiedTrackingSystem {
                 buttonClicks: this.trackingData.engagement?.buttonClicks || 0
             },
             
-            // User journey
+            // User journey - EXACT structure from template
             userJourney: {
                 pageHistory: this.trackingData.userJourney || [],
                 totalPages: this.trackingData.userJourney?.length || 1,
@@ -1079,18 +1079,23 @@ class UnifiedTrackingSystem {
                 previousPage: this.trackingData.userJourney?.[this.trackingData.userJourney?.length - 2]?.url || ''
             },
             
-            // Progress tracking
+            // Progress tracking - EXACT field names from template
             currentStep: this.trackingData.currentStep || 1,
             totalSteps: this.trackingData.totalSteps || 5,
             stepProgress: this.calculateStepProgress(),
             
-            // Terms and consent
+            // Terms and consent - EXACT field names from template
             termsAccepted: this.trackingData.termsAccepted || false,
             marketingConsent: this.trackingData.marketingConsent || false,
             
-            // Timestamps
+            // Timestamps - EXACT field names from template
             timestamp: new Date().toISOString(),
             bookingTime: this.trackingData[this.STANDARD_FIELDS.bookingTime] || new Date().toISOString(),
+            
+            // Page data - EXACT field names from template
+            pageUrl: this.trackingData[this.STANDARD_FIELDS.pageUrl] || window.location.href,
+            pagePath: this.trackingData[this.STANDARD_FIELDS.pagePath] || window.location.pathname,
+            pageTitle: this.trackingData[this.STANDARD_FIELDS.pageTitle] || document.title,
             
             // Additional data
             ...additionalData
