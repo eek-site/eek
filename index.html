@@ -1622,6 +1622,9 @@ async function updateHoursDisplay() {
       if (el.style) el.style.display = 'none';
     });
     
+    // Update modal buttons to show "Call Now"
+    updateModalButtons();
+    
     const closedBanner = document.getElementById('closedBanner');
     const phonesBusyBanner = document.getElementById('phonesBusyBanner');
     if (closedBanner) closedBanner.style.display = 'none';
@@ -1641,6 +1644,9 @@ async function updateHoursDisplay() {
     afterHoursElements.forEach(el => {
       if (el.style) el.style.display = 'block';
     });
+    
+    // Update modal buttons to show "Book Online"
+    updateModalButtons();
     
     const closedBanner = document.getElementById('closedBanner');
     const closedTitle = document.getElementById('closedTitle');
@@ -1996,8 +2002,32 @@ function openMoreModal(serviceType) {
   title.textContent = serviceData.title;
   body.innerHTML = serviceData.content;
   
+  // Update button text based on phone system status
+  updateModalButtons();
+  
   modal.style.display = 'flex';
   document.body.style.overflow = 'hidden';
+}
+
+// Update modal buttons based on phone system status
+function updateModalButtons() {
+  const modalButtons = document.querySelectorAll('#moreInfoModal .cta-button');
+  
+  // Check if normal hours buttons are visible (indicates phones are on)
+  const normalButtons = document.querySelectorAll('.normal-hours-btn');
+  const isSystemActive = normalButtons.length > 0 && normalButtons[0].style.display !== 'none';
+  
+  modalButtons.forEach(button => {
+    if (isSystemActive) {
+      // Phones are on - show Call Now
+      button.textContent = '📞 Call Now';
+      button.style.display = 'inline-block';
+    } else {
+      // Phones are off - show Book Online
+      button.textContent = '📅 Book Online';
+      button.style.display = 'inline-block';
+    }
+  });
 }
 
 function closeMoreModal() {
@@ -2052,7 +2082,7 @@ function getServiceData(serviceType) {
         </div>
         
         <div class="cta-section">
-          <a href="javascript:void(0)" onclick="closeMoreModal(); openServiceModal();" class="cta-button">📞 Call Now</a>
+          <a href="javascript:void(0)" onclick="closeMoreModal(); openServiceModal();" class="cta-button normal-hours-btn">📞 Call Now</a>
         </div>
       `
     },
@@ -2099,7 +2129,7 @@ function getServiceData(serviceType) {
         </div>
         
         <div class="cta-section">
-          <a href="javascript:void(0)" onclick="closeMoreModal(); openServiceModal();" class="cta-button">📞 Call Now</a>
+          <a href="javascript:void(0)" onclick="closeMoreModal(); openServiceModal();" class="cta-button normal-hours-btn">📞 Call Now</a>
         </div>
       `
     },
@@ -2157,7 +2187,7 @@ function getServiceData(serviceType) {
         </div>
         
         <div class="cta-section">
-          <a href="javascript:void(0)" onclick="closeMoreModal(); openServiceModal();" class="cta-button">📞 Call Now</a>
+          <a href="javascript:void(0)" onclick="closeMoreModal(); openServiceModal();" class="cta-button normal-hours-btn">📞 Call Now</a>
         </div>
       `
     },
@@ -2216,7 +2246,7 @@ function getServiceData(serviceType) {
         </div>
         
         <div class="cta-section">
-          <a href="javascript:void(0)" onclick="closeMoreModal(); openServiceModal();" class="cta-button">📞 Call Now</a>
+          <a href="javascript:void(0)" onclick="closeMoreModal(); openServiceModal();" class="cta-button normal-hours-btn">📞 Call Now</a>
         </div>
       `
     }
