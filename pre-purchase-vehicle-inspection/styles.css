@@ -1162,6 +1162,7 @@ h1 {
   background: rgba(0,0,0,0.5);
   z-index: 1000;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .modal.show {
@@ -1189,16 +1190,29 @@ h1 {
   .modal-content {
     max-width: 100vw;
     width: 100vw;
-    max-height: 100vh;
-    height: 100vh;
+    max-height: 100dvh;
+    height: 100dvh;
+    min-height: -webkit-fill-available;
     border-radius: 0;
+    display: flex;
+    flex-direction: column;
   }
   .modal-header {
     border-radius: 0 0 0 0;
-    padding: var(--space-lg) var(--space-xl);
+    padding: calc(var(--space-lg) + env(safe-area-inset-top, 0px)) var(--space-xl) var(--space-lg) var(--space-xl);
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
   .modal-body {
-    padding: var(--space-lg) var(--space-xl);
+    padding: var(--space-lg) var(--space-xl) calc(var(--space-xl) + env(safe-area-inset-bottom, 0px)) var(--space-xl);
+    flex: 1;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .modal-close {
+    width: 40px;
+    height: 40px;
   }
 }
 
