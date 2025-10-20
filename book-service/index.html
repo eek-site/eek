@@ -768,6 +768,23 @@ async function sendBookingUpdate(status) {
   console.log(`%c${STATUS_DESCRIPTIONS[status]}`, `color: ${STATUS_COLORS[status]}; font-style: italic;`);
   console.log('📊 Complete booking data:', data);
   
+  // Mirror to unified tracking API for normalized payloads
+  try {
+    if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+      window.unifiedTracking.sendTrackingData(status, {
+        ...data,
+        eventType: status,
+        service: data.service,
+        serviceCode: data.serviceCode,
+        serviceTitle: data.serviceTitle,
+        price: data.price,
+        basePrice: data.basePrice,
+        selectedTime: data.selectedTime,
+        selectedUrgency: data.selectedUrgency
+      });
+    }
+  } catch (e) { console.warn('Unified tracking mirror failed:', e); }
+  
   try {
     const response = await fetch(TRACKING_API_URL, {
       method: 'POST',
@@ -786,6 +803,16 @@ async function generateWinzQuote() {
   
   console.log('📋 === WINZ QUOTE GENERATION === 📋');
   console.log('💰 Quote data:', data);
+  
+  // Mirror to unified tracking
+  try {
+    if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+      window.unifiedTracking.sendTrackingData('winz_quote_sent', {
+        ...data,
+        eventType: 'winz_quote_sent'
+      });
+    }
+  } catch (e) {}
   
   try {
     const response = await fetch(WINZ_API_URL, {
@@ -1278,6 +1305,12 @@ async function generatePaymentLink(){
   btn.classList.add('processing');
   
   await sendBookingUpdate(BOOKING_STATUS.TERMS_ACCEPTED);
+  try {
+    if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+      const mirror = buildBookingData(BOOKING_STATUS.TERMS_ACCEPTED);
+      window.unifiedTracking.sendTrackingData('terms_accepted', { ...mirror, eventType: 'terms_accepted' });
+    }
+  } catch (e) {}
   
   if (window.currentConfig.isWinz) {
     btn.textContent = 'Generating Quote';
@@ -1300,6 +1333,12 @@ async function generatePaymentLink(){
   }
   
   await sendBookingUpdate(BOOKING_STATUS.PAYMENT_PENDING);
+  try {
+    if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+      const mirror2 = buildBookingData(BOOKING_STATUS.PAYMENT_PENDING);
+      window.unifiedTracking.sendTrackingData('payment_pending', { ...mirror2, eventType: 'payment_pending' });
+    }
+  } catch (e) {}
   
   btn.textContent = 'Generating Link';
 

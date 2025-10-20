@@ -881,6 +881,15 @@ async function completeBooking() {
   try {
     // Send final step tracking
     await sendStepTracking(BOOKING_STATUS.BOOKING_COMPLETE);
+    // Mirror to unified tracking API
+    try {
+      if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+        window.unifiedTracking.sendTrackingData('inspection_booking_completed', {
+          ...finalBookingData,
+          eventType: 'inspection_booking_completed'
+        });
+      }
+    } catch (e) {}
     
     // Debug: Log the data being sent
     console.log('🚀 SENDING BOOKING DATA TO API:', finalBookingData);
