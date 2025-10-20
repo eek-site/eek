@@ -15,6 +15,11 @@ class FooterManager {
         <div class="eek-footer-wrapper">
           <div class="eek-footer-content">
             <div class="eek-footer-section">
+              <h4><a href="/" style="color: #ff5500; text-decoration: none;">Eek Mechanical</a></h4>
+              <p>Professional mobile mechanics across New Zealand</p>
+            </div>
+            
+            <div class="eek-footer-section">
               <h4>Book Online</h4>
               <a href="/book-service/?service=jump-start">Jump Starts</a>
               <a href="/book-service/?service=mechanical-repair">Mobile Repairs</a>
@@ -23,10 +28,8 @@ class FooterManager {
             </div>
             
             <div class="eek-footer-section">
-              <h4>Company</h4>
-              <a href="/">Home</a>
-              <a href="/supplier">Join Our Network</a>
-              <a href="javascript:void(0)" onclick="openServiceModal()">Contact Us</a>
+              <h4>Contact</h4>
+              <a href="javascript:void(0)" onclick="openServiceModal()" style="color: #ff5500; font-weight: 600;">Contact Us</a>
             </div>
           </div>
           
