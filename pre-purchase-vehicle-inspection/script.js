@@ -314,9 +314,10 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.1 - MOBILE-FIRST REDESIGN 🚀🚀🚀');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.2 - PAYMENT VALIDATION FIXED 🚀🚀🚀');
   console.log('📱 MOBILE-FIRST MODAL - Beautiful, modern design!');
-  console.log('🔄 FORCE REFRESH - Version 3.1 loaded successfully!');
+  console.log('💳 PAYMENT VALIDATION - No more $0 payments!');
+  console.log('🔄 FORCE REFRESH - Version 3.2 loaded successfully!');
   console.log('📅 Script loaded at:', new Date().toISOString());
   console.log('🔧 openServiceSelectionModal available:', typeof window.openServiceSelectionModal);
   
@@ -1586,12 +1587,12 @@ function buildStepData(status) {
     location: bookingData.address || bookingData.city || '',
     
     // Service information - EXACT field names from template
-    service: selectedService ? (selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive') : '',
-    serviceCode: selectedService ? (selectedService.id === 'basic' ? 'INSP_BASIC' : 'INSP_COMP') : '',
-    serviceTitle: selectedService ? selectedService.name : '',
-    serviceTier: selectedService ? selectedService.id : '',
-    basePrice: selectedServicePrice || 0,
-    price: selectedServicePrice || 0,
+    service: selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive',
+    serviceCode: selectedService.id === 'basic' ? 'INSP_BASIC' : 'INSP_COMP',
+    serviceTitle: selectedService.name,
+    serviceTier: selectedService.id,
+    basePrice: selectedServicePrice,
+    price: selectedServicePrice,
     
     // Vehicle information - EXACT field names from template (both formats)
     vehicleMake: bookingData.make || '',
@@ -1938,8 +1939,16 @@ function buildInspectionData(status) {
   const trackingData = window.unifiedTracking ? window.unifiedTracking.getTrackingData() : {};
   const geo = window.CF_GEO || {};
   
+  // CRITICAL: Validate service selection
+  if (!selectedService || !selectedServicePrice || selectedServicePrice === 0) {
+    console.error('❌ CRITICAL ERROR: No service selected for payment!');
+    throw new Error('No inspection service selected. Please select a service before proceeding.');
+  }
+  
   // Calculate amount in cents for Stripe
-  const amountInCents = Math.round((selectedServicePrice || 0) * 100);
+  const amountInCents = Math.round(selectedServicePrice * 100);
+  
+  console.log('🔍 Payment data - Service:', selectedService.name, 'Price:', selectedServicePrice, 'Amount in cents:', amountInCents);
   
   // Build vehicle description
   const vehicleDescription = `${bookingData.year || ''} ${bookingData.make || ''} ${bookingData.model || ''}`.trim();
@@ -1987,12 +1996,12 @@ function buildInspectionData(status) {
       sellerPhone: bookingData.sellerPhone || '',
       
       // Service information - EXACT field names from payment API
-      service: selectedService ? (selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive') : '',
-      serviceCode: selectedService ? (selectedService.id === 'basic' ? 'INSP_BASIC' : 'INSP_COMP') : '',
-      serviceTitle: selectedService ? selectedService.name : '',
+      service: selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive',
+      serviceCode: selectedService.id === 'basic' ? 'INSP_BASIC' : 'INSP_COMP',
+      serviceTitle: selectedService.name,
       details: bookingData.specialInstructions || '',
-      price: selectedServicePrice || 0,
-      basePrice: selectedServicePrice || 0,
+      price: selectedServicePrice,
+      basePrice: selectedServicePrice,
       
       // Scheduling - EXACT field names from payment API
       bookingDateTime: new Date().toISOString(),
@@ -2088,6 +2097,16 @@ async function generatePaymentLink() {
     alert('Please accept the terms and conditions before proceeding');
     return;
   }
+
+  // CRITICAL: Check if service is selected
+  if (!selectedService || !selectedServicePrice || selectedServicePrice === 0) {
+    alert('Please select an inspection service before proceeding to payment');
+    // Go back to step 1 to select service
+    showStep(1);
+    return;
+  }
+
+  console.log('🔍 Payment validation - Service:', selectedService?.name, 'Price:', selectedServicePrice);
 
   const navButton = document.querySelector('.nav-continue');
   if (navButton) {
