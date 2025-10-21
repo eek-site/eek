@@ -325,10 +325,10 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.5 - STEP 1 VISIBLE 🚀🚀🚀');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.6 - SINGLE CONTINUE BUTTON 🚀🚀🚀');
   console.log('💰 FIXED PRICE - $299 Pre Purchase Vehicle Inspection');
-  console.log('✅ STEP 1 VISIBLE - Service selection with Continue button');
-  console.log('🔄 FORCE REFRESH - Version 3.5 loaded successfully!');
+  console.log('✅ SINGLE CONTINUE BUTTON - Removed duplicate button');
+  console.log('🔄 FORCE REFRESH - Version 3.6 loaded successfully!');
   console.log('📅 Script loaded at:', new Date().toISOString());
   console.log('🔧 openServiceSelectionModal available:', typeof window.openServiceSelectionModal);
   
@@ -789,9 +789,9 @@ function showStep(stepNum) {
   const navBackBtn = document.querySelector('.nav-back');
   
   if (stepNum === 1) {
-    // Step 1: Hide navigation, show service selection
-    if (stepNav) stepNav.style.display = 'none';
-    if (continueBtn) continueBtn.style.display = 'none';
+    // Step 1: Show navigation with Continue button
+    if (stepNav) stepNav.style.display = 'flex';
+    if (continueBtn) continueBtn.style.display = 'block';
     if (prevBtn) prevBtn.style.display = 'none';
   } else {
     // Other steps: Show navigation buttons
@@ -1003,9 +1003,9 @@ function updateContinueButton() {
     navButton.disabled = false;
     navButton.textContent = buttonText;
     
-    // For step 1, always hide the continue button
+    // For step 1, show the continue button
     if (currentStep === 1) {
-      navButton.style.display = 'none';
+      navButton.style.display = 'block';
     }
     
     console.log(`🔘 Navigation button updated - Disabled: ${navButton.disabled}, Text: ${navButton.textContent}, Display: ${navButton.style.display}`);
