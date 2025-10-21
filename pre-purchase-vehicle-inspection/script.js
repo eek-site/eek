@@ -6,7 +6,7 @@
 let currentStep = 2; // Start at step 2, skip service selection
 let selectedService = {
   id: 'comprehensive',
-  name: 'Comprehensive Vehicle Inspection',
+  name: 'Pre Purchase Vehicle Inspection',
   price: 299,
   features: [
     'Complete mechanical inspection',
@@ -325,10 +325,10 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.3 - FIXED PRICE $299 🚀🚀🚀');
-  console.log('💰 FIXED PRICE - $299 Comprehensive Inspection');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.4 - SERVICE NAME FIXED 🚀🚀🚀');
+  console.log('💰 FIXED PRICE - $299 Pre Purchase Vehicle Inspection');
   console.log('🚫 NO SERVICE SELECTION - Step 1 removed, no bypass possible');
-  console.log('🔄 FORCE REFRESH - Version 3.3 loaded successfully!');
+  console.log('🔄 FORCE REFRESH - Version 3.4 loaded successfully!');
   console.log('📅 Script loaded at:', new Date().toISOString());
   console.log('🔧 openServiceSelectionModal available:', typeof window.openServiceSelectionModal);
   
