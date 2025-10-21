@@ -325,10 +325,10 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.7 - CLEANED UP FORM 🚀🚀🚀');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.8 - SINGLE BUTTONS 🚀🚀🚀');
   console.log('💰 FIXED PRICE - $299 Pre Purchase Vehicle Inspection');
-  console.log('🧹 CLEANED UP - Removed unnecessary fields, inline buttons only');
-  console.log('🔄 FORCE REFRESH - Version 3.7 loaded successfully!');
+  console.log('🔘 SINGLE BUTTONS - Removed duplicate Continue buttons');
+  console.log('🔄 FORCE REFRESH - Version 3.8 loaded successfully!');
   console.log('📅 Script loaded at:', new Date().toISOString());
   console.log('🔧 openServiceSelectionModal available:', typeof window.openServiceSelectionModal);
   
@@ -826,33 +826,10 @@ function showStep(stepNum) {
     console.warn('Focus/scroll error:', e);
   }
 
-  // Ensure inline step controls are present for easier reach on mobile
-  ensureInlineControls(stepNum);
+  // Inline controls are now handled directly in HTML - no need for ensureInlineControls
 }
 
-// Inject inline Continue/Back buttons inside the active step for easier mobile reach
-function ensureInlineControls(stepNum) {
-  const stepEl = document.getElementById(`step${stepNum}`);
-  if (!stepEl) return;
-  let controls = stepEl.querySelector('.inline-step-controls');
-  if (!controls) {
-    controls = document.createElement('div');
-    controls.className = 'inline-step-controls';
-    controls.innerHTML = `
-      <div class="inline-controls-buttons">
-        <button type="button" class="btn btn-secondary inline-back" onclick="goToPreviousStep()">← Back</button>
-        <button type="button" class="btn btn-primary inline-continue" onclick="goToNextStep()">Continue →</button>
-      </div>
-    `;
-    stepEl.appendChild(controls);
-  }
-  // Hide back on first step
-  const backBtn = controls.querySelector('.inline-back');
-  if (backBtn) backBtn.style.display = stepNum > 1 ? 'inline-block' : 'none';
-  // Update continue label on final step
-  const continueBtn = controls.querySelector('.inline-continue');
-  if (continueBtn) continueBtn.textContent = stepNum === 7 ? 'Secure My Inspection Now →' : 'Continue →';
-}
+// ensureInlineControls function removed - buttons are now directly in HTML
 
 function updateProgressBar(stepNum) {
   try {
