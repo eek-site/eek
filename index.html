@@ -2039,6 +2039,18 @@ function checkReturnVisit() {
     // Store return visit data
     localStorage.setItem('eek_return_visit_data', JSON.stringify(returnVisitData));
     
+    // Send return visit tracking event to Power Automate API
+    if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+      window.unifiedTracking.sendTrackingData('return_visit', {
+        eventAction: 'return_visit',
+        callAttemptId: callAttemptId,
+        callTimestamp: callTimestamp,
+        returnTimestamp: returnVisitData.returnTimestamp,
+        timeBetweenCallAndReturn: returnVisitData.timeBetweenCallAndReturn,
+        returnSource: 'booking_link'
+      });
+    }
+    
     console.log('✅ Return visit detected from booking link:', returnVisitData);
   }
   
