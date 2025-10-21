@@ -594,35 +594,77 @@ function updateSelectedServiceDisplay() {
 
 // Service modal functions
 function openServiceSelectionModal() {
+  console.log('🔧 Opening service selection modal...');
   const modal = document.getElementById('serviceModal');
-  if (modal) {
-    modal.classList.add('show');
-    document.body.style.overflow = 'hidden';
+  const serviceOptions = document.getElementById('serviceOptions');
+  
+  if (!modal) {
+    console.error('❌ Modal element not found!');
+    return;
   }
+  
+  // Ensure service options are rendered
+  if (serviceOptions && serviceOptions.children.length === 0) {
+    console.log('🔧 Rendering service options...');
+    renderServiceOptions();
+  }
+  
+  // Show modal
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  
+  // Add escape key listener
+  const escapeHandler = (e) => {
+    if (e.key === 'Escape') {
+      closeServiceModal();
+      document.removeEventListener('keydown', escapeHandler);
+    }
+  };
+  document.addEventListener('keydown', escapeHandler);
+  
+  console.log('✅ Modal opened successfully');
 }
 
 function closeServiceModal() {
+  console.log('🔧 Closing service selection modal...');
   const modal = document.getElementById('serviceModal');
   if (modal) {
     modal.classList.remove('show');
     document.body.style.overflow = '';
+    console.log('✅ Modal closed successfully');
   }
 }
 
 // Render service options
 function renderServiceOptions() {
   const container = document.getElementById('serviceOptions');
-  if (!container) return;
+  if (!container) {
+    console.error('❌ Service options container not found!');
+    return;
+  }
+  
+  console.log('🔧 Rendering service options...', Object.keys(services));
   
   container.innerHTML = Object.values(services).map(service => `
-    <div class="service-option" data-service="${service.id}">
+    <div class="service-option ${service.id === 'comprehensive' ? 'recommended' : ''}" data-service="${service.id}">
       <h3 class="service-title">${service.name}</h3>
       <div class="service-price">$${service.price}</div>
+      <div class="service-description">
+        ${service.id === 'basic' ? 'Essential inspection for most vehicles' : 'Complete analysis with valuation and history check'}
+      </div>
       <ul class="service-features">
-        ${service.features.map(feature => `<li>${feature}</li>`).join('')}
+        ${service.features.slice(0, 6).map(feature => `<li>${feature}</li>`).join('')}
+        ${service.features.length > 6 ? `<li><strong>+ ${service.features.length - 6} more features</strong></li>` : ''}
       </ul>
+      <div class="service-action">
+        <button class="btn btn-primary btn-block" onclick="selectInspectionService('${service.id}')">
+          Choose ${service.name}
+        </button>
+      </div>
     </div>
   `).join('');
+  
+  console.log('✅ Service options rendered successfully');
 }
 
 // Vehicle type functions
@@ -1382,7 +1424,10 @@ document.addEventListener('click', function(e) {
 // Close modal with Escape key
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
-    closeServiceModal();
+    const modal = document.getElementById('serviceModal');
+    if (modal && modal.classList.contains('show')) {
+      closeServiceModal();
+    }
   }
 });
 
@@ -2135,6 +2180,16 @@ function setupExitIntent() {
     }
   });
 }
+
+// Test function to debug modal
+window.testModal = function() {
+  console.log('🧪 Testing modal functionality...');
+  console.log('Modal element:', document.getElementById('serviceModal'));
+  console.log('Service options container:', document.getElementById('serviceOptions'));
+  console.log('Services object:', services);
+  console.log('Opening modal...');
+  openServiceSelectionModal();
+};
 
 // Export functions for global access
 window.openServiceSelectionModal = openServiceSelectionModal;

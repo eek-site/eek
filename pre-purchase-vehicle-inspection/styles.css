@@ -680,6 +680,19 @@ h1 {
   text-align: center;
 }
 
+.service-action {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--gray-200);
+}
+
+.service-action .btn {
+  font-size: 1rem;
+  font-weight: 700;
+  padding: var(--space-md) var(--space-lg);
+  min-height: 48px;
+}
+
 /* Info Boxes */
 .info-box {
   background: #e8f4f8;
@@ -1272,6 +1285,34 @@ h1 {
 
 .modal-body {
   padding: var(--space-xl);
+}
+
+.modal-instructions {
+  background: #e8f4f8;
+  border: 2px solid #bee5eb;
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-xl);
+  text-align: left;
+}
+
+.modal-instructions p {
+  margin: var(--space-sm) 0;
+  color: #0c5460;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.modal-instructions p:first-child {
+  margin-top: 0;
+  font-weight: 600;
+}
+
+.modal-footer {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--gray-200);
+  text-align: center;
 }
 
 /* Notifications */
