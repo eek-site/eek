@@ -151,17 +151,57 @@
 
     <!-- Booking Steps -->
     <div class="booking-steps">
-      <!-- Step 1: Fixed Service (Hidden - starts at step 2) -->
-      <div class="step" id="step1" style="display:none;">
-        <div style="background:#e8f4f8;border-radius:8px;padding:20px;margin-bottom:25px;text-align:center;">
-          <h2 style="margin:0 0 10px 0;color:#0c5460;font-size:1.6em;">Pre Purchase Vehicle Inspection</h2>
-          <p style="margin:0;color:#0c5460;font-size:1.05em;">Complete mechanical inspection, safety check, professional valuation, and detailed report.</p>
-          <div style="margin:15px 0;font-size:1.8em;font-weight:bold;color:#ff5500;">$299 NZD</div>
+      <!-- Step 1: Fixed Service (Visible with Continue button) -->
+      <div class="step active" id="step1">
+        <div style="background:linear-gradient(135deg,#0c5460,#17a2b8);border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;color:#fff;">
+          <h2 style="margin:0 0 10px 0;font-size:1.8em;">Pre Purchase Vehicle Inspection</h2>
+          <p style="margin:0;font-size:1.1em;opacity:.95;">Complete mechanical inspection, safety check, professional valuation, and detailed report delivered within 90 minutes.</p>
+        </div>
+        
+        <div style="background:#fff;border:2px solid #ff5500;border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;">
+          <div style="font-size:2.5em;font-weight:bold;color:#ff5500;margin-bottom:10px;">$299 NZD</div>
+          <p style="margin:0;color:#666;font-size:1.05em;">Fixed price - no hidden fees</p>
+        </div>
+
+        <div style="background:#f8f9fa;border-radius:8px;padding:20px;margin-bottom:25px;">
+          <h4 style="margin:0 0 15px 0;color:#495057;">What's Included:</h4>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:left;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="color:#28a745;font-weight:bold;">✓</span>
+              <span style="font-size:.9em;">Engine & Transmission</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="color:#28a745;font-weight:bold;">✓</span>
+              <span style="font-size:.9em;">Brakes & Suspension</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="color:#28a745;font-weight:bold;">✓</span>
+              <span style="font-size:.9em;">Electrical Systems</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="color:#28a745;font-weight:bold;">✓</span>
+              <span style="font-size:.9em;">Safety & Recalls</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="color:#28a745;font-weight:bold;">✓</span>
+              <span style="font-size:.9em;">Professional Report</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="color:#28a745;font-weight:bold;">✓</span>
+              <span style="font-size:.9em;">Workshop Hoist</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:center;">
+          <button class="button" onclick="goToNextStep()" style="font-size:1.2em;padding:15px 30px;">
+            Continue to Your Information →
+          </button>
         </div>
       </div>
 
-      <!-- Step 2: Your Information (Now Step 1) -->
-      <div class="step active" id="step2">
+      <!-- Step 2: Your Information -->
+      <div class="step" id="step2">
         <div style="background:linear-gradient(135deg,#ff5500,#ff7733);border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;color:#fff;">
           <h2 style="margin:0 0 10px 0;font-size:1.6em;">We Inspect Today - Not Next Week</h2>
           <p style="margin:0;font-size:1.05em;opacity:.95;">Other inspection services make you wait 2-3 days. We inspect same-day and deliver your report within 90 minutes. Don't lose the car while waiting.</p>
@@ -454,6 +494,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=20251020.19"></script>
+  <script src="script.js?v=20251020.20"></script>
 </body>
 </html>
