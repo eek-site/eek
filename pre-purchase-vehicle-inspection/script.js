@@ -314,8 +314,9 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.0 - MOBILE-FIRST REDESIGN 🚀🚀🚀');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.1 - MOBILE-FIRST REDESIGN 🚀🚀🚀');
   console.log('📱 MOBILE-FIRST MODAL - Beautiful, modern design!');
+  console.log('🔄 FORCE REFRESH - Version 3.1 loaded successfully!');
   console.log('📅 Script loaded at:', new Date().toISOString());
   console.log('🔧 openServiceSelectionModal available:', typeof window.openServiceSelectionModal);
   
