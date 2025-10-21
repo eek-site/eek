@@ -911,6 +911,101 @@
             return sid;
         }
 
+        // Enhanced visitor journey tracking
+        function trackVisitorJourney(action, data = {}) {
+            const journey = JSON.parse(localStorage.getItem('eek_visitor_journey') || '[]');
+            const sessionId = localStorage.getItem("eek_session_id");
+            const gclid = localStorage.getItem("eek_gclid");
+            
+            const journeyEntry = {
+                timestamp: new Date().toISOString(),
+                sessionId: sessionId,
+                gclid: gclid,
+                action: action,
+                page: {
+                    url: window.location.href,
+                    path: window.location.pathname,
+                    title: document.title,
+                    referrer: document.referrer
+                },
+                data: data
+            };
+            
+            journey.push(journeyEntry);
+            
+            // Keep last 20 journey entries
+            if (journey.length > 20) {
+                journey.splice(0, journey.length - 20);
+            }
+            
+            localStorage.setItem('eek_visitor_journey', JSON.stringify(journey));
+            
+            // Send to tracking API
+            sendJourneyTracking(journeyEntry);
+            
+            return journeyEntry;
+        }
+
+        async function sendJourneyTracking(journeyEntry) {
+            try {
+                const payload = {
+                    eventType: "visitor_journey",
+                    eventAction: journeyEntry.action,
+                    timestamp: journeyEntry.timestamp,
+                    sessionId: journeyEntry.sessionId,
+                    gclid: journeyEntry.gclid,
+                    page: journeyEntry.page,
+                    journeyData: journeyEntry.data,
+                    source: 'journey_tracking'
+                };
+                
+                await fetch(TRACKING_API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                    keepalive: true
+                });
+                
+                console.log('✅ Journey tracking sent:', journeyEntry.action);
+            } catch (error) {
+                console.error('❌ Journey tracking failed:', error);
+            }
+        }
+
+        // Check for return visit from booking link
+        function checkReturnVisit() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const callAttemptId = urlParams.get('call_attempt_id');
+            const callTimestamp = urlParams.get('call_timestamp');
+            const sessionId = urlParams.get('session_id');
+            
+            if (callAttemptId && callTimestamp) {
+                // This is a return visit from a booking link
+                const returnVisitData = {
+                    callAttemptId: callAttemptId,
+                    callTimestamp: callTimestamp,
+                    returnTimestamp: new Date().toISOString(),
+                    timeBetweenCallAndReturn: new Date() - new Date(callTimestamp),
+                    source: 'booking_link_return',
+                    page: 'more_options'
+                };
+                
+                // Track the return visit
+                trackVisitorJourney('booking_link_return_visit', returnVisitData);
+                
+                console.log('✅ Return visit detected from booking link:', returnVisitData);
+            }
+            
+            // Check if this is a return visit with session continuity
+            const storedSessionId = localStorage.getItem("eek_session_id");
+            if (sessionId && storedSessionId && sessionId === storedSessionId) {
+                trackVisitorJourney('session_continuity_return', {
+                    sessionId: sessionId,
+                    returnSource: 'session_continuity'
+                });
+            }
+        }
+
         function getGCLID() {
             const urlParams = new URLSearchParams(window.location.search);
             let gclidValue = extractGCLID(urlParams);
@@ -1302,6 +1397,9 @@
             
             // Initialize tracking
             initializeTracking();
+            
+            // Check for return visit from booking link
+            checkReturnVisit();
             
             // Update phone numbers based on traffic source
             updatePhoneNumbers();

@@ -371,12 +371,12 @@
         <h3>🛠️ Need Additional Services?</h3>
         <p>Access our complete range of services and support options</p>
         <div class="service-links">
-          <a href="https://www.eek.nz/customer-escalation">📝 Customer Support</a>
-          <a href="https://www.eek.nz/review-form">⭐ Leave a Review</a>
-          <a href="https://www.eek.nz/insurance-form">🛡️ Insurance Claims</a>
-          <a href="https://www.eek.nz/more-options">📋 More Services</a>
-          <a href="https://www.eek.nz/find-me">📍 Update Location</a>
-          <a href="https://www.eek.nz/helper-form">🆘 Emergency Help</a>
+          <a href="https://www.eek.nz/customer-escalation" data-track="customer_support" onclick="trackInteraction(this)">📝 Customer Support</a>
+          <a href="https://www.eek.nz/review-form" data-track="leave_review" onclick="trackInteraction(this)">⭐ Leave a Review</a>
+          <a href="https://www.eek.nz/insurance-form" data-track="insurance_claims" onclick="trackInteraction(this)">🛡️ Insurance Claims</a>
+          <a href="https://www.eek.nz/more-options" data-track="more_services" onclick="trackInteraction(this)">📋 More Services</a>
+          <a href="https://www.eek.nz/find-me" data-track="update_location" onclick="trackInteraction(this)">📍 Update Location</a>
+          <a href="https://www.eek.nz/helper-form" data-track="emergency_help" onclick="trackInteraction(this)">🆘 Emergency Help</a>
         </div>
       </div>
 
@@ -388,7 +388,8 @@
     // === INITIALIZATION ===
     console.log('🚀 === THANKS PAGE INITIALIZED (Enhanced Data Retention & Protection) === 🚀');
 
-    // Power Automate URLs for payment confirmation
+    // Power Automate URLs for payment confirmation and tracking
+    const TRACKING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
     const PAYMENT_CONFIRMED_WEBHOOK_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c8ac1b8ac2574f66ad4efcdc23165379/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kg6bffZKUQzUVR7jzpdTRaeudIa_T99V1hpzb_VlXPk';
     const SHAREPOINT_LOOKUP_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c35b9414a0be42f88182ae7e6e409f1d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2ztt24wScLuAfifD0pjzovseRDKXBAEtCQtScGMgPqQ';
 
@@ -468,6 +469,164 @@
         (data.serviceTitle || '').toLowerCase().includes('winz'),
         String(data.isWinz) === 'true'
       ].some(Boolean);
+    }
+
+    // === TRACKING FUNCTIONALITY ===
+    function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
+      // Enhanced geolocation data
+      const geo = window.CF_GEO || {
+        country: 'Unknown',
+        city: 'Unknown', 
+        region: 'Unknown',
+        postalCode: 'Unknown',
+        latitude: null,
+        longitude: null,
+        timezone: 'Unknown',
+        continent: 'Unknown',
+        regionCode: 'Unknown',
+        countryCode: 'Unknown'
+      };
+      
+      return {
+        eventType: eventType,
+        eventAction: eventAction,
+        timestamp: new Date().toISOString(),
+        sessionId: bookingData.sessionId || `thanks_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        gclid: bookingData.gclid || localStorage.getItem("eek_gclid"),
+        
+        // Comprehensive location data
+        location: {
+          country: geo.country || 'Unknown',
+          countryCode: geo.countryCode || geo.country || 'Unknown',
+          region: geo.region || 'Unknown',
+          regionCode: geo.regionCode || 'Unknown',
+          city: geo.city || 'Unknown',
+          postalCode: geo.postalCode || 'Unknown',
+          continent: geo.continent || 'Unknown',
+          coordinates: {
+            latitude: geo.latitude || null,
+            longitude: geo.longitude || null,
+            accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+          },
+          timezone: geo.timezone || 'Unknown',
+          raw: geo
+        },
+        
+        // Page context
+        page: {
+          title: document.title,
+          url: window.location.href,
+          path: window.location.pathname,
+          referrer: document.referrer || null,
+          pageType: 'thanks_page'
+        },
+        
+        // Booking data
+        booking: {
+          service: bookingData.service || '',
+          serviceCode: bookingData.serviceCode || '',
+          serviceTitle: bookingData.serviceTitle || '',
+          price: bookingData.price || 0,
+          currency: bookingData.currency || 'NZD',
+          paymentStatus: 'confirmed',
+          isWinzQuote: isWinzQuote(bookingData),
+          bookingId: bookingData.sharepointId || bookingData.sessionId
+        },
+        
+        // UTM tracking
+        utm: {
+          source: bookingData.utm_source || null,
+          medium: bookingData.utm_medium || null,
+          campaign: bookingData.utm_campaign || null,
+          term: bookingData.utm_term || null,
+          content: bookingData.utm_content || null,
+          gclid: bookingData.gclid || null
+        },
+        
+        // Device info
+        device: {
+          userAgent: navigator.userAgent,
+          platform: navigator.platform || null,
+          language: navigator.language || null,
+          mobile: /Mobi|Android/i.test(navigator.userAgent),
+          screen: {
+            width: window.screen ? window.screen.width : null,
+            height: window.screen ? window.screen.height : null,
+            pixelRatio: window.devicePixelRatio || 1
+          }
+        },
+        
+        // Source tracking
+        source: 'thanks_page',
+        formVersion: '2.1',
+        
+        // Additional data
+        ...additionalData
+      };
+    }
+
+    async function sendTrackingEvent(payload) {
+      try {
+        const response = await fetch(TRACKING_API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload),
+          keepalive: true
+        });
+        
+        console.log(`📡 Thanks page tracking event sent: ${payload.eventAction} (Status: ${response.status})`);
+        return response.ok;
+      } catch (error) {
+        console.error('❌ Thanks page tracking event failed:', error);
+        return false;
+      }
+    }
+
+    function sendPageViewEvent() {
+      const payload = buildTrackingPayload('page_view', 'thanks_page_view', {
+        loadTime: Date.now() - performance.navigationStart,
+        pageType: 'payment_confirmation',
+        conversionValue: bookingData.price || 0
+      });
+      
+      sendTrackingEvent(payload);
+    }
+
+    function sendConversionEvent() {
+      const payload = buildTrackingPayload('conversion', 'payment_confirmed', {
+        conversionValue: bookingData.price || 0,
+        conversionCurrency: bookingData.currency || 'NZD',
+        serviceType: bookingData.service || 'unknown',
+        isWinzQuote: isWinzQuote(bookingData),
+        paymentMethod: 'stripe',
+        conversionPath: 'booking_to_payment'
+      });
+      
+      sendTrackingEvent(payload);
+    }
+
+    function trackInteraction(element) {
+      const trackingAction = element.dataset.track;
+      const linkUrl = element.href;
+      const linkText = element.textContent.trim();
+      
+      console.log('👆 Thanks page interaction tracked:', trackingAction);
+      
+      const payload = buildTrackingPayload('user_interaction', trackingAction, {
+        element: {
+          tag: element.tagName.toLowerCase(),
+          text: linkText,
+          href: linkUrl,
+          className: element.className
+        },
+        interactionType: element.href && element.href.startsWith('tel:') ? 'phone_call' : 
+                        element.href && element.href.startsWith('mailto:') ? 'email' : 'link_click',
+        conversionContext: 'post_payment'
+      });
+      
+      sendTrackingEvent(payload);
     }
 
     // === ENHANCED IDEMPOTENCY PROTECTION ===
@@ -1545,10 +1704,15 @@
 
       displayContent(bookingData);
 
+      // Send page view tracking event
+      sendPageViewEvent();
+
       const submissionResult = await sendToPaymentConfirmedFlow(bookingData);
       
       if (submissionResult.success) {
         console.log('✅ Submission completed successfully');
+        // Send conversion tracking event
+        sendConversionEvent();
       } else if (submissionResult.skipped) {
         console.log('ℹ️ Submission skipped:', submissionResult.reason);
       } else {
@@ -1731,6 +1895,19 @@
     };
 
     console.log('💡 Debug functions available: window.eekDebug.checkStatus(), window.eekDebug.clearSubmissionRecords()');
+
+    // Make tracking functions globally accessible
+    window.trackInteraction = trackInteraction;
+
+    // Add event listeners for tracking
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add click tracking to all elements with data-track attribute
+      document.querySelectorAll('[data-track]').forEach(element => {
+        element.addEventListener('click', function(e) {
+          trackInteraction(this);
+        });
+      });
+    });
   </script>
 </body>
 </html>

@@ -16,6 +16,128 @@ let sessionId = null;
 let gclid = null;
 let utmData = {};
 
+// Enhanced visitor data persistence
+function storeVisitorData(data) {
+  const visitorData = JSON.parse(localStorage.getItem('eek_visitor_data') || '{}');
+  
+  // Merge new data with existing data
+  Object.assign(visitorData, data);
+  
+  // Add timestamp for data freshness
+  visitorData.lastUpdated = new Date().toISOString();
+  
+  localStorage.setItem('eek_visitor_data', JSON.stringify(visitorData));
+  
+  console.log('✅ Visitor data stored:', data);
+  return visitorData;
+}
+
+function getVisitorData() {
+  return JSON.parse(localStorage.getItem('eek_visitor_data') || '{}');
+}
+
+function clearVisitorData() {
+  localStorage.removeItem('eek_visitor_data');
+  console.log('🗑️ Visitor data cleared');
+}
+
+// Enhanced visitor journey tracking
+function trackVisitorJourney(action, data = {}) {
+  const journey = JSON.parse(localStorage.getItem('eek_visitor_journey') || '[]');
+  const sessionId = localStorage.getItem("eek_session_id");
+  const gclid = localStorage.getItem("eek_gclid");
+  const visitorData = getVisitorData();
+  
+  const journeyEntry = {
+    timestamp: new Date().toISOString(),
+    sessionId: sessionId,
+    gclid: gclid,
+    action: action,
+    page: {
+      url: window.location.href,
+      path: window.location.pathname,
+      title: document.title,
+      referrer: document.referrer
+    },
+    data: data,
+    visitorData: visitorData // Include current visitor data
+  };
+  
+  journey.push(journeyEntry);
+  
+  // Keep last 20 journey entries
+  if (journey.length > 20) {
+    journey.splice(0, journey.length - 20);
+  }
+  
+  localStorage.setItem('eek_visitor_journey', JSON.stringify(journey));
+  
+  // Send to tracking API
+  sendJourneyTracking(journeyEntry);
+  
+  return journeyEntry;
+}
+
+async function sendJourneyTracking(journeyEntry) {
+  try {
+    const payload = {
+      eventType: "visitor_journey",
+      eventAction: journeyEntry.action,
+      timestamp: journeyEntry.timestamp,
+      sessionId: journeyEntry.sessionId,
+      gclid: journeyEntry.gclid,
+      page: journeyEntry.page,
+      journeyData: journeyEntry.data,
+      source: 'journey_tracking'
+    };
+    
+    await fetch(API_ENDPOINTS.tracking, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true
+    });
+    
+    console.log('✅ Journey tracking sent:', journeyEntry.action);
+  } catch (error) {
+    console.error('❌ Journey tracking failed:', error);
+  }
+}
+
+// Check for return visit from booking link
+function checkReturnVisit() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const callAttemptId = urlParams.get('call_attempt_id');
+  const callTimestamp = urlParams.get('call_timestamp');
+  const sessionId = urlParams.get('session_id');
+  
+  if (callAttemptId && callTimestamp) {
+    // This is a return visit from a booking link
+    const returnVisitData = {
+      callAttemptId: callAttemptId,
+      callTimestamp: callTimestamp,
+      returnTimestamp: new Date().toISOString(),
+      timeBetweenCallAndReturn: new Date() - new Date(callTimestamp),
+      source: 'booking_link_return',
+      page: 'pre_purchase_inspection'
+    };
+    
+    // Track the return visit
+    trackVisitorJourney('booking_link_return_visit', returnVisitData);
+    
+    console.log('✅ Return visit detected from booking link:', returnVisitData);
+  }
+  
+  // Check if this is a return visit with session continuity
+  const storedSessionId = localStorage.getItem("eek_session_id");
+  if (sessionId && storedSessionId && sessionId === storedSessionId) {
+    trackVisitorJourney('session_continuity_return', {
+      sessionId: sessionId,
+      returnSource: 'session_continuity'
+    });
+  }
+}
+
 // API Configuration - Separate endpoints for tracking vs payment
 const API_ENDPOINTS = {
     tracking: 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4',
@@ -109,6 +231,9 @@ document.addEventListener('DOMContentLoaded', function() {
   setupEventListeners();
   setupExitIntent();
   updateContinueButton();
+  
+  // Check for return visit from booking link
+  checkReturnVisit();
   
   // Send initial page load tracking
   sendStepTracking(BOOKING_STATUS.INITIAL);
@@ -1705,6 +1830,20 @@ function buildInspectionData(status) {
   
   // Build vehicle description
   const vehicleDescription = `${bookingData.year || ''} ${bookingData.make || ''} ${bookingData.model || ''}`.trim();
+  
+  // Store visitor data for persistence
+  storeVisitorData({
+    name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
+    phone: bookingData.phone || '',
+    email: bookingData.email || '',
+    service: 'pre_purchase_inspection',
+    serviceCode: selectedService?.id || 'inspection',
+    vehicleRego: bookingData.vehicleRego || '',
+    vehicleYear: bookingData.year || '',
+    vehicleMake: bookingData.make || '',
+    vehicleModel: bookingData.model || '',
+    location: bookingData.address || bookingData.city || ''
+  });
   
   return {
     // Top-level Stripe fields - EXACT format for payment API
