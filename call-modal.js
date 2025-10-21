@@ -2,6 +2,7 @@
  * Service Selection Modal JavaScript
  * Handles the call modal functionality for service selection
  * Version: 2.2 - Enhanced with comprehensive tracking
+ * Cache busting: v20251020.7
  */
 
 // Tracking helper function

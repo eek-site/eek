@@ -1,5 +1,6 @@
 /* Eek Mechanical - Pre Purchase Inspection JavaScript */
 /* Clean, Mobile-First Booking System */
+/* Cache busting: v20251020.7 */
 
 // Global variables
 let currentStep = 1;

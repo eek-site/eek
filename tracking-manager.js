@@ -1,6 +1,7 @@
 /**
  * Centralized Tracking Management System
  * Handles all tracking across the entire website including Google Analytics, Reddit Pixel, and custom events
+ * Cache busting: v20251020.7
  */
 
 class TrackingManager {

@@ -1,6 +1,7 @@
 /**
  * Enhanced Tracking System for Maximum Data Value
  * Tracks page source, user journey, and comprehensive analytics across all pages
+ * Cache busting: v20251020.7
  */
 
 class EnhancedTrackingManager {

@@ -1,6 +1,7 @@
 /**
  * EEK TRACKING DIAGNOSTIC SCRIPT
  * Add this to your page to see what's working and what's broken
+ * Cache busting: v20251020.7
  */
 
 console.log('🔍 EEK TRACKING DIAGNOSTIC STARTING...');
