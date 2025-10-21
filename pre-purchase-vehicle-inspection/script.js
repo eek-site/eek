@@ -247,6 +247,49 @@ const vehicleTypes = [
   { id: 'other', name: 'Other', icon: '🚜' }
 ];
 
+// Service modal functions - Define early for immediate availability
+function openServiceSelectionModal() {
+  console.log('🔧 Opening service selection modal...');
+  const modal = document.getElementById('serviceModal');
+  const serviceOptions = document.getElementById('serviceOptions');
+  
+  if (!modal) {
+    console.error('❌ Modal element not found!');
+    return;
+  }
+  
+  // Ensure service options are rendered
+  if (serviceOptions && serviceOptions.children.length === 0) {
+    console.log('🔧 Rendering service options...');
+    renderServiceOptions();
+  }
+  
+  // Show modal
+  modal.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  
+  // Add escape key listener
+  const escapeHandler = (e) => {
+    if (e.key === 'Escape') {
+      closeServiceModal();
+      document.removeEventListener('keydown', escapeHandler);
+    }
+  };
+  document.addEventListener('keydown', escapeHandler);
+  
+  console.log('✅ Modal opened successfully');
+}
+
+function closeServiceModal() {
+  console.log('🔧 Closing service selection modal...');
+  const modal = document.getElementById('serviceModal');
+  if (modal) {
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+    console.log('✅ Modal closed successfully');
+  }
+}
+
 // Export functions for global access immediately
 window.openServiceSelectionModal = openServiceSelectionModal;
 window.closeServiceModal = closeServiceModal;
@@ -614,48 +657,6 @@ function updateSelectedServiceDisplay() {
   }
 }
 
-// Service modal functions
-function openServiceSelectionModal() {
-  console.log('🔧 Opening service selection modal...');
-  const modal = document.getElementById('serviceModal');
-  const serviceOptions = document.getElementById('serviceOptions');
-  
-  if (!modal) {
-    console.error('❌ Modal element not found!');
-    return;
-  }
-  
-  // Ensure service options are rendered
-  if (serviceOptions && serviceOptions.children.length === 0) {
-    console.log('🔧 Rendering service options...');
-    renderServiceOptions();
-  }
-  
-  // Show modal
-  modal.classList.add('show');
-  document.body.style.overflow = 'hidden';
-  
-  // Add escape key listener
-  const escapeHandler = (e) => {
-    if (e.key === 'Escape') {
-      closeServiceModal();
-      document.removeEventListener('keydown', escapeHandler);
-    }
-  };
-  document.addEventListener('keydown', escapeHandler);
-  
-  console.log('✅ Modal opened successfully');
-}
-
-function closeServiceModal() {
-  console.log('🔧 Closing service selection modal...');
-  const modal = document.getElementById('serviceModal');
-  if (modal) {
-    modal.classList.remove('show');
-    document.body.style.overflow = '';
-    console.log('✅ Modal closed successfully');
-  }
-}
 
 // Render service options
 function renderServiceOptions() {
