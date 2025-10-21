@@ -406,25 +406,28 @@
 
   </div>
 
-  <!-- Service Selection Modal -->
-  <div id="serviceModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>🔧 Choose Your Inspection Service</h3>
-        <p>Select the service that best fits your needs. Both services include same-day availability and 60-90 minute report delivery.</p>
-        <button class="modal-close" onclick="closeServiceModal()" aria-label="Close modal">×</button>
+  <!-- Service Selection Modal - Mobile First Design -->
+  <div id="serviceModal" class="modal-mobile">
+    <div class="modal-backdrop" onclick="closeServiceModal()"></div>
+    <div class="modal-container">
+      <!-- Mobile Header -->
+      <div class="modal-header-mobile">
+        <div class="modal-title">
+          <h2>Choose Your Inspection</h2>
+          <p>Same-day service • 60-90 min report</p>
+        </div>
+        <button class="modal-close-mobile" onclick="closeServiceModal()" aria-label="Close">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
-      <div class="modal-body">
-        <div class="modal-instructions">
-          <p><strong>💡 Need help choosing?</strong></p>
-          <p>• <strong>Basic Inspection</strong> - Perfect for most vehicles, includes all essential checks</p>
-          <p>• <strong>Comprehensive Inspection</strong> - Includes valuation, history check, and detailed analysis</p>
-        </div>
-        <div id="serviceOptions" class="service-selector">
+      
+      <!-- Mobile Content -->
+      <div class="modal-content-mobile">
+        <div class="service-options-mobile" id="serviceOptions">
           <!-- Service options will be populated by JavaScript -->
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" onclick="closeServiceModal()">Cancel</button>
         </div>
       </div>
     </div>

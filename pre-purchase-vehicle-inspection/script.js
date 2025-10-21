@@ -247,9 +247,9 @@ const vehicleTypes = [
   { id: 'other', name: 'Other', icon: '🚜' }
 ];
 
-// Service modal functions - Define early for immediate availability
+// Mobile-First Modal Functions - Define early for immediate availability
 function openServiceSelectionModal() {
-  console.log('🔧 Opening service selection modal...');
+  console.log('🔧 Opening mobile-first service selection modal...');
   const modal = document.getElementById('serviceModal');
   const serviceOptions = document.getElementById('serviceOptions');
   
@@ -260,11 +260,11 @@ function openServiceSelectionModal() {
   
   // Ensure service options are rendered
   if (serviceOptions && serviceOptions.children.length === 0) {
-    console.log('🔧 Rendering service options...');
-    renderServiceOptions();
+    console.log('🔧 Rendering mobile service options...');
+    renderMobileServiceOptions();
   }
   
-  // Show modal
+  // Show modal with mobile-first animation
   modal.classList.add('show');
   document.body.style.overflow = 'hidden';
   
@@ -277,16 +277,16 @@ function openServiceSelectionModal() {
   };
   document.addEventListener('keydown', escapeHandler);
   
-  console.log('✅ Modal opened successfully');
+  console.log('✅ Mobile modal opened successfully');
 }
 
 function closeServiceModal() {
-  console.log('🔧 Closing service selection modal...');
+  console.log('🔧 Closing mobile service selection modal...');
   const modal = document.getElementById('serviceModal');
   if (modal) {
     modal.classList.remove('show');
     document.body.style.overflow = '';
-    console.log('✅ Modal closed successfully');
+    console.log('✅ Mobile modal closed successfully');
   }
 }
 
@@ -314,8 +314,8 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v2.6 - MODAL FIXED 🚀🚀🚀');
-  console.log('🔧 MODAL FUNCTIONS MOVED TO TOP - Should work now!');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.0 - MOBILE-FIRST REDESIGN 🚀🚀🚀');
+  console.log('📱 MOBILE-FIRST MODAL - Beautiful, modern design!');
   console.log('📅 Script loaded at:', new Date().toISOString());
   console.log('🔧 openServiceSelectionModal available:', typeof window.openServiceSelectionModal);
   
@@ -571,9 +571,9 @@ function selectInspectionService(serviceId) {
   selectedService = services[serviceId];
   selectedServicePrice = selectedService.price;
   
-  // Update UI
+  // Update UI for mobile design
   try {
-    document.querySelectorAll('.service-option').forEach(option => {
+    document.querySelectorAll('.service-card-mobile').forEach(option => {
       option.classList.remove('selected');
     });
     
@@ -659,36 +659,51 @@ function updateSelectedServiceDisplay() {
 }
 
 
-// Render service options
-function renderServiceOptions() {
+// Render mobile-first service options
+function renderMobileServiceOptions() {
   const container = document.getElementById('serviceOptions');
   if (!container) {
     console.error('❌ Service options container not found!');
     return;
   }
   
-  console.log('🔧 Rendering service options...', Object.keys(services));
+  console.log('🔧 Rendering mobile service options...', Object.keys(services));
   
   container.innerHTML = Object.values(services).map(service => `
-    <div class="service-option ${service.id === 'comprehensive' ? 'recommended' : ''}" data-service="${service.id}">
-      <h3 class="service-title">${service.name}</h3>
-      <div class="service-price">$${service.price}</div>
-      <div class="service-description">
-        ${service.id === 'basic' ? 'Essential inspection for most vehicles' : 'Complete analysis with valuation and history check'}
+    <div class="service-card-mobile ${service.id === 'comprehensive' ? 'recommended' : ''}" data-service="${service.id}">
+      <div class="service-header-mobile">
+        <h3 class="service-name-mobile">${service.name}</h3>
+        <div class="service-price-mobile">$${service.price}</div>
       </div>
-      <ul class="service-features">
-        ${service.features.slice(0, 6).map(feature => `<li>${feature}</li>`).join('')}
-        ${service.features.length > 6 ? `<li><strong>+ ${service.features.length - 6} more features</strong></li>` : ''}
+      
+      <div class="service-description-mobile">
+        ${service.id === 'basic' 
+          ? 'Perfect for most vehicles. Includes all essential safety and mechanical checks.' 
+          : 'Complete analysis with professional valuation, history check, and detailed recommendations.'}
+      </div>
+      
+      <ul class="service-features-mobile">
+        ${service.features.slice(0, 4).map(feature => `<li>${feature}</li>`).join('')}
+        ${service.features.length > 4 ? `<li><strong>+ ${service.features.length - 4} more features included</strong></li>` : ''}
       </ul>
-      <div class="service-action">
-        <button class="btn btn-primary btn-block" onclick="selectInspectionService('${service.id}')">
-          Choose ${service.name}
+      
+      <div class="service-action-mobile">
+        <button class="btn btn-primary" onclick="selectInspectionService('${service.id}')">
+          <span>Choose ${service.name}</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
         </button>
       </div>
     </div>
   `).join('');
   
-  console.log('✅ Service options rendered successfully');
+  console.log('✅ Mobile service options rendered successfully');
+}
+
+// Legacy function for backward compatibility
+function renderServiceOptions() {
+  renderMobileServiceOptions();
 }
 
 // Vehicle type functions
