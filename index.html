@@ -1909,7 +1909,7 @@ async function updateHoursDisplay() {
     return withId ? ("#" + withId.id) : null;
   }
 
-  function sendCallClick(eventAction, eventCategory, anchorEl){
+  window.sendCallClick = function(eventAction, eventCategory, anchorEl){
     const callAttemptId = "call_" + Date.now() + "_" + Math.random().toString(36).slice(2,10);
     const sessionId = getOrCreateSessionId();
     const gclid = getAndStoreGCLID();
