@@ -186,28 +186,58 @@ class UnifiedTrackingSystem {
     }
 
     /**
-     * Update location data when CF_GEO becomes available
+     * Update location data when CF_GEO becomes available (non-destructive)
      */
     updateLocationData() {
         const geo = window.CF_GEO;
         
         if (this.trackingData.location) {
-            this.trackingData.location[this.STANDARD_FIELDS.country] = geo.country || 'New Zealand';
-            this.trackingData.location.countryCode = geo.countryCode || 'NZ';
-            this.trackingData.location[this.STANDARD_FIELDS.region] = geo.region || 'Auckland';
-            this.trackingData.location.regionCode = geo.regionCode || 'AUK';
-            this.trackingData.location[this.STANDARD_FIELDS.city] = geo.city || 'Auckland';
-            this.trackingData.location[this.STANDARD_FIELDS.postalCode] = geo.postalCode || 'Unknown';
-            this.trackingData.location.continent = geo.continent || 'Oceania';
-            this.trackingData.location[this.STANDARD_FIELDS.coordinates] = {
-                latitude: geo.latitude || -36.8485,
-                longitude: geo.longitude || 174.7633,
-                accuracy: geo.latitude && geo.longitude ? 'IP-based' : 'Default'
-            };
-            this.trackingData.location[this.STANDARD_FIELDS.timezone] = geo.timezone || 'Pacific/Auckland';
-            this.trackingData.location.raw = geo;
+            // Only update if current data is fallback/default values
+            const currentCountry = this.trackingData.location[this.STANDARD_FIELDS.country];
+            const currentCity = this.trackingData.location[this.STANDARD_FIELDS.city];
             
-            console.log('🌍 Updated location data:', this.trackingData.location);
+            // Don't overwrite if we already have real location data
+            if (currentCountry === 'Unknown' || currentCountry === 'New Zealand' || 
+                currentCity === 'Unknown' || currentCity === 'Auckland') {
+                
+                console.log('🌍 Updating location data from CF_GEO (non-destructive)');
+                
+                // Only update fields that are actually available in CF_GEO
+                if (geo.country && geo.country !== 'Unknown') {
+                    this.trackingData.location[this.STANDARD_FIELDS.country] = geo.country;
+                    this.trackingData.location.countryCode = geo.countryCode || geo.country;
+                }
+                if (geo.region && geo.region !== 'Unknown') {
+                    this.trackingData.location[this.STANDARD_FIELDS.region] = geo.region;
+                    this.trackingData.location.regionCode = geo.regionCode || geo.region;
+                }
+                if (geo.city && geo.city !== 'Unknown') {
+                    this.trackingData.location[this.STANDARD_FIELDS.city] = geo.city;
+                }
+                if (geo.postalCode && geo.postalCode !== 'Unknown') {
+                    this.trackingData.location[this.STANDARD_FIELDS.postalCode] = geo.postalCode;
+                }
+                if (geo.continent && geo.continent !== 'Unknown') {
+                    this.trackingData.location.continent = geo.continent;
+                }
+                if (geo.latitude && geo.longitude) {
+                    this.trackingData.location[this.STANDARD_FIELDS.coordinates] = {
+                        latitude: geo.latitude,
+                        longitude: geo.longitude,
+                        accuracy: 'IP-based'
+                    };
+                }
+                if (geo.timezone && geo.timezone !== 'Unknown') {
+                    this.trackingData.location[this.STANDARD_FIELDS.timezone] = geo.timezone;
+                }
+                
+                // Always update raw data for debugging
+                this.trackingData.location.raw = geo;
+                
+                console.log('🌍 Location data updated (non-destructive):', this.trackingData.location);
+            } else {
+                console.log('🌍 Location data already accurate, skipping update:', currentCountry, currentCity);
+            }
         }
     }
 
