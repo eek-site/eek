@@ -259,13 +259,22 @@ function setupEventListeners() {
     }
   });
   
-  // Simple form validation - no complex logic to avoid loops
+  // Simple form validation with debounce to prevent excessive validation calls
+  let validationTimeout;
   document.addEventListener('input', function(e) {
     try {
       if (e.target?.matches('.form-input, .form-select, .form-textarea') && currentStep === 2) {
         console.log(`🔍 INPUT CHANGE - Field: ${e.target.name || e.target.id}, Value: "${e.target.value}"`);
-        // Just update the button - no complex validation
-        updateContinueButton();
+        
+        // Clear previous timeout
+        if (validationTimeout) {
+          clearTimeout(validationTimeout);
+        }
+        
+        // Debounce validation to prevent excessive calls while typing
+        validationTimeout = setTimeout(() => {
+          updateContinueButton();
+        }, 500); // Wait 500ms after user stops typing (increased from 300ms)
       }
     } catch (error) {
       console.warn('Form validation error:', error);
@@ -578,11 +587,17 @@ function showStep(stepNum) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Focus the first enabled input/select/textarea in the step
+    // Focus the first enabled input/select/textarea in the step (only if no field is currently focused)
     const activeStep = document.getElementById(`step${stepNum}`);
-    const firstFocusable = activeStep?.querySelector('[autofocus], input:not([type=hidden]):not([disabled]), select:not([disabled]), textarea:not([disabled])');
-    if (firstFocusable && typeof firstFocusable.focus === 'function') {
-      setTimeout(() => firstFocusable.focus(), 100);
+    const currentlyFocused = document.activeElement;
+    const isFormField = currentlyFocused && (currentlyFocused.tagName === 'INPUT' || currentlyFocused.tagName === 'SELECT' || currentlyFocused.tagName === 'TEXTAREA');
+    
+    // Only auto-focus if no form field is currently focused (to avoid interrupting user typing)
+    if (!isFormField) {
+      const firstFocusable = activeStep?.querySelector('[autofocus], input:not([type=hidden]):not([disabled]), select:not([disabled]), textarea:not([disabled])');
+      if (firstFocusable && typeof firstFocusable.focus === 'function') {
+        setTimeout(() => firstFocusable.focus(), 100);
+      }
     }
   } catch (e) {
     console.warn('Focus/scroll error:', e);
@@ -671,13 +686,13 @@ function validateForm() {
     }
   }
 
-  // Mobile UX: scroll to first invalid field
+  // Mobile UX: scroll to first invalid field (but don't auto-focus to avoid interrupting typing)
   if (!isValid) {
     const firstInvalid = currentStepElement.querySelector('[required].error, [required]:invalid');
     if (firstInvalid) {
       try {
         firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        setTimeout(() => firstInvalid.focus && firstInvalid.focus(), 150);
+        // Removed auto-focus to prevent interrupting user typing
       } catch (e) {}
     }
   }
