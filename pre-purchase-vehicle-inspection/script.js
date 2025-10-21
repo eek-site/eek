@@ -314,9 +314,10 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v2.5 - Payment Redirect Fixed 🚀🚀🚀');
-  console.log('🔧 DEBUGGING ENABLED - Check for continue button issues');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v2.6 - MODAL FIXED 🚀🚀🚀');
+  console.log('🔧 MODAL FUNCTIONS MOVED TO TOP - Should work now!');
   console.log('📅 Script loaded at:', new Date().toISOString());
+  console.log('🔧 openServiceSelectionModal available:', typeof window.openServiceSelectionModal);
   
   initializeTracking();
   initializeDaySelector();
