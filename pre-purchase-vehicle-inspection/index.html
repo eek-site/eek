@@ -134,7 +134,7 @@
   <div class="booking-container">
     <div class="booking-header">
       <h2>Book Your Inspection</h2>
-      <p>Same-day & weekend service • 7 simple steps • Secure payment</p>
+      <p>Same-day & weekend service • 6 simple steps • Secure payment</p>
     </div>
 
     <!-- Progress Bar -->
@@ -144,7 +144,6 @@
       <div class="progress-step" id="step3-progress"><span>Vehicle</span></div>
       <div class="progress-step" id="step4-progress"><span>Seller</span></div>
       <div class="progress-step" id="step5-progress"><span>When</span></div>
-      <div class="progress-step" id="step6-progress"><span>Type</span></div>
       <div class="progress-step" id="step7-progress"><span>Confirm</span></div>
     </div>
 
@@ -160,7 +159,6 @@
         
         <div style="background:#fff;border:2px solid #ff5500;border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;">
           <div style="font-size:2.5em;font-weight:bold;color:#ff5500;margin-bottom:10px;">$299 NZD</div>
-          <p style="margin:0;color:#666;font-size:1.05em;">Standard vehicles included - classic/specialty vehicles cost extra</p>
         </div>
 
         <div style="background:#f8f9fa;border-radius:8px;padding:20px;margin-bottom:25px;">
@@ -189,6 +187,22 @@
             <div style="display:flex;align-items:center;gap:8px;">
               <span style="color:#28a745;font-weight:bold;">✓</span>
               <span style="font-size:.9em;">Workshop Hoist</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#f8f9fa;border-radius:8px;padding:20px;margin-bottom:25px;">
+          <h4 style="margin:0 0 15px 0;color:#495057;">Vehicle Type:</h4>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+            <div class="vehicle-type-option" data-type="standard" onclick="selectVehicleType('standard', 0, this)" style="background:#fff;border:2px solid #28a745;border-radius:8px;padding:15px;text-align:center;cursor:pointer;">
+              <div style="font-weight:bold;color:#28a745;margin-bottom:5px;">Standard Vehicle</div>
+              <div style="font-size:0.9em;color:#666;">Cars, SUVs, utes, motorhomes</div>
+              <div style="font-size:0.9em;color:#28a745;font-weight:bold;margin-top:5px;">No additional fee</div>
+            </div>
+            <div class="vehicle-type-option" data-type="specialty" onclick="selectVehicleType('specialty', 129, this)" style="background:#fff;border:2px solid #6c757d;border-radius:8px;padding:15px;text-align:center;cursor:pointer;">
+              <div style="font-weight:bold;color:#6c757d;margin-bottom:5px;">Classic/Specialty</div>
+              <div style="font-size:0.9em;color:#666;">Classics, modified, rare imports</div>
+              <div style="font-size:0.9em;color:#dc3545;font-weight:bold;margin-top:5px;">+$129</div>
             </div>
           </div>
         </div>
@@ -338,43 +352,11 @@
         
         <div style="text-align:center;margin-top:25px;">
           <button class="btn btn-primary" onclick="goToNextStep()">
-            Continue to Vehicle Type →
-          </button>
-        </div>
-      </div>
-          
-      <!-- Step 6: Vehicle Type -->
-      <div class="step" id="step6">
-        <div style="background:linear-gradient(135deg,#28a745,#20c997);border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;color:#fff;">
-          <h2 style="margin:0 0 10px 0;font-size:1.6em;">95% Of Vehicles Are Standard Pricing</h2>
-          <p style="margin:0;font-size:1.05em;opacity:.95;">Most cars, SUVs, utes, and motorhomes are included in the base price. Only specialty vehicles cost extra.</p>
-        </div>
-        <div class="separator-bar-thin"></div>
-
-        <div class="vehicle-types">
-          <div class="vehicle-type popular selected" onclick="selectVehicleType('standard', 0, this)">
-            <div class="vehicle-type-title">Standard Vehicle</div>
-            <div class="vehicle-type-subtitle">Cars, SUVs, utes, motorhomes with standard license</div>
-            <div class="vehicle-note" style="color:#28a745;font-weight:700;">No additional fee</div>
-          </div>
-
-          <div class="vehicle-type" onclick="selectVehicleType('specialty', 129, this)">
-            <div class="vehicle-type-title">Classic/Specialty</div>
-            <div class="vehicle-type-subtitle">Classics, modified vehicles, rare imports</div>
-            <div class="vehicle-note">Specialist expertise (+$129)</div>
-            </div>
-          </div>
-
-        <div style="background:#f8f9fa;border-radius:8px;padding:15px;margin:20px 0;text-align:left;">
-          <p style="margin:0;color:#495057;font-size:.9em;line-height:1.5;"><strong>Note:</strong> We inspect vehicles with standard licenses. Heavy truck (HT) licenses and commercial trucks requiring special licenses are not available for inspection through this service.</p>
-        </div>
-        
-        <div style="text-align:center;margin-top:25px;">
-          <button class="btn btn-primary" onclick="goToNextStep()">
             Continue to Confirmation →
           </button>
         </div>
       </div>
+          
 
       <!-- Step 7: Confirmation -->
       <div class="step" id="step7">
@@ -481,6 +463,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=20251020.26"></script>
+  <script src="script.js?v=20251020.27"></script>
 </body>
 </html>

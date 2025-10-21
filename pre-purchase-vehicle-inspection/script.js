@@ -325,11 +325,11 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.11 - CLEAR PRICING 🚀🚀🚀');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.12 - STREAMLINED FLOW 🚀🚀🚀');
   console.log('💰 FIXED PRICE - $299 Pre Purchase Vehicle Inspection');
   console.log('🎨 MATCHING STYLES - Updated buttons to match site color scheme');
-  console.log('📝 CLEAR PRICING - "Standard vehicles included - classic/specialty vehicles cost extra"');
-  console.log('🔄 FORCE REFRESH - Version 3.11 loaded successfully!');
+  console.log('🔄 STREAMLINED - Vehicle type selection moved to Step 1, removed Step 6');
+  console.log('🔄 FORCE REFRESH - Version 3.12 loaded successfully!');
   console.log('📅 Script loaded at:', new Date().toISOString());
   console.log('🔧 openServiceSelectionModal available:', typeof window.openServiceSelectionModal);
   
@@ -909,7 +909,7 @@ function updateContinueButton() {
 }
 
 function goToNextStep() {
-  if (currentStep < 7) {
+  if (currentStep < 6) {
     // Collect form data
     collectFormData();
     
@@ -942,16 +942,18 @@ function goToNextStep() {
       case 5:
         stepStatus = BOOKING_STATUS.TIME_SELECTED;
         break;
-      case 6:
-        stepStatus = BOOKING_STATUS.INSPECTION_TYPE;
-        break;
     }
     
     if (stepStatus) {
       sendStepTracking(stepStatus);
     }
     
-    showStep(currentStep + 1);
+    // Handle the new flow: step 5 goes to step 7 (skip step 6)
+    if (currentStep === 5) {
+      showStep(7);
+    } else {
+      showStep(currentStep + 1);
+    }
   } else {
     // Generate payment link for step 7
     generatePaymentLink();
@@ -1531,8 +1533,8 @@ function buildStepData(status) {
     
     // Step information - EXACT field names from template
     currentStep: currentStep,
-    totalSteps: 7,
-    stepProgress: Math.round((currentStep / 7) * 100),
+    totalSteps: 6,
+    stepProgress: Math.round((currentStep / 6) * 100),
     
     // Page source data - EXACT structure from template
     pageSource: {
