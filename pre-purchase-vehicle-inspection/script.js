@@ -106,7 +106,7 @@ async function sendJourneyTracking(journeyEntry) {
 }
 
 // Check for return visit from booking link
-function checkReturnVisit() {
+async function checkReturnVisit() {
   const urlParams = new URLSearchParams(window.location.search);
   const callAttemptId = urlParams.get('call_attempt_id');
   const callTimestamp = urlParams.get('call_timestamp');
@@ -246,6 +246,28 @@ const vehicleTypes = [
   { id: 'truck', name: 'Truck', icon: '🚛' },
   { id: 'other', name: 'Other', icon: '🚜' }
 ];
+
+// Export functions for global access immediately
+window.openServiceSelectionModal = openServiceSelectionModal;
+window.closeServiceModal = closeServiceModal;
+window.goToNextStep = goToNextStep;
+window.goToPreviousStep = goToPreviousStep;
+window.selectDay = selectDay;
+window.initializeDaySelector = initializeDaySelector;
+window.selectVehicleType = selectVehicleType;
+window.toggleBookingButton = toggleBookingButton;
+window.buildInspectionData = buildInspectionData;
+window.generatePaymentLink = generatePaymentLink;
+window.closeExitIntent = closeExitIntent;
+window.applyDiscount = applyDiscount;
+window.testModal = function() {
+  console.log('🧪 Testing modal functionality...');
+  console.log('Modal element:', document.getElementById('serviceModal'));
+  console.log('Service options container:', document.getElementById('serviceOptions'));
+  console.log('Services object:', services);
+  console.log('Opening modal...');
+  openServiceSelectionModal();
+};
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
@@ -2181,27 +2203,4 @@ function setupExitIntent() {
   });
 }
 
-// Test function to debug modal
-window.testModal = function() {
-  console.log('🧪 Testing modal functionality...');
-  console.log('Modal element:', document.getElementById('serviceModal'));
-  console.log('Service options container:', document.getElementById('serviceOptions'));
-  console.log('Services object:', services);
-  console.log('Opening modal...');
-  openServiceSelectionModal();
-};
-
-// Export functions for global access
-window.openServiceSelectionModal = openServiceSelectionModal;
-window.closeServiceModal = closeServiceModal;
-window.goToNextStep = goToNextStep;
-window.goToPreviousStep = goToPreviousStep;
-window.selectDay = selectDay;
-window.initializeDaySelector = initializeDaySelector;
-window.selectVehicleType = selectVehicleType;
-window.toggleBookingButton = toggleBookingButton;
-window.buildInspectionData = buildInspectionData;
-window.generatePaymentLink = generatePaymentLink;
-window.closeExitIntent = closeExitIntent;
-window.applyDiscount = applyDiscount;
 
