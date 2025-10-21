@@ -325,10 +325,10 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.6 - SINGLE CONTINUE BUTTON 🚀🚀🚀');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.7 - CLEANED UP FORM 🚀🚀🚀');
   console.log('💰 FIXED PRICE - $299 Pre Purchase Vehicle Inspection');
-  console.log('✅ SINGLE CONTINUE BUTTON - Removed duplicate button');
-  console.log('🔄 FORCE REFRESH - Version 3.6 loaded successfully!');
+  console.log('🧹 CLEANED UP - Removed unnecessary fields, inline buttons only');
+  console.log('🔄 FORCE REFRESH - Version 3.7 loaded successfully!');
   console.log('📅 Script loaded at:', new Date().toISOString());
   console.log('🔧 openServiceSelectionModal available:', typeof window.openServiceSelectionModal);
   
@@ -788,31 +788,7 @@ function showStep(stepNum) {
   const navContinueBtn = document.querySelector('.nav-continue');
   const navBackBtn = document.querySelector('.nav-back');
   
-  if (stepNum === 1) {
-    // Step 1: Show navigation with Continue button
-    if (stepNav) stepNav.style.display = 'flex';
-    if (continueBtn) continueBtn.style.display = 'block';
-    if (prevBtn) prevBtn.style.display = 'none';
-  } else {
-    // Other steps: Show navigation buttons
-    if (stepNav) stepNav.style.display = 'flex';
-    if (continueBtn) continueBtn.style.display = 'block';
-    if (prevBtn) prevBtn.style.display = stepNum > 1 ? 'block' : 'none';
-    
-    // Show/hide back button
-    if (navBackBtn) {
-      navBackBtn.style.display = stepNum > 1 ? 'block' : 'none';
-    }
-    
-    // Update continue button text for final step
-    if (navContinueBtn) {
-      if (stepNum === 7) {
-        navContinueBtn.textContent = 'Complete Booking →';
-      } else {
-        navContinueBtn.textContent = 'Continue →';
-      }
-    }
-  }
+  // No floating navigation - each step has its own Continue button
   
   currentStep = stepNum;
   updateContinueButton();
@@ -947,69 +923,11 @@ function validateForm() {
   return isValid;
 }
 
-// Continue button functions
+// Continue button functions - now using inline buttons
 function updateContinueButton() {
-  const button = document.getElementById('continueBtn');
-  const navButton = document.querySelector('.nav-continue');
-  
-  let canContinue = false;
-  
-  switch (currentStep) {
-    case 1:
-      canContinue = true; // Skip step 1, service is pre-selected
-      break;
-    case 2:
-      canContinue = validateForm();
-      break;
-    case 3:
-      canContinue = bookingData.vehicleType && validateForm();
-      break;
-    case 4:
-      canContinue = validateForm();
-      break;
-    case 5:
-      canContinue = validateForm();
-      break;
-    case 6:
-      canContinue = validateForm();
-      break;
-    case 7:
-      canContinue = true;
-      // Disable button initially on step 7 until terms are accepted
-      if (navButton) {
-        navButton.disabled = true;
-        navButton.style.opacity = '0.5';
-        navButton.style.cursor = 'not-allowed';
-      }
-      // Call toggleBookingButton to set up the terms checkbox listener
-      setTimeout(() => toggleBookingButton(), 100);
-      break;
-  }
-  
-  const buttonText = currentStep === 7 ? 'Complete Booking' : 'Continue';
-  
-  console.log(`🔘 UPDATE CONTINUE BUTTON - Step: ${currentStep}, CanContinue: ${canContinue}, SelectedService: ${selectedService?.name || 'null'}`);
-  console.log(`🔘 Button elements - Regular: ${!!button}, Navigation: ${!!navButton}`);
-  console.log(`🔘 Navigation button disabled state: ${navButton?.disabled}, display: ${navButton?.style.display}`);
-  
-  if (button) {
-    button.disabled = !canContinue;
-    button.textContent = buttonText;
-    console.log(`🔘 Regular button updated - Disabled: ${button.disabled}, Text: ${button.textContent}`);
-  }
-  
-  if (navButton) {
-    // Always enable the button - no more disabling
-    navButton.disabled = false;
-    navButton.textContent = buttonText;
-    
-    // For step 1, show the continue button
-    if (currentStep === 1) {
-      navButton.style.display = 'block';
-    }
-    
-    console.log(`🔘 Navigation button updated - Disabled: ${navButton.disabled}, Text: ${navButton.textContent}, Display: ${navButton.style.display}`);
-  }
+  // Each step now has its own inline Continue button
+  // No need for complex floating navigation logic
+  console.log(`🔘 UPDATE CONTINUE BUTTON - Step: ${currentStep}, SelectedService: ${selectedService?.name || 'null'}`);
 }
 
 function goToNextStep() {
@@ -1615,14 +1533,7 @@ function buildStepData(status) {
     vehicleType: bookingData.vehicleType || '',
     vehicleRego: bookingData.vehicleRego || '',
     rego: bookingData.vehicleRego || '', // Template expects both
-    batteryVoltage: bookingData.batteryVoltage || '',
-    selectedVoltage: bookingData.batteryVoltage || '', // Template expects both
-    urgencyLevel: bookingData.urgencyLevel || 'standard',
-    urgencyTitle: getUrgencyTitle(bookingData.urgencyLevel || 'standard'),
-    timeWindow: getTimeWindow(bookingData.urgencyLevel || 'standard'),
-    emergencyType: getEmergencyType(bookingData.urgencyLevel || 'standard'),
-    quoteReference: bookingData.quoteReference || '',
-    isWinzService: bookingData.isWinzService === 'true' || false,
+    // Removed fields: batteryVoltage, urgencyLevel, quoteReference, isWinzService
     
     // Seller information
     sellerName: bookingData.sellerName || '',
@@ -1903,16 +1814,16 @@ function updateSummary() {
 // === BOOKING BUTTON TOGGLE ===
 function toggleBookingButton() {
   const termsCheckbox = document.getElementById('termsAgree');
-  const navButton = document.querySelector('.nav-continue');
+  const paymentButton = document.getElementById('finalPaymentBtn');
   
-  if (termsCheckbox && navButton) {
-    navButton.disabled = !termsCheckbox.checked;
+  if (termsCheckbox && paymentButton) {
+    paymentButton.disabled = !termsCheckbox.checked;
     if (termsCheckbox.checked) {
-      navButton.style.opacity = '1';
-      navButton.style.cursor = 'pointer';
+      paymentButton.style.opacity = '1';
+      paymentButton.style.cursor = 'pointer';
     } else {
-      navButton.style.opacity = '0.5';
-      navButton.style.cursor = 'not-allowed';
+      paymentButton.style.opacity = '0.5';
+      paymentButton.style.cursor = 'not-allowed';
     }
   }
 }
@@ -2017,13 +1928,7 @@ function buildInspectionData(status) {
       scheduledDateISO: bookingData.preferredDate ? new Date(bookingData.preferredDate).toISOString() : '',
       
       // Additional fields - EXACT field names from payment API
-      urgencyLevel: bookingData.urgencyLevel || 'standard',
-      urgencyTitle: getUrgencyTitle(bookingData.urgencyLevel || 'standard'),
-      timeWindow: getTimeWindow(bookingData.urgencyLevel || 'standard'),
-      batteryVoltage: bookingData.batteryVoltage || '',
-      emergencyType: getEmergencyType(bookingData.urgencyLevel || 'standard'),
-      quoteReference: bookingData.quoteReference || '',
-      isWinzService: bookingData.isWinzService === 'true' || false,
+      // Removed fields: urgencyLevel, batteryVoltage, quoteReference, isWinzService
       vehicleTypeAddon: vehicleTypeAddon || 0,
       
       // Tracking - EXACT field names from payment API
@@ -2109,10 +2014,10 @@ async function generatePaymentLink() {
 
   console.log('🔍 Payment validation - Service:', selectedService?.name, 'Price:', selectedServicePrice);
 
-  const navButton = document.querySelector('.nav-continue');
-  if (navButton) {
-    navButton.disabled = true;
-    navButton.textContent = 'Generating Payment...';
+  const paymentButton = document.getElementById('finalPaymentBtn');
+  if (paymentButton) {
+    paymentButton.disabled = true;
+    paymentButton.textContent = 'Generating Payment...';
   }
   
   try {
@@ -2157,11 +2062,9 @@ async function generatePaymentLink() {
     console.error('Payment generation error:', error);
     showNotification('Error generating payment link. Please try again.', 'error');
     
-    if (navButton) {
-      navButton.disabled = false;
-      navButton.textContent = 'Secure My Inspection Now →';
-      navButton.style.opacity = '1';
-      navButton.style.cursor = 'pointer';
+    if (paymentButton) {
+      paymentButton.disabled = false;
+      paymentButton.textContent = 'Secure My Inspection Now →';
     }
   }
 }
