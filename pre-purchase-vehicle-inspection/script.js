@@ -3,9 +3,20 @@
 /* Cache busting: v20251020.7 */
 
 // Global variables
-let currentStep = 1;
-let selectedService = null;
-let selectedServicePrice = 0;
+let currentStep = 2; // Start at step 2, skip service selection
+let selectedService = {
+  id: 'comprehensive',
+  name: 'Comprehensive Vehicle Inspection',
+  price: 299,
+  features: [
+    'Complete mechanical inspection',
+    'Safety systems check',
+    'Professional valuation',
+    'History check',
+    'Detailed report with recommendations'
+  ]
+};
+let selectedServicePrice = 299;
 let selectedDay = null;
 let selectedDayString = '';
 let selectedVehicleType = 'standard';
@@ -314,10 +325,10 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.2 - PAYMENT VALIDATION FIXED 🚀🚀🚀');
-  console.log('📱 MOBILE-FIRST MODAL - Beautiful, modern design!');
-  console.log('💳 PAYMENT VALIDATION - No more $0 payments!');
-  console.log('🔄 FORCE REFRESH - Version 3.2 loaded successfully!');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.3 - FIXED PRICE $299 🚀🚀🚀');
+  console.log('💰 FIXED PRICE - $299 Comprehensive Inspection');
+  console.log('🚫 NO SERVICE SELECTION - Step 1 removed, no bypass possible');
+  console.log('🔄 FORCE REFRESH - Version 3.3 loaded successfully!');
   console.log('📅 Script loaded at:', new Date().toISOString());
   console.log('🔧 openServiceSelectionModal available:', typeof window.openServiceSelectionModal);
   
@@ -945,7 +956,7 @@ function updateContinueButton() {
   
   switch (currentStep) {
     case 1:
-      canContinue = selectedService !== null;
+      canContinue = true; // Skip step 1, service is pre-selected
       break;
     case 2:
       canContinue = validateForm();
@@ -1939,11 +1950,7 @@ function buildInspectionData(status) {
   const trackingData = window.unifiedTracking ? window.unifiedTracking.getTrackingData() : {};
   const geo = window.CF_GEO || {};
   
-  // CRITICAL: Validate service selection
-  if (!selectedService || !selectedServicePrice || selectedServicePrice === 0) {
-    console.error('❌ CRITICAL ERROR: No service selected for payment!');
-    throw new Error('No inspection service selected. Please select a service before proceeding.');
-  }
+  // Service is pre-selected at $299 - no validation needed
   
   // Calculate amount in cents for Stripe
   const amountInCents = Math.round(selectedServicePrice * 100);
@@ -2098,13 +2105,7 @@ async function generatePaymentLink() {
     return;
   }
 
-  // CRITICAL: Check if service is selected
-  if (!selectedService || !selectedServicePrice || selectedServicePrice === 0) {
-    alert('Please select an inspection service before proceeding to payment');
-    // Go back to step 1 to select service
-    showStep(1);
-    return;
-  }
+  // Service is pre-selected at $299 - no validation needed
 
   console.log('🔍 Payment validation - Service:', selectedService?.name, 'Price:', selectedServicePrice);
 

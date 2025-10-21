@@ -151,21 +151,17 @@
 
     <!-- Booking Steps -->
     <div class="booking-steps">
-      <!-- Step 1: Service Selection -->
-      <div class="step active" id="step1">
+      <!-- Step 1: Fixed Service (Hidden - starts at step 2) -->
+      <div class="step" id="step1" style="display:none;">
         <div style="background:#e8f4f8;border-radius:8px;padding:20px;margin-bottom:25px;text-align:center;">
-          <h2 style="margin:0 0 10px 0;color:#0c5460;font-size:1.6em;">1 in 5 Vehicles We Inspect Get Rejected</h2>
-          <p style="margin:0;color:#0c5460;font-size:1.05em;">Don't lose thousands on hidden repairs. Choose Comprehensive for detailed analysis, professional valuation, and credit protection if it's a lemon.</p>
+          <h2 style="margin:0 0 10px 0;color:#0c5460;font-size:1.6em;">Comprehensive Vehicle Inspection</h2>
+          <p style="margin:0;color:#0c5460;font-size:1.05em;">Complete mechanical inspection, safety check, professional valuation, and detailed report.</p>
+          <div style="margin:15px 0;font-size:1.8em;font-weight:bold;color:#ff5500;">$299 NZD</div>
         </div>
-        <div style="text-align:center; margin: 20px 0 10px;">
-          <button class="btn btn-success" onclick="openServiceSelectionModal()">Choose Your Inspection →</button>
-        </div>
-        <div id="selected-service-display" style="display:none; margin-top:15px;"></div>
-        
       </div>
 
-      <!-- Step 2: Your Information -->
-      <div class="step" id="step2">
+      <!-- Step 2: Your Information (Now Step 1) -->
+      <div class="step active" id="step2">
         <div style="background:linear-gradient(135deg,#ff5500,#ff7733);border-radius:12px;padding:25px;margin-bottom:25px;text-align:center;color:#fff;">
           <h2 style="margin:0 0 10px 0;font-size:1.6em;">We Inspect Today - Not Next Week</h2>
           <p style="margin:0;font-size:1.05em;opacity:.95;">Other inspection services make you wait 2-3 days. We inspect same-day and deliver your report within 90 minutes. Don't lose the car while waiting.</p>
@@ -406,32 +402,7 @@
 
   </div>
 
-  <!-- Service Selection Modal - Mobile First Design -->
-  <div id="serviceModal" class="modal-mobile">
-    <div class="modal-backdrop" onclick="closeServiceModal()"></div>
-    <div class="modal-container">
-      <!-- Mobile Header -->
-      <div class="modal-header-mobile">
-        <div class="modal-title">
-          <h2>Choose Your Inspection</h2>
-          <p>Same-day service • 60-90 min report</p>
-        </div>
-        <button class="modal-close-mobile" onclick="closeServiceModal()" aria-label="Close">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-      </div>
-      
-      <!-- Mobile Content -->
-      <div class="modal-content-mobile">
-        <div class="service-options-mobile" id="serviceOptions">
-          <!-- Service options will be populated by JavaScript -->
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Service Selection Modal Removed - Fixed Price $299 -->
 
   <!-- Trust Badges -->
   <div class="trust-badges">
