@@ -1,0 +1,43 @@
+#!/bin/sh
+# Pre-commit hook to auto-increment version for cache busting
+# This runs before each commit to update _config.yml version
+
+# Check if any JavaScript files are being committed
+js_files=$(git diff --cached --name-only | grep -E '\.(js|css)$')
+
+if [ -n "$js_files" ]; then
+    echo "🔧 JavaScript/CSS files detected, updating version for cache busting..."
+    
+    # Get current version from _config.yml
+    current_version=$(grep '^version:' _config.yml | cut -d' ' -f2)
+    echo "📊 Current version: $current_version"
+    
+    # Extract the date part (YYYYMMDD) and increment the build number
+    date_part=$(echo $current_version | cut -d'.' -f1)
+    build_part=$(echo $current_version | cut -d'.' -f2)
+    
+    # If no build part, start at 1
+    if [ "$build_part" = "$date_part" ]; then
+        build_part=1
+    else
+        build_part=$((build_part + 1))
+    fi
+    
+    # Create new version
+    new_version="${date_part}.${build_part}"
+    
+    echo "🚀 New version: $new_version"
+    
+    # Update _config.yml
+    sed -i "s/^version: .*/version: $new_version/" _config.yml
+    
+    # Add the updated _config.yml to the commit
+    git add _config.yml
+    
+    echo "✅ Version updated to $new_version and added to commit"
+    echo "📁 Modified files: $js_files"
+else
+    echo "ℹ️  No JavaScript/CSS files modified, skipping version update"
+fi
+
+exit 0
