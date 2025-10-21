@@ -330,6 +330,13 @@ function trackCallButtonClick(serviceType, phoneHref) {
     trigger: 'call_button_click',
     value: 1
   });
+  
+  // Store call attempt data for return visit tracking
+  if (typeof sendCallClick === 'function') {
+    sendCallClick('modal_call_click', 'Service', null);
+  } else {
+    console.warn('sendCallClick function not available for call tracking');
+  }
 }
 
 function trackBackButtonClick(serviceType) {
