@@ -325,10 +325,11 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.8 - SINGLE BUTTONS 🚀🚀🚀');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.10 - ACCURATE PRICING 🚀🚀🚀');
   console.log('💰 FIXED PRICE - $299 Pre Purchase Vehicle Inspection');
-  console.log('🔘 SINGLE BUTTONS - Removed duplicate Continue buttons');
-  console.log('🔄 FORCE REFRESH - Version 3.8 loaded successfully!');
+  console.log('🎨 MATCHING STYLES - Updated buttons to match site color scheme');
+  console.log('📝 ACCURATE PRICING - Removed misleading "no hidden fees" text');
+  console.log('🔄 FORCE REFRESH - Version 3.10 loaded successfully!');
   console.log('📅 Script loaded at:', new Date().toISOString());
   console.log('🔧 openServiceSelectionModal available:', typeof window.openServiceSelectionModal);
   
