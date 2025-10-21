@@ -1207,7 +1207,8 @@ function extractGCLID(urlParams) {
     };
     
     const payload = {
-      eventType: "session_started",
+      eventType: "page_view",
+      eventAction: "initial_page_load",
       timestamp: new Date().toISOString(),
       sessionId: sessionId,
       gclid: gclid,

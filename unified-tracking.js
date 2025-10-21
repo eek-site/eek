@@ -134,12 +134,13 @@ class UnifiedTrackingSystem {
     }
 
     /**
-     * Initialize comprehensive tracking
+     * Initialize comprehensive tracking (without automatic page_view)
      */
     initializeTracking() {
         console.log('🚀 Unified Tracking System v2.1 initialized');
         
-        this.trackPageView();
+        // NOTE: Removed automatic trackPageView() to prevent duplicate emails
+        // Page view tracking is now controlled by the main page's IIFE
         this.trackPageSource();
         this.trackUserJourney();
         this.trackEngagement();
