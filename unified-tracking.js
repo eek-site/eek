@@ -128,17 +128,20 @@ class UnifiedTrackingSystem {
      */
     init() {
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.initializeTracking());
+            document.addEventListener('DOMContentLoaded', () => this.initializeTracking().catch(console.error));
         } else {
-            this.initializeTracking();
+            this.initializeTracking().catch(console.error);
         }
     }
 
     /**
      * Initialize comprehensive tracking (without automatic page_view)
      */
-    initializeTracking() {
+    async initializeTracking() {
         console.log('🚀 Unified Tracking System v2.1 initialized');
+        
+        // Initialize tracking data with proper CF_GEO waiting
+        this.trackingData = await this.initializeTrackingData();
         
         // NOTE: Removed automatic trackPageView() to prevent duplicate emails
         // Page view tracking is now controlled by the main page's IIFE
@@ -157,6 +160,42 @@ class UnifiedTrackingSystem {
         this.retryLocationDetection();
         
         console.log('📊 Tracking Data:', this.trackingData);
+    }
+
+    /**
+     * Wait for CF_GEO to be available with retry mechanism
+     */
+    waitForCFGeo(maxRetries = 10, delay = 100) {
+        return new Promise((resolve) => {
+            let retries = 0;
+            
+            const checkCFGeo = () => {
+                if (window.CF_GEO && window.CF_GEO.country && window.CF_GEO.country !== 'Unknown') {
+                    console.log('✅ CF_GEO loaded successfully:', window.CF_GEO);
+                    resolve(window.CF_GEO);
+                } else if (retries < maxRetries) {
+                    retries++;
+                    console.log(`⏳ Waiting for CF_GEO... (attempt ${retries}/${maxRetries})`);
+                    setTimeout(checkCFGeo, delay);
+                } else {
+                    console.log('⚠️ CF_GEO not available, using fallback data');
+                    resolve({
+                        country: 'Unknown',
+                        city: 'Unknown', 
+                        region: 'Unknown',
+                        postalCode: 'Unknown',
+                        latitude: null,
+                        longitude: null,
+                        timezone: 'Unknown',
+                        continent: 'Unknown',
+                        regionCode: 'Unknown',
+                        countryCode: 'Unknown'
+                    });
+                }
+            };
+            
+            checkCFGeo();
+        });
     }
 
     /**
@@ -358,9 +397,9 @@ class UnifiedTrackingSystem {
     /**
      * Initialize comprehensive tracking data with standardized fields
      */
-    initializeTrackingData() {
+    async initializeTrackingData() {
         // Wait for CF_GEO to be available, with fallback
-        const geo = window.CF_GEO || {};
+        const geo = await this.waitForCFGeo();
         
         // Debug logging for location data
         console.log('🌍 CF_GEO Data:', geo);

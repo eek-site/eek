@@ -2274,6 +2274,9 @@ function handleMoreInfoAction(serviceType) {
         });
       }
     }
+    
+    // Store call attempt data for return visit tracking
+    sendCallClick('more_info_call_click', 'Service', null);
   } else {
     // Phones are off - redirect to booking page
     const serviceSlugMap = {
