@@ -1653,22 +1653,8 @@
   });
 
   // === TIME ON PAGE TRACKING ===
+  // Note: page_exit tracking is handled by unified-tracking.js
   let startTime = Date.now();
-  window.addEventListener('beforeunload', function() {
-    const timeOnPage = Date.now() - startTime;
-    const payload = buildTrackingPayload('supplier_engagement', 'session_end', {
-      timeOnPage: timeOnPage,
-      timeOnPageSeconds: Math.round(timeOnPage / 1000),
-      sessionType: 'supplier_portal',
-      supplierType: supplierType,
-      engagementLevel: timeOnPage > 300000 ? 'very_high' : // 5+ minutes
-                     timeOnPage > 120000 ? 'high' :        // 2-5 minutes
-                     timeOnPage > 60000 ? 'medium' :       // 1-2 minutes
-                     timeOnPage > 30000 ? 'low' : 'very_low' // <30 seconds
-    });
-    
-    sendTrackingEvent(payload);
-  });
 
   // Enable debug panel for testing (uncomment to show)
   // document.getElementById('debugInfo').style.display = 'block';

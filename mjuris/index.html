@@ -1364,18 +1364,8 @@
     });
 
     // === TIME ON PAGE TRACKING ===
+    // Note: page_exit tracking is handled by unified-tracking.js
     let startTime = Date.now();
-    window.addEventListener('beforeunload', function() {
-      const timeOnPage = Date.now() - startTime;
-      const payload = buildTrackingPayload('authority_engagement', 'session_end', {
-        timeOnPage: timeOnPage,
-        timeOnPageSeconds: Math.round(timeOnPage / 1000),
-        sessionType: 'legal_authority',
-        engagementLevel: timeOnPage > 60000 ? 'high' : timeOnPage > 30000 ? 'medium' : 'low'
-      });
-      
-      sendTrackingEvent(payload);
-    });
 
     // === ACCESS LOG FUNCTION FOR AUTHORITIES ===
     function logAuthorityAccess(authorityDetails) {

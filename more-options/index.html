@@ -1450,16 +1450,8 @@
         });
 
         // === TIME ON PAGE TRACKING ===
+        // Note: page_exit tracking is handled by unified-tracking.js
         let startTime = Date.now();
-        window.addEventListener('beforeunload', function() {
-            const timeOnPage = Date.now() - startTime;
-            const payload = buildTrackingPayload('user_engagement', 'time_on_page', {
-                timeOnPage: timeOnPage,
-                timeOnPageSeconds: Math.round(timeOnPage / 1000)
-            });
-            
-            sendTrackingEvent(payload);
-        });
 
         // Enable debug panel for testing (uncomment to show)
         // document.getElementById('debugInfo').style.display = 'block';
