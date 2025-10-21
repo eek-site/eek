@@ -126,6 +126,33 @@ function checkReturnVisit() {
     // Track the return visit
     trackVisitorJourney('booking_link_return_visit', returnVisitData);
     
+    // Send return visit tracking event to Power Automate API
+    const returnVisitPayload = {
+      eventType: 'return_visit',
+      eventAction: 'return_visit',
+      callAttemptId: callAttemptId,
+      callTimestamp: callTimestamp,
+      returnTimestamp: returnVisitData.returnTimestamp,
+      timeBetweenCallAndReturn: returnVisitData.timeBetweenCallAndReturn,
+      returnSource: 'booking_link',
+      page: 'pre_purchase_inspection',
+      sessionId: localStorage.getItem("eek_session_id"),
+      gclid: localStorage.getItem("eek_gclid"),
+      timestamp: new Date().toISOString()
+    };
+    
+    try {
+      await fetch(API_ENDPOINTS.tracking, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(returnVisitPayload),
+        keepalive: true
+      });
+      console.log('✅ Return visit tracking sent to API');
+    } catch (error) {
+      console.error('❌ Return visit tracking failed:', error);
+    }
+    
     console.log('✅ Return visit detected from booking link:', returnVisitData);
   }
   

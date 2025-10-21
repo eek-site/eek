@@ -901,6 +901,17 @@
         // Track the return visit
         trackVisitorJourney('booking_link_return_visit', returnVisitData);
         
+        // Send return visit tracking event to Power Automate API
+        const returnVisitPayload = buildTrackingPayload('return_visit', 'return_visit', {
+          callAttemptId: callAttemptId,
+          callTimestamp: callTimestamp,
+          returnTimestamp: returnVisitData.returnTimestamp,
+          timeBetweenCallAndReturn: returnVisitData.timeBetweenCallAndReturn,
+          returnSource: 'booking_link',
+          page: 'mjuris'
+        });
+        sendTrackingEvent(returnVisitPayload);
+        
         console.log('✅ Return visit detected from booking link:', returnVisitData);
       }
       
