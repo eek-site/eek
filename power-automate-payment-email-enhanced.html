@@ -1,0 +1,193 @@
+<!-- Subject Line: 💳 Payment Link Ready - @{triggerBody()?['customerData']?['name']} - @{triggerBody()?['customerData']?['serviceTitle']} -->
+
+<meta>
+<style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background-color: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+    .content { background-color: #f9f9f9; padding: 20px; border: 1px solid #ddd; }
+    .section { margin-bottom: 20px; }
+    .section-title { font-weight: bold; color: #2c3e50; margin-bottom: 10px; font-size: 16px; border-bottom: 2px solid #3498db; padding-bottom: 5px; }
+    .info-row { display: flex; margin-bottom: 8px; }
+    .label { font-weight: bold; min-width: 180px; color: #555; }
+    .value { color: #333; }
+    .link-button { background-color: #3498db; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 10px 5px; font-weight: bold; }
+    .link-button:hover { background-color: #2980b9; }
+    .payment-button { background-color: #27ae60; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 15px; font-weight: bold; font-size: 18px; }
+    .payment-button:hover { background-color: #229954; }
+    .footer { background-color: #34495e; color: white; padding: 15px; text-align: center; border-radius: 0 0 5px 5px; font-size: 12px; }
+    .price { font-size: 24px; font-weight: bold; color: #27ae60; }
+    .links-section { background-color: #ecf0f1; padding: 15px; border-radius: 5px; margin-top: 15px; }
+    .badge { display: inline-block; padding: 5px 10px; border-radius: 3px; font-size: 12px; font-weight: bold; margin-left: 10px; }
+    .badge-emergency { background-color: #e74c3c; color: white; }
+    .badge-standard { background-color: #95a5a6; color: white; }
+    .badge-gclid { background-color: #f39c12; color: white; }
+    .badge-direct { background-color: #95a5a6; color: white; }
+    .url-box { background-color: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 3px; margin: 5px 0; word-break: break-all; font-size: 11px; }
+    .tracking-section { background-color: #e8f5e8; border: 1px solid #a5d6a7; padding: 12px; border-radius: 5px; margin: 10px 0; }
+    .tracking-section h4 { margin: 0 0 10px 0; color: #2c3e50; font-size: 14px; }
+    a { color: #3498db; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+</style>
+
+<div class="container">
+    <div class="header">
+        <h1>💳 Payment Link Generated</h1>
+        <p style="margin: 5px 0; font-size: 14px;">
+            @{if(and(not(equals(triggerBody()?['trackingData']?['gclid'], null)), not(equals(triggerBody()?['trackingData']?['gclid'], ''))), '<span class="badge badge-gclid">GOOGLE ADS</span>', '<span class="badge badge-direct">DIRECT</span>')}
+            @{if(equals(triggerBody()?['customerData']?['urgencyLevel'], 'emergency'), '<span class="badge badge-emergency">EMERGENCY</span>', if(equals(triggerBody()?['customerData']?['urgencyLevel'], 'standard'), '<span class="badge badge-standard">STANDARD</span>', ''))}
+        </p>
+    </div>
+    
+    <div class="content">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <p style="font-size: 18px; color: #2c3e50;">Payment link created for:</p>
+            <p style="font-size: 22px; font-weight: bold; color: #27ae60;">
+                @{triggerBody()?['customerData']?['serviceTitle']}
+            </p>
+        </div>
+
+        <!-- Enhanced Tracking Information -->
+        @{if(not(equals(triggerBody()?['trackingData'], null)), concat('<div class="tracking-section"><h4>🎯 Traffic Source & Attribution</h4><div class="info-row"><span class="label">GCLID:</span><span class="value">', coalesce(triggerBody()?['trackingData']?['gclid'], 'None'), '</span></div><div class="info-row"><span class="label">GCLID State:</span><span class="value">', coalesce(triggerBody()?['trackingData']?['gclidState'], 'Unknown'), '</span></div><div class="info-row"><span class="label">Page Source:</span><span class="value">', coalesce(triggerBody()?['trackingData']?['pageSource']?['type'], 'Direct'), ' - ', coalesce(triggerBody()?['trackingData']?['pageSource']?['detail'], 'Direct visit'), '</span></div><div class="info-row"><span class="label">Campaign:</span><span class="value">', coalesce(triggerBody()?['trackingData']?['utm']?['campaign'], triggerBody()?['trackingData']?['pageSource']?['utm']?['campaign'], 'None'), '</span></div><div class="info-row"><span class="label">Keyword:</span><span class="value">', coalesce(triggerBody()?['trackingData']?['utm']?['term'], triggerBody()?['trackingData']?['pageSource']?['utm']?['term'], 'None'), '</span></div><div class="info-row"><span class="label">Device:</span><span class="value">', coalesce(triggerBody()?['trackingData']?['device']?['platform'], 'Unknown'), '</span></div><div class="info-row"><span class="label">Location:</span><span class="value">', coalesce(triggerBody()?['trackingData']?['location']?['city'], 'Unknown'), ', ', coalesce(triggerBody()?['trackingData']?['location']?['region'], 'Unknown'), '</span></div></div>'), '')}
+
+        <!-- Call Correlation -->
+        @{if(or(and(not(equals(triggerBody()?['trackingData']?['journeyData']?['callAttemptId'], null)), not(equals(triggerBody()?['trackingData']?['journeyData']?['callAttemptId'], ''))), and(not(equals(triggerBody()?['trackingData']?['journeyData']?['callTimestamp'], null)), not(equals(triggerBody()?['trackingData']?['journeyData']?['callTimestamp'], '')))), concat('<div class="tracking-section"><h4>📞 Call Correlation</h4>', if(and(not(equals(triggerBody()?['trackingData']?['journeyData']?['callAttemptId'], null)), not(equals(triggerBody()?['trackingData']?['journeyData']?['callAttemptId'], ''))), concat('<div class="info-row"><span class="label">Call Attempt ID:</span><span class="value">', triggerBody()?['trackingData']?['journeyData']?['callAttemptId'], '</span></div>'), ''), if(and(not(equals(triggerBody()?['trackingData']?['journeyData']?['callTimestamp'], null)), not(equals(triggerBody()?['trackingData']?['journeyData']?['callTimestamp'], ''))), concat('<div class="info-row"><span class="label">Call Timestamp:</span><span class="value">', formatDateTime(triggerBody()?['trackingData']?['journeyData']?['callTimestamp'], 'dd/MM/yyyy HH:mm'), '</span></div>'), ''), if(and(not(equals(triggerBody()?['trackingData']?['journeyData']?['timeBetweenCallAndReturn'], null)), not(equals(triggerBody()?['trackingData']?['journeyData']?['timeBetweenCallAndReturn'], 0))), concat('<div class="info-row"><span class="label">Time Between Call & Return:</span><span class="value">', div(triggerBody()?['trackingData']?['journeyData']?['timeBetweenCallAndReturn'], 60000), ' minutes</span></div>'), ''), '</div>'), '')}
+
+        <!-- Visitor Journey -->
+        @{if(not(equals(triggerBody()?['trackingData']?['userJourney'], null)), concat('<div class="tracking-section"><h4>🛣️ Visitor Journey</h4><div class="info-row"><span class="label">Entry Page:</span><span class="value">', coalesce(triggerBody()?['trackingData']?['userJourney']?['entryPage'], 'Unknown'), '</span></div><div class="info-row"><span class="label">Previous Page:</span><span class="value">', coalesce(triggerBody()?['trackingData']?['userJourney']?['previousPage'], 'Unknown'), '</span></div><div class="info-row"><span class="label">Total Pages:</span><span class="value">', coalesce(string(triggerBody()?['trackingData']?['userJourney']?['totalPages']), '1'), '</span></div><div class="info-row"><span class="label">Session Duration:</span><span class="value">', if(and(not(equals(triggerBody()?['trackingData']?['userJourney']?['sessionDuration'], null)), not(equals(triggerBody()?['trackingData']?['userJourney']?['sessionDuration'], 0))), concat(div(triggerBody()?['trackingData']?['userJourney']?['sessionDuration'], 60000), ' minutes'), 'Unknown'), '</span></div></div>'), '')}
+
+        <div class="section">
+            <div class="section-title">Customer Information</div>
+            <div class="info-row">
+                <span class="label">Name:</span>
+                <span class="value">@{triggerBody()?['customerData']?['name']}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Phone:</span>
+                <span class="value"><a href="tel:@{triggerBody()?['customerData']?['phone']}">@{triggerBody()?['customerData']?['phone']}</a></span>
+            </div>
+            <div class="info-row">
+                <span class="label">Email:</span>
+                <span class="value"><a href="mailto:@{triggerBody()?['customerData']?['email']}">@{triggerBody()?['customerData']?['email']}</a></span>
+            </div>
+            @{if(and(not(equals(triggerBody()?['customerData']?['location'], null)), not(equals(triggerBody()?['customerData']?['location'], ''))), concat('<div class="info-row"><span class="label">Location:</span><span class="value">', triggerBody()?['customerData']?['location'], '</span></div>'), '')}
+        </div>
+
+        <div class="section">
+            <div class="section-title">Service Details</div>
+            <div class="info-row">
+                <span class="label">Service:</span>
+                <span class="value">@{triggerBody()?['customerData']?['serviceTitle']} (@{triggerBody()?['customerData']?['serviceCode']})</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Service Type:</span>
+                <span class="value">@{triggerBody()?['customerData']?['service']}</span>
+            </div>
+            @{if(and(not(equals(triggerBody()?['customerData']?['urgencyTitle'], null)), not(equals(triggerBody()?['customerData']?['urgencyTitle'], ''))), concat('<div class="info-row"><span class="label">Urgency:</span><span class="value">', triggerBody()?['customerData']?['urgencyTitle'], '</span></div>'), '')}
+            @{if(and(not(equals(triggerBody()?['customerData']?['scheduledDate'], null)), not(equals(triggerBody()?['customerData']?['scheduledDate'], ''))), concat('<div class="info-row"><span class="label">Scheduled:</span><span class="value">', triggerBody()?['customerData']?['scheduledDate'], if(and(not(equals(triggerBody()?['customerData']?['scheduledTime'], null)), not(equals(triggerBody()?['customerData']?['scheduledTime'], ''))), concat(' - ', triggerBody()?['customerData']?['scheduledTime']), ''), '</span></div>'), '')}
+            @{if(and(not(equals(triggerBody()?['customerData']?['scheduledDateISO'], null)), not(equals(triggerBody()?['customerData']?['scheduledDateISO'], ''))), concat('<div class="info-row"><span class="label">Scheduled (ISO):</span><span class="value">', triggerBody()?['customerData']?['scheduledDateISO'], '</span></div>'), '')}
+            @{if(and(not(equals(triggerBody()?['customerData']?['timeWindow'], null)), not(equals(triggerBody()?['customerData']?['timeWindow'], ''))), concat('<div class="info-row"><span class="label">Time Window:</span><span class="value">', triggerBody()?['customerData']?['timeWindow'], '</span></div>'), '')}
+            @{if(and(not(equals(triggerBody()?['customerData']?['details'], null)), not(equals(triggerBody()?['customerData']?['details'], ''))), concat('<div class="info-row"><span class="label">Details:</span><span class="value">', triggerBody()?['customerData']?['details'], '</span></div>'), '')}
+            @{if(and(not(equals(triggerBody()?['customerData']?['emergencyType'], null)), not(equals(triggerBody()?['customerData']?['emergencyType'], ''))), concat('<div class="info-row"><span class="label">Emergency Type:</span><span class="value">', triggerBody()?['customerData']?['emergencyType'], '</span></div>'), '')}
+            @{if(and(not(equals(triggerBody()?['customerData']?['quoteReference'], null)), not(equals(triggerBody()?['customerData']?['quoteReference'], ''))), concat('<div class="info-row"><span class="label">Quote Reference:</span><span class="value">', triggerBody()?['customerData']?['quoteReference'], '</span></div>'), '')}
+            <div class="info-row">
+                <span class="label">WINZ Service:</span>
+                <span class="value">@{if(equals(triggerBody()?['customerData']?['isWinzService'], true), 'Yes', 'No')}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Booking Time (UTC):</span>
+                <span class="value">@{triggerBody()?['customerData']?['bookingDateTime']}</span>
+            </div>
+            @{if(and(not(equals(triggerBody()?['customerData']?['formVersion'], null)), not(equals(triggerBody()?['customerData']?['formVersion'], ''))), concat('<div class="info-row"><span class="label">Form Version:</span><span class="value">', triggerBody()?['customerData']?['formVersion'], '</span></div>'), '')}
+        </div>
+
+        <div class="section">
+            <div class="section-title">Vehicle Information</div>
+            @{if(and(not(equals(triggerBody()?['customerData']?['vehicleRego'], null)), not(equals(triggerBody()?['customerData']?['vehicleRego'], ''))), concat('<div class="info-row"><span class="label">Registration:</span><span class="value">', triggerBody()?['customerData']?['vehicleRego'], '</span></div>'), '')}
+            @{if(and(not(equals(triggerBody()?['customerData']?['vehicleDescription'], null)), not(equals(triggerBody()?['customerData']?['vehicleDescription'], ''))), concat('<div class="info-row"><span class="label">Vehicle:</span><span class="value">', triggerBody()?['customerData']?['vehicleDescription'], '</span></div>'), if(and(not(equals(triggerBody()?['customerData']?['vehicleYear'], null)), not(equals(triggerBody()?['customerData']?['vehicleYear'], ''))), concat('<div class="info-row"><span class="label">Year:</span><span class="value">', triggerBody()?['customerData']?['vehicleYear'], '</span></div><div class="info-row"><span class="label">Make:</span><span class="value">', triggerBody()?['customerData']?['vehicleMake'], '</span></div><div class="info-row"><span class="label">Model:</span><span class="value">', triggerBody()?['customerData']?['vehicleModel'], '</span></div>'), ''))}
+            @{if(and(not(equals(triggerBody()?['customerData']?['vehicleType'], null)), not(equals(triggerBody()?['customerData']?['vehicleType'], ''))), concat('<div class="info-row"><span class="label">Vehicle Type:</span><span class="value">', triggerBody()?['customerData']?['vehicleType'], '</span></div>'), '')}
+            @{if(and(not(equals(triggerBody()?['customerData']?['vehicleTypeAddon'], null)), not(equals(triggerBody()?['customerData']?['vehicleTypeAddon'], ''))), concat('<div class="info-row"><span class="label">Vehicle Type Addon:</span><span class="value">', triggerBody()?['customerData']?['vehicleTypeAddon'], '</span></div>'), '')}
+            @{if(and(not(equals(triggerBody()?['customerData']?['batteryVoltage'], null)), not(equals(triggerBody()?['customerData']?['batteryVoltage'], ''))), concat('<div class="info-row"><span class="label">Battery Voltage:</span><span class="value">', triggerBody()?['customerData']?['batteryVoltage'], '</span></div>'), '')}
+        </div>
+
+        @{if(or(and(not(equals(triggerBody()?['customerData']?['sellerName'], null)), not(equals(triggerBody()?['customerData']?['sellerName'], ''))), and(not(equals(triggerBody()?['customerData']?['sellerPhone'], null)), not(equals(triggerBody()?['customerData']?['sellerPhone'], '')))), concat('<div class="section"><div class="section-title">Seller Information</div>', if(and(not(equals(triggerBody()?['customerData']?['sellerName'], null)), not(equals(triggerBody()?['customerData']?['sellerName'], ''))), concat('<div class="info-row"><span class="label">Seller Name:</span><span class="value">', triggerBody()?['customerData']?['sellerName'], '</span></div>'), ''), if(and(not(equals(triggerBody()?['customerData']?['sellerPhone'], null)), not(equals(triggerBody()?['customerData']?['sellerPhone'], ''))), concat('<div class="info-row"><span class="label">Seller Phone:</span><span class="value"><a href="tel:', triggerBody()?['customerData']?['sellerPhone'], '">', triggerBody()?['customerData']?['sellerPhone'], '</a></span></div>'), ''), '</div>'), '')}
+
+        <div class="section">
+            <div class="section-title">Payment Information</div>
+            <div class="info-row">
+                <span class="label">Amount:</span>
+                <span class="value price">$@{triggerBody()?['customerData']?['price']}.00 @{toUpper(triggerBody()?['currency'])}</span>
+            </div>
+            @{if(not(equals(triggerBody()?['customerData']?['basePrice'], triggerBody()?['customerData']?['price'])), concat('<div class="info-row"><span class="label">Base Price:</span><span class="value">$', triggerBody()?['customerData']?['basePrice'], '.00 ', toUpper(triggerBody()?['currency']), '</span></div>'), '')}
+            <div class="info-row">
+                <span class="label">Currency:</span>
+                <span class="value">@{toUpper(triggerBody()?['currency'])}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Session ID:</span>
+                <span class="value">@{triggerBody()?['customerData']?['sessionId']}</span>
+            </div>
+            @{if(and(not(equals(triggerBody()?['customerData']?['bookingSource'], null)), not(equals(triggerBody()?['customerData']?['bookingSource'], ''))), concat('<div class="info-row"><span class="label">Booking Source:</span><span class="value">', triggerBody()?['customerData']?['bookingSource'], '</span></div>'), '')}
+            <div class="info-row">
+                <span class="label">Payment Link ID:</span>
+                <span class="value">@{body('CreatePaymentLink')?['id']}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Payment Link Active:</span>
+                <span class="value">@{if(equals(body('CreatePaymentLink')?['active'], true), 'Yes', 'No')}</span>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="@{body('CreatePaymentLink')?['url']}" class="payment-button">🔗 Stripe Payment Link</a>
+            </div>
+        </div>
+
+        <div class="links-section">
+            <div class="section-title">📎 Quick Actions</div>
+            <div style="text-align: center;">
+                <a href="@{body('CreatePaymentLink')?['url']}" class="link-button">💳 Payment Link</a>
+                <a href="@{triggerBody()?['redirectUrl']}" class="link-button">✅ Confirmation Page</a>
+                <a href="@{body('CreatePaymentLink')?['after_completion']?['redirect']?['url']}" class="link-button">🎉 After Payment Page</a>
+                <a href="mailto:@{triggerBody()?['customerData']?['email']}" class="link-button">📧 Email Customer</a>
+                <a href="tel:@{triggerBody()?['customerData']?['phone']}" class="link-button">📞 Call Customer</a>
+                @{if(and(not(equals(triggerBody()?['customerData']?['sellerPhone'], null)), not(equals(triggerBody()?['customerData']?['sellerPhone'], ''))), concat('<a href="tel:', triggerBody()?['customerData']?['sellerPhone'], '" class="link-button">📞 Call Seller</a>'), '')}
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <p style="font-weight: bold; margin-bottom: 5px;">Stripe Payment URL:</p>
+                <div class="url-box">
+                    <a href="@{body('CreatePaymentLink')?['url']}">@{body('CreatePaymentLink')?['url']}</a>
+                </div>
+                
+                <p style="font-weight: bold; margin-bottom: 5px; margin-top: 15px;">Confirmation Page URL:</p>
+                <div class="url-box">
+                    <a href="@{triggerBody()?['redirectUrl']}">@{triggerBody()?['redirectUrl']}</a>
+                </div>
+                
+                <p style="font-weight: bold; margin-bottom: 5px; margin-top: 15px;">After Payment Redirect URL:</p>
+                <div class="url-box">
+                    <a href="@{body('CreatePaymentLink')?['after_completion']?['redirect']?['url']}">@{body('CreatePaymentLink')?['after_completion']?['redirect']?['url']}</a>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
+                <p style="font-weight: bold; margin-bottom: 10px;">Additional Stripe Data:</p>
+                <div style="font-size: 11px; color: #666;">
+                    <p><strong>Payment Link ID:</strong> @{body('CreatePaymentLink')?['id']}</p>
+                    <p><strong>Object Type:</strong> @{body('CreatePaymentLink')?['object']}</p>
+                    <p><strong>Live Mode:</strong> @{if(equals(body('CreatePaymentLink')?['livemode'], true), 'Yes', 'No')}</p>
+                    <p><strong>Billing Address Collection:</strong> @{body('CreatePaymentLink')?['billing_address_collection']}</p>
+                    <p><strong>Customer Creation:</strong> @{body('CreatePaymentLink')?['customer_creation']}</p>
+                    <p><strong>Payment Method Collection:</strong> @{body('CreatePaymentLink')?['payment_method_collection']}</p>
+                    <p><strong>Submit Type:</strong> @{body('CreatePaymentLink')?['submit_type']}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>EEK - Payment Link Notification</p>
+        <p>Generated: @{triggerBody()?['customerData']?['bookingDateTime']}</p>
+        <p style="font-size: 10px; margin-top: 5px;">Description: @{triggerBody()?['description']}</p>
+        @{if(and(not(equals(triggerBody()?['trackingData']?['gclid'], null)), not(equals(triggerBody()?['trackingData']?['gclid'], ''))), concat('<p style="font-size: 10px; margin-top: 5px;">GCLID: ', triggerBody()?['trackingData']?['gclid'], '</p>'), '')}
+    </div>
+</div>

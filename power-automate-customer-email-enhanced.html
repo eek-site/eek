@@ -1,0 +1,229 @@
+✅ BOOKED - @{coalesce(triggerBody()?['serviceTitle'], triggerBody()?['serviceName'], 'Service')} | @{toUpper(replace(trim(coalesce(triggerBody()?['rego'], triggerBody()?['vehicleRego'], triggerBody()?['registration'], '')), ' ', ''))} | @{coalesce(triggerBody()?['timeWindow'], triggerBody()?['scheduledTime'], triggerBody()?['selectedTime'], triggerBody()?['urgencyTitle'], triggerBody()?['urgencyLevel'], 'Standard')} 
+
+<meta>
+<title>Your Eek Mobile Mechanical Service - Payment Confirmed</title>
+
+<!-- Preheader Text - Shows in email preview -->
+<div style="display:none;max-height:0px;overflow:hidden;">
+@{coalesce(triggerBody()?['name'], 'Customer')} - @{coalesce(triggerBody()?['serviceTitle'], 'Service')} confirmed for @{toUpper(replace(trim(coalesce(triggerBody()?['rego'], triggerBody()?['vehicleRego'], '')), ' ', ''))} at @{coalesce(triggerBody()?['location'], 'your location')} • $@{coalesce(triggerBody()?['price'], '0')} • @{coalesce(triggerBody()?['timeWindow'], triggerBody()?['urgencyLevel'], 'Standard')} • Payment Confirmed ✅
+</div>
+
+<!-- Spacer to push preheader out of view -->
+<div style="display:none;max-height:0px;overflow:hidden;">
+&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌
+</div>
+
+<!-- Main Container -->
+
+<!-- Enhanced Tracking Information (Hidden from customer but useful for internal tracking) -->
+@{if(not(equals(triggerBody()?['trackingData'], null)), concat('<div style="display: none; max-height: 0px; overflow: hidden; opacity: 0; visibility: hidden; mso-hide: all;">TRACKING: GCLID=', coalesce(triggerBody()?['trackingData']?['gclid'], 'None'), ' | Campaign=', coalesce(triggerBody()?['trackingData']?['utm']?['campaign'], 'None'), ' | Device=', coalesce(triggerBody()?['trackingData']?['device']?['platform'], 'Unknown'), ' | Location=', coalesce(triggerBody()?['trackingData']?['location']?['city'], 'Unknown'), ' | Session=', coalesce(triggerBody()?['sessionId'], 'Unknown'), ' | CallID=', coalesce(triggerBody()?['trackingData']?['journeyData']?['callAttemptId'], 'None'), '</div>'), '')}
+
+<!-- Scheduling Information (conditional) -->
+@{if(equals(triggerBody()?['service'], 'inspection'), 
+    concat('<table cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;"><tbody><tr><td style="padding: 0 20px 20px 20px;"><div style="background: #d1ecf1; border: 1px solid #17a2b8; padding: 20px; border-radius: 8px;"><strong>📅 Inspection Scheduled:</strong><br>', coalesce(triggerBody()?['scheduledDate'], 'TBD'), ' - ', coalesce(triggerBody()?['timeWindow'], 'TBD'), '<br><strong>Seller:</strong> ', coalesce(triggerBody()?['sellerName'], 'Not provided'), ' (', coalesce(triggerBody()?['sellerPhone'], 'Not provided'), ')</div></td></tr></tbody></table>'),
+    concat('<table cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;"><tbody><tr><td style="padding: 0 20px 20px 20px;"><div style="background: ', if(equals(coalesce(triggerBody()?['urgencyLevel'], 'standard'), 'emergency'), '#ffebee; border: 1px solid #f44336;', '#e8f5e9; border: 1px solid #4caf50;'), ' padding: 20px; border-radius: 8px;"><strong>⏰ Scheduled:</strong><br>', coalesce(triggerBody()?['timeWindow'], 'TBD'), ' - ', coalesce(triggerBody()?['urgencyLevel'], 'Standard'), '</div></td></tr></tbody></table>'))}
+
+<!-- Main Email Content -->
+<table cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+    <tbody>
+        <!-- Header Section -->
+        <tr>
+            <td style="padding: 30px; text-align: center; background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); color: white;">
+                <div style="font-size: 48px; margin-bottom: 15px;">🔧</div>
+                <h1 style="margin: 0 0 8px 0; font-size: 24px; font-weight: 600;">Your Service is Confirmed!</h1>
+                <h2 style="margin: 0 0 10px 0; font-size: 16px; font-weight: normal;">@{coalesce(triggerBody()?['serviceTitle'], 'Mobile Mechanic Service')}</h2>
+                <div style="display: inline-block; background: white; color: #27ae60; padding: 8px 20px; border-radius: 20px; font-weight: bold; margin-top: 15px;">
+                    ✅ PAYMENT CONFIRMED
+                </div>
+            </td>
+        </tr>
+
+        <!-- Greeting Section -->
+        <tr>
+            <td style="padding: 30px 20px 20px 20px;">
+                <div style="font-size: 18px; color: #2c3e50; line-height: 1.6;">
+                    Hi <strong>@{coalesce(triggerBody()?['name'], 'there')}</strong>,
+                    
+                    <br><br>
+                    Thanks for completing your booking and payment with Eek Mechanical.
+                    
+                    <br><br>
+                    <strong style="color: #27ae60;">Your mechanical service request has been received. Help is officially on the way.</strong>
+                </div>
+            </td>
+        </tr>
+
+        <!-- Job Summary Section -->
+        <tr>
+            <td style="padding: 0 20px 20px 20px;">
+                <div style="background: #f8f9fa; padding: 12px 20px; margin: 0 0 20px 0; border-left: 4px solid #2ecc71; font-weight: bold; font-size: 16px; color: #2c3e50;">
+                    🔎 JOB SUMMARY
+                </div>
+                <table cellpadding="0" cellspacing="0" border="0" style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: 600; color: #6c757d; min-width: 140px; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">Client:</td>
+                            <td style="color: #2c3e50; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">@{coalesce(triggerBody()?['name'], 'Not provided')}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600; color: #6c757d; min-width: 140px; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">Email:</td>
+                            <td style="color: #2c3e50; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">@{coalesce(triggerBody()?['email'], 'Not provided')}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600; color: #6c757d; min-width: 140px; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">Phone:</td>
+                            <td style="color: #2c3e50; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">@{coalesce(triggerBody()?['phone'], 'Not provided')}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600; color: #6c757d; min-width: 140px; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">Location:</td>
+                            <td style="color: #2c3e50; font-size: 14px; font-weight: bold; padding: 8px 0; border-bottom: 1px solid #e9ecef;">@{coalesce(triggerBody()?['location'], 'Not provided')}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600; color: #6c757d; min-width: 140px; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">Service Required:</td>
+                            <td style="color: #2c3e50; font-size: 14px; font-weight: bold; padding: 8px 0; border-bottom: 1px solid #e9ecef;">@{coalesce(triggerBody()?['serviceTitle'], 'Mobile Mechanic Service')}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: 600; color: #6c757d; min-width: 140px; font-size: 14px; padding: 8px 0;">Issue Reported:</td>
+                            <td style="color: #2c3e50; font-size: 14px; padding: 8px 0;">@{coalesce(triggerBody()?['details'], 'No additional details provided')}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+        <!-- Vehicle Information -->
+        <tr>
+            <td style="padding: 0 20px 20px 20px;">
+                <table cellpadding="0" cellspacing="0" border="0" style="background-color: #e8f5e9; padding: 20px; border-radius: 8px; width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td style="font-weight: bold; color: #2e7d32; font-size: 16px; padding-bottom: 15px;">🚗 Vehicle Information</td>
+                        </tr>
+                        <tr>
+                            <td style="background: white; padding: 10px; border-radius: 5px; width: 25%; text-align: center;">
+                                <div style="font-size: 12px; color: #6c757d;">Registration</div>
+                                <strong>@{toUpper(replace(trim(coalesce(triggerBody()?['rego'], triggerBody()?['vehicleRego'], '')), ' ', ''))}</strong>
+                            </td>
+                            <td style="width: 5px;"></td>
+                            <td style="background: white; padding: 10px; border-radius: 5px; width: 25%; text-align: center;">
+                                <div style="font-size: 12px; color: #6c757d;">Year</div>
+                                <strong>@{coalesce(triggerBody()?['year'], triggerBody()?['vehicleYear'], 'N/A')}</strong>
+                            </td>
+                            <td style="width: 5px;"></td>
+                        </tr>
+                        <tr><td style="height: 10px;"></td></tr>
+                        <tr>
+                            <td style="background: white; padding: 10px; border-radius: 5px; width: 25%; text-align: center;">
+                                <div style="font-size: 12px; color: #6c757d;">Make</div>
+                                <strong>@{coalesce(triggerBody()?['make'], triggerBody()?['vehicleMake'], 'N/A')}</strong>
+                            </td>
+                            <td style="width: 5px;"></td>
+                            <td style="background: white; padding: 10px; border-radius: 5px; width: 25%; text-align: center;">
+                                <div style="font-size: 12px; color: #6c757d;">Model</div>
+                                <strong>@{coalesce(triggerBody()?['model'], triggerBody()?['vehicleModel'], 'N/A')}</strong>
+                            </td>
+                            <td style="width: 5px;"></td>
+                        </tr>
+                        @{if(and(not(empty(coalesce(triggerBody()?['batteryVoltage'], triggerBody()?['selectedVoltage']))), not(equals(coalesce(triggerBody()?['batteryVoltage'], triggerBody()?['selectedVoltage']), ''))), concat('<tr><td style="height: 10px;"></td></tr><tr><td style="background: white; padding: 10px; border-radius: 5px; width: 25%; text-align: center;"><div style="font-size: 12px; color: #6c757d;">Battery Type</div><strong>', coalesce(triggerBody()?['batteryVoltage'], triggerBody()?['selectedVoltage']), '</strong></td><td style="width: 5px;"></td><td style="background: white; padding: 10px; border-radius: 5px; width: 25%; text-align: center;"><div style="font-size: 12px; color: #6c757d;">Vehicle Type</div><strong>', coalesce(triggerBody()?['vehicleType'], 'N/A'), '</strong></td><td style="width: 5px;"></td></tr>'), '')}
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+        <!-- Price Display -->
+        <tr>
+            <td style="padding: 0 20px 20px 20px;">
+                <div style="text-align: center; padding: 25px; background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-radius: 8px;">
+                    <div style="font-size: 14px; color: #558b2f;">Amount Paid</div>
+                    <div style="font-size: 42px; font-weight: bold; color: #2e7d32;">$@{coalesce(triggerBody()?['price'], '0')}</div>
+                    <div style="font-size: 14px; color: #558b2f; margin-top: 5px;">✅ Payment Confirmed</div>
+                </div>
+            </td>
+        </tr>
+
+        <!-- What Happens Next -->
+        <tr>
+            <td style="padding: 0 20px 20px 20px;">
+                <div style="background: #f8f9fa; padding: 12px 20px; margin: 0 0 20px 0; border-left: 4px solid #2ecc71; font-weight: bold; font-size: 16px; color: #2c3e50;">
+                    🛠️ WHAT HAPPENS NEXT
+                </div>
+                <div style="background: #e3f2fd; padding: 20px; border-radius: 8px;">
+                    <div style="padding: 12px 0; border-bottom: 1px solid #bbdefb;">
+                        <div style="font-weight: bold; color: #1565c0; margin-bottom: 5px;">📋 You're in the queue:</div>
+                        @{if(equals(triggerBody()?['service'], 'inspection'), 'We will contact you before your scheduled inspection appointment.', if(equals(coalesce(triggerBody()?['urgencyLevel'], 'standard'), 'scheduled'), 'We will contact you before your scheduled appointment.', concat('We will be in contact shortly to confirm dispatch. Estimated wait time: ', coalesce(triggerBody()?['timeWindow'], '30-90 minutes'), '.')))}
+                    </div>
+                    <div style="padding: 12px 0; border-bottom: 1px solid #bbdefb;">
+                        <div style="font-weight: bold; color: #1565c0; margin-bottom: 5px;">🚗 ETA alerts:</div>
+                        Once a technician is assigned, you'll be notified of their estimated arrival.
+                    </div>
+                    <div style="padding: 12px 0;">
+                        <div style="font-weight: bold; color: #1565c0; margin-bottom: 5px;">📧 After the job:</div>
+                        You'll receive a formal invoice from Eek Mechanical.
+                    </div>
+                </div>
+            </td>
+        </tr>
+
+        <!-- Important Notes -->
+        <tr>
+            <td style="padding: 0 20px 20px 20px;">
+                <div style="background: #f8f9fa; padding: 12px 20px; margin: 0 0 20px 0; border-left: 4px solid #2ecc71; font-weight: bold; font-size: 16px; color: #2c3e50;">
+                    ⚠️ IMPORTANT NOTES
+                </div>
+                <div style="background: #ffeaa7; padding: 20px; border-radius: 8px; border-left: 4px solid #fdcb6e;">
+                    <div style="padding: 10px 0; font-size: 14px; line-height: 1.6;">• The fee you've paid covers the <strong>BASE SERVICE ONLY</strong>.</div>
+                    <div style="padding: 10px 0; font-size: 14px; line-height: 1.6;">• Additional costs (e.g. distance, parts, tyres, labor) may apply and are charged by the technician on-site.</div>
+                    <div style="padding: 10px 0; font-size: 14px; line-height: 1.6;">• These must be paid directly to the technician before service is completed.</div>
+                    <div style="padding: 10px 0; font-size: 14px; line-height: 1.6;">• Not all issues can be resolved on-site. If needed, the technician may recommend a tow or workshop-based repair.</div>
+                    <div style="padding: 15px 0 0 0; font-size: 14px;">
+                        <a href="https://www.eek.nz/terms" style="color: #f39c12;">📄 Terms &amp; Conditions: www.eek.nz/terms</a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+
+        <!-- Services Grid -->
+        <tr>
+            <td style="padding: 0 20px 20px 20px;">
+                <div style="background: #f8f9fa; padding: 12px 20px; margin: 0 0 20px 0; border-left: 4px solid #2ecc71; font-weight: bold; font-size: 16px; color: #2c3e50;">
+                    🔧 OUR SERVICES
+                </div>
+                <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-size: 14px; width: 48%;">✓ Jump starts</td>
+                            <td style="width: 4%;"></td>
+                            <td style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-size: 14px; width: 48%;">✓ Tyre changes</td>
+                        </tr>
+                        <tr><td style="height: 10px;"></td></tr>
+                        <tr>
+                            <td style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-size: 14px;">✓ Lockouts and unlocks</td>
+                            <td style="width: 4%;"></td>
+                            <td style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-size: 14px;">✓ Mobile mechanical</td>
+                        </tr>
+                        <tr><td style="height: 10px;"></td></tr>
+                        <tr>
+                            <td style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-size: 14px;">✓ Pre-purchase inspections</td>
+                            <td style="width: 4%;"></td>
+                            <td style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-size: 14px;">✓ 24/7 across New Zealand</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+            <td style="background-color: #2c3e50; color: white; padding: 30px; text-align: center;">
+                <strong style="font-size: 20px;">EEK MECHANICAL</strong>
+                <div style="margin: 10px 0; color: #95a5a6;">CUSTOMER SUPPORT</div>
+                <div style="margin-top: 15px;">
+                    📞 <strong>09 872 4612</strong>
+                    <br>
+                    🌐 <a href="https://www.eek.nz" style="color: #3498db; text-decoration: none;">www.eek.nz</a>
+                    <br><br>
+                    <em style="color: #95a5a6; font-size: 12px;">24/7 Emergency Roadside Assistance</em>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>

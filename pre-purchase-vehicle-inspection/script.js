@@ -1901,6 +1901,68 @@ function buildInspectionData(status) {
       sessionId: sessionId,
       bookingSource: 'inspection_form',
       formVersion: '1.0'
+    },
+    
+    // Enhanced tracking data for complete attribution
+    trackingData: {
+      gclid: gclid,
+      gclidState: gclid ? 'Active' : 'Inactive',
+      utm: utmData,
+      pageSource: trackingData?.pageSource || {
+        type: 'direct',
+        detail: 'Direct visit',
+        referrer: document.referrer || '',
+        utm: utmData,
+        clickIds: {
+          gclid: gclid,
+          fbclid: null,
+          msclkid: null
+        }
+      },
+      device: {
+        userAgent: navigator.userAgent,
+        platform: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+        language: navigator.language || 'en-NZ',
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Pacific/Auckland',
+        screenResolution: `${window.screen?.width || 0}x${window.screen?.height || 0}`,
+        viewportSize: `${window.innerWidth || 0}x${window.innerHeight || 0}`
+      },
+      location: {
+        country: geo?.country || 'New Zealand',
+        region: geo?.region || 'Unknown',
+        city: geo?.city || 'Unknown',
+        postalCode: geo?.postalCode || 'Unknown',
+        coordinates: {
+          latitude: geo?.latitude || null,
+          longitude: geo?.longitude || null,
+          accuracy: geo?.latitude && geo?.longitude ? 'IP-based' : null
+        }
+      },
+      engagement: {
+        timeOnPage: Math.round((Date.now() - (window.pageLoadTime || Date.now())) / 1000),
+        scrollDepth: 0, // Could be enhanced with scroll tracking
+        clicks: 0, // Could be enhanced with click tracking
+        formInteractions: 0, // Could be enhanced with form tracking
+        buttonClicks: 0 // Could be enhanced with button tracking
+      },
+      userJourney: {
+        pageHistory: JSON.parse(localStorage.getItem('eek_user_journey') || '[]'),
+        totalPages: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').length || 1,
+        sessionDuration: Date.now() - (window.sessionStartTime || Date.now()),
+        entryPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]')[0]?.url || window.location.href,
+        previousPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').slice(-2, -1)[0]?.url || ''
+      },
+      visitorData: getVisitorData(),
+      journeyData: {
+        callAttemptId: localStorage.getItem('eek_last_call_attempt_id') || null,
+        callTimestamp: localStorage.getItem('eek_last_call_timestamp') || null,
+        returnTimestamp: null, // Will be set if this is a return visit
+        timeBetweenCallAndReturn: null, // Will be calculated if this is a return visit
+        source: 'inspection_booking'
+      },
+      eventType: 'payment_generation',
+      eventAction: 'inspection_payment_link_created',
+      timestamp: new Date().toISOString()
     }
   };
 }
