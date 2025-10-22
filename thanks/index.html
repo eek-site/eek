@@ -414,24 +414,24 @@
 
       canonical.name   = cleanText(coalesce(raw.name, raw.customerName, raw.customerData?.name));
       canonical.phone  = sanitizePhone(coalesce(raw.phone, raw.customerPhone, raw.customerData?.phone));
-      canonical.email  = cleanText(coalesce(raw.email, raw.customerEmail));
+      canonical.email  = cleanText(coalesce(raw.email, raw.customerEmail, raw.customerData?.email));
       canonical.location = cleanText(coalesce(raw.location, raw.customerData?.location));
 
-      canonical.rego   = cleanText(coalesce(raw.rego, raw.vehicleRego));
-      canonical.year   = cleanText(coalesce(raw.year, raw.vehicleYear));
-      canonical.make   = cleanText(coalesce(raw.make, raw.vehicleMake));
-      canonical.model  = cleanText(coalesce(raw.model, raw.vehicleModel));
-      canonical.vehicleType  = cleanText(raw.vehicleType);
-      canonical.vehicleAddon = coalesce(raw.vehicleAddon, '');
+      canonical.rego   = cleanText(coalesce(raw.rego, raw.vehicleRego, raw.customerData?.vehicleRego));
+      canonical.year   = cleanText(coalesce(raw.year, raw.vehicleYear, raw.customerData?.vehicleYear));
+      canonical.make   = cleanText(coalesce(raw.make, raw.vehicleMake, raw.customerData?.vehicleMake));
+      canonical.model  = cleanText(coalesce(raw.model, raw.vehicleModel, raw.customerData?.vehicleModel));
+      canonical.vehicleType  = cleanText(coalesce(raw.vehicleType, raw.customerData?.vehicleType));
+      canonical.vehicleAddon = coalesce(raw.vehicleAddon, raw.customerData?.vehicleTypeAddon, '');
 
-      canonical.batteryVoltage = cleanText(coalesce(raw.batteryVoltage, raw.selectedVoltage));
+      canonical.batteryVoltage = cleanText(coalesce(raw.batteryVoltage, raw.selectedVoltage, raw.customerData?.batteryVoltage));
 
-      canonical.sellerName  = cleanText(raw.sellerName);
-      canonical.sellerPhone = sanitizePhone(raw.sellerPhone);
+      canonical.sellerName  = cleanText(coalesce(raw.sellerName, raw.customerData?.sellerName));
+      canonical.sellerPhone = sanitizePhone(coalesce(raw.sellerPhone, raw.customerData?.sellerPhone));
 
-      canonical.service      = cleanText(coalesce(raw.service, raw.serviceType));
-      canonical.serviceCode  = cleanText(raw.serviceCode);
-      canonical.serviceTitle = cleanText(coalesce(raw.serviceTitle, (raw.service === 'inspection' ? 'Pre Purchase Vehicle Inspection' : 'Mobile Mechanic Service')));
+      canonical.service      = cleanText(coalesce(raw.service, raw.serviceType, raw.customerData?.service));
+      canonical.serviceCode  = cleanText(coalesce(raw.serviceCode, raw.customerData?.serviceCode));
+      canonical.serviceTitle = cleanText(coalesce(raw.serviceTitle, raw.customerData?.serviceTitle, (raw.service === 'inspection' ? 'Pre Purchase Vehicle Inspection' : 'Mobile Mechanic Service')));
 
       canonical.scheduledDate   = cleanText(coalesce(raw.scheduledDate));
       canonical.scheduledDateNZ = cleanText(coalesce(raw.scheduledDateNZ));
@@ -439,7 +439,7 @@
       canonical.urgencyLevel    = cleanText(coalesce(raw.urgencyLevel, raw.selectedUrgency));
 
       canonical.price   = String(coalesce(raw.price, raw.finalPrice, raw.calculatedPrice, raw.customerData?.price, ''));
-      canonical.details = cleanText(coalesce(raw.details, raw.description));
+      canonical.details = cleanText(coalesce(raw.details, raw.description, raw.customerData?.details));
 
       canonical.emergencyType  = cleanText(raw.emergencyType);
       canonical.quoteReference = cleanText(raw.quoteReference);
@@ -824,24 +824,24 @@
 
       canonical.name   = cleanText(coalesce(raw.name, raw.customerName, raw.customerData?.name));
       canonical.phone  = sanitizePhone(coalesce(raw.phone, raw.customerPhone, raw.customerData?.phone));
-      canonical.email  = cleanText(coalesce(raw.email, raw.customerEmail));
+      canonical.email  = cleanText(coalesce(raw.email, raw.customerEmail, raw.customerData?.email));
       canonical.location = cleanText(coalesce(raw.location, raw.customerData?.location));
 
-      canonical.rego   = cleanText(coalesce(raw.rego, raw.vehicleRego));
-      canonical.year   = cleanText(coalesce(raw.year, raw.vehicleYear));
-      canonical.make   = cleanText(coalesce(raw.make, raw.vehicleMake));
-      canonical.model  = cleanText(coalesce(raw.model, raw.vehicleModel));
-      canonical.vehicleType  = cleanText(raw.vehicleType);
-      canonical.vehicleAddon = coalesce(raw.vehicleAddon, '');
+      canonical.rego   = cleanText(coalesce(raw.rego, raw.vehicleRego, raw.customerData?.vehicleRego));
+      canonical.year   = cleanText(coalesce(raw.year, raw.vehicleYear, raw.customerData?.vehicleYear));
+      canonical.make   = cleanText(coalesce(raw.make, raw.vehicleMake, raw.customerData?.vehicleMake));
+      canonical.model  = cleanText(coalesce(raw.model, raw.vehicleModel, raw.customerData?.vehicleModel));
+      canonical.vehicleType  = cleanText(coalesce(raw.vehicleType, raw.customerData?.vehicleType));
+      canonical.vehicleAddon = coalesce(raw.vehicleAddon, raw.customerData?.vehicleTypeAddon, '');
 
-      canonical.batteryVoltage = cleanText(coalesce(raw.batteryVoltage, raw.selectedVoltage));
+      canonical.batteryVoltage = cleanText(coalesce(raw.batteryVoltage, raw.selectedVoltage, raw.customerData?.batteryVoltage));
 
-      canonical.sellerName  = cleanText(raw.sellerName);
-      canonical.sellerPhone = sanitizePhone(raw.sellerPhone);
+      canonical.sellerName  = cleanText(coalesce(raw.sellerName, raw.customerData?.sellerName));
+      canonical.sellerPhone = sanitizePhone(coalesce(raw.sellerPhone, raw.customerData?.sellerPhone));
 
-      canonical.service      = cleanText(coalesce(raw.service, raw.serviceType));
-      canonical.serviceCode  = cleanText(raw.serviceCode);
-      canonical.serviceTitle = cleanText(coalesce(raw.serviceTitle, (raw.service === 'inspection' ? 'Pre Purchase Vehicle Inspection' : 'Mobile Mechanic Service')));
+      canonical.service      = cleanText(coalesce(raw.service, raw.serviceType, raw.customerData?.service));
+      canonical.serviceCode  = cleanText(coalesce(raw.serviceCode, raw.customerData?.serviceCode));
+      canonical.serviceTitle = cleanText(coalesce(raw.serviceTitle, raw.customerData?.serviceTitle, (raw.service === 'inspection' ? 'Pre Purchase Vehicle Inspection' : 'Mobile Mechanic Service')));
 
       canonical.scheduledDate   = cleanText(coalesce(raw.scheduledDate));
       canonical.scheduledDateNZ = cleanText(coalesce(raw.scheduledDateNZ));
@@ -849,7 +849,7 @@
       canonical.urgencyLevel    = cleanText(coalesce(raw.urgencyLevel, raw.selectedUrgency));
 
       canonical.price   = String(coalesce(raw.price, raw.finalPrice, raw.calculatedPrice, raw.customerData?.price, ''));
-      canonical.details = cleanText(coalesce(raw.details, raw.description));
+      canonical.details = cleanText(coalesce(raw.details, raw.description, raw.customerData?.details));
 
       canonical.emergencyType  = cleanText(raw.emergencyType);
       canonical.quoteReference = cleanText(raw.quoteReference);
