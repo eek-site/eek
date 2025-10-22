@@ -325,7 +325,7 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.16 - LOCATION FIX 🚀🚀🚀');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.17 - DATA STRUCTURE FIX 🚀🚀🚀');
   console.log('💰 FIXED PRICE - $299 Pre Purchase Vehicle Inspection');
   console.log('🎨 MATCHING STYLES - Updated buttons to match site color scheme');
   console.log('🔄 STREAMLINED - Vehicle type selection moved to Step 1, removed Step 6');
@@ -333,7 +333,8 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('🔧 TOTALPRICE FIX - Fixed ReferenceError in buildStepData function');
   console.log('💰 PRICE FIELD FIX - Added finalPrice and calculatedPrice fields for thanks page');
   console.log('📍 LOCATION FIX - Fixed location field mapping from form to API');
-  console.log('🔄 FORCE REFRESH - Version 3.16 loaded successfully!');
+  console.log('🔧 DATA STRUCTURE FIX - Added root-level fields for thanks page compatibility');
+  console.log('🔄 FORCE REFRESH - Version 3.17 loaded successfully!');
   console.log('📅 Script loaded at:', new Date().toISOString());
   console.log('🔧 openServiceSelectionModal available:', typeof window.openServiceSelectionModal);
   
@@ -1893,6 +1894,29 @@ function buildInspectionData(status) {
     description: `Pre-Purchase Inspection - ${selectedService ? selectedService.name : 'Vehicle Inspection'}`,
     redirectUrl: `${window.location.origin}/pre-purchase-vehicle-inspection/confirmation?session=${sessionId}`,
     rego: bookingData.vehicleRego || '', // Top-level rego field
+    
+    // Root-level fields for thanks page compatibility
+    name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
+    phone: bookingData.phone || '',
+    email: bookingData.email || '',
+    location: bookingData.location || bookingData.address || bookingData.city || '',
+    price: totalPrice,
+    finalPrice: totalPrice,
+    calculatedPrice: totalPrice,
+    service: selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive',
+    serviceCode: selectedService.id === 'basic' ? 'INSP_BASIC' : 'INSP_COMP',
+    serviceTitle: selectedService.name,
+    rego: bookingData.vehicleRego || '',
+    year: bookingData.year || '',
+    make: bookingData.make || '',
+    model: bookingData.model || '',
+    vehicleType: bookingData.vehicleType || '',
+    vehicleAddon: vehicleTypeAddon,
+    sellerName: bookingData.sellerName || '',
+    sellerPhone: bookingData.sellerPhone || '',
+    details: bookingData.specialInstructions || '',
+    bookingTime: new Date().toISOString(),
+    sessionId: sessionId,
     
     // Nested customerData object - EXACT structure for payment API
     customerData: {
