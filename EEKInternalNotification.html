@@ -1,3 +1,13 @@
+concat(
+  coalesce(body('Parse_JSON')?['bookingStatus'], body('Parse_JSON')?['eventType'], 'NEW'), 
+  ' | ', 
+  coalesce(body('Parse_JSON')?['visitorData']?['name'], body('Parse_JSON')?['name'], 'Customer'), 
+  ' | ', 
+  coalesce(body('Parse_JSON')?['visitorData']?['vehicleRego'], body('Parse_JSON')?['vehicleRego'], 'No Rego'), 
+  ' | ', 
+  coalesce(body('Parse_JSON')?['visitorData']?['serviceCode'], body('Parse_JSON')?['serviceCode'], 'Service')
+)
+
 <table cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; width: 100%;">
 <tbody>
 <tr>

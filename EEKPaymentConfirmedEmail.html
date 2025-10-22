@@ -1,4 +1,15 @@
-🆕 @{coalesce(triggerBody()?['trackingData']?['visitorData']?['serviceCode'], triggerBody()?['serviceCode'], 'JOB')} - @{coalesce(triggerBody()?['trackingData']?['visitorData']?['name'], triggerBody()?['name'])} | @{toUpper(replace(trim(coalesce(triggerBody()?['trackingData']?['visitorData']?['vehicleRego'], triggerBody()?['rego'])), ' ', ''))} | @{coalesce(triggerBody()?['trackingData']?['visitorData']?['urgencyLevel'], triggerBody()?['urgencyLevel'], 'Standard')} <meta>
+concat(
+  '🆕 ', 
+  coalesce(triggerBody()?['trackingData']?['visitorData']?['serviceCode'], triggerBody()?['serviceCode'], 'JOB'), 
+  ' - ', 
+  coalesce(triggerBody()?['trackingData']?['visitorData']?['name'], triggerBody()?['name']), 
+  ' | ', 
+  toUpper(replace(trim(coalesce(triggerBody()?['trackingData']?['visitorData']?['vehicleRego'], triggerBody()?['rego'])), ' ', '')), 
+  ' | ', 
+  coalesce(triggerBody()?['trackingData']?['visitorData']?['urgencyLevel'], triggerBody()?['urgencyLevel'], 'Standard')
+)
+
+<meta>
 <title>Eek Mobile Mechanical - Payment Confirmed</title>
 
 <!-- Preheader Text - Shows in email preview -->

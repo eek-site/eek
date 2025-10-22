@@ -1,4 +1,9 @@
-<!-- Subject Line: 💳 Payment Link Ready - @{triggerBody()?['customerData']?['name']} - @{triggerBody()?['customerData']?['serviceTitle']} -->
+concat(
+  '💳 Payment Link Ready - ', 
+  coalesce(triggerBody()?['customerData']?['name'], triggerBody()?['name'], 'Customer'), 
+  ' - ', 
+  coalesce(triggerBody()?['customerData']?['serviceTitle'], triggerBody()?['serviceTitle'], 'Service')
+)
 
 <meta>
 <style>

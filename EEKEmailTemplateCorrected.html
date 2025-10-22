@@ -1,3 +1,14 @@
+concat(
+  '🆕 ', 
+  coalesce(triggerBody()?['serviceCode'], triggerBody()?['trackingData']?['visitorData']?['serviceCode'], 'JOB'), 
+  ' - ', 
+  coalesce(triggerBody()?['name'], triggerBody()?['trackingData']?['visitorData']?['name']), 
+  ' | ', 
+  toUpper(replace(trim(coalesce(triggerBody()?['rego'], triggerBody()?['trackingData']?['visitorData']?['vehicleRego'])), ' ', '')), 
+  ' | ', 
+  coalesce(triggerBody()?['urgencyLevel'], triggerBody()?['trackingData']?['visitorData']?['urgencyLevel'], 'Standard')
+)
+
 <meta>
 <title>Your Eek Mobile Mechanical Service - Payment Confirmed</title>
 
