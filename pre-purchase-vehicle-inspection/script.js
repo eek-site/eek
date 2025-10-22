@@ -325,11 +325,12 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.12 - STREAMLINED FLOW 🚀🚀🚀');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.13 - PRICING FIX 🚀🚀🚀');
   console.log('💰 FIXED PRICE - $299 Pre Purchase Vehicle Inspection');
   console.log('🎨 MATCHING STYLES - Updated buttons to match site color scheme');
   console.log('🔄 STREAMLINED - Vehicle type selection moved to Step 1, removed Step 6');
-  console.log('🔄 FORCE REFRESH - Version 3.12 loaded successfully!');
+  console.log('💵 PRICING FIX - Vehicle type addon now properly included in total price');
+  console.log('🔄 FORCE REFRESH - Version 3.13 loaded successfully!');
   console.log('📅 Script loaded at:', new Date().toISOString());
   console.log('🔧 openServiceSelectionModal available:', typeof window.openServiceSelectionModal);
   
@@ -721,7 +722,9 @@ function renderServiceOptions() {
 }
 
 // Vehicle type functions
-function selectVehicleType(type) {
+function selectVehicleType(type, addon, element) {
+  selectedVehicleType = type;
+  vehicleTypeAddon = addon || 0;
   bookingData.vehicleType = type;
   
   // Update UI
@@ -730,13 +733,21 @@ function selectVehicleType(type) {
       option.classList.remove('selected');
     });
     
-    const selectedElement = document.querySelector(`[data-type="${type}"]`);
-    if (selectedElement) {
-      selectedElement.classList.add('selected');
+    if (element) {
+      element.classList.add('selected');
+    } else {
+      const selectedElement = document.querySelector(`[data-type="${type}"]`);
+      if (selectedElement) {
+        selectedElement.classList.add('selected');
+      }
     }
   } catch (error) {
     console.warn('Vehicle type UI update error:', error);
   }
+  
+  // Update the total price
+  const totalPrice = selectedServicePrice + vehicleTypeAddon;
+  console.log(`🔘 VEHICLE TYPE SELECTED - ${type}, Addon: $${vehicleTypeAddon}, Total: $${totalPrice}`);
   
   updateContinueButton();
 }
@@ -1193,9 +1204,9 @@ async function completeBooking() {
       if (typeof gtag !== 'undefined') {
         gtag('event', 'booking_completed', {
           service_name: selectedService.name,
-          service_price: selectedServicePrice,
+          service_price: totalPrice,
           event_category: 'pre_purchase_inspection',
-          value: selectedServicePrice,
+          value: totalPrice,
           currency: 'NZD',
           page_type: 'inspection',
           source_type: window.unifiedTracking?.getTrackingData()?.pageSource?.type || 'unknown'
@@ -1206,16 +1217,16 @@ async function completeBooking() {
       if (window.unifiedTracking) {
         window.unifiedTracking.trackEvent('inspection_booking_completed', 'Conversion', selectedService.name, {
           service_id: selectedService.id,
-          service_price: selectedServicePrice,
+          service_price: totalPrice,
           service_type: 'inspection',
-          conversion_value: selectedServicePrice,
+          conversion_value: totalPrice,
           currency: 'NZD'
         });
         
         // Send comprehensive booking data to API
         window.unifiedTracking.sendTrackingData('inspection_booking_completed', {
           service: selectedService,
-          price: selectedServicePrice,
+          price: totalPrice,
           bookingData: finalBookingData
         });
       }
@@ -1501,7 +1512,8 @@ function buildStepData(status) {
     serviceTitle: selectedService.name,
     serviceTier: selectedService.id,
     basePrice: selectedServicePrice,
-    price: selectedServicePrice,
+    price: totalPrice,
+    vehicleTypeAddon: vehicleTypeAddon,
     
     // Vehicle information - EXACT field names from template (both formats)
     vehicleMake: bookingData.make || '',
@@ -1843,10 +1855,11 @@ function buildInspectionData(status) {
   
   // Service is pre-selected at $299 - no validation needed
   
-  // Calculate amount in cents for Stripe
-  const amountInCents = Math.round(selectedServicePrice * 100);
+  // Calculate total price including vehicle type addon
+  const totalPrice = selectedServicePrice + vehicleTypeAddon;
+  const amountInCents = Math.round(totalPrice * 100);
   
-  console.log('🔍 Payment data - Service:', selectedService.name, 'Price:', selectedServicePrice, 'Amount in cents:', amountInCents);
+  console.log('🔍 Payment data - Service:', selectedService.name, 'Base Price:', selectedServicePrice, 'Addon:', vehicleTypeAddon, 'Total:', totalPrice, 'Amount in cents:', amountInCents);
   
   // Build vehicle description
   const vehicleDescription = `${bookingData.year || ''} ${bookingData.make || ''} ${bookingData.model || ''}`.trim();
@@ -1898,8 +1911,9 @@ function buildInspectionData(status) {
       serviceCode: selectedService.id === 'basic' ? 'INSP_BASIC' : 'INSP_COMP',
       serviceTitle: selectedService.name,
       details: bookingData.specialInstructions || '',
-      price: selectedServicePrice,
+      price: totalPrice,
       basePrice: selectedServicePrice,
+      vehicleTypeAddon: vehicleTypeAddon,
       
       // Scheduling - EXACT field names from payment API
       bookingDateTime: new Date().toISOString(),
