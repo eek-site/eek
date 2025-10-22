@@ -325,12 +325,13 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.13 - PRICING FIX 🚀🚀🚀');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.14 - TOTALPRICE FIX 🚀🚀🚀');
   console.log('💰 FIXED PRICE - $299 Pre Purchase Vehicle Inspection');
   console.log('🎨 MATCHING STYLES - Updated buttons to match site color scheme');
   console.log('🔄 STREAMLINED - Vehicle type selection moved to Step 1, removed Step 6');
   console.log('💵 PRICING FIX - Vehicle type addon now properly included in total price');
-  console.log('🔄 FORCE REFRESH - Version 3.13 loaded successfully!');
+  console.log('🔧 TOTALPRICE FIX - Fixed ReferenceError in buildStepData function');
+  console.log('🔄 FORCE REFRESH - Version 3.14 loaded successfully!');
   console.log('📅 Script loaded at:', new Date().toISOString());
   console.log('🔧 openServiceSelectionModal available:', typeof window.openServiceSelectionModal);
   
@@ -1489,6 +1490,9 @@ async function sendStepTracking(status) {
 function buildStepData(status) {
   const trackingData = window.unifiedTracking ? window.unifiedTracking.getTrackingData() : {};
   const geo = window.CF_GEO || {};
+  
+  // Calculate total price including vehicle type addon
+  const totalPrice = selectedServicePrice + vehicleTypeAddon;
   
   return {
     // Basic info - EXACT field names from Power Automate template
