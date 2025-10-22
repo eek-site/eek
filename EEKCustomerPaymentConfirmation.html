@@ -7,7 +7,11 @@ concat(
   toUpper(replace(trim(coalesce(triggerBody()?['rego'], triggerBody()?['trackingData']?['visitorData']?['vehicleRego'])), ' ', '')), 
   ' | ', 
   coalesce(triggerBody()?['urgencyLevel'], triggerBody()?['trackingData']?['visitorData']?['urgencyLevel'], 'Standard')
-) 
+)
+
+<!-- ========================================== -->
+<!-- SUBJECT LINE ENDS - HTML BODY BEGINS -->
+<!-- ========================================== -->
 
 <meta>
 <title>Your Eek Mobile Mechanical Service - Payment Confirmed</title>
