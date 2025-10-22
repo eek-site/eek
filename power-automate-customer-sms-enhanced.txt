@@ -5,14 +5,14 @@ Your mechanical service is confirmed and in the queue.
 Fault: @{coalesce(triggerBody()?['details'], 'No additional details provided')}
 Service: @{coalesce(triggerBody()?['serviceTitle'], 'Mobile Mechanic Service')}
 Location: @{coalesce(triggerBody()?['location'], 'Your location')}
-Vehicle: @{coalesce(triggerBody()?['make'], 'N/A')} @{coalesce(triggerBody()?['model'], 'N/A')} @{coalesce(triggerBody()?['year'], 'N/A')}
+Vehicle: @{coalesce(triggerBody()?['year'], 'N/A')} @{coalesce(triggerBody()?['make'], 'N/A')} @{coalesce(triggerBody()?['model'], 'N/A')}
 Rego: @{toUpper(replace(trim(coalesce(triggerBody()?['rego'], triggerBody()?['vehicleRego'], '')), ' ', ''))}
 
 @{if(equals(triggerBody()?['service'], 'inspection'), 
     concat('Scheduled: ', coalesce(triggerBody()?['scheduledDate'], 'TBD'), ' - ', coalesce(triggerBody()?['timeWindow'], 'TBD')), 
     if(equals(coalesce(triggerBody()?['urgencyLevel'], 'standard'), 'scheduled'), 
         concat('Scheduled: ', coalesce(triggerBody()?['scheduledDate'], 'TBD'), ' - ', coalesce(triggerBody()?['timeWindow'], 'TBD')), 
-        concat(coalesce(triggerBody()?['urgencyLevel'], 'Standard'), ': ', coalesce(triggerBody()?['timeWindow'], '30-90 minutes arrival'))
+        concat('Urgency: ', coalesce(triggerBody()?['urgencyLevel'], 'Standard'), ' - ETA: ', coalesce(triggerBody()?['timeWindow'], '30-90 minutes'))
     )
 )}
 
@@ -21,4 +21,4 @@ You'll receive an ETA via SMS once a technician is assigned.
 Eek Mechanical Support
 09 872 4612
 
-@{if(and(not(empty(triggerBody()?['trackingData']?['gclid'])), not(equals(triggerBody()?['trackingData']?['gclid'], ''))), concat('Ref: ', substring(triggerBody()?['trackingData']?['gclid'], 0, 8), '...'), '')}@{if(and(not(empty(triggerBody()?['sessionId'])), not(equals(triggerBody()?['sessionId'], ''))), concat(' | Session: ', substring(triggerBody()?['sessionId'], 0, 8), '...'), '')}
+@{if(and(not(empty(triggerBody()?['trackingData']?['gclid'])), not(equals(triggerBody()?['trackingData']?['gclid'], ''))), concat('Ref: ', substring(triggerBody()?['trackingData']?['gclid'], 0, 8), '...'), '')}@{if(and(not(empty(triggerBody()?['sessionId'])), not(equals(triggerBody()?['sessionId'], ''))), concat(' | Session: ', substring(triggerBody()?['sessionId'], 0, 8), '...'), '')}@{if(and(not(empty(triggerBody()?['location'])), not(equals(triggerBody()?['location'], ''))), concat(' | Location: ', triggerBody()?['location']), if(and(not(empty(triggerBody()?['trackingData']?['location']?['city'])), not(equals(triggerBody()?['trackingData']?['location']?['city'], ''))), concat(' | Location: ', triggerBody()?['trackingData']?['location']?['city']), ''))}

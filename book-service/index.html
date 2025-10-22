@@ -714,7 +714,22 @@ function buildBookingData(status) {
     },
     
     source: 'booking_form',
-    formVersion: '2.1'
+    formVersion: '2.1',
+    
+    // Add visitorData for Power Automate compatibility
+    visitorData: {
+      name: sanitizeText(document.getElementById('nameInput').value),
+      phone: sanitizePhone(document.getElementById('phoneInput').value),
+      email: document.getElementById('emailInput').value.trim(),
+      location: sanitizeText(document.getElementById('locationInput').value),
+      vehicleRego: sanitizeRego(document.getElementById('regoInput').value),
+      vehicleYear: document.getElementById('yearInput').value.trim(),
+      vehicleMake: sanitizeText(document.getElementById('makeInput').value),
+      vehicleModel: sanitizeText(document.getElementById('modelInput').value),
+      service: window.currentService,
+      serviceCode: window.currentConfig.serviceCode,
+      serviceTitle: window.currentConfig.title
+    }
   };
 
   if (status === BOOKING_STATUS.TIME_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.PAYMENT_PENDING) {

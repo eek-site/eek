@@ -1,4 +1,4 @@
-✅ BOOKED - @{coalesce(triggerBody()?['serviceTitle'], triggerBody()?['serviceName'], 'Service')} | @{toUpper(replace(trim(coalesce(triggerBody()?['rego'], triggerBody()?['vehicleRego'], triggerBody()?['registration'], '')), ' ', ''))} | @{coalesce(triggerBody()?['timeWindow'], triggerBody()?['scheduledTime'], triggerBody()?['selectedTime'], triggerBody()?['urgencyTitle'], triggerBody()?['urgencyLevel'], 'Standard')} 
+🆕 @{coalesce(triggerBody()?['serviceCode'], triggerBody()?['trackingData']?['visitorData']?['serviceCode'], 'JOB')} - @{coalesce(triggerBody()?['name'], triggerBody()?['trackingData']?['visitorData']?['name'])} | @{toUpper(replace(trim(coalesce(triggerBody()?['rego'], triggerBody()?['trackingData']?['visitorData']?['vehicleRego'])), ' ', ''))} | @{coalesce(triggerBody()?['urgencyLevel'], triggerBody()?['trackingData']?['visitorData']?['urgencyLevel'], 'Standard')} 
 
 <meta>
 <title>Your Eek Mobile Mechanical Service - Payment Confirmed</title>
@@ -16,7 +16,7 @@
 <!-- Main Container -->
 
 <!-- Enhanced Tracking Information (Hidden from customer but useful for internal tracking) -->
-@{if(not(equals(triggerBody()?['trackingData'], null)), concat('<div style="display: none; max-height: 0px; overflow: hidden; opacity: 0; visibility: hidden; mso-hide: all;">TRACKING: GCLID=', coalesce(triggerBody()?['trackingData']?['gclid'], 'None'), ' | Campaign=', coalesce(triggerBody()?['trackingData']?['utm']?['campaign'], 'None'), ' | Device=', coalesce(triggerBody()?['trackingData']?['device']?['platform'], 'Unknown'), ' | Location=', coalesce(triggerBody()?['trackingData']?['location']?['city'], 'Unknown'), ' | Session=', coalesce(triggerBody()?['sessionId'], 'Unknown'), ' | CallID=', coalesce(triggerBody()?['trackingData']?['journeyData']?['callAttemptId'], 'None'), '</div>'), '')}
+@{if(not(equals(triggerBody()?['trackingData'], null)), concat('<div style="display: none; max-height: 0px; overflow: hidden; opacity: 0; visibility: hidden; mso-hide: all;">TRACKING: GCLID=', coalesce(triggerBody()?['trackingData']?['gclid'], 'None'), ' | Campaign=', coalesce(triggerBody()?['trackingData']?['utm']?['campaign'], 'None'), ' | Device=', coalesce(triggerBody()?['trackingData']?['device']?['platform'], 'Unknown'), ' | Location=', coalesce(triggerBody()?['location'], triggerBody()?['trackingData']?['location']?['city'], 'Unknown'), ' | Session=', coalesce(triggerBody()?['sessionId'], 'Unknown'), ' | CallID=', coalesce(triggerBody()?['trackingData']?['journeyData']?['callAttemptId'], 'None'), '</div>'), '')}
 
 <!-- Scheduling Information (conditional) -->
 @{if(equals(triggerBody()?['service'], 'inspection'), 
@@ -93,37 +93,29 @@
         <!-- Vehicle Information -->
         <tr>
             <td style="padding: 0 20px 20px 20px;">
+                <div style="background: #f8f9fa; padding: 12px 20px; margin: 0 0 20px 0; border-left: 4px solid #2ecc71; font-weight: bold; font-size: 16px; color: #2c3e50;">
+                    🚗 VEHICLE INFORMATION
+                </div>
                 <table cellpadding="0" cellspacing="0" border="0" style="background-color: #e8f5e9; padding: 20px; border-radius: 8px; width: 100%;">
                     <tbody>
                         <tr>
-                            <td style="font-weight: bold; color: #2e7d32; font-size: 16px; padding-bottom: 15px;">🚗 Vehicle Information</td>
+                            <td style="font-weight: 600; color: #6c757d; min-width: 140px; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">Registration:</td>
+                            <td style="color: #2c3e50; font-size: 14px; font-weight: bold; padding: 8px 0; border-bottom: 1px solid #e9ecef;">@{toUpper(replace(trim(coalesce(triggerBody()?['rego'], triggerBody()?['vehicleRego'], '')), ' ', ''))}</td>
                         </tr>
                         <tr>
-                            <td style="background: white; padding: 10px; border-radius: 5px; width: 25%; text-align: center;">
-                                <div style="font-size: 12px; color: #6c757d;">Registration</div>
-                                <strong>@{toUpper(replace(trim(coalesce(triggerBody()?['rego'], triggerBody()?['vehicleRego'], '')), ' ', ''))}</strong>
-                            </td>
-                            <td style="width: 5px;"></td>
-                            <td style="background: white; padding: 10px; border-radius: 5px; width: 25%; text-align: center;">
-                                <div style="font-size: 12px; color: #6c757d;">Year</div>
-                                <strong>@{coalesce(triggerBody()?['year'], triggerBody()?['vehicleYear'], 'N/A')}</strong>
-                            </td>
-                            <td style="width: 5px;"></td>
+                            <td style="font-weight: 600; color: #6c757d; min-width: 140px; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">Year:</td>
+                            <td style="color: #2c3e50; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">@{coalesce(triggerBody()?['year'], triggerBody()?['vehicleYear'], 'Not provided')}</td>
                         </tr>
-                        <tr><td style="height: 10px;"></td></tr>
                         <tr>
-                            <td style="background: white; padding: 10px; border-radius: 5px; width: 25%; text-align: center;">
-                                <div style="font-size: 12px; color: #6c757d;">Make</div>
-                                <strong>@{coalesce(triggerBody()?['make'], triggerBody()?['vehicleMake'], 'N/A')}</strong>
-                            </td>
-                            <td style="width: 5px;"></td>
-                            <td style="background: white; padding: 10px; border-radius: 5px; width: 25%; text-align: center;">
-                                <div style="font-size: 12px; color: #6c757d;">Model</div>
-                                <strong>@{coalesce(triggerBody()?['model'], triggerBody()?['vehicleModel'], 'N/A')}</strong>
-                            </td>
-                            <td style="width: 5px;"></td>
+                            <td style="font-weight: 600; color: #6c757d; min-width: 140px; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">Make:</td>
+                            <td style="color: #2c3e50; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">@{coalesce(triggerBody()?['make'], triggerBody()?['vehicleMake'], 'Not provided')}</td>
                         </tr>
-                        @{if(and(not(empty(coalesce(triggerBody()?['batteryVoltage'], triggerBody()?['selectedVoltage']))), not(equals(coalesce(triggerBody()?['batteryVoltage'], triggerBody()?['selectedVoltage']), ''))), concat('<tr><td style="height: 10px;"></td></tr><tr><td style="background: white; padding: 10px; border-radius: 5px; width: 25%; text-align: center;"><div style="font-size: 12px; color: #6c757d;">Battery Type</div><strong>', coalesce(triggerBody()?['batteryVoltage'], triggerBody()?['selectedVoltage']), '</strong></td><td style="width: 5px;"></td><td style="background: white; padding: 10px; border-radius: 5px; width: 25%; text-align: center;"><div style="font-size: 12px; color: #6c757d;">Vehicle Type</div><strong>', coalesce(triggerBody()?['vehicleType'], 'N/A'), '</strong></td><td style="width: 5px;"></td></tr>'), '')}
+                        <tr>
+                            <td style="font-weight: 600; color: #6c757d; min-width: 140px; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">Model:</td>
+                            <td style="color: #2c3e50; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">@{coalesce(triggerBody()?['model'], triggerBody()?['vehicleModel'], 'Not provided')}</td>
+                        </tr>
+                        @{if(and(not(empty(coalesce(triggerBody()?['vehicleType'], triggerBody()?['trackingData']?['visitorData']?['vehicleType']))), not(equals(coalesce(triggerBody()?['vehicleType'], triggerBody()?['trackingData']?['visitorData']?['vehicleType']), ''))), concat('<tr><td style="font-weight: 600; color: #6c757d; min-width: 140px; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">Vehicle Type:</td><td style="color: #2c3e50; font-size: 14px; padding: 8px 0; border-bottom: 1px solid #e9ecef;">', coalesce(triggerBody()?[\'vehicleType\'], triggerBody()?[\'trackingData\']?[\'visitorData\']?[\'vehicleType\']), \'Not provided\'), '</td></tr>'), '')}
+                        @{if(and(not(empty(coalesce(triggerBody()?['batteryVoltage'], triggerBody()?['selectedVoltage']))), not(equals(coalesce(triggerBody()?['batteryVoltage'], triggerBody()?['selectedVoltage']), ''))), concat('<tr><td style="font-weight: 600; color: #6c757d; min-width: 140px; font-size: 14px; padding: 8px 0;">Battery Type:</td><td style="color: #2c3e50; font-size: 14px; padding: 8px 0;">', coalesce(triggerBody()?[\'batteryVoltage\'], triggerBody()?[\'selectedVoltage\']), '</td></tr>'), '')}
                     </tbody>
                 </table>
             </td>
@@ -149,7 +141,7 @@
                 <div style="background: #e3f2fd; padding: 20px; border-radius: 8px;">
                     <div style="padding: 12px 0; border-bottom: 1px solid #bbdefb;">
                         <div style="font-weight: bold; color: #1565c0; margin-bottom: 5px;">📋 You're in the queue:</div>
-                        @{if(equals(triggerBody()?['service'], 'inspection'), 'We will contact you before your scheduled inspection appointment.', if(equals(coalesce(triggerBody()?['urgencyLevel'], 'standard'), 'scheduled'), 'We will contact you before your scheduled appointment.', concat('We will be in contact shortly to confirm dispatch. Estimated wait time: ', coalesce(triggerBody()?['timeWindow'], '30-90 minutes'), '.')))}
+                        @{if(equals(triggerBody()?['service'], 'inspection'), 'We will contact you before your scheduled inspection appointment.', if(equals(coalesce(triggerBody()?['urgencyLevel'], 'standard'), 'scheduled'), 'We will contact you before your scheduled appointment.', 'We will be in contact shortly to confirm dispatch. Estimated wait time: 30-90 minutes.'))}
                     </div>
                     <div style="padding: 12px 0; border-bottom: 1px solid #bbdefb;">
                         <div style="font-weight: bold; color: #1565c0; margin-bottom: 5px;">🚗 ETA alerts:</div>
