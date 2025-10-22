@@ -1800,6 +1800,19 @@
 
       bookingData = toCanonical(bookingData);
       console.log('✅ Canonical booking data:', bookingData);
+      console.log('🔍 DEBUG - Raw data before canonicalization:', bookingData._raw || 'No _raw field');
+      console.log('🔍 DEBUG - Name fields:', {
+        'raw.name': bookingData._raw?.name,
+        'raw.customerName': bookingData._raw?.customerName, 
+        'raw.customerData.name': bookingData._raw?.customerData?.name,
+        'canonical.name': bookingData.name
+      });
+      console.log('🔍 DEBUG - Phone fields:', {
+        'raw.phone': bookingData._raw?.phone,
+        'raw.customerPhone': bookingData._raw?.customerPhone,
+        'raw.customerData.phone': bookingData._raw?.customerData?.phone,
+        'canonical.phone': bookingData.phone
+      });
 
       displayContent(bookingData);
 
