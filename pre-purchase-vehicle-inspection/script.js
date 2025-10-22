@@ -325,13 +325,14 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.14 - TOTALPRICE FIX 🚀🚀🚀');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.15 - PRICE FIELD FIX 🚀🚀🚀');
   console.log('💰 FIXED PRICE - $299 Pre Purchase Vehicle Inspection');
   console.log('🎨 MATCHING STYLES - Updated buttons to match site color scheme');
   console.log('🔄 STREAMLINED - Vehicle type selection moved to Step 1, removed Step 6');
   console.log('💵 PRICING FIX - Vehicle type addon now properly included in total price');
   console.log('🔧 TOTALPRICE FIX - Fixed ReferenceError in buildStepData function');
-  console.log('🔄 FORCE REFRESH - Version 3.14 loaded successfully!');
+  console.log('💰 PRICE FIELD FIX - Added finalPrice and calculatedPrice fields for thanks page');
+  console.log('🔄 FORCE REFRESH - Version 3.15 loaded successfully!');
   console.log('📅 Script loaded at:', new Date().toISOString());
   console.log('🔧 openServiceSelectionModal available:', typeof window.openServiceSelectionModal);
   
@@ -1517,6 +1518,8 @@ function buildStepData(status) {
     serviceTier: selectedService.id,
     basePrice: selectedServicePrice,
     price: totalPrice,
+    finalPrice: totalPrice,
+    calculatedPrice: totalPrice,
     vehicleTypeAddon: vehicleTypeAddon,
     
     // Vehicle information - EXACT field names from template (both formats)
@@ -1916,6 +1919,8 @@ function buildInspectionData(status) {
       serviceTitle: selectedService.name,
       details: bookingData.specialInstructions || '',
       price: totalPrice,
+      finalPrice: totalPrice,
+      calculatedPrice: totalPrice,
       basePrice: selectedServicePrice,
       vehicleTypeAddon: vehicleTypeAddon,
       
