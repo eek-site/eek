@@ -325,14 +325,15 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.15 - PRICE FIELD FIX 🚀🚀🚀');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.16 - LOCATION FIX 🚀🚀🚀');
   console.log('💰 FIXED PRICE - $299 Pre Purchase Vehicle Inspection');
   console.log('🎨 MATCHING STYLES - Updated buttons to match site color scheme');
   console.log('🔄 STREAMLINED - Vehicle type selection moved to Step 1, removed Step 6');
   console.log('💵 PRICING FIX - Vehicle type addon now properly included in total price');
   console.log('🔧 TOTALPRICE FIX - Fixed ReferenceError in buildStepData function');
   console.log('💰 PRICE FIELD FIX - Added finalPrice and calculatedPrice fields for thanks page');
-  console.log('🔄 FORCE REFRESH - Version 3.15 loaded successfully!');
+  console.log('📍 LOCATION FIX - Fixed location field mapping from form to API');
+  console.log('🔄 FORCE REFRESH - Version 3.16 loaded successfully!');
   console.log('📅 Script loaded at:', new Date().toISOString());
   console.log('🔧 openServiceSelectionModal available:', typeof window.openServiceSelectionModal);
   
@@ -1047,7 +1048,7 @@ async function completeBooking() {
     name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
     phone: bookingData.phone || '',
     email: bookingData.email || '',
-    location: bookingData.address || '',
+    location: bookingData.location || bookingData.address || '',
     
     // Service information
     service: selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive',
@@ -1509,7 +1510,7 @@ function buildStepData(status) {
     name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
     phone: bookingData.phone || '',
     email: bookingData.email || '',
-    location: bookingData.address || bookingData.city || '',
+    location: bookingData.location || bookingData.address || bookingData.city || '',
     
     // Service information - EXACT field names from template
     service: selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive',
@@ -1899,7 +1900,7 @@ function buildInspectionData(status) {
       name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
       phone: bookingData.phone || '',
       email: bookingData.email || '',
-      location: bookingData.address || bookingData.city || '',
+      location: bookingData.location || bookingData.address || bookingData.city || '',
       
       // Vehicle information - EXACT field names from payment API
       vehicleRego: bookingData.vehicleRego || '',
