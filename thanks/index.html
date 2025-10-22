@@ -412,10 +412,10 @@
       
       canonical.formVersion = coalesce(raw.formVersion, '2.0');
 
-      canonical.name   = cleanText(coalesce(raw.name, raw.customerName));
-      canonical.phone  = sanitizePhone(coalesce(raw.phone, raw.customerPhone));
+      canonical.name   = cleanText(coalesce(raw.name, raw.customerName, raw.customerData?.name));
+      canonical.phone  = sanitizePhone(coalesce(raw.phone, raw.customerPhone, raw.customerData?.phone));
       canonical.email  = cleanText(coalesce(raw.email, raw.customerEmail));
-      canonical.location = cleanText(raw.location);
+      canonical.location = cleanText(coalesce(raw.location, raw.customerData?.location));
 
       canonical.rego   = cleanText(coalesce(raw.rego, raw.vehicleRego));
       canonical.year   = cleanText(coalesce(raw.year, raw.vehicleYear));
@@ -438,7 +438,7 @@
       canonical.timeWindow      = cleanText(coalesce(raw.timeWindow, raw.selectedTime));
       canonical.urgencyLevel    = cleanText(coalesce(raw.urgencyLevel, raw.selectedUrgency));
 
-      canonical.price   = String(coalesce(raw.price, raw.finalPrice, raw.calculatedPrice, ''));
+      canonical.price   = String(coalesce(raw.price, raw.finalPrice, raw.calculatedPrice, raw.customerData?.price, ''));
       canonical.details = cleanText(coalesce(raw.details, raw.description));
 
       canonical.emergencyType  = cleanText(raw.emergencyType);
@@ -822,10 +822,10 @@
       
       canonical.formVersion = coalesce(raw.formVersion, '2.0');
 
-      canonical.name   = cleanText(coalesce(raw.name, raw.customerName));
-      canonical.phone  = sanitizePhone(coalesce(raw.phone, raw.customerPhone));
+      canonical.name   = cleanText(coalesce(raw.name, raw.customerName, raw.customerData?.name));
+      canonical.phone  = sanitizePhone(coalesce(raw.phone, raw.customerPhone, raw.customerData?.phone));
       canonical.email  = cleanText(coalesce(raw.email, raw.customerEmail));
-      canonical.location = cleanText(raw.location);
+      canonical.location = cleanText(coalesce(raw.location, raw.customerData?.location));
 
       canonical.rego   = cleanText(coalesce(raw.rego, raw.vehicleRego));
       canonical.year   = cleanText(coalesce(raw.year, raw.vehicleYear));
@@ -848,7 +848,7 @@
       canonical.timeWindow      = cleanText(coalesce(raw.timeWindow, raw.selectedTime));
       canonical.urgencyLevel    = cleanText(coalesce(raw.urgencyLevel, raw.selectedUrgency));
 
-      canonical.price   = String(coalesce(raw.price, raw.finalPrice, raw.calculatedPrice, ''));
+      canonical.price   = String(coalesce(raw.price, raw.finalPrice, raw.calculatedPrice, raw.customerData?.price, ''));
       canonical.details = cleanText(coalesce(raw.details, raw.description));
 
       canonical.emergencyType  = cleanText(raw.emergencyType);
