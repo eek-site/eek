@@ -1813,6 +1813,17 @@
         'raw.customerData.phone': bookingData._raw?.customerData?.phone,
         'canonical.phone': bookingData.phone
       });
+      console.log('🔍 DEBUG - Email fields:', {
+        'raw.email': bookingData._raw?.email,
+        'raw.customerEmail': bookingData._raw?.customerEmail,
+        'raw.customerData.email': bookingData._raw?.customerData?.email,
+        'canonical.email': bookingData.email
+      });
+      console.log('🔍 DEBUG - Service fields:', {
+        'raw.service': bookingData._raw?.service,
+        'raw.customerData.service': bookingData._raw?.customerData?.service,
+        'canonical.service': bookingData.service
+      });
 
       displayContent(bookingData);
 
