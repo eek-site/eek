@@ -1,7 +1,7 @@
 concat(
   coalesce(body('Parse_JSON')?['bookingStatus'], body('Parse_JSON')?['eventType'], 'NEW'), 
   ' | ', 
-  coalesce(outputs('LocationName'), 'Unknown'), 
+  coalesce(body('Parse_JSON')?['visitorData']?['location'], body('Parse_JSON')?['location'], 'Unknown'), 
   ' | ', 
   coalesce(body('Parse_JSON')?['visitorData']?['vehicleRego'], body('Parse_JSON')?['vehicleRego'], 'No Rego'), 
   ' | ', 
@@ -9,14 +9,14 @@ concat(
   ' | ', 
   coalesce(body('Parse_JSON')?['pageSource']?['type'], 'Direct'), 
   ' | ',
-  if(and(not(equals(body('Parse_JSON')?['visitorData']?['name'], null)), not(equals(string(body('Parse_JSON')?['visitorData']?['name']), ''))), 
+  if(and(not(empty(body('Parse_JSON')?['visitorData']?['name'])), not(equals(string(body('Parse_JSON')?['visitorData']?['name']), ''))), 
     concat(substring(body('Parse_JSON')?['visitorData']?['name'], 0, 10), ' | '), 
-    if(and(not(equals(body('Parse_JSON')?['name'], null)), not(equals(string(body('Parse_JSON')?['name']), ''))), 
+    if(and(not(empty(body('Parse_JSON')?['name'])), not(equals(string(body('Parse_JSON')?['name']), ''))), 
       concat(substring(body('Parse_JSON')?['name'], 0, 10), ' | '), 
       ''
     )
   ),
-  if(and(not(equals(body('Parse_JSON')?['journeyData']?['callAttemptId'], null)), not(equals(string(body('Parse_JSON')?['journeyData']?['callAttemptId']), ''))), 
+  if(and(not(empty(body('Parse_JSON')?['journeyData']?['callAttemptId'])), not(equals(string(body('Parse_JSON')?['journeyData']?['callAttemptId']), ''))), 
     'CALL | ', 
     ''
   ),
@@ -34,7 +34,7 @@ concat(
 @{if(and(not(empty(body('Parse_JSON')?['utm']?['campaign'])), not(equals(string(body('Parse_JSON')?['utm']?['campaign']), ''))), concat('Campaign: ', body('Parse_JSON')?['utm']?['campaign'], ' | '), '')}
 @{if(and(not(empty(body('Parse_JSON')?['utm']?['term'])), not(equals(string(body('Parse_JSON')?['utm']?['term']), ''))), concat('Keyword: ', body('Parse_JSON')?['utm']?['term'], ' | '), '')}
 @{if(and(not(empty(body('Parse_JSON')?['device']?['platform'])), not(equals(string(body('Parse_JSON')?['device']?['platform']), ''))), concat(body('Parse_JSON')?['device']?['platform'], ' | '), '')}
-@{if(and(not(empty(outputs('MatchType'))), not(equals(string(outputs('MatchType')), ''))), concat('Match: ', outputs('MatchType'), ' | '), '')}
+@{if(and(not(empty(body('Parse_JSON')?['matchType'])), not(equals(string(body('Parse_JSON')?['matchType']), ''))), concat('Match: ', body('Parse_JSON')?['matchType'], ' | '), '')}
 @{if(and(not(empty(body('Parse_JSON')?['visitorData']?['name'])), not(equals(string(body('Parse_JSON')?['visitorData']?['name']), ''))), concat(body('Parse_JSON')?['visitorData']?['name'], ' | '), if(and(not(empty(body('Parse_JSON')?['name'])), not(equals(string(body('Parse_JSON')?['name']), ''))), concat(body('Parse_JSON')?['name'], ' | '), ''))}
 @{if(and(not(empty(body('Parse_JSON')?['visitorData']?['phone'])), not(equals(string(body('Parse_JSON')?['visitorData']?['phone']), ''))), body('Parse_JSON')?['visitorData']?['phone'], if(and(not(empty(body('Parse_JSON')?['phone'])), not(equals(string(body('Parse_JSON')?['phone']), ''))), body('Parse_JSON')?['phone'], ''))}
 @{if(and(not(empty(body('Parse_JSON')?['visitorData']?['email'])), not(equals(string(body('Parse_JSON')?['visitorData']?['email']), ''))), concat(' | Email: ', body('Parse_JSON')?['visitorData']?['email']), if(and(not(empty(body('Parse_JSON')?['email'])), not(equals(string(body('Parse_JSON')?['email']), ''))), concat(' | Email: ', body('Parse_JSON')?['email']), ''))}
@@ -79,7 +79,7 @@ concat(
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Call Attempt ID:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['journeyData']?['callAttemptId'], body('Parse_JSON')?['callAttemptId'], '-')}</span></div>
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Call Timestamp:</strong> <span style="color: #333;">@{if(and(not(empty(body('Parse_JSON')?['journeyData']?['callTimestamp'])), not(equals(string(body('Parse_JSON')?['journeyData']?['callTimestamp']), ''))), formatDateTime(body('Parse_JSON')?['journeyData']?['callTimestamp'], 'dd/MM/yyyy HH:mm'), if(and(not(empty(body('Parse_JSON')?['callTimestamp'])), not(equals(string(body('Parse_JSON')?['callTimestamp']), ''))), formatDateTime(body('Parse_JSON')?['callTimestamp'], 'dd/MM/yyyy HH:mm'), '-'))}</span></div>
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Return Timestamp:</strong> <span style="color: #333;">@{if(and(not(empty(body('Parse_JSON')?['journeyData']?['returnTimestamp'])), not(equals(string(body('Parse_JSON')?['journeyData']?['returnTimestamp']), ''))), formatDateTime(body('Parse_JSON')?['journeyData']?['returnTimestamp'], 'dd/MM/yyyy HH:mm'), '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Time Between Call &amp; Return:</strong> <span style="color: #333;">@{if(and(not(equals(body('Parse_JSON')?['journeyData']?['timeBetweenCallAndReturn'], null)), not(equals(body('Parse_JSON')?['journeyData']?['timeBetweenCallAndReturn'], 0))), concat(div(body('Parse_JSON')?['journeyData']?['timeBetweenCallAndReturn'], 60000), ' minutes'), '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Time Between Call &amp; Return:</strong> <span style="color: #333;">@{if(and(not(empty(body('Parse_JSON')?['journeyData']?['timeBetweenCallAndReturn'])), not(equals(body('Parse_JSON')?['journeyData']?['timeBetweenCallAndReturn'], 0))), concat(div(body('Parse_JSON')?['journeyData']?['timeBetweenCallAndReturn'], 60000), ' minutes'), '-')}</span></div>
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Return Source:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['journeyData']?['source'], '-')}</span></div>
 </td>
 </tr>
@@ -105,7 +105,7 @@ concat(
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Vehicle:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['visitorData']?['vehicleYear'], body('Parse_JSON')?['vehicleYear'], '')} @{coalesce(body('Parse_JSON')?['visitorData']?['vehicleMake'], body('Parse_JSON')?['vehicleMake'], body('Parse_JSON')?['make'], '')} @{coalesce(body('Parse_JSON')?['visitorData']?['vehicleModel'], body('Parse_JSON')?['vehicleModel'], body('Parse_JSON')?['model'], '-')}</span></div>
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Service:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['visitorData']?['service'], body('Parse_JSON')?['serviceTitle'], body('Parse_JSON')?['service'], '-')}</span></div>
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Service Code:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['visitorData']?['serviceCode'], body('Parse_JSON')?['serviceCode'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Price:</strong> <span style="color: #333;">@{if(and(not(equals(body('Parse_JSON')?['basePrice'], null)), not(equals(body('Parse_JSON')?['basePrice'], 0))), concat('$', body('Parse_JSON')?['basePrice']), if(and(not(equals(body('Parse_JSON')?['price'], null)), not(equals(body('Parse_JSON')?['price'], 0))), concat('$', body('Parse_JSON')?['price']), '-'))}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Price:</strong> <span style="color: #333;">@{if(and(not(empty(body('Parse_JSON')?['basePrice'])), not(equals(body('Parse_JSON')?['basePrice'], 0))), concat('$', body('Parse_JSON')?['basePrice']), if(and(not(empty(body('Parse_JSON')?['price'])), not(equals(body('Parse_JSON')?['price'], 0))), concat('$', body('Parse_JSON')?['price']), '-'))}</span></div>
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Battery Voltage:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['visitorData']?['batteryVoltage'], body('Parse_JSON')?['batteryVoltage'], body('Parse_JSON')?['selectedVoltage'], '-')}</span></div>
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Vehicle Type:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['visitorData']?['vehicleType'], body('Parse_JSON')?['vehicleType'], '-')}</span></div>
 </td>
@@ -169,7 +169,7 @@ concat(
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Entry Page:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['userJourney']?['entryPage'], body('Parse_JSON')?['pageUrl'], '-')}</span></div>
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Previous Page:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['userJourney']?['previousPage'], body('Parse_JSON')?['pageSource']?['referrer'], '-')}</span></div>
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Total Pages:</strong> <span style="color: #333;">@{coalesce(string(body('Parse_JSON')?['userJourney']?['totalPages']), '1')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Session Duration:</strong> <span style="color: #333;">@{if(and(not(equals(body('Parse_JSON')?['userJourney']?['sessionDuration'], null)), not(equals(body('Parse_JSON')?['userJourney']?['sessionDuration'], 0))), concat(div(body('Parse_JSON')?['userJourney']?['sessionDuration'], 60000), ' minutes'), '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Session Duration:</strong> <span style="color: #333;">@{if(and(not(empty(body('Parse_JSON')?['userJourney']?['sessionDuration'])), not(equals(body('Parse_JSON')?['userJourney']?['sessionDuration'], 0))), concat(div(body('Parse_JSON')?['userJourney']?['sessionDuration'], 60000), ' minutes'), '-')}</span></div>
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Journey Actions:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['eventAction'], '-')}</span></div>
 </td>
 </tr>
@@ -190,7 +190,7 @@ concat(
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Country:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['trackingData']?['location']?['country'], '-')}</span></div>
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Region:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['trackingData']?['location']?['region'], '-')}</span></div>
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">City:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['trackingData']?['location']?['city'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Coordinates:</strong> <span style="color: #333;">@{if(and(not(equals(body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['latitude'], null)), not(equals(body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['longitude'], null))), concat('<a href="https://www.google.com/maps/place/', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['latitude'], ',', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['longitude'], '/@', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['latitude'], ',', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['longitude'], ',17z/data=!3m1!4b1!4m4!3m3!8m2!3d', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['latitude'], '!4d', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['longitude'], '?entry=ttu&g_ep=EgoyMDI1MTAxNC4wIKXMDSoASAFQAw%3D%3D" style="color: #007bff; text-decoration: none;">', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['latitude'], ', ', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['longitude'], '</a>'), '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Coordinates:</strong> <span style="color: #333;">@{if(and(not(empty(body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['latitude'])), not(empty(body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['longitude']))), concat('<a href="https://www.google.com/maps/place/', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['latitude'], ',', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['longitude'], '/@', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['latitude'], ',', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['longitude'], ',17z/data=!3m1!4b1!4m4!3m3!8m2!3d', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['latitude'], '!4d', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['longitude'], '?entry=ttu&g_ep=EgoyMDI1MTAxNC4wIKXMDSoASAFQAw%3D%3D" style="color: #007bff; text-decoration: none;">', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['latitude'], ', ', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['longitude'], '</a>'), '-')}</span></div>
 <div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Accuracy:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['accuracy'], '-')}</span></div>
 </td>
 </tr>
