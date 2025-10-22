@@ -1,27 +1,4 @@
-concat(
-  coalesce(body('Parse_JSON')?['bookingStatus'], body('Parse_JSON')?['eventType'], 'NEW'), 
-  ' | ', 
-  coalesce(body('Parse_JSON')?['visitorData']?['location'], body('Parse_JSON')?['location'], 'Unknown'), 
-  ' | ', 
-  coalesce(body('Parse_JSON')?['visitorData']?['vehicleRego'], body('Parse_JSON')?['vehicleRego'], 'No Rego'), 
-  ' | ', 
-  coalesce(body('Parse_JSON')?['visitorData']?['serviceCode'], body('Parse_JSON')?['serviceCode'], body('Parse_JSON')?['visitorData']?['service'], body('Parse_JSON')?['serviceTitle'], 'Service'), 
-  ' | ', 
-  coalesce(body('Parse_JSON')?['pageSource']?['type'], 'Direct'), 
-  ' | ',
-  if(and(not(empty(body('Parse_JSON')?['visitorData']?['name'])), not(equals(string(body('Parse_JSON')?['visitorData']?['name']), ''))), 
-    concat(substring(body('Parse_JSON')?['visitorData']?['name'], 0, 10), ' | '), 
-    if(and(not(empty(body('Parse_JSON')?['name'])), not(equals(string(body('Parse_JSON')?['name']), ''))), 
-      concat(substring(body('Parse_JSON')?['name'], 0, 10), ' | '), 
-      ''
-    )
-  ),
-  if(and(not(empty(body('Parse_JSON')?['journeyData']?['callAttemptId'])), not(equals(string(body('Parse_JSON')?['journeyData']?['callAttemptId']), ''))), 
-    'CALL | ', 
-    ''
-  ),
-  formatDateTime(utcNow(), 'HH:mm')
-)
+concat('NEW | ', coalesce(triggerBody()?['visitorData']?['name'], triggerBody()?['name'], 'Customer'), ' | ', coalesce(triggerBody()?['visitorData']?['vehicleRego'], triggerBody()?['vehicleRego'], 'No Rego'), ' | ', coalesce(triggerBody()?['visitorData']?['serviceCode'], triggerBody()?['serviceCode'], 'Service'))
 
 <!-- ========================================== -->
 <!-- SUBJECT LINE ENDS - HTML BODY BEGINS -->
@@ -31,38 +8,38 @@ concat(
 <tbody>
 <tr>
 <td style="display: none; max-height: 0px; overflow: hidden; opacity: 0; visibility: hidden; mso-hide: all;">
-@{if(and(not(empty(body('Parse_JSON')?['utm']?['campaign'])), not(equals(string(body('Parse_JSON')?['utm']?['campaign']), ''))), concat('Campaign: ', body('Parse_JSON')?['utm']?['campaign'], ' | '), '')}
-@{if(and(not(empty(body('Parse_JSON')?['utm']?['term'])), not(equals(string(body('Parse_JSON')?['utm']?['term']), ''))), concat('Keyword: ', body('Parse_JSON')?['utm']?['term'], ' | '), '')}
-@{if(and(not(empty(body('Parse_JSON')?['device']?['platform'])), not(equals(string(body('Parse_JSON')?['device']?['platform']), ''))), concat(body('Parse_JSON')?['device']?['platform'], ' | '), '')}
-@{if(and(not(empty(body('Parse_JSON')?['matchType'])), not(equals(string(body('Parse_JSON')?['matchType']), ''))), concat('Match: ', body('Parse_JSON')?['matchType'], ' | '), '')}
-@{if(and(not(empty(body('Parse_JSON')?['visitorData']?['name'])), not(equals(string(body('Parse_JSON')?['visitorData']?['name']), ''))), concat(body('Parse_JSON')?['visitorData']?['name'], ' | '), if(and(not(empty(body('Parse_JSON')?['name'])), not(equals(string(body('Parse_JSON')?['name']), ''))), concat(body('Parse_JSON')?['name'], ' | '), ''))}
-@{if(and(not(empty(body('Parse_JSON')?['visitorData']?['phone'])), not(equals(string(body('Parse_JSON')?['visitorData']?['phone']), ''))), body('Parse_JSON')?['visitorData']?['phone'], if(and(not(empty(body('Parse_JSON')?['phone'])), not(equals(string(body('Parse_JSON')?['phone']), ''))), body('Parse_JSON')?['phone'], ''))}
-@{if(and(not(empty(body('Parse_JSON')?['visitorData']?['email'])), not(equals(string(body('Parse_JSON')?['visitorData']?['email']), ''))), concat(' | Email: ', body('Parse_JSON')?['visitorData']?['email']), if(and(not(empty(body('Parse_JSON')?['email'])), not(equals(string(body('Parse_JSON')?['email']), ''))), concat(' | Email: ', body('Parse_JSON')?['email']), ''))}
-@{if(and(not(empty(body('Parse_JSON')?['visitorData']?['vehicleRego'])), not(equals(string(body('Parse_JSON')?['visitorData']?['vehicleRego']), ''))), concat(' | Rego: ', body('Parse_JSON')?['visitorData']?['vehicleRego']), if(and(not(empty(body('Parse_JSON')?['vehicleRego'])), not(equals(string(body('Parse_JSON')?['vehicleRego']), ''))), concat(' | Rego: ', body('Parse_JSON')?['vehicleRego']), ''))}
-@{if(and(not(empty(body('Parse_JSON')?['visitorData']?['service'])), not(equals(string(body('Parse_JSON')?['visitorData']?['service']), ''))), concat(' | Service: ', body('Parse_JSON')?['visitorData']?['service']), if(and(not(empty(body('Parse_JSON')?['serviceTitle'])), not(equals(string(body('Parse_JSON')?['serviceTitle']), ''))), concat(' | Service: ', body('Parse_JSON')?['serviceTitle']), ''))}
-@{if(and(not(empty(body('Parse_JSON')?['visitorData']?['location'])), not(equals(string(body('Parse_JSON')?['visitorData']?['location']), ''))), concat(' | Location: ', body('Parse_JSON')?['visitorData']?['location']), if(and(not(empty(body('Parse_JSON')?['location'])), not(equals(string(body('Parse_JSON')?['location']), ''))), concat(' | Location: ', body('Parse_JSON')?['location']), if(and(not(empty(body('Parse_JSON')?['trackingData']?['location']?['city'])), not(equals(string(body('Parse_JSON')?['trackingData']?['location']?['city']), ''))), concat(' | Location: ', body('Parse_JSON')?['trackingData']?['location']?['city']), '')))}
-@{if(and(not(empty(body('Parse_JSON')?['journeyData']?['callAttemptId'])), not(equals(string(body('Parse_JSON')?['journeyData']?['callAttemptId']), ''))), concat(' | Call ID: ', body('Parse_JSON')?['journeyData']?['callAttemptId']), '')}
-@{if(and(not(empty(body('Parse_JSON')?['eventAction'])), not(equals(string(body('Parse_JSON')?['eventAction']), ''))), concat(' | Action: ', body('Parse_JSON')?['eventAction']), '')}
-@{if(and(not(empty(body('Parse_JSON')?['gclid'])), not(equals(string(body('Parse_JSON')?['gclid']), ''))), concat(' | GCLID: ', body('Parse_JSON')?['gclid']), '')}
-@{if(and(not(empty(body('Parse_JSON')?['sessionId'])), not(equals(string(body('Parse_JSON')?['sessionId']), ''))), concat(' | Session: ', substring(body('Parse_JSON')?['sessionId'], 0, 8), '...'), '')}
+@{if(and(not(empty(triggerBody()?['utm']?['campaign'])), not(equals(string(triggerBody()?['utm']?['campaign']), ''))), concat('Campaign: ', triggerBody()?['utm']?['campaign'], ' | '), '')}
+@{if(and(not(empty(triggerBody()?['utm']?['term'])), not(equals(string(triggerBody()?['utm']?['term']), ''))), concat('Keyword: ', triggerBody()?['utm']?['term'], ' | '), '')}
+@{if(and(not(empty(triggerBody()?['device']?['platform'])), not(equals(string(triggerBody()?['device']?['platform']), ''))), concat(triggerBody()?['device']?['platform'], ' | '), '')}
+@{if(and(not(empty(triggerBody()?['matchType'])), not(equals(string(triggerBody()?['matchType']), ''))), concat('Match: ', triggerBody()?['matchType'], ' | '), '')}
+@{if(and(not(empty(triggerBody()?['visitorData']?['name'])), not(equals(string(triggerBody()?['visitorData']?['name']), ''))), concat(triggerBody()?['visitorData']?['name'], ' | '), if(and(not(empty(triggerBody()?['name'])), not(equals(string(triggerBody()?['name']), ''))), concat(triggerBody()?['name'], ' | '), ''))}
+@{if(and(not(empty(triggerBody()?['visitorData']?['phone'])), not(equals(string(triggerBody()?['visitorData']?['phone']), ''))), triggerBody()?['visitorData']?['phone'], if(and(not(empty(triggerBody()?['phone'])), not(equals(string(triggerBody()?['phone']), ''))), triggerBody()?['phone'], ''))}
+@{if(and(not(empty(triggerBody()?['visitorData']?['email'])), not(equals(string(triggerBody()?['visitorData']?['email']), ''))), concat(' | Email: ', triggerBody()?['visitorData']?['email']), if(and(not(empty(triggerBody()?['email'])), not(equals(string(triggerBody()?['email']), ''))), concat(' | Email: ', triggerBody()?['email']), ''))}
+@{if(and(not(empty(triggerBody()?['visitorData']?['vehicleRego'])), not(equals(string(triggerBody()?['visitorData']?['vehicleRego']), ''))), concat(' | Rego: ', triggerBody()?['visitorData']?['vehicleRego']), if(and(not(empty(triggerBody()?['vehicleRego'])), not(equals(string(triggerBody()?['vehicleRego']), ''))), concat(' | Rego: ', triggerBody()?['vehicleRego']), ''))}
+@{if(and(not(empty(triggerBody()?['visitorData']?['service'])), not(equals(string(triggerBody()?['visitorData']?['service']), ''))), concat(' | Service: ', triggerBody()?['visitorData']?['service']), if(and(not(empty(triggerBody()?['serviceTitle'])), not(equals(string(triggerBody()?['serviceTitle']), ''))), concat(' | Service: ', triggerBody()?['serviceTitle']), ''))}
+@{if(and(not(empty(triggerBody()?['visitorData']?['location'])), not(equals(string(triggerBody()?['visitorData']?['location']), ''))), concat(' | Location: ', triggerBody()?['visitorData']?['location']), if(and(not(empty(triggerBody()?['location'])), not(equals(string(triggerBody()?['location']), ''))), concat(' | Location: ', triggerBody()?['location']), if(and(not(empty(triggerBody()?['trackingData']?['location']?['city'])), not(equals(string(triggerBody()?['trackingData']?['location']?['city']), ''))), concat(' | Location: ', triggerBody()?['trackingData']?['location']?['city']), '')))}
+@{if(and(not(empty(triggerBody()?['journeyData']?['callAttemptId'])), not(equals(string(triggerBody()?['journeyData']?['callAttemptId']), ''))), concat(' | Call ID: ', triggerBody()?['journeyData']?['callAttemptId']), '')}
+@{if(and(not(empty(triggerBody()?['eventAction'])), not(equals(string(triggerBody()?['eventAction']), ''))), concat(' | Action: ', triggerBody()?['eventAction']), '')}
+@{if(and(not(empty(triggerBody()?['gclid'])), not(equals(string(triggerBody()?['gclid']), ''))), concat(' | GCLID: ', triggerBody()?['gclid']), '')}
+@{if(and(not(empty(triggerBody()?['sessionId'])), not(equals(string(triggerBody()?['sessionId']), ''))), concat(' | Session: ', substring(triggerBody()?['sessionId'], 0, 8), '...'), '')}
 </td>
 </tr>
 <tr>
 <td style="padding: 15px; text-align: center; background-color: #ff5500; color: white;">
 <h1 style="margin: 0 0 8px 0; font-size: 20px;">Eek Mobile Mechanical</h1>
-<h2 style="margin: 0 0 5px 0; font-size: 16px; font-weight: normal;">@{coalesce(body('Parse_JSON')?['serviceTitle'], body('Parse_JSON')?['eventType'], 'Notification')}</h2>
-<div style="font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">@{coalesce(body('Parse_JSON')?['bookingStatus'], body('Parse_JSON')?['eventType'], 'NEW')}</div>
+<h2 style="margin: 0 0 5px 0; font-size: 16px; font-weight: normal;">@{coalesce(triggerBody()?['serviceTitle'], triggerBody()?['eventType'], 'Notification')}</h2>
+<div style="font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">@{coalesce(triggerBody()?['bookingStatus'], triggerBody()?['eventType'], 'NEW')}</div>
 </td>
 </tr>
 <tr>
 <td style="padding: 12px 15px; background-color: #e3f2fd; border-left: 4px solid #ff5500;">
-<div style="margin-bottom: 6px; font-size: 13px;"><strong>Session:</strong> @{coalesce(body('Parse_JSON')?['sessionId'], 'Unknown')}</div>
-<div style="margin-bottom: 6px; font-size: 13px;"><strong>GCLID:</strong> @{coalesce(body('Parse_JSON')?['gclid'], body('Parse_JSON')?['pageSource']?['clickIds']?['gclid'], 'None')}</div>
-<div style="margin-bottom: 6px; font-size: 13px;"><strong>GCLID State:</strong> <span style="padding: 2px 6px; background-color: @{if(equals(coalesce(body('Parse_JSON')?['gclidState'], ''), 'Active'), '#28a745', '#6c757d')}; color: white; border-radius: 3px; font-size: 11px;">@{coalesce(body('Parse_JSON')?['gclidState'], 'Unknown')}</span></div>
-<div style="margin-bottom: 6px; font-size: 13px;"><strong>Page Source:</strong> @{coalesce(body('Parse_JSON')?['pageSource']?['type'], 'Direct')} - @{coalesce(body('Parse_JSON')?['pageSource']?['detail'], 'Direct visit')}</div>
-<div style="margin-bottom: 6px; font-size: 13px;"><strong>Event Type:</strong> @{coalesce(body('Parse_JSON')?['eventType'], 'Unknown')}</div>
-<div style="margin-bottom: 6px; font-size: 13px;"><strong>Event Action:</strong> @{coalesce(body('Parse_JSON')?['eventAction'], 'Unknown')}</div>
-<div style="font-size: 13px;"><strong>Time:</strong> @{formatDateTime(coalesce(body('Parse_JSON')?['timestamp'], utcNow()), 'dd/MM/yyyy HH:mm')}</div>
+<div style="margin-bottom: 6px; font-size: 13px;"><strong>Session:</strong> @{coalesce(triggerBody()?['sessionId'], 'Unknown')}</div>
+<div style="margin-bottom: 6px; font-size: 13px;"><strong>GCLID:</strong> @{coalesce(triggerBody()?['gclid'], triggerBody()?['pageSource']?['clickIds']?['gclid'], 'None')}</div>
+<div style="margin-bottom: 6px; font-size: 13px;"><strong>GCLID State:</strong> <span style="padding: 2px 6px; background-color: @{if(equals(coalesce(triggerBody()?['gclidState'], ''), 'Active'), '#28a745', '#6c757d')}; color: white; border-radius: 3px; font-size: 11px;">@{coalesce(triggerBody()?['gclidState'], 'Unknown')}</span></div>
+<div style="margin-bottom: 6px; font-size: 13px;"><strong>Page Source:</strong> @{coalesce(triggerBody()?['pageSource']?['type'], 'Direct')} - @{coalesce(triggerBody()?['pageSource']?['detail'], 'Direct visit')}</div>
+<div style="margin-bottom: 6px; font-size: 13px;"><strong>Event Type:</strong> @{coalesce(triggerBody()?['eventType'], 'Unknown')}</div>
+<div style="margin-bottom: 6px; font-size: 13px;"><strong>Event Action:</strong> @{coalesce(triggerBody()?['eventAction'], 'Unknown')}</div>
+<div style="font-size: 13px;"><strong>Time:</strong> @{formatDateTime(coalesce(triggerBody()?['timestamp'], utcNow()), 'dd/MM/yyyy HH:mm')}</div>
 </td>
 </tr>
 
@@ -76,11 +53,11 @@ concat(
 </tr>
 <tr>
 <td style="padding: 8px 0;">
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Call Attempt ID:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['journeyData']?['callAttemptId'], body('Parse_JSON')?['callAttemptId'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Call Timestamp:</strong> <span style="color: #333;">@{if(and(not(empty(body('Parse_JSON')?['journeyData']?['callTimestamp'])), not(equals(string(body('Parse_JSON')?['journeyData']?['callTimestamp']), ''))), formatDateTime(body('Parse_JSON')?['journeyData']?['callTimestamp'], 'dd/MM/yyyy HH:mm'), if(and(not(empty(body('Parse_JSON')?['callTimestamp'])), not(equals(string(body('Parse_JSON')?['callTimestamp']), ''))), formatDateTime(body('Parse_JSON')?['callTimestamp'], 'dd/MM/yyyy HH:mm'), '-'))}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Return Timestamp:</strong> <span style="color: #333;">@{if(and(not(empty(body('Parse_JSON')?['journeyData']?['returnTimestamp'])), not(equals(string(body('Parse_JSON')?['journeyData']?['returnTimestamp']), ''))), formatDateTime(body('Parse_JSON')?['journeyData']?['returnTimestamp'], 'dd/MM/yyyy HH:mm'), '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Time Between Call &amp; Return:</strong> <span style="color: #333;">@{if(and(not(empty(body('Parse_JSON')?['journeyData']?['timeBetweenCallAndReturn'])), not(equals(body('Parse_JSON')?['journeyData']?['timeBetweenCallAndReturn'], 0))), concat(div(body('Parse_JSON')?['journeyData']?['timeBetweenCallAndReturn'], 60000), ' minutes'), '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Return Source:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['journeyData']?['source'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Call Attempt ID:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['journeyData']?['callAttemptId'], triggerBody()?['callAttemptId'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Call Timestamp:</strong> <span style="color: #333;">@{if(and(not(empty(triggerBody()?['journeyData']?['callTimestamp'])), not(equals(string(triggerBody()?['journeyData']?['callTimestamp']), ''))), formatDateTime(triggerBody()?['journeyData']?['callTimestamp'], 'dd/MM/yyyy HH:mm'), if(and(not(empty(triggerBody()?['callTimestamp'])), not(equals(string(triggerBody()?['callTimestamp']), ''))), formatDateTime(triggerBody()?['callTimestamp'], 'dd/MM/yyyy HH:mm'), '-'))}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Return Timestamp:</strong> <span style="color: #333;">@{if(and(not(empty(triggerBody()?['journeyData']?['returnTimestamp'])), not(equals(string(triggerBody()?['journeyData']?['returnTimestamp']), ''))), formatDateTime(triggerBody()?['journeyData']?['returnTimestamp'], 'dd/MM/yyyy HH:mm'), '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Time Between Call &amp; Return:</strong> <span style="color: #333;">@{if(and(not(empty(triggerBody()?['journeyData']?['timeBetweenCallAndReturn'])), not(equals(triggerBody()?['journeyData']?['timeBetweenCallAndReturn'], 0))), concat(div(triggerBody()?['journeyData']?['timeBetweenCallAndReturn'], 60000), ' minutes'), '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Return Source:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['journeyData']?['source'], '-')}</span></div>
 </td>
 </tr>
 </tbody>
@@ -97,17 +74,17 @@ concat(
 </tr>
 <tr>
 <td style="padding: 8px 0;">
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Name:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['visitorData']?['name'], body('Parse_JSON')?['name'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Phone:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['visitorData']?['phone'], body('Parse_JSON')?['phone'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Email:</strong> <span style="color: #333; word-break: break-all;">@{coalesce(body('Parse_JSON')?['visitorData']?['email'], body('Parse_JSON')?['email'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Location:</strong> <span style="color: #333;">@{if(and(not(empty(body('Parse_JSON')?['visitorData']?['location'])), not(equals(string(body('Parse_JSON')?['visitorData']?['location']), ''))), body('Parse_JSON')?['visitorData']?['location'], if(and(not(empty(body('Parse_JSON')?['location'])), not(equals(string(body('Parse_JSON')?['location']), ''))), body('Parse_JSON')?['location'], '-'))</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Rego:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['visitorData']?['vehicleRego'], body('Parse_JSON')?['vehicleRego'], body('Parse_JSON')?['rego'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Vehicle:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['visitorData']?['vehicleYear'], body('Parse_JSON')?['vehicleYear'], '')} @{coalesce(body('Parse_JSON')?['visitorData']?['vehicleMake'], body('Parse_JSON')?['vehicleMake'], body('Parse_JSON')?['make'], '')} @{coalesce(body('Parse_JSON')?['visitorData']?['vehicleModel'], body('Parse_JSON')?['vehicleModel'], body('Parse_JSON')?['model'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Service:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['visitorData']?['service'], body('Parse_JSON')?['serviceTitle'], body('Parse_JSON')?['service'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Service Code:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['visitorData']?['serviceCode'], body('Parse_JSON')?['serviceCode'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Price:</strong> <span style="color: #333;">@{if(and(not(empty(body('Parse_JSON')?['basePrice'])), not(equals(body('Parse_JSON')?['basePrice'], 0))), concat('$', body('Parse_JSON')?['basePrice']), if(and(not(empty(body('Parse_JSON')?['price'])), not(equals(body('Parse_JSON')?['price'], 0))), concat('$', body('Parse_JSON')?['price']), '-'))}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Battery Voltage:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['visitorData']?['batteryVoltage'], body('Parse_JSON')?['batteryVoltage'], body('Parse_JSON')?['selectedVoltage'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Vehicle Type:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['visitorData']?['vehicleType'], body('Parse_JSON')?['vehicleType'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Name:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['visitorData']?['name'], triggerBody()?['name'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Phone:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['visitorData']?['phone'], triggerBody()?['phone'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Email:</strong> <span style="color: #333; word-break: break-all;">@{coalesce(triggerBody()?['visitorData']?['email'], triggerBody()?['email'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Location:</strong> <span style="color: #333;">@{if(and(not(empty(triggerBody()?['visitorData']?['location'])), not(equals(string(triggerBody()?['visitorData']?['location']), ''))), triggerBody()?['visitorData']?['location'], if(and(not(empty(triggerBody()?['location'])), not(equals(string(triggerBody()?['location']), ''))), triggerBody()?['location'], '-'))</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Rego:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['visitorData']?['vehicleRego'], triggerBody()?['vehicleRego'], triggerBody()?['rego'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Vehicle:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['visitorData']?['vehicleYear'], triggerBody()?['vehicleYear'], '')} @{coalesce(triggerBody()?['visitorData']?['vehicleMake'], triggerBody()?['vehicleMake'], triggerBody()?['make'], '')} @{coalesce(triggerBody()?['visitorData']?['vehicleModel'], triggerBody()?['vehicleModel'], triggerBody()?['model'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Service:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['visitorData']?['service'], triggerBody()?['serviceTitle'], triggerBody()?['service'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Service Code:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['visitorData']?['serviceCode'], triggerBody()?['serviceCode'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Price:</strong> <span style="color: #333;">@{if(and(not(empty(triggerBody()?['basePrice'])), not(equals(triggerBody()?['basePrice'], 0))), concat('$', triggerBody()?['basePrice']), if(and(not(empty(triggerBody()?['price'])), not(equals(triggerBody()?['price'], 0))), concat('$', triggerBody()?['price']), '-'))}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Battery Voltage:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['visitorData']?['batteryVoltage'], triggerBody()?['batteryVoltage'], triggerBody()?['selectedVoltage'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Vehicle Type:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['visitorData']?['vehicleType'], triggerBody()?['vehicleType'], '-')}</span></div>
 </td>
 </tr>
 </tbody>
@@ -123,10 +100,10 @@ concat(
 </tr>
 <tr>
 <td style="padding: 8px 0;">
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Current Step:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['currentStep'], '-')} of @{coalesce(body('Parse_JSON')?['totalSteps'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Progress:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['stepProgress'], '0')}%</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Terms Accepted:</strong> <span style="color: #333;">@{if(equals(coalesce(body('Parse_JSON')?['termsAccepted'], false), true), '✅ Yes', '❌ No')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Marketing Consent:</strong> <span style="color: #333;">@{if(equals(coalesce(body('Parse_JSON')?['marketingConsent'], false), true), '✅ Yes', '❌ No')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Current Step:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['currentStep'], '-')} of @{coalesce(triggerBody()?['totalSteps'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Progress:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['stepProgress'], '0')}%</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Terms Accepted:</strong> <span style="color: #333;">@{if(equals(coalesce(triggerBody()?['termsAccepted'], false), true), '✅ Yes', '❌ No')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Marketing Consent:</strong> <span style="color: #333;">@{if(equals(coalesce(triggerBody()?['marketingConsent'], false), true), '✅ Yes', '❌ No')}</span></div>
 </td>
 </tr>
 </tbody>
@@ -142,13 +119,13 @@ concat(
 </tr>
 <tr>
 <td style="padding: 8px 0;">
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Screen Resolution:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['device']?['screenResolution'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Viewport Size:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['device']?['viewportSize'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Language:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['device']?['language'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Timezone:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['device']?['timezone'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Time on Page:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['engagement']?['timeOnPage'], '0')} seconds</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Scroll Depth:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['engagement']?['scrollDepth'], '0')}%</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Total Clicks:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['engagement']?['clicks'], '0')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Screen Resolution:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['device']?['screenResolution'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Viewport Size:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['device']?['viewportSize'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Language:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['device']?['language'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Timezone:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['device']?['timezone'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Time on Page:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['engagement']?['timeOnPage'], '0')} seconds</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Scroll Depth:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['engagement']?['scrollDepth'], '0')}%</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Total Clicks:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['engagement']?['clicks'], '0')}</span></div>
 </td>
 </tr>
 </tbody>
@@ -166,11 +143,11 @@ concat(
 </tr>
 <tr>
 <td style="padding: 8px 0;">
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Entry Page:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['userJourney']?['entryPage'], body('Parse_JSON')?['pageUrl'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Previous Page:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['userJourney']?['previousPage'], body('Parse_JSON')?['pageSource']?['referrer'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Total Pages:</strong> <span style="color: #333;">@{coalesce(string(body('Parse_JSON')?['userJourney']?['totalPages']), '1')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Session Duration:</strong> <span style="color: #333;">@{if(and(not(empty(body('Parse_JSON')?['userJourney']?['sessionDuration'])), not(equals(body('Parse_JSON')?['userJourney']?['sessionDuration'], 0))), concat(div(body('Parse_JSON')?['userJourney']?['sessionDuration'], 60000), ' minutes'), '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Journey Actions:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['eventAction'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Entry Page:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['userJourney']?['entryPage'], triggerBody()?['pageUrl'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Previous Page:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['userJourney']?['previousPage'], triggerBody()?['pageSource']?['referrer'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Total Pages:</strong> <span style="color: #333;">@{coalesce(string(triggerBody()?['userJourney']?['totalPages']), '1')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Session Duration:</strong> <span style="color: #333;">@{if(and(not(empty(triggerBody()?['userJourney']?['sessionDuration'])), not(equals(triggerBody()?['userJourney']?['sessionDuration'], 0))), concat(div(triggerBody()?['userJourney']?['sessionDuration'], 60000), ' minutes'), '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Journey Actions:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['eventAction'], '-')}</span></div>
 </td>
 </tr>
 </tbody>
@@ -187,11 +164,11 @@ concat(
 </tr>
 <tr>
 <td style="padding: 8px 0;">
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Country:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['trackingData']?['location']?['country'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Region:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['trackingData']?['location']?['region'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">City:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['trackingData']?['location']?['city'], '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Coordinates:</strong> <span style="color: #333;">@{if(and(not(empty(body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['latitude'])), not(empty(body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['longitude']))), concat('<a href="https://www.google.com/maps/place/', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['latitude'], ',', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['longitude'], '/@', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['latitude'], ',', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['longitude'], ',17z/data=!3m1!4b1!4m4!3m3!8m2!3d', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['latitude'], '!4d', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['longitude'], '?entry=ttu&g_ep=EgoyMDI1MTAxNC4wIKXMDSoASAFQAw%3D%3D" style="color: #007bff; text-decoration: none;">', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['latitude'], ', ', body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['longitude'], '</a>'), '-')}</span></div>
-<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Accuracy:</strong> <span style="color: #333;">@{coalesce(body('Parse_JSON')?['trackingData']?['location']?['coordinates']?['accuracy'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Country:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['trackingData']?['location']?['country'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Region:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['trackingData']?['location']?['region'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">City:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['trackingData']?['location']?['city'], '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Coordinates:</strong> <span style="color: #333;">@{if(and(not(empty(triggerBody()?['trackingData']?['location']?['coordinates']?['latitude'])), not(empty(triggerBody()?['trackingData']?['location']?['coordinates']?['longitude']))), concat('<a href="https://www.google.com/maps/place/', triggerBody()?['trackingData']?['location']?['coordinates']?['latitude'], ',', triggerBody()?['trackingData']?['location']?['coordinates']?['longitude'], '/@', triggerBody()?['trackingData']?['location']?['coordinates']?['latitude'], ',', triggerBody()?['trackingData']?['location']?['coordinates']?['longitude'], ',17z/data=!3m1!4b1!4m4!3m3!8m2!3d', triggerBody()?['trackingData']?['location']?['coordinates']?['latitude'], '!4d', triggerBody()?['trackingData']?['location']?['coordinates']?['longitude'], '?entry=ttu&g_ep=EgoyMDI1MTAxNC4wIKXMDSoASAFQAw%3D%3D" style="color: #007bff; text-decoration: none;">', triggerBody()?['trackingData']?['location']?['coordinates']?['latitude'], ', ', triggerBody()?['trackingData']?['location']?['coordinates']?['longitude'], '</a>'), '-')}</span></div>
+<div style="padding: 4px 0; font-size: 13px;"><strong style="color: #555;">Accuracy:</strong> <span style="color: #333;">@{coalesce(triggerBody()?['trackingData']?['location']?['coordinates']?['accuracy'], '-')}</span></div>
 </td>
 </tr>
 </tbody>
@@ -200,9 +177,9 @@ concat(
 </tr>
 <tr>
 <td style="padding: 0 15px 15px 15px;">
-<a href="tel:@{coalesce(body('Parse_JSON')?['visitorData']?['phone'], body('Parse_JSON')?['phone'], '0800769000')}" style="display: block; padding: 12px; margin: 5px 0; background-color: #28a745; color: white; text-decoration: none; font-weight: bold; font-size: 14px; border-radius: 5px; text-align: center;">📞 Call Customer</a>
-<a href="mailto:@{coalesce(body('Parse_JSON')?['visitorData']?['email'], body('Parse_JSON')?['email'], 'no-reply@eek.nz')}" style="display: block; padding: 12px; margin: 5px 0; background-color: #17a2b8; color: white; text-decoration: none; font-weight: bold; font-size: 14px; border-radius: 5px; text-align: center;">✉️ Email Customer</a>
-<a href="https://www.carjam.co.nz/car/?plate=@{coalesce(body('Parse_JSON')?['visitorData']?['vehicleRego'], body('Parse_JSON')?['vehicleRego'], 'UNKNOWN')}" style="display: block; padding: 12px; margin: 5px 0; background-color: #6c757d; color: white; text-decoration: none; font-weight: bold; font-size: 14px; border-radius: 5px; text-align: center;">🚗 CarJam Lookup</a>
+<a href="tel:@{coalesce(triggerBody()?['visitorData']?['phone'], triggerBody()?['phone'], '0800769000')}" style="display: block; padding: 12px; margin: 5px 0; background-color: #28a745; color: white; text-decoration: none; font-weight: bold; font-size: 14px; border-radius: 5px; text-align: center;">📞 Call Customer</a>
+<a href="mailto:@{coalesce(triggerBody()?['visitorData']?['email'], triggerBody()?['email'], 'no-reply@eek.nz')}" style="display: block; padding: 12px; margin: 5px 0; background-color: #17a2b8; color: white; text-decoration: none; font-weight: bold; font-size: 14px; border-radius: 5px; text-align: center;">✉️ Email Customer</a>
+<a href="https://www.carjam.co.nz/car/?plate=@{coalesce(triggerBody()?['visitorData']?['vehicleRego'], triggerBody()?['vehicleRego'], 'UNKNOWN')}" style="display: block; padding: 12px; margin: 5px 0; background-color: #6c757d; color: white; text-decoration: none; font-weight: bold; font-size: 14px; border-radius: 5px; text-align: center;">🚗 CarJam Lookup</a>
 </td>
 </tr>
 <tr>
