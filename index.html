@@ -991,7 +991,7 @@ font-src 'self' data:;">
   </ul>
   
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
-    <a class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('jumpstart_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
+    <a id="jumpstart-call-btn" class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('jumpstart_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
       📞 CALL NOW
     </a>
     <button class="more-info-btn" onclick="openMoreModal('jumpstarts')" style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1.1em; cursor: pointer; margin-left: 10px;">
@@ -1015,7 +1015,7 @@ font-src 'self' data:;">
   </ul>
   
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
-    <a class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('repairs_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
+    <a id="repairs-call-btn" class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('repairs_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
       📞 CALL NOW
     </a>
     <button class="more-info-btn" onclick="openMoreModal('repairs')" style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1.1em; cursor: pointer; margin-left: 10px;">
@@ -1038,7 +1038,7 @@ font-src 'self' data:;">
   </ul>
   
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
-    <a class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('inspection_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
+    <a id="inspection-call-btn" class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('inspection_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
       📞 CALL NOW
     </a>
     <button class="more-info-btn" onclick="openMoreModal('inspections')" style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1.1em; cursor: pointer; margin-left: 10px;">
@@ -1061,7 +1061,7 @@ font-src 'self' data:;">
   </ul>
   
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
-    <a class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('fuel_drain_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
+    <a id="fuel-drain-call-btn" class="cta-button normal-hours-btn" href="javascript:void(0)" onclick="openServiceModal(); trackConversion('fuel_drain_call', 'Contact')" style="font-size:1.4em;padding:18px 35px;">
       📞 CALL NOW
     </a>
     <button class="more-info-btn" onclick="openMoreModal('fuel')" style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1.1em; cursor: pointer; margin-left: 10px;">
@@ -1906,7 +1906,32 @@ async function updateHoursDisplay() {
     if (!el) return null;
     if (el.id) return "#" + el.id;
     const withId = el.closest("[id]");
-    return withId ? ("#" + withId.id) : null;
+    if (withId) return "#" + withId.id;
+    
+    // Try to identify the button by its classes and context
+    if (el.classList && el.classList.contains('cta-button')) {
+      return '.cta-button';
+    }
+    if (el.classList && el.classList.contains('normal-hours-btn')) {
+      return '.normal-hours-btn';
+    }
+    
+    return null;
+  }
+
+  function getServiceType(eventAction) {
+    const serviceMap = {
+      'jumpstart_call': 'Jump Start Service',
+      'repairs_call': 'Mobile Mechanical Repairs',
+      'inspection_call': 'Pre-Purchase Inspection',
+      'fuel_drain_call': 'Wrong Fuel Rescue',
+      'emergency_breakdown': 'Emergency Breakdown',
+      'battery_jumpstart': 'Battery Jump Start',
+      'wrong_fuel': 'Wrong Fuel Emergency',
+      'pre_purchase': 'Pre-Purchase Inspection',
+      'post_job': 'Post-Job Support'
+    };
+    return serviceMap[eventAction] || 'General Service';
   }
 
   window.sendCallClick = function(eventAction, eventCategory, anchorEl){
@@ -1920,13 +1945,20 @@ async function updateHoursDisplay() {
       sessionId: sessionId,
       callAttemptId: callAttemptId,
       gclid: gclid,
-      phoneTarget: (anchorEl && anchorEl.getAttribute("href")) || "tel:0800769000",
+      phoneTarget: (anchorEl && anchorEl.getAttribute("href") && anchorEl.getAttribute("href").startsWith("tel:")) 
+        ? anchorEl.getAttribute("href") 
+        : "tel:0800769000",
       button: {
         eventAction: eventAction || "phone_call",
         eventCategory: eventCategory || "Contact",
         serviceType: (typeof getServiceType === "function") ? getServiceType(eventAction) : undefined,
         placement: anchorEl ? closestPlacement(anchorEl) : null,
-        text: anchorEl ? (anchorEl.textContent || "").trim() : null
+        text: anchorEl ? (anchorEl.textContent || "").trim() : null,
+        buttonId: anchorEl ? (anchorEl.id || null) : null,
+        buttonClass: anchorEl ? (anchorEl.className || null) : null,
+        buttonType: anchorEl ? (anchorEl.tagName || null) : null,
+        href: anchorEl ? (anchorEl.getAttribute("href") || null) : null,
+        onclick: anchorEl ? (anchorEl.getAttribute("onclick") || null) : null
       },
       site: {
         domain: location.hostname,
@@ -1986,7 +2018,9 @@ async function updateHoursDisplay() {
   window.trackConversion = function(eventAction, eventCategory){
     try {
       if (eventAction && /call/i.test(eventAction)){
-        sendCallClick(eventAction, eventCategory, window.__eek_last_tel_anchor || null);
+        // Find the button that was clicked by looking for the eventAction in the onclick attribute
+        const clickedButton = document.querySelector(`[onclick*="${eventAction}"]`);
+        sendCallClick(eventAction, eventCategory, clickedButton || window.__eek_last_tel_anchor || null);
       }
     } catch(_) {}
     return _origTrack.apply(this, arguments);
