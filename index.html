@@ -1934,10 +1934,36 @@ async function updateHoursDisplay() {
     return serviceMap[eventAction] || 'General Service';
   }
 
-  window.sendCallClick = function(eventAction, eventCategory, anchorEl){
+  window.sendCallClick = async function(eventAction, eventCategory, anchorEl){
     const callAttemptId = "call_" + Date.now() + "_" + Math.random().toString(36).slice(2,10);
     const sessionId = getOrCreateSessionId();
     const gclid = getAndStoreGCLID();
+    
+    // Get current GCLID state from cached states, with fallback
+    let gclidState = window.eek_states?.gclidState || null;
+    
+    console.log('🔍 GCLID State Debug:', {
+      gclid: gclid,
+      cachedGclidState: window.eek_states?.gclidState,
+      gclidState: gclidState,
+      eekStates: window.eek_states
+    });
+    
+    // If no GCLID state is available, try to fetch it
+    if (gclidState === null && gclid) {
+      console.log('🔄 GCLID state not available, attempting to fetch...');
+      try {
+        const states = await fetchStatesOnce(false);
+        gclidState = states.gclidState;
+        console.log('✅ Fetched GCLID state:', gclidState);
+      } catch (error) {
+        console.warn('⚠️ Could not fetch GCLID state:', error);
+        gclidState = 'Unknown';
+      }
+    } else if (!gclid) {
+      console.log('ℹ️ No GCLID present, setting state to null');
+      gclidState = null;
+    }
     
     const payload = {
       eventType: "call_click",
@@ -1945,6 +1971,7 @@ async function updateHoursDisplay() {
       sessionId: sessionId,
       callAttemptId: callAttemptId,
       gclid: gclid,
+      gclidState: gclidState,
       phoneTarget: (anchorEl && anchorEl.getAttribute("href") && anchorEl.getAttribute("href").startsWith("tel:")) 
         ? anchorEl.getAttribute("href") 
         : "tel:0800769000",
@@ -2015,12 +2042,12 @@ async function updateHoursDisplay() {
   }, true);
 
   const _origTrack = window.trackConversion || function(){};
-  window.trackConversion = function(eventAction, eventCategory){
+  window.trackConversion = async function(eventAction, eventCategory){
     try {
       if (eventAction && /call/i.test(eventAction)){
         // Find the button that was clicked by looking for the eventAction in the onclick attribute
         const clickedButton = document.querySelector(`[onclick*="${eventAction}"]`);
-        sendCallClick(eventAction, eventCategory, clickedButton || window.__eek_last_tel_anchor || null);
+        await sendCallClick(eventAction, eventCategory, clickedButton || window.__eek_last_tel_anchor || null);
       }
     } catch(_) {}
     return _origTrack.apply(this, arguments);
@@ -2261,7 +2288,7 @@ function updateModalButtons() {
 }
 
 // Handle More Info modal action - either call or book based on phone status
-function handleMoreInfoAction(serviceType) {
+async function handleMoreInfoAction(serviceType) {
   // Check if normal hours buttons are visible (indicates phones are on)
   const normalButtons = document.querySelectorAll('.normal-hours-btn');
   const isSystemActive = normalButtons.length > 0 && normalButtons[0].style.display !== 'none';
@@ -2310,7 +2337,7 @@ function handleMoreInfoAction(serviceType) {
     }
     
     // Store call attempt data for return visit tracking
-    sendCallClick('more_info_call_click', 'Service', null);
+    await sendCallClick('more_info_call_click', 'Service', null);
   } else {
     // Phones are off - redirect to booking page
     const serviceSlugMap = {
