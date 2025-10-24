@@ -2034,7 +2034,18 @@ function buildInspectionData(status) {
       name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
       phone: bookingData.phone || '',
       email: bookingData.email || '',
-      location: bookingData.location || bookingData.address || bookingData.city || '',
+      location: bookingData.location || bookingData.address || bookingData.city || '', // String for payment API
+      locationObject: { // Object for email template compatibility
+        city: bookingData.city || bookingData.location || bookingData.address || '',
+        region: geo.region || 'Unknown',
+        country: geo.country || 'New Zealand',
+        address: bookingData.location || bookingData.address || '',
+        coordinates: {
+          latitude: geo.latitude || null,
+          longitude: geo.longitude || null,
+          accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+        }
+      },
       
       // Vehicle information - EXACT field names from payment API
       vehicleRego: bookingData.vehicleRego || '',
@@ -2073,6 +2084,38 @@ function buildInspectionData(status) {
       sessionId: sessionId,
       bookingSource: 'inspection_form',
       formVersion: '1.0'
+    },
+    
+    // visitorData object for email template compatibility
+    visitorData: {
+      // Customer information
+      name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
+      phone: bookingData.phone || '',
+      email: bookingData.email || '',
+      location: { // Object for email template compatibility
+        city: bookingData.city || bookingData.location || bookingData.address || '',
+        region: geo.region || 'Unknown',
+        country: geo.country || 'New Zealand',
+        address: bookingData.location || bookingData.address || '',
+        coordinates: {
+          latitude: geo.latitude || null,
+          longitude: geo.longitude || null,
+          accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+        }
+      },
+      
+      // Vehicle information
+      vehicleRego: bookingData.vehicleRego || '',
+      rego: bookingData.vehicleRego || '', // Template expects both
+      vehicleYear: bookingData.year || '',
+      vehicleMake: bookingData.make || '',
+      vehicleModel: bookingData.model || '',
+      vehicleType: bookingData.vehicleType || 'car',
+      
+      // Service information
+      service: selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive',
+      serviceCode: selectedService.id === 'basic' ? 'INSP_BASIC' : 'INSP_COMP',
+      serviceTitle: selectedService.name
     },
     
     // Enhanced tracking data for complete attribution
