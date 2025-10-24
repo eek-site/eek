@@ -1402,18 +1402,74 @@
           name: canon.name,
           phone: canon.phone,
           email: canon.email,
-          location: canon.location,
+          location: { // Object for email template compatibility
+            city: canon.location || 'Unknown',
+            region: window.CF_GEO?.region || 'Unknown',
+            country: window.CF_GEO?.country || 'New Zealand',
+            countryCode: window.CF_GEO?.countryCode || 'NZ',
+            regionCode: window.CF_GEO?.regionCode || 'Unknown',
+            postalCode: window.CF_GEO?.postalCode || 'Unknown',
+            continent: window.CF_GEO?.continent || 'Oceania',
+            address: canon.location || '',
+            coordinates: {
+              latitude: window.CF_GEO?.latitude || null,
+              longitude: window.CF_GEO?.longitude || null,
+              accuracy: window.CF_GEO?.latitude && window.CF_GEO?.longitude ? 'IP-based' : null
+            },
+            timezone: window.CF_GEO?.timezone || 'Pacific/Auckland',
+            raw: window.CF_GEO || {}
+          },
           vehicleRego: canon.rego,
+          rego: canon.rego, // Template expects both
           vehicleYear: canon.year,
           vehicleMake: canon.make,
           vehicleModel: canon.model,
           vehicleType: canon.vehicleType,
           service: canon.service,
           serviceCode: canon.serviceCode,
+          serviceTitle: canon.serviceTitle
+        },
+        
+        // customerData object for payment API compatibility
+        customerData: {
+          // Basic customer info - EXACT field names from payment API
+          name: canon.name,
+          phone: canon.phone,
+          email: canon.email,
+          location: canon.location || '', // String for payment API
+          locationObject: { // Object for email template compatibility
+            city: canon.location || 'Unknown',
+            region: window.CF_GEO?.region || 'Unknown',
+            country: window.CF_GEO?.country || 'New Zealand',
+            address: canon.location || '',
+            coordinates: {
+              latitude: window.CF_GEO?.latitude || null,
+              longitude: window.CF_GEO?.longitude || null,
+              accuracy: window.CF_GEO?.latitude && window.CF_GEO?.longitude ? 'IP-based' : null
+            }
+          },
+          
+          // Vehicle information - EXACT field names from payment API
+          vehicleRego: canon.rego,
+          vehicleYear: canon.year,
+          vehicleMake: canon.make,
+          vehicleModel: canon.model,
+          vehicleType: canon.vehicleType,
+          
+          // Service information - EXACT field names from payment API
+          service: canon.service,
+          serviceCode: canon.serviceCode,
           serviceTitle: canon.serviceTitle,
-          batteryVoltage: canon.batteryVoltage,
+          details: canon.details,
           price: canon.price,
-          basePrice: canon.price
+          finalPrice: canon.price,
+          calculatedPrice: canon.price,
+          basePrice: canon.price,
+          
+          // Tracking - EXACT field names from payment API
+          sessionId: canon.sessionId,
+          bookingSource: 'payment_confirmation',
+          formVersion: '2.1'
         },
         
         // Root-level journeyData for email template compatibility

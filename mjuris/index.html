@@ -1072,77 +1072,208 @@
       };
       
       return {
+        // === ROOT LEVEL FIELDS (for direct access) ===
+        sessionId: sessionId,
+        gclid: gclid,
+        gclidState: gclid ? 'Active' : 'Inactive',
         eventType: eventType,
         eventAction: eventAction,
         timestamp: new Date().toISOString(),
-        sessionId: sessionId,
-        gclid: gclid,
+        bookingStatus: "page_loaded",
+        currentStep: 1,
+        totalSteps: 1,
+        stepProgress: 100,
+        termsAccepted: false,
+        marketingConsent: false,
         
-        // 🆕 COMPREHENSIVE LOCATION DATA
-        location: {
-          // Basic location info
-          country: geo.country || 'Unknown',
-          countryCode: geo.countryCode || geo.country || 'Unknown',
-          region: geo.region || 'Unknown',
-          regionCode: geo.regionCode || 'Unknown',
-          city: geo.city || 'Unknown',
-          postalCode: geo.postalCode || 'Unknown',
-          continent: geo.continent || 'Unknown',
-          
-          // Coordinates
-          coordinates: {
-            latitude: geo.latitude || null,
-            longitude: geo.longitude || null,
-            accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+        // Customer information (root level for direct access)
+        name: "",
+        phone: "",
+        email: "",
+        
+        // Location as STRING for payment APIs (root level)
+        location: geo.city || 'Unknown',
+        
+        // Vehicle information (root level for direct access)
+        rego: "",
+        vehicleRego: "",
+        year: "",
+        vehicleYear: "",
+        make: "",
+        vehicleMake: "",
+        model: "",
+        vehicleModel: "",
+        vehicleType: "car",
+        
+        // Service information (root level for direct access)
+        service: "",
+        serviceCode: "",
+        serviceTitle: "",
+        price: 0,
+        details: "",
+        
+        // === NESTED OBJECTS (for email templates) ===
+        visitorData: {
+          // Customer information
+          name: "",
+          phone: "",
+          email: "",
+          location: { // Object for email template compatibility
+            city: geo.city || 'Unknown',
+            region: geo.region || 'Unknown',
+            country: geo.country || 'New Zealand',
+            countryCode: geo.countryCode || 'NZ',
+            regionCode: geo.regionCode || 'Unknown',
+            postalCode: geo.postalCode || 'Unknown',
+            continent: geo.continent || 'Oceania',
+            address: '',
+            coordinates: {
+              latitude: geo.latitude || null,
+              longitude: geo.longitude || null,
+              accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+            },
+            timezone: geo.timezone || 'Pacific/Auckland',
+            raw: geo
           },
           
-          // Timezone
-          timezone: geo.timezone || 'Unknown',
+          // Vehicle information
+          vehicleRego: "",
+          rego: "", // Template expects both
+          vehicleYear: "",
+          vehicleMake: "",
+          vehicleModel: "",
+          vehicleType: "car",
           
-          // Raw CF_GEO data for debugging
-          raw: geo
+          // Service information
+          service: "",
+          serviceCode: "",
+          serviceTitle: ""
         },
         
-        // Page context
-        page: {
-          title: document.title,
-          url: window.location.href,
-          path: window.location.pathname,
+        journeyData: {
+          callAttemptId: null,
+          callTimestamp: null,
+          returnTimestamp: null,
+          timeBetweenCallAndReturn: null,
+          source: 'legal_authority_portal'
+        },
+        
+        pageSource: {
+          type: 'direct',
+          detail: 'Direct visit',
           referrer: document.referrer || null,
-          pageType: 'legal_authority_portal'
+          landingPage: window.location.href,
+          entryPoint: 'direct',
+          clickIds: {
+            gclid: gclid,
+            gbraid: null,
+            wbraid: null,
+            msclkid: null,
+            fbclid: null,
+            rdtclid: null
+          }
         },
         
-        // Authority-specific data
+        device: {
+          userAgent: navigator.userAgent,
+          platform: navigator.platform || null,
+          language: navigator.language || null,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          screenResolution: `${window.screen ? window.screen.width : 0}x${window.screen ? window.screen.height : 0}`,
+          viewportSize: `${window.innerWidth}x${window.innerHeight}`,
+          isMobile: /Mobi|Android/i.test(navigator.userAgent),
+          isTablet: /iPad|Android(?=.*\bMobile\b)/i.test(navigator.userAgent)
+        },
+        
+        engagement: {
+          timeOnPage: 0,
+          timeOnSite: 0,
+          pageViews: 1,
+          interactions: 0,
+          scrollDepth: 0,
+          formInteractions: 0,
+          buttonClicks: 0,
+          linkClicks: 0,
+          engagementScore: 0
+        },
+        
+        userJourney: {
+          journeyId: `journey_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          journeyStart: new Date().toISOString(),
+          journeyEnd: new Date().toISOString(),
+          journeyDuration: 0,
+          journeySteps: [],
+          journeyCompleted: false,
+          journeyAbandoned: false,
+          journeyConversion: false,
+          pageHistory: [],
+          totalPages: 1,
+          sessionDuration: 0,
+          entryPage: window.location.href,
+          previousPage: ''
+        },
+        
+        utm: utmData,
+        
+        trackingData: {
+          gclid: gclid,
+          gclidState: gclid ? 'Active' : 'Inactive',
+          utm: utmData,
+          pageSource: {
+            type: 'direct',
+            detail: 'Direct visit',
+            referrer: document.referrer || null,
+            landingPage: window.location.href,
+            entryPoint: 'direct',
+            clickIds: {
+              gclid: gclid,
+              gbraid: null,
+              wbraid: null,
+              msclkid: null,
+              fbclid: null,
+              rdtclid: null
+            }
+          },
+          location: {
+            city: geo.city || 'Unknown',
+            region: geo.region || 'Unknown',
+            country: geo.country || 'New Zealand',
+            countryCode: geo.countryCode || 'NZ',
+            regionCode: geo.regionCode || 'Unknown',
+            postalCode: geo.postalCode || 'Unknown',
+            continent: geo.continent || 'Oceania',
+            address: '',
+            coordinates: {
+              latitude: geo.latitude || null,
+              longitude: geo.longitude || null,
+              accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+            },
+            timezone: geo.timezone || 'Pacific/Auckland',
+            raw: geo
+          },
+          sessionId: sessionId,
+          pageUrl: window.location.href,
+          pagePath: window.location.pathname,
+          pageTitle: document.title,
+          pageType: 'legal_authority_portal',
+          referrer: document.referrer || null,
+          referrerDomain: document.referrer ? new URL(document.referrer).hostname : null,
+          conversionValue: 0,
+          conversionCurrency: 'NZD',
+          conversionType: 'page_view'
+        },
+        
+        // Legacy fields for backward compatibility
         authority: {
           type: authorityType,
           ipCountry: ipCountry,
           verified: false // Would be set to true after verification process
         },
-        
-        // UTM tracking
-        utm: utmData,
-        
-        // Device info
-        device: {
-          userAgent: navigator.userAgent,
-          platform: navigator.platform || null,
-          language: navigator.language || null,
-          mobile: /Mobi|Android/i.test(navigator.userAgent),
-          screen: {
-            width: window.screen ? window.screen.width : null,
-            height: window.screen ? window.screen.height : null,
-            pixelRatio: window.devicePixelRatio || 1
-          }
-        },
-        
-        // Security context
         security: {
           restrictedAccess: true,
           portalType: 'legal_authority',
           accessLogged: true
         },
-        
-        // Source tracking
         source: 'mjuris_portal',
         formVersion: '2.0',
         
