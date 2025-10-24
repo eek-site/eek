@@ -1932,6 +1932,84 @@ function buildInspectionData(status) {
         accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
       }
     },
+    
+    // Root-level visitorData for email template compatibility
+    visitorData: {
+      name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
+      phone: bookingData.phone || '',
+      email: bookingData.email || '',
+      location: bookingData.location || bookingData.address || bookingData.city || '',
+      vehicleRego: bookingData.vehicleRego || '',
+      vehicleYear: bookingData.year || '',
+      vehicleMake: bookingData.make || '',
+      vehicleModel: bookingData.model || '',
+      vehicleType: bookingData.vehicleType || '',
+      service: selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive',
+      serviceCode: selectedService.id === 'basic' ? 'INSP_BASIC' : 'INSP_COMP',
+      serviceTitle: selectedService.name,
+      batteryVoltage: bookingData.batteryVoltage || '',
+      price: totalPrice,
+      basePrice: selectedServicePrice
+    },
+    
+    // Root-level journeyData for email template compatibility
+    journeyData: {
+      callAttemptId: localStorage.getItem('eek_last_call_attempt_id') || null,
+      callTimestamp: localStorage.getItem('eek_last_call_timestamp') || null,
+      returnTimestamp: null,
+      timeBetweenCallAndReturn: null,
+      source: 'inspection_booking'
+    },
+    
+    // Additional fields for email template compatibility
+    gclid: gclid,
+    gclidState: gclid ? 'Active' : 'Inactive',
+    eventType: 'inspection_booking_completed',
+    eventAction: 'inspection_payment_link_created',
+    timestamp: new Date().toISOString(),
+    sessionId: sessionId,
+    bookingStatus: 'inspection_booking_completed',
+    currentStep: 7,
+    totalSteps: 6,
+    stepProgress: 100,
+    termsAccepted: bookingData.termsAccepted || false,
+    marketingConsent: bookingData.marketingConsent || false,
+    
+    // Additional objects for email template compatibility
+    pageSource: trackingData?.pageSource || {
+      type: 'direct',
+      detail: 'Direct visit',
+      referrer: document.referrer || '',
+      utm: utmData,
+      clickIds: {
+        gclid: gclid,
+        fbclid: null,
+        msclkid: null
+      }
+    },
+    device: {
+      userAgent: navigator.userAgent,
+      platform: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+      language: navigator.language || 'en-NZ',
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Pacific/Auckland',
+      screenResolution: `${window.screen?.width || 0}x${window.screen?.height || 0}`,
+      viewportSize: `${window.innerWidth || 0}x${window.innerHeight || 0}`
+    },
+    engagement: {
+      timeOnPage: Math.round((Date.now() - (window.pageLoadTime || Date.now())) / 1000),
+      scrollDepth: 0,
+      clicks: 0,
+      formInteractions: 0,
+      buttonClicks: 0
+    },
+    userJourney: {
+      pageHistory: JSON.parse(localStorage.getItem('eek_user_journey') || '[]'),
+      totalPages: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').length || 1,
+      sessionDuration: Date.now() - (window.sessionStartTime || Date.now()),
+      entryPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]')[0]?.url || window.location.href,
+      previousPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').slice(-2, -1)[0]?.url || ''
+    },
+    utm: utmData,
     price: totalPrice,
     finalPrice: totalPrice,
     calculatedPrice: totalPrice,
@@ -2046,7 +2124,23 @@ function buildInspectionData(status) {
         entryPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]')[0]?.url || window.location.href,
         previousPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').slice(-2, -1)[0]?.url || ''
       },
-      visitorData: getVisitorData(),
+      visitorData: {
+        name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
+        phone: bookingData.phone || '',
+        email: bookingData.email || '',
+        location: bookingData.location || bookingData.address || bookingData.city || '',
+        vehicleRego: bookingData.vehicleRego || '',
+        vehicleYear: bookingData.year || '',
+        vehicleMake: bookingData.make || '',
+        vehicleModel: bookingData.model || '',
+        vehicleType: bookingData.vehicleType || '',
+        service: selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive',
+        serviceCode: selectedService.id === 'basic' ? 'INSP_BASIC' : 'INSP_COMP',
+        serviceTitle: selectedService.name,
+        batteryVoltage: bookingData.batteryVoltage || '',
+        price: totalPrice,
+        basePrice: selectedServicePrice
+      },
       journeyData: {
         callAttemptId: localStorage.getItem('eek_last_call_attempt_id') || null,
         callTimestamp: localStorage.getItem('eek_last_call_timestamp') || null,
