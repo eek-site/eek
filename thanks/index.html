@@ -1355,14 +1355,124 @@
       const bookingId = guardCheck.bookingId;
       console.log(`✅ Proceeding with submission for ${bookingId}`);
 
-      // Prepare payload for payment confirmed webhook
+      // Prepare payload for payment confirmed webhook with proper nested structure
       const payload = {
-        ...canon,
-        idempotencyKey: bookingId,
-        paymentConfirmedAt: new Date().toISOString(),
-        paymentStatus: 'confirmed',
-        pageLoadedAt: new Date().toISOString(),
-        submissionAttempt: 1,
+        // Root-level fields for email template compatibility
+        name: canon.name,
+        phone: canon.phone,
+        email: canon.email,
+        location: canon.location,
+        rego: canon.rego,
+        year: canon.year,
+        make: canon.make,
+        model: canon.model,
+        vehicleType: canon.vehicleType,
+        service: canon.service,
+        serviceCode: canon.serviceCode,
+        serviceTitle: canon.serviceTitle,
+        price: canon.price,
+        basePrice: canon.price,
+        finalPrice: canon.price,
+        calculatedPrice: canon.price,
+        batteryVoltage: canon.batteryVoltage,
+        sellerName: canon.sellerName,
+        sellerPhone: canon.sellerPhone,
+        details: canon.details,
+        scheduledDate: canon.scheduledDate,
+        scheduledTime: canon.timeWindow,
+        urgencyLevel: canon.urgencyLevel,
+        emergencyType: canon.emergencyType,
+        quoteReference: canon.quoteReference,
+        isWinzService: canon.isWinz === 'true',
+        sessionId: canon.sessionId,
+        gclid: canon.gclid,
+        gclidState: (canon.gclid || localStorage.getItem("eek_gclid")) ? 'Active' : 'Inactive',
+        eventType: 'payment_confirmed',
+        eventAction: 'payment_confirmed',
+        timestamp: new Date().toISOString(),
+        bookingStatus: 'payment_confirmed',
+        currentStep: 8,
+        totalSteps: 8,
+        stepProgress: 100,
+        termsAccepted: true,
+        marketingConsent: false,
+        
+        // Root-level visitorData for email template compatibility
+        visitorData: {
+          name: canon.name,
+          phone: canon.phone,
+          email: canon.email,
+          location: canon.location,
+          vehicleRego: canon.rego,
+          vehicleYear: canon.year,
+          vehicleMake: canon.make,
+          vehicleModel: canon.model,
+          vehicleType: canon.vehicleType,
+          service: canon.service,
+          serviceCode: canon.serviceCode,
+          serviceTitle: canon.serviceTitle,
+          batteryVoltage: canon.batteryVoltage,
+          price: canon.price,
+          basePrice: canon.price
+        },
+        
+        // Root-level journeyData for email template compatibility
+        journeyData: {
+          callAttemptId: localStorage.getItem('eek_last_call_attempt_id') || null,
+          callTimestamp: localStorage.getItem('eek_last_call_timestamp') || null,
+          returnTimestamp: null,
+          timeBetweenCallAndReturn: null,
+          source: 'payment_confirmation'
+        },
+        
+        // Additional objects for email template compatibility
+        pageSource: {
+          type: 'direct',
+          detail: 'Direct visit',
+          referrer: document.referrer || '',
+          utm: {
+            source: canon.utm_source || localStorage.getItem("eek_utm_source"),
+            medium: canon.utm_medium || localStorage.getItem("eek_utm_medium"),
+            campaign: canon.utm_campaign || localStorage.getItem("eek_utm_campaign"),
+            term: canon.utm_term || localStorage.getItem("eek_utm_term"),
+            content: canon.utm_content || localStorage.getItem("eek_utm_content")
+          },
+          clickIds: {
+            gclid: canon.gclid || localStorage.getItem("eek_gclid"),
+            fbclid: null,
+            msclkid: null
+          }
+        },
+        device: {
+          userAgent: navigator.userAgent,
+          platform: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+          language: navigator.language || 'en-NZ',
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Pacific/Auckland',
+          screenResolution: `${window.screen?.width || 0}x${window.screen?.height || 0}`,
+          viewportSize: `${window.innerWidth || 0}x${window.innerHeight || 0}`
+        },
+        engagement: {
+          timeOnPage: Math.round((Date.now() - (window.pageLoadTime || Date.now())) / 1000),
+          scrollDepth: 0,
+          clicks: 0,
+          formInteractions: 0,
+          buttonClicks: 0
+        },
+        userJourney: {
+          pageHistory: JSON.parse(localStorage.getItem('eek_user_journey') || '[]'),
+          totalPages: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').length || 1,
+          sessionDuration: Date.now() - (window.sessionStartTime || Date.now()),
+          entryPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]')[0]?.url || window.location.href,
+          previousPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').slice(-2, -1)[0]?.url || ''
+        },
+        utm: {
+          source: canon.utm_source || localStorage.getItem("eek_utm_source"),
+          medium: canon.utm_medium || localStorage.getItem("eek_utm_medium"),
+          campaign: canon.utm_campaign || localStorage.getItem("eek_utm_campaign"),
+          term: canon.utm_term || localStorage.getItem("eek_utm_term"),
+          content: canon.utm_content || localStorage.getItem("eek_utm_content"),
+          gclid: canon.gclid || localStorage.getItem("eek_gclid")
+        },
         
         // Enhanced tracking data for complete attribution
         trackingData: {
@@ -1440,28 +1550,26 @@
             serviceCode: canon.serviceCode,
             serviceTitle: canon.serviceTitle,
             price: canon.price,
-            urgencyLevel: canon.urgencyLevel,
-            emergencyType: canon.emergencyType,
-            quoteReference: canon.quoteReference,
-            isWinzService: canon.isWinz === 'true'
+            basePrice: canon.price
           },
           journeyData: {
             callAttemptId: localStorage.getItem('eek_last_call_attempt_id') || null,
             callTimestamp: localStorage.getItem('eek_last_call_timestamp') || null,
-            returnTimestamp: new Date().toISOString(),
-            timeBetweenCallAndReturn: (() => {
-              const callTimestamp = localStorage.getItem('eek_last_call_timestamp');
-              if (callTimestamp) {
-                return Date.now() - new Date(callTimestamp).getTime();
-              }
-              return null;
-            })(),
+            returnTimestamp: null,
+            timeBetweenCallAndReturn: null,
             source: 'payment_confirmation'
           },
           eventType: 'payment_confirmed',
-          eventAction: 'payment_confirmation_webhook',
+          eventAction: 'payment_confirmed',
           timestamp: new Date().toISOString()
-        }
+        },
+        
+        // Additional fields for webhook functionality
+        idempotencyKey: bookingId,
+        paymentConfirmedAt: new Date().toISOString(),
+        paymentStatus: 'confirmed',
+        pageLoadedAt: new Date().toISOString(),
+        submissionAttempt: 1
       };
 
       const maxRetries = 3;
