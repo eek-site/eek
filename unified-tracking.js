@@ -1037,7 +1037,17 @@ class UnifiedTrackingSystem {
                 : this.trackingData[this.STANDARD_FIELDS.fullName] || '',
             phone: this.trackingData[this.STANDARD_FIELDS.phone] || '',
             email: this.trackingData[this.STANDARD_FIELDS.email] || '',
-            location: this.trackingData[this.STANDARD_FIELDS.address] || this.trackingData[this.STANDARD_FIELDS.city] || '',
+            location: {
+                city: this.trackingData[this.STANDARD_FIELDS.address] || this.trackingData[this.STANDARD_FIELDS.city] || '',
+                region: this.trackingData.location?.region || 'Unknown',
+                country: this.trackingData.location?.country || 'New Zealand',
+                address: this.trackingData[this.STANDARD_FIELDS.address] || '',
+                coordinates: {
+                    latitude: this.trackingData.location?.coordinates?.latitude || null,
+                    longitude: this.trackingData.location?.coordinates?.longitude || null,
+                    accuracy: this.trackingData.location?.coordinates?.accuracy || null
+                }
+            },
             
             // Vehicle information - EXACT field names from template
             vehicleRego: this.trackingData[this.STANDARD_FIELDS.vehicleRego] || '',
