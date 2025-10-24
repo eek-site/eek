@@ -14,11 +14,11 @@
 
   <!-- Security Headers -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self';
-script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net https://widget.reviewability.com https://static.cloudflareinsights.com;
-style-src 'self' 'unsafe-inline' https://widget.reviewability.com;
-img-src 'self' data: https: https://app.revu.cloud https://widget.reviewability.com;
-connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://app.revu.cloud https://widget.reviewability.com https://www.eek.nz https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com https://static.cloudflareinsights.com;
-frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com https://app.revu.cloud https://widget.reviewability.com;
+script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net https://static.cloudflareinsights.com;
+style-src 'self' 'unsafe-inline';
+img-src 'self' data: https:;
+connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://www.eek.nz https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com https://static.cloudflareinsights.com;
+frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;
 font-src 'self' data:;">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
@@ -108,6 +108,12 @@ font-src 'self' data:;">
   
   <!-- Centralized Footer Management -->
   <script src="/footer-new.js?v=20251020.7"></script>
+  
+  <!-- Google Reviews Widget Configuration -->
+  <script src="/reviews-config.js?v=20250120.1"></script>
+  
+  <!-- Google Reviews Widget -->
+  <script src="/google-reviews-widget.js?v=20250120.1"></script>
 
   <script type="application/ld+json">
   {
@@ -1075,9 +1081,8 @@ font-src 'self' data:;">
   <h2>⭐ What Customers Say</h2>
   <p>Real, verified reviews from clients across New Zealand.</p>
   
-  <div data-bid="157676" data-url="https://app.revu.cloud" data-aid="23788">
-    <script src="https://widget.reviewability.com/js/widgetAdv.min.js" async></script>
-  </div>
+  <!-- Custom Google Reviews Widget -->
+  <div id="reviews-widget-container"></div>
 </div>
 
 <a id="stripePaymentSticky" class="sticky-payment" href="#" style="display: none;">💳 Make Payment</a>
