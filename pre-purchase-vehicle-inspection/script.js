@@ -1049,7 +1049,17 @@ async function completeBooking() {
     name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
     phone: bookingData.phone || '',
     email: bookingData.email || '',
-    location: bookingData.location || bookingData.address || '',
+    location: {
+      city: bookingData.city || bookingData.location || bookingData.address || '',
+      region: geo.region || 'Unknown',
+      country: geo.country || 'New Zealand',
+      address: bookingData.location || bookingData.address || '',
+      coordinates: {
+        latitude: geo.latitude || null,
+        longitude: geo.longitude || null,
+        accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+      }
+    },
     
     // Service information
     service: selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive',
@@ -1511,7 +1521,19 @@ function buildStepData(status) {
     name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
     phone: bookingData.phone || '',
     email: bookingData.email || '',
-    location: bookingData.location || bookingData.address || bookingData.city || '',
+    
+    // Location object for email template compatibility
+    location: {
+      city: bookingData.city || bookingData.location || bookingData.address || '',
+      region: geo.region || 'Unknown',
+      country: geo.country || 'New Zealand',
+      address: bookingData.location || bookingData.address || '',
+      coordinates: {
+        latitude: geo.latitude || null,
+        longitude: geo.longitude || null,
+        accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+      }
+    },
     
     // Service information - EXACT field names from template
     service: selectedService.id === 'basic' ? 'inspection_basic' : 'inspection_comprehensive',
@@ -1899,7 +1921,17 @@ function buildInspectionData(status) {
     name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
     phone: bookingData.phone || '',
     email: bookingData.email || '',
-    location: bookingData.location || bookingData.address || bookingData.city || '',
+    location: {
+      city: bookingData.city || bookingData.location || bookingData.address || '',
+      region: geo.region || 'Unknown',
+      country: geo.country || 'New Zealand',
+      address: bookingData.location || bookingData.address || '',
+      coordinates: {
+        latitude: geo.latitude || null,
+        longitude: geo.longitude || null,
+        accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+      }
+    },
     price: totalPrice,
     finalPrice: totalPrice,
     calculatedPrice: totalPrice,
@@ -1924,7 +1956,17 @@ function buildInspectionData(status) {
       name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
       phone: bookingData.phone || '',
       email: bookingData.email || '',
-      location: bookingData.location || bookingData.address || bookingData.city || '',
+      location: {
+        city: bookingData.city || bookingData.location || bookingData.address || '',
+        region: geo.region || 'Unknown',
+        country: geo.country || 'New Zealand',
+        address: bookingData.location || bookingData.address || '',
+        coordinates: {
+          latitude: geo.latitude || null,
+          longitude: geo.longitude || null,
+          accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+        }
+      },
       
       // Vehicle information - EXACT field names from payment API
       vehicleRego: bookingData.vehicleRego || '',
