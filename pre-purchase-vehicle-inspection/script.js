@@ -1,6 +1,6 @@
 /* Eek Mechanical - Pre Purchase Inspection JavaScript */
 /* Clean, Mobile-First Booking System */
-/* Cache busting: v20251020.7 */
+/* Cache busting: v20250124.1 - DATA STRUCTURE FIX */
 
 // Global variables
 let currentStep = 1; // Start at step 1, show service selection with fixed price
@@ -325,7 +325,7 @@ window.testModal = function() {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.17 - DATA STRUCTURE FIX 🚀🚀🚀');
+  console.log('🚀🚀🚀 PRE-PURCHASE INSPECTION SCRIPT v3.18 - DATA STRUCTURE FIX + CACHE BUST 🚀🚀🚀');
   console.log('💰 FIXED PRICE - $299 Pre Purchase Vehicle Inspection');
   console.log('🎨 MATCHING STYLES - Updated buttons to match site color scheme');
   console.log('🔄 STREAMLINED - Vehicle type selection moved to Step 1, removed Step 6');
