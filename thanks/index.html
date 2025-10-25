@@ -953,6 +953,39 @@
       return Object.keys(trackingData).length > 0 ? trackingData : null;
     }
 
+    // === HELPER FUNCTION - Convert empty strings to null ===
+    function normalizeValue(value) {
+      // If value is undefined, null, or empty string, return null
+      if (value === undefined || value === null || value === '') {
+        return null;
+      }
+      // If it's a string with only whitespace, return null
+      if (typeof value === 'string' && value.trim() === '') {
+        return null;
+      }
+      // Otherwise return the value as-is
+      return value;
+    }
+
+    // === HELPER FUNCTION - Normalize entire object ===
+    function normalizeObject(obj) {
+      if (!obj || typeof obj !== 'object') return obj;
+      
+      const normalized = {};
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          const value = obj[key];
+          if (value && typeof value === 'object' && !Array.isArray(value)) {
+            // Recursively normalize nested objects
+            normalized[key] = normalizeObject(value);
+          } else {
+            normalized[key] = normalizeValue(value);
+          }
+        }
+      }
+      return normalized;
+    }
+
     // Get session ID with fallback creation
     function getSessionId(){
       let sessionId = localStorage.getItem("eek_session_id");
@@ -998,7 +1031,7 @@
       
       for (const [k,v] of params){
         if (k !== 'd' && k !== 'bookingId'){ 
-          data[k] = decodeURIComponent(v);
+          data[k] = normalizeValue(decodeURIComponent(v));
         }
       }
       
@@ -1358,34 +1391,34 @@
       // Prepare payload for payment confirmed webhook with proper nested structure
       const payload = {
         // Root-level fields for email template compatibility
-        name: canon.name,
-        phone: canon.phone,
-        email: canon.email,
-        location: canon.location,
-        rego: canon.rego,
-        year: canon.year,
-        make: canon.make,
-        model: canon.model,
-        vehicleType: canon.vehicleType,
-        service: canon.service,
-        serviceCode: canon.serviceCode,
-        serviceTitle: canon.serviceTitle,
-        price: canon.price,
+        name: normalizeValue(canon.name),
+        phone: normalizeValue(canon.phone),
+        email: normalizeValue(canon.email),
+        location: normalizeValue(canon.location),
+        rego: normalizeValue(canon.rego),
+        year: normalizeValue(canon.year),
+        make: normalizeValue(canon.make),
+        model: normalizeValue(canon.model),
+        vehicleType: normalizeValue(canon.vehicleType),
+        service: normalizeValue(canon.service),
+        serviceCode: normalizeValue(canon.serviceCode),
+        serviceTitle: normalizeValue(canon.serviceTitle),
+        price: normalizeValue(canon.price),
         basePrice: canon.price,
         finalPrice: canon.price,
         calculatedPrice: canon.price,
-        batteryVoltage: canon.batteryVoltage,
-        sellerName: canon.sellerName,
-        sellerPhone: canon.sellerPhone,
-        details: canon.details,
-        scheduledDate: canon.scheduledDate,
-        scheduledTime: canon.timeWindow,
-        urgencyLevel: canon.urgencyLevel,
-        emergencyType: canon.emergencyType,
-        quoteReference: canon.quoteReference,
+        batteryVoltage: normalizeValue(canon.batteryVoltage),
+        sellerName: normalizeValue(canon.sellerName),
+        sellerPhone: normalizeValue(canon.sellerPhone),
+        details: normalizeValue(canon.details),
+        scheduledDate: normalizeValue(canon.scheduledDate),
+        scheduledTime: normalizeValue(canon.timeWindow),
+        urgencyLevel: normalizeValue(canon.urgencyLevel),
+        emergencyType: normalizeValue(canon.emergencyType),
+        quoteReference: normalizeValue(canon.quoteReference),
         isWinzService: canon.isWinz === 'true',
-        sessionId: canon.sessionId,
-        gclid: canon.gclid,
+        sessionId: normalizeValue(canon.sessionId),
+        gclid: normalizeValue(canon.gclid),
         gclidState: (canon.gclid || localStorage.getItem("eek_gclid")) ? 'Active' : 'Inactive',
         eventType: 'payment_confirmed',
         eventAction: 'payment_confirmed',
@@ -1399,9 +1432,9 @@
         
         // Root-level visitorData for email template compatibility
         visitorData: {
-          name: canon.name,
-          phone: canon.phone,
-          email: canon.email,
+          name: normalizeValue(canon.name),
+          phone: normalizeValue(canon.phone),
+          email: normalizeValue(canon.email),
           location: { // Object for email template compatibility
             city: canon.location || 'Unknown',
             region: window.CF_GEO?.region || 'Unknown',
@@ -1419,23 +1452,23 @@
             timezone: window.CF_GEO?.timezone || 'Pacific/Auckland',
             raw: window.CF_GEO || {}
           },
-          vehicleRego: canon.rego,
-          rego: canon.rego, // Template expects both
-          vehicleYear: canon.year,
-          vehicleMake: canon.make,
-          vehicleModel: canon.model,
-          vehicleType: canon.vehicleType,
-          service: canon.service,
-          serviceCode: canon.serviceCode,
+          vehicleRego: normalizeValue(canon.rego),
+          rego: normalizeValue(canon.rego), // Template expects both
+          vehicleYear: normalizeValue(canon.year),
+          vehicleMake: normalizeValue(canon.make),
+          vehicleModel: normalizeValue(canon.model),
+          vehicleType: normalizeValue(canon.vehicleType),
+          service: normalizeValue(canon.service),
+          serviceCode: normalizeValue(canon.serviceCode),
           serviceTitle: canon.serviceTitle
         },
         
         // customerData object for payment API compatibility
         customerData: {
           // Basic customer info - EXACT field names from payment API
-          name: canon.name,
-          phone: canon.phone,
-          email: canon.email,
+          name: normalizeValue(canon.name),
+          phone: normalizeValue(canon.phone),
+          email: normalizeValue(canon.email),
           location: canon.location || '', // String for payment API
           locationObject: { // Object for email template compatibility
             city: canon.location || 'Unknown',
@@ -1450,24 +1483,24 @@
           },
           
           // Vehicle information - EXACT field names from payment API
-          vehicleRego: canon.rego,
-          vehicleYear: canon.year,
-          vehicleMake: canon.make,
-          vehicleModel: canon.model,
-          vehicleType: canon.vehicleType,
+          vehicleRego: normalizeValue(canon.rego),
+          vehicleYear: normalizeValue(canon.year),
+          vehicleMake: normalizeValue(canon.make),
+          vehicleModel: normalizeValue(canon.model),
+          vehicleType: normalizeValue(canon.vehicleType),
           
           // Service information - EXACT field names from payment API
-          service: canon.service,
-          serviceCode: canon.serviceCode,
-          serviceTitle: canon.serviceTitle,
-          details: canon.details,
-          price: canon.price,
+          service: normalizeValue(canon.service),
+          serviceCode: normalizeValue(canon.serviceCode),
+          serviceTitle: normalizeValue(canon.serviceTitle),
+          details: normalizeValue(canon.details),
+          price: normalizeValue(canon.price),
           finalPrice: canon.price,
           calculatedPrice: canon.price,
           basePrice: canon.price,
           
           // Tracking - EXACT field names from payment API
-          sessionId: canon.sessionId,
+          sessionId: normalizeValue(canon.sessionId),
           bookingSource: 'payment_confirmation',
           formVersion: '2.1'
         },
@@ -1592,20 +1625,20 @@
             previousPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').slice(-2, -1)[0]?.url || ''
           },
           visitorData: {
-            name: canon.name,
-            phone: canon.phone,
-            email: canon.email,
-            location: canon.location,
-            vehicleRego: canon.rego,
-            vehicleYear: canon.year,
-            vehicleMake: canon.make,
-            vehicleModel: canon.model,
-            vehicleType: canon.vehicleType,
-            batteryVoltage: canon.batteryVoltage,
-            service: canon.service,
-            serviceCode: canon.serviceCode,
-            serviceTitle: canon.serviceTitle,
-            price: canon.price,
+            name: normalizeValue(canon.name),
+            phone: normalizeValue(canon.phone),
+            email: normalizeValue(canon.email),
+            location: normalizeValue(canon.location),
+            vehicleRego: normalizeValue(canon.rego),
+            vehicleYear: normalizeValue(canon.year),
+            vehicleMake: normalizeValue(canon.make),
+            vehicleModel: normalizeValue(canon.model),
+            vehicleType: normalizeValue(canon.vehicleType),
+            batteryVoltage: normalizeValue(canon.batteryVoltage),
+            service: normalizeValue(canon.service),
+            serviceCode: normalizeValue(canon.serviceCode),
+            serviceTitle: normalizeValue(canon.serviceTitle),
+            price: normalizeValue(canon.price),
             basePrice: canon.price
           },
           journeyData: {
@@ -1789,7 +1822,7 @@
       const price = parseFloat(canon.price) || 0;
       
       const conversionData = {
-        gclid: canon.gclid,
+        gclid: normalizeValue(canon.gclid),
         session_id: canon.sessionId,
         utm_source: canon.utm_source,
         utm_medium: canon.utm_medium,
@@ -1803,7 +1836,7 @@
             value: price || 299, 
             lead_source:'WINZ Quote', 
             service_type: canon.emergencyType || 'unknown',
-            gclid: canon.gclid,
+            gclid: normalizeValue(canon.gclid),
             session_id: canon.sessionId
           });
         }else if (price > 0){
@@ -1818,7 +1851,7 @@
               quantity:1, 
               item_category: canon.service || 'service' 
             }],
-            gclid: canon.gclid,
+            gclid: normalizeValue(canon.gclid),
             session_id: canon.sessionId
           });
           
