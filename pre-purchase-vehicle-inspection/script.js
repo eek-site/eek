@@ -2035,17 +2035,6 @@ function buildInspectionData(status) {
       phone: bookingData.phone || '',
       email: bookingData.email || '',
       location: bookingData.location || bookingData.address || bookingData.city || '', // String for payment API
-      locationObject: { // Object for email template compatibility
-        city: bookingData.city || bookingData.location || bookingData.address || '',
-        region: geo.region || 'Unknown',
-        country: geo.country || 'New Zealand',
-        address: bookingData.location || bookingData.address || '',
-        coordinates: {
-          latitude: geo.latitude || null,
-          longitude: geo.longitude || null,
-          accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
-        }
-      },
       
       // Vehicle information - EXACT field names from payment API
       vehicleRego: bookingData.vehicleRego || '',

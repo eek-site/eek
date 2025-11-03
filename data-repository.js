@@ -109,7 +109,18 @@ class EekDataRepository {
             name: 'string',
             phone: 'string',
             email: 'string',
-            location: 'string', // For payment API compatibility
+            // Root-level location object for email template compatibility
+            location: {
+                city: 'string',
+                region: 'string',
+                country: 'string',
+                address: 'string',
+                coordinates: {
+                    latitude: 'number|null',
+                    longitude: 'number|null',
+                    accuracy: 'string|null'
+                }
+            },
             
             // Vehicle Information (Root Level)
             rego: 'string',
@@ -135,18 +146,7 @@ class EekDataRepository {
                 name: 'string',
                 phone: 'string',
                 email: 'string',
-                location: 'string', // String for payment API
-                locationObject: { // Object for email templates
-                    city: 'string',
-                    region: 'string',
-                    country: 'string',
-                    address: 'string',
-                    coordinates: {
-                        latitude: 'number|null',
-                        longitude: 'number|null',
-                        accuracy: 'string|null'
-                    }
-                },
+                location: 'string', // String for payment API (matches triggerBody structure)
                 
                 // Vehicle Information
                 vehicleRego: 'string',
@@ -422,14 +422,22 @@ class EekDataRepository {
 
         // Validate nested objects
         if (type === 'payment') {
+            // Validate root-level location object (for email template compatibility)
+            if (!data.location || typeof data.location !== 'object') {
+                warnings.push('Missing recommended field: root-level location object (for email template compatibility)');
+            } else {
+                if (!data.location.country) {
+                    warnings.push('Root-level location object missing country field');
+                }
+            }
+
             if (!data.customerData) {
                 errors.push('Missing required object: customerData');
             } else {
                 if (!data.customerData.location) {
-                    errors.push('Missing required field: customerData.location');
-                }
-                if (!data.customerData.locationObject) {
-                    warnings.push('Missing recommended field: customerData.locationObject');
+                    errors.push('Missing required field: customerData.location (must be string for payment API)');
+                } else if (typeof data.customerData.location !== 'string') {
+                    errors.push('customerData.location must be a string (for payment API compatibility)');
                 }
             }
 
@@ -437,7 +445,7 @@ class EekDataRepository {
                 warnings.push('Missing recommended object: visitorData');
             } else {
                 if (!data.visitorData.location || typeof data.visitorData.location !== 'object') {
-                    errors.push('visitorData.location must be an object for email template compatibility');
+                    warnings.push('visitorData.location should be an object for email template compatibility');
                 }
             }
         }

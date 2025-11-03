@@ -1394,7 +1394,18 @@
         name: normalizeValue(canon.name),
         phone: normalizeValue(canon.phone),
         email: normalizeValue(canon.email),
-        location: normalizeValue(canon.location),
+        // Root-level location object for email template compatibility
+        location: {
+          city: canon.location || 'Unknown',
+          region: window.CF_GEO?.region || 'Unknown',
+          country: window.CF_GEO?.country || 'New Zealand',
+          address: canon.location || '',
+          coordinates: {
+            latitude: window.CF_GEO?.latitude || null,
+            longitude: window.CF_GEO?.longitude || null,
+            accuracy: window.CF_GEO?.latitude && window.CF_GEO?.longitude ? 'IP-based' : null
+          }
+        },
         rego: normalizeValue(canon.rego),
         year: normalizeValue(canon.year),
         make: normalizeValue(canon.make),
@@ -1470,17 +1481,6 @@
           phone: normalizeValue(canon.phone),
           email: normalizeValue(canon.email),
           location: canon.location || '', // String for payment API
-          locationObject: { // Object for email template compatibility
-            city: canon.location || 'Unknown',
-            region: window.CF_GEO?.region || 'Unknown',
-            country: window.CF_GEO?.country || 'New Zealand',
-            address: canon.location || '',
-            coordinates: {
-              latitude: window.CF_GEO?.latitude || null,
-              longitude: window.CF_GEO?.longitude || null,
-              accuracy: window.CF_GEO?.latitude && window.CF_GEO?.longitude ? 'IP-based' : null
-            }
-          },
           
           // Vehicle information - EXACT field names from payment API
           vehicleRego: normalizeValue(canon.rego),

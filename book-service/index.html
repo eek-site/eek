@@ -1446,7 +1446,18 @@ async function generatePaymentLink(){
     name: customerName,
     phone: phone,
     email: email,
-    location: location,
+    // Root-level location object for email template compatibility
+    location: {
+      city: location || 'Unknown',
+      region: geo?.region || 'Unknown',
+      country: geo?.country || 'New Zealand',
+      address: location || '',
+      coordinates: {
+        latitude: geo?.latitude || null,
+        longitude: geo?.longitude || null,
+        accuracy: geo?.latitude && geo?.longitude ? 'IP-based' : null
+      }
+    },
     price: total,
     finalPrice: total,
     calculatedPrice: total,
