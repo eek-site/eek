@@ -1,0 +1,188 @@
+<!-- Fixed HTML Email Template for Power Automate -->
+<!-- Copy this entire template into your Power Automate Send an Email action -->
+
+<!-- Subject Line -->
+🆕 @{coalesce(triggerBody()?['body']?['serviceCode'], triggerBody()?['serviceCode'], triggerBody()?['body']?['trackingData']?['visitorData']?['serviceCode'], triggerBody()?['trackingData']?['visitorData']?['serviceCode'], 'JOB')} - @{trim(coalesce(triggerBody()?['body']?['name'], triggerBody()?['name'], triggerBody()?['body']?['trackingData']?['visitorData']?['name'], triggerBody()?['trackingData']?['visitorData']?['name'], 'Unknown'))} | @{if(empty(coalesce(triggerBody()?['body']?['rego'], triggerBody()?['rego'], triggerBody()?['body']?['trackingData']?['visitorData']?['vehicleRego'], triggerBody()?['trackingData']?['visitorData']?['vehicleRego'])), 'NO-REGO', toUpper(replace(trim(coalesce(triggerBody()?['body']?['rego'], triggerBody()?['rego'], triggerBody()?['body']?['trackingData']?['visitorData']?['vehicleRego'], triggerBody()?['trackingData']?['visitorData']?['vehicleRego'], '')), ' ', '')))} | @{coalesce(triggerBody()?['body']?['urgencyLevel'], triggerBody()?['urgencyLevel'], triggerBody()?['body']?['trackingData']?['visitorData']?['urgencyLevel'], triggerBody()?['trackingData']?['visitorData']?['urgencyLevel'], 'Standard')}
+
+<!-- Preheader -->
+<meta>
+<title>Eek Mobile Mechanical - Payment Confirmed</title>
+<div style="display:none;max-height:0px;overflow:hidden;">
+@{coalesce(triggerBody()?['body']?['name'], triggerBody()?['name'], triggerBody()?['body']?['trackingData']?['visitorData']?['name'], triggerBody()?['trackingData']?['visitorData']?['name'], 'Customer')} booked @{coalesce(triggerBody()?['body']?['serviceTitle'], triggerBody()?['serviceTitle'], triggerBody()?['body']?['trackingData']?['visitorData']?['serviceTitle'], triggerBody()?['trackingData']?['visitorData']?['serviceTitle'], 'Service')} for @{coalesce(triggerBody()?['body']?['year'], triggerBody()?['year'], triggerBody()?['body']?['trackingData']?['visitorData']?['vehicleYear'], triggerBody()?['trackingData']?['visitorData']?['vehicleYear'], '')} @{coalesce(triggerBody()?['body']?['make'], triggerBody()?['make'], triggerBody()?['body']?['trackingData']?['visitorData']?['vehicleMake'], triggerBody()?['trackingData']?['visitorData']?['vehicleMake'], '')} @{coalesce(triggerBody()?['body']?['model'], triggerBody()?['model'], triggerBody()?['body']?['trackingData']?['visitorData']?['vehicleModel'], triggerBody()?['trackingData']?['visitorData']?['vehicleModel'], '')} (@{if(empty(coalesce(triggerBody()?['body']?['rego'], triggerBody()?['rego'], triggerBody()?['body']?['trackingData']?['visitorData']?['vehicleRego'], triggerBody()?['trackingData']?['visitorData']?['vehicleRego'])), 'NO-REGO', toUpper(replace(trim(coalesce(triggerBody()?['body']?['rego'], triggerBody()?['rego'], triggerBody()?['body']?['trackingData']?['visitorData']?['vehicleRego'], triggerBody()?['trackingData']?['visitorData']?['vehicleRego'], '')), ' ', '')))})
+</div>
+
+<!-- Enhanced Tracking Information -->
+@{if(not(equals(coalesce(triggerBody()?['body']?['trackingData'], triggerBody()?['trackingData']), null)), concat('<table cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;"><tbody><tr><td style="padding: 0 20px 20px 20px;"><table cellpadding="0" cellspacing="0" border="0" style="background-color: #e8f5e8; border: 1px solid #a5d6a7; padding: 15px; border-radius: 8px;"><tbody><tr><td style="font-size: 16px; font-weight: bold; color: #333; margin-bottom: 10px; border-bottom: 2px solid #a5d6a7; padding-bottom: 5px;">🎯 Traffic Source & Attribution</td></tr><tr><td style="padding: 8px 0;"><table cellpadding="0" cellspacing="0" border="0" style="width: 100%;"><tbody><tr><td style="font-weight: bold; width: 140px; color: #555; padding: 6px 0;">GCLID:</td><td style="color: #333; padding: 6px 0;">', coalesce(triggerBody()?['body']?['trackingData']?['gclid'], triggerBody()?['trackingData']?['gclid'], 'None'), '</td></tr><tr><td style="font-weight: bold; width: 140px; color: #555; padding: 6px 0;">GCLID State:</td><td style="color: #333; padding: 6px 0;">', coalesce(triggerBody()?['body']?['trackingData']?['gclidState'], triggerBody()?['trackingData']?['gclidState'], 'Unknown'), '</td></tr><tr><td style="font-weight: bold; width: 140px; color: #555; padding: 6px 0;">Page Source:</td><td style="color: #333; padding: 6px 0;">', coalesce(triggerBody()?['body']?['trackingData']?['pageSource']?['type'], triggerBody()?['trackingData']?['pageSource']?['type'], 'Direct'), ' - ', coalesce(triggerBody()?['body']?['trackingData']?['pageSource']?['detail'], triggerBody()?['trackingData']?['pageSource']?['detail'], 'Direct visit'), '</td></tr><tr><td style="font-weight: bold; width: 140px; color: #555; padding: 6px 0;">Campaign:</td><td style="color: #333; padding: 6px 0;">', coalesce(triggerBody()?['body']?['trackingData']?['utm']?['campaign'], triggerBody()?['trackingData']?['utm']?['campaign'], triggerBody()?['body']?['trackingData']?['pageSource']?['utm']?['campaign'], triggerBody()?['trackingData']?['pageSource']?['utm']?['campaign'], 'None'), '</td></tr><tr><td style="font-weight: bold; width: 140px; color: #555; padding: 6px 0;">Keyword:</td><td style="color: #333; padding: 6px 0;">', coalesce(triggerBody()?['body']?['trackingData']?['utm']?['term'], triggerBody()?['trackingData']?['utm']?['term'], triggerBody()?['body']?['trackingData']?['pageSource']?['utm']?['term'], triggerBody()?['trackingData']?['pageSource']?['utm']?['term'], 'None'), '</td></tr><tr><td style="font-weight: bold; width: 140px; color: #555; padding: 6px 0;">Device:</td><td style="color: #333; padding: 6px 0;">', coalesce(triggerBody()?['body']?['trackingData']?['device']?['platform'], triggerBody()?['trackingData']?['device']?['platform'], 'Unknown'), '</td></tr><tr><td style="font-weight: bold; width: 140px; color: #555; padding: 6px 0;">Location:</td><td style="color: #333; padding: 6px 0;">', coalesce(triggerBody()?['body']?['trackingData']?['location']?['city'], triggerBody()?['trackingData']?['location']?['city'], 'Unknown'), ', ', coalesce(triggerBody()?['body']?['trackingData']?['location']?['region'], triggerBody()?['trackingData']?['location']?['region'], 'Unknown'), '</td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table>'), '')}
+
+<!-- Call Correlation -->
+@{if(or(and(not(equals(coalesce(triggerBody()?['body']?['trackingData']?['journeyData']?['callAttemptId'], triggerBody()?['trackingData']?['journeyData']?['callAttemptId']), null)), not(equals(coalesce(triggerBody()?['body']?['trackingData']?['journeyData']?['callAttemptId'], triggerBody()?['trackingData']?['journeyData']?['callAttemptId']), ''))), and(not(equals(coalesce(triggerBody()?['body']?['trackingData']?['journeyData']?['callTimestamp'], triggerBody()?['trackingData']?['journeyData']?['callTimestamp']), null)), not(equals(coalesce(triggerBody()?['body']?['trackingData']?['journeyData']?['callTimestamp'], triggerBody()?['trackingData']?['journeyData']?['callTimestamp']), '')))), concat('<table cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;"><tbody><tr><td style="padding: 0 20px 20px 20px;"><table cellpadding="0" cellspacing="0" border="0" style="background-color: #fff8e1; border: 1px solid #ffcc02; padding: 15px; border-radius: 8px;"><tbody><tr><td style="font-size: 16px; font-weight: bold; color: #333; margin-bottom: 10px; border-bottom: 2px solid #ffcc02; padding-bottom: 5px;">📞 Call Correlation</td></tr><tr><td style="padding: 8px 0;"><table cellpadding="0" cellspacing="0" border="0" style="width: 100%;"><tbody>', if(and(not(equals(coalesce(triggerBody()?['body']?['trackingData']?['journeyData']?['callAttemptId'], triggerBody()?['trackingData']?['journeyData']?['callAttemptId']), null)), not(equals(coalesce(triggerBody()?['body']?['trackingData']?['journeyData']?['callAttemptId'], triggerBody()?['trackingData']?['journeyData']?['callAttemptId']), ''))), concat('<tr><td style="font-weight: bold; width: 140px; color: #555; padding: 6px 0;">Call Attempt ID:</td><td style="color: #333; padding: 6px 0;">', coalesce(triggerBody()?['body']?['trackingData']?['journeyData']?['callAttemptId'], triggerBody()?['trackingData']?['journeyData']?['callAttemptId']), '</td></tr>'), ''), if(and(not(equals(coalesce(triggerBody()?['body']?['trackingData']?['journeyData']?['callTimestamp'], triggerBody()?['trackingData']?['journeyData']?['callTimestamp']), null)), not(equals(coalesce(triggerBody()?['body']?['trackingData']?['journeyData']?['callTimestamp'], triggerBody()?['trackingData']?['journeyData']?['callTimestamp']), ''))), concat('<tr><td style="font-weight: bold; width: 140px; color: #555; padding: 6px 0;">Call Timestamp:</td><td style="color: #333; padding: 6px 0;">', formatDateTime(coalesce(triggerBody()?['body']?['trackingData']?['journeyData']?['callTimestamp'], triggerBody()?['trackingData']?['journeyData']?['callTimestamp']), 'dd/MM/yyyy HH:mm'), '</td></tr>'), ''), '</tbody></table></td></tr></tbody></table></td></tr></tbody></table>'), '')}
+
+<!-- Visitor Journey -->
+@{if(not(equals(coalesce(triggerBody()?['body']?['trackingData']?['userJourney'], triggerBody()?['trackingData']?['userJourney']), null)), concat('<table cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;"><tbody><tr><td style="padding: 0 20px 20px 20px;"><table cellpadding="0" cellspacing="0" border="0" style="background-color: #e1f5fe; border: 1px solid #4fc3f7; padding: 15px; border-radius: 8px;"><tbody><tr><td style="font-size: 16px; font-weight: bold; color: #333; margin-bottom: 10px; border-bottom: 2px solid #4fc3f7; padding-bottom: 5px;">🛣️ Visitor Journey</td></tr><tr><td style="padding: 8px 0;"><table cellpadding="0" cellspacing="0" border="0" style="width: 100%;"><tbody><tr><td style="font-weight: bold; width: 140px; color: #555; padding: 6px 0;">Entry Page:</td><td style="color: #333; padding: 6px 0; word-break: break-all;">', coalesce(triggerBody()?['body']?['trackingData']?['userJourney']?['entryPage'], triggerBody()?['trackingData']?['userJourney']?['entryPage'], 'Unknown'), '</td></tr><tr><td style="font-weight: bold; width: 140px; color: #555; padding: 6px 0;">Previous Page:</td><td style="color: #333; padding: 6px 0; word-break: break-all;">', coalesce(triggerBody()?['body']?['trackingData']?['userJourney']?['previousPage'], triggerBody()?['trackingData']?['userJourney']?['previousPage'], 'Unknown'), '</td></tr><tr><td style="font-weight: bold; width: 140px; color: #555; padding: 6px 0;">Total Pages:</td><td style="color: #333; padding: 6px 0;">', coalesce(string(triggerBody()?['body']?['trackingData']?['userJourney']?['totalPages']), string(triggerBody()?['trackingData']?['userJourney']?['totalPages']), '1'), '</td></tr><tr><td style="font-weight: bold; width: 140px; color: #555; padding: 6px 0;">Session Duration:</td><td style="color: #333; padding: 6px 0;">', if(and(not(equals(coalesce(triggerBody()?['body']?['trackingData']?['userJourney']?['sessionDuration'], triggerBody()?['trackingData']?['userJourney']?['sessionDuration']), null)), not(equals(coalesce(triggerBody()?['body']?['trackingData']?['userJourney']?['sessionDuration'], triggerBody()?['trackingData']?['userJourney']?['sessionDuration']), 0))), concat(div(coalesce(triggerBody()?['body']?['trackingData']?['userJourney']?['sessionDuration'], triggerBody()?['trackingData']?['userJourney']?['sessionDuration']), 60000), ' minutes'), 'Unknown'), '</td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table>'), '')}
+
+<!-- Main Email Content -->
+<table cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; font-family: Arial, sans-serif;">
+    <tbody>
+        <!-- Header Section -->
+        <tr>
+            <td style="padding: 30px 20px; text-align: center; @{if(equals(coalesce(triggerBody()?['body']?['urgencyLevel'], triggerBody()?['urgencyLevel'], triggerBody()?['body']?['trackingData']?['visitorData']?['urgencyLevel'], triggerBody()?['trackingData']?['visitorData']?['urgencyLevel'], 'standard'), 'emergency'), 'background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);', 'background: linear-gradient(135deg, #28a745 0%, #218838 100%);')} color: white; border-radius: 8px 8px 0 0;">
+                <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 700;">Eek Mobile Mechanical</h1>
+                <h2 style="margin: 0 0 10px 0; font-size: 20px; font-weight: 400;">@{coalesce(triggerBody()?['body']?['serviceTitle'], triggerBody()?['serviceTitle'], triggerBody()?['body']?['trackingData']?['visitorData']?['serviceTitle'], triggerBody()?['trackingData']?['visitorData']?['serviceTitle'], 'Service')}</h2>
+                <div style="font-size: 18px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; padding: 10px 20px; background: rgba(255,255,255,0.2); border-radius: 4px; display: inline-block;">
+                    ✓ PAYMENT CONFIRMED
+                </div>
+            </td>
+        </tr>
+
+        <!-- Status Bar - FIXED LAYOUT -->
+        <tr>
+            <td style="padding: 20px; background-color: #d4edda; border-left: 5px solid #28a745;">
+                <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td style="padding: 8px 0;">
+                                <strong style="color: #155724;">Urgency:</strong> 
+                                <span style="color: #333;">@{coalesce(triggerBody()?['body']?['urgencyLevel'], triggerBody()?['urgencyLevel'], triggerBody()?['body']?['trackingData']?['visitorData']?['urgencyLevel'], triggerBody()?['trackingData']?['visitorData']?['urgencyLevel'], 'Standard')}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0;">
+                                <strong style="color: #155724;">ETA:</strong> 
+                                <span style="color: #333;">@{coalesce(triggerBody()?['body']?['timeWindow'], triggerBody()?['timeWindow'], triggerBody()?['body']?['trackingData']?['visitorData']?['timeWindow'], triggerBody()?['trackingData']?['visitorData']?['timeWindow'], 'TBD')}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0;">
+                                <strong style="color: #155724;">Session ID:</strong> 
+                                <span style="color: #333; font-family: monospace; font-size: 12px;">@{coalesce(triggerBody()?['body']?['sessionId'], triggerBody()?['sessionId'], triggerBody()?['body']?['trackingData']?['visitorData']?['sessionId'], triggerBody()?['trackingData']?['visitorData']?['sessionId'], 'N/A')}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0;">
+                                <strong style="color: #155724;">Payment Confirmed:</strong> 
+                                <span style="color: #333;">@{formatDateTime(utcNow(), 'dd/MM/yyyy HH:mm')} NZT</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+        <!-- Customer Information -->
+        <tr>
+            <td style="padding: 20px;">
+                <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #f8f9fa; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef;">
+                    <tbody>
+                        <tr>
+                            <td style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #dee2e6;">Customer Details</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top: 10px;">
+                                <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                                    <tbody>
+                                        <tr>
+                                            <td style="font-weight: bold; width: 140px; color: #555; padding: 10px 0; vertical-align: top;">Name:</td>
+                                            <td style="color: #333; padding: 10px 0;">@{coalesce(triggerBody()?['body']?['name'], triggerBody()?['name'], triggerBody()?['body']?['trackingData']?['visitorData']?['name'], triggerBody()?['trackingData']?['visitorData']?['name'], 'N/A')}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: bold; width: 140px; color: #555; padding: 10px 0; vertical-align: top;">Phone:</td>
+                                            <td style="color: #333; padding: 10px 0;"><a href="tel:@{coalesce(triggerBody()?['body']?['phone'], triggerBody()?['phone'], triggerBody()?['body']?['trackingData']?['visitorData']?['phone'], triggerBody()?['trackingData']?['visitorData']?['phone'], '')}" style="color: #007bff; text-decoration: none;">@{coalesce(triggerBody()?['body']?['phone'], triggerBody()?['phone'], triggerBody()?['body']?['trackingData']?['visitorData']?['phone'], triggerBody()?['trackingData']?['visitorData']?['phone'], 'N/A')}</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: bold; width: 140px; color: #555; padding: 10px 0; vertical-align: top;">Email:</td>
+                                            <td style="color: #333; padding: 10px 0;"><a href="mailto:@{coalesce(triggerBody()?['body']?['email'], triggerBody()?['email'], triggerBody()?['body']?['trackingData']?['visitorData']?['email'], triggerBody()?['trackingData']?['visitorData']?['email'], '')}" style="color: #007bff; text-decoration: none;">@{coalesce(triggerBody()?['body']?['email'], triggerBody()?['email'], triggerBody()?['body']?['trackingData']?['visitorData']?['email'], triggerBody()?['trackingData']?['visitorData']?['email'], 'N/A')}</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: bold; width: 140px; color: #555; padding: 10px 0; vertical-align: top;">Location:</td>
+                                            <td style="color: #333; padding: 10px 0;">@{coalesce(triggerBody()?['body']?['location'], triggerBody()?['location'], triggerBody()?['body']?['visitorData']?['location']?['address'], triggerBody()?['body']?['visitorData']?['location']?['city'], triggerBody()?['body']?['trackingData']?['visitorData']?['location'], triggerBody()?['trackingData']?['visitorData']?['location'], 'TBD')}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+        <!-- Vehicle Information -->
+        <tr>
+            <td style="padding: 0 20px 20px 20px;">
+                <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 20px; border-radius: 8px;">
+                    <tbody>
+                        <tr>
+                            <td style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #ffc107;">Vehicle Information</td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top: 10px;">
+                                <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                                    <tbody>
+                                        @{if(not(empty(coalesce(triggerBody()?['body']?['batteryVoltage'], triggerBody()?['batteryVoltage'], triggerBody()?['body']?['trackingData']?['visitorData']?['batteryVoltage'], triggerBody()?['trackingData']?['visitorData']?['batteryVoltage']))), concat('<tr><td style="font-weight: bold; width: 140px; color: #555; padding: 10px 0; vertical-align: top;">Battery Type:</td><td style="color: #333; padding: 10px 0;">', coalesce(triggerBody()?['body']?['batteryVoltage'], triggerBody()?['batteryVoltage'], triggerBody()?['body']?['trackingData']?['visitorData']?['batteryVoltage'], triggerBody()?['trackingData']?['visitorData']?['batteryVoltage']), '</td></tr>'), '')}
+                                        @{if(not(empty(coalesce(triggerBody()?['body']?['emergencyType'], triggerBody()?['emergencyType'], triggerBody()?['body']?['trackingData']?['visitorData']?['emergencyType'], triggerBody()?['trackingData']?['visitorData']?['emergencyType']))), concat('<tr><td style="font-weight: bold; width: 140px; color: #555; padding: 10px 0; vertical-align: top;">Emergency Type:</td><td style="color: #333; padding: 10px 0;">', coalesce(triggerBody()?['body']?['emergencyType'], triggerBody()?['emergencyType'], triggerBody()?['body']?['trackingData']?['visitorData']?['emergencyType'], triggerBody()?['trackingData']?['visitorData']?['emergencyType']), '</td></tr>'), '')}
+                                        @{if(not(empty(coalesce(triggerBody()?['body']?['details'], triggerBody()?['details'], triggerBody()?['body']?['trackingData']?['visitorData']?['details'], triggerBody()?['trackingData']?['visitorData']?['details']))), concat('<tr><td style="font-weight: bold; width: 140px; color: #555; padding: 10px 0; vertical-align: top;">Additional Details:</td><td style="color: #333; padding: 10px 0;">', coalesce(triggerBody()?['body']?['details'], triggerBody()?['details'], triggerBody()?['body']?['trackingData']?['visitorData']?['details'], triggerBody()?['trackingData']?['visitorData']?['details']), '</td></tr>'), '')}
+                                        <tr>
+                                            <td style="font-weight: bold; width: 140px; color: #555; padding: 10px 0; vertical-align: top;">Registration:</td>
+                                            <td style="color: #333; padding: 10px 0; font-weight: bold;">@{if(empty(coalesce(triggerBody()?['body']?['rego'], triggerBody()?['rego'], triggerBody()?['body']?['trackingData']?['visitorData']?['vehicleRego'], triggerBody()?['trackingData']?['visitorData']?['vehicleRego'])), 'NO-REGO', toUpper(replace(trim(coalesce(triggerBody()?['body']?['rego'], triggerBody()?['rego'], triggerBody()?['body']?['trackingData']?['visitorData']?['vehicleRego'], triggerBody()?['trackingData']?['visitorData']?['vehicleRego'], '')), ' ', '')))}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: bold; width: 140px; color: #555; padding: 10px 0; vertical-align: top;">Vehicle:</td>
+                                            <td style="color: #333; padding: 10px 0;">@{coalesce(triggerBody()?['body']?['year'], triggerBody()?['year'], triggerBody()?['body']?['trackingData']?['visitorData']?['vehicleYear'], triggerBody()?['trackingData']?['visitorData']?['vehicleYear'], '')} @{coalesce(triggerBody()?['body']?['make'], triggerBody()?['make'], triggerBody()?['body']?['trackingData']?['visitorData']?['vehicleMake'], triggerBody()?['trackingData']?['visitorData']?['vehicleMake'], '')} @{coalesce(triggerBody()?['body']?['model'], triggerBody()?['model'], triggerBody()?['body']?['trackingData']?['visitorData']?['vehicleModel'], triggerBody()?['trackingData']?['visitorData']?['vehicleModel'], '')}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: bold; width: 140px; color: #555; padding: 10px 0; vertical-align: top;">Vehicle Type:</td>
+                                            <td style="color: #333; padding: 10px 0;">@{if(empty(coalesce(triggerBody()?['body']?['vehicleType'], triggerBody()?['vehicleType'], triggerBody()?['body']?['trackingData']?['visitorData']?['vehicleType'], triggerBody()?['trackingData']?['visitorData']?['vehicleType'])), 'Not specified', coalesce(triggerBody()?['body']?['vehicleType'], triggerBody()?['vehicleType'], triggerBody()?['body']?['trackingData']?['visitorData']?['vehicleType'], triggerBody()?['trackingData']?['visitorData']?['vehicleType']))}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: bold; width: 140px; color: #555; padding: 10px 0; vertical-align: top;">Service:</td>
+                                            <td style="color: #333; padding: 10px 0;">@{coalesce(triggerBody()?['body']?['serviceTitle'], triggerBody()?['serviceTitle'], triggerBody()?['body']?['trackingData']?['visitorData']?['serviceTitle'], triggerBody()?['trackingData']?['visitorData']?['serviceTitle'], 'Service')} <span style="color: #6c757d;">(@{coalesce(triggerBody()?['body']?['serviceCode'], triggerBody()?['serviceCode'], triggerBody()?['body']?['trackingData']?['visitorData']?['serviceCode'], triggerBody()?['trackingData']?['visitorData']?['serviceCode'], 'N/A')})</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+        <!-- Price Information -->
+        <tr>
+            <td style="padding: 0 20px 20px 20px;">
+                <div style="font-size: 24px; font-weight: bold; text-align: center; padding: 20px; background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); color: #155724; border-radius: 8px; border: 2px solid #28a745;">
+                    Service Fee: $@{coalesce(triggerBody()?['body']?['price'], triggerBody()?['price'], triggerBody()?['body']?['trackingData']?['visitorData']?['price'], triggerBody()?['trackingData']?['visitorData']?['price'], '0')}
+                </div>
+            </td>
+        </tr>
+
+        <!-- Action Buttons -->
+        <tr>
+            <td style="padding: 20px; text-align: center;">
+                <div style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 20px;">Quick Actions</div>
+                <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
+                    <tbody>
+                        <tr>
+                            <td style="padding: 5px;"><a href="tel:@{coalesce(triggerBody()?['body']?['phone'], triggerBody()?['phone'], triggerBody()?['body']?['trackingData']?['visitorData']?['phone'], triggerBody()?['trackingData']?['visitorData']?['phone'], '')}" style="display: inline-block; padding: 12px 24px; background-color: #28a745; color: white; text-decoration: none; font-weight: bold; font-size: 14px; border-radius: 6px;">📞 Call @{coalesce(triggerBody()?['body']?['name'], triggerBody()?['name'], triggerBody()?['body']?['trackingData']?['visitorData']?['name'], triggerBody()?['trackingData']?['visitorData']?['name'], 'Customer')}</a></td>
+                            <td style="padding: 5px;"><a href="mailto:@{coalesce(triggerBody()?['body']?['phone'], triggerBody()?['phone'], triggerBody()?['body']?['trackingData']?['visitorData']?['phone'], triggerBody()?['trackingData']?['visitorData']?['phone'], '')}@sms.tnz.co.nz" style="display: inline-block; padding: 12px 24px; background-color: #007bff; color: white; text-decoration: none; font-weight: bold; font-size: 14px; border-radius: 6px;">💬 Send SMS</a></td>
+                            <td style="padding: 5px;"><a href="mailto:@{coalesce(triggerBody()?['body']?['email'], triggerBody()?['email'], triggerBody()?['body']?['trackingData']?['visitorData']?['email'], triggerBody()?['trackingData']?['visitorData']?['email'], '')}" style="display: inline-block; padding: 12px 24px; background-color: #17a2b8; color: white; text-decoration: none; font-weight: bold; font-size: 14px; border-radius: 6px;">📧 Email Customer</a></td>
+                            <td style="padding: 5px;"><a href="https://www.carjam.co.nz/car/?plate=@{if(empty(coalesce(triggerBody()?['body']?['rego'], triggerBody()?['rego'], triggerBody()?['body']?['trackingData']?['visitorData']?['vehicleRego'], triggerBody()?['trackingData']?['visitorData']?['vehicleRego'])), '', toUpper(replace(trim(coalesce(triggerBody()?['body']?['rego'], triggerBody()?['rego'], triggerBody()?['body']?['trackingData']?['visitorData']?['vehicleRego'], triggerBody()?['trackingData']?['visitorData']?['vehicleRego'], '')), ' ', '')))}" style="display: inline-block; padding: 12px 24px; background-color: #6c757d; color: white; text-decoration: none; font-weight: bold; font-size: 14px; border-radius: 6px;">🔍 CarJam Lookup</a></td>
+                            @{if(not(empty(coalesce(triggerBody()?['body']?['sellerPhone'], triggerBody()?['sellerPhone'], triggerBody()?['body']?['trackingData']?['visitorData']?['sellerPhone'], triggerBody()?['trackingData']?['visitorData']?['sellerPhone']))), concat('<td style="padding: 5px;"><a href="tel:', coalesce(triggerBody()?['body']?['sellerPhone'], triggerBody()?['sellerPhone'], triggerBody()?['body']?['trackingData']?['visitorData']?['sellerPhone'], triggerBody()?['trackingData']?['visitorData']?['sellerPhone']), '" style="display: inline-block; padding: 12px 24px; background-color: #ffc107; color: #333; text-decoration: none; font-weight: bold; font-size: 14px; border-radius: 6px;">📞 Call Seller</a></td>'), '')}
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+            <td style="background-color: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; color: #6c757d; border-top: 2px solid #e9ecef; border-radius: 0 0 8px 8px;">
+                <strong style="font-size: 14px; color: #495057;">Eek Mobile Mechanical</strong><br>
+                <span style="color: #868e96;">Email generated automatically by Power Automate</span><br>
+                <span style="color: #868e96; font-family: monospace; margin-top: 5px; display: inline-block;">
+                    Session: @{coalesce(triggerBody()?['body']?['sessionId'], triggerBody()?['sessionId'], triggerBody()?['body']?['trackingData']?['visitorData']?['sessionId'], triggerBody()?['trackingData']?['visitorData']?['sessionId'], 'N/A')} | @{formatDateTime(utcNow(), 'dd/MM/yyyy HH:mm:ss')} NZT
+                </span>
+                @{if(and(not(empty(coalesce(triggerBody()?['body']?['trackingData']?['gclid'], triggerBody()?['trackingData']?['gclid']))), not(equals(coalesce(triggerBody()?['body']?['trackingData']?['gclid'], triggerBody()?['trackingData']?['gclid']), ''))), concat('<br><span style="color: #868e96; font-family: monospace;">GCLID: ', coalesce(triggerBody()?['body']?['trackingData']?['gclid'], triggerBody()?['trackingData']?['gclid']), '</span>'), '')}
+            </td>
+        </tr>
+    </tbody>
+</table>
+
