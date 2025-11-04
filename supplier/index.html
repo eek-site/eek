@@ -1002,8 +1002,7 @@
     // Update debug display
     updateDebugInfo();
     
-    // Send page view event
-    sendPageViewEvent();
+    // sendPageViewEvent() removed - unified-tracking.js automatically tracks page_view
     
     console.log('✅ Supplier portal tracking system initialized');
     console.log('📊 Session ID:', sessionId);
@@ -1541,15 +1540,7 @@
     }
   }
 
-  function sendPageViewEvent() {
-    const payload = buildTrackingPayload('page_view', 'supplier_portal_view', {
-      loadTime: Date.now() - performance.navigationStart,
-      supplierPortalType: 'main',
-      targetAudience: supplierType
-    });
-    
-    sendTrackingEvent(payload);
-  }
+  // sendPageViewEvent removed - unified-tracking.js automatically tracks page_view on initialization
 
   // === INTERACTION TRACKING ===
   function trackInteraction(element) {

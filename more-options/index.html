@@ -876,7 +876,7 @@
             updateDebugInfo();
             
             // Send page view event
-            sendPageViewEvent();
+            // sendPageViewEvent() removed - unified-tracking.js automatically tracks page_view
             
             console.log('✅ Tracking system v2.1 initialized');
             console.log('📊 Session ID:', sessionId);
@@ -1456,14 +1456,7 @@
             }
         }
 
-        function sendPageViewEvent() {
-            const payload = buildTrackingPayload('page_view', 'more_options_view', {
-                pageType: 'more_options',
-                loadTime: Date.now() - performance.navigationStart
-            });
-            
-            sendTrackingEvent(payload);
-        }
+        // sendPageViewEvent removed - unified-tracking.js automatically tracks page_view on initialization
 
         // === INTERACTION TRACKING ===
         function trackInteraction(element) {

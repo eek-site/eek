@@ -579,15 +579,7 @@
       }
     }
 
-    function sendPageViewEvent() {
-      const payload = buildTrackingPayload('page_view', 'thanks_page_view', {
-        loadTime: Date.now() - performance.navigationStart,
-        pageType: 'payment_confirmation',
-        conversionValue: bookingData.price || 0
-      });
-      
-      sendTrackingEvent(payload);
-    }
+    // sendPageViewEvent removed - unified-tracking.js automatically tracks page_view on initialization
 
     function sendConversionEvent() {
       const payload = buildTrackingPayload('conversion', 'payment_confirmed', {
@@ -2039,8 +2031,7 @@
 
       displayContent(bookingData);
 
-      // Send page view tracking event
-      sendPageViewEvent();
+      // sendPageViewEvent() removed - unified-tracking.js automatically tracks page_view on initialization
 
       const submissionResult = await sendToPaymentConfirmedFlow(bookingData);
       

@@ -808,7 +808,7 @@
       updateDebugInfo();
       
       // Send page view event
-      sendPageViewEvent();
+      // sendPageViewEvent() removed - unified-tracking.js automatically tracks page_view
       
       console.log('✅ Legal authority tracking system initialized');
       console.log('📊 Session ID:', sessionId);
@@ -1343,16 +1343,7 @@
       }
     }
 
-    function sendPageViewEvent() {
-      const payload = buildTrackingPayload('page_view', 'mjuris_portal_access', {
-        accessTime: new Date().toISOString(),
-        loadTime: Date.now() - performance.navigationStart,
-        restrictedPortal: true,
-        securityLevel: 'high'
-      });
-      
-      sendTrackingEvent(payload);
-    }
+    // sendPageViewEvent removed - unified-tracking.js automatically tracks page_view on initialization
 
     // === INTERACTION TRACKING ===
     function trackInteraction(element) {
