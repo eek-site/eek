@@ -140,6 +140,8 @@ class PaymentUtils {
             eventAction: 'payment_confirmed',
             timestamp: new Date().toISOString(),
             bookingStatus: 'payment_confirmed',
+            // bookingTime required for Power Automate convertTimeZone - use canonical bookingTime or current time
+            bookingTime: canonicalData.bookingTime || new Date().toISOString(),
             currentStep: 8,
             totalSteps: 8,
             stepProgress: 100,
