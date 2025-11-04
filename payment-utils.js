@@ -80,7 +80,16 @@ class PaymentUtils {
      */
     buildPaymentConfirmedPayload(canonicalData, bookingId) {
         const geo = window.CF_GEO || {};
-        const locationStr = canonicalData.location || '';
+        // Extract location string - handle both string and object cases
+        let locationStr = '';
+        if (typeof canonicalData.location === 'string') {
+            locationStr = canonicalData.location;
+        } else if (canonicalData.location && typeof canonicalData.location === 'object') {
+            // If location is an object, extract address or city
+            locationStr = canonicalData.location.address || canonicalData.location.city || canonicalData.location || '';
+        } else {
+            locationStr = canonicalData.location || '';
+        }
         
         // Build payload following data-repository.js structure
         const payload = {
@@ -89,20 +98,9 @@ class PaymentUtils {
             phone: this.normalizeForPayment(canonicalData.phone),
             email: this.normalizeForPayment(canonicalData.email),
             
-            // Root-level location object (MUST be object, not string)
-            location: this.dataRepo 
-                ? this.dataRepo.getStandardizedLocationObject(geo, locationStr)
-                : {
-                    city: locationStr || 'Unknown',
-                    region: geo.region || 'Unknown',
-                    country: geo.country || 'New Zealand',
-                    address: locationStr || '',
-                    coordinates: {
-                        latitude: geo.latitude || null,
-                        longitude: geo.longitude || null,
-                        accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
-                    }
-                },
+            // Root-level location - STRING for Excel compatibility (Power Automate Excel action expects string)
+            // Email template will use trackingData.visitorData.location object instead
+            location: locationStr || '',
             
             // Vehicle information
             rego: this.normalizeForPayment(canonicalData.rego),
@@ -156,20 +154,20 @@ class PaymentUtils {
                 location: this.dataRepo
                     ? this.dataRepo.getStandardizedLocationObject(geo, locationStr)
                     : {
-                        city: locationStr || 'Unknown',
-                        region: geo.region || 'Unknown',
-                        country: geo.country || 'New Zealand',
-                        countryCode: geo.countryCode || 'NZ',
-                        regionCode: geo.regionCode || 'Unknown',
-                        postalCode: geo.postalCode || 'Unknown',
-                        continent: geo.continent || 'Oceania',
-                        address: locationStr || '',
+                        city: String(locationStr || geo.city || 'Unknown'),
+                        region: String(geo.region || 'Unknown'),
+                        country: String(geo.country || 'New Zealand'),
+                        countryCode: String(geo.countryCode || 'NZ'),
+                        regionCode: String(geo.regionCode || 'Unknown'),
+                        postalCode: String(geo.postalCode || 'Unknown'),
+                        continent: String(geo.continent || 'Oceania'),
+                        address: String(locationStr || ''),
                         coordinates: {
                             latitude: geo.latitude || null,
                             longitude: geo.longitude || null,
                             accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
                         },
-                        timezone: geo.timezone || 'Pacific/Auckland',
+                        timezone: String(geo.timezone || 'Pacific/Auckland'),
                         raw: geo || {}
                     },
                 vehicleRego: this.normalizeForPayment(canonicalData.rego),
@@ -321,10 +319,10 @@ class PaymentUtils {
                         viewportSize: `${window.innerWidth || 0}x${window.innerHeight || 0}`
                     },
                 location: {
-                    country: geo.country || 'New Zealand',
-                    region: geo.region || 'Unknown',
-                    city: geo.city || 'Unknown',
-                    postalCode: geo.postalCode || 'Unknown',
+                    country: String(geo.country || 'New Zealand'),
+                    region: String(geo.region || 'Unknown'),
+                    city: String(geo.city || 'Unknown'),
+                    postalCode: String(geo.postalCode || 'Unknown'),
                     coordinates: {
                         latitude: geo.latitude || null,
                         longitude: geo.longitude || null,

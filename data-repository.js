@@ -465,21 +465,23 @@ class EekDataRepository {
      * @returns {Object} Standardized location object
      */
     getStandardizedLocationObject(geo = {}, userLocation = '') {
+        // Ensure all string fields are actually strings to prevent [object Object] issues
+        const locationStr = String(userLocation || '');
         return {
-            city: userLocation || geo.city || 'Unknown',
-            region: geo.region || 'Unknown',
-            country: geo.country || 'New Zealand',
-            countryCode: geo.countryCode || 'NZ',
-            regionCode: geo.regionCode || 'Unknown',
-            postalCode: geo.postalCode || 'Unknown',
-            continent: geo.continent || 'Oceania',
-            address: userLocation || '',
+            city: String(locationStr || geo.city || 'Unknown'),
+            region: String(geo.region || 'Unknown'),
+            country: String(geo.country || 'New Zealand'),
+            countryCode: String(geo.countryCode || 'NZ'),
+            regionCode: String(geo.regionCode || 'Unknown'),
+            postalCode: String(geo.postalCode || 'Unknown'),
+            continent: String(geo.continent || 'Oceania'),
+            address: String(locationStr || ''),
             coordinates: {
                 latitude: geo.latitude || null,
                 longitude: geo.longitude || null,
                 accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
             },
-            timezone: geo.timezone || 'Pacific/Auckland',
+            timezone: String(geo.timezone || 'Pacific/Auckland'),
             raw: geo
         };
     }
