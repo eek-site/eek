@@ -658,7 +658,7 @@ const serviceConfigs = {
 };
 
 // Globals
-const TRACKING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
+// TRACKING_API_URL removed - all tracking now goes through unified-tracking.js
 const PAYMENT_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
 const WINZ_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95fc801df59b4250a48919ace91c0276/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mFpTX4gPrz1u1DbdfF3YqHBnAsW3pnAAj-GWXWvBYYc';
 
@@ -798,10 +798,10 @@ async function sendBookingUpdate(status) {
   console.log(`%c${STATUS_DESCRIPTIONS[status]}`, `color: ${STATUS_COLORS[status]}; font-style: italic;`);
   console.log('📊 Complete booking data:', data);
   
-  // Mirror to unified tracking API for normalized payloads
+  // Use unified-tracking.js - this is the ONLY way to send tracking data
   try {
     if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
-      window.unifiedTracking.sendTrackingData(status, {
+      await window.unifiedTracking.sendTrackingData(status, {
         ...data,
         eventType: status,
         service: data.service,
@@ -812,17 +812,10 @@ async function sendBookingUpdate(status) {
         selectedTime: data.selectedTime,
         selectedUrgency: data.selectedUrgency
       });
+      console.log(`%c✅ Tracking data sent via unified-tracking.js: ${status}`, `color: ${STATUS_COLORS[status]}`);
+    } else {
+      console.warn('⚠️ unified-tracking.js not available, skipping tracking');
     }
-  } catch (e) { console.warn('Unified tracking mirror failed:', e); }
-  
-  try {
-    const response = await fetch(TRACKING_API_URL, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(data)
-    });
-    console.log(`%c✅ Unified API Response: ${response.status}`, `color: ${STATUS_COLORS[status]}`);
-    return response;
   } catch (err) {
     console.error(`%c❌ Error sending ${status} update:`, `color: #dc3545`, err);
   }

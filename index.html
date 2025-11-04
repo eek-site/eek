@@ -1098,39 +1098,15 @@ function extractGCLID(urlParams) {
   return urlParams.get('gclid') || urlParams.get('gbraid') || urlParams.get('wbraid') || null;
 }
 
-// IMMEDIATE FIRST VISIT TRACKING - NO DEPENDENCIES
+// FIRST VISIT TRACKING - Now handled by unified-tracking.js
+// unified-tracking.js automatically tracks page_view on initialization
+// This block is kept only for state fetching (GCLID/Callflow state) which is needed for other functionality
 (function() {
-  const FIRST_VISIT_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
   const GCLID_STATE_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f20c5153e8a4de0be50a17e2dab4254/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Zw5-_6YSCNPb2cfjjfa0Oj_Fpc7N9rhHfc6fPZZhX7g";
   const CALLFLOW_STATE_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/17b1d2990e6f4082a2b0d9c2f1a29025/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=bPyoxJ24kuxJZOyLGAclGaEuH6BHwUTFaGmYOwHofa8";
   
-  console.log('🔥 FIRST VISIT SCRIPT EXECUTING IMMEDIATELY');
-  
-  if (sessionStorage.getItem("eek_first_visit_sent") === "1") {
-    console.log('❌ First visit already sent this session');
-    return;
-  }
-  
-  let sessionId = localStorage.getItem("eek_session_id");
-  if (!sessionId) {
-    sessionId = "session_" + Date.now() + "_" + Math.random().toString(36).slice(2, 11);
-    localStorage.setItem("eek_session_id", sessionId);
-    console.log('✅ Created new session ID:', sessionId);
-  } else {
-    console.log('✅ Using existing session ID:', sessionId);
-  }
-  
-  const urlParams = new URLSearchParams(location.search);
-  let gclid = extractGCLID(urlParams);
-  if (gclid) {
-    localStorage.setItem("eek_gclid", gclid);
-    localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
-    console.log('✅ GCLID/GBRAID/WBRAID captured and stored:', gclid);
-  } else {
-    gclid = localStorage.getItem("eek_gclid");
-    console.log('📋 Using stored GCLID:', gclid);
-  }
-  
+  // GCLID and Callflow state fetching - these are NOT tracking data, just state checks
+  // Tracking data is now handled entirely by unified-tracking.js
   async function getStateData() {
     const states = {
       gclidState: null,
@@ -1180,290 +1156,12 @@ function extractGCLID(urlParams) {
     return states;
   }
   
+  // Store states globally for other scripts that need them
   getStateData().then(states => {
-    // 🆕 ENHANCED GEOLOCATION DATA - ALL AVAILABLE FIELDS
-    // Wait for CF_GEO to be available (Cloudflare geolocation) with retry
-    const waitForCFGeo = (maxRetries = 10, delay = 100) => {
-      return new Promise((resolve) => {
-        let retries = 0;
-        
-        const checkCFGeo = () => {
-          if (window.CF_GEO && window.CF_GEO.country && window.CF_GEO.country !== 'Unknown') {
-            console.log('✅ CF_GEO loaded successfully:', window.CF_GEO);
-            resolve(window.CF_GEO);
-          } else if (retries < maxRetries) {
-            retries++;
-            console.log(`⏳ Waiting for CF_GEO... (attempt ${retries}/${maxRetries})`);
-            setTimeout(checkCFGeo, delay);
-          } else {
-            console.log('⚠️ CF_GEO not available, using fallback data');
-            resolve({
-              country: 'Unknown',
-              city: 'Unknown', 
-              region: 'Unknown',
-              postalCode: 'Unknown',
-              latitude: null,
-              longitude: null,
-              timezone: 'Unknown',
-              continent: 'Unknown',
-              regionCode: 'Unknown',
-              countryCode: 'Unknown'
-            });
-          }
-        };
-        
-        checkCFGeo();
-      });
-    };
-    
-    waitForCFGeo().then(geo => {
-    
-    const payload = {
-      // === ROOT LEVEL FIELDS (for direct access) ===
-      sessionId: sessionId,
-      gclid: gclid,
-      gclidState: states.gclidState,
-      eventType: "page_view",
-      eventAction: "initial_page_load",
-      timestamp: new Date().toISOString(),
-      bookingStatus: "page_loaded",
-      currentStep: 1,
-      totalSteps: 1,
-      stepProgress: 100,
-      termsAccepted: false,
-      marketingConsent: false,
-      
-      // Customer information (root level for direct access)
-      name: "",
-      phone: "",
-      email: "",
-      
-      // Root-level location object for email template compatibility (MUST be object, not string)
-      location: {
-        city: geo.city || 'Unknown',
-        region: geo.region || 'Unknown',
-        country: geo.country || 'New Zealand',
-        countryCode: geo.countryCode || 'NZ',
-        regionCode: geo.regionCode || 'Unknown',
-        postalCode: geo.postalCode || 'Unknown',
-        continent: geo.continent || 'Oceania',
-        address: '',
-        coordinates: {
-          latitude: geo.latitude || null,
-          longitude: geo.longitude || null,
-          accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
-        },
-        timezone: geo.timezone || 'Pacific/Auckland',
-        raw: geo
-      },
-      
-      // Vehicle information (root level for direct access)
-      rego: "",
-      vehicleRego: "",
-      year: "",
-      vehicleYear: "",
-      make: "",
-      vehicleMake: "",
-      model: "",
-      vehicleModel: "",
-      vehicleType: "car",
-      
-      // Service information (root level for direct access)
-      service: "",
-      serviceCode: "",
-      serviceTitle: "",
-      price: 0,
-      details: "",
-      
-      // === NESTED OBJECTS (for email templates) ===
-      visitorData: {
-        // Customer information
-        name: "",
-        phone: "",
-        email: "",
-        location: { // Object for email template compatibility
-          city: geo.city || 'Unknown',
-          region: geo.region || 'Unknown',
-          country: geo.country || 'New Zealand',
-          countryCode: geo.countryCode || 'NZ',
-          regionCode: geo.regionCode || 'Unknown',
-          postalCode: geo.postalCode || 'Unknown',
-          continent: geo.continent || 'Oceania',
-          address: '',
-          coordinates: {
-            latitude: geo.latitude || null,
-            longitude: geo.longitude || null,
-            accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
-          },
-          timezone: geo.timezone || 'Pacific/Auckland',
-          raw: geo
-        },
-        
-        // Vehicle information
-        vehicleRego: "",
-        rego: "", // Template expects both
-        vehicleYear: "",
-        vehicleMake: "",
-        vehicleModel: "",
-        vehicleType: "car",
-        
-        // Service information
-        service: "",
-        serviceCode: "",
-        serviceTitle: ""
-      },
-      
-      journeyData: {
-        callAttemptId: null,
-        callTimestamp: null,
-        returnTimestamp: null,
-        timeBetweenCallAndReturn: null,
-        source: 'homepage_visit'
-      },
-      
-      pageSource: {
-        type: 'direct',
-        detail: 'Direct visit',
-        referrer: document.referrer || null,
-        landingPage: location.href,
-        entryPoint: 'direct',
-        clickIds: {
-          gclid: gclid,
-          gbraid: null,
-          wbraid: null,
-          msclkid: urlParams.get("msclkid") || null,
-          fbclid: urlParams.get("fbclid") || null,
-          rdtclid: urlParams.get("rdtclid") || null
-        }
-      },
-      
-      device: {
-        userAgent: navigator.userAgent,
-        platform: navigator.platform || null,
-        language: navigator.language || null,
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        screenResolution: `${(window.screen && window.screen.width) || 0}x${(window.screen && window.screen.height) || 0}`,
-        viewportSize: `${window.innerWidth}x${window.innerHeight}`,
-        isMobile: /Mobi|Android/i.test(navigator.userAgent),
-        isTablet: /iPad|Android(?=.*\bMobile\b)/i.test(navigator.userAgent)
-      },
-      
-      engagement: {
-        timeOnPage: 0,
-        timeOnSite: 0,
-        pageViews: 1,
-        interactions: 0,
-        scrollDepth: 0,
-        formInteractions: 0,
-        buttonClicks: 0,
-        linkClicks: 0,
-        engagementScore: 0
-      },
-      
-      userJourney: {
-        journeyId: `journey_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-        journeyStart: new Date().toISOString(),
-        journeyEnd: new Date().toISOString(),
-        journeyDuration: 0,
-        journeySteps: [],
-        journeyCompleted: false,
-        journeyAbandoned: false,
-        journeyConversion: false,
-        pageHistory: [],
-        totalPages: 1,
-        sessionDuration: 0,
-        entryPage: location.href,
-        previousPage: ''
-      },
-      
-      utm: {
-        source: urlParams.get("utm_source") || null,
-        medium: urlParams.get("utm_medium") || null,
-        campaign: urlParams.get("utm_campaign") || null,
-        term: urlParams.get("utm_term") || null,
-        content: urlParams.get("utm_content") || null,
-        gclid: gclid
-      },
-      
-      trackingData: {
-        gclid: gclid,
-        gclidState: states.gclidState,
-        utm: {
-          source: urlParams.get("utm_source") || null,
-          medium: urlParams.get("utm_medium") || null,
-          campaign: urlParams.get("utm_campaign") || null,
-          term: urlParams.get("utm_term") || null,
-          content: urlParams.get("utm_content") || null,
-          gclid: gclid
-        },
-        pageSource: {
-          type: 'direct',
-          detail: 'Direct visit',
-          referrer: document.referrer || null,
-          landingPage: location.href,
-          entryPoint: 'direct',
-          clickIds: {
-            gclid: gclid,
-            gbraid: null,
-            wbraid: null,
-            msclkid: urlParams.get("msclkid") || null,
-            fbclid: urlParams.get("fbclid") || null,
-            rdtclid: urlParams.get("rdtclid") || null
-          }
-        },
-        location: {
-          city: geo.city || 'Unknown',
-          region: geo.region || 'Unknown',
-          country: geo.country || 'New Zealand',
-          countryCode: geo.countryCode || 'NZ',
-          regionCode: geo.regionCode || 'Unknown',
-          postalCode: geo.postalCode || 'Unknown',
-          continent: geo.continent || 'Oceania',
-          address: '',
-          coordinates: {
-            latitude: geo.latitude || null,
-            longitude: geo.longitude || null,
-            accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
-          },
-          timezone: geo.timezone || 'Pacific/Auckland',
-          raw: geo
-        },
-        sessionId: sessionId,
-        pageUrl: location.href,
-        pagePath: location.pathname,
-        pageTitle: document.title,
-        pageType: 'homepage',
-        referrer: document.referrer || null,
-        referrerDomain: document.referrer ? new URL(document.referrer).hostname : null,
-        conversionValue: 0,
-        conversionCurrency: 'NZD',
-        conversionType: 'page_view'
-      },
-      
-      // Legacy fields for backward compatibility
-      callflowState: states.callflowState
-    };
-    
-    console.log('🚀 SENDING FIRST VISIT WEBHOOK WITH STATE DATA:', payload);
-    
-    fetch(FIRST_VISIT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-      keepalive: true,
-      cache: "no-store"
-    }).then(response => {
-      console.log('✅ FIRST VISIT WEBHOOK SUCCESS:', response.status, response.statusText);
-      if (response.ok) {
-        sessionStorage.setItem("eek_first_visit_sent", "1");
-        console.log('✅ Marked as sent for this session');
-      } else {
-        console.error('❌ FIRST VISIT WEBHOOK FAILED:', response.status);
-      }
-    }).catch(error => {
-      console.error('❌ FIRST VISIT WEBHOOK ERROR:', error);
-    });
-    }); // Close waitForCFGeo().then(geo => {
+    window.eek_states = window.eek_states || {};
+    window.eek_states.gclidState = states.gclidState;
+    window.eek_states.callflowState = states.callflowState;
+    console.log('✅ States stored for other scripts');
   });
 })();
 
@@ -1634,57 +1332,27 @@ function handleServiceSelection() {
   });
 }
 
-// Track orange box service selection clicks
+// Track orange box service selection clicks - Now uses unified-tracking.js
 function trackServiceSelection() {
-  const SERVICE_SELECTION_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
-  
   document.querySelectorAll('.keyword-item').forEach(item => {
     item.addEventListener('click', function(e) {
       const service = this.dataset.service;
       const serviceName = this.querySelector('h4')?.textContent || 'Unknown';
-      const sessionId = localStorage.getItem("eek_session_id");
-      const gclid = localStorage.getItem("eek_gclid");
       
-      const urlParams = new URLSearchParams(window.location.search);
+      console.log('🎯 SERVICE SELECTION TRACKED:', serviceName);
       
-      const payload = {
-        eventType: "service_selection",
-        timestamp: new Date().toISOString(),
-        sessionId: sessionId,
-        gclid: gclid,
-        service: { code: service, name: serviceName, placement: "orange_service_card" },
-        site: { domain: location.hostname, url: location.href, path: location.pathname, title: document.title },
-        utm: {
-          source: urlParams.get("utm_source") || null,
-          medium: urlParams.get("utm_medium") || null,
-          campaign: urlParams.get("utm_campaign") || null,
-          term: urlParams.get("utm_term") || null,
-          content: urlParams.get("utm_content") || null,
-          gclid: gclid,
-          msclkid: urlParams.get("msclkid") || null,
-          fbclid: urlParams.get("fbclid") || null,
-          rdtclid: urlParams.get("rdtclid") || null
-        },
-        device: {
-          userAgent: navigator.userAgent,
-          platform: navigator.platform || null,
-          language: navigator.language || null,
-          mobile: /Mobi|Android/i.test(navigator.userAgent)
-        }
-      };
-      
-      console.log('🎯 SERVICE SELECTION TRACKED:', serviceName, payload);
-      
-      fetch(SERVICE_SELECTION_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        keepalive: true
-      }).then(response => {
-        console.log('✅ Service selection webhook sent:', response.status, serviceName);
-      }).catch(error => {
-        console.error('❌ Service selection webhook failed:', error);
-      });
+      // Use unified-tracking.js instead of direct API call
+      if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+        window.unifiedTracking.sendTrackingData('service_selection', {
+          service: service,
+          serviceCode: service,
+          serviceTitle: serviceName,
+          serviceName: serviceName,
+          placement: 'orange_service_card'
+        });
+      } else {
+        console.warn('⚠️ unified-tracking.js not available, skipping service selection tracking');
+      }
       
       if (typeof gtag !== 'undefined') {
         gtag('event', 'service_card_click', {
@@ -1880,9 +1548,8 @@ async function updateHoursDisplay() {
 }
 
 /* === INCOMING CALL CORRELATION WEBHOOK === */
+// Now uses unified-tracking.js instead of direct API calls
 (function(){
-  const INCOMING_CALL_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
-  
   window.correlateIncomingCall = function(callerID, internalNumber) {
     const sessionId = localStorage.getItem("eek_session_id");
     const lastCallAttemptId = localStorage.getItem("eek_last_call_attempt_id");
@@ -1903,21 +1570,26 @@ async function updateHoursDisplay() {
       correlationSuccess: true
     };
     
-    fetch(INCOMING_CALL_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-      keepalive: true
-    }).then(() => {
-      console.log('✅ Call correlated with GCLID:', gclid);
-    }).catch(() => {});
+    // Use unified-tracking.js instead of direct API call
+    if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+      window.unifiedTracking.sendTrackingData('incoming_call_correlation', {
+        callerID: callerID,
+        internalNumber: internalNumber,
+        lastCallAttemptId: lastCallAttemptId,
+        lastCallTimestamp: lastCallTimestamp,
+        correlationSuccess: true
+      }).then(() => {
+        console.log('✅ Call correlated with GCLID:', gclid);
+      }).catch(() => {});
+    } else {
+      console.warn('⚠️ unified-tracking.js not available, skipping call correlation');
+    }
   };
 })();
 
 /* === ENHANCED CALL-CLICK WEBHOOK WITH GCLID/GBRAID/WBRAID === */
+// Now uses unified-tracking.js instead of direct API calls
 (function(){
-  const CALL_CLICK_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
-
   function getOrCreateSessionId(){
     let sid = localStorage.getItem("eek_session_id");
     if (!sid){
@@ -2030,25 +1702,18 @@ async function updateHoursDisplay() {
 
   async function sendJourneyTracking(journeyEntry) {
     try {
-      const payload = {
-        eventType: "visitor_journey",
-        eventAction: journeyEntry.action,
-        timestamp: journeyEntry.timestamp,
-        sessionId: journeyEntry.sessionId,
-        gclid: journeyEntry.gclid,
-        page: journeyEntry.page,
-        journeyData: journeyEntry.data,
-        source: 'journey_tracking'
-      };
-      
-      await fetch(CALL_CLICK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        keepalive: true
-      });
-      
-      console.log('✅ Journey tracking sent:', journeyEntry.action);
+      // Use unified-tracking.js instead of direct API call
+      if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+        await window.unifiedTracking.sendTrackingData('visitor_journey', {
+          eventAction: journeyEntry.action,
+          journeyData: journeyEntry.data,
+          page: journeyEntry.page,
+          source: 'journey_tracking'
+        });
+        console.log('✅ Journey tracking sent:', journeyEntry.action);
+      } else {
+        console.warn('⚠️ unified-tracking.js not available, skipping journey tracking');
+      }
     } catch (error) {
       console.error('❌ Journey tracking failed:', error);
     }
@@ -2176,16 +1841,22 @@ async function updateHoursDisplay() {
       });
     } catch (_) {}
 
-    fetch(CALL_CLICK_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-      keepalive: true
-    }).then(response => {
-      console.log('✅ Call click tracked with GCLID/GBRAID/WBRAID:', gclid, 'Status:', response.status);
-    }).catch(error => {
-      console.error('❌ Call click failed:', error);
-    });
+    // Use unified-tracking.js instead of direct API call
+    if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+      window.unifiedTracking.sendTrackingData('call_click', {
+        callAttemptId: callAttemptId,
+        gclidState: gclidState,
+        phoneTarget: payload.phoneTarget,
+        button: payload.button,
+        status: payload.status
+      }).then(() => {
+        console.log('✅ Call click tracked with GCLID/GBRAID/WBRAID:', gclid);
+      }).catch(error => {
+        console.error('❌ Call click failed:', error);
+      });
+    } else {
+      console.warn('⚠️ unified-tracking.js not available, skipping call click tracking');
+    }
   }
 
   document.addEventListener("click", function(ev){

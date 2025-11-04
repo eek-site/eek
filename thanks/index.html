@@ -389,7 +389,7 @@
     console.log('🚀 === THANKS PAGE INITIALIZED (Enhanced Data Retention & Protection) === 🚀');
 
     // Power Automate URLs for payment confirmation and tracking
-    const TRACKING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
+    // TRACKING_API_URL removed - all tracking now goes through unified-tracking.js
     const PAYMENT_CONFIRMED_WEBHOOK_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c8ac1b8ac2574f66ad4efcdc23165379/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kg6bffZKUQzUVR7jzpdTRaeudIa_T99V1hpzb_VlXPk';
     const SHAREPOINT_LOOKUP_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c35b9414a0be42f88182ae7e6e409f1d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2ztt24wScLuAfifD0pjzovseRDKXBAEtCQtScGMgPqQ';
 
@@ -567,17 +567,15 @@
 
     async function sendTrackingEvent(payload) {
       try {
-        const response = await fetch(TRACKING_API_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload),
-          keepalive: true
-        });
-        
-        console.log(`📡 Thanks page tracking event sent: ${payload.eventAction} (Status: ${response.status})`);
-        return response.ok;
+        // Use unified-tracking.js instead of direct API call
+        if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+          await window.unifiedTracking.sendTrackingData(payload.eventType || payload.eventAction, payload);
+          console.log(`📡 Thanks page tracking event sent via unified-tracking.js: ${payload.eventAction}`);
+          return true;
+        } else {
+          console.warn('⚠️ unified-tracking.js not available, skipping tracking');
+          return false;
+        }
       } catch (error) {
         console.error('❌ Thanks page tracking event failed:', error);
         return false;

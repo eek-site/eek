@@ -1086,14 +1086,18 @@
         source: 'journey_tracking'
       };
       
-      await fetch(TRACKING_API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        keepalive: true
-      });
-      
-      console.log('✅ Journey tracking sent:', journeyEntry.action);
+      // Use unified-tracking.js instead of direct API call
+      if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+        await window.unifiedTracking.sendTrackingData('visitor_journey', {
+          eventAction: journeyEntry.action,
+          journeyData: journeyEntry.data,
+          page: journeyEntry.page,
+          source: 'journey_tracking'
+        });
+        console.log('✅ Journey tracking sent:', journeyEntry.action);
+      } else {
+        console.warn('⚠️ unified-tracking.js not available, skipping journey tracking');
+      }
     } catch (error) {
       console.error('❌ Journey tracking failed:', error);
     }
@@ -1300,8 +1304,24 @@
       phone: "",
       email: "",
       
-      // Location as STRING for payment APIs (root level)
-      location: geo.city || 'Unknown',
+      // Root-level location object for email template compatibility (MUST be object, not string)
+      location: {
+          city: geo.city || 'Unknown',
+          region: geo.region || 'Unknown',
+          country: geo.country || 'New Zealand',
+          countryCode: geo.countryCode || 'NZ',
+          regionCode: geo.regionCode || 'Unknown',
+          postalCode: geo.postalCode || 'Unknown',
+          continent: geo.continent || 'Oceania',
+          address: '',
+          coordinates: {
+              latitude: geo.latitude || null,
+              longitude: geo.longitude || null,
+              accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+          },
+          timezone: geo.timezone || 'Pacific/Auckland',
+          raw: geo
+      },
       
       // Vehicle information (root level for direct access)
       rego: "",
@@ -1487,6 +1507,25 @@
   }
 
   async function sendTrackingEvent(payload) {
+    try {
+      // Use unified-tracking.js instead of direct API call
+      if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+        await window.unifiedTracking.sendTrackingData(payload.eventType || payload.eventAction, payload);
+        console.log(`📡 Supplier tracking event sent via unified-tracking.js: ${payload.eventAction}`);
+        return true;
+      } else {
+        console.warn('⚠️ unified-tracking.js not available, skipping tracking');
+        return false;
+      }
+    } catch (error) {
+      console.error('❌ Supplier tracking event failed:', error);
+      return false;
+    }
+  }
+  
+  // Old function removed - keeping for reference
+  /*
+  async function sendTrackingEvent_OLD(payload) {
     try {
       const response = await fetch(TRACKING_API_URL, {
         method: 'POST',
