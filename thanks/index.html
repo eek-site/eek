@@ -428,6 +428,7 @@
       canonical.vehicleAddon = coalesce(raw.vehicleAddon, raw.customerData?.vehicleTypeAddon, '');
 
       canonical.batteryVoltage = cleanText(coalesce(raw.batteryVoltage, raw.selectedVoltage, raw.customerData?.batteryVoltage));
+      canonical.tyreSize = cleanText(coalesce(raw.tyreSize, raw.customerData?.tyreSize));
 
       canonical.sellerName  = cleanText(coalesce(raw.sellerName, raw.customerData?.sellerName));
       canonical.sellerPhone = sanitizePhone(coalesce(raw.sellerPhone, raw.customerData?.sellerPhone));
@@ -828,6 +829,7 @@
       canonical.vehicleAddon = coalesce(raw.vehicleAddon, raw.customerData?.vehicleTypeAddon, '');
 
       canonical.batteryVoltage = cleanText(coalesce(raw.batteryVoltage, raw.selectedVoltage, raw.customerData?.batteryVoltage));
+      canonical.tyreSize = cleanText(coalesce(raw.tyreSize, raw.customerData?.tyreSize));
 
       canonical.sellerName  = cleanText(coalesce(raw.sellerName, raw.customerData?.sellerName));
       canonical.sellerPhone = sanitizePhone(coalesce(raw.sellerPhone, raw.customerData?.sellerPhone));
