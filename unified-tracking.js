@@ -894,6 +894,12 @@ class UnifiedTrackingSystem {
      * Determine if tracking data should be sent based on changes
      */
     shouldSendTrackingData(eventType, additionalData = {}) {
+        // Always send if this is the first time (no lastSentData)
+        if (!this.lastSentData || !this.lastSentData.timestamp) {
+            console.log('📊 Sending first tracking event (no previous data):', eventType);
+            return true;
+        }
+
         // Always send significant events
         if (this.significantEvents.has(eventType)) {
             console.log('📊 Sending significant event:', eventType);
