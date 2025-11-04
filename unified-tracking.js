@@ -135,7 +135,7 @@ class UnifiedTrackingSystem {
     }
 
     /**
-     * Initialize comprehensive tracking (without automatic page_view)
+     * Initialize comprehensive tracking with automatic page_view (once per session)
      */
     async initializeTracking() {
         console.log('🚀 Unified Tracking System v2.1 initialized');
@@ -143,8 +143,16 @@ class UnifiedTrackingSystem {
         // Initialize tracking data with proper CF_GEO waiting
         this.trackingData = await this.initializeTrackingData();
         
-        // NOTE: Removed automatic trackPageView() to prevent duplicate emails
-        // Page view tracking is now controlled by the main page's IIFE
+        // Track page view automatically (only once per session to prevent duplicates)
+        const pageViewKey = `page_view_sent_${this.trackingData[this.STANDARD_FIELDS.sessionId]}`;
+        if (!sessionStorage.getItem(pageViewKey)) {
+            this.trackPageView();
+            sessionStorage.setItem(pageViewKey, 'true');
+            console.log('✅ First page_view event sent for this session');
+        } else {
+            console.log('⏭️ Page view already sent for this session, skipping');
+        }
+        
         this.trackPageSource();
         this.trackUserJourney();
         this.trackEngagement();
