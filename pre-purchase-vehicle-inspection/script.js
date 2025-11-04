@@ -92,25 +92,21 @@ function trackVisitorJourney(action, data = {}) {
 
 async function sendJourneyTracking(journeyEntry) {
   try {
-    const payload = {
-      eventType: "visitor_journey",
-      eventAction: journeyEntry.action,
-      timestamp: journeyEntry.timestamp,
-      sessionId: journeyEntry.sessionId,
-      gclid: journeyEntry.gclid,
-      page: journeyEntry.page,
-      journeyData: journeyEntry.data,
-      source: 'journey_tracking'
-    };
-    
-    await fetch(API_ENDPOINTS.tracking, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-      keepalive: true
-    });
-    
-    console.log('✅ Journey tracking sent:', journeyEntry.action);
+    // Use unified-tracking.js instead of direct API call
+    if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+      await window.unifiedTracking.sendTrackingData('visitor_journey', {
+        eventAction: journeyEntry.action,
+        timestamp: journeyEntry.timestamp,
+        sessionId: journeyEntry.sessionId,
+        gclid: journeyEntry.gclid,
+        page: journeyEntry.page,
+        journeyData: journeyEntry.data,
+        source: 'journey_tracking'
+      });
+      console.log('✅ Journey tracking sent via unified-tracking.js:', journeyEntry.action);
+    } else {
+      console.warn('⚠️ unified-tracking.js not available, skipping journey tracking');
+    }
   } catch (error) {
     console.error('❌ Journey tracking failed:', error);
   }
@@ -1476,27 +1472,18 @@ async function sendStepTracking(status) {
   console.log('📊 Step data:', data);
   
   try {
-    // Use TRACKING API for step updates, not payment API
-    const response = await fetch(API_ENDPOINTS.tracking, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': navigator.userAgent
-      },
-      body: JSON.stringify(data)
-    });
-    
-    console.log(`✅ Step API Response: ${response.status}`);
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('❌ Step API Error Response:', errorText);
+    // Use unified-tracking.js instead of direct API call
+    if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+      await window.unifiedTracking.sendTrackingData(data.eventType || 'step_update', data);
+      console.log(`✅ Step tracking sent via unified-tracking.js: ${status}`);
+      return { ok: true, status: 200 };
+    } else {
+      console.warn('⚠️ unified-tracking.js not available, skipping step tracking');
+      return { ok: false, status: 0 };
     }
-    
-    return response;
   } catch (error) {
-    console.error('❌ Step API Error:', error);
-    return null;
+    console.error('❌ Step tracking error:', error);
+    return { ok: false, status: 0 };
   }
 }
 
