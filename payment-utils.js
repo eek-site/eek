@@ -86,9 +86,20 @@ class PaymentUtils {
             locationStr = canonicalData.location;
         } else if (canonicalData.location && typeof canonicalData.location === 'object') {
             // If location is an object, extract address or city
-            locationStr = canonicalData.location.address || canonicalData.location.city || canonicalData.location || '';
+            locationStr = canonicalData.location.address || canonicalData.location.city || '';
+            // If still empty, try to extract from nested properties
+            if (!locationStr && canonicalData.location.location) {
+                locationStr = typeof canonicalData.location.location === 'string' 
+                    ? canonicalData.location.location 
+                    : (canonicalData.location.location.address || canonicalData.location.location.city || '');
+            }
         } else {
-            locationStr = canonicalData.location || '';
+            locationStr = String(canonicalData.location || '');
+        }
+        
+        // Final safety check - if locationStr is still "[object Object]", clear it
+        if (locationStr === '[object Object]' || locationStr === 'object Object') {
+            locationStr = '';
         }
         
         // Build payload following data-repository.js structure
@@ -128,6 +139,7 @@ class PaymentUtils {
             urgencyLevel: this.normalizeForPayment(canonicalData.urgencyLevel),
             emergencyType: this.normalizeForPayment(canonicalData.emergencyType),
             quoteReference: this.normalizeForPayment(canonicalData.quoteReference),
+            tyreSize: this.normalizeForPayment(canonicalData.tyreSize),
             
             // Tracking fields
             isWinzService: canonicalData.isWinz === 'true',
@@ -172,6 +184,7 @@ class PaymentUtils {
                         timezone: String(geo.timezone || 'Pacific/Auckland'),
                         raw: geo || {}
                     },
+                tyreSize: this.normalizeForPayment(canonicalData.tyreSize),
                 vehicleRego: this.normalizeForPayment(canonicalData.rego),
                 rego: this.normalizeForPayment(canonicalData.rego),
                 vehicleYear: this.normalizeForPayment(canonicalData.year),
@@ -225,7 +238,7 @@ class PaymentUtils {
                 detail: 'Direct visit',
                 referrer: document.referrer || '',
                 utm: this.dataRepo
-                    ? this.dataRepo.getStandardizedUtmData(canonicalData)
+                    ? this.dataRepo.getStandardizedUtmData(canonicalData, true) // Use empty strings for Power Automate
                     : {
                         source: canonicalData.utm_source || localStorage.getItem("eek_utm_source") || '',
                         medium: canonicalData.utm_medium || localStorage.getItem("eek_utm_medium") || '',
@@ -268,7 +281,7 @@ class PaymentUtils {
             },
             
             utm: this.dataRepo
-                ? this.dataRepo.getStandardizedUtmData(canonicalData)
+                ? this.dataRepo.getStandardizedUtmData(canonicalData, true) // Use empty strings for Power Automate
                 : {
                     source: canonicalData.utm_source || localStorage.getItem("eek_utm_source") || '',
                     medium: canonicalData.utm_medium || localStorage.getItem("eek_utm_medium") || '',
@@ -283,7 +296,7 @@ class PaymentUtils {
                 gclid: canonicalData.gclid || localStorage.getItem("eek_gclid") || '',
                 gclidState: (canonicalData.gclid || localStorage.getItem("eek_gclid")) ? 'Active' : 'Inactive',
                 utm: this.dataRepo
-                    ? this.dataRepo.getStandardizedUtmData(canonicalData)
+                    ? this.dataRepo.getStandardizedUtmData(canonicalData, true) // Use empty strings for Power Automate
                     : {
                         source: canonicalData.utm_source || localStorage.getItem("eek_utm_source") || '',
                         medium: canonicalData.utm_medium || localStorage.getItem("eek_utm_medium") || '',
@@ -296,7 +309,7 @@ class PaymentUtils {
                     detail: 'Direct visit',
                     referrer: document.referrer || '',
                     utm: this.dataRepo
-                        ? this.dataRepo.getStandardizedUtmData(canonicalData)
+                        ? this.dataRepo.getStandardizedUtmData(canonicalData, true) // Use empty strings for Power Automate
                         : {
                             source: canonicalData.utm_source || localStorage.getItem("eek_utm_source") || '',
                             medium: canonicalData.utm_medium || localStorage.getItem("eek_utm_medium") || '',
@@ -349,7 +362,7 @@ class PaymentUtils {
                     name: this.normalizeForPayment(canonicalData.name),
                     phone: this.normalizeForPayment(canonicalData.phone),
                     email: this.normalizeForPayment(canonicalData.email),
-                    location: locationStr || '',
+                    location: locationStr || '', // String for trackingData.visitorData.location
                     vehicleRego: this.normalizeForPayment(canonicalData.rego),
                     vehicleYear: this.normalizeForPayment(canonicalData.year),
                     vehicleMake: this.normalizeForPayment(canonicalData.make),

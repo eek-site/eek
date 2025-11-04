@@ -465,8 +465,24 @@ class EekDataRepository {
      * @returns {Object} Standardized location object
      */
     getStandardizedLocationObject(geo = {}, userLocation = '') {
+        // Extract location string - handle both string and object cases
+        let locationStr = '';
+        if (typeof userLocation === 'string') {
+            locationStr = userLocation;
+        } else if (userLocation && typeof userLocation === 'object') {
+            // If location is an object, extract address or city
+            locationStr = userLocation.address || userLocation.city || '';
+            // If still empty, try to extract from nested properties
+            if (!locationStr && userLocation.location) {
+                locationStr = typeof userLocation.location === 'string' 
+                    ? userLocation.location 
+                    : (userLocation.location.address || userLocation.location.city || '');
+            }
+        } else {
+            locationStr = String(userLocation || '');
+        }
+        
         // Ensure all string fields are actually strings to prevent [object Object] issues
-        const locationStr = String(userLocation || '');
         return {
             city: String(locationStr || geo.city || 'Unknown'),
             region: String(geo.region || 'Unknown'),
@@ -491,14 +507,16 @@ class EekDataRepository {
      * @param {Object} formData - Form data
      * @returns {Object} Standardized UTM data
      */
-    getStandardizedUtmData(formData = {}) {
+    getStandardizedUtmData(formData = {}, useEmptyStrings = false) {
+        // For payment payloads, use empty strings instead of null for Power Automate compatibility
+        const defaultValue = useEmptyStrings ? '' : null;
         return {
-            source: formData.utm_source || localStorage.getItem("eek_utm_source") || null,
-            medium: formData.utm_medium || localStorage.getItem("eek_utm_medium") || null,
-            campaign: formData.utm_campaign || localStorage.getItem("eek_utm_campaign") || null,
-            term: formData.utm_term || localStorage.getItem("eek_utm_term") || null,
-            content: formData.utm_content || localStorage.getItem("eek_utm_content") || null,
-            gclid: formData.gclid || localStorage.getItem("eek_gclid") || null
+            source: formData.utm_source || localStorage.getItem("eek_utm_source") || defaultValue,
+            medium: formData.utm_medium || localStorage.getItem("eek_utm_medium") || defaultValue,
+            campaign: formData.utm_campaign || localStorage.getItem("eek_utm_campaign") || defaultValue,
+            term: formData.utm_term || localStorage.getItem("eek_utm_term") || defaultValue,
+            content: formData.utm_content || localStorage.getItem("eek_utm_content") || defaultValue,
+            gclid: formData.gclid || localStorage.getItem("eek_gclid") || defaultValue
         };
     }
 
