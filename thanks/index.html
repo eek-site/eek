@@ -1396,22 +1396,12 @@
       const maxRetries = 3;
       let lastError = null;
 
-      // Verify location is an object before sending
-      if (typeof payload.location !== 'object' || payload.location === null) {
-        console.error('❌ Location must be an object, got:', typeof payload.location, payload.location);
-        payload.location = {
-          city: 'Unknown',
-          region: 'Unknown',
-          country: 'New Zealand',
-          address: '',
-          coordinates: { latitude: null, longitude: null, accuracy: null }
-        };
+      // Verify location is a string (for Excel compatibility)
+      if (typeof payload.location !== 'string') {
+        console.warn('⚠️ Location is not a string, converting:', typeof payload.location, payload.location);
+        payload.location = String(payload.location || '');
       }
-      console.log('📤 Payload location structure:', { 
-        isObject: typeof payload.location === 'object',
-        hasCountry: !!payload.location?.country,
-        location: payload.location 
-      });
+      console.log('📤 Payload location:', payload.location);
 
       for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
@@ -1775,6 +1765,13 @@
 
       // sendPageViewEvent() removed - unified-tracking.js automatically tracks page_view on initialization
 
+      // Check if submission should be skipped (e.g., from pageshow handler for cached page)
+      if (window.skipSubmission) {
+        console.log('🛑 Submission skipped (page restored from cache or already submitted)');
+        window.skipSubmission = false; // Reset flag
+        return;
+      }
+
       const submissionResult = await sendToPaymentConfirmedFlow(bookingData);
       
       if (submissionResult.success) {
@@ -1807,9 +1804,20 @@
 
     window.addEventListener('pageshow', (event) => {
       if (event.persisted || sessionStorage.getItem('eek_page_was_unloaded') === 'true') {
-        console.log('⚠️ Page was restored from cache - preventing re-submission');
+        console.log('⚠️ Page was restored from cache - checking submission status');
         sessionStorage.removeItem('eek_page_was_unloaded');
-        showIndicator('info', '✓ Your booking has already been confirmed', 8000);
+        
+        // Check if this booking was already submitted
+        const bookingData = getComprehensiveBookingData();
+        const canon = toCanonical(bookingData);
+        const bookingId = submissionGuard.generateId(canon);
+        
+        if (submissionGuard.hasBeenSubmitted(bookingId)) {
+          console.log('🛑 Booking already submitted - preventing re-submission');
+          showIndicator('info', '✓ Your booking has already been confirmed (no duplicate sent)', 8000);
+          // Prevent the load event from submitting
+          window.skipSubmission = true;
+        }
       }
     });
 
