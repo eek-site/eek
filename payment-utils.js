@@ -336,7 +336,7 @@ class PaymentUtils {
                 location: {
                     country: String(geo.country || 'New Zealand'),
                     region: String(geo.region || 'Unknown'),
-                    city: String(geo.city || 'Unknown'),
+                    city: String(locationStr || geo.city || 'Unknown'), // Use user-provided location string first
                     postalCode: String(geo.postalCode || 'Unknown'),
                     coordinates: {
                         latitude: geo.latitude || null,
