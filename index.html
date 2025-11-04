@@ -1238,8 +1238,24 @@ function extractGCLID(urlParams) {
       phone: "",
       email: "",
       
-      // Location as STRING for payment APIs (root level)
-      location: geo.city || 'Unknown',
+      // Root-level location object for email template compatibility (MUST be object, not string)
+      location: {
+        city: geo.city || 'Unknown',
+        region: geo.region || 'Unknown',
+        country: geo.country || 'New Zealand',
+        countryCode: geo.countryCode || 'NZ',
+        regionCode: geo.regionCode || 'Unknown',
+        postalCode: geo.postalCode || 'Unknown',
+        continent: geo.continent || 'Oceania',
+        address: '',
+        coordinates: {
+          latitude: geo.latitude || null,
+          longitude: geo.longitude || null,
+          accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+        },
+        timezone: geo.timezone || 'Pacific/Auckland',
+        raw: geo
+      },
       
       // Vehicle information (root level for direct access)
       rego: "",
