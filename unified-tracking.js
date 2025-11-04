@@ -1029,6 +1029,19 @@ class UnifiedTrackingSystem {
             return;
         }
 
+        // Create the location object first (will be protected from string overwrites)
+        const baseLocationObject = {
+            city: this.trackingData[this.STANDARD_FIELDS.address] || this.trackingData[this.STANDARD_FIELDS.city] || this.trackingData.location?.city || 'Unknown',
+            region: this.trackingData.location?.region || 'Unknown',
+            country: this.trackingData.location?.country || 'New Zealand',
+            address: this.trackingData[this.STANDARD_FIELDS.address] || '',
+            coordinates: {
+                latitude: this.trackingData.location?.coordinates?.latitude || null,
+                longitude: this.trackingData.location?.coordinates?.longitude || null,
+                accuracy: this.trackingData.location?.coordinates?.accuracy || null
+            }
+        };
+        
         // Create payload that matches Power Automate email template expectations EXACTLY
         const trackingPayload = {
             // Core fields that the email template expects - EXACT field names
@@ -1037,17 +1050,7 @@ class UnifiedTrackingSystem {
                 : this.trackingData[this.STANDARD_FIELDS.fullName] || '',
             phone: this.trackingData[this.STANDARD_FIELDS.phone] || '',
             email: this.trackingData[this.STANDARD_FIELDS.email] || '',
-            location: {
-                city: this.trackingData[this.STANDARD_FIELDS.address] || this.trackingData[this.STANDARD_FIELDS.city] || '',
-                region: this.trackingData.location?.region || 'Unknown',
-                country: this.trackingData.location?.country || 'New Zealand',
-                address: this.trackingData[this.STANDARD_FIELDS.address] || '',
-                coordinates: {
-                    latitude: this.trackingData.location?.coordinates?.latitude || null,
-                    longitude: this.trackingData.location?.coordinates?.longitude || null,
-                    accuracy: this.trackingData.location?.coordinates?.accuracy || null
-                }
-            },
+            location: baseLocationObject,
             
             // Vehicle information - EXACT field names from template
             vehicleRego: this.trackingData[this.STANDARD_FIELDS.vehicleRego] || '',
@@ -1136,19 +1139,6 @@ class UnifiedTrackingSystem {
                 platform: this.detectDevicePlatform()
             },
             
-            // Location information - EXACT structure from template
-            location: {
-                country: this.trackingData.location?.country || 'Unknown',
-                region: this.trackingData.location?.region || 'Unknown',
-                city: this.trackingData.location?.city || 'Unknown',
-                postalCode: this.trackingData.location?.postalCode || 'Unknown',
-                coordinates: {
-                    latitude: this.trackingData.location?.coordinates?.latitude || null,
-                    longitude: this.trackingData.location?.coordinates?.longitude || null,
-                    accuracy: this.trackingData.location?.coordinates?.accuracy || null
-                }
-            },
-            
             // Engagement data - EXACT structure from template
             engagement: {
                 timeOnPage: this.trackingData.engagement?.timeOnPage || 0,
@@ -1189,24 +1179,26 @@ class UnifiedTrackingSystem {
             ...additionalData,
             // Ensure location is always an object (override any string location from additionalData)
             location: (() => {
-                // If additionalData has location as string, use it for city
-                const additionalLocationStr = typeof additionalData.location === 'string' ? additionalData.location : '';
-                // Use the location object we created, or build one from additionalData
+                // If additionalData has location as object, use it (but ensure it has required fields)
                 if (typeof additionalData.location === 'object' && additionalData.location !== null) {
-                    return additionalData.location;
+                    return {
+                        city: additionalData.location.city || baseLocationObject.city,
+                        region: additionalData.location.region || baseLocationObject.region,
+                        country: additionalData.location.country || baseLocationObject.country,
+                        address: additionalData.location.address || baseLocationObject.address,
+                        coordinates: additionalData.location.coordinates || baseLocationObject.coordinates
+                    };
                 }
-                // Return the location object we already created (with city updated if additionalData had string)
-                return {
-                    city: additionalLocationStr || this.trackingData[this.STANDARD_FIELDS.address] || this.trackingData[this.STANDARD_FIELDS.city] || '',
-                    region: this.trackingData.location?.region || 'Unknown',
-                    country: this.trackingData.location?.country || 'New Zealand',
-                    address: additionalLocationStr || this.trackingData[this.STANDARD_FIELDS.address] || '',
-                    coordinates: {
-                        latitude: this.trackingData.location?.coordinates?.latitude || null,
-                        longitude: this.trackingData.location?.coordinates?.longitude || null,
-                        accuracy: this.trackingData.location?.coordinates?.accuracy || null
-                    }
-                };
+                // If additionalData has location as string, use it for city/address but keep the object structure
+                if (typeof additionalData.location === 'string' && additionalData.location !== '') {
+                    return {
+                        ...baseLocationObject,
+                        city: additionalData.location,
+                        address: additionalData.location
+                    };
+                }
+                // If additionalData.location is empty string or missing, use baseLocationObject
+                return baseLocationObject;
             })()
         };
 

@@ -676,6 +676,9 @@ function sanitizeText(val){ return (val || '').trim().replace(/\s+/g,' '); }
 
 // === CONSISTENT DATA BUILDER ===
 function buildBookingData(status) {
+  const geo = window.CF_GEO || {};
+  const locationInputValue = sanitizeText(document.getElementById('locationInput')?.value || '');
+  
   const baseData = {
     sessionId: sessionId,
     gclid: gclid,
@@ -684,10 +687,21 @@ function buildBookingData(status) {
     statusDescription: STATUS_DESCRIPTIONS[status] || 'Unknown status',
     timestamp: new Date().toISOString(),
     
-    name: sanitizeText(document.getElementById('nameInput').value),
-    phone: sanitizePhone(document.getElementById('phoneInput').value),
-    email: document.getElementById('emailInput').value.trim(),
-    location: sanitizeText(document.getElementById('locationInput').value),
+    name: sanitizeText(document.getElementById('nameInput')?.value || ''),
+    phone: sanitizePhone(document.getElementById('phoneInput')?.value || ''),
+    email: document.getElementById('emailInput')?.value?.trim() || '',
+    // Root-level location object for email template compatibility (MUST be object, not string)
+    location: {
+      city: locationInputValue || 'Unknown',
+      region: geo?.region || 'Unknown',
+      country: geo?.country || 'New Zealand',
+      address: locationInputValue || '',
+      coordinates: {
+        latitude: geo?.latitude || null,
+        longitude: geo?.longitude || null,
+        accuracy: geo?.latitude && geo?.longitude ? 'IP-based' : null
+      }
+    },
     details: document.getElementById('detailsInput').value || '',
     
     rego: sanitizeRego(document.getElementById('regoInput').value),
@@ -718,10 +732,11 @@ function buildBookingData(status) {
     
     // Add visitorData for Power Automate compatibility
     visitorData: {
-      name: sanitizeText(document.getElementById('nameInput').value),
-      phone: sanitizePhone(document.getElementById('phoneInput').value),
-      email: document.getElementById('emailInput').value.trim(),
-      location: sanitizeText(document.getElementById('locationInput').value),
+      name: sanitizeText(document.getElementById('nameInput')?.value || ''),
+      phone: sanitizePhone(document.getElementById('phoneInput')?.value || ''),
+      email: document.getElementById('emailInput')?.value?.trim() || '',
+      // visitorData.location can be string (for backward compatibility) but root-level location must be object
+      location: locationInputValue,
       vehicleRego: sanitizeRego(document.getElementById('regoInput').value),
       vehicleYear: document.getElementById('yearInput').value.trim(),
       vehicleMake: sanitizeText(document.getElementById('makeInput').value),
