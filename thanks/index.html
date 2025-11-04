@@ -1032,7 +1032,9 @@
       
       for (const [k,v] of params){
         if (k !== 'd' && k !== 'bookingId'){ 
-          data[k] = normalizeValue(decodeURIComponent(v));
+          // Map common parameter name variations
+          const mappedKey = k === 'session_id' ? 'sessionId' : k;
+          data[mappedKey] = normalizeValue(decodeURIComponent(v));
         }
       }
       
