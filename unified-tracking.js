@@ -1185,8 +1185,29 @@ class UnifiedTrackingSystem {
             pagePath: this.trackingData[this.STANDARD_FIELDS.pagePath] || window.location.pathname,
             pageTitle: this.trackingData[this.STANDARD_FIELDS.pageTitle] || document.title,
             
-            // Additional data
-            ...additionalData
+            // Additional data (but protect location from being overwritten as string)
+            ...additionalData,
+            // Ensure location is always an object (override any string location from additionalData)
+            location: (() => {
+                // If additionalData has location as string, use it for city
+                const additionalLocationStr = typeof additionalData.location === 'string' ? additionalData.location : '';
+                // Use the location object we created, or build one from additionalData
+                if (typeof additionalData.location === 'object' && additionalData.location !== null) {
+                    return additionalData.location;
+                }
+                // Return the location object we already created (with city updated if additionalData had string)
+                return {
+                    city: additionalLocationStr || this.trackingData[this.STANDARD_FIELDS.address] || this.trackingData[this.STANDARD_FIELDS.city] || '',
+                    region: this.trackingData.location?.region || 'Unknown',
+                    country: this.trackingData.location?.country || 'New Zealand',
+                    address: additionalLocationStr || this.trackingData[this.STANDARD_FIELDS.address] || '',
+                    coordinates: {
+                        latitude: this.trackingData.location?.coordinates?.latitude || null,
+                        longitude: this.trackingData.location?.coordinates?.longitude || null,
+                        accuracy: this.trackingData.location?.coordinates?.accuracy || null
+                    }
+                };
+            })()
         };
 
         console.log('📊 SENDING TRACKING DATA:', {

@@ -1446,18 +1446,21 @@ async function generatePaymentLink(){
     name: customerName,
     phone: phone,
     email: email,
-    // Root-level location object for email template compatibility
-    location: {
-      city: location || 'Unknown',
-      region: geo?.region || 'Unknown',
-      country: geo?.country || 'New Zealand',
-      address: location || '',
-      coordinates: {
-        latitude: geo?.latitude || null,
-        longitude: geo?.longitude || null,
-        accuracy: geo?.latitude && geo?.longitude ? 'IP-based' : null
-      }
-    },
+    // Root-level location object for email template compatibility (MUST be object, not string)
+    location: (() => {
+      const locationStr = location || '';
+      return {
+        city: locationStr || 'Unknown',
+        region: geo?.region || 'Unknown',
+        country: geo?.country || 'New Zealand',
+        address: locationStr || '',
+        coordinates: {
+          latitude: geo?.latitude || null,
+          longitude: geo?.longitude || null,
+          accuracy: geo?.latitude && geo?.longitude ? 'IP-based' : null
+        }
+      };
+    })(),
     price: total,
     finalPrice: total,
     calculatedPrice: total,

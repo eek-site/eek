@@ -1921,17 +1921,21 @@ function buildInspectionData(status) {
     name: `${bookingData.firstName || ''} ${bookingData.lastName || ''}`.trim(),
     phone: bookingData.phone || '',
     email: bookingData.email || '',
-    location: {
-      city: bookingData.city || bookingData.location || bookingData.address || '',
-      region: geo.region || 'Unknown',
-      country: geo.country || 'New Zealand',
-      address: bookingData.location || bookingData.address || '',
-      coordinates: {
-        latitude: geo.latitude || null,
-        longitude: geo.longitude || null,
-        accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
-      }
-    },
+    // Root-level location object for email template compatibility (MUST be object, not string)
+    location: (() => {
+      const locationStr = bookingData.location || bookingData.address || bookingData.city || '';
+      return {
+        city: locationStr || 'Unknown',
+        region: geo.region || 'Unknown',
+        country: geo.country || 'New Zealand',
+        address: locationStr || '',
+        coordinates: {
+          latitude: geo.latitude || null,
+          longitude: geo.longitude || null,
+          accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+        }
+      };
+    })(),
     
     // Root-level visitorData for email template compatibility
     visitorData: {

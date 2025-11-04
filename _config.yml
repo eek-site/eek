@@ -1,4 +1,4 @@
-version: 20251020.33
+version: 20251020.34
 plugins:
   - jekyll-sitemap
   

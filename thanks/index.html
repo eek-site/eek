@@ -1394,18 +1394,21 @@
         name: normalizeValue(canon.name),
         phone: normalizeValue(canon.phone),
         email: normalizeValue(canon.email),
-        // Root-level location object for email template compatibility
-        location: {
-          city: canon.location || 'Unknown',
-          region: window.CF_GEO?.region || 'Unknown',
-          country: window.CF_GEO?.country || 'New Zealand',
-          address: canon.location || '',
-          coordinates: {
-            latitude: window.CF_GEO?.latitude || null,
-            longitude: window.CF_GEO?.longitude || null,
-            accuracy: window.CF_GEO?.latitude && window.CF_GEO?.longitude ? 'IP-based' : null
-          }
-        },
+        // Root-level location object for email template compatibility (MUST be object, not string)
+        location: (() => {
+          const locationStr = canon.location || '';
+          return {
+            city: locationStr || 'Unknown',
+            region: window.CF_GEO?.region || 'Unknown',
+            country: window.CF_GEO?.country || 'New Zealand',
+            address: locationStr || '',
+            coordinates: {
+              latitude: window.CF_GEO?.latitude || null,
+              longitude: window.CF_GEO?.longitude || null,
+              accuracy: window.CF_GEO?.latitude && window.CF_GEO?.longitude ? 'IP-based' : null
+            }
+          };
+        })(),
         rego: normalizeValue(canon.rego),
         year: normalizeValue(canon.year),
         make: normalizeValue(canon.make),
@@ -1663,6 +1666,23 @@
 
       const maxRetries = 3;
       let lastError = null;
+
+      // Verify location is an object before sending
+      if (typeof payload.location !== 'object' || payload.location === null) {
+        console.error('❌ Location must be an object, got:', typeof payload.location, payload.location);
+        payload.location = {
+          city: 'Unknown',
+          region: 'Unknown',
+          country: 'New Zealand',
+          address: '',
+          coordinates: { latitude: null, longitude: null, accuracy: null }
+        };
+      }
+      console.log('📤 Payload location structure:', { 
+        isObject: typeof payload.location === 'object',
+        hasCountry: !!payload.location?.country,
+        location: payload.location 
+      });
 
       for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
