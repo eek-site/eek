@@ -1253,7 +1253,11 @@
 
       addDetailRow(rows, 'Service', data.serviceTitle || data.service);
       addDetailRow(rows, 'Service Code', data.serviceCode);
-      addDetailRow(rows, 'Location', data.location);
+      // Extract location string - handle both string and object cases
+      const locationDisplay = typeof data.location === 'string' 
+        ? data.location 
+        : (data.location?.address || data.location?.city || (typeof data.location === 'object' ? '' : data.location) || '');
+      addDetailRow(rows, 'Location', locationDisplay);
 
       addDetailRow(rows, 'Registration', data.rego);
       const vehicleLine = [data.year, data.make, data.model].filter(Boolean).join(' ');
@@ -1642,7 +1646,11 @@
       // Service
       addDetailRow(rows, 'Service', data.serviceTitle || data.service);
       addDetailRow(rows, 'Service Code', data.serviceCode);
-      addDetailRow(rows, 'Location', data.location);
+      // Extract location string - handle both string and object cases
+      const locationDisplay = typeof data.location === 'string' 
+        ? data.location 
+        : (data.location?.address || data.location?.city || (typeof data.location === 'object' ? '' : data.location) || '');
+      addDetailRow(rows, 'Location', locationDisplay);
 
       // Vehicle
       addDetailRow(rows, 'Registration', data.rego);
