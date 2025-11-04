@@ -40,6 +40,12 @@
   <!-- Centralized Phone Number Management -->
   <script src="/phone-manager.js?v={{ site.version }}"></script>
   
+  <!-- Data Repository - Single Source of Truth -->
+  <script src="/data-repository.js?v={{ site.version }}"></script>
+  
+  <!-- Payment Utilities - Payment-specific data handling -->
+  <script src="/payment-utils.js?v={{ site.version }}"></script>
+  
   <!-- Unified Tracking System (replaces tracking-manager.js) -->
   <script src="/unified-tracking.js?v={{ site.version }}"></script>
   
@@ -940,18 +946,26 @@
       return Object.keys(trackingData).length > 0 ? trackingData : null;
     }
 
-    // === HELPER FUNCTION - Convert empty strings to null ===
+    // === HELPER FUNCTION - Normalize values for Power Automate ===
+    // Converts null/undefined to empty strings so Power Automate Excel trim() works
+    // Previously returned null, but Power Automate trim() requires strings
     function normalizeValue(value) {
-      // If value is undefined, null, or empty string, return null
+      // If value is undefined, null, or empty string, return empty string
+      // Power Automate trim() function requires strings, not null
       if (value === undefined || value === null || value === '') {
-        return null;
+        return '';
       }
-      // If it's a string with only whitespace, return null
+      // If it's a string with only whitespace, return empty string
       if (typeof value === 'string' && value.trim() === '') {
-        return null;
+        return '';
       }
-      // Otherwise return the value as-is
-      return value;
+      // If it's already a string, return as-is
+      if (typeof value === 'string') {
+        return value;
+      }
+      // For other types (numbers, booleans), convert to string
+      // This ensures Power Automate Excel actions can trim() all values
+      return String(value);
     }
 
     // === HELPER FUNCTION - Normalize entire object ===
@@ -1375,281 +1389,9 @@
       const bookingId = guardCheck.bookingId;
       console.log(`✅ Proceeding with submission for ${bookingId}`);
 
-      // Prepare payload for payment confirmed webhook with proper nested structure
-      const payload = {
-        // Root-level fields for email template compatibility
-        name: normalizeValue(canon.name),
-        phone: normalizeValue(canon.phone),
-        email: normalizeValue(canon.email),
-        // Root-level location object for email template compatibility (MUST be object, not string)
-        location: (() => {
-          const locationStr = canon.location || '';
-          return {
-            city: locationStr || 'Unknown',
-            region: window.CF_GEO?.region || 'Unknown',
-            country: window.CF_GEO?.country || 'New Zealand',
-            address: locationStr || '',
-            coordinates: {
-              latitude: window.CF_GEO?.latitude || null,
-              longitude: window.CF_GEO?.longitude || null,
-              accuracy: window.CF_GEO?.latitude && window.CF_GEO?.longitude ? 'IP-based' : null
-            }
-          };
-        })(),
-        rego: normalizeValue(canon.rego),
-        year: normalizeValue(canon.year),
-        make: normalizeValue(canon.make),
-        model: normalizeValue(canon.model),
-        vehicleType: normalizeValue(canon.vehicleType),
-        service: normalizeValue(canon.service),
-        serviceCode: normalizeValue(canon.serviceCode),
-        serviceTitle: normalizeValue(canon.serviceTitle),
-        price: normalizeValue(canon.price),
-        basePrice: canon.price,
-        finalPrice: canon.price,
-        calculatedPrice: canon.price,
-        batteryVoltage: normalizeValue(canon.batteryVoltage),
-        sellerName: normalizeValue(canon.sellerName),
-        sellerPhone: normalizeValue(canon.sellerPhone),
-        details: normalizeValue(canon.details),
-        scheduledDate: normalizeValue(canon.scheduledDate),
-        scheduledTime: normalizeValue(canon.timeWindow),
-        urgencyLevel: normalizeValue(canon.urgencyLevel),
-        emergencyType: normalizeValue(canon.emergencyType),
-        quoteReference: normalizeValue(canon.quoteReference),
-        isWinzService: canon.isWinz === 'true',
-        sessionId: normalizeValue(canon.sessionId),
-        gclid: normalizeValue(canon.gclid),
-        gclidState: (canon.gclid || localStorage.getItem("eek_gclid")) ? 'Active' : 'Inactive',
-        eventType: 'payment_confirmed',
-        eventAction: 'payment_confirmed',
-        timestamp: new Date().toISOString(),
-        bookingStatus: 'payment_confirmed',
-        currentStep: 8,
-        totalSteps: 8,
-        stepProgress: 100,
-        termsAccepted: true,
-        marketingConsent: false,
-        
-        // Root-level visitorData for email template compatibility
-        visitorData: {
-          name: normalizeValue(canon.name),
-          phone: normalizeValue(canon.phone),
-          email: normalizeValue(canon.email),
-          location: { // Object for email template compatibility
-            city: canon.location || 'Unknown',
-            region: window.CF_GEO?.region || 'Unknown',
-            country: window.CF_GEO?.country || 'New Zealand',
-            countryCode: window.CF_GEO?.countryCode || 'NZ',
-            regionCode: window.CF_GEO?.regionCode || 'Unknown',
-            postalCode: window.CF_GEO?.postalCode || 'Unknown',
-            continent: window.CF_GEO?.continent || 'Oceania',
-            address: canon.location || '',
-            coordinates: {
-              latitude: window.CF_GEO?.latitude || null,
-              longitude: window.CF_GEO?.longitude || null,
-              accuracy: window.CF_GEO?.latitude && window.CF_GEO?.longitude ? 'IP-based' : null
-            },
-            timezone: window.CF_GEO?.timezone || 'Pacific/Auckland',
-            raw: window.CF_GEO || {}
-          },
-          vehicleRego: normalizeValue(canon.rego),
-          rego: normalizeValue(canon.rego), // Template expects both
-          vehicleYear: normalizeValue(canon.year),
-          vehicleMake: normalizeValue(canon.make),
-          vehicleModel: normalizeValue(canon.model),
-          vehicleType: normalizeValue(canon.vehicleType),
-          service: normalizeValue(canon.service),
-          serviceCode: normalizeValue(canon.serviceCode),
-          serviceTitle: canon.serviceTitle
-        },
-        
-        // customerData object for payment API compatibility
-        customerData: {
-          // Basic customer info - EXACT field names from payment API
-          name: normalizeValue(canon.name),
-          phone: normalizeValue(canon.phone),
-          email: normalizeValue(canon.email),
-          location: canon.location || '', // String for payment API
-          
-          // Vehicle information - EXACT field names from payment API
-          vehicleRego: normalizeValue(canon.rego),
-          vehicleYear: normalizeValue(canon.year),
-          vehicleMake: normalizeValue(canon.make),
-          vehicleModel: normalizeValue(canon.model),
-          vehicleType: normalizeValue(canon.vehicleType),
-          
-          // Service information - EXACT field names from payment API
-          service: normalizeValue(canon.service),
-          serviceCode: normalizeValue(canon.serviceCode),
-          serviceTitle: normalizeValue(canon.serviceTitle),
-          details: normalizeValue(canon.details),
-          price: normalizeValue(canon.price),
-          finalPrice: canon.price,
-          calculatedPrice: canon.price,
-          basePrice: canon.price,
-          
-          // Tracking - EXACT field names from payment API
-          sessionId: normalizeValue(canon.sessionId),
-          bookingSource: 'payment_confirmation',
-          formVersion: '2.1'
-        },
-        
-        // Root-level journeyData for email template compatibility
-        journeyData: {
-          callAttemptId: localStorage.getItem('eek_last_call_attempt_id') || null,
-          callTimestamp: localStorage.getItem('eek_last_call_timestamp') || null,
-          returnTimestamp: null,
-          timeBetweenCallAndReturn: null,
-          source: 'payment_confirmation'
-        },
-        
-        // Additional objects for email template compatibility
-        pageSource: {
-          type: 'direct',
-          detail: 'Direct visit',
-          referrer: document.referrer || '',
-          utm: {
-            source: canon.utm_source || localStorage.getItem("eek_utm_source"),
-            medium: canon.utm_medium || localStorage.getItem("eek_utm_medium"),
-            campaign: canon.utm_campaign || localStorage.getItem("eek_utm_campaign"),
-            term: canon.utm_term || localStorage.getItem("eek_utm_term"),
-            content: canon.utm_content || localStorage.getItem("eek_utm_content")
-          },
-          clickIds: {
-            gclid: canon.gclid || localStorage.getItem("eek_gclid"),
-            fbclid: null,
-            msclkid: null
-          }
-        },
-        device: {
-          userAgent: navigator.userAgent,
-          platform: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
-          language: navigator.language || 'en-NZ',
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Pacific/Auckland',
-          screenResolution: `${window.screen?.width || 0}x${window.screen?.height || 0}`,
-          viewportSize: `${window.innerWidth || 0}x${window.innerHeight || 0}`
-        },
-        engagement: {
-          timeOnPage: Math.round((Date.now() - (window.pageLoadTime || Date.now())) / 1000),
-          scrollDepth: 0,
-          clicks: 0,
-          formInteractions: 0,
-          buttonClicks: 0
-        },
-        userJourney: {
-          pageHistory: JSON.parse(localStorage.getItem('eek_user_journey') || '[]'),
-          totalPages: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').length || 1,
-          sessionDuration: Date.now() - (window.sessionStartTime || Date.now()),
-          entryPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]')[0]?.url || window.location.href,
-          previousPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').slice(-2, -1)[0]?.url || ''
-        },
-        utm: {
-          source: canon.utm_source || localStorage.getItem("eek_utm_source"),
-          medium: canon.utm_medium || localStorage.getItem("eek_utm_medium"),
-          campaign: canon.utm_campaign || localStorage.getItem("eek_utm_campaign"),
-          term: canon.utm_term || localStorage.getItem("eek_utm_term"),
-          content: canon.utm_content || localStorage.getItem("eek_utm_content"),
-          gclid: canon.gclid || localStorage.getItem("eek_gclid")
-        },
-        
-        // Enhanced tracking data for complete attribution
-        trackingData: {
-          gclid: canon.gclid || localStorage.getItem("eek_gclid"),
-          gclidState: (canon.gclid || localStorage.getItem("eek_gclid")) ? 'Active' : 'Inactive',
-          utm: {
-            source: canon.utm_source || localStorage.getItem("eek_utm_source"),
-            medium: canon.utm_medium || localStorage.getItem("eek_utm_medium"),
-            campaign: canon.utm_campaign || localStorage.getItem("eek_utm_campaign"),
-            term: canon.utm_term || localStorage.getItem("eek_utm_term"),
-            content: canon.utm_content || localStorage.getItem("eek_utm_content")
-          },
-          pageSource: {
-            type: 'direct',
-            detail: 'Direct visit',
-            referrer: document.referrer || '',
-            utm: {
-              source: canon.utm_source || localStorage.getItem("eek_utm_source"),
-              medium: canon.utm_medium || localStorage.getItem("eek_utm_medium"),
-              campaign: canon.utm_campaign || localStorage.getItem("eek_utm_campaign"),
-              term: canon.utm_term || localStorage.getItem("eek_utm_term"),
-              content: canon.utm_content || localStorage.getItem("eek_utm_content")
-            },
-            clickIds: {
-              gclid: canon.gclid || localStorage.getItem("eek_gclid"),
-              fbclid: null,
-              msclkid: null
-            }
-          },
-          device: {
-            userAgent: navigator.userAgent,
-            platform: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
-            language: navigator.language || 'en-NZ',
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Pacific/Auckland',
-            screenResolution: `${window.screen?.width || 0}x${window.screen?.height || 0}`,
-            viewportSize: `${window.innerWidth || 0}x${window.innerHeight || 0}`
-          },
-          location: {
-            country: window.CF_GEO?.country || 'New Zealand',
-            region: window.CF_GEO?.region || 'Unknown',
-            city: window.CF_GEO?.city || 'Unknown',
-            postalCode: window.CF_GEO?.postalCode || 'Unknown',
-            coordinates: {
-              latitude: window.CF_GEO?.latitude || null,
-              longitude: window.CF_GEO?.longitude || null,
-              accuracy: window.CF_GEO?.latitude && window.CF_GEO?.longitude ? 'IP-based' : null
-            }
-          },
-          engagement: {
-            timeOnPage: Math.round((Date.now() - (window.pageLoadTime || Date.now())) / 1000),
-            scrollDepth: 0, // Could be enhanced with scroll tracking
-            clicks: 0, // Could be enhanced with click tracking
-            formInteractions: 0, // Could be enhanced with form tracking
-            buttonClicks: 0 // Could be enhanced with button tracking
-          },
-          userJourney: {
-            pageHistory: JSON.parse(localStorage.getItem('eek_user_journey') || '[]'),
-            totalPages: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').length || 1,
-            sessionDuration: Date.now() - (window.sessionStartTime || Date.now()),
-            entryPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]')[0]?.url || window.location.href,
-            previousPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').slice(-2, -1)[0]?.url || ''
-          },
-          visitorData: {
-            name: normalizeValue(canon.name),
-            phone: normalizeValue(canon.phone),
-            email: normalizeValue(canon.email),
-            location: normalizeValue(canon.location),
-            vehicleRego: normalizeValue(canon.rego),
-            vehicleYear: normalizeValue(canon.year),
-            vehicleMake: normalizeValue(canon.make),
-            vehicleModel: normalizeValue(canon.model),
-            vehicleType: normalizeValue(canon.vehicleType),
-            batteryVoltage: normalizeValue(canon.batteryVoltage),
-            service: normalizeValue(canon.service),
-            serviceCode: normalizeValue(canon.serviceCode),
-            serviceTitle: normalizeValue(canon.serviceTitle),
-            price: normalizeValue(canon.price),
-            basePrice: canon.price
-          },
-          journeyData: {
-            callAttemptId: localStorage.getItem('eek_last_call_attempt_id') || null,
-            callTimestamp: localStorage.getItem('eek_last_call_timestamp') || null,
-            returnTimestamp: null,
-            timeBetweenCallAndReturn: null,
-            source: 'payment_confirmation'
-          },
-          eventType: 'payment_confirmed',
-          eventAction: 'payment_confirmed',
-          timestamp: new Date().toISOString()
-        },
-        
-        // Additional fields for webhook functionality
-        idempotencyKey: bookingId,
-        paymentConfirmedAt: new Date().toISOString(),
-        paymentStatus: 'confirmed',
-        pageLoadedAt: new Date().toISOString(),
-        submissionAttempt: 1
-      };
+      // Use PaymentUtils to build payload (uses data-repository.js as SSOT)
+      const paymentUtils = new PaymentUtils();
+      const payload = paymentUtils.buildPaymentConfirmedPayload(canon, bookingId);
 
       const maxRetries = 3;
       let lastError = null;

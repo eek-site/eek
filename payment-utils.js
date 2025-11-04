@@ -1,0 +1,406 @@
+/**
+ * PAYMENT UTILITIES - Payment-Specific Data Handling
+ * 
+ * This file handles payment payload construction and normalization.
+ * Uses data-repository.js as the Single Source of Truth (SSOT) for structure.
+ * 
+ * Key difference from tracking:
+ * - Payment: Uses empty strings (''), not null, for Power Automate Excel trim() compatibility
+ * - Tracking: Can use null values where appropriate
+ * 
+ * Version: 1.0
+ * Last Updated: 2025-01-24
+ */
+
+class PaymentUtils {
+    constructor() {
+        // Use data repository as SSOT
+        this.dataRepo = window.EekDataRepository ? new window.EekDataRepository() : null;
+        
+        if (!this.dataRepo) {
+            console.warn('⚠️ EekDataRepository not found. Payment utilities may not work correctly.');
+        }
+    }
+
+    /**
+     * Normalize value for Power Automate Excel compatibility
+     * Power Automate Excel trim() requires strings, not null
+     * @param {*} value - Value to normalize
+     * @returns {string} Normalized string value
+     */
+    normalizeForPayment(value) {
+        // If value is undefined, null, or empty string, return empty string
+        // Power Automate Excel trim() function requires strings, not null
+        if (value === undefined || value === null || value === '') {
+            return '';
+        }
+        // If it's a string with only whitespace, return empty string
+        if (typeof value === 'string' && value.trim() === '') {
+            return '';
+        }
+        // If it's already a string, return as-is
+        if (typeof value === 'string') {
+            return value;
+        }
+        // For other types (numbers, booleans), convert to string
+        return String(value);
+    }
+
+    /**
+     * Normalize entire object for payment payload
+     * Recursively converts all null/undefined values to empty strings
+     * @param {Object} obj - Object to normalize
+     * @returns {Object} Normalized object
+     */
+    normalizeObjectForPayment(obj) {
+        if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
+            return obj === null || obj === undefined ? '' : obj;
+        }
+        
+        const normalized = {};
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                const value = obj[key];
+                if (value && typeof value === 'object' && !Array.isArray(value)) {
+                    // Recursively normalize nested objects
+                    normalized[key] = this.normalizeObjectForPayment(value);
+                } else {
+                    normalized[key] = this.normalizeForPayment(value);
+                }
+            }
+        }
+        return normalized;
+    }
+
+    /**
+     * Build payment confirmed payload following SSOT structure
+     * @param {Object} canonicalData - Canonical booking data
+     * @param {string} bookingId - Booking ID
+     * @returns {Object} Payment payload following SSOT structure
+     */
+    buildPaymentConfirmedPayload(canonicalData, bookingId) {
+        const geo = window.CF_GEO || {};
+        const locationStr = canonicalData.location || '';
+        
+        // Build payload following data-repository.js structure
+        const payload = {
+            // Root-level fields for email template compatibility
+            name: this.normalizeForPayment(canonicalData.name),
+            phone: this.normalizeForPayment(canonicalData.phone),
+            email: this.normalizeForPayment(canonicalData.email),
+            
+            // Root-level location object (MUST be object, not string)
+            location: this.dataRepo 
+                ? this.dataRepo.getStandardizedLocationObject(geo, locationStr)
+                : {
+                    city: locationStr || 'Unknown',
+                    region: geo.region || 'Unknown',
+                    country: geo.country || 'New Zealand',
+                    address: locationStr || '',
+                    coordinates: {
+                        latitude: geo.latitude || null,
+                        longitude: geo.longitude || null,
+                        accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+                    }
+                },
+            
+            // Vehicle information
+            rego: this.normalizeForPayment(canonicalData.rego),
+            year: this.normalizeForPayment(canonicalData.year),
+            make: this.normalizeForPayment(canonicalData.make),
+            model: this.normalizeForPayment(canonicalData.model),
+            vehicleType: this.normalizeForPayment(canonicalData.vehicleType),
+            
+            // Service information
+            service: this.normalizeForPayment(canonicalData.service),
+            serviceCode: this.normalizeForPayment(canonicalData.serviceCode),
+            serviceTitle: this.normalizeForPayment(canonicalData.serviceTitle),
+            price: this.normalizeForPayment(canonicalData.price),
+            basePrice: canonicalData.price || '',
+            finalPrice: canonicalData.price || '',
+            calculatedPrice: canonicalData.price || '',
+            
+            // Optional fields - normalize to empty strings for Power Automate
+            batteryVoltage: this.normalizeForPayment(canonicalData.batteryVoltage),
+            sellerName: this.normalizeForPayment(canonicalData.sellerName),
+            sellerPhone: this.normalizeForPayment(canonicalData.sellerPhone),
+            details: this.normalizeForPayment(canonicalData.details),
+            scheduledDate: this.normalizeForPayment(canonicalData.scheduledDate),
+            scheduledTime: this.normalizeForPayment(canonicalData.timeWindow),
+            urgencyLevel: this.normalizeForPayment(canonicalData.urgencyLevel),
+            emergencyType: this.normalizeForPayment(canonicalData.emergencyType),
+            quoteReference: this.normalizeForPayment(canonicalData.quoteReference),
+            
+            // Tracking fields
+            isWinzService: canonicalData.isWinz === 'true',
+            sessionId: this.normalizeForPayment(canonicalData.sessionId),
+            gclid: this.normalizeForPayment(canonicalData.gclid),
+            gclidState: (canonicalData.gclid || localStorage.getItem("eek_gclid")) ? 'Active' : 'Inactive',
+            
+            // Event metadata
+            eventType: 'payment_confirmed',
+            eventAction: 'payment_confirmed',
+            timestamp: new Date().toISOString(),
+            bookingStatus: 'payment_confirmed',
+            currentStep: 8,
+            totalSteps: 8,
+            stepProgress: 100,
+            termsAccepted: true,
+            marketingConsent: false,
+            
+            // visitorData object for email template compatibility
+            visitorData: {
+                name: this.normalizeForPayment(canonicalData.name),
+                phone: this.normalizeForPayment(canonicalData.phone),
+                email: this.normalizeForPayment(canonicalData.email),
+                location: this.dataRepo
+                    ? this.dataRepo.getStandardizedLocationObject(geo, locationStr)
+                    : {
+                        city: locationStr || 'Unknown',
+                        region: geo.region || 'Unknown',
+                        country: geo.country || 'New Zealand',
+                        countryCode: geo.countryCode || 'NZ',
+                        regionCode: geo.regionCode || 'Unknown',
+                        postalCode: geo.postalCode || 'Unknown',
+                        continent: geo.continent || 'Oceania',
+                        address: locationStr || '',
+                        coordinates: {
+                            latitude: geo.latitude || null,
+                            longitude: geo.longitude || null,
+                            accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+                        },
+                        timezone: geo.timezone || 'Pacific/Auckland',
+                        raw: geo || {}
+                    },
+                vehicleRego: this.normalizeForPayment(canonicalData.rego),
+                rego: this.normalizeForPayment(canonicalData.rego),
+                vehicleYear: this.normalizeForPayment(canonicalData.year),
+                vehicleMake: this.normalizeForPayment(canonicalData.make),
+                vehicleModel: this.normalizeForPayment(canonicalData.model),
+                vehicleType: this.normalizeForPayment(canonicalData.vehicleType),
+                service: this.normalizeForPayment(canonicalData.service),
+                serviceCode: this.normalizeForPayment(canonicalData.serviceCode),
+                serviceTitle: canonicalData.serviceTitle || ''
+            },
+            
+            // customerData object for payment API compatibility (location as string)
+            customerData: {
+                name: this.normalizeForPayment(canonicalData.name),
+                phone: this.normalizeForPayment(canonicalData.phone),
+                email: this.normalizeForPayment(canonicalData.email),
+                location: locationStr || '', // String for payment API
+                
+                vehicleRego: this.normalizeForPayment(canonicalData.rego),
+                vehicleYear: this.normalizeForPayment(canonicalData.year),
+                vehicleMake: this.normalizeForPayment(canonicalData.make),
+                vehicleModel: this.normalizeForPayment(canonicalData.model),
+                vehicleType: this.normalizeForPayment(canonicalData.vehicleType),
+                
+                service: this.normalizeForPayment(canonicalData.service),
+                serviceCode: this.normalizeForPayment(canonicalData.serviceCode),
+                serviceTitle: this.normalizeForPayment(canonicalData.serviceTitle),
+                details: this.normalizeForPayment(canonicalData.details),
+                price: this.normalizeForPayment(canonicalData.price),
+                finalPrice: canonicalData.price || '',
+                calculatedPrice: canonicalData.price || '',
+                basePrice: canonicalData.price || '',
+                
+                sessionId: this.normalizeForPayment(canonicalData.sessionId),
+                bookingSource: 'payment_confirmation',
+                formVersion: '2.1'
+            },
+            
+            // journeyData for email template compatibility
+            journeyData: {
+                callAttemptId: localStorage.getItem('eek_last_call_attempt_id') || '',
+                callTimestamp: localStorage.getItem('eek_last_call_timestamp') || '',
+                returnTimestamp: '',
+                timeBetweenCallAndReturn: '',
+                source: 'payment_confirmation'
+            },
+            
+            // Additional objects for email template compatibility
+            pageSource: {
+                type: 'direct',
+                detail: 'Direct visit',
+                referrer: document.referrer || '',
+                utm: this.dataRepo
+                    ? this.dataRepo.getStandardizedUtmData(canonicalData)
+                    : {
+                        source: canonicalData.utm_source || localStorage.getItem("eek_utm_source") || '',
+                        medium: canonicalData.utm_medium || localStorage.getItem("eek_utm_medium") || '',
+                        campaign: canonicalData.utm_campaign || localStorage.getItem("eek_utm_campaign") || '',
+                        term: canonicalData.utm_term || localStorage.getItem("eek_utm_term") || '',
+                        content: canonicalData.utm_content || localStorage.getItem("eek_utm_content") || ''
+                    },
+                clickIds: {
+                    gclid: canonicalData.gclid || localStorage.getItem("eek_gclid") || '',
+                    fbclid: '',
+                    msclkid: ''
+                }
+            },
+            
+            device: this.dataRepo
+                ? this.dataRepo.getStandardizedDeviceData()
+                : {
+                    userAgent: navigator.userAgent,
+                    platform: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+                    language: navigator.language || 'en-NZ',
+                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Pacific/Auckland',
+                    screenResolution: `${window.screen?.width || 0}x${window.screen?.height || 0}`,
+                    viewportSize: `${window.innerWidth || 0}x${window.innerHeight || 0}`
+                },
+            
+            engagement: {
+                timeOnPage: Math.round((Date.now() - (window.pageLoadTime || Date.now())) / 1000),
+                scrollDepth: 0,
+                clicks: 0,
+                formInteractions: 0,
+                buttonClicks: 0
+            },
+            
+            userJourney: {
+                pageHistory: JSON.parse(localStorage.getItem('eek_user_journey') || '[]'),
+                totalPages: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').length || 1,
+                sessionDuration: Date.now() - (window.sessionStartTime || Date.now()),
+                entryPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]')[0]?.url || window.location.href,
+                previousPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').slice(-2, -1)[0]?.url || ''
+            },
+            
+            utm: this.dataRepo
+                ? this.dataRepo.getStandardizedUtmData(canonicalData)
+                : {
+                    source: canonicalData.utm_source || localStorage.getItem("eek_utm_source") || '',
+                    medium: canonicalData.utm_medium || localStorage.getItem("eek_utm_medium") || '',
+                    campaign: canonicalData.utm_campaign || localStorage.getItem("eek_utm_campaign") || '',
+                    term: canonicalData.utm_term || localStorage.getItem("eek_utm_term") || '',
+                    content: canonicalData.utm_content || localStorage.getItem("eek_utm_content") || '',
+                    gclid: canonicalData.gclid || localStorage.getItem("eek_gclid") || ''
+                },
+            
+            // Enhanced tracking data for complete attribution
+            trackingData: {
+                gclid: canonicalData.gclid || localStorage.getItem("eek_gclid") || '',
+                gclidState: (canonicalData.gclid || localStorage.getItem("eek_gclid")) ? 'Active' : 'Inactive',
+                utm: this.dataRepo
+                    ? this.dataRepo.getStandardizedUtmData(canonicalData)
+                    : {
+                        source: canonicalData.utm_source || localStorage.getItem("eek_utm_source") || '',
+                        medium: canonicalData.utm_medium || localStorage.getItem("eek_utm_medium") || '',
+                        campaign: canonicalData.utm_campaign || localStorage.getItem("eek_utm_campaign") || '',
+                        term: canonicalData.utm_term || localStorage.getItem("eek_utm_term") || '',
+                        content: canonicalData.utm_content || localStorage.getItem("eek_utm_content") || ''
+                    },
+                pageSource: {
+                    type: 'direct',
+                    detail: 'Direct visit',
+                    referrer: document.referrer || '',
+                    utm: this.dataRepo
+                        ? this.dataRepo.getStandardizedUtmData(canonicalData)
+                        : {
+                            source: canonicalData.utm_source || localStorage.getItem("eek_utm_source") || '',
+                            medium: canonicalData.utm_medium || localStorage.getItem("eek_utm_medium") || '',
+                            campaign: canonicalData.utm_campaign || localStorage.getItem("eek_utm_campaign") || '',
+                            term: canonicalData.utm_term || localStorage.getItem("eek_utm_term") || '',
+                            content: canonicalData.utm_content || localStorage.getItem("eek_utm_content") || ''
+                        },
+                    clickIds: {
+                        gclid: canonicalData.gclid || localStorage.getItem("eek_gclid") || '',
+                        fbclid: '',
+                        msclkid: ''
+                    }
+                },
+                device: this.dataRepo
+                    ? this.dataRepo.getStandardizedDeviceData()
+                    : {
+                        userAgent: navigator.userAgent,
+                        platform: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+                        language: navigator.language || 'en-NZ',
+                        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Pacific/Auckland',
+                        screenResolution: `${window.screen?.width || 0}x${window.screen?.height || 0}`,
+                        viewportSize: `${window.innerWidth || 0}x${window.innerHeight || 0}`
+                    },
+                location: {
+                    country: geo.country || 'New Zealand',
+                    region: geo.region || 'Unknown',
+                    city: geo.city || 'Unknown',
+                    postalCode: geo.postalCode || 'Unknown',
+                    coordinates: {
+                        latitude: geo.latitude || null,
+                        longitude: geo.longitude || null,
+                        accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+                    }
+                },
+                engagement: {
+                    timeOnPage: Math.round((Date.now() - (window.pageLoadTime || Date.now())) / 1000),
+                    scrollDepth: 0,
+                    clicks: 0,
+                    formInteractions: 0,
+                    buttonClicks: 0
+                },
+                userJourney: {
+                    pageHistory: JSON.parse(localStorage.getItem('eek_user_journey') || '[]'),
+                    totalPages: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').length || 1,
+                    sessionDuration: Date.now() - (window.sessionStartTime || Date.now()),
+                    entryPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]')[0]?.url || window.location.href,
+                    previousPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').slice(-2, -1)[0]?.url || ''
+                },
+                visitorData: {
+                    name: this.normalizeForPayment(canonicalData.name),
+                    phone: this.normalizeForPayment(canonicalData.phone),
+                    email: this.normalizeForPayment(canonicalData.email),
+                    location: locationStr || '',
+                    vehicleRego: this.normalizeForPayment(canonicalData.rego),
+                    vehicleYear: this.normalizeForPayment(canonicalData.year),
+                    vehicleMake: this.normalizeForPayment(canonicalData.make),
+                    vehicleModel: this.normalizeForPayment(canonicalData.model),
+                    vehicleType: this.normalizeForPayment(canonicalData.vehicleType),
+                    batteryVoltage: this.normalizeForPayment(canonicalData.batteryVoltage),
+                    service: this.normalizeForPayment(canonicalData.service),
+                    serviceCode: this.normalizeForPayment(canonicalData.serviceCode),
+                    serviceTitle: this.normalizeForPayment(canonicalData.serviceTitle),
+                    price: this.normalizeForPayment(canonicalData.price),
+                    basePrice: canonicalData.price || ''
+                },
+                journeyData: {
+                    callAttemptId: localStorage.getItem('eek_last_call_attempt_id') || '',
+                    callTimestamp: localStorage.getItem('eek_last_call_timestamp') || '',
+                    returnTimestamp: '',
+                    timeBetweenCallAndReturn: '',
+                    source: 'payment_confirmation'
+                },
+                eventType: 'payment_confirmed',
+                eventAction: 'payment_confirmed',
+                timestamp: new Date().toISOString()
+            },
+            
+            // Additional fields for webhook functionality
+            idempotencyKey: bookingId,
+            paymentConfirmedAt: new Date().toISOString(),
+            paymentStatus: 'confirmed',
+            pageLoadedAt: new Date().toISOString(),
+            submissionAttempt: 1
+        };
+
+        // Validate payload structure if dataRepo is available
+        if (this.dataRepo) {
+            const validation = this.dataRepo.validateDataStructure(payload, 'payment');
+            if (!validation.isValid) {
+                console.warn('⚠️ Payment payload validation warnings:', validation.warnings);
+                if (validation.errors.length > 0) {
+                    console.error('❌ Payment payload validation errors:', validation.errors);
+                }
+            }
+        }
+
+        return payload;
+    }
+}
+
+// Export for use in other files
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = PaymentUtils;
+} else {
+    window.PaymentUtils = PaymentUtils;
+}
+
