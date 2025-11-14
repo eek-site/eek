@@ -1592,12 +1592,7 @@
         value: getEventValue(trackingAction)
       });
       
-      // Track high-value interactions as conversions
-      if (isHighValue) {
-        gtag('event', 'conversion', {
-          send_to: 'AW-17084465163/supplier_portal_conversion'
-        });
-      }
+      // Conversion tracking removed - only purchase conversions tracked on thanks page
     }
     
     // Reddit Pixel tracking for supplier interactions

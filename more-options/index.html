@@ -1488,12 +1488,7 @@
                     value: getEventValue(trackingAction)
                 });
                 
-                // Track phone calls as conversions
-                if (trackingAction.includes('call')) {
-                    gtag('event', 'conversion', {
-                        send_to: 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
-                    });
-                }
+                // Conversion tracking removed - only purchase conversions tracked on thanks page
             }
             
             // Reddit Pixel tracking

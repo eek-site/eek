@@ -1389,12 +1389,7 @@
           value: getEventValue(trackingAction)
         });
         
-        // Track high-priority contacts as special conversions
-        if (isPriorityContact) {
-          gtag('event', 'conversion', {
-            send_to: 'AW-17084465163/legal_authority_priority_contact'
-          });
-        }
+        // Conversion tracking removed - only purchase conversions tracked on thanks page
       }
       
       // Reddit Pixel tracking for legal authority interactions

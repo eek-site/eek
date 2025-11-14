@@ -169,12 +169,7 @@ class TrackingManager {
                 ...additionalData
             });
 
-            // Track as conversion if it's a call action
-            if (eventAction.includes('_call') || eventAction.includes('call')) {
-                gtag('event', 'conversion', {
-                    'send_to': 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
-                });
-            }
+            // Conversion tracking removed - only purchase conversions tracked on thanks page
         }
 
         // Reddit Pixel tracking

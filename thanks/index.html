@@ -860,6 +860,11 @@
       canonical.utm_content = coalesce(raw.utm_content, localStorage.getItem("eek_utm_content"));
 
       canonical.sharepointId   = cleanText(raw.sharepointId);
+      
+      // Capture token from URL for token-based payments
+      const urlParams = new URLSearchParams(window.location.search);
+      canonical.token = urlParams.get('token') || raw.token || null;
+      
       canonical._raw = raw;
       return canonical;
     }
@@ -1483,84 +1488,38 @@
       }
     }
 
-    function trackGoogleAdsConversion(canon, price) {
-      const serviceType = canon.service || canon.emergencyType || 'general_inquiry';
-      const transactionId = canon.sessionId || canon.quoteReference || `eek_${Date.now()}`;
-      
-      console.log('🎯 Tracking Google Ads conversion:', {
-        serviceType,
-        price,
-        transactionId,
-        gclid: canon.gclid ? 'present' : 'none'
-      });
-      
-      // Map service types to conversion actions and their default values
-      const conversionActions = {
-        'pre_purchase': {
-          sendTo: 'AW-17084465163/1g-rCLPD_K0bEIuAwdI_',
-          defaultValue: 299.0,
-          hasValue: true
-        },
-        'emergency_breakdown': {
-          sendTo: 'AW-17084465163/NjGJCNuy_K0bEIuAwdI_',
-          defaultValue: 249.0,
-          hasValue: false // No value in your snippet
-        },
-        'battery_jumpstart': {
-          sendTo: 'AW-17084465163/hwbkCJ3D6a0bEIuAwdI_',
-          defaultValue: 149.0,
-          hasValue: false // No value in your snippet
-        },
-        'wrong_fuel': {
-          sendTo: 'AW-17084465163/ZoV3CIjH8a0bEIuAwdI_',
-          defaultValue: 399.0,
-          hasValue: true
-        },
-        'general_inquiry': {
-          sendTo: 'AW-17084465163/NjGJCNuy_K0bEIuAwdI_',
-          defaultValue: 249.0,
-          hasValue: false
-        }
-      };
-      
-      const conversionConfig = conversionActions[serviceType] || conversionActions['general_inquiry'];
-      const sendTo = conversionConfig.sendTo;
-      
-      // Determine the value to send
-      let conversionValue = price;
-      if (conversionConfig.hasValue && price > 0) {
-        // Use actual price for services that track value
-        conversionValue = price;
-      } else if (conversionConfig.hasValue) {
-        // Use default value if no price provided
-        conversionValue = conversionConfig.defaultValue;
+    // Google Ads Purchase Conversion Tracking
+    function trackPurchaseConversion(canon) {
+      if (typeof gtag === 'undefined') {
+        console.warn('⚠️ gtag not available - Google Ads conversion not tracked');
+        return;
       }
+
+      // Get price from booking data - handle both initial payment and token-based payments
+      const price = parseFloat(canon.price) || 0;
       
-      // Track the conversion
-      if (typeof gtag !== 'undefined') {
-        const conversionData = {
-          'send_to': sendTo,
-          'transaction_id': transactionId,
-          'gclid': canon.gclid
-        };
+      // Generate unique transaction ID - use sessionId if available, otherwise create one
+      // For token-based payments, we want a unique ID per payment
+      const baseTransactionId = canon.sessionId || canon.quoteReference || `eek_${Date.now()}`;
+      const transactionId = canon.token ? `${baseTransactionId}_token_${canon.token.substring(0, 8)}` : baseTransactionId;
+      
+      // Only track if there's a valid price
+      if (price > 0) {
+        gtag('event', 'conversion', {
+          'send_to': 'AW-17084465163/VkFHCNfslMAbEIuAwdI_',
+          'value': price,
+          'currency': 'NZD',
+          'transaction_id': transactionId
+        });
         
-        // Only add value and currency if the conversion action expects it
-        if (conversionConfig.hasValue) {
-          conversionData.value = conversionValue;
-          conversionData.currency = 'NZD';
-        }
-        
-        gtag('event', 'conversion', conversionData);
-        
-        console.log('✅ Google Ads conversion tracked:', {
-          sendTo,
-          value: conversionConfig.hasValue ? conversionValue : 'not tracked',
-          currency: conversionConfig.hasValue ? 'NZD' : 'not tracked',
-          transactionId,
-          gclid: canon.gclid ? 'present' : 'none'
+        console.log('✅ Google Ads purchase conversion tracked:', {
+          value: price,
+          currency: 'NZD',
+          transaction_id: transactionId,
+          payment_type: canon.token ? 'token_payment' : 'initial_payment'
         });
       } else {
-        console.warn('⚠️ gtag not available - Google Ads conversion not tracked');
+        console.log('⚠️ No price found - conversion not tracked');
       }
     }
 
@@ -1602,8 +1561,8 @@
             session_id: canon.sessionId
           });
           
-          // Google Ads conversion tracking
-          trackGoogleAdsConversion(canon, price);
+          // Google Ads purchase conversion tracking
+          trackPurchaseConversion(canon);
         }
       }
       
