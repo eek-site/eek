@@ -34,13 +34,36 @@
 # Utility redirects
 /map                     https://www.google.com/maps/search/where+am+I      301
 
-# Case variations (common typos)
-/Apply                   https://forms.office.com/r/XLdGk4wDYY              301
-/APPLY                   https://forms.office.com/r/XLdGk4wDYY              301
-/Availability            https://forms.office.com/r/jGgFgQUj0N              301
-/RESCUE-ME               https://forms.office.com/r/sdf0YirK6s              301
-/Rescue-Me               https://forms.office.com/r/sdf0YirK6s              301
+# Paths in redirectDatabase that would otherwise 404 - Return 200 and route through 404 handler
+# These paths are handled by 404.html's redirectDatabase and will show messaging before redirecting
+# Note: /thanks, /supplier, /mjuris, /more-options are actual pages, so they're not listed here
+/wrong-fuel-rescue       /404.html                                          200
+/misfuel-service         /404.html                                          200
+/petrol-in-diesel        /404.html                                          200
+/fuel-extraction         /404.html                                          200
+/disputes-tribunal       /404.html                                          200
+/tribunal                /404.html                                          200
+/authorize               /404.html                                          200
+/third-party             /404.html                                          200
+/job                     /404.html                                          200
+/winz                    /404.html                                          200
+/review-form             /404.html                                          200
+/insurance-form          /404.html                                          200
+/cc                      /404.html                                          200
+/privacy-report          /404.html                                          200
 
-# Catch-all for dynamic 404 handling
+# Case variations (common typos) - Return 200 and route through 404 handler
+/Apply                   /404.html                                          200
+/APPLY                   /404.html                                          200
+/Availability            /404.html                                          200
+/RESCUE-ME               /404.html                                          200
+/Rescue-Me               /404.html                                          200
+/CC                      /404.html                                          200
+/Thanks                  /404.html                                          200
+/THANKS                  /404.html                                          200
+/Authorize               /404.html                                          200
+/AUTHORIZE               /404.html                                          200
+
+# Catch-all for paths NOT in redirectDatabase - Return standard 404
 # This should be the LAST line in your _redirects file
 /*                       /404.html                                          404
