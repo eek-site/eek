@@ -1044,11 +1044,20 @@ class UnifiedTrackingSystem {
         }
 
         // Create the location object first (will be protected from string overwrites)
+        // Check address in multiple locations: root level, location object, and additionalData
+        const addressValue = this.trackingData[this.STANDARD_FIELDS.address] 
+            || this.trackingData.location?.address 
+            || additionalData.location?.address 
+            || (typeof additionalData.location === 'string' ? additionalData.location : '')
+            || '';
+        
         const baseLocationObject = {
-            city: this.trackingData[this.STANDARD_FIELDS.address] || this.trackingData[this.STANDARD_FIELDS.city] || this.trackingData.location?.city || 'Unknown',
+            city: this.trackingData[this.STANDARD_FIELDS.city] 
+                || this.trackingData.location?.city 
+                || (addressValue && !this.trackingData[this.STANDARD_FIELDS.city] && !this.trackingData.location?.city ? addressValue : 'Unknown'),
             region: this.trackingData.location?.region || 'Unknown',
             country: this.trackingData.location?.country || 'New Zealand',
-            address: this.trackingData[this.STANDARD_FIELDS.address] || '',
+            address: addressValue,
             coordinates: {
                 latitude: this.trackingData.location?.coordinates?.latitude || null,
                 longitude: this.trackingData.location?.coordinates?.longitude || null,
