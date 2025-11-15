@@ -69,3 +69,4 @@ Our payload sends:
 2. **Fix HTML layout** in Status Bar section to use line breaks
 3. **Test email** to ensure Location displays correctly
 
+
