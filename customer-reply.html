@@ -585,9 +585,47 @@
     </div>
 
     <script>
+        // Base64 Decode Function
+        function decodeBase64(encoded) {
+            try {
+                // Decode Base64
+                const decoded = atob(encoded);
+                
+                // Parse the query string format
+                const params = new URLSearchParams(decoded);
+                const data = {};
+                
+                for (const [key, value] of params) {
+                    data[key] = value;
+                }
+                
+                return data;
+            } catch (e) {
+                console.error('Failed to decode data:', e);
+                return null;
+            }
+        }
+
         // Get URL parameters (in case you pass data from email/SMS)
         function getUrlParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name) || '';
+        }
+
+        // Enhanced URL parameter getter that handles both encoded and regular params
+        function getUrlParameterEnhanced(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // First check if there's an encoded data parameter
+            const encodedData = urlParams.get('d');
+            if (encodedData) {
+                const decodedData = decodeBase64(encodedData);
+                if (decodedData && decodedData[name]) {
+                    return decodedData[name];
+                }
+            }
+            
+            // Fall back to regular URL parameters
             return urlParams.get(name) || '';
         }
 
@@ -665,11 +703,32 @@
 
         // Initialize form on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Pre-fill form if parameters are passed
-            document.getElementById('rego').value = getUrlParameter('rego');
-            document.getElementById('customerName').value = getUrlParameter('name');
-            document.getElementById('email').value = getUrlParameter('email');
-            document.getElementById('phone').value = getUrlParameter('phone');
+            const urlParams = new URLSearchParams(window.location.search);
+            const encodedData = urlParams.get('d');
+            
+            if (encodedData) {
+                // Decode the Base64 encoded data
+                const decodedData = decodeBase64(encodedData);
+                
+                if (decodedData) {
+                    // Pre-fill form with decoded data
+                    if (decodedData.rego) document.getElementById('rego').value = decodedData.rego;
+                    if (decodedData.email) document.getElementById('email').value = decodedData.email;
+                    if (decodedData.phone) document.getElementById('phone').value = decodedData.phone;
+                    if (decodedData.name) document.getElementById('customerName').value = decodedData.name;
+                    
+                    // Log timestamp if present (for debugging)
+                    if (decodedData.ts) {
+                        console.log('Link generated at:', decodedData.ts);
+                    }
+                }
+            } else {
+                // Fall back to regular URL parameters (for backward compatibility)
+                document.getElementById('rego').value = getUrlParameter('rego');
+                document.getElementById('customerName').value = getUrlParameter('name');
+                document.getElementById('email').value = getUrlParameter('email');
+                document.getElementById('phone').value = getUrlParameter('phone');
+            }
             
             // Set hidden tracking fields
             const sessionId = getOrCreateSessionId();
