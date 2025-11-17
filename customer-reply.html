@@ -768,9 +768,38 @@
             }
         });
 
+        // Form submission protection - prevent duplicate submissions
+        let isSubmitting = false;
+        let submissionId = null;
+        let lastSubmissionHash = null;
+        let lastSubmissionTime = null;
+        
+        // Create a hash of form data to detect duplicates
+        function createFormHash(data) {
+            const keyFields = [
+                data.rego,
+                data.customerName,
+                data.email,
+                data.phone,
+                data.messageType,
+                data.message
+            ].join('|');
+            return btoa(keyFields).substring(0, 20); // Short hash
+        }
+
         // Form submission
         document.getElementById('customerReplyForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            // Prevent duplicate submissions
+            if (isSubmitting) {
+                console.warn('Form submission already in progress, ignoring duplicate submit');
+                return;
+            }
+            
+            // Generate unique submission ID for this attempt
+            submissionId = `submission_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            isSubmitting = true;
             
             // Show loading state
             const submitBtn = document.getElementById('submitBtn');
@@ -793,10 +822,28 @@
             // Add checkbox value explicitly
             data.allowMarketing = document.getElementById('allowMarketing').checked;
             
+            // Check for duplicate submission (same content within 5 seconds)
+            const formHash = createFormHash(data);
+            const now = Date.now();
+            if (formHash === lastSubmissionHash && lastSubmissionTime && (now - lastSubmissionTime) < 5000) {
+                console.warn('Duplicate submission detected - same content submitted within 5 seconds, ignoring');
+                isSubmitting = false;
+                submitBtn.disabled = false;
+                loadingSpinner.style.display = 'none';
+                errorMessage.textContent = 'This message was already sent. Please wait a moment before submitting again.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Update last submission tracking
+            lastSubmissionHash = formHash;
+            lastSubmissionTime = now;
+            
             // Add form metadata
             data.formType = 'customer_reply';
             data.formVersion = '1.0';
             data.submissionTimestamp = new Date().toISOString();
+            data.submissionId = submissionId; // Unique ID to track this specific submission
             
             // Track form submission attempt
             if (typeof gtag === 'function') {
@@ -831,14 +878,18 @@
                 });
                 
                 if (response.ok) {
-                    // Success
+                    // Success - prevent any further submissions
                     successMessage.style.display = 'block';
+                    
+                    // Keep isSubmitting = true to prevent duplicate submissions
+                    // Don't reset it so form can't be submitted again
                     
                     // Track successful submission
                     if (typeof gtag === 'function') {
                         gtag('event', 'form_submit_success', {
                             form_type: 'customer_reply',
-                            message_type: data.messageType
+                            message_type: data.messageType,
+                            submission_id: submissionId
                         });
                     }
 
@@ -855,13 +906,18 @@
                         }
                     }
                     
-                    // Reset form after short delay
+                    // Reset form after short delay (but keep submission locked)
                     setTimeout(() => {
                         this.reset();
                         // Re-populate hidden fields
                         document.getElementById('timestamp').value = new Date().toISOString();
                         document.getElementById('timezone').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
                     }, 2000);
+                    
+                    // Keep button disabled and loading hidden
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Message Sent ✓';
+                    loadingSpinner.style.display = 'none';
                     
                 } else {
                     throw new Error(`Server returned ${response.status}`);
@@ -870,14 +926,19 @@
                 console.error('Error:', error);
                 errorMessage.style.display = 'block';
                 
+                // Reset submission flag on error so user can try again
+                isSubmitting = false;
+                
                 // Track error
                 if (typeof gtag === 'function') {
                     gtag('event', 'form_submit_error', {
                         form_type: 'customer_reply',
-                        error_message: error.message
+                        error_message: error.message,
+                        submission_id: submissionId
                     });
                 }
-            } finally {
+                
+                // Re-enable form on error
                 submitBtn.disabled = false;
                 loadingSpinner.style.display = 'none';
             }
