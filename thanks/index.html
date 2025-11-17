@@ -491,6 +491,11 @@
         countryCode: 'Unknown'
       };
       
+      // Preserve user's location address from booking data
+      const userLocationAddress = typeof bookingData.location === 'string' 
+        ? bookingData.location 
+        : (bookingData.location?.address || bookingData.location?.city || '');
+      
       return {
         eventType: eventType,
         eventAction: eventAction,
@@ -498,13 +503,17 @@
         sessionId: bookingData.sessionId || `thanks_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         gclid: bookingData.gclid || localStorage.getItem("eek_gclid"),
         
-        // Comprehensive location data
+        // Comprehensive location data - preserve user's address input
         location: {
+          // User's actual address input (most important)
+          address: userLocationAddress || '',
+          city: userLocationAddress || geo.city || 'Unknown',
+          
+          // Basic location info from geo
           country: geo.country || 'Unknown',
           countryCode: geo.countryCode || geo.country || 'Unknown',
           region: geo.region || 'Unknown',
           regionCode: geo.regionCode || 'Unknown',
-          city: geo.city || 'Unknown',
           postalCode: geo.postalCode || 'Unknown',
           continent: geo.continent || 'Unknown',
           coordinates: {
@@ -1149,14 +1158,21 @@
       data.pageTitle = enhancedTrackingData.pageTitle || document.title;
       data.pageType = enhancedTrackingData.pageType || 'thanks';
       
-      // Enhanced geolocation data
+      // Enhanced geolocation data - preserve user's address input
+      const userLocationAddress = typeof data.location === 'string' 
+        ? data.location 
+        : (data.location?.address || data.location?.city || '');
+      
       data.location = {
-        // Basic location info
+        // User's actual address input (most important)
+        address: userLocationAddress || '',
+        city: userLocationAddress || geo.city || 'Unknown',
+        
+        // Basic location info from geo
         country: geo.country || 'Unknown',
         countryCode: geo.countryCode || geo.country || 'Unknown',
         region: geo.region || 'Unknown',
         regionCode: geo.regionCode || 'Unknown',
-        city: geo.city || 'Unknown',
         postalCode: geo.postalCode || 'Unknown',
         continent: geo.continent || 'Unknown',
         
@@ -1953,6 +1969,33 @@
         element.addEventListener('click', function(e) {
           trackInteraction(this);
         });
+      });
+
+      // Prevent back button navigation - replace current history entry
+      // This prevents users from going back to the form after submission
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', window.location.href);
+        
+        // Listen for popstate events (back/forward button)
+        window.addEventListener('popstate', function(event) {
+          // Push the current state again to prevent back navigation
+          window.history.pushState(null, '', window.location.href);
+          // Redirect to home page
+          window.location.href = '/';
+        });
+        
+        // Push a new state to prevent back navigation
+        window.history.pushState(null, '', window.location.href);
+      }
+
+      // Auto-redirect to home page after 10 seconds
+      const redirectTimeout = setTimeout(() => {
+        window.location.href = '/';
+      }, 10000);
+
+      // Clear timeout if user navigates away manually
+      window.addEventListener('beforeunload', () => {
+        clearTimeout(redirectTimeout);
       });
     });
   </script>

@@ -339,24 +339,159 @@
         }
 
         /* Message Styles */
-        .success-message, .error-message {
+        .error-message {
             padding: var(--space-lg);
             border-radius: var(--radius-md);
             margin-bottom: var(--space-xl);
             display: none;
             border-left: 4px solid;
-        }
-
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            border-color: var(--success);
-        }
-
-        .error-message {
             background: #f8d7da;
             color: #721c24;
             border-color: var(--danger);
+        }
+
+        /* Success Modal Styles */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .success-modal.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .success-modal-content {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-2xl);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.3s ease-out;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .success-modal-image {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: var(--radius-md);
+            margin: 0 auto var(--space-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .success-modal-content h2 {
+            color: var(--success);
+            font-size: 1.8em;
+            margin-bottom: var(--space-md);
+        }
+
+        .success-modal-content p {
+            color: var(--gray-700);
+            font-size: 1.1em;
+            margin-bottom: var(--space-xl);
+            line-height: 1.6;
+        }
+
+        .success-icon {
+            font-size: 3em;
+            color: var(--success);
+            margin-bottom: var(--space-sm);
+        }
+
+        .modal-content-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-md);
+            margin: var(--space-xl) 0;
+            padding: var(--space-lg);
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+        }
+
+        .modal-option-card {
+            background: var(--white);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            border: 2px solid var(--gray-200);
+            transition: all var(--transition-normal);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .modal-option-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .modal-option-card h3 {
+            color: var(--primary);
+            font-size: 1.1em;
+            margin-bottom: var(--space-sm);
+        }
+
+        .modal-option-card p {
+            color: var(--gray-600);
+            font-size: 0.9em;
+            margin: 0;
+        }
+
+        .modal-close-btn {
+            background: var(--primary);
+            color: var(--white);
+            padding: var(--space-md) var(--space-xl);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            box-shadow: var(--shadow-md);
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .modal-close-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
         .loading {
@@ -448,10 +583,6 @@
         </div>
 
         <div class="form-container">
-            <div class="success-message" id="successMessage">
-                <strong>Thank you!</strong> Your message has been sent successfully. We'll get back to you soon.
-            </div>
-            
             <div class="error-message" id="errorMessage">
                 <strong>Sorry,</strong> there was an error sending your message. Please try again or call us directly.
             </div>
@@ -581,6 +712,46 @@
                     <p>Sending your message...</p>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="success-modal" id="successModal">
+        <div class="success-modal-content">
+            <div class="success-icon">✓</div>
+            <h2>Message Sent Successfully!</h2>
+            <p>Thank you for contacting us. Your message has been sent and we'll get back to you soon.</p>
+            
+            <img src="/sweet-ride.png" alt="Eek Mechanical - Your Sweet Ride" class="success-modal-image" onerror="this.style.display='none'">
+            
+            <div class="modal-content-options">
+                <a href="/" class="modal-option-card">
+                    <h3>🏠 Home</h3>
+                    <p>Return to homepage</p>
+                </a>
+                <a href="/book-service/?service=jumpstart" class="modal-option-card">
+                    <h3>🔋 Jump Start</h3>
+                    <p>Battery service</p>
+                </a>
+                <a href="/book-service/?service=mechanic" class="modal-option-card">
+                    <h3>🔧 Mobile Mechanic</h3>
+                    <p>On-site repairs</p>
+                </a>
+                <a href="/book-service/?service=fuel-extraction" class="modal-option-card">
+                    <h3>⛽ Wrong Fuel</h3>
+                    <p>Emergency extraction</p>
+                </a>
+                <a href="/pre-purchase-vehicle-inspection/" class="modal-option-card">
+                    <h3>🔍 Inspection</h3>
+                    <p>Pre-purchase check</p>
+                </a>
+                <a href="/more-options" class="modal-option-card">
+                    <h3>📋 More Options</h3>
+                    <p>View all services</p>
+                </a>
+            </div>
+            
+            <button class="modal-close-btn" id="modalCloseBtn">Return to Home</button>
         </div>
     </div>
 
@@ -804,12 +975,12 @@
             // Show loading state
             const submitBtn = document.getElementById('submitBtn');
             const loadingSpinner = document.getElementById('loadingSpinner');
-            const successMessage = document.getElementById('successMessage');
+            const successModal = document.getElementById('successModal');
             const errorMessage = document.getElementById('errorMessage');
             
             submitBtn.disabled = true;
             loadingSpinner.style.display = 'block';
-            successMessage.style.display = 'none';
+            successModal.classList.remove('show');
             errorMessage.style.display = 'none';
             
             // Collect form data
@@ -879,8 +1050,6 @@
                 
                 if (response.ok) {
                     // Success - prevent any further submissions
-                    successMessage.style.display = 'block';
-                    
                     // Keep isSubmitting = true to prevent duplicate submissions
                     // Don't reset it so form can't be submitted again
                     
@@ -906,18 +1075,62 @@
                         }
                     }
                     
-                    // Reset form after short delay (but keep submission locked)
-                    setTimeout(() => {
-                        this.reset();
-                        // Re-populate hidden fields
-                        document.getElementById('timestamp').value = new Date().toISOString();
-                        document.getElementById('timezone').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                    }, 2000);
-                    
                     // Keep button disabled and loading hidden
                     submitBtn.disabled = true;
                     submitBtn.textContent = 'Message Sent ✓';
                     loadingSpinner.style.display = 'none';
+                    
+                    // Prevent back button navigation - replace current history entry
+                    // This prevents users from going back to the form after submission
+                    if (window.history && window.history.replaceState) {
+                        window.history.replaceState(null, '', window.location.href);
+                        
+                        // Listen for popstate events (back/forward button)
+                        window.addEventListener('popstate', function(event) {
+                            // Push the current state again to prevent back navigation
+                            window.history.pushState(null, '', window.location.href);
+                            // Redirect to home page
+                            window.location.href = '/';
+                        });
+                        
+                        // Push a new state to prevent back navigation
+                        window.history.pushState(null, '', window.location.href);
+                    }
+                    
+                    // Scroll to top of page
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    // Show success modal
+                    successModal.classList.add('show');
+                    
+                    // Function to redirect to home page
+                    const redirectToHome = () => {
+                        window.location.href = '/';
+                    };
+                    
+                    // Set timeout to redirect after 10 seconds
+                    let redirectTimeout = setTimeout(redirectToHome, 10000);
+                    
+                    // Close button handler
+                    const closeBtn = document.getElementById('modalCloseBtn');
+                    closeBtn.onclick = () => {
+                        clearTimeout(redirectTimeout);
+                        redirectToHome();
+                    };
+                    
+                    // Click outside modal to close and redirect
+                    successModal.onclick = (e) => {
+                        if (e.target === successModal) {
+                            clearTimeout(redirectTimeout);
+                            redirectToHome();
+                        }
+                    };
+                    
+                    // Prevent clicks inside modal content from closing
+                    const modalContent = successModal.querySelector('.success-modal-content');
+                    modalContent.onclick = (e) => {
+                        e.stopPropagation();
+                    };
                     
                 } else {
                     throw new Error(`Server returned ${response.status}`);
