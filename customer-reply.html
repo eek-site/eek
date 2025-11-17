@@ -572,14 +572,14 @@
     <header>
         <img id="headerImage" src="/brand-image.png" alt="Eek Mechanical - Mobile Mechanics NZ" onerror="this.style.display='none'">
         <div class="business-name">Eek Mechanical</div>
-        <h1>Customer Contact Form</h1>
-        <p class="tagline">Send us a message about your vehicle service</p>
+        <h1 id="pageTitle">Contact Form</h1>
+        <p class="tagline" id="pageTagline">Send us a message</p>
     </header>
 
     <div class="container">
         <div class="header-section">
-            <h1>Get in Touch</h1>
-            <p>We're here to help with all your vehicle service needs</p>
+            <h1 id="sectionTitle">Get in Touch</h1>
+            <p id="sectionSubtitle">We're here to help</p>
         </div>
 
         <div class="form-container">
@@ -613,22 +613,22 @@
                     <input type="text" id="vehicleYear" name="vehicleYear" placeholder="e.g., 2020" maxlength="4" pattern="\d{4}" inputmode="numeric">
                 </div>
                 
-                <!-- Customer Information Section -->
+                <!-- Contact Information Section -->
                 <div class="section-divider"></div>
-                <h2 style="color: var(--primary); margin-bottom: var(--space-lg); font-size: 1.3em;">Your Information</h2>
+                <h2 style="color: var(--primary); margin-bottom: var(--space-lg); font-size: 1.3em;" id="contactSectionTitle">Your Information</h2>
                 
                 <div class="form-group">
-                    <label for="customerName">Your Name <span class="required">*</span></label>
+                    <label for="customerName" id="nameLabel">Your Name <span class="required">*</span></label>
                     <input type="text" id="customerName" name="customerName" required placeholder="Full name" autocomplete="name">
                 </div>
                 
                 <div class="form-group">
-                    <label for="email">Email Address <span class="required">*</span></label>
+                    <label for="email" id="emailLabel">Email Address <span class="required">*</span></label>
                     <input type="email" id="email" name="email" required placeholder="your.email@example.com" autocomplete="email">
                 </div>
                 
                 <div class="form-group">
-                    <label for="phone">Phone Number <span class="required">*</span></label>
+                    <label for="phone" id="phoneLabel">Phone Number <span class="required">*</span></label>
                     <input type="tel" id="phone" name="phone" required placeholder="+64 21 123 4567" autocomplete="tel">
                 </div>
                 
@@ -662,7 +662,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="message">Your Message <span class="required">*</span></label>
+                    <label for="message" id="messageLabel">Your Message <span class="required">*</span></label>
                     <textarea id="message" name="message" required placeholder="Please describe what you need help with..."></textarea>
                 </div>
                 
@@ -687,7 +687,7 @@
                 
                 <div class="checkbox-group">
                     <input type="checkbox" id="allowMarketing" name="allowMarketing">
-                    <label for="allowMarketing">I'd like to receive service reminders and special offers</label>
+                    <label for="allowMarketing" id="marketingLabel">I'd like to receive service reminders and special offers</label>
                 </div>
                 
                 <!-- Hidden fields for tracking -->
@@ -705,6 +705,8 @@
                 <input type="hidden" id="utmCampaign" name="utmCampaign">
                 <input type="hidden" id="utmTerm" name="utmTerm">
                 <input type="hidden" id="utmContent" name="utmContent">
+                <input type="hidden" id="contactType" name="contactType" value="">
+                <input type="hidden" id="bookingId" name="bookingId" value="">
                 
                 <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
                 <div class="loading" id="loadingSpinner">
@@ -720,7 +722,7 @@
         <div class="success-modal-content">
             <div class="success-icon">✓</div>
             <h2>Message Sent Successfully!</h2>
-            <p>Thank you for contacting us. Your message has been sent and we'll get back to you soon.</p>
+            <p id="successMessage">Thank you for contacting us. Your message has been sent and we'll get back to you soon.</p>
             
             <img src="/sweet-ride.png" alt="Eek Mechanical - Your Sweet Ride" class="success-modal-image" onerror="this.style.display='none'">
             
@@ -756,6 +758,55 @@
     </div>
 
     <script>
+        // SharePoint Lookup API URL
+        const SHAREPOINT_LOOKUP_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c35b9414a0be42f88182ae7e6e409f1d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2ztt24wScLuAfifD0pjzovseRDKXBAEtCQtScGMgPqQ';
+
+        // Contact type configuration
+        const CONTACT_TYPE_CONFIG = {
+            customer: {
+                pageTitle: 'Customer Contact Form',
+                pageTagline: 'Send us a message about your vehicle service',
+                sectionTitle: 'Get in Touch',
+                sectionSubtitle: 'We\'re here to help with all your vehicle service needs',
+                contactSectionTitle: 'Your Information',
+                nameLabel: 'Your Name',
+                emailLabel: 'Email Address',
+                phoneLabel: 'Phone Number',
+                messageLabel: 'Your Message',
+                messagePlaceholder: 'Please describe what you need help with...',
+                marketingLabel: 'I\'d like to receive service reminders and special offers',
+                submitButton: 'Send Message'
+            },
+            supplier: {
+                pageTitle: 'Supplier Contact Form',
+                pageTagline: 'Send us a message about your service or parts',
+                sectionTitle: 'Get in Touch',
+                sectionSubtitle: 'We\'re here to help with supplier and mechanic communications',
+                contactSectionTitle: 'Your Information',
+                nameLabel: 'Your Name',
+                emailLabel: 'Email Address',
+                phoneLabel: 'Phone Number',
+                messageLabel: 'Your Message',
+                messagePlaceholder: 'Please describe your inquiry or update...',
+                marketingLabel: 'I\'d like to receive updates and communications',
+                submitButton: 'Send Message'
+            },
+            seller: {
+                pageTitle: 'Vehicle Seller Contact Form',
+                pageTagline: 'Send us a message about your vehicle inspection',
+                sectionTitle: 'Get in Touch',
+                sectionSubtitle: 'We\'re here to help with your pre-purchase inspection',
+                contactSectionTitle: 'Your Information',
+                nameLabel: 'Your Name',
+                emailLabel: 'Email Address',
+                phoneLabel: 'Phone Number',
+                messageLabel: 'Your Message',
+                messagePlaceholder: 'Please describe your inquiry about the inspection...',
+                marketingLabel: 'I\'d like to receive updates about the inspection',
+                submitButton: 'Send Message'
+            }
+        };
+
         // Base64 Decode Function
         function decodeBase64(encoded) {
             try {
@@ -775,6 +826,118 @@
                 console.error('Failed to decode data:', e);
                 return null;
             }
+        }
+
+        // Fetch booking data from SharePoint
+        async function fetchBookingDataFromSharePoint(bookingId) {
+            console.log('🔍 Fetching booking from SharePoint…', bookingId);
+            
+            if (!bookingId) {
+                console.warn('⚠️ No bookingId provided');
+                return null;
+            }
+            
+            try {
+                const res = await fetch(SHAREPOINT_LOOKUP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ bookingId })
+                });
+                
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                
+                const result = await res.json();
+                if (result.success && result.bookingData) {
+                    const json = atob(result.bookingData);
+                    const decoded = JSON.parse(json);
+                    decoded.sharepointId = bookingId;
+                    decoded.sharepointStatus = result.status;
+                    decoded.retrievedAt = new Date().toISOString();
+                    console.log('✅ SharePoint data retrieved successfully');
+                    return decoded;
+                }
+                console.log('⚠️ SharePoint returned success=false or no bookingData');
+                return null;
+            } catch (err) {
+                console.error('❌ SharePoint fetch error:', err);
+                return null;
+            }
+        }
+
+        // Normalize field values
+        function normalizeValue(value) {
+            if (value === null || value === undefined) return '';
+            return String(value).trim();
+        }
+
+        // Populate form from booking data
+        function populateFormFromBookingData(bookingData) {
+            if (!bookingData) return;
+
+            console.log('📝 Populating form from booking data:', bookingData);
+
+            // Vehicle Information
+            if (bookingData.rego || bookingData.vehicleRego) {
+                document.getElementById('rego').value = normalizeValue(bookingData.rego || bookingData.vehicleRego);
+            }
+            if (bookingData.make || bookingData.vehicleMake) {
+                document.getElementById('vehicleMake').value = normalizeValue(bookingData.make || bookingData.vehicleMake);
+            }
+            if (bookingData.model || bookingData.vehicleModel) {
+                document.getElementById('vehicleModel').value = normalizeValue(bookingData.model || bookingData.vehicleModel);
+            }
+            if (bookingData.year || bookingData.vehicleYear) {
+                document.getElementById('vehicleYear').value = normalizeValue(bookingData.year || bookingData.vehicleYear);
+            }
+
+            // Contact Information
+            if (bookingData.name || bookingData.customerName) {
+                document.getElementById('customerName').value = normalizeValue(bookingData.name || bookingData.customerName);
+            }
+            if (bookingData.email || bookingData.customerEmail) {
+                document.getElementById('email').value = normalizeValue(bookingData.email || bookingData.customerEmail);
+            }
+            if (bookingData.phone || bookingData.customerPhone) {
+                document.getElementById('phone').value = normalizeValue(bookingData.phone || bookingData.customerPhone);
+            }
+
+            // Location
+            if (bookingData.location) {
+                const locationValue = typeof bookingData.location === 'string' 
+                    ? bookingData.location 
+                    : (bookingData.location.address || bookingData.location.city || '');
+                if (locationValue) {
+                    document.getElementById('serviceLocation').value = normalizeValue(locationValue);
+                }
+            }
+
+            console.log('✅ Form populated from booking data');
+        }
+
+        // Update page language based on contact type
+        function updatePageLanguage(contactType) {
+            const config = CONTACT_TYPE_CONFIG[contactType] || CONTACT_TYPE_CONFIG.customer;
+            
+            // Update page elements
+            document.getElementById('pageTitle').textContent = config.pageTitle;
+            document.getElementById('pageTagline').textContent = config.pageTagline;
+            document.getElementById('sectionTitle').textContent = config.sectionTitle;
+            document.getElementById('sectionSubtitle').textContent = config.sectionSubtitle;
+            document.getElementById('contactSectionTitle').textContent = config.contactSectionTitle;
+            
+            // Update labels
+            document.getElementById('nameLabel').innerHTML = config.nameLabel + ' <span class="required">*</span>';
+            document.getElementById('emailLabel').innerHTML = config.emailLabel + ' <span class="required">*</span>';
+            document.getElementById('phoneLabel').innerHTML = config.phoneLabel + ' <span class="required">*</span>';
+            document.getElementById('messageLabel').innerHTML = config.messageLabel + ' <span class="required">*</span>';
+            document.getElementById('marketingLabel').textContent = config.marketingLabel;
+            document.getElementById('submitBtn').textContent = config.submitButton;
+            
+            // Update placeholders
+            document.getElementById('message').placeholder = config.messagePlaceholder;
+            
+            // Update document title
+            document.title = config.pageTitle + ' - Eek Mechanical';
         }
 
         // Get URL parameters (in case you pass data from email/SMS)
@@ -873,32 +1036,59 @@
         }
 
         // Initialize form on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             const urlParams = new URLSearchParams(window.location.search);
             const encodedData = urlParams.get('d');
             
+            let bookingId = null;
+            let contactType = 'customer'; // Default to customer
+            
+            // Decode hash to get bookingId and contactType
             if (encodedData) {
-                // Decode the Base64 encoded data
                 const decodedData = decodeBase64(encodedData);
-                
                 if (decodedData) {
-                    // Pre-fill form with decoded data
-                    if (decodedData.rego) document.getElementById('rego').value = decodedData.rego;
-                    if (decodedData.email) document.getElementById('email').value = decodedData.email;
-                    if (decodedData.phone) document.getElementById('phone').value = decodedData.phone;
-                    if (decodedData.name) document.getElementById('customerName').value = decodedData.name;
+                    bookingId = decodedData.bookingId || null;
+                    contactType = decodedData.contactType || decodedData.contacttype || 'customer';
                     
-                    // Log timestamp if present (for debugging)
-                    if (decodedData.ts) {
-                        console.log('Link generated at:', decodedData.ts);
-                    }
+                    console.log('📋 Decoded hash data:', { bookingId, contactType });
                 }
             } else {
                 // Fall back to regular URL parameters (for backward compatibility)
-                document.getElementById('rego').value = getUrlParameter('rego');
-                document.getElementById('customerName').value = getUrlParameter('name');
-                document.getElementById('email').value = getUrlParameter('email');
-                document.getElementById('phone').value = getUrlParameter('phone');
+                bookingId = getUrlParameter('bookingId');
+                contactType = getUrlParameter('contactType') || getUrlParameter('contacttype') || 'customer';
+            }
+            
+            // Validate contactType
+            if (!['customer', 'supplier', 'seller'].includes(contactType)) {
+                console.warn('⚠️ Invalid contactType, defaulting to customer:', contactType);
+                contactType = 'customer';
+            }
+            
+            // Set contactType in hidden field
+            document.getElementById('contactType').value = contactType;
+            if (bookingId) {
+                document.getElementById('bookingId').value = bookingId;
+            }
+            
+            // Update page language based on contact type
+            updatePageLanguage(contactType);
+            
+            // Fetch booking data if bookingId is provided
+            if (bookingId) {
+                console.log('🔄 Fetching booking data for bookingId:', bookingId);
+                try {
+                    const bookingData = await fetchBookingDataFromSharePoint(bookingId);
+                    if (bookingData) {
+                        populateFormFromBookingData(bookingData);
+                    } else {
+                        console.log('ℹ️ No booking data found, form will remain empty');
+                    }
+                } catch (error) {
+                    console.error('❌ Error fetching booking data:', error);
+                    // Continue with empty form - user can still fill it out
+                }
+            } else {
+                console.log('ℹ️ No bookingId provided, form will remain empty');
             }
             
             // Set hidden tracking fields
@@ -1012,9 +1202,19 @@
             
             // Add form metadata
             data.formType = 'customer_reply';
-            data.formVersion = '1.0';
+            data.formVersion = '2.0';
             data.submissionTimestamp = new Date().toISOString();
             data.submissionId = submissionId; // Unique ID to track this specific submission
+            
+            // Ensure contactType is included (from hidden field)
+            const contactTypeValue = document.getElementById('contactType').value || 'customer';
+            data.contactType = contactTypeValue;
+            
+            // Include bookingId if available
+            const bookingIdValue = document.getElementById('bookingId').value;
+            if (bookingIdValue) {
+                data.bookingId = bookingIdValue;
+            }
             
             // Track form submission attempt
             if (typeof gtag === 'function') {
@@ -1099,6 +1299,15 @@
                     
                     // Scroll to top of page
                     window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    // Update success message based on contact type
+                    const contactTypeValue = document.getElementById('contactType').value || 'customer';
+                    const successMessages = {
+                        customer: 'Thank you for contacting us. Your message has been sent and we\'ll get back to you soon.',
+                        supplier: 'Thank you for your message. We\'ll review your inquiry and get back to you shortly.',
+                        seller: 'Thank you for your message about the inspection. We\'ll respond to your inquiry soon.'
+                    };
+                    document.getElementById('successMessage').textContent = successMessages[contactTypeValue] || successMessages.customer;
                     
                     // Show success modal
                     successModal.classList.add('show');
