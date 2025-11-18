@@ -876,39 +876,85 @@
 
             console.log('📝 Populating form from booking data:', bookingData);
 
+            // Get customerData if it exists (nested structure)
+            const customerData = bookingData.customerData || {};
+            
+            // Helper to get value from root or customerData
+            const getValue = (...keys) => {
+                for (const key of keys) {
+                    if (bookingData[key] !== undefined && bookingData[key] !== null && bookingData[key] !== '') {
+                        return bookingData[key];
+                    }
+                    if (customerData[key] !== undefined && customerData[key] !== null && customerData[key] !== '') {
+                        return customerData[key];
+                    }
+                }
+                return null;
+            };
+
             // Vehicle Information
-            if (bookingData.rego || bookingData.vehicleRego) {
-                document.getElementById('rego').value = normalizeValue(bookingData.rego || bookingData.vehicleRego);
+            const regoValue = getValue('rego', 'vehicleRego');
+            if (regoValue) {
+                document.getElementById('rego').value = normalizeValue(regoValue);
             }
-            if (bookingData.make || bookingData.vehicleMake) {
-                document.getElementById('vehicleMake').value = normalizeValue(bookingData.make || bookingData.vehicleMake);
+            
+            const makeValue = getValue('make', 'vehicleMake');
+            if (makeValue) {
+                document.getElementById('vehicleMake').value = normalizeValue(makeValue);
             }
-            if (bookingData.model || bookingData.vehicleModel) {
-                document.getElementById('vehicleModel').value = normalizeValue(bookingData.model || bookingData.vehicleModel);
+            
+            const modelValue = getValue('model', 'vehicleModel');
+            if (modelValue) {
+                document.getElementById('vehicleModel').value = normalizeValue(modelValue);
             }
-            if (bookingData.year || bookingData.vehicleYear) {
-                document.getElementById('vehicleYear').value = normalizeValue(bookingData.year || bookingData.vehicleYear);
+            
+            const yearValue = getValue('year', 'vehicleYear');
+            if (yearValue) {
+                document.getElementById('vehicleYear').value = normalizeValue(yearValue);
             }
 
             // Contact Information
-            if (bookingData.name || bookingData.customerName) {
-                document.getElementById('customerName').value = normalizeValue(bookingData.name || bookingData.customerName);
+            const nameValue = getValue('name', 'customerName');
+            if (nameValue) {
+                document.getElementById('customerName').value = normalizeValue(nameValue);
             }
-            if (bookingData.email || bookingData.customerEmail) {
-                document.getElementById('email').value = normalizeValue(bookingData.email || bookingData.customerEmail);
+            
+            const emailValue = getValue('email', 'customerEmail');
+            if (emailValue) {
+                document.getElementById('email').value = normalizeValue(emailValue);
             }
-            if (bookingData.phone || bookingData.customerPhone) {
-                document.getElementById('phone').value = normalizeValue(bookingData.phone || bookingData.customerPhone);
+            
+            const phoneValue = getValue('phone', 'customerPhone');
+            if (phoneValue) {
+                document.getElementById('phone').value = normalizeValue(phoneValue);
             }
 
-            // Location
+            // Location - check root level, customerData, and trackingData
+            let locationValue = null;
             if (bookingData.location) {
-                const locationValue = typeof bookingData.location === 'string' 
-                    ? bookingData.location 
-                    : (bookingData.location.address || bookingData.location.city || '');
-                if (locationValue) {
-                    document.getElementById('serviceLocation').value = normalizeValue(locationValue);
+                if (typeof bookingData.location === 'string') {
+                    locationValue = bookingData.location;
+                } else if (bookingData.location.address || bookingData.location.city) {
+                    locationValue = bookingData.location.address || bookingData.location.city;
                 }
+            }
+            if (!locationValue && customerData.location) {
+                locationValue = typeof customerData.location === 'string' 
+                    ? customerData.location 
+                    : (customerData.location.address || customerData.location.city || '');
+            }
+            if (!locationValue && bookingData.trackingData && bookingData.trackingData.location) {
+                try {
+                    const trackingLocation = typeof bookingData.trackingData.location === 'string'
+                        ? JSON.parse(bookingData.trackingData.location)
+                        : bookingData.trackingData.location;
+                    locationValue = trackingLocation.address || trackingLocation.city || '';
+                } catch (e) {
+                    // Ignore parse errors
+                }
+            }
+            if (locationValue) {
+                document.getElementById('serviceLocation').value = normalizeValue(locationValue);
             }
 
             console.log('✅ Form populated from booking data');
