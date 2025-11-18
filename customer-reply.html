@@ -775,7 +775,17 @@
                 messageLabel: 'Your Message',
                 messagePlaceholder: 'Please describe what you need help with...',
                 marketingLabel: 'I\'d like to receive service reminders and special offers',
-                submitButton: 'Send Message'
+                submitButton: 'Send Message',
+                messageTypeOptions: [
+                    { value: 'booking', text: 'New Booking Request' },
+                    { value: 'update', text: 'Update on Current Service' },
+                    { value: 'inquiry', text: 'General Inquiry' },
+                    { value: 'quote', text: 'Quote Request' },
+                    { value: 'feedback', text: 'Feedback' },
+                    { value: 'complaint', text: 'Complaint' },
+                    { value: 'urgent', text: 'Urgent Issue' },
+                    { value: 'other', text: 'Other' }
+                ]
             },
             supplier: {
                 pageTitle: 'Supplier Contact Form',
@@ -789,7 +799,16 @@
                 messageLabel: 'Your Message',
                 messagePlaceholder: 'Please describe your inquiry or update...',
                 marketingLabel: 'I\'d like to receive updates and communications',
-                submitButton: 'Send Message'
+                submitButton: 'Send Message',
+                messageTypeOptions: [
+                    { value: 'parts', text: 'Parts Inquiry' },
+                    { value: 'service', text: 'Service Update' },
+                    { value: 'invoice', text: 'Invoice Query' },
+                    { value: 'availability', text: 'Availability Check' },
+                    { value: 'quote', text: 'Quote Request' },
+                    { value: 'urgent', text: 'Urgent Matter' },
+                    { value: 'other', text: 'Other' }
+                ]
             },
             seller: {
                 pageTitle: 'Vehicle Seller Contact Form',
@@ -803,7 +822,15 @@
                 messageLabel: 'Your Message',
                 messagePlaceholder: 'Please describe your inquiry about the inspection...',
                 marketingLabel: 'I\'d like to receive updates about the inspection',
-                submitButton: 'Send Message'
+                submitButton: 'Send Message',
+                messageTypeOptions: [
+                    { value: 'inspection', text: 'Inspection Inquiry' },
+                    { value: 'schedule', text: 'Schedule Change' },
+                    { value: 'access', text: 'Vehicle Access' },
+                    { value: 'results', text: 'Inspection Results' },
+                    { value: 'question', text: 'Question About Inspection' },
+                    { value: 'other', text: 'Other' }
+                ]
             }
         };
 
@@ -981,6 +1008,18 @@
             
             // Update placeholders
             document.getElementById('message').placeholder = config.messagePlaceholder;
+            
+            // Update message type dropdown options
+            const messageTypeSelect = document.getElementById('messageType');
+            messageTypeSelect.innerHTML = '<option value="">Select a type...</option>';
+            if (config.messageTypeOptions) {
+                config.messageTypeOptions.forEach(option => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = option.value;
+                    optionElement.textContent = option.text;
+                    messageTypeSelect.appendChild(optionElement);
+                });
+            }
             
             // Update document title
             document.title = config.pageTitle + ' - Eek Mechanical';
