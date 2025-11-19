@@ -2,15 +2,5 @@
 # All paths route to 404.html with 200 status
 # 404.html handles all redirects and 404 errors via its redirectDatabase
 
-# Google Ads Sitelinks - explicitly route to 404.html with 200 (force override any existing files)
-/wrong-fuel-rescue      /404.html                                          200!
-/wrong-fuel-rescue/     /404.html                                          200!
-/misfuel-service        /404.html                                          200!
-/misfuel-service/       /404.html                                          200!
-/petrol-in-diesel       /404.html                                          200!
-/petrol-in-diesel/      /404.html                                          200!
-/fuel-extraction        /404.html                                          200!
-/fuel-extraction/       /404.html                                          200!
-
-# Route everything else to 404.html - it will handle redirects and 404s
+# Route everything to 404.html - it will handle redirects and 404s
 /*                       /404.html                                          200

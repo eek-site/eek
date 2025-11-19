@@ -416,12 +416,6 @@ GitHub Pages will automatically serve this for any 404 errors.
             '/privacy-report': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUMzRTVVRQQVVGN0s2QjRQTUVNOEVNR1QwOC4u',
             '/more-options': 'https://www.eek.nz/more-options',
             
-            // Google Ads Sitelinks - Misfuel/Wrong Fuel Rescue (all redirect to homepage)
-            '/wrong-fuel-rescue': 'https://www.eek.nz',
-            '/misfuel-service': 'https://www.eek.nz',
-            '/petrol-in-diesel': 'https://www.eek.nz',
-            '/fuel-extraction': 'https://www.eek.nz',
-            
             // Case variations (common typos)
             '/Apply': 'https://forms.office.com/r/XLdGk4wDYY',
             '/APPLY': 'https://forms.office.com/r/XLdGk4wDYY',
@@ -632,31 +626,6 @@ GitHub Pages will automatically serve this for any 404 errors.
                 return {
                     title: 'Payment Confirmation',
                     description: 'Taking you to your secure payment confirmation page. Your service is confirmed and being processed.'
-                };
-            }
-            // Google Ads Sitelinks - Misfuel/Wrong Fuel Rescue
-            if (path === '/wrong-fuel-rescue') {
-                return {
-                    title: 'Wrong Fuel Rescue - STOP - Don\'t Start Engine',
-                    description: 'Put wrong fuel in? Don\'t panic! Professional wrong fuel rescue service. Priority dispatch - we drain and flush your system on-site. Fully insured service. Call immediately - don\'t start the engine!'
-                };
-            }
-            if (path === '/misfuel-service') {
-                return {
-                    title: 'Misfuel Service - Emergency Fuel Removal',
-                    description: 'Misfuel emergency? We provide professional petrol/diesel removal service. Complete system flush on-site - no expensive tow truck needed. Priority dispatch for wrong fuel emergencies across New Zealand.'
-                };
-            }
-            if (path === '/petrol-in-diesel') {
-                return {
-                    title: 'Petrol in Diesel? Emergency Service Available',
-                    description: 'Petrol in diesel or diesel in petrol? Don\'t start your car! Our wrong fuel specialists can drain and flush your system on-site. Professional fuel contamination service - cheaper than engine damage.'
-                };
-            }
-            if (path === '/fuel-extraction') {
-                return {
-                    title: 'Wrong Fuel Extraction - Professional Service',
-                    description: 'Emergency fuel extraction service. We remove contaminated fuel, flush the entire system, and add fresh fuel. Fully insured wrong fuel rescue - available 24/7 across New Zealand. Priority dispatch.'
                 };
             }
             if (url.includes('sharepoint.com')) {
