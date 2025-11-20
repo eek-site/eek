@@ -153,10 +153,12 @@ class FooterManager {
         
         .eek-footer-bottom p {
           color: rgba(255,255,255,0.7) !important;
-          margin: 4px 0 !important;
+          margin: 4px auto !important;
           font-size: 0.85em !important;
           line-height: 1.6 !important;
           text-align: center !important;
+          display: block !important;
+          width: 100% !important;
         }
         
         .eek-footer-bottom div {
@@ -169,7 +171,7 @@ class FooterManager {
         
         .eek-footer-bottom div a {
           color: rgba(255,255,255,0.7) !important;
-          margin: 0 20px 0 0 !important;
+          margin: 0 30px 0 0 !important;
           font-size: 0.85em !important;
           text-decoration: none !important;
         }
