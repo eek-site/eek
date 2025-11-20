@@ -146,7 +146,7 @@ class FooterManager {
         }
         
         .eek-footer-bottom {
-          text-align: left !important;
+          text-align: center !important;
           padding-top: 20px !important;
           border-top: 1px solid rgba(255,255,255,0.2) !important;
         }
@@ -156,12 +156,14 @@ class FooterManager {
           margin: 4px 0 !important;
           font-size: 0.85em !important;
           line-height: 1.6 !important;
+          text-align: center !important;
         }
         
         .eek-footer-bottom div {
           margin-top: 12px !important;
           display: flex !important;
           flex-wrap: wrap !important;
+          justify-content: center !important;
           gap: 15px !important;
         }
         
@@ -234,13 +236,14 @@ class FooterManager {
             font-size: 0.8em !important;
             line-height: 1.6 !important;
             margin: 5px 0 !important;
+            text-align: center !important;
           }
           
           .eek-footer-bottom div {
             margin-top: 15px !important;
             display: flex !important;
             flex-wrap: wrap !important;
-            justify-content: flex-start !important;
+            justify-content: center !important;
             gap: 10px !important;
           }
           
