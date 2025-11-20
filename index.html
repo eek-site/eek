@@ -604,6 +604,51 @@ font-src 'self' data:;">
       background: linear-gradient(135deg, var(--secondary-light), var(--secondary));
     }
 
+    /* Sticky Call Button */
+    .sticky-call,
+    #stickyCallButton,
+    #stickyClosedButton {
+      position: fixed;
+      bottom: var(--space-lg);
+      right: var(--space-lg);
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: var(--white);
+      font-size: clamp(1rem, 2.5vw, 1.1rem);
+      padding: var(--space-lg) var(--space-xl);
+      border-radius: 50px;
+      box-shadow: var(--shadow-xl);
+      text-decoration: none;
+      z-index: 999;
+      font-weight: 700;
+      transition: all var(--transition-normal);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    #stickyClosedButton {
+      background: linear-gradient(135deg, #666, #555);
+    }
+
+    .sticky-call:hover,
+    #stickyCallButton:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    #stickyClosedButton:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      background: linear-gradient(135deg, #555, #666);
+      color: var(--white);
+      text-decoration: none;
+    }
+
     /* Book Now Urgent Styling */
     .book-now-urgent {
       background: linear-gradient(135deg, #28a745, #20c997) !important;
