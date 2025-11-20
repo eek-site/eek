@@ -17,7 +17,7 @@ class FooterManager {
           <div class="eek-footer-content">
             <div class="eek-footer-section eek-footer-main">
               <h4><a href="/" style="color: #ff5500; text-decoration: none;">Eek Mechanical</a></h4>
-              <p>Professional mobile mechanics across New Zealand</p>
+              <p class="eek-footer-tagline">Professional mobile mechanics across New Zealand</p>
               <div class="eek-footer-links-grid">
                 <a href="/misfuels/petrol-in-diesel">Petrol in Diesel</a>
                 <a href="/misfuels/diesel-in-petrol">Diesel in Petrol</a>
@@ -85,16 +85,19 @@ class FooterManager {
         
         .eek-footer-content {
           display: grid !important;
-          grid-template-columns: 2fr 1fr 1fr !important;
-          gap: 40px !important;
-          margin-bottom: 20px !important;
+          grid-template-columns: 2.5fr 1fr 1fr !important;
+          gap: 60px !important;
+          margin-bottom: 30px !important;
+          max-width: 100% !important;
+          align-items: start !important;
         }
         
         .eek-footer-section h4 {
           color: #ff5500 !important;
-          font-size: 1.1em !important;
-          margin-bottom: 12px !important;
+          font-size: 1.15em !important;
+          margin-bottom: 15px !important;
           font-weight: 600 !important;
+          text-align: left !important;
         }
         
         .eek-footer-main {
@@ -104,24 +107,40 @@ class FooterManager {
         .eek-footer-links-grid {
           display: grid !important;
           grid-template-columns: repeat(2, 1fr) !important;
-          gap: 0 20px !important;
+          gap: 0 30px !important;
+          row-gap: 4px !important;
         }
         
         .eek-footer-section p {
           color: rgba(255,255,255,0.9) !important;
           margin-bottom: 5px !important;
           font-size: 0.9em !important;
-          line-height: 1.4 !important;
+          line-height: 1.5 !important;
+          text-align: left !important;
+        }
+        
+        .eek-footer-tagline {
+          margin-bottom: 15px !important;
+          color: rgba(255,255,255,0.9) !important;
         }
         
         .eek-footer-section a {
           color: rgba(255,255,255,0.9) !important;
           text-decoration: none !important;
-          margin-bottom: 6px !important;
+          margin-bottom: 8px !important;
           display: block !important;
           font-size: 0.9em !important;
           transition: color 0.3s ease !important;
-          line-height: 1.5 !important;
+          line-height: 1.6 !important;
+          text-align: left !important;
+        }
+        
+        .eek-footer-section h4 a {
+          color: #ff5500 !important;
+        }
+        
+        .eek-footer-section h4 a:hover {
+          color: #ff7733 !important;
         }
         
         .eek-footer-section a:hover {
@@ -129,25 +148,30 @@ class FooterManager {
         }
         
         .eek-footer-bottom {
-          text-align: center !important;
-          padding-top: 15px !important;
+          text-align: left !important;
+          padding-top: 20px !important;
           border-top: 1px solid rgba(255,255,255,0.2) !important;
         }
         
         .eek-footer-bottom p {
           color: rgba(255,255,255,0.7) !important;
-          margin: 3px 0 !important;
-          font-size: 0.8em !important;
+          margin: 4px 0 !important;
+          font-size: 0.85em !important;
+          line-height: 1.6 !important;
         }
         
         .eek-footer-bottom div {
-          margin-top: 10px !important;
+          margin-top: 12px !important;
+          display: flex !important;
+          flex-wrap: wrap !important;
+          gap: 15px !important;
         }
         
         .eek-footer-bottom div a {
           color: rgba(255,255,255,0.7) !important;
-          margin: 0 8px !important;
-          font-size: 0.8em !important;
+          margin: 0 !important;
+          font-size: 0.85em !important;
+          text-decoration: none !important;
         }
         
         .eek-footer-bottom div a:hover {
@@ -222,7 +246,7 @@ class FooterManager {
             margin-top: 15px !important;
             display: flex !important;
             flex-wrap: wrap !important;
-            justify-content: center !important;
+            justify-content: flex-start !important;
             gap: 10px !important;
           }
           
