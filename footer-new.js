@@ -163,13 +163,13 @@ class FooterManager {
           margin-top: 12px !important;
           display: flex !important;
           flex-wrap: wrap !important;
-          justify-content: center !important;
-          gap: 15px !important;
+          justify-content: flex-start !important;
+          gap: 0 !important;
         }
         
         .eek-footer-bottom div a {
           color: rgba(255,255,255,0.7) !important;
-          margin: 0 !important;
+          margin: 0 20px 0 0 !important;
           font-size: 0.85em !important;
           text-decoration: none !important;
         }
@@ -243,14 +243,14 @@ class FooterManager {
             margin-top: 15px !important;
             display: flex !important;
             flex-wrap: wrap !important;
-            justify-content: center !important;
-            gap: 10px !important;
+            justify-content: flex-start !important;
+            gap: 0 !important;
           }
           
           .eek-footer-bottom div a {
             font-size: 0.8em !important;
-            margin: 0 !important;
-            padding: 6px 12px !important;
+            margin: 0 15px 0 0 !important;
+            padding: 6px 0 !important;
             min-height: 36px !important;
             display: flex !important;
             align-items: center !important;
