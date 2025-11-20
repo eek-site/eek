@@ -1,7 +1,7 @@
 /**
  * Eek Footer Manager - Clean Rebuild
  * Simple, reliable footer injection system
- * Cache busting: v20251020.64
+ * Cache busting: v20251020.65
  */
 
 class FooterManager {
