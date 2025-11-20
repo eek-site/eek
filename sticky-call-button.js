@@ -82,7 +82,7 @@
   }
 
   /**
-   * Get GCLID from URL or sessionStorage (session-only persistence)
+   * Get GCLID from URL or sessionStorage (only if set in THIS session)
    */
   function getGCLID() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -91,17 +91,24 @@
     if (gclid) {
       // Store GCLID in sessionStorage for current session only
       sessionStorage.setItem("eek_gclid", gclid);
+      sessionStorage.setItem("eek_gclid_session_set", "true");
       return gclid;
     }
     
-    // Check sessionStorage for stored GCLID (session-only, no expiration needed)
-    gclid = sessionStorage.getItem("eek_gclid");
+    // Only use sessionStorage GCLID if it was set in THIS session
+    // Check if we have a flag indicating it was set in this session
+    const wasSetThisSession = sessionStorage.getItem("eek_gclid_session_set");
+    if (wasSetThisSession === "true") {
+      gclid = sessionStorage.getItem("eek_gclid");
+      return gclid;
+    }
     
-    return gclid || null;
+    // If no flag, this is a new session without GCLID, so don't use stored value
+    return null;
   }
 
   /**
-   * Get payment token from URL or sessionStorage (session-only persistence)
+   * Get payment token from URL or sessionStorage (only if set in THIS session)
    */
   function getPaymentToken() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -110,13 +117,20 @@
     if (token) {
       // Store token in sessionStorage for current session only
       sessionStorage.setItem('eek_payment_token', token);
+      sessionStorage.setItem('eek_payment_token_session_set', 'true');
       return token;
     }
     
-    // Check sessionStorage for stored token (session-only, no expiration needed)
-    token = sessionStorage.getItem('eek_payment_token');
+    // Only use sessionStorage token if it was set in THIS session
+    // Check if we have a flag indicating it was set in this session
+    const wasSetThisSession = sessionStorage.getItem('eek_payment_token_session_set');
+    if (wasSetThisSession === 'true') {
+      token = sessionStorage.getItem('eek_payment_token');
+      return token;
+    }
     
-    return token || null;
+    // If no flag, this is a new session without token, so don't use stored value
+    return null;
   }
 
   /**

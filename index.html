@@ -1291,25 +1291,37 @@ function buildTrackingParams() {
   const params = new URLSearchParams();
   const urlParams = new URLSearchParams(window.location.search);
   
-  // Check for token in URL first, then sessionStorage (session-only persistence)
+  // Check for token in URL first
   let token = urlParams.get('token');
   if (token) {
     // Store token in sessionStorage for current session only
     sessionStorage.setItem('eek_payment_token', token);
+    sessionStorage.setItem('eek_payment_token_session_set', 'true');
   } else {
-    // Check sessionStorage for stored token (session-only, no expiration needed)
-    token = sessionStorage.getItem('eek_payment_token');
+    // Only use sessionStorage token if it was set in THIS session (not from a previous session)
+    // Check if we have a flag indicating it was set in this session
+    const wasSetThisSession = sessionStorage.getItem('eek_payment_token_session_set');
+    if (wasSetThisSession === 'true') {
+      token = sessionStorage.getItem('eek_payment_token');
+    }
+    // If no flag, this is a new session without token, so don't use stored value
   }
   if (token) params.set('token', token);
   
-  // Check for GCLID in URL first, then sessionStorage (session-only persistence)
+  // Check for GCLID in URL first
   let gclid = extractGCLID(urlParams);
   if (gclid) {
     // Store GCLID in sessionStorage for current session only
     sessionStorage.setItem("eek_gclid", gclid);
+    sessionStorage.setItem("eek_gclid_session_set", "true");
   } else {
-    // Check sessionStorage for stored GCLID (session-only, no expiration needed)
-    gclid = sessionStorage.getItem("eek_gclid");
+    // Only use sessionStorage GCLID if it was set in THIS session (not from a previous session)
+    // Check if we have a flag indicating it was set in this session
+    const wasSetThisSession = sessionStorage.getItem("eek_gclid_session_set");
+    if (wasSetThisSession === "true") {
+      gclid = sessionStorage.getItem("eek_gclid");
+    }
+    // If no flag, this is a new session without GCLID, so don't use stored value
   }
   if (gclid) params.set('gclid', gclid);
   
