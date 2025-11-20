@@ -18,6 +18,20 @@ class FooterManager {
             <div class="eek-footer-section">
               <h4><a href="/" style="color: #ff5500; text-decoration: none;">Eek Mechanical</a></h4>
               <p>Professional mobile mechanics across New Zealand</p>
+              <a href="/misfuels/petrol-in-diesel">Petrol in Diesel</a>
+              <a href="/misfuels/diesel-in-petrol">Diesel in Petrol</a>
+              <a href="/misfuels/wrong-fuel-at-petrol-station">Wrong Fuel at Station</a>
+              <a href="/misfuels/wrong-fuel-left-station">Wrong Fuel Left Station</a>
+              <a href="/fuel-extraction/how-fuel-extraction-works">How Fuel Extraction Works</a>
+              <a href="/fuel-extraction/fuel-extraction-cost-comparison">Fuel Extraction Cost Comparison</a>
+              <a href="/fuel-extraction/when-you-need-fuel-extraction">When You Need Fuel Extraction</a>
+              <a href="/fuel-extraction/fuel-extraction-insurance-coverage">Fuel Extraction Insurance</a>
+              <a href="/fuel-extraction/fuel-extraction-nationwide-service">Nationwide Fuel Extraction</a>
+              <a href="/fuel-extraction/fuel-extraction-response-times">Fuel Extraction Response Times</a>
+              <a href="/fuel-extraction/fuel-extraction-vs-towing">Fuel Extraction vs Towing</a>
+              <a href="/fuel-extraction/fuel-extraction-equipment-methods">Fuel Extraction Equipment</a>
+              <a href="/fuel-extraction/fuel-extraction-vehicle-types">Fuel Extraction Vehicle Types</a>
+              <a href="/fuel-extraction/fuel-extraction-safety-procedures">Fuel Extraction Safety</a>
             </div>
             
             <div class="eek-footer-section">
