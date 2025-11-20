@@ -108,6 +108,7 @@ font-src 'self' data:;">
   
   <!-- Centralized Footer Management -->
   <script src="/footer-new.js?v=20251020.39"></script>
+  <script src="/sticky-call-button.js?v=20251020.59"></script>
   
 
   <script type="application/ld+json">
@@ -1526,11 +1527,7 @@ async function updateHoursDisplay() {
     if (closedBanner) closedBanner.style.display = 'none';
     if (phonesBusyBanner) phonesBusyBanner.style.display = 'none';
     
-    const stickyCall = document.getElementById('stickyCallButton');
-    const stickyClosed = document.getElementById('stickyClosedButton');
-    if (stickyCall) stickyCall.style.display = 'inline-block';
-    if (stickyClosed) stickyClosed.style.display = 'none';
-    
+    // Sticky call button now handled by sticky-call-button.js
     console.log('✅ PHONES ON - Showing call buttons');
   } else {
     // PHONES ARE OFF - Show booking buttons, hide call
@@ -1569,14 +1566,7 @@ async function updateHoursDisplay() {
       }
     }
     
-    // Update sticky button
-    const stickyCall = document.getElementById('stickyCallButton');
-    const stickyClosed = document.getElementById('stickyClosedButton');
-    if (stickyCall) stickyCall.style.display = 'none';
-    if (stickyClosed) {
-      stickyClosed.style.display = 'inline-block';
-      stickyClosed.innerHTML = '📅 Book Now';
-    }
+    // Sticky call button now handled by sticky-call-button.js
     
     // Add urgency badges to service cards
     document.querySelectorAll('.keyword-item').forEach(item => {
