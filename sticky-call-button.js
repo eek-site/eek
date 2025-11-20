@@ -82,12 +82,49 @@
   }
 
   /**
+   * Get GCLID from URL or sessionStorage (session-only persistence)
+   */
+  function getGCLID() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let gclid = extractGCLID(urlParams);
+    
+    if (gclid) {
+      // Store GCLID in sessionStorage for current session only
+      sessionStorage.setItem("eek_gclid", gclid);
+      return gclid;
+    }
+    
+    // Check sessionStorage for stored GCLID (session-only, no expiration needed)
+    gclid = sessionStorage.getItem("eek_gclid");
+    
+    return gclid || null;
+  }
+
+  /**
+   * Get payment token from URL or sessionStorage (session-only persistence)
+   */
+  function getPaymentToken() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let token = urlParams.get('token');
+    
+    if (token) {
+      // Store token in sessionStorage for current session only
+      sessionStorage.setItem('eek_payment_token', token);
+      return token;
+    }
+    
+    // Check sessionStorage for stored token (session-only, no expiration needed)
+    token = sessionStorage.getItem('eek_payment_token');
+    
+    return token || null;
+  }
+
+  /**
    * Update sticky call button visibility
    */
   async function updateStickyCallButton() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const hasPaymentToken = urlParams.get('token');
-    const hasGclid = extractGCLID(urlParams);
+    const hasPaymentToken = getPaymentToken();
+    const hasGclid = getGCLID();
 
     // Get states from API
     const states = await fetchStatesOnce(false);

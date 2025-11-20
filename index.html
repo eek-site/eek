@@ -1291,10 +1291,26 @@ function buildTrackingParams() {
   const params = new URLSearchParams();
   const urlParams = new URLSearchParams(window.location.search);
   
-  const token = urlParams.get('token');
+  // Check for token in URL first, then sessionStorage (session-only persistence)
+  let token = urlParams.get('token');
+  if (token) {
+    // Store token in sessionStorage for current session only
+    sessionStorage.setItem('eek_payment_token', token);
+  } else {
+    // Check sessionStorage for stored token (session-only, no expiration needed)
+    token = sessionStorage.getItem('eek_payment_token');
+  }
   if (token) params.set('token', token);
   
-  const gclid = extractGCLID(urlParams);
+  // Check for GCLID in URL first, then sessionStorage (session-only persistence)
+  let gclid = extractGCLID(urlParams);
+  if (gclid) {
+    // Store GCLID in sessionStorage for current session only
+    sessionStorage.setItem("eek_gclid", gclid);
+  } else {
+    // Check sessionStorage for stored GCLID (session-only, no expiration needed)
+    gclid = sessionStorage.getItem("eek_gclid");
+  }
   if (gclid) params.set('gclid', gclid);
   
   ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
@@ -1986,6 +2002,36 @@ function checkReturnVisit() {
 }
 
 // Initialize on page load
+// Automatically append tracking params to all internal links
+function appendTrackingToAllLinks() {
+  const trackingParams = buildTrackingParams();
+  if (!trackingParams) return; // No params to add
+  
+  // Find all internal links (not external, not tel:, not mailto:, not javascript:)
+  document.querySelectorAll('a[href]').forEach(link => {
+    const href = link.getAttribute('href');
+    if (!href) return;
+    
+    // Skip external links, tel:, mailto:, javascript:, anchors, and links that already have tracking params
+    if (href.startsWith('http://') || 
+        href.startsWith('https://') || 
+        href.startsWith('tel:') || 
+        href.startsWith('mailto:') || 
+        href.startsWith('javascript:') || 
+        href.startsWith('#') ||
+        href.includes('gclid=') ||
+        href.includes('token=')) {
+      return;
+    }
+    
+    // Append tracking params
+    const separator = href.includes('?') ? '&' : '?';
+    link.setAttribute('href', href + separator + trackingParams);
+  });
+  
+  console.log('✅ Tracking params appended to all internal links');
+}
+
 window.addEventListener('load', function() {
   console.log('🚀 Page loaded - initializing...');
   
@@ -1998,6 +2044,9 @@ window.addEventListener('load', function() {
   handleServiceSelection();
   trackServiceSelection();
   updateHoursDisplay();
+  
+  // Append tracking params to all links
+  appendTrackingToAllLinks();
   
   setInterval(updateHoursDisplay, 5 * 60 * 1000);
   
