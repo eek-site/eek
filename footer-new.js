@@ -17,7 +17,6 @@ class FooterManager {
           <div class="eek-footer-content">
             <div class="eek-footer-section eek-footer-main">
               <h4><a href="/" style="color: #ff5500; text-decoration: none;">Eek Mechanical</a></h4>
-              <p class="eek-footer-tagline">Professional mobile mechanics across New Zealand</p>
               <div class="eek-footer-links-grid">
                 <a href="/misfuels/petrol-in-diesel">Petrol in Diesel</a>
                 <a href="/misfuels/diesel-in-petrol">Diesel in Petrol</a>
@@ -36,17 +35,15 @@ class FooterManager {
               </div>
             </div>
             
-            <div class="eek-footer-section">
+            <div class="eek-footer-section eek-footer-secondary">
               <h4>Book Online</h4>
               <a href="/book-service/?service=jumpstart">Jump Starts</a>
               <a href="/book-service/?service=mechanic">Mobile Repairs</a>
               <a href="/book-service/?service=inspection">Pre-Purchase Inspections</a>
               <a href="/book-service/?service=fuel-extraction">Wrong Fuel Rescue</a>
-            </div>
-            
-            <div class="eek-footer-section">
-              <h4>Contact</h4>
-              <a href="javascript:void(0)" onclick="openServiceModal()" style="color: #ff5500; font-weight: 600;">Contact Us</a>
+              
+              <h4 class="eek-footer-subheading">Contact</h4>
+              <a href="javascript:void(0)" onclick="openServiceModal()">Contact Us</a>
             </div>
           </div>
           
@@ -85,8 +82,8 @@ class FooterManager {
         
         .eek-footer-content {
           display: grid !important;
-          grid-template-columns: 2.5fr 1fr 1fr !important;
-          gap: 60px !important;
+          grid-template-columns: 1.5fr 1fr !important;
+          gap: 80px !important;
           margin-bottom: 30px !important;
           max-width: 100% !important;
           align-items: start !important;
@@ -94,10 +91,15 @@ class FooterManager {
         
         .eek-footer-section h4 {
           color: #ff5500 !important;
-          font-size: 1.15em !important;
-          margin-bottom: 15px !important;
+          font-size: 1.1em !important;
+          margin-bottom: 12px !important;
+          margin-top: 0 !important;
           font-weight: 600 !important;
           text-align: left !important;
+        }
+        
+        .eek-footer-subheading {
+          margin-top: 20px !important;
         }
         
         .eek-footer-main {
@@ -108,7 +110,7 @@ class FooterManager {
           display: grid !important;
           grid-template-columns: repeat(2, 1fr) !important;
           gap: 0 30px !important;
-          row-gap: 4px !important;
+          row-gap: 6px !important;
         }
         
         .eek-footer-section p {
@@ -119,10 +121,6 @@ class FooterManager {
           text-align: left !important;
         }
         
-        .eek-footer-tagline {
-          margin-bottom: 15px !important;
-          color: rgba(255,255,255,0.9) !important;
-        }
         
         .eek-footer-section a {
           color: rgba(255,255,255,0.9) !important;
@@ -131,7 +129,7 @@ class FooterManager {
           display: block !important;
           font-size: 0.9em !important;
           transition: color 0.3s ease !important;
-          line-height: 1.6 !important;
+          line-height: 1.5 !important;
           text-align: left !important;
         }
         
@@ -181,12 +179,8 @@ class FooterManager {
         /* Tablet Responsive */
         @media (max-width: 968px) {
           .eek-footer-content {
-            grid-template-columns: 1fr 1fr !important;
+            grid-template-columns: 1fr !important;
             gap: 30px !important;
-          }
-          
-          .eek-footer-section:first-child {
-            grid-column: 1 / -1 !important;
           }
         }
         
