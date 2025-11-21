@@ -394,22 +394,27 @@
     <div class="acknowledgment-content">
       <h2>⚠️ Important Legal Notice - Please Read Carefully</h2>
       <p style="margin-bottom: 15px; font-size: 1.1em;">
-        You are about to view Eek Mechanical Limited's official defamation policy and legal action protocol. This document contains important information about your legal obligations under New Zealand law.
+        <strong id="modalCustomerName">You</strong> are about to view Eek Mechanical Limited's official defamation policy and legal action protocol. This document contains important information about <strong id="modalCustomerName2">your</strong> legal obligations under New Zealand law.
       </p>
       <p style="margin-bottom: 15px; font-size: 1.1em;">
-        <strong>By proceeding, you acknowledge that:</strong>
+        <strong>By proceeding, <span id="modalCustomerName3">you</span> acknowledge that:</strong>
       </p>
       <ul style="margin-bottom: 20px; padding-left: 20px;">
-        <li>You have read and understood the legal consequences of posting false, defamatory, or malicious reviews</li>
-        <li>You understand that Eek Mechanical Limited takes immediate legal action against false reviews</li>
-        <li>You are aware of the financial and legal consequences outlined in this policy</li>
-        <li>You understand that all customer interactions are recorded and documented</li>
-        <li>You acknowledge that this policy is legally binding under New Zealand law</li>
+        <li><span id="modalCustomerName4">You</span> have read and understood the legal consequences of posting false, defamatory, or malicious reviews</li>
+        <li><span id="modalCustomerName5">You</span> understand that Eek Mechanical Limited takes immediate legal action against false reviews</li>
+        <li><span id="modalCustomerName6">You</span> are aware of the financial and legal consequences outlined in this policy</li>
+        <li><span id="modalCustomerName7">You</span> understand that all customer interactions are recorded and documented</li>
+        <li><span id="modalCustomerName8">You</span> acknowledge that this policy is legally binding under New Zealand law</li>
       </ul>
+      <div style="background: #e8f4fd; border-left: 4px solid #17a2b8; padding: 15px; border-radius: 4px; margin: 20px 0;">
+        <p style="margin-bottom: 10px; font-size: 0.95em; color: #0c5460;">
+          <strong>Electronic Signature Notice:</strong> Under the Electronic Transactions Act 2002 (New Zealand), this acknowledgment constitutes a valid electronic signature. By checking the box below, <span id="modalCustomerName9">you</span> are providing <span id="modalCustomerName10">your</span> electronic signature, which has the same legal effect as a handwritten signature under New Zealand law.
+        </p>
+      </div>
       <div class="acknowledgment-checkbox">
         <label>
           <input type="checkbox" id="acknowledgeCheckbox" required>
-          <span>I acknowledge that I have read and understood the above notice and wish to proceed</span>
+          <span><strong id="modalCustomerName11">I</strong>, <strong id="modalCustomerNameSignature">[Your Name]</strong>, acknowledge that I have read and understood the above notice and wish to proceed. This acknowledgment serves as my electronic signature.</span>
         </label>
       </div>
       <button class="acknowledgment-btn" id="acknowledgeBtn" disabled>I Acknowledge and Proceed</button>
@@ -1479,34 +1484,130 @@
       }, true);
     }
 
-    // Initialize page
-    window.addEventListener('load', async function() {
+    // Base64 Decode Function (same as customer-reply.html)
+    function decodeBase64(encoded) {
+      try {
+        // Decode Base64
+        const decoded = atob(encoded);
+        
+        // Parse the query string format
+        const params = new URLSearchParams(decoded);
+        const data = {};
+        
+        for (const [key, value] of params) {
+          data[key] = value;
+        }
+        
+        return data;
+      } catch (e) {
+        console.error('Failed to decode data:', e);
+        return null;
+      }
+    }
+
+    // Initialize page (using same process as customer-reply.html)
+    document.addEventListener('DOMContentLoaded', async function() {
       console.log('🚀 Defamation policy page initialized');
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const encodedData = urlParams.get('d');
+      
+      let bookingId = null;
+      let contactType = 'customer'; // Default to customer
+      
+      // Decode hash to get bookingId and contactType (same as customer-reply.html)
+      if (encodedData) {
+        const decodedData = decodeBase64(encodedData);
+        if (decodedData) {
+          bookingId = decodedData.bookingId || decodedData.bookingid || null;
+          contactType = decodedData.contactType || decodedData.contacttype || 'customer';
+          
+          console.log('📋 Decoded hash data:', { bookingId, contactType });
+        }
+      } else {
+        // Fall back to regular URL parameters (for backward compatibility)
+        bookingId = urlParams.get('bookingId');
+        contactType = urlParams.get('contactType') || urlParams.get('contacttype') || 'customer';
+      }
       
       // Prevent leaving without acknowledgment
       preventLeavingWithoutAcknowledgment();
       
-      // Get booking data
-      const params = new URLSearchParams(window.location.search);
-      const bookingId = params.get('bookingId');
-      
+      // Fetch booking data if bookingId is provided (same as customer-reply.html)
       let bookingData = null;
       
       if (bookingId) {
-        bookingData = await fetchBookingDataFromSharePoint(bookingId);
+        console.log('🔄 Fetching booking data for bookingId:', bookingId);
+        try {
+          bookingData = await fetchBookingDataFromSharePoint(bookingId);
+          if (bookingData) {
+            console.log('✅ Booking data retrieved from SharePoint');
+          } else {
+            console.log('ℹ️ No booking data found from SharePoint, trying comprehensive data');
+            bookingData = getComprehensiveBookingData();
+          }
+        } catch (error) {
+          console.error('❌ Error fetching booking data:', error);
+          // Continue with comprehensive data - user can still see the page
+          bookingData = getComprehensiveBookingData();
+        }
       } else {
+        console.log('ℹ️ No bookingId provided, using comprehensive booking data');
         bookingData = getComprehensiveBookingData();
+      }
+      
+      // Merge hash data into booking data if available
+      if (encodedData) {
+        const decodedData = decodeBase64(encodedData);
+        if (decodedData && bookingData) {
+          Object.assign(bookingData, decodedData);
+          console.log('✅ Hash data merged into booking data');
+        }
       }
       
       // Personalize page with customer data
       if (bookingData) {
+        console.log('📝 Personalizing page with booking data:', bookingData);
         personalizePage(bookingData);
         populateAddressForm(bookingData);
         
-        // Update all remaining customer name references
+        // Update acknowledgment modal with customer name
         const customerName = getCustomerName(bookingData);
         if (customerName) {
-          // Update address section references
+          // Update modal references
+          const modalRefs = [
+            'modalCustomerName', 'modalCustomerName2', 'modalCustomerName3', 'modalCustomerName4',
+            'modalCustomerName5', 'modalCustomerName6', 'modalCustomerName7', 'modalCustomerName8',
+            'modalCustomerName9', 'modalCustomerName10', 'modalCustomerName11'
+          ];
+          
+          modalRefs.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+              const text = el.textContent.toLowerCase();
+              if (text === 'you' || text === 'your' || text === 'i') {
+                if (text === 'i') {
+                  el.textContent = 'I';
+                } else if (text === 'you') {
+                  el.textContent = customerName;
+                } else {
+                  el.textContent = customerName + "'s";
+                }
+              } else if (text.includes('you')) {
+                el.textContent = el.textContent.replace(/you/gi, customerName);
+              } else if (text.includes('your')) {
+                el.textContent = el.textContent.replace(/your/gi, customerName + "'s");
+              }
+            }
+          });
+          
+          // Update signature field
+          const signatureEl = document.getElementById('modalCustomerNameSignature');
+          if (signatureEl) {
+            signatureEl.textContent = customerName;
+          }
+          
+          // Update all remaining customer name references
           const addressRefs = [
             'customerNameAddress', 'customerNameAddressForm', 'customerNameAddressForm2', 
             'customerNameAddressForm3', 'customerNameAddressConsequence', 'customerNameAddressConsequence2',
@@ -1528,6 +1629,8 @@
             }
           });
         }
+      } else {
+        console.warn('⚠️ No booking data available for personalization');
       }
       
       // Set up address form handler
