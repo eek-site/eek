@@ -1090,9 +1090,67 @@
         <strong style="font-size: 1.3em; color: #dc3545;">legal@eek.nz</strong>
       </p>
       <p style="color: #6c757d;">
-        You have 24 hours from posting to remove false content voluntarily.<br>
+        <span id="contactCustomerName">You</span> have 24 hours from posting to remove false content voluntarily.<br>
         After this period, legal proceedings commence automatically.
       </p>
+    </div>
+  </section>
+
+  <!-- Final Acknowledgment Section -->
+  <section class="section" style="background: linear-gradient(135deg, #fff5f5, #ffe0e0); border: 3px solid #dc3545;">
+    <h2 class="section-title" style="color: #dc3545;">📋 Final Acknowledgment & Terms of Service</h2>
+    
+    <div style="background: white; padding: 30px; border-radius: 8px; margin: 30px 0;">
+      <p style="font-size: 1.2em; margin-bottom: 20px; line-height: 1.8;">
+        <strong><span id="finalAckName">You</span>, <span id="finalAckName2">[Customer Name]</span>,</strong> acknowledge that <span id="finalAckName3">you</span> have read and understood:
+      </p>
+      
+      <ul style="margin: 20px 0; padding-left: 30px; font-size: 1.1em; line-height: 2;">
+        <li style="margin-bottom: 15px;">This defamation policy and legal action protocol in its entirety</li>
+        <li style="margin-bottom: 15px;">The legal consequences of posting false, defamatory, or malicious reviews</li>
+        <li style="margin-bottom: 15px;">The financial and legal consequences outlined in this policy</li>
+        <li style="margin-bottom: 15px;">That all customer interactions are recorded and documented</li>
+        <li style="margin-bottom: 15px;">The Terms of Service that <span id="finalAckName4">you</span> agreed to when <span id="finalAckName5">you</span> used Eek Mechanical's services</li>
+        <li style="margin-bottom: 15px;">That this policy is legally binding under New Zealand law</li>
+        <li style="margin-bottom: 15px;">That <span id="finalAckName6">your</span> address for service is required and will be obtained from the Motor Vehicle Register if not provided</li>
+      </ul>
+      
+      <div style="background: #e8f4fd; border-left: 4px solid #17a2b8; padding: 25px; border-radius: 4px; margin: 30px 0;">
+        <h3 style="color: #17a2b8; margin-bottom: 15px;">📄 Terms of Service Reference</h3>
+        <p style="margin-bottom: 15px;">
+          By using Eek Mechanical's services, <span id="finalAckName7">you</span> agreed to our <a href="/terms" target="_blank" style="color: #17a2b8; font-weight: bold; text-decoration: underline;">Terms of Service</a>, which include:
+        </p>
+        <ul style="margin-left: 20px; color: #0c5460;">
+          <li style="margin-bottom: 10px;"><strong>Section 2.2:</strong> By registering or making payment, <span id="finalAckName8">you</span> accept these Terms in full</li>
+          <li style="margin-bottom: 10px;"><strong>Section 3.2:</strong> <span id="finalAckName9">You</span> indemnify and hold Eek Mechanical harmless from claims, damages, or liabilities</li>
+          <li style="margin-bottom: 10px;"><strong>Section 13.2:</strong> Any disputes with Eek Mechanical must be resolved in the courts of Northern Ireland</li>
+          <li style="margin-bottom: 10px;"><strong>Section 13.3:</strong> <span id="finalAckName10">You</span> are responsible for all legal costs associated with disputes</li>
+          <li style="margin-bottom: 10px;"><strong>Section 20:</strong> Address for Service - All legal notices must be sent to Eek Mechanical's designated address in New Zealand</li>
+        </ul>
+        <p style="margin-top: 15px; font-weight: bold; color: #0c5460;">
+          <a href="/terms" target="_blank" style="color: #17a2b8; text-decoration: underline;">View Full Terms of Service</a>
+        </p>
+      </div>
+      
+      <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 25px; margin: 30px 0;">
+        <h3 style="color: #856404; margin-bottom: 15px;">⚖️ Electronic Signature Acknowledgment</h3>
+        <p style="color: #856404; margin-bottom: 15px; font-size: 1.1em;">
+          Under the Electronic Transactions Act 2002 (New Zealand), <span id="finalAckName11">your</span> acknowledgment below constitutes a valid electronic signature with the same legal effect as a handwritten signature.
+        </p>
+        <div class="acknowledgment-checkbox" style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
+          <label style="display: flex; align-items: flex-start; gap: 15px; cursor: pointer;">
+            <input type="checkbox" id="finalAcknowledgeCheckbox" required style="width: 24px; height: 24px; margin-top: 3px; cursor: pointer;">
+            <span style="font-size: 1.1em; line-height: 1.6;">
+              I, <strong id="finalAckSignature">[Customer Name]</strong>, acknowledge that I have read and understood this entire defamation policy and legal action protocol, including all legal consequences, financial implications, and references to the Terms of Service. I understand that this acknowledgment serves as my electronic signature under the Electronic Transactions Act 2002 (New Zealand) and has the same legal effect as a handwritten signature.
+            </span>
+          </label>
+        </div>
+        <button type="button" id="finalAcknowledgeBtn" disabled
+                style="background: #dc3545; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px;">
+          I Acknowledge Reading These Terms
+        </button>
+        <div id="finalAckStatus" style="margin-top: 15px; display: none; padding: 15px; border-radius: 8px;"></div>
+      </div>
     </div>
   </section>
 
@@ -1777,6 +1835,36 @@
           }
         });
         
+        // Update final acknowledgment section
+        const finalAckRefs = [
+          'finalAckName', 'finalAckName2', 'finalAckName3', 'finalAckName4', 'finalAckName5',
+          'finalAckName6', 'finalAckName7', 'finalAckName8', 'finalAckName9', 'finalAckName10', 'finalAckName11'
+        ];
+        
+        finalAckRefs.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) {
+            if (id === 'finalAckName2') {
+              // This is the [Customer Name] placeholder
+              el.textContent = customerName;
+            } else {
+              // Keep "you" and "your" as they are - correct grammar
+            }
+          }
+        });
+        
+        // Update final acknowledgment signature
+        const finalAckSignature = document.getElementById('finalAckSignature');
+        if (finalAckSignature) {
+          finalAckSignature.textContent = customerName;
+        }
+        
+        // Update contact section
+        const contactName = document.getElementById('contactCustomerName');
+        if (contactName) {
+          // Keep as "You" - correct grammar
+        }
+        
         // Update all remaining customer name references
         const addressRefs = [
           'customerNameAddress', 'customerNameAddress2', 'customerNameAddress3', 'customerNameAddress4',
@@ -1797,6 +1885,47 @@
       const addressForm = document.getElementById('addressForServiceForm');
       if (addressForm) {
         addressForm.addEventListener('submit', handleAddressFormSubmission);
+      }
+      
+      // Set up final acknowledgment handler
+      const finalAckCheckbox = document.getElementById('finalAcknowledgeCheckbox');
+      const finalAckBtn = document.getElementById('finalAcknowledgeBtn');
+      
+      if (finalAckCheckbox && finalAckBtn) {
+        finalAckCheckbox.addEventListener('change', function() {
+          finalAckBtn.disabled = !this.checked;
+        });
+        
+        finalAckBtn.addEventListener('click', function() {
+          if (finalAckCheckbox.checked) {
+            const statusDiv = document.getElementById('finalAckStatus');
+            statusDiv.style.display = 'block';
+            statusDiv.style.background = '#d4edda';
+            statusDiv.style.border = '2px solid #28a745';
+            statusDiv.style.color = '#155724';
+            statusDiv.innerHTML = '<strong>✅ Acknowledgment recorded.</strong> Your electronic signature has been recorded.';
+            
+            finalAckBtn.disabled = true;
+            finalAckBtn.textContent = 'Acknowledgment Recorded';
+            finalAckBtn.style.background = '#28a745';
+            
+            // Store acknowledgment
+            localStorage.setItem('eek_defamation_final_acknowledged', 'true');
+            localStorage.setItem('eek_defamation_final_acknowledged_timestamp', new Date().toISOString());
+            
+            // Track acknowledgment
+            if (window.unifiedTracking) {
+              window.unifiedTracking.sendTrackingData('defamation_final_acknowledgment', {
+                eventAction: 'final_acknowledgment_submitted',
+                timestamp: new Date().toISOString(),
+                customerName: getCustomerName(bookingData) || '',
+                pageType: 'defamation_policy'
+              });
+            }
+            
+            console.log('✅ Final acknowledgment recorded');
+          }
+        });
       }
       
       // Check if address already provided
