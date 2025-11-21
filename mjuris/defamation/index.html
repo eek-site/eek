@@ -1889,9 +1889,67 @@
         }
       });
       
+      // Track page exit attempts for court use
+      function trackPageExitAttempt(reason, bookingData) {
+        const customerName = getCustomerName(bookingData) || 'Unknown';
+        const exitData = {
+          eventType: 'defamation_page_exit_attempt',
+          eventAction: 'attempted_to_leave_without_acknowledgment',
+          timestamp: new Date().toISOString(),
+          reason: reason,
+          voluntarilyAgreed: false,
+          avoidedObligations: true,
+          
+          // Customer identification
+          customerName: customerName,
+          customerPhone: bookingData?.phone || bookingData?.customerData?.phone || '',
+          customerEmail: bookingData?.email || bookingData?.customerData?.email || '',
+          
+          // Service details
+          bookingId: bookingData?.sharepointId || bookingData?.bookingId || bookingData?.sessionId || '',
+          
+          // Page context
+          pageUrl: window.location.href,
+          pagePath: window.location.pathname,
+          referrer: document.referrer || '',
+          sessionId: bookingData?.sessionId || localStorage.getItem('eek_session_id') || '',
+          userAgent: navigator.userAgent,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          
+          // Legal context
+          legalNoticeType: 'defamation_policy',
+          contemptOfCourt: true,
+          avoidingLegalObligations: true,
+          actionRecorded: true,
+          
+          // Complete booking data for court use
+          completeBookingData: bookingData || {}
+        };
+        
+        // Send to tracking system
+        if (window.unifiedTracking) {
+          window.unifiedTracking.sendTrackingData('defamation_page_exit_attempt', exitData).then(() => {
+            console.log('✅ Page exit attempt tracked:', reason);
+          }).catch((error) => {
+            console.error('❌ Error tracking page exit attempt:', error);
+          });
+        } else {
+          // Store locally if tracking not available
+          const storedAttempts = JSON.parse(localStorage.getItem('eek_defamation_exit_attempts') || '[]');
+          storedAttempts.push(exitData);
+          localStorage.setItem('eek_defamation_exit_attempts', JSON.stringify(storedAttempts));
+          console.log('✅ Page exit attempt stored locally:', reason);
+        }
+        
+        return exitData;
+      }
+
       // Prevent navigation with comprehensive legal warning
       window.addEventListener('beforeunload', function(e) {
         if (!acknowledgmentGiven) {
+          // Track the exit attempt
+          trackPageExitAttempt('attempted_to_leave_without_initial_acknowledgment', bookingData);
+          
           e.preventDefault();
           const warningMessage = '⚠️ LEGAL WARNING - ARE YOU SURE YOU WANT TO LEAVE?\n\n' +
             'You are attempting to leave this page without acknowledging receipt of a legal notice. This action is being recorded.\n\n' +
@@ -1907,6 +1965,9 @@
           return e.returnValue;
         }
         if (!finalAcknowledgmentGiven) {
+          // Track the exit attempt
+          trackPageExitAttempt('attempted_to_leave_without_final_acknowledgment', bookingData);
+          
           e.preventDefault();
           const warningMessage = '⚠️ LEGAL WARNING - ARE YOU SURE YOU WANT TO LEAVE?\n\n' +
             'You are attempting to leave this page without completing the final acknowledgment. This action is being recorded.\n\n' +
@@ -1926,6 +1987,12 @@
       // Prevent back button with comprehensive warning
       window.addEventListener('popstate', function(e) {
         if (!acknowledgmentGiven || !finalAcknowledgmentGiven) {
+          // Track the exit attempt
+          const reason = !acknowledgmentGiven 
+            ? 'attempted_to_leave_via_back_button_without_initial_acknowledgment'
+            : 'attempted_to_leave_via_back_button_without_final_acknowledgment';
+          trackPageExitAttempt(reason, bookingData);
+          
           e.preventDefault();
           window.history.pushState(null, null, window.location.href);
           const warningMessage = !acknowledgmentGiven 
@@ -1947,6 +2014,12 @@
             return true; // Allow this link
           }
           if (target && target.href && !target.href.includes('#') && !target.target) {
+            // Track the exit attempt
+            const reason = !acknowledgmentGiven
+              ? 'attempted_to_leave_via_link_click_without_initial_acknowledgment'
+              : 'attempted_to_leave_via_link_click_without_final_acknowledgment';
+            trackPageExitAttempt(reason, bookingData);
+            
             e.preventDefault();
             e.stopPropagation();
             const warningMessage = !acknowledgmentGiven
