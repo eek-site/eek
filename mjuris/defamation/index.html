@@ -1416,14 +1416,49 @@
         window.unifiedTracking.trackingData.address = fullAddress;
         window.unifiedTracking.trackingData.city = serviceCity;
         
-        // Send tracking event
-        window.unifiedTracking.sendTrackingData('address_for_service_provided', {
+        // Build comprehensive tracking data with ALL customer details for court use
+        const customerName = getCustomerName(bookingData) || 'Unknown';
+        const serviceDetails = getServiceDetails(bookingData);
+        
+        const comprehensiveTrackingData = {
           ...addressData,
           location: locationData,
           eventAction: 'address_for_service_submitted',
           pageType: 'defamation_policy',
-          timestamp: new Date().toISOString()
-        }).then(() => {
+          timestamp: new Date().toISOString(),
+          voluntarilyProvided: true,
+          
+          // Customer identification
+          customerName: customerName,
+          customerPhone: bookingData?.phone || bookingData?.customerData?.phone || '',
+          customerEmail: bookingData?.email || bookingData?.customerData?.email || '',
+          
+          // Service details
+          bookingId: bookingData?.sharepointId || bookingData?.bookingId || bookingData?.sessionId || '',
+          serviceType: serviceDetails?.service || '',
+          serviceCode: serviceDetails?.serviceCode || '',
+          serviceDate: serviceDetails?.bookingDate || '',
+          
+          // Vehicle details
+          vehicleRego: serviceDetails?.rego || '',
+          vehicleMake: serviceDetails?.make || '',
+          vehicleModel: serviceDetails?.model || '',
+          vehicleYear: serviceDetails?.year || '',
+          
+          // Page context
+          pageUrl: window.location.href,
+          pagePath: window.location.pathname,
+          referrer: document.referrer || '',
+          sessionId: bookingData?.sessionId || localStorage.getItem('eek_session_id') || '',
+          userAgent: navigator.userAgent,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          
+          // Complete booking data for court use
+          completeBookingData: bookingData || {}
+        };
+        
+        // Send tracking event
+        window.unifiedTracking.sendTrackingData('address_for_service_provided', comprehensiveTrackingData).then(() => {
           // Success
           statusDiv.style.background = '#d4edda';
           statusDiv.style.border = '2px solid #28a745';
@@ -1606,31 +1641,121 @@
 
     // Acknowledgment modal functionality
     let acknowledgmentGiven = false;
+    let finalAcknowledgmentGiven = false;
     const acknowledgmentModal = document.getElementById('acknowledgmentModal');
     const acknowledgeCheckbox = document.getElementById('acknowledgeCheckbox');
     const acknowledgeBtn = document.getElementById('acknowledgeBtn');
 
     // Enable/disable button based on checkbox
-    acknowledgeCheckbox.addEventListener('change', function() {
-      acknowledgeBtn.disabled = !this.checked;
-    });
+    if (acknowledgeCheckbox && acknowledgeBtn) {
+      acknowledgeCheckbox.addEventListener('change', function() {
+        acknowledgeBtn.disabled = !this.checked;
+      });
 
-    // Handle acknowledgment
-    acknowledgeBtn.addEventListener('click', function() {
-      if (acknowledgeCheckbox.checked) {
-        acknowledgmentGiven = true;
-        acknowledgmentModal.classList.remove('active');
-        localStorage.setItem('eek_defamation_acknowledged', 'true');
-        localStorage.setItem('eek_defamation_acknowledged_timestamp', new Date().toISOString());
-        console.log('✅ Defamation policy acknowledgment recorded');
+      // Handle acknowledgment
+      acknowledgeBtn.addEventListener('click', function() {
+        if (acknowledgeCheckbox.checked) {
+          acknowledgmentGiven = true;
+          acknowledgmentModal.classList.remove('active');
+          localStorage.setItem('eek_defamation_acknowledged', 'true');
+          localStorage.setItem('eek_defamation_acknowledged_timestamp', new Date().toISOString());
+          
+          // Track initial acknowledgment with all customer details
+          trackAcknowledgment('initial_acknowledgment', true, bookingData);
+          
+          console.log('✅ Defamation policy acknowledgment recorded');
+        }
+      });
+    }
+
+    // Track acknowledgment with comprehensive customer data for court use
+    function trackAcknowledgment(type, voluntarilyAgreed, bookingData) {
+      const customerName = getCustomerName(bookingData) || 'Unknown';
+      const serviceDetails = getServiceDetails(bookingData);
+      
+      // Build comprehensive tracking data with ALL customer details for court use
+      const trackingData = {
+        eventType: 'defamation_acknowledgment',
+        eventAction: type,
+        timestamp: new Date().toISOString(),
+        voluntarilyAgreed: voluntarilyAgreed,
+        acknowledgmentType: type, // 'initial_acknowledgment' or 'final_acknowledgment'
+        
+        // Customer identification
+        customerName: customerName,
+        customerPhone: bookingData?.phone || bookingData?.customerData?.phone || '',
+        customerEmail: bookingData?.email || bookingData?.customerData?.email || '',
+        
+        // Service details
+        bookingId: bookingData?.sharepointId || bookingData?.bookingId || bookingData?.sessionId || '',
+        serviceType: serviceDetails?.service || '',
+        serviceCode: serviceDetails?.serviceCode || '',
+        serviceDate: serviceDetails?.bookingDate || '',
+        
+        // Vehicle details
+        vehicleRego: serviceDetails?.rego || '',
+        vehicleMake: serviceDetails?.make || '',
+        vehicleModel: serviceDetails?.model || '',
+        vehicleYear: serviceDetails?.year || '',
+        
+        // Location/Address
+        serviceLocation: bookingData?.location?.address || bookingData?.location || '',
+        locationCity: bookingData?.location?.city || '',
+        locationRegion: bookingData?.location?.region || '',
+        locationPostcode: bookingData?.location?.postalCode || '',
+        
+        // Address for service (if provided)
+        addressForService: localStorage.getItem('eek_address_for_service') ? JSON.parse(localStorage.getItem('eek_address_for_service')).address : '',
+        addressForServiceProvided: !!localStorage.getItem('eek_address_for_service'),
+        
+        // Page context
+        pageUrl: window.location.href,
+        pagePath: window.location.pathname,
+        pageTitle: document.title,
+        referrer: document.referrer || '',
+        
+        // Device and session
+        sessionId: bookingData?.sessionId || localStorage.getItem('eek_session_id') || '',
+        userAgent: navigator.userAgent,
+        screenResolution: `${screen.width}x${screen.height}`,
+        viewportSize: `${window.innerWidth}x${window.innerHeight}`,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        language: navigator.language,
+        
+        // Legal context
+        legalNoticeType: 'defamation_policy',
+        acknowledgmentTimestamp: new Date().toISOString(),
+        acknowledgmentMethod: 'electronic_signature',
+        legalBasis: 'Electronic Transactions Act 2002 (New Zealand)',
+        
+        // Complete booking data for court use
+        completeBookingData: bookingData || {}
+      };
+      
+      // Send to tracking system
+      if (window.unifiedTracking) {
+        window.unifiedTracking.sendTrackingData('defamation_acknowledgment', trackingData).then(() => {
+          console.log('✅ Acknowledgment tracked with all customer details:', type, voluntarilyAgreed);
+        }).catch((error) => {
+          console.error('❌ Error tracking acknowledgment:', error);
+        });
+      } else {
+        // Store locally if tracking not available
+        const storedAcks = JSON.parse(localStorage.getItem('eek_defamation_acknowledgments') || '[]');
+        storedAcks.push(trackingData);
+        localStorage.setItem('eek_defamation_acknowledgments', JSON.stringify(storedAcks));
+        console.log('✅ Acknowledgment stored locally:', type, voluntarilyAgreed);
       }
-    });
+      
+      return trackingData;
+    }
 
     // Prevent leaving page without acknowledgment
     function preventLeavingWithoutAcknowledgment() {
       // Check if already acknowledged
       const acknowledged = localStorage.getItem('eek_defamation_acknowledged');
       const acknowledgedTimestamp = localStorage.getItem('eek_defamation_acknowledged_timestamp');
+      const finalAcknowledged = localStorage.getItem('eek_defamation_final_acknowledged');
       
       if (acknowledged === 'true' && acknowledgedTimestamp) {
         // Check if acknowledgment is recent (within 24 hours)
@@ -1640,28 +1765,42 @@
         
         if (hoursSinceAcknowledgment < 24) {
           acknowledgmentGiven = true;
-          acknowledgmentModal.classList.remove('active');
-          return;
+          if (acknowledgmentModal) {
+            acknowledgmentModal.classList.remove('active');
+          }
         }
       }
       
+      // Check final acknowledgment
+      if (finalAcknowledged === 'true') {
+        finalAcknowledgmentGiven = true;
+      }
+      
       // Show modal if not acknowledged
-      acknowledgmentModal.classList.add('active');
+      if (!acknowledgmentGiven && acknowledgmentModal) {
+        acknowledgmentModal.classList.add('active');
+      }
       
       // Prevent closing modal by clicking outside
-      acknowledgmentModal.addEventListener('click', function(e) {
-        if (e.target === acknowledgmentModal && !acknowledgmentGiven) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      });
+      if (acknowledgmentModal) {
+        acknowledgmentModal.addEventListener('click', function(e) {
+          if (e.target === acknowledgmentModal && !acknowledgmentGiven) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        });
+      }
       
       // Prevent closing via escape key
       document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && !acknowledgmentGiven) {
+        if (e.key === 'Escape' && (!acknowledgmentGiven || !finalAcknowledgmentGiven)) {
           e.preventDefault();
           e.stopPropagation();
-          alert('You must acknowledge receipt of this legal notice before proceeding.');
+          if (!acknowledgmentGiven) {
+            alert('You must acknowledge receipt of this legal notice before proceeding.');
+          } else if (!finalAcknowledgmentGiven) {
+            alert('You must complete the final acknowledgment at the bottom of the page before leaving.');
+          }
         }
       });
       
@@ -1672,28 +1811,41 @@
           e.returnValue = 'You must acknowledge receipt of this legal notice before leaving this page.';
           return e.returnValue;
         }
+        if (!finalAcknowledgmentGiven) {
+          e.preventDefault();
+          e.returnValue = 'You must complete the final acknowledgment at the bottom of the page before leaving.';
+          return e.returnValue;
+        }
       });
       
       // Prevent back button
       window.addEventListener('popstate', function(e) {
-        if (!acknowledgmentGiven) {
+        if (!acknowledgmentGiven || !finalAcknowledgmentGiven) {
           e.preventDefault();
           window.history.pushState(null, null, window.location.href);
-          alert('You must acknowledge receipt of this legal notice before leaving this page.');
+          if (!acknowledgmentGiven) {
+            alert('You must acknowledge receipt of this legal notice before leaving this page.');
+          } else {
+            alert('You must complete the final acknowledgment at the bottom of the page before leaving.');
+          }
         }
       });
       
       // Push state to prevent back navigation
       window.history.pushState(null, null, window.location.href);
       
-      // Prevent all link clicks until acknowledged
+      // Prevent all link clicks until both acknowledgments are given
       document.addEventListener('click', function(e) {
-        if (!acknowledgmentGiven) {
+        if (!acknowledgmentGiven || !finalAcknowledgmentGiven) {
           const target = e.target.closest('a');
-          if (target && target.href && !target.href.includes('#')) {
+          if (target && target.href && !target.href.includes('#') && !target.target) {
             e.preventDefault();
             e.stopPropagation();
-            alert('You must acknowledge receipt of this legal notice before navigating away.');
+            if (!acknowledgmentGiven) {
+              alert('You must acknowledge receipt of this legal notice before navigating away.');
+            } else {
+              alert('You must complete the final acknowledgment at the bottom of the page before leaving.');
+            }
             return false;
           }
         }
@@ -1898,6 +2050,8 @@
         
         finalAckBtn.addEventListener('click', function() {
           if (finalAckCheckbox.checked) {
+            finalAcknowledgmentGiven = true;
+            
             const statusDiv = document.getElementById('finalAckStatus');
             statusDiv.style.display = 'block';
             statusDiv.style.background = '#d4edda';
@@ -1913,17 +2067,10 @@
             localStorage.setItem('eek_defamation_final_acknowledged', 'true');
             localStorage.setItem('eek_defamation_final_acknowledged_timestamp', new Date().toISOString());
             
-            // Track acknowledgment
-            if (window.unifiedTracking) {
-              window.unifiedTracking.sendTrackingData('defamation_final_acknowledgment', {
-                eventAction: 'final_acknowledgment_submitted',
-                timestamp: new Date().toISOString(),
-                customerName: getCustomerName(bookingData) || '',
-                pageType: 'defamation_policy'
-              });
-            }
+            // Track final acknowledgment with ALL customer details and voluntary agreement status
+            trackAcknowledgment('final_acknowledgment', true, bookingData);
             
-            console.log('✅ Final acknowledgment recorded');
+            console.log('✅ Final acknowledgment recorded with all customer details');
           }
         });
       }
