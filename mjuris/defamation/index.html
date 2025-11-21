@@ -368,6 +368,50 @@
     li {
       margin-bottom: 10px;
     }
+    /* Floating Contact Button */
+    .floating-contact-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: white;
+      padding: 18px 28px;
+      border-radius: 50px;
+      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1em;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
+    }
+    
+    .floating-contact-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(40, 167, 69, 0.6);
+      background: linear-gradient(135deg, #20c997, #28a745);
+    }
+    
+    .floating-contact-btn:active {
+      transform: translateY(-1px);
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+      }
+      50% {
+        box-shadow: 0 6px 25px rgba(40, 167, 69, 0.6);
+      }
+    }
+    
+    .floating-contact-btn-icon {
+      font-size: 1.3em;
+    }
+    
     @media (max-width: 768px) {
       .header h1 {
         font-size: 1.8em;
@@ -384,6 +428,12 @@
       }
       .personalized-greeting {
         padding: 20px;
+      }
+      .floating-contact-btn {
+        bottom: 20px;
+        right: 20px;
+        padding: 15px 22px;
+        font-size: 1em;
       }
     }
   </style>
@@ -916,7 +966,7 @@
         We value genuine feedback and work hard to resolve legitimate concerns.
       </p>
       <p style="font-size: 1.1em; margin-bottom: 20px;">
-        If you have a real issue, contact us directly: <strong>0800 447 153</strong><br>
+        If you have a real issue, <a href="/customer-reply" style="color: white; text-decoration: underline; font-weight: bold;">contact us directly through our customer reply form</a>.<br>
         We offer mediation, refunds where appropriate, and genuine resolution.
       </p>
       <p style="margin-top: 20px; font-size: 1em; opacity: 0.9;">
@@ -1172,6 +1222,12 @@
       </div>
     </div>
   </section>
+
+  <!-- Floating Contact Button -->
+  <a href="/customer-reply" class="floating-contact-btn" id="floatingContactBtn">
+    <span class="floating-contact-btn-icon">💬</span>
+    <span>Why don't we sort it out?</span>
+  </a>
 
   <footer style="background: #343a40; color: white; padding: 30px 0; text-align: center;">
     <div class="container">
@@ -1863,10 +1919,14 @@
       // Push state to prevent back navigation
       window.history.pushState(null, null, window.location.href);
       
-      // Prevent all link clicks until both acknowledgments are given
+      // Prevent all link clicks until both acknowledgments are given (except floating contact button)
       document.addEventListener('click', function(e) {
         if (!acknowledgmentGiven || !finalAcknowledgmentGiven) {
           const target = e.target.closest('a');
+          // Allow floating contact button to work (it's a way to resolve the issue)
+          if (target && target.id === 'floatingContactBtn') {
+            return true; // Allow this link
+          }
           if (target && target.href && !target.href.includes('#') && !target.target) {
             e.preventDefault();
             e.stopPropagation();
