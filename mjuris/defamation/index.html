@@ -733,6 +733,131 @@
     </div>
   </section>
 
+  <!-- Address for Service Section -->
+  <section class="section" id="address-for-service">
+    <h2 class="section-title" style="color: #dc3545;">📮 Address for Service - Required Information</h2>
+    
+    <div class="warning-box" style="background: linear-gradient(135deg, #ffc107, #ff9800);">
+      <h3>⚠️ LEGAL REQUIREMENT: Address for Service</h3>
+      <p style="font-size: 1.2em; margin-bottom: 15px;">
+        <strong>Under New Zealand High Court Rules and District Court Rules, you are legally required to provide an address for service of legal documents.</strong>
+      </p>
+      <p style="font-size: 1.1em; margin-bottom: 15px;">
+        Failure to provide a valid address for service may constitute:
+      </p>
+      <ul style="margin: 15px 0; padding-left: 30px; font-size: 1.1em;">
+        <li><strong>Contempt of Court</strong> - Under High Court Rules 2016, Rule 6.2 and District Court Rules 2014, Rule 4.2</li>
+        <li><strong>Obstruction of Justice</strong> - Under Crimes Act 1961 Section 117</li>
+        <li><strong>Failure to Comply with Court Orders</strong> - May result in additional costs and penalties</li>
+      </ul>
+      <p style="margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 5px; font-size: 1.1em;">
+        <strong>⚠️ IMPORTANT:</strong> If you fail to provide your address for service, Eek Mechanical Limited will obtain your details from the New Zealand Transport Agency Motor Vehicle Register under the Land Transport Act 1998. All costs associated with obtaining this information (currently $25-$50 per search) will be added to any legal costs awarded against you.
+      </p>
+    </div>
+
+    <div style="background: white; border: 2px solid #dc3545; border-radius: 8px; padding: 30px; margin: 30px 0;">
+      <h3 style="color: #dc3545; margin-bottom: 20px;">📋 Provide Your Address for Service</h3>
+      <p style="margin-bottom: 20px; font-size: 1.1em;">
+        Please provide your complete address where legal documents can be served. This address will be used for all legal proceedings, including service of court documents, legal notices, and tribunal applications.
+      </p>
+      
+      <form id="addressForServiceForm" style="margin-top: 20px;">
+        <div style="margin-bottom: 20px;">
+          <label for="serviceAddress" style="display: block; margin-bottom: 8px; font-weight: bold; color: #dc3545;">
+            Street Address <span style="color: #dc3545;">*</span>
+          </label>
+          <input type="text" id="serviceAddress" name="serviceAddress" required 
+                 placeholder="e.g., 123 Main Street" 
+                 style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 6px; font-size: 1em;">
+          <small style="color: #6c757d; display: block; margin-top: 5px;">
+            The physical address where legal documents can be delivered
+          </small>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+          <div>
+            <label for="serviceCity" style="display: block; margin-bottom: 8px; font-weight: bold; color: #dc3545;">
+              City/Suburb <span style="color: #dc3545;">*</span>
+            </label>
+            <input type="text" id="serviceCity" name="serviceCity" required 
+                   placeholder="e.g., Auckland" 
+                   style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 6px; font-size: 1em;">
+          </div>
+          
+          <div>
+            <label for="servicePostcode" style="display: block; margin-bottom: 8px; font-weight: bold; color: #dc3545;">
+              Postcode <span style="color: #dc3545;">*</span>
+            </label>
+            <input type="text" id="servicePostcode" name="servicePostcode" required 
+                   placeholder="e.g., 1010" 
+                   pattern="[0-9]{4}" 
+                   maxlength="4"
+                   style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 6px; font-size: 1em;">
+          </div>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+          <label for="serviceRegion" style="display: block; margin-bottom: 8px; font-weight: bold; color: #dc3545;">
+            Region
+          </label>
+          <select id="serviceRegion" name="serviceRegion" 
+                  style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 6px; font-size: 1em;">
+            <option value="">Select Region</option>
+            <option value="Auckland">Auckland</option>
+            <option value="Bay of Plenty">Bay of Plenty</option>
+            <option value="Canterbury">Canterbury</option>
+            <option value="Gisborne">Gisborne</option>
+            <option value="Hawke's Bay">Hawke's Bay</option>
+            <option value="Manawatu-Wanganui">Manawatu-Wanganui</option>
+            <option value="Marlborough">Marlborough</option>
+            <option value="Nelson">Nelson</option>
+            <option value="Northland">Northland</option>
+            <option value="Otago">Otago</option>
+            <option value="Southland">Southland</option>
+            <option value="Taranaki">Taranaki</option>
+            <option value="Tasman">Tasman</option>
+            <option value="Waikato">Waikato</option>
+            <option value="Wellington">Wellington</option>
+            <option value="West Coast">West Coast</option>
+          </select>
+        </div>
+        
+        <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 20px; margin: 20px 0;">
+          <h4 style="color: #856404; margin-bottom: 15px;">📋 Legal Requirements for Address for Service</h4>
+          <ul style="color: #856404; margin-left: 20px;">
+            <li style="margin-bottom: 10px;">The address must be a physical location where you can receive legal documents</li>
+            <li style="margin-bottom: 10px;">The address must be in New Zealand (or you must provide an agent's address in New Zealand)</li>
+            <li style="margin-bottom: 10px;">You must notify Eek Mechanical Limited of any change of address within 7 days</li>
+            <li style="margin-bottom: 10px;">Failure to maintain a valid address for service may result in service by alternative means and additional costs</li>
+          </ul>
+        </div>
+        
+        <button type="submit" id="submitAddressBtn" 
+                style="background: #dc3545; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px;">
+          Submit Address for Service
+        </button>
+        
+        <div id="addressSubmissionStatus" style="margin-top: 15px; display: none; padding: 15px; border-radius: 8px;"></div>
+      </form>
+    </div>
+    
+    <div style="background: #e8f4fd; border-left: 4px solid #17a2b8; padding: 25px; border-radius: 4px; margin: 30px 0;">
+      <h3 style="color: #17a2b8; margin-bottom: 15px;">ℹ️ What Happens If You Don't Provide Your Address?</h3>
+      <p style="margin-bottom: 15px;">
+        If you fail to provide a valid address for service, Eek Mechanical Limited will:
+      </p>
+      <ol style="margin-left: 20px;">
+        <li style="margin-bottom: 10px;"><strong>Obtain your address from the Motor Vehicle Register</strong> - Under the Land Transport Act 1998, we are entitled to access vehicle registration information for legal proceedings</li>
+        <li style="margin-bottom: 10px;"><strong>Add search costs to your legal bill</strong> - Motor Vehicle Register searches cost $25-$50 per search, plus processing fees</li>
+        <li style="margin-bottom: 10px;"><strong>Proceed with service at that address</strong> - Documents will be served to the address on file with NZTA</li>
+        <li style="margin-bottom: 10px;"><strong>Add all costs to any damages award</strong> - These costs will be included in any costs order made against you</li>
+      </ol>
+      <p style="margin-top: 15px; font-weight: bold; color: #0c5460;">
+        Providing your address now saves you money and ensures you receive all legal documents promptly.
+      </p>
+    </div>
+  </section>
+
   <!-- Alternative Dispute Resolution Options -->
   <section class="section">
     <h2 class="section-title" style="color: #17a2b8;">⚖️ Alternative Dispute Resolution Options</h2>
@@ -922,6 +1047,196 @@
       return getValue('name', 'customerName') || null;
     }
 
+    // Get address from booking data
+    function getAddressFromBookingData(bookingData) {
+      if (!bookingData) return null;
+      
+      const customerData = bookingData.customerData || {};
+      
+      // Check location.address first (this is the standard field)
+      if (bookingData.location?.address) {
+        return bookingData.location.address;
+      }
+      
+      // Check root level location (string or object)
+      if (typeof bookingData.location === 'string') {
+        return bookingData.location;
+      }
+      
+      // Check customerData.location
+      if (customerData.location) {
+        if (typeof customerData.location === 'string') {
+          return customerData.location;
+        }
+        if (customerData.location.address) {
+          return customerData.location.address;
+        }
+      }
+      
+      // Check serviceLocation field
+      if (bookingData.serviceLocation) {
+        return bookingData.serviceLocation;
+      }
+      
+      return null;
+    }
+
+    // Populate address form from booking data
+    function populateAddressForm(bookingData) {
+      const address = getAddressFromBookingData(bookingData);
+      
+      if (address) {
+        // Try to parse address into components
+        const addressInput = document.getElementById('serviceAddress');
+        if (addressInput) {
+          addressInput.value = normalizeValue(address);
+        }
+        
+        // Try to extract city from location object
+        if (bookingData.location?.city) {
+          const cityInput = document.getElementById('serviceCity');
+          if (cityInput) {
+            cityInput.value = normalizeValue(bookingData.location.city);
+          }
+        }
+        
+        // Try to extract postcode
+        if (bookingData.location?.postalCode) {
+          const postcodeInput = document.getElementById('servicePostcode');
+          if (postcodeInput) {
+            postcodeInput.value = normalizeValue(bookingData.location.postalCode);
+          }
+        }
+        
+        // Try to extract region
+        if (bookingData.location?.region) {
+          const regionInput = document.getElementById('serviceRegion');
+          if (regionInput) {
+            regionInput.value = normalizeValue(bookingData.location.region);
+          }
+        }
+      }
+    }
+
+    // Handle address for service form submission
+    function handleAddressFormSubmission(e) {
+      e.preventDefault();
+      
+      const form = document.getElementById('addressForServiceForm');
+      const statusDiv = document.getElementById('addressSubmissionStatus');
+      const submitBtn = document.getElementById('submitAddressBtn');
+      
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      
+      // Get form values
+      const serviceAddress = document.getElementById('serviceAddress').value.trim();
+      const serviceCity = document.getElementById('serviceCity').value.trim();
+      const servicePostcode = document.getElementById('servicePostcode').value.trim();
+      const serviceRegion = document.getElementById('serviceRegion').value.trim();
+      
+      // Build full address string
+      const fullAddress = `${serviceAddress}, ${serviceCity} ${servicePostcode}${serviceRegion ? ', ' + serviceRegion : ''}`;
+      
+      // Disable submit button
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+      
+      // Show status
+      statusDiv.style.display = 'block';
+      statusDiv.style.background = '#e8f4fd';
+      statusDiv.style.border = '2px solid #17a2b8';
+      statusDiv.style.color = '#0c5460';
+      statusDiv.innerHTML = '<strong>⏳ Submitting address for service...</strong>';
+      
+      // Prepare tracking data with address
+      const addressData = {
+        serviceAddress: serviceAddress,
+        serviceCity: serviceCity,
+        servicePostcode: servicePostcode,
+        serviceRegion: serviceRegion,
+        fullAddressForService: fullAddress,
+        addressProvidedAt: new Date().toISOString(),
+        addressProvidedVia: 'defamation_policy_page'
+      };
+      
+      // Update location object for tracking (this is the key - using location.address)
+      const locationData = {
+        address: fullAddress, // This goes into location.address which is already in the tracking system
+        city: serviceCity,
+        postalCode: servicePostcode,
+        region: serviceRegion,
+        addressForService: true,
+        addressSource: 'user_provided'
+      };
+      
+      // Store in tracking system
+      if (window.unifiedTracking) {
+        // Update tracking data with location
+        window.unifiedTracking.trackingData.location = {
+          ...window.unifiedTracking.trackingData.location,
+          ...locationData
+        };
+        
+        // Also store in standard fields
+        window.unifiedTracking.trackingData.address = fullAddress;
+        window.unifiedTracking.trackingData.city = serviceCity;
+        
+        // Send tracking event
+        window.unifiedTracking.sendTrackingData('address_for_service_provided', {
+          ...addressData,
+          location: locationData,
+          eventAction: 'address_for_service_submitted',
+          pageType: 'defamation_policy',
+          timestamp: new Date().toISOString()
+        }).then(() => {
+          // Success
+          statusDiv.style.background = '#d4edda';
+          statusDiv.style.border = '2px solid #28a745';
+          statusDiv.style.color = '#155724';
+          statusDiv.innerHTML = '<strong>✅ Address for service submitted successfully!</strong><br>Your address has been recorded and will be used for all legal proceedings.';
+          
+          // Store in localStorage for persistence
+          localStorage.setItem('eek_address_for_service', JSON.stringify({
+            address: fullAddress,
+            components: addressData,
+            providedAt: new Date().toISOString()
+          }));
+          
+          submitBtn.textContent = 'Address Submitted';
+          submitBtn.style.background = '#28a745';
+          
+          console.log('✅ Address for service submitted and tracked:', addressData);
+        }).catch((error) => {
+          console.error('❌ Error submitting address:', error);
+          statusDiv.style.background = '#f8d7da';
+          statusDiv.style.border = '2px solid #dc3545';
+          statusDiv.style.color = '#721c24';
+          statusDiv.innerHTML = '<strong>❌ Error submitting address. Please try again or contact legal@eek.nz</strong>';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Address for Service';
+        });
+      } else {
+        // Fallback if unified tracking not available
+        console.warn('⚠️ Unified tracking not available, storing locally only');
+        localStorage.setItem('eek_address_for_service', JSON.stringify({
+          address: fullAddress,
+          components: addressData,
+          providedAt: new Date().toISOString()
+        }));
+        
+        statusDiv.style.background = '#d4edda';
+        statusDiv.style.border = '2px solid #28a745';
+        statusDiv.style.color = '#155724';
+        statusDiv.innerHTML = '<strong>✅ Address for service saved locally!</strong><br>Your address has been recorded.';
+        
+        submitBtn.textContent = 'Address Saved';
+        submitBtn.style.background = '#28a745';
+      }
+    }
+
     // Personalize the page content
     function personalizePage(bookingData) {
       const customerName = getCustomerName(bookingData);
@@ -1062,6 +1377,37 @@
       // Personalize page with customer data
       if (bookingData) {
         personalizePage(bookingData);
+        populateAddressForm(bookingData);
+      }
+      
+      // Set up address form handler
+      const addressForm = document.getElementById('addressForServiceForm');
+      if (addressForm) {
+        addressForm.addEventListener('submit', handleAddressFormSubmission);
+      }
+      
+      // Check if address already provided
+      const storedAddress = localStorage.getItem('eek_address_for_service');
+      if (storedAddress) {
+        try {
+          const addressData = JSON.parse(storedAddress);
+          const statusDiv = document.getElementById('addressSubmissionStatus');
+          if (statusDiv) {
+            statusDiv.style.display = 'block';
+            statusDiv.style.background = '#d4edda';
+            statusDiv.style.border = '2px solid #28a745';
+            statusDiv.style.color = '#155724';
+            statusDiv.innerHTML = `<strong>✅ Address for service already provided:</strong><br>${addressData.address}<br><small>Provided: ${new Date(addressData.providedAt).toLocaleString()}</small>`;
+          }
+          
+          const submitBtn = document.getElementById('submitAddressBtn');
+          if (submitBtn) {
+            submitBtn.textContent = 'Update Address for Service';
+            submitBtn.style.background = '#ffc107';
+          }
+        } catch (e) {
+          console.warn('⚠️ Error parsing stored address:', e);
+        }
       }
       
       console.log('✅ Page initialization complete');
