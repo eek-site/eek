@@ -613,7 +613,7 @@
       </p>
       <p style="font-size: 1.1em;">All customer interactions are recorded. All service records are documented. <span id="customerNameWarning2">Your</span> false claims WILL be prosecuted to the full extent of New Zealand law.</p>
       <p id="personalizedEvidence" style="font-size: 1.1em; margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 5px; display: none;">
-        <strong>Regarding your specific service:</strong> We have complete documentation of <span id="customerNameEvidence">your</span> interaction with Eek Mechanical, including call recordings, service records, payment history, and all communications. Any false statements about this service will be immediately disproven with this evidence.
+        <strong>Regarding <span id="customerNameEvidence2">your</span> specific service:</strong> We have complete documentation of <span id="customerNameEvidence">your</span> interaction with Eek Mechanical, including call recordings, service records, payment history, and all communications. Any false statements about <span id="customerNameEvidence3">your</span> service will be immediately disproven with this evidence.
       </p>
       <p style="margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 5px;">
         <strong>⚠️ FINAL WARNING:</strong> If you are considering posting a false review, be aware that you will face both civil and criminal prosecution. The financial and legal consequences will be severe.
@@ -1568,6 +1568,16 @@
         const nameEvidence = document.getElementById('customerNameEvidence');
         if (nameEvidence) {
           nameEvidence.textContent = customerName + "'s";
+        }
+        
+        const nameEvidence2 = document.getElementById('customerNameEvidence2');
+        if (nameEvidence2) {
+          nameEvidence2.textContent = customerName + "'s";
+        }
+        
+        const nameEvidence3 = document.getElementById('customerNameEvidence3');
+        if (nameEvidence3) {
+          nameEvidence3.textContent = customerName + "'s";
         }
         
         const personalizedMessage = document.getElementById('personalizedMessage');
