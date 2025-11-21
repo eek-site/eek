@@ -966,7 +966,7 @@
         We value genuine feedback and work hard to resolve legitimate concerns.
       </p>
       <p style="font-size: 1.1em; margin-bottom: 20px;">
-        If you have a real issue, <a href="/customer-reply" style="color: white; text-decoration: underline; font-weight: bold;">contact us directly through our customer reply form</a>.<br>
+        If you have a real issue, <a href="/customer-reply" id="customerReplyLink" style="color: white; text-decoration: underline; font-weight: bold;">contact us directly through our customer reply form</a>.<br>
         We offer mediation, refunds where appropriate, and genuine resolution.
       </p>
       <p style="margin-top: 20px; font-size: 1em; opacity: 0.9;">
@@ -1113,7 +1113,7 @@
       
       <div class="dispute-option-card">
         <h4>1. Direct Contact & Mediation</h4>
-        <p>Contact us directly through our <a href="/customer-reply" style="color: #17a2b8; font-weight: bold; text-decoration: underline;">customer reply form</a> or <strong>legal@eek.nz</strong> to discuss your concerns. We provide free mediation services for any disputes between customers and mechanics. As an intermediary service, we cannot be sued directly, but we will mediate fairly and professionally.</p>
+        <p>Contact us directly through our <a href="/customer-reply" id="customerReplyLink2" style="color: #17a2b8; font-weight: bold; text-decoration: underline;">customer reply form</a> or <strong>legal@eek.nz</strong> to discuss your concerns. We provide free mediation services for any disputes between customers and mechanics. As an intermediary service, we cannot be sued directly, but we will mediate fairly and professionally.</p>
       </div>
       
       <div class="dispute-option-card">
@@ -2201,6 +2201,31 @@
       if (addressForm) {
         addressForm.addEventListener('submit', handleAddressFormSubmission);
       }
+      
+      // Update customer-reply links with hash code
+      function updateCustomerReplyLinks() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const hash = urlParams.get('d');
+        
+        if (hash) {
+          // Update all customer-reply links to include the hash
+          const customerReplyLinks = document.querySelectorAll('a[href="/customer-reply"], a[href*="customer-reply"]');
+          customerReplyLinks.forEach(link => {
+            const currentHref = link.getAttribute('href');
+            if (currentHref === '/customer-reply' || currentHref === 'https://eek.nz/customer-reply' || currentHref === 'https://www.eek.nz/customer-reply') {
+              link.href = `/customer-reply?d=${encodeURIComponent(hash)}`;
+            } else if (!currentHref.includes('d=')) {
+              // If it already has parameters, add the hash
+              const separator = currentHref.includes('?') ? '&' : '?';
+              link.href = `${currentHref}${separator}d=${encodeURIComponent(hash)}`;
+            }
+          });
+          console.log('✅ Customer-reply links updated with hash code');
+        }
+      }
+      
+      // Update customer-reply links on page load
+      updateCustomerReplyLinks();
       
       // Set up final acknowledgment handler
       const finalAckCheckbox = document.getElementById('finalAcknowledgeCheckbox');
