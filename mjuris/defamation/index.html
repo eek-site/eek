@@ -661,9 +661,9 @@
       <p style="font-size: 1.2em; margin-bottom: 15px;">
         <strong><span id="customerNameWarning">You</span>, Eek Mechanical Limited takes immediate and decisive legal action against all false, defamatory, or malicious reviews.</strong>
       </p>
-      <p style="font-size: 1.1em;">All customer interactions are recorded. All service records are documented. <span id="customerNameWarning2">Your</span> false claims WILL be prosecuted to the full extent of New Zealand law.</p>
+      <p style="font-size: 1.1em;">All customer interactions are recorded. All service records are documented. Your false claims WILL be prosecuted to the full extent of New Zealand law.</p>
       <p id="personalizedEvidence" style="font-size: 1.1em; margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 5px; display: none;">
-        <strong>Regarding <span id="customerNameEvidence2">your</span> specific service:</strong> We have complete documentation of <span id="customerNameEvidence">your</span> interaction with Eek Mechanical, including call recordings, service records, payment history, and all communications. Any false statements about <span id="customerNameEvidence3">your</span> service will be immediately disproven with this evidence.
+        <strong>Regarding your specific service:</strong> We have complete documentation of your interaction with Eek Mechanical, including call recordings, service records, payment history, and all communications. Any false statements about your service will be immediately disproven with this evidence.
       </p>
       <p style="margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 5px;">
         <strong>⚠️ FINAL WARNING:</strong> If you are considering posting a false review, be aware that you will face both civil and criminal prosecution. The financial and legal consequences will be severe.
@@ -1635,25 +1635,8 @@
           nameWarning.textContent = customerName;
         }
         
-        const nameWarning2 = document.getElementById('customerNameWarning2');
-        if (nameWarning2) {
-          nameWarning2.textContent = customerName + "'s";
-        }
-        
-        const nameEvidence = document.getElementById('customerNameEvidence');
-        if (nameEvidence) {
-          nameEvidence.textContent = customerName + "'s";
-        }
-        
-        const nameEvidence2 = document.getElementById('customerNameEvidence2');
-        if (nameEvidence2) {
-          nameEvidence2.textContent = customerName + "'s";
-        }
-        
-        const nameEvidence3 = document.getElementById('customerNameEvidence3');
-        if (nameEvidence3) {
-          nameEvidence3.textContent = customerName + "'s";
-        }
+        // Keep "your" and "you" as they are - correct grammar
+        // Don't replace with customer name in these sections
         
         const personalizedMessage = document.getElementById('personalizedMessage');
         if (personalizedMessage) {
