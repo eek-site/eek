@@ -393,8 +393,11 @@
   <div class="acknowledgment-modal active" id="acknowledgmentModal">
     <div class="acknowledgment-content">
       <h2>⚠️ Important Legal Notice - Please Read Carefully</h2>
+      <p style="margin-bottom: 15px; font-size: 1.1em; font-weight: bold;">
+        Dear <span id="modalCustomerNameGreeting">[Customer Name]</span>.
+      </p>
       <p style="margin-bottom: 15px; font-size: 1.1em;">
-        <strong id="modalCustomerName">You</strong> are about to view Eek Mechanical Limited's official defamation policy and legal action protocol. This document contains important information about <strong id="modalCustomerName2">your</strong> legal obligations under New Zealand law.
+        Eek Mechanical has identified that <span id="modalCustomerNameIdentified">you</span> have posted information online about the company that may be false, defamatory, or malicious. From here we are going to take the matter further through our legal response protocol. <span id="modalCustomerName">You</span> are about to view Eek Mechanical Limited's official defamation policy and legal action protocol. This document contains important information about <span id="modalCustomerName2">your</span> legal obligations under New Zealand law.
       </p>
       <p style="margin-bottom: 15px; font-size: 1.1em;">
         <strong>By proceeding, <span id="modalCustomerName3">you</span> acknowledge that:</strong>
@@ -414,7 +417,7 @@
       <div class="acknowledgment-checkbox">
         <label>
           <input type="checkbox" id="acknowledgeCheckbox" required>
-          <span><strong id="modalCustomerName11">I</strong>, <strong id="modalCustomerNameSignature">[Your Name]</strong>, acknowledge that I have read and understood the above notice and wish to proceed. This acknowledgment serves as my electronic signature.</span>
+          <span>I, <strong id="modalCustomerNameSignature">[Your Name]</strong>, acknowledge that I have read and understood the above notice and wish to proceed. This acknowledgment serves as my electronic signature.</span>
         </label>
       </div>
       <button class="acknowledgment-btn" id="acknowledgeBtn" disabled>I Acknowledge and Proceed</button>
@@ -1574,34 +1577,20 @@
         // Update acknowledgment modal with customer name
         const customerName = getCustomerName(bookingData);
         if (customerName) {
-          // Update modal references
-          const modalRefs = [
-            'modalCustomerName', 'modalCustomerName2', 'modalCustomerName3', 'modalCustomerName4',
-            'modalCustomerName5', 'modalCustomerName6', 'modalCustomerName7', 'modalCustomerName8',
-            'modalCustomerName9', 'modalCustomerName10', 'modalCustomerName11'
-          ];
+          // Update greeting
+          const greetingEl = document.getElementById('modalCustomerNameGreeting');
+          if (greetingEl) {
+            greetingEl.textContent = customerName;
+          }
           
-          modalRefs.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-              const text = el.textContent.toLowerCase();
-              if (text === 'you' || text === 'your' || text === 'i') {
-                if (text === 'i') {
-                  el.textContent = 'I';
-                } else if (text === 'you') {
-                  el.textContent = customerName;
-                } else {
-                  el.textContent = customerName + "'s";
-                }
-              } else if (text.includes('you')) {
-                el.textContent = el.textContent.replace(/you/gi, customerName);
-              } else if (text.includes('your')) {
-                el.textContent = el.textContent.replace(/your/gi, customerName + "'s");
-              }
-            }
-          });
+          // Update identified reference (keep as "you" - don't replace with name)
+          const identifiedEl = document.getElementById('modalCustomerNameIdentified');
+          if (identifiedEl) {
+            // Keep as "you" - this is correct grammar
+          }
           
-          // Update signature field
+          // Update modal references (keep "you" and "your" as they are - correct grammar)
+          // Only update the signature field with the actual name
           const signatureEl = document.getElementById('modalCustomerNameSignature');
           if (signatureEl) {
             signatureEl.textContent = customerName;
