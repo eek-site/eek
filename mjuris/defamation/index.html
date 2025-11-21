@@ -425,10 +425,15 @@
 
   <!-- Personalized Greeting Section -->
   <div class="personalized-greeting" id="personalizedGreeting">
-    <h2>Important Notice for <span id="customerNameDisplay">You</span></h2>
+    <h2>Important Legal Notice for <span id="customerNameDisplay">You</span></h2>
     <p id="personalizedMessage">
       This page contains critical information about your legal obligations regarding any public statements, reviews, or online commentary you may be considering about Eek Mechanical Limited.
     </p>
+    <div id="serviceDetails" style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.7); border-radius: 8px; display: none;">
+      <p style="margin-bottom: 10px;"><strong>Service Reference:</strong> <span id="serviceReference"></span></p>
+      <p style="margin-bottom: 10px;"><strong>Service Date:</strong> <span id="serviceDate"></span></p>
+      <p><strong>Vehicle:</strong> <span id="vehicleDetails"></span></p>
+    </div>
     <p style="font-weight: bold; color: #dc3545; margin-top: 15px;">
       ⚠️ Please read this entire document carefully. Your understanding of these legal requirements is essential.
     </p>
@@ -441,9 +446,12 @@
     <div class="warning-box">
       <h3>🚨 ZERO TOLERANCE FOR FALSE REVIEWS</h3>
       <p style="font-size: 1.2em; margin-bottom: 15px;">
-        <strong>Eek Mechanical Limited takes immediate and decisive legal action against all false, defamatory, or malicious reviews.</strong>
+        <strong><span id="customerNameWarning">You</span>, Eek Mechanical Limited takes immediate and decisive legal action against all false, defamatory, or malicious reviews.</strong>
       </p>
-      <p style="font-size: 1.1em;">All customer interactions are recorded. All service records are documented. False claims WILL be prosecuted to the full extent of New Zealand law.</p>
+      <p style="font-size: 1.1em;">All customer interactions are recorded. All service records are documented. <span id="customerNameWarning2">Your</span> false claims WILL be prosecuted to the full extent of New Zealand law.</p>
+      <p id="personalizedEvidence" style="font-size: 1.1em; margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 5px; display: none;">
+        <strong>Regarding your specific service:</strong> We have complete documentation of <span id="customerNameEvidence">your</span> interaction with Eek Mechanical, including call recordings, service records, payment history, and all communications. Any false statements about this service will be immediately disproven with this evidence.
+      </p>
       <p style="margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 5px;">
         <strong>⚠️ FINAL WARNING:</strong> If you are considering posting a false review, be aware that you will face both civil and criminal prosecution. The financial and legal consequences will be severe.
       </p>
@@ -451,6 +459,9 @@
 
     <div style="background: white; padding: 30px; border-radius: 8px; margin-bottom: 30px;">
       <h3 style="color: #dc3545; margin-bottom: 25px; font-size: 1.5em;">📋 Our Legal Response Protocol for Defamatory Reviews</h3>
+      <p style="margin-bottom: 20px; font-size: 1.1em; color: #495057;">
+        <strong>This protocol applies specifically to <span id="customerNameProtocol">you</span>.</strong> If you post a false or defamatory review about your service with Eek Mechanical, the following process will be initiated immediately:
+      </p>
       
       <div class="process-steps">
         <div class="process-step">
@@ -740,7 +751,7 @@
     <div class="warning-box" style="background: linear-gradient(135deg, #ffc107, #ff9800);">
       <h3>⚠️ LEGAL REQUIREMENT: Address for Service</h3>
       <p style="font-size: 1.2em; margin-bottom: 15px;">
-        <strong>Under New Zealand High Court Rules and District Court Rules, you are legally required to provide an address for service of legal documents.</strong>
+        <strong><span id="customerNameAddress">You</span> are legally required under New Zealand High Court Rules and District Court Rules to provide an address for service of legal documents.</strong>
       </p>
       <p style="font-size: 1.1em; margin-bottom: 15px;">
         Failure to provide a valid address for service may constitute:
@@ -758,7 +769,7 @@
     <div style="background: white; border: 2px solid #dc3545; border-radius: 8px; padding: 30px; margin: 30px 0;">
       <h3 style="color: #dc3545; margin-bottom: 20px;">📋 Provide Your Address for Service</h3>
       <p style="margin-bottom: 20px; font-size: 1.1em;">
-        Please provide your complete address where legal documents can be served. This address will be used for all legal proceedings, including service of court documents, legal notices, and tribunal applications.
+        <span id="customerNameAddressForm">You</span> must provide <span id="customerNameAddressForm2">your</span> complete address where legal documents can be served. This address will be used for all legal proceedings related to <span id="customerNameAddressForm3">your</span> case, including service of court documents, legal notices, and tribunal applications.
       </p>
       
       <form id="addressForServiceForm" style="margin-top: 20px;">
@@ -842,9 +853,9 @@
     </div>
     
     <div style="background: #e8f4fd; border-left: 4px solid #17a2b8; padding: 25px; border-radius: 4px; margin: 30px 0;">
-      <h3 style="color: #17a2b8; margin-bottom: 15px;">ℹ️ What Happens If You Don't Provide Your Address?</h3>
+      <h3 style="color: #17a2b8; margin-bottom: 15px;">ℹ️ What Happens If <span id="customerNameAddressConsequence">You</span> Don't Provide <span id="customerNameAddressConsequence2">Your</span> Address?</h3>
       <p style="margin-bottom: 15px;">
-        If you fail to provide a valid address for service, Eek Mechanical Limited will:
+        If <span id="customerNameAddressConsequence3">you</span> fail to provide a valid address for service, Eek Mechanical Limited will:
       </p>
       <ol style="margin-left: 20px;">
         <li style="margin-bottom: 10px;"><strong>Obtain your address from the Motor Vehicle Register</strong> - Under the Land Transport Act 1998, we are entitled to access vehicle registration information for legal proceedings</li>
@@ -852,8 +863,8 @@
         <li style="margin-bottom: 10px;"><strong>Proceed with service at that address</strong> - Documents will be served to the address on file with NZTA</li>
         <li style="margin-bottom: 10px;"><strong>Add all costs to any damages award</strong> - These costs will be included in any costs order made against you</li>
       </ol>
-      <p style="margin-top: 15px; font-weight: bold; color: #0c5460;">
-        Providing your address now saves you money and ensures you receive all legal documents promptly.
+        <p style="margin-top: 15px; font-weight: bold; color: #0c5460;">
+        Providing <span id="customerNameAddressFinal">your</span> address now saves <span id="customerNameAddressFinal2">you</span> money and ensures <span id="customerNameAddressFinal3">you</span> receive all legal documents related to <span id="customerNameAddressFinal4">your</span> case promptly.
       </p>
     </div>
   </section>
@@ -1237,24 +1248,137 @@
       }
     }
 
+    // Get service details from booking data
+    function getServiceDetails(bookingData) {
+      if (!bookingData) return null;
+      
+      const customerData = bookingData.customerData || {};
+      
+      const getValue = (...keys) => {
+        for (const key of keys) {
+          if (bookingData[key] !== undefined && bookingData[key] !== null && bookingData[key] !== '') {
+            return bookingData[key];
+          }
+          if (customerData[key] !== undefined && customerData[key] !== null && customerData[key] !== '') {
+            return customerData[key];
+          }
+        }
+        return null;
+      };
+      
+      return {
+        service: getValue('service', 'serviceType', 'serviceTitle') || 'Service',
+        serviceCode: getValue('serviceCode') || '',
+        rego: getValue('rego', 'vehicleRego') || '',
+        make: getValue('make', 'vehicleMake') || '',
+        model: getValue('model', 'vehicleModel') || '',
+        year: getValue('year', 'vehicleYear') || '',
+        bookingDate: getValue('bookingTime', 'bookingDate', 'createdAt') || '',
+        bookingId: bookingData.sharepointId || bookingData.bookingId || bookingData.sessionId || ''
+      };
+    }
+
     // Personalize the page content
     function personalizePage(bookingData) {
       const customerName = getCustomerName(bookingData);
+      const serviceDetails = getServiceDetails(bookingData);
       
+      // Update all name references throughout the page
       if (customerName) {
-        const nameDisplay = document.getElementById('customerNameDisplay');
-        const personalizedMessage = document.getElementById('personalizedMessage');
+        const nameElements = document.querySelectorAll('[id*="customerName"], [id*="CustomerName"]');
+        nameElements.forEach(el => {
+          if (el.id.includes('Display') || el.id.includes('Warning') || el.id.includes('Evidence')) {
+            el.textContent = customerName;
+          } else if (el.id.includes('Message')) {
+            // Already handled below
+          }
+        });
         
+        const nameDisplay = document.getElementById('customerNameDisplay');
         if (nameDisplay) {
           nameDisplay.textContent = customerName;
         }
         
+        const nameWarning = document.getElementById('customerNameWarning');
+        if (nameWarning) {
+          nameWarning.textContent = customerName + ',';
+        }
+        
+        const nameWarning2 = document.getElementById('customerNameWarning2');
+        if (nameWarning2) {
+          nameWarning2.textContent = customerName + "'s";
+        }
+        
+        const nameEvidence = document.getElementById('customerNameEvidence');
+        if (nameEvidence) {
+          nameEvidence.textContent = customerName + "'s";
+        }
+        
+        const personalizedMessage = document.getElementById('personalizedMessage');
         if (personalizedMessage) {
           personalizedMessage.innerHTML = `
-            <strong>${customerName}</strong>, this page contains critical information about your legal obligations regarding any public statements, reviews, or online commentary you may be considering about Eek Mechanical Limited.
+            <strong>${customerName}</strong>, this is a personalized legal notice regarding your specific interaction with Eek Mechanical Limited. This page contains critical information about your legal obligations regarding any public statements, reviews, or online commentary you may be considering.
             <br><br>
-            Based on our records, we have documentation of your service interaction, including call recordings, service records, and payment history. Any public statements you make must accurately reflect these documented events.
+            Based on our records, we have complete documentation of your service interaction, including call recordings, service records, payment history, GPS tracking data, and all communications. Any public statements you make must accurately reflect these documented events.
           `;
+        }
+      }
+      
+      // Update service details section
+      if (serviceDetails && (serviceDetails.rego || serviceDetails.service || serviceDetails.bookingId)) {
+        const serviceDetailsDiv = document.getElementById('serviceDetails');
+        if (serviceDetailsDiv) {
+          serviceDetailsDiv.style.display = 'block';
+          
+          const serviceReference = document.getElementById('serviceReference');
+          if (serviceReference) {
+            const ref = serviceDetails.bookingId || serviceDetails.serviceCode || 'N/A';
+            serviceReference.textContent = ref;
+          }
+          
+          const serviceDate = document.getElementById('serviceDate');
+          if (serviceDate && serviceDetails.bookingDate) {
+            try {
+              const date = new Date(serviceDetails.bookingDate);
+              serviceDate.textContent = date.toLocaleDateString('en-NZ', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+              });
+            } catch (e) {
+              serviceDate.textContent = serviceDetails.bookingDate;
+            }
+          } else if (serviceDate) {
+            serviceDate.textContent = 'See booking records';
+          }
+          
+          const vehicleDetails = document.getElementById('vehicleDetails');
+          if (vehicleDetails) {
+            const vehicleParts = [];
+            if (serviceDetails.year) vehicleParts.push(serviceDetails.year);
+            if (serviceDetails.make) vehicleParts.push(serviceDetails.make);
+            if (serviceDetails.model) vehicleParts.push(serviceDetails.model);
+            if (serviceDetails.rego) vehicleParts.push(`(${serviceDetails.rego})`);
+            
+            vehicleDetails.textContent = vehicleParts.length > 0 
+              ? vehicleParts.join(' ') 
+              : 'See booking records';
+          }
+        }
+        
+        // Show personalized evidence section
+        const personalizedEvidence = document.getElementById('personalizedEvidence');
+        if (personalizedEvidence) {
+          personalizedEvidence.style.display = 'block';
+        }
+      }
+      
+      // Update address form with personalized message
+      const addressSection = document.querySelector('#address-for-service');
+      if (addressSection && customerName) {
+        const addressTitle = addressSection.querySelector('h2');
+        if (addressTitle) {
+          addressTitle.innerHTML = `📮 Address for Service - Required Information for <strong>${customerName}</strong>`;
         }
       }
     }
@@ -1378,6 +1502,32 @@
       if (bookingData) {
         personalizePage(bookingData);
         populateAddressForm(bookingData);
+        
+        // Update all remaining customer name references
+        const customerName = getCustomerName(bookingData);
+        if (customerName) {
+          // Update address section references
+          const addressRefs = [
+            'customerNameAddress', 'customerNameAddressForm', 'customerNameAddressForm2', 
+            'customerNameAddressForm3', 'customerNameAddressConsequence', 'customerNameAddressConsequence2',
+            'customerNameAddressConsequence3', 'customerNameAddressFinal', 'customerNameAddressFinal2',
+            'customerNameAddressFinal3', 'customerNameAddressFinal4', 'customerNameProtocol'
+          ];
+          
+          addressRefs.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+              const text = el.textContent.toLowerCase();
+              if (text === 'you' || text === 'your') {
+                el.textContent = text === 'you' ? customerName : customerName + "'s";
+              } else if (text.includes('you')) {
+                el.textContent = el.textContent.replace(/you/gi, customerName);
+              } else if (text.includes('your')) {
+                el.textContent = el.textContent.replace(/your/gi, customerName + "'s");
+              }
+            }
+          });
+        }
       }
       
       // Set up address form handler
