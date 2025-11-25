@@ -1,0 +1,394 @@
+/**
+ * Enhanced NZIFDA Badge Styles
+ * Modern, responsive, and interactive badge presentation
+ */
+
+.nzifda-badge-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nzifda-badge-container {
+  position: relative;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(3, 105, 161, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.nzifda-badge-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(3, 105, 161, 0.1) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.nzifda-badge-wrapper:hover .nzifda-badge-glow {
+  opacity: 1;
+}
+
+.nzifda-badge-content {
+  position: relative;
+  z-index: 1;
+}
+
+.nzifda-badge-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, rgba(3, 105, 161, 0.1) 0%, rgba(22, 163, 74, 0.1) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(3, 105, 161, 0.2);
+}
+
+.nzifda-badge-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  color: white;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(22, 163, 74, 0.3);
+  flex-shrink: 0;
+}
+
+.nzifda-badge-label-text {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #0369a1;
+  letter-spacing: 0.02em;
+}
+
+.nzifda-badge-image-wrapper {
+  position: relative;
+  display: inline-block;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  line-height: 0;
+}
+
+.nzifda-badge-image-wrapper:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(3, 105, 161, 0.2);
+}
+
+.nzifda-badge-image {
+  display: block;
+  width: 400px;
+  max-width: 100%;
+  height: auto;
+  border: none;
+  background: transparent;
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.nzifda-badge-wrapper:hover .nzifda-badge-image {
+  filter: brightness(1.05);
+  transform: scale(1.01);
+}
+
+.nzifda-badge-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(3, 105, 161, 0) 0%,
+    rgba(3, 105, 161, 0.05) 50%,
+    rgba(3, 105, 161, 0.1) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.nzifda-badge-wrapper:hover .nzifda-badge-overlay {
+  opacity: 1;
+}
+
+.nzifda-badge-hover-effect {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  transform: translateY(10px);
+  transition: transform 0.3s ease;
+}
+
+.nzifda-badge-wrapper:hover .nzifda-badge-hover-effect {
+  transform: translateY(0);
+}
+
+.nzifda-badge-hover-text {
+  font-size: 0.95em;
+  font-weight: 600;
+  color: #0369a1;
+  letter-spacing: 0.5px;
+}
+
+.nzifda-badge-arrow {
+  color: #0369a1;
+  animation: arrowPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes arrowPulse {
+  0%, 100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(4px);
+    opacity: 0.7;
+  }
+}
+
+.nzifda-badge-footer {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.nzifda-badge-link {
+  display: inline-block;
+  font-size: 0.9em;
+  color: #0369a1;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.nzifda-badge-link::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: #0369a1;
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+}
+
+.nzifda-badge-link:hover {
+  color: #0284c7;
+  background: rgba(3, 105, 161, 0.05);
+}
+
+.nzifda-badge-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Size Variants */
+.nzifda-badge-compact {
+  max-width: 350px;
+}
+
+.nzifda-badge-compact .nzifda-badge-container {
+  padding: 16px;
+}
+
+.nzifda-badge-compact .nzifda-badge-image {
+  width: 320px;
+}
+
+.nzifda-badge-compact .nzifda-badge-label {
+  padding: 8px 12px;
+  margin-bottom: 12px;
+}
+
+.nzifda-badge-compact .nzifda-badge-label-text {
+  font-size: 0.95em;
+}
+
+.nzifda-badge-large {
+  max-width: 600px;
+}
+
+.nzifda-badge-large .nzifda-badge-container {
+  padding: 32px;
+}
+
+.nzifda-badge-large .nzifda-badge-image {
+  width: 480px;
+}
+
+.nzifda-badge-large .nzifda-badge-label {
+  padding: 12px 20px;
+  margin-bottom: 20px;
+}
+
+.nzifda-badge-large .nzifda-badge-label-text {
+  font-size: 1.2em;
+}
+
+/* Variant Styles */
+.nzifda-badge-variant-prominent {
+  max-width: 100%;
+}
+
+.nzifda-badge-variant-prominent .nzifda-badge-container {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+  border: 2px solid #0369a1;
+  box-shadow: 
+    0 8px 16px -4px rgba(3, 105, 161, 0.2),
+    0 4px 8px -2px rgba(3, 105, 161, 0.1),
+    0 0 0 1px rgba(3, 105, 161, 0.1);
+}
+
+.nzifda-badge-variant-prominent .nzifda-badge-label {
+  background: linear-gradient(135deg, rgba(3, 105, 161, 0.15) 0%, rgba(22, 163, 74, 0.15) 100%);
+  border: 2px solid rgba(3, 105, 161, 0.3);
+}
+
+.nzifda-badge-variant-minimal .nzifda-badge-container {
+  background: transparent;
+  box-shadow: none;
+  padding: 12px;
+}
+
+.nzifda-badge-variant-minimal .nzifda-badge-label {
+  display: none;
+}
+
+.nzifda-badge-variant-minimal .nzifda-badge-footer {
+  display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .nzifda-badge-wrapper {
+    max-width: 100%;
+  }
+
+  .nzifda-badge-container {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .nzifda-badge-image {
+    width: 100% !important;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .nzifda-badge-label {
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .nzifda-badge-label-text {
+    font-size: 0.95em;
+  }
+
+  .nzifda-badge-hover-effect {
+    padding: 10px 16px;
+  }
+
+  .nzifda-badge-hover-text {
+    font-size: 0.85em;
+  }
+
+  .nzifda-badge-large .nzifda-badge-image {
+    width: 100% !important;
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .nzifda-badge-container {
+    padding: 12px;
+  }
+
+  .nzifda-badge-image {
+    width: 100%;
+  }
+
+  .nzifda-badge-label-text {
+    font-size: 0.85em;
+  }
+
+  .nzifda-badge-link {
+    font-size: 0.85em;
+  }
+}
+
+/* Animation for page load */
+@keyframes badgeFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nzifda-badge-wrapper {
+  animation: badgeFadeIn 0.6s ease-out;
+}
+
+/* Accessibility */
+.nzifda-badge-image-wrapper:focus {
+  outline: 3px solid #0369a1;
+  outline-offset: 4px;
+  border-radius: 16px;
+}
+
+.nzifda-badge-link:focus {
+  outline: 2px solid #0369a1;
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .nzifda-badge-wrapper {
+    break-inside: avoid;
+  }
+
+  .nzifda-badge-overlay,
+  .nzifda-badge-hover-effect {
+    display: none;
+  }
+}
+
