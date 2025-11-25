@@ -1,7 +1,7 @@
 /**
  * Eek Footer Manager - Clean Rebuild
  * Simple, reliable footer injection system
- * Cache busting: v20251020.66
+ * Cache busting: v20250125.01
  */
 
 class FooterManager {
@@ -32,6 +32,7 @@ class FooterManager {
                 <a href="/fuel-extraction/fuel-extraction-equipment-methods">Fuel Extraction Equipment</a>
                 <a href="/fuel-extraction/fuel-extraction-vehicle-types">Fuel Extraction Vehicle Types</a>
                 <a href="/fuel-extraction/fuel-extraction-safety-procedures">Fuel Extraction Safety</a>
+                <a href="/certification">NZIFDA Certification</a>
               </div>
             </div>
             
@@ -52,6 +53,7 @@ class FooterManager {
             <p>Company No: 9365185 | NZBN: 9429053064165</p>
             <div>
               <a href="/more-options">More Options</a>
+              <a href="/certification">NZIFDA Certification</a>
               <a href="/privacy">Privacy Policy</a>
               <a href="/terms">Terms of Service</a>
             </div>
