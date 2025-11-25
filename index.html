@@ -771,6 +771,23 @@ font-src 'self' data:;">
         grid-template-columns: repeat(2, 1fr);
         gap: var(--space-md);
       }
+      
+      /* Mobile badge styling */
+      iframe[title*="NZIFDA"] {
+        width: 100% !important;
+        max-width: 280px !important;
+        height: 140px !important;
+        min-height: 140px !important;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      iframe[title*="NZIFDA"] {
+        width: 100% !important;
+        max-width: 260px !important;
+        height: 130px !important;
+        min-height: 130px !important;
+      }
     }
     
     @media (max-width: 480px) {
@@ -1038,8 +1055,14 @@ font-src 'self' data:;">
   </ul>
   
   <!-- NZIFDA Certification Badge -->
-  <div style="text-align: center; margin: 25px 0;">
-    <img src="https://nzifda.org/badge/RUVLIE1lY2hhbmljYWwgTHRk?v=20250125" alt="NZIFDA Certified - Eek Mechanical Ltd" />
+  <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid #0369a1; border-radius: 16px; padding: 20px; margin: 30px 0; text-align: center; max-width: 100%; box-sizing: border-box;">
+    <p style="margin: 0 0 12px 0; font-size: clamp(0.85em, 2.5vw, 0.95em); font-weight: 600; color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px;">✅ Certified Operator</p>
+    <div style="display: inline-block; max-width: 100%; width: 100%;">
+      <iframe src="https://nzifda.org/badge/RUVLIE1lY2hhbmljYWwgTHRk?v=20250125" width="320" height="160" style="border: none; max-width: 100%; width: 100%; height: auto; min-height: 160px; display: block; margin: 0 auto; box-sizing: border-box;" title="NZIFDA Certified - Eek Mechanical Ltd"></iframe>
+    </div>
+    <p style="margin: 12px 0 0 0; font-size: clamp(0.8em, 2.5vw, 0.85em); color: #6c757d;">
+      <a href="/certification" style="color: #0369a1; text-decoration: none; font-weight: 500;">Learn about our certification →</a>
+    </p>
   </div>
   
   <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">

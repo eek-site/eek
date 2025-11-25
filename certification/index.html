@@ -269,25 +269,23 @@ font-src 'self' data:;">
 
     .badge-container {
       text-align: center;
-      margin: var(--space-2xl) 0;
-      padding: var(--space-xl);
-      background: var(--gray-50);
-      border-radius: var(--radius-xl);
+      margin: var(--space-2xl) auto;
+      padding: var(--space-2xl);
+      max-width: 600px;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border: 3px solid #0369a1;
+      border-radius: var(--radius-2xl);
+      box-shadow: 0 8px 24px rgba(3, 105, 161, 0.15);
     }
 
-    .badge-container a {
-      display: inline-block;
-      transition: transform var(--transition-normal);
-    }
-
-    .badge-container a:hover {
-      transform: scale(1.05);
-    }
-
-    .badge-container svg {
+    .badge-container iframe {
       max-width: 100%;
       height: auto;
-      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+      min-height: 160px;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 4px 12px rgba(3, 105, 161, 0.2);
+      display: block;
+      margin: 0 auto;
     }
 
     .certification-grid {
@@ -392,6 +390,32 @@ font-src 'self' data:;">
       .certification-grid {
         grid-template-columns: 1fr;
       }
+      
+      .badge-container {
+        padding: var(--space-xl) var(--space-lg);
+        margin: var(--space-xl) var(--space-md);
+      }
+      
+      /* Mobile badge styling */
+      iframe[title*="NZIFDA"] {
+        width: 100% !important;
+        max-width: 280px !important;
+        height: 140px !important;
+        min-height: 140px !important;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .badge-container {
+        padding: var(--space-lg);
+      }
+      
+      iframe[title*="NZIFDA"] {
+        width: 100% !important;
+        max-width: 260px !important;
+        height: 130px !important;
+        min-height: 130px !important;
+      }
     }
   </style>
 </head>
@@ -405,7 +429,9 @@ font-src 'self' data:;">
 </header>
 
 <div class="badge-container">
-  <img src="https://nzifda.org/badge/RUVLIE1lY2hhbmljYWwgTHRk?v=20250125" alt="NZIFDA Certified - Eek Mechanical Ltd" />
+  <p style="margin: 0 0 20px 0; font-size: 1.1em; font-weight: 700; color: #0369a1; text-transform: uppercase; letter-spacing: 1px;">Official Certification Badge</p>
+  <iframe src="https://nzifda.org/badge/RUVLIE1lY2hhbmljYWwgTHRk?v=20250125" width="320" height="160" style="border: none; max-width: 100%; height: auto; min-height: 160px; display: block; margin: 0 auto;" title="NZIFDA Certified - Eek Mechanical Ltd"></iframe>
+  <p style="margin: 20px 0 0 0; font-size: 0.9em; color: var(--gray-600);">Click the badge to verify our certification status</p>
 </div>
 
 <div class="services">
