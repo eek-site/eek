@@ -372,18 +372,18 @@ font-src 'self' data:;">
       /* Mobile badge styling */
       iframe[title*="NZIFDA"] {
         width: 100% !important;
-        max-width: 280px !important;
-        height: 140px !important;
-        min-height: 140px !important;
+        max-width: 100% !important;
+        height: auto !important;
+        min-height: 240px !important;
       }
     }
     
     @media (max-width: 480px) {
       iframe[title*="NZIFDA"] {
         width: 100% !important;
-        max-width: 260px !important;
-        height: 130px !important;
-        min-height: 130px !important;
+        max-width: 100% !important;
+        height: auto !important;
+        min-height: 220px !important;
       }
     }
 
@@ -523,18 +523,45 @@ font-src 'self' data:;">
     <li>You need to drain old or degraded fuel from your vehicle</li>
   </ul>
   
-  <!-- NZIFDA Certification Badge -->
-  <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #0369a1; border-radius: 12px; padding: 24px 20px; margin: 30px 0; text-align: center; max-width: 100%; box-sizing: border-box;">
-    <p style="margin: 0 0 16px 0; font-size: clamp(0.9em, 2.5vw, 1em); font-weight: 700; color: #0369a1; display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;">
-      <span style="font-size: 1.2em;">✅</span>
-      <span style="text-align: center;">NZIFDA Certified Operator - Verified Compliance</span>
-    </p>
-    <div style="display: inline-block; max-width: 100%; width: 100%; margin: 0 auto; box-sizing: border-box;">
-      <iframe src="https://nzifda.org/badge/RUVLIE1lY2hhbmljYWwgTHRk?v=20250125" width="320" height="160" style="border: none; max-width: 100%; width: 100%; height: auto; min-height: 160px; display: block; margin: 0 auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(3, 105, 161, 0.15); box-sizing: border-box;" title="NZIFDA Certified - Eek Mechanical Ltd"></iframe>
+  <!-- NZIFDA Certification Badge - Enhanced -->
+  <div style="background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 50%, #e0f2fe 100%); border: 3px solid #0369a1; border-radius: 16px; padding: 28px 20px; margin: 35px 0; text-align: center; max-width: 100%; box-sizing: border-box; box-shadow: 0 10px 28px rgba(3, 105, 161, 0.18), 0 0 0 1px rgba(3, 105, 161, 0.1); position: relative; overflow: hidden;">
+    <!-- Decorative background -->
+    <div style="position: absolute; top: -40px; right: -40px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(3, 105, 161, 0.08) 0%, transparent 70%); border-radius: 50%; pointer-events: none;"></div>
+    
+    <div style="position: relative; z-index: 1;">
+      <div style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, rgba(3, 105, 161, 0.15) 0%, rgba(22, 163, 74, 0.15) 100%); padding: 10px 20px; border-radius: 50px; margin-bottom: 18px; border: 2px solid rgba(3, 105, 161, 0.25); box-shadow: 0 3px 10px rgba(3, 105, 161, 0.12);">
+        <span style="font-size: 1.3em;">✅</span>
+        <span style="font-size: clamp(0.95em, 2.5vw, 1.1em); font-weight: 700; color: #0369a1; text-transform: uppercase; letter-spacing: 0.03em;">NZIFDA Certified Operator</span>
+      </div>
+      
+      <p style="margin: 0 0 20px 0; font-size: clamp(0.85em, 2.5vw, 0.95em); color: #16a34a; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap;">
+        <span style="display: inline-block; width: 7px; height: 7px; background: #16a34a; border-radius: 50%;"></span>
+        <span>Verified Compliance</span>
+      </p>
+      
+      <div style="position: relative; display: inline-block; max-width: 100%; margin: 0 auto 20px; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+        <a href="https://nzifda.org/index.html#certification?encoded=RUVLIE1lY2hhbmljYWwgTHRk" target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none; cursor: pointer;" title="Click to verify NZIFDA certification">
+          <iframe src="https://nzifda.org/badge/RUVLIE1lY2hhbmljYWwgTHRk?v=20250125" width="400" height="320" style="border: none; max-width: 100%; width: 100%; height: auto; min-height: 240px; display: block; margin: 0 auto; border-radius: 10px; box-shadow: 0 6px 20px rgba(3, 105, 161, 0.22); transition: all 0.3s ease; box-sizing: border-box;" title="NZIFDA Certified - Eek Mechanical Ltd - Click to Verify"></iframe>
+        </a>
+      </div>
+      
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 16px; padding: 14px; background: rgba(255, 255, 255, 0.6); border-radius: 10px; backdrop-filter: blur(8px);">
+        <span style="font-size: 0.8em; color: #475569; font-weight: 500;">✓ Licensed</span>
+        <span style="font-size: 0.8em; color: #475569; font-weight: 500;">✓ Insured</span>
+        <span style="font-size: 0.8em; color: #475569; font-weight: 500;">✓ Compliant</span>
+      </div>
+      
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 16px;">
+        <a href="https://nzifda.org/index.html#certification?encoded=RUVLIE1lY2hhbmljYWwgTHRk" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; background: linear-gradient(135deg, #0369a1 0%, #0284c7 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 0.9em; box-shadow: 0 3px 10px rgba(3, 105, 161, 0.25); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 14px rgba(3, 105, 161, 0.35)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 3px 10px rgba(3, 105, 161, 0.25)'">
+          <span>🔍</span>
+          <span>Verify Status</span>
+        </a>
+        <a href="/certification" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; background: white; color: #0369a1; text-decoration: none; border: 2px solid #0369a1; border-radius: 8px; font-weight: 600; font-size: 0.9em; transition: all 0.3s ease;" onmouseover="this.style.background='#f0f9ff'; this.style.transform='translateY(-2px)'" onmouseout="this.style.background='white'; this.style.transform='translateY(0)'">
+          <span>📋</span>
+          <span>Learn More</span>
+        </a>
+      </div>
     </div>
-    <p style="margin: 16px 0 0 0; font-size: clamp(0.85em, 2.5vw, 0.9em); color: #64748b;">
-      <a href="/certification" style="color: #0369a1; text-decoration: none; font-weight: 500; border-bottom: 1px solid transparent; transition: border-color 0.2s;" onmouseover="this.style.borderBottomColor='#0369a1'" onmouseout="this.style.borderBottomColor='transparent'">Learn about our NZIFDA certification →</a>
-    </p>
   </div>
 </div>
 
