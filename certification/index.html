@@ -475,11 +475,51 @@ font-src 'self' data:;">
       <span>Verified Compliance • Active Certification • Click Badge to Verify</span>
     </p>
     
-    <!-- Badge Display -->
-    <div style="position: relative; display: inline-block; max-width: 100%; margin: 0 auto 28px; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.02)'; this.style.filter='brightness(1.05)'" onmouseout="this.style.transform='scale(1)'; this.style.filter='brightness(1)'">
-      <a href="https://nzifda.org/index.html#certification?encoded=RUVLIE1lY2hhbmljYWwgTHRk" target="_blank" rel="noopener noreferrer" style="display: block; text-decoration: none; cursor: pointer;" title="Click to verify NZIFDA certification">
-        <iframe src="https://nzifda.org/badge/RUVLIE1lY2hhbmljYWwgTHRk?v=20250125" width="400" height="320" style="border: none; max-width: 100%; width: 100%; height: auto; min-height: 280px; display: block; margin: 0 auto; border-radius: 12px; box-shadow: 0 8px 24px rgba(3, 105, 161, 0.25); transition: all 0.3s ease; box-sizing: border-box;" title="NZIFDA Certified - Eek Mechanical Ltd - Click to Verify"></iframe>
-      </a>
+    <!-- Dynamic Interactive Badge Container -->
+    <div id="nzifda-badge-container" class="badge-widget-container">
+      <!-- Badge Box with Controls -->
+      <div class="badge-box" id="badge-box">
+        <!-- Animated Border Glow -->
+        <div class="badge-glow"></div>
+        
+        <!-- Badge Display Area -->
+        <div class="badge-display-wrapper">
+          <a href="https://nzifda.org/index.html#certification?encoded=RUVLIE1lY2hhbmljYWwgTHRk" target="_blank" rel="noopener noreferrer" class="badge-link" title="Click to verify NZIFDA certification" id="badge-link">
+            <img src="https://nzifda.org/badge/RUVLIE1lY2hhbmljYWwgTHRk?v=20250125" alt="NZIFDA Certified - Eek Mechanical Ltd - Click to Verify" class="badge-image" id="badge-image" loading="lazy">
+          </a>
+          
+          <!-- Interactive Overlay -->
+          <div class="badge-overlay" id="badge-overlay">
+            <div class="overlay-content">
+              <div class="verify-icon">🔍</div>
+              <div class="verify-text">Click to Verify</div>
+              <div class="verify-arrow">→</div>
+            </div>
+          </div>
+          
+          <!-- Status Indicator -->
+          <div class="status-indicator" id="status-indicator">
+            <span class="status-dot"></span>
+            <span class="status-text">Live Verification</span>
+          </div>
+        </div>
+        
+        <!-- Control Panel -->
+        <div class="badge-controls">
+          <button class="control-btn" id="refresh-btn" title="Refresh Badge" aria-label="Refresh badge">
+            <span>🔄</span>
+          </button>
+          <button class="control-btn" id="verify-btn" title="Verify Certification" aria-label="Verify certification">
+            <span>✓</span>
+          </button>
+          <button class="control-btn" id="info-btn" title="More Information" aria-label="More information">
+            <span>ℹ️</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Dynamic Status Messages -->
+      <div class="badge-status-message" id="status-message"></div>
     </div>
     
     <!-- Trust Indicators -->
@@ -513,7 +553,477 @@ font-src 'self' data:;">
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.7; transform: scale(1.2); }
     }
+    
+    /* Dynamic Badge Widget Container */
+    .badge-widget-container {
+      position: relative;
+      max-width: 100%;
+      margin: 0 auto 28px;
+      padding: 0;
+    }
+    
+    /* Badge Box with Controls */
+    .badge-box {
+      position: relative;
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border: 4px solid #0369a1;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 
+        0 20px 60px rgba(3, 105, 161, 0.25),
+        0 0 0 1px rgba(3, 105, 161, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+    
+    .badge-box:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 28px 80px rgba(3, 105, 161, 0.35),
+        0 0 0 1px rgba(3, 105, 161, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      border-color: #0284c7;
+    }
+    
+    /* Animated Glow Effect */
+    .badge-glow {
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(3, 105, 161, 0.15) 0%, transparent 70%);
+      animation: rotateGlow 8s linear infinite;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    
+    .badge-box:hover .badge-glow {
+      opacity: 1;
+    }
+    
+    @keyframes rotateGlow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Badge Display Wrapper */
+    .badge-display-wrapper {
+      position: relative;
+      display: inline-block;
+      max-width: 100%;
+      margin: 0 auto;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .badge-link {
+      display: block;
+      text-decoration: none;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .badge-link:hover {
+      transform: scale(1.02);
+    }
+    
+    .badge-image {
+      display: block;
+      max-width: 100%;
+      width: 400px;
+      height: auto;
+      min-height: 280px;
+      border-radius: 12px;
+      box-shadow: 0 12px 32px rgba(3, 105, 161, 0.3);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background: #ffffff;
+    }
+    
+    .badge-link:hover .badge-image {
+      box-shadow: 0 16px 48px rgba(3, 105, 161, 0.4);
+      filter: brightness(1.05);
+    }
+    
+    /* Interactive Overlay */
+    .badge-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(3, 105, 161, 0.85) 0%, rgba(22, 163, 74, 0.85) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+    }
+    
+    .badge-display-wrapper:hover .badge-overlay {
+      opacity: 1;
+    }
+    
+    .overlay-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      font-weight: 700;
+      text-align: center;
+      animation: slideUp 0.3s ease;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .verify-icon {
+      font-size: 2.5em;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    .verify-text {
+      font-size: 1.2em;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    
+    .verify-arrow {
+      font-size: 1.5em;
+      animation: bounce 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(8px); }
+    }
+    
+    /* Status Indicator */
+    .status-indicator {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75em;
+      font-weight: 600;
+      color: #16a34a;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(10px);
+      z-index: 10;
+      transition: all 0.3s ease;
+    }
+    
+    .badge-display-wrapper:hover .status-indicator {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #16a34a;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+      box-shadow: 0 0 8px rgba(22, 163, 74, 0.6);
+    }
+    
+    /* Control Panel */
+    .badge-controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid rgba(3, 105, 161, 0.1);
+    }
+    
+    .control-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border: 2px solid #0369a1;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 1.2em;
+      box-shadow: 0 4px 12px rgba(3, 105, 161, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .control-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(3, 105, 161, 0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s ease, height 0.4s ease;
+    }
+    
+    .control-btn:hover {
+      transform: translateY(-3px) scale(1.1);
+      box-shadow: 0 8px 20px rgba(3, 105, 161, 0.3);
+      border-color: #0284c7;
+      background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+    }
+    
+    .control-btn:active {
+      transform: translateY(-1px) scale(1.05);
+    }
+    
+    .control-btn:hover::before {
+      width: 100px;
+      height: 100px;
+    }
+    
+    .control-btn span {
+      position: relative;
+      z-index: 1;
+      transition: transform 0.3s ease;
+    }
+    
+    .control-btn:hover span {
+      transform: rotate(15deg) scale(1.1);
+    }
+    
+    .control-btn:active span {
+      transform: rotate(0deg) scale(0.95);
+    }
+    
+    /* Status Messages */
+    .badge-status-message {
+      margin-top: 16px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 0.9em;
+      font-weight: 600;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+    
+    .badge-status-message.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .badge-status-message.success {
+      background: linear-gradient(135deg, rgba(22, 163, 74, 0.1) 0%, rgba(22, 163, 74, 0.05) 100%);
+      color: #16a34a;
+      border: 2px solid rgba(22, 163, 74, 0.3);
+    }
+    
+    .badge-status-message.info {
+      background: linear-gradient(135deg, rgba(3, 105, 161, 0.1) 0%, rgba(3, 105, 161, 0.05) 100%);
+      color: #0369a1;
+      border: 2px solid rgba(3, 105, 161, 0.3);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .badge-box {
+        padding: 20px;
+        border-radius: 20px;
+      }
+      
+      .badge-image {
+        width: 100%;
+        min-height: 240px;
+      }
+      
+      .badge-controls {
+        gap: 8px;
+      }
+      
+      .control-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.1em;
+      }
+      
+      .status-indicator {
+        font-size: 0.7em;
+        padding: 5px 10px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .badge-box {
+        padding: 16px;
+        border-width: 3px;
+      }
+      
+      .badge-image {
+        min-height: 220px;
+      }
+      
+      .control-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1em;
+      }
+    }
   </style>
+  
+  <script>
+    // Dynamic Badge Interactivity
+    (function() {
+      const badgeContainer = document.getElementById('nzifda-badge-container');
+      const badgeBox = document.getElementById('badge-box');
+      const badgeImage = document.getElementById('badge-image');
+      const badgeLink = document.getElementById('badge-link');
+      const refreshBtn = document.getElementById('refresh-btn');
+      const verifyBtn = document.getElementById('verify-btn');
+      const infoBtn = document.getElementById('info-btn');
+      const statusMessage = document.getElementById('status-message');
+      const statusIndicator = document.getElementById('status-indicator');
+      
+      if (!badgeContainer) return;
+      
+      // Refresh Badge
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Add loading state
+          badgeImage.style.opacity = '0.5';
+          badgeImage.style.transform = 'scale(0.98)';
+          statusMessage.textContent = 'Refreshing badge...';
+          statusMessage.className = 'badge-status-message show info';
+          
+          // Refresh image with cache busting
+          const timestamp = new Date().getTime();
+          const currentSrc = badgeImage.src.split('?')[0];
+          badgeImage.src = currentSrc + '?v=' + timestamp;
+          
+          // Reset after load
+          badgeImage.onload = function() {
+            badgeImage.style.opacity = '1';
+            badgeImage.style.transform = 'scale(1)';
+            statusMessage.textContent = 'Badge refreshed successfully!';
+            statusMessage.className = 'badge-status-message show success';
+            
+            setTimeout(() => {
+              statusMessage.className = 'badge-status-message';
+            }, 3000);
+          };
+          
+          // Button animation
+          this.style.transform = 'rotate(360deg)';
+          setTimeout(() => {
+            this.style.transform = 'rotate(0deg)';
+          }, 600);
+        });
+      }
+      
+      // Verify Button
+      if (verifyBtn) {
+        verifyBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          if (badgeLink) {
+            statusMessage.textContent = 'Opening verification page...';
+            statusMessage.className = 'badge-status-message show info';
+            
+            setTimeout(() => {
+              badgeLink.click();
+            }, 300);
+            
+            setTimeout(() => {
+              statusMessage.className = 'badge-status-message';
+            }, 2000);
+          }
+        });
+      }
+      
+      // Info Button
+      if (infoBtn) {
+        infoBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          statusMessage.textContent = 'You are already on the certification page!';
+          statusMessage.className = 'badge-status-message show info';
+          
+          setTimeout(() => {
+            statusMessage.className = 'badge-status-message';
+          }, 3000);
+        });
+      }
+      
+      // Badge Image Error Handling
+      if (badgeImage) {
+        badgeImage.addEventListener('error', function() {
+          statusMessage.textContent = 'Unable to load badge. Please try refreshing.';
+          statusMessage.className = 'badge-status-message show info';
+          this.style.border = '2px dashed #ef4444';
+        });
+        
+        badgeImage.addEventListener('load', function() {
+          statusIndicator.querySelector('.status-text').textContent = 'Live Verification';
+          statusIndicator.style.display = 'flex';
+        });
+      }
+      
+      // Add entrance animation
+      if (badgeBox) {
+        badgeBox.style.opacity = '0';
+        badgeBox.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+          badgeBox.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+          badgeBox.style.opacity = '1';
+          badgeBox.style.transform = 'translateY(0)';
+        }, 100);
+      }
+      
+      // Periodic status check (every 30 seconds)
+      setInterval(function() {
+        if (badgeImage && statusIndicator) {
+          const dot = statusIndicator.querySelector('.status-dot');
+          if (dot) {
+            dot.style.animation = 'none';
+            setTimeout(() => {
+              dot.style.animation = 'pulse 2s ease-in-out infinite';
+            }, 10);
+          }
+        }
+      }, 30000);
+    })();
+  </script>
 </div>
 
 <div class="services">
