@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Emergency Mobile Mechanic Services - Eek Mechanical</title>
-  <meta name="description" content="Book emergency mobile mechanic services with Eek Mechanical. Battery jump start, fuel extraction, mechanical diagnostics. Professional service across New Zealand." />
-  <meta name="keywords" content="mobile mechanic, emergency mechanic, battery jump start, wrong fuel removal, mobile mechanic NZ" />
+  <title>Wrong Fuel Rescue Booking - Emergency Fuel Extraction | Eek Mechanical</title>
+  <meta name="description" content="Book emergency wrong fuel extraction service with Eek Mechanical. Professional fuel removal, system flush, NZIFDA certified. Don't start your engine - call now!" />
+  <meta name="keywords" content="wrong fuel rescue, fuel extraction booking, misfuel service, petrol in diesel, diesel in petrol, emergency fuel removal" />
 
   <!-- Security Headers -->
   <meta http-equiv="Content-Security-Policy" content="
@@ -156,18 +156,18 @@
 <header>
   <img id="headerImage" src="/brand-image.png" alt="Eek Mechanical - Emergency Roadside Services"/>
   <div class="business-name">Eek Mechanical</div>
-  <h1 id="headerTitle">Emergency Mobile Mechanic Service</h1>
+  <h1 id="headerTitle">Wrong Fuel Rescue Service</h1>
   <p id="headerSubtitle" style="font-size:1.1em;color:#666;margin:10px 0;"></p>
 </header>
 
 <div class="breadcrumb">
-  <a href="/" class="tracking-link">Home</a> > <span id="breadcrumbText">Emergency Service</span>
+  <a href="/" class="tracking-link">Home</a> > <span id="breadcrumbText">Wrong Fuel Rescue</span>
 </div>
 
 <div class="booking-container">
   <div class="booking-header" id="bookingHeader">
-    <h2 id="bookingTitle">Book Your Emergency Service</h2>
-    <p id="bookingDescription">Professional mobile mechanic service across New Zealand</p>
+    <h2 id="bookingTitle">Book Wrong Fuel Rescue Service</h2>
+    <p id="bookingDescription">Emergency fuel extraction service • Don't start your engine!</p>
     <div class="service-stats">
       <div class="stats-grid" id="statsContent"></div>
     </div>
@@ -490,83 +490,6 @@ const STATUS_DESCRIPTIONS = {
 
 // Service Configurations
 const serviceConfigs = {
-  'jumpstart': {
-    title:'Battery Jump Start Service',
-    subtitle:"Dead battery? We'll get you started!",
-    breadcrumb:'Battery Jump Start',
-    bookingTitle:'Battery Jump Start Service',
-    bookingDescription:'Professional jump start service • Includes battery health check',
-    step1Title:'Step 1: Tell us about your battery situation',
-    detailsLabel:'Any additional details about the battery problem:',
-    detailsPlaceholder:"e.g., Age of battery, if lights were left on, how long it's been dead, etc.",
-    serviceCode:'JUMP',
-    basePrice:149,
-    voltages: [
-      { id:'12v', label:'12V (cars, SUVs, utes)', price:149 },
-      { id:'24v', label:'24V (trucks, buses)',   price:229 }
-    ],
-    stats:[
-      {number:'30–90',text:'min arrival'},
-      {number:'Free',text:'battery test'},
-      {number:'All',text:'makes & models'},
-      {number:'Insured',text:'service'}
-    ],
-    urgencyOptions:[
-      {id:'emergency',title:'Emergency Service',time:'30–90 minutes arrival',description:'Technician dispatched immediately',hidePrice:true}
-    ],
-    infoContent:`
-      <h4>Our Jump Start Service Includes:</h4>
-      <ul>
-        <li><strong>Professional jump start</strong> using commercial-grade equipment</li>
-        <li><strong>Battery voltage test</strong> to check current condition</li>
-        <li><strong>Charging system check</strong> to ensure alternator is working</li>
-        <li><strong>Battery terminal cleaning</strong> if needed</li>
-        <li><strong>Advice on battery replacement</strong> if required</li>
-      </ul>`,
-    terms:[
-      'Service includes professional jump start and battery health assessment',
-      'Price calculated based on your vehicle type',
-      'Arrival times are approximate - we will SMS you when the technician is on the way',
-      'Payment required via secure Stripe checkout'
-    ]
-  },
-  'mechanic': {
-    title:'Mobile Mechanic Diagnostic Service',
-    subtitle:"Engine problems? We'll diagnose the issue!",
-    breadcrumb:'Mechanic Diagnostic',
-    bookingTitle:'Mobile Mechanic Diagnostic Service',
-    bookingDescription:'Professional mechanical diagnostic • On-site assessment',
-    step1Title:'Step 1: Tell us about your mechanical problem',
-    detailsLabel:'Describe the symptoms and any issues:',
-    detailsPlaceholder:"e.g., Engine won't start, warning lights, strange noises, overheating, etc.",
-    serviceCode:'DIAG',
-    basePrice:249,
-    stats:[
-      {number:'30–90',text:'min arrival'},
-      {number:'Full',text:'diagnostic scan'},
-      {number:'Expert',text:'assessment'},
-      {number:'Written',text:'report'}
-    ],
-    urgencyOptions:[
-      {id:'emergency',title:'Emergency Diagnostic',time:'30–90 minutes arrival',description:'Immediate dispatch for urgent issues',hidePrice:true},
-      {id:'scheduled',title:'Scheduled Service',time:'Within 4 hours',description:'Book for later today',hidePrice:true}
-    ],
-    infoContent:`
-      <h4>Our Diagnostic Service Includes:</h4>
-      <ul>
-        <li><strong>Professional diagnostic scanning</strong> of all vehicle systems</li>
-        <li><strong>Mechanical assessment</strong> to identify problems</li>
-        <li><strong>Written report</strong> of findings and recommendations</li>
-        <li><strong>Cost estimate</strong> for any required repairs</li>
-        <li><strong>Expert advice</strong> on next steps</li>
-      </ul>`,
-    terms:[
-      'Service includes comprehensive diagnostic scanning and assessment',
-      'Price calculated based on your requirements',
-      'Written report provided with findings',
-      'Arrival times are approximate due to the nature of mechanical work'
-    ]
-  },
   'fuel-extraction': {
     title:'Wrong Fuel Extraction Service',
     subtitle:"Put wrong fuel in? We'll extract it safely!",
@@ -608,50 +531,6 @@ const serviceConfigs = {
       ]
     }
   },
-  'winz': {
-    title:'WINZ Vehicle Repair Quote',
-    subtitle:'Get an instant quote for Work and Income assistance',
-    breadcrumb:'WINZ Quote',
-    bookingTitle:'WINZ Vehicle Repair Quote',
-    bookingDescription:'Approved WINZ supplier • Instant quotes for vehicle repairs',
-    step1Title:'Start Here.',
-    step2Title:'Step 2: Generate Your WINZ Quote',
-    detailsLabel:'2. Describe the problem in detail:',
-    detailsPlaceholder:'Please provide as much detail as possible about the issue...',
-    serviceCode:'WINZ',
-    basePrice:0,
-    hidePrice:true,
-    isWinz:true,
-    stats:[
-      {number:'WINZ',text:'approved supplier'},
-      {number:'Instant',text:'quote generation'},
-      {number:'Up to $400',text:'assistance available'},
-      {number:'1-2 days',text:'approval time'}
-    ],
-    emergencyTypes: [
-      {id:'battery',label:'Flat Battery',description:'Battery won\'t start, needs jump start or replacement'},
-      {id:'mechanical',label:'Mechanical Breakdown',description:'Engine problems, won\'t start, warning lights'},
-      {id:'misfuel',label:'Misfuel',description:'Wrong fuel in tank (petrol in diesel or vice versa)'}
-    ],
-    urgencyOptions:[
-      {id:'standard',title:'WINZ Quote Generation',time:'Instant digital quote',description:'Submit to Work and Income for approval',hidePrice:true}
-    ],
-    infoContent:`
-      <h4>How This Works:</h4>
-      <ul>
-        <li><strong>Select your emergency type</strong> from the options above</li>
-        <li><strong>Provide vehicle and contact details</strong></li>
-        <li><strong>Describe the problem</strong> in as much detail as possible</li>
-        <li><strong>Receive instant quote</strong> to submit to WINZ</li>
-        <li><strong>Take quote to WINZ</strong> or upload to MyMSD</li>
-      </ul>`,
-    terms:[
-      'Quote valid for 30 days from generation',
-      'Subject to WINZ approval and eligibility criteria',
-      'Service provided after WINZ approval confirmed',
-      'Mobile service - we come to your location'
-    ]
-  }
 };
 
 // Globals
@@ -758,7 +637,7 @@ function buildBookingData(status) {
     }
   }
 
-  if (window.currentService === 'jumpstart' && selectedVoltageId) {
+  if (false) { // Removed jumpstart voltage selection
     baseData.selectedVoltage = selectedVoltageId;
     baseData.batteryVoltage = selectedVoltageId === '12v' ? '12V' : '24V';
   }
@@ -909,13 +788,13 @@ document.addEventListener('DOMContentLoaded', function(){
   checkReturnVisit();
   
   const urlParams = new URLSearchParams(window.location.search);
-  const service = urlParams.get('service') || 'jumpstart';
+  const service = urlParams.get('service') || 'fuel-extraction';
   
-  if (service === 'inspection') {
-    console.log('🔄 Redirecting inspection service to dedicated page');
-    let redirectUrl = 'https://eek.nz/pre-purchase-vehicle-inspection/';
-    
+  // Only allow fuel-extraction service
+  if (service !== 'fuel-extraction') {
+    console.log('🔄 Redirecting to fuel-extraction service');
     const redirectParams = new URLSearchParams();
+    redirectParams.append('service', 'fuel-extraction');
     if (gclid) redirectParams.append('gclid', gclid);
     if (sessionId) redirectParams.append('session_id', sessionId);
     
@@ -924,11 +803,7 @@ document.addEventListener('DOMContentLoaded', function(){
       if (value) redirectParams.append(param, value);
     });
     
-    if (redirectParams.toString()) {
-      redirectUrl += '?' + redirectParams.toString();
-    }
-    
-    window.location.href = redirectUrl;
+    window.location.href = '/book-service/?' + redirectParams.toString();
     return;
   }
   
@@ -937,7 +812,7 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 function loadServiceConfig(serviceType){
-  const config = serviceConfigs[serviceType] || serviceConfigs['jumpstart'];
+  const config = serviceConfigs[serviceType] || serviceConfigs['fuel-extraction'];
   
   console.log('⚙️ === SERVICE CONFIGURATION LOADED === ⚙️');
   console.log('📦 Service:', config.title);
@@ -1124,16 +999,7 @@ async function goToStep2(){
           calculatedPrice = window.currentConfig.basePrice;
         }
         
-        if (window.currentService === 'jumpstart' && window.currentConfig.voltages) {
-          document.querySelectorAll('.voltage-card').forEach(card => {
-            const isV24 = card.dataset.id === '24v';
-            const price = isV24 ? Math.round(calculatedPrice * 1.5) : calculatedPrice;
-            card.querySelector('.voltage-price').textContent = `$${price}`;
-            if (card.dataset.id === selectedVoltageId) {
-              selectedVoltagePrice = price;
-            }
-          });
-        }
+        // Voltage selection removed - fuel extraction only
       }
     } catch (err) {
       console.error('Pricing API error:', err);
@@ -1255,9 +1121,7 @@ function getTotalPrice(){
   if (window.currentConfig.isWinz) {
     return calculatedPrice || 0;
   }
-  if (window.currentService === 'jumpstart' && selectedVoltagePrice) {
-    return selectedVoltagePrice;
-  }
+  // Voltage pricing removed - fuel extraction only
   if (window.currentService === 'fuel-extraction' && selectedUrgency) {
     const selectedOption = window.currentConfig.urgencyOptions.find(opt => opt.id === selectedUrgency);
     return selectedOption ? selectedOption.price : window.currentConfig.basePrice;
@@ -1283,12 +1147,7 @@ function updateSummary(){
   }
 
   const voltageRow = document.getElementById('summaryVoltageRow');
-  if (window.currentService === 'jumpstart' && selectedVoltageId && !window.currentConfig.isWinz){
-    voltageRow.style.display = '';
-    document.getElementById('summaryVoltage').textContent = (selectedVoltageId === '12v' ? '12V' : '24V');
-  } else {
-    voltageRow.style.display = 'none';
-  }
+  voltageRow.style.display = 'none'; // Voltage selection not applicable for fuel extraction
 
   if (window.currentConfig.isWinz) {
     document.getElementById('summaryUrgencyRow').style.display = 'none';
@@ -1360,9 +1219,7 @@ function buildRedirectUrl(){
     }
   }
   
-  if (window.currentService === 'jumpstart' && !window.currentConfig.isWinz){
-    params.append('batteryVoltage', selectedVoltageId || '');
-  }
+  // Battery voltage removed - fuel extraction only
 
   return `${baseUrl}?${params.toString()}`;
 }
@@ -1484,7 +1341,7 @@ async function generatePaymentLink(){
     emergencyType: selectedEmergencyType || '',
     quoteReference: window.winzQuoteReference || '',
     isWinzService: window.currentConfig.isWinz || false,
-    batteryVoltage: window.currentService === 'jumpstart' ? (selectedVoltageId === '12v' ? '12V' : '24V') : '',
+    batteryVoltage: '', // Not applicable for fuel extraction
     
     customerData: {
       name: customerName, 
@@ -1518,7 +1375,7 @@ async function generatePaymentLink(){
       sessionId: sessionId,
       bookingSource: 'booking_form',
       formVersion: '2.1',
-      ...(window.currentService === 'jumpstart' ? { batteryVoltage: (selectedVoltageId === '12v' ? '12V' : '24V') } : {})
+      // Battery voltage removed - fuel extraction only
     },
     
     // Enhanced tracking data for complete attribution

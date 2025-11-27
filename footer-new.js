@@ -37,14 +37,14 @@ class FooterManager {
             </div>
             
             <div class="eek-footer-section eek-footer-secondary">
-              <h4>Book Online</h4>
-              <a href="/book-service/?service=jumpstart">Jump Starts</a>
-              <a href="/book-service/?service=mechanic">Mobile Repairs</a>
-              <a href="/book-service/?service=inspection">Pre-Purchase Inspections</a>
-              <a href="/book-service/?service=fuel-extraction">Wrong Fuel Rescue</a>
+              <h4>Emergency Wrong Fuel Service</h4>
+              <p style="color: rgba(255,255,255,0.9); margin-bottom: 15px; font-size: 0.95em; line-height: 1.6;">
+                ⚠️ <strong>CRITICAL:</strong> If you've put the wrong fuel in your vehicle, DO NOT start the engine. Call us immediately for professional fuel extraction service.
+              </p>
+              <a href="/book-service/?service=fuel-extraction" style="background: #ff5500; color: white; padding: 12px 24px; border-radius: 8px; display: inline-block; margin-top: 10px; font-weight: 600; text-decoration: none;">Book Wrong Fuel Rescue</a>
               
-              <h4 class="eek-footer-subheading">Contact</h4>
-              <a href="javascript:void(0)" onclick="openServiceModal()">Contact Us</a>
+              <h4 class="eek-footer-subheading" style="margin-top: 25px;">Contact</h4>
+              <a href="javascript:void(0)" onclick="openServiceModal()">Emergency Contact</a>
             </div>
           </div>
           

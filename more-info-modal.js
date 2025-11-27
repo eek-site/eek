@@ -27,9 +27,6 @@
     // Send unified tracking event for modal open
     if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
       const serviceMap = {
-        'jumpstarts': { service: 'jump_start', serviceCode: 'JUMP', serviceTitle: 'Jump Start', price: 149 },
-        'repairs': { service: 'mechanical_repair', serviceCode: 'REPAIR', serviceTitle: 'Mobile Mechanical Repair', price: 249 },
-        'inspections': { service: 'inspection', serviceCode: 'INSP', serviceTitle: 'Pre-Purchase Inspection', price: 299 },
         'fuel': { service: 'fuel_extraction', serviceCode: 'FUEL', serviceTitle: 'Wrong Fuel Rescue', price: 399 }
       };
       const svc = serviceMap[serviceType] || { service: serviceType, serviceCode: serviceType, serviceTitle: serviceData.title || 'Service', price: undefined };
@@ -126,12 +123,9 @@
     } else {
       // Phones are off - redirect to booking page
       const serviceSlugMap = {
-        'jumpstarts': 'jumpstart',
-        'repairs': 'mechanic', 
-        'inspections': 'inspection',
         'fuel': 'fuel-extraction'
       };
-      const bookingService = serviceSlugMap[serviceType] || 'jumpstart';
+      const bookingService = serviceSlugMap[serviceType] || 'fuel-extraction';
       const trackingParams = (typeof buildTrackingParams === 'function') ? buildTrackingParams() : '';
       const bookingUrl = trackingParams ? `/book-service/?service=${bookingService}&${trackingParams}` : `/book-service/?service=${bookingService}`;
       
@@ -177,138 +171,6 @@
 
   function getServiceData(serviceType) {
     const serviceData = {
-      jumpstarts: {
-        title: '🔋 Jump Start Service - Complete Information',
-        content: `
-          <div class="more-info-section">
-            <h4>🚀 Why Choose Our Jump Start Service?</h4>
-            <ul>
-              <li><strong>Professional Equipment:</strong> We use commercial-grade jump start packs that work with all vehicle types</li>
-              <li><strong>Battery Health Check:</strong> FREE battery voltage and condition assessment included</li>
-              <li><strong>All Vehicle Types:</strong> Cars, SUVs, utes, motorcycles, boats, and more</li>
-              <li><strong>Safe & Reliable:</strong> Our mechanics are trained in proper jump start procedures</li>
-              <li><strong>No Damage Risk:</strong> We know how to safely connect to modern vehicles with sensitive electronics</li>
-            </ul>
-          </div>
-          
-          <div class="more-info-section">
-            <h4>⚡ What Happens When You Call?</h4>
-            <ul>
-              <li><strong>Immediate Dispatch:</strong> We typically arrive within 10-30 minutes</li>
-              <li><strong>Professional Assessment:</strong> We check your battery condition and charging system</li>
-              <li><strong>Safe Jump Start:</strong> Proper connection and jump start procedure</li>
-              <li><strong>Battery Advice:</strong> We'll tell you if your battery needs replacement</li>
-              <li><strong>Follow-up:</strong> We ensure your vehicle starts reliably before leaving</li>
-            </ul>
-          </div>
-          
-          <div class="more-info-section">
-            <h4>🛡️ Why This Service Matters</h4>
-            <ul>
-              <li><strong>Prevent Engine Damage:</strong> Improper jump starting can damage your vehicle's electronics</li>
-              <li><strong>Battery Replacement Guidance:</strong> We'll tell you if you need a new battery and why</li>
-              <li><strong>Peace of Mind:</strong> Professional service means no guesswork</li>
-              <li><strong>Time Saving:</strong> Get back on the road quickly and safely</li>
-            </ul>
-          </div>
-          
-          <div class="cta-section">
-            <a href="javascript:void(0)" onclick="handleMoreInfoAction('jumpstarts')" class="cta-button normal-hours-btn">📞 Call Now</a>
-          </div>
-        `
-      },
-      repairs: {
-        title: '🛠️ Mobile Mechanical Repairs - Complete Information',
-        content: `
-          <div class="more-info-section">
-            <h4>🚀 Why Choose Our Mobile Repair Service?</h4>
-            <ul>
-              <li><strong>Fully Equipped Workshop:</strong> Our mobile mechanics carry professional diagnostic tools and parts</li>
-              <li><strong>On-Site Repairs:</strong> Most common issues fixed where you are - no towing needed</li>
-              <li><strong>Professional Diagnostics:</strong> Computer scanning and fault detection capabilities</li>
-              <li><strong>Quality Parts:</strong> We use quality replacement parts with warranties</li>
-              <li><strong>Transparent Pricing:</strong> No hidden fees - you know the cost before we start</li>
-            </ul>
-          </div>
-          
-          <div class="more-info-section">
-            <h4>🔧 What We Can Fix On-Site</h4>
-            <ul>
-              <li><strong>Engine Issues:</strong> Starting problems, rough idle, stalling</li>
-              <li><strong>Electrical Problems:</strong> Battery, alternator, starter motor issues</li>
-              <li><strong>Brake Repairs:</strong> Pad replacement, brake fluid service</li>
-              <li><strong>Fluid Services:</strong> Oil changes, coolant, transmission fluid</li>
-              <li><strong>Minor Repairs:</strong> Belts, hoses, filters, and more</li>
-            </ul>
-          </div>
-          
-          <div class="more-info-section">
-            <h4>⚡ Our Process</h4>
-            <ul>
-              <li><strong>Diagnostic Scan:</strong> Computer diagnosis to identify the exact problem</li>
-              <li><strong>Clear Explanation:</strong> We explain what's wrong and what needs fixing</li>
-              <li><strong>Upfront Pricing:</strong> You approve the work before we start</li>
-              <li><strong>Quality Repair:</strong> Professional repair using quality parts</li>
-              <li><strong>Testing & Verification:</strong> We test the repair to ensure it works properly</li>
-            </ul>
-          </div>
-          
-          <div class="cta-section">
-            <a href="javascript:void(0)" onclick="handleMoreInfoAction('repairs')" class="cta-button normal-hours-btn">📞 Call Now</a>
-          </div>
-        `
-      },
-      inspections: {
-        title: '🔍 Pre-Purchase Inspections - Complete Information',
-        content: `
-          <div class="more-info-section">
-            <h4>🚀 Why Our Inspection Service is Different</h4>
-            <ul>
-              <li><strong>Same-Day Service:</strong> Most competitors take 2-3 days - we inspect today</li>
-              <li><strong>Workshop Hoist Inspection:</strong> Not driveway mobile - we use proper workshop facilities</li>
-              <li><strong>45-Point Certified Check:</strong> Comprehensive inspection covering all major systems</li>
-              <li><strong>Professional Valuation:</strong> We tell you what the car is actually worth</li>
-              <li><strong>Detailed Report:</strong> Written report with photos and maintenance recommendations</li>
-            </ul>
-          </div>
-          
-          <div class="more-info-section">
-            <h4>🔍 What We Inspect</h4>
-            <ul>
-              <li><strong>Engine & Transmission:</strong> Performance, leaks, wear indicators</li>
-              <li><strong>Braking System:</strong> Pads, discs, fluid, ABS functionality</li>
-              <li><strong>Electrical Systems:</strong> Battery, alternator, lights, electronics</li>
-              <li><strong>Body & Chassis:</strong> Rust, accident damage, structural integrity</li>
-              <li><strong>Safety Systems:</strong> Airbags, seatbelts, safety recalls</li>
-            </ul>
-          </div>
-          
-          <div class="more-info-section">
-            <h4>💰 What You Get</h4>
-            <ul>
-              <li><strong>Detailed Written Report:</strong> Complete assessment with photos</li>
-              <li><strong>Price Recommendation:</strong> Fair market value assessment</li>
-              <li><strong>Maintenance Schedule:</strong> What needs fixing now vs later</li>
-              <li><strong>Safety Assessment:</strong> Is this car safe to drive?</li>
-              <li><strong>Negotiation Power:</strong> Use our report to negotiate a better price</li>
-            </ul>
-          </div>
-          
-          <div class="more-info-section">
-            <h4>🛡️ Why This Inspection Matters</h4>
-            <ul>
-              <li><strong>1 in 5 Cars Rejected:</strong> 20% of vehicles we inspect have major hidden problems</li>
-              <li><strong>Save Thousands:</strong> Avoid buying a car that needs expensive repairs</li>
-              <li><strong>Peace of Mind:</strong> Know exactly what you're buying</li>
-              <li><strong>Better Negotiation:</strong> Use our report to get a fair price</li>
-            </ul>
-          </div>
-          
-          <div class="cta-section">
-            <a href="javascript:void(0)" onclick="handleMoreInfoAction('inspections')" class="cta-button normal-hours-btn">📞 Call Now</a>
-          </div>
-        `
-      },
       fuel: {
         title: '⛽ Wrong Fuel Rescue - Complete Information',
         content: `

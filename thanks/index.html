@@ -248,41 +248,18 @@
   <div id="serviceModal" class="service-modal" style="display: none;">
     <div class="service-modal-content">
       <div class="service-modal-header">
-        <h3>🚨 What's Your Emergency?</h3>
-        <p>Select your service so we can dispatch the right mechanic</p>
+        <h3>⛽ Wrong Fuel Emergency</h3>
+        <p>⚠️ DON'T START YOUR ENGINE - Call us immediately for professional fuel extraction</p>
         <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
       </div>
       <div class="service-modal-body">
         <div class="service-options">
-          <button class="service-option" onclick="selectService('emergency_breakdown')" data-service="emergency_breakdown">
-            <span class="service-icon">🚨</span>
-            <div class="service-details">
-              <h4>Emergency Breakdown</h4>
-              <p>Engine won't start, stranded, mechanical issues</p>
-            </div>
-          </button>
-          
-          <button class="service-option" onclick="selectService('battery_jumpstart')" data-service="battery_jumpstart">
-            <span class="service-icon">🔋</span>
-            <div class="service-details">
-              <h4>Dead Battery</h4>
-              <p>Jump start service, battery replacement</p>
-            </div>
-          </button>
-          
-          <button class="service-option" onclick="selectService('wrong_fuel')" data-service="wrong_fuel">
+          <button class="service-option" onclick="selectService('wrong_fuel')" data-service="wrong_fuel" style="width: 100%; max-width: 500px; margin: 0 auto;">
             <span class="service-icon">⛽</span>
             <div class="service-details">
               <h4>Wrong Fuel Emergency</h4>
-              <p>Petrol in diesel or diesel in petrol</p>
-            </div>
-          </button>
-          
-          <button class="service-option" onclick="selectService('pre_purchase')" data-service="pre_purchase">
-            <span class="service-icon">🔍</span>
-            <div class="service-details">
-              <h4>Pre-Purchase Inspection</h4>
-              <p>45-point vehicle inspection</p>
+              <p>⚠️ DON'T START YOUR ENGINE - Petrol in diesel or diesel in petrol</p>
+              <p style="margin-top: 10px; font-weight: 600; color: #dc3545;">Call us immediately for professional fuel extraction</p>
             </div>
           </button>
         </div>
