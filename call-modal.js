@@ -1,7 +1,7 @@
 /**
  * Service Selection Modal JavaScript
  * Handles the call modal functionality for service selection
- * Version: 2.3 - Simplified for wrong fuel rescue only
+ * Version: 2.3 - Wrong fuel rescue + contact options (removed non-fuel services)
  * Cache busting: v20251020.77
  */
 
@@ -39,7 +39,7 @@ function trackModalEvent(eventName, data = {}) {
   console.log(`📊 Modal Event: ${eventName}`, trackingData);
 }
 
-// Service Selection Modal Functions - Simplified for Wrong Fuel Rescue Only
+// Service Selection Modal Functions - Wrong Fuel Rescue + Contact Options
 function openServiceModal() {
   const modal = document.getElementById('serviceModal');
   if (modal) {
@@ -47,8 +47,7 @@ function openServiceModal() {
     trackModalEvent('modal_opened', {
       action: 'open',
       trigger: 'user_click',
-      modal_type: 'wrong_fuel_rescue',
-      serviceType: 'wrong_fuel'
+      modal_type: 'service_selection'
     });
 
     // Refresh phone numbers if phone manager is available
@@ -63,46 +62,34 @@ function openServiceModal() {
       });
     }
 
-    // Get phone number directly - no service selection needed
-    const { phoneData, phoneSource } = getFreshPhoneData();
-    const phoneHref = phoneData.tel;
-    const phoneNumber = phoneData.display;
-
-    // Show phone number directly for wrong fuel rescue
+    // Reset modal to service selection - only wrong fuel + contact options
     const modalContent = document.querySelector('.service-modal-content');
     modalContent.innerHTML = `
       <div class="service-modal-header">
         <h3>⛽ Wrong Fuel Emergency</h3>
-        <p>⚠️ DON'T START YOUR ENGINE - Call us immediately</p>
+        <p>Select your option below</p>
         <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
       </div>
       <div class="service-modal-body">
-        <div style="text-align: center; padding: 20px;">
-          <div style="font-size: 1.2em; margin-bottom: 15px; color: #dc3545; font-weight: 600;">
-            ⚠️ CRITICAL: Do not start your engine
-          </div>
-          <div id="phoneNumberDisplay" style="font-size: 2em; margin-bottom: 20px; color: var(--primary, #ff5500); font-weight: bold; display: block;">
-            ${phoneNumber}
-          </div>
-          <p style="margin-bottom: 30px; color: #666; line-height: 1.6;">
-            Our emergency fuel extraction team is ready to help.<br>
-            We'll extract the wrong fuel and flush your system safely.
-          </p>
-          <a href="${phoneHref}" class="cta-button" style="display: inline-block; background: var(--primary, #ff5500); color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 1.2em; font-weight: bold; margin: 10px;" onclick="trackCallButtonClick('wrong_fuel', '${phoneHref}');">
-            📞 Call Now
-          </a>
+        <div class="service-options">
+          <button class="service-option" onclick="selectService('wrong_fuel')" data-service="wrong_fuel">
+            <span class="service-icon">⛽</span>
+            <div class="service-details">
+              <h4>Wrong Fuel Emergency</h4>
+              <p>⚠️ DON'T START YOUR ENGINE - Petrol in diesel or diesel in petrol</p>
+            </div>
+          </button>
+          
+          <button class="service-option" onclick="selectService('post_job')" data-service="post_job">
+            <span class="service-icon">📋</span>
+            <div class="service-details">
+              <h4>Post-Job Support</h4>
+              <p>Customer escalation or supplier relations</p>
+            </div>
+          </button>
         </div>
       </div>
     `;
-    
-    // Track service selection (automatically wrong_fuel)
-    trackModalEvent('service_selected', {
-      action: 'select_service',
-      serviceType: 'wrong_fuel',
-      serviceName: 'Wrong Fuel Emergency',
-      trigger: 'auto_select',
-      value: 1
-    });
     
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden'; // Prevent background scrolling
@@ -146,16 +133,24 @@ function showPhoneNumber() {
   }
 }
 
-// Simplified - service is always wrong_fuel, so this function is no longer needed
-// Keeping for backward compatibility but it will just show the phone number
 function selectService(serviceType) {
-  // Always treat as wrong_fuel emergency
-  const serviceName = 'Wrong Fuel Emergency';
+  const serviceNames = {
+    'wrong_fuel': 'Wrong Fuel Emergency',
+    'post_job': 'Post-Job Support'
+  };
+  
+  const serviceName = serviceNames[serviceType] || 'Service';
+  
+  // Special handling for post-job service - redirect instead of showing phone
+  if (serviceType === 'post_job') {
+    handlePostJobRedirect();
+    return;
+  }
   
   // Track the service selection
   trackModalEvent('service_selected', {
     action: 'select_service',
-    serviceType: 'wrong_fuel',
+    serviceType: serviceType,
     serviceName: serviceName,
     trigger: 'service_button_click',
     value: 1
@@ -163,29 +158,42 @@ function selectService(serviceType) {
 
   // Legacy tracking for backward compatibility
   if (window.trackingManager && typeof window.trackingManager.trackServiceSelection === 'function') {
-    window.trackingManager.trackServiceSelection('wrong_fuel');
+    window.trackingManager.trackServiceSelection(serviceType);
   } else if (window.unifiedTracking) {
     window.unifiedTracking.trackEvent('service_selection', {
-      serviceType: 'wrong_fuel',
+      serviceType: serviceType,
       category: 'Service Selection'
     });
   }
   
   // Get the phone number
-  const { phoneData, phoneSource } = getFreshPhoneData();
+  let phoneData;
+  let phoneSource = 'fallback';
+  
+  if (window.phoneManager && typeof window.phoneManager.getModalPhoneNumber === 'function') {
+    phoneData = window.phoneManager.getModalPhoneNumber();
+    phoneSource = 'phoneManager';
+  } else if (window.unifiedTracking && typeof window.unifiedTracking.getModalPhoneNumber === 'function') {
+    phoneData = window.unifiedTracking.getModalPhoneNumber();
+    phoneSource = 'unifiedTracking';
+  } else {
+    phoneData = { tel: 'tel:0800769000', display: 'Call Now' };
+    phoneSource = 'fallback';
+  }
+  
   const phoneHref = phoneData.tel;
   const phoneNumber = phoneData.display;
   
   // Track phone number selection
   trackModalEvent('phone_number_selected', {
     action: 'select_phone_number',
-    serviceType: 'wrong_fuel',
+    serviceType: serviceType,
     phoneSource: phoneSource,
     phoneNumber: phoneData.display,
     phoneHref: phoneData.tel
   });
   
-  // Update modal to show phone number
+  // Update modal to show phone number and call option
   const modalContent = document.querySelector('.service-modal-content');
   
   if (phoneHref && phoneNumber) {
@@ -207,9 +215,31 @@ function selectService(serviceType) {
             Our emergency fuel extraction team is ready to help.<br>
             We'll extract the wrong fuel and flush your system safely.
           </p>
-          <a href="${phoneHref}" class="cta-button" style="display: inline-block; background: var(--primary, #ff5500); color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 1.2em; font-weight: bold; margin: 10px;" onclick="trackCallButtonClick('wrong_fuel', '${phoneHref}');">
+          <a href="${phoneHref}" class="cta-button" style="display: inline-block; background: var(--primary, #ff5500); color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 1.2em; font-weight: bold; margin: 10px;" onclick="trackCallButtonClick('${serviceType}', '${phoneHref}');">
             📞 Call Now
           </a>
+          <button onclick="trackBackButtonClick('${serviceType}'); openServiceModal();" style="display: block; margin: 20px auto 0; background: none; border: 1px solid #ddd; padding: 10px 20px; border-radius: 6px; cursor: pointer; color: #666;">
+            ← Back to Options
+          </button>
+        </div>
+      </div>
+    `;
+  } else {
+    // Fallback if no phone number available
+    modalContent.innerHTML = `
+      <div class="service-modal-header">
+        <h3>⛽ Wrong Fuel Emergency</h3>
+        <p>${serviceName} service selected</p>
+        <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
+      </div>
+      <div class="service-modal-body">
+        <div style="text-align: center; padding: 20px;">
+          <p style="margin-bottom: 30px; color: #666;">
+            Please use the main call button to contact us for ${serviceName.toLowerCase()} service
+          </p>
+          <button onclick="trackBackButtonClick('${serviceType}'); openServiceModal();" style="display: block; margin: 20px auto 0; background: none; border: 1px solid #ddd; padding: 10px 20px; border-radius: 6px; cursor: pointer; color: #666;">
+            ← Back to Options
+          </button>
         </div>
       </div>
     `;
@@ -228,10 +258,123 @@ function trackCallButtonClick(serviceType, phoneHref) {
   
   // Store call attempt data for return visit tracking
   if (typeof sendCallClick === 'function') {
-    sendCallClick('modal_call_click', 'Wrong Fuel Rescue', null);
+    sendCallClick('modal_call_click', 'Service', null);
   } else {
     console.warn('sendCallClick function not available for call tracking');
   }
+}
+
+function trackBackButtonClick(serviceType) {
+  trackModalEvent('back_button_clicked', {
+    action: 'click_back_button',
+    serviceType: serviceType,
+    trigger: 'back_button_click',
+    value: 1
+  });
+}
+
+// Post-job redirect handling
+function handlePostJobRedirect() {
+  // Track the post-job selection
+  trackModalEvent('post_job_selected', {
+    action: 'select_post_job',
+    serviceType: 'post_job',
+    serviceName: 'Post-Job Support',
+    trigger: 'service_button_click',
+    value: 1
+  });
+  
+  // Show submenu with customer/supplier options
+  const modalContent = document.querySelector('.service-modal-content');
+  modalContent.innerHTML = `
+    <div class="service-modal-header">
+      <h3>📋 Post-Job Support</h3>
+      <p>Are you a customer or supplier?</p>
+      <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
+    </div>
+    <div class="service-modal-body">
+      <div class="service-options">
+        <button class="service-option" onclick="selectPostJobType('customer')" data-type="customer">
+          <span class="service-icon">👤</span>
+          <div class="service-details">
+            <h4>Customer</h4>
+            <p>Need help with a completed job or have a complaint?</p>
+          </div>
+        </button>
+        
+        <button class="service-option" onclick="selectPostJobType('supplier')" data-type="supplier">
+          <span class="service-icon">🏢</span>
+          <div class="service-details">
+            <h4>Supplier</h4>
+            <p>Need support with supplier relations or account issues?</p>
+          </div>
+        </button>
+      </div>
+      <div style="text-align: center; margin-top: 20px;">
+        <button onclick="trackBackButtonClick('post_job'); openServiceModal();" style="display: inline-block; background: none; border: 1px solid #ddd; padding: 10px 20px; border-radius: 6px; cursor: pointer; color: #666;">
+          ← Back to Options
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// Handle post-job type selection (customer or supplier)
+function selectPostJobType(userType) {
+  const redirectUrl = userType === 'supplier' ? 'https://www.eek.nz/supplier-relations' : 'https://www.eek.nz/customer-escalation';
+  const pageName = userType === 'supplier' ? 'Supplier Relations' : 'Customer Escalation';
+  
+  // Track the user type selection
+  trackModalEvent('post_job_type_selected', {
+    action: 'select_user_type',
+    serviceType: 'post_job',
+    userType: userType,
+    redirectUrl: redirectUrl,
+    trigger: 'user_type_button_click',
+    value: 1
+  });
+  
+  // Show redirect confirmation
+  const modalContent = document.querySelector('.service-modal-content');
+  modalContent.innerHTML = `
+    <div class="service-modal-header">
+      <h3>📋 ${pageName}</h3>
+      <p>Redirecting to ${pageName.toLowerCase()} page...</p>
+      <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
+    </div>
+    <div class="service-modal-body">
+      <div style="text-align: center; padding: 20px;">
+        <div style="font-size: 3em; margin-bottom: 20px;">⏳</div>
+        <p style="margin-bottom: 30px; color: #666; font-size: 1.1em;">
+          Taking you to the ${pageName.toLowerCase()} page...
+        </p>
+        <div style="margin-bottom: 20px;">
+          <a href="${redirectUrl}" class="cta-button" style="display: inline-block; background: var(--primary, #ff5500); color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 1.2em; font-weight: bold; margin: 10px;" onclick="trackPostJobRedirect('${userType}')">
+            Continue to ${pageName}
+          </a>
+        </div>
+        <button onclick="trackBackButtonClick('post_job'); handlePostJobRedirect();" style="display: block; margin: 20px auto 0; background: none; border: 1px solid #ddd; padding: 10px 20px; border-radius: 6px; cursor: pointer; color: #666;">
+          ← Back to User Type Selection
+        </button>
+      </div>
+    </div>
+  `;
+  
+  // Auto-redirect after 3 seconds
+  setTimeout(() => {
+    trackPostJobRedirect(userType);
+    window.location.href = redirectUrl;
+  }, 3000);
+}
+
+function trackPostJobRedirect(userType) {
+  trackModalEvent('post_job_redirect', {
+    action: 'redirect_post_job',
+    userType: userType,
+    redirectUrl: userType === 'supplier' ? 'https://www.eek.nz/supplier-relations' : 'https://www.eek.nz/customer-escalation',
+    trigger: 'redirect_click',
+    value: 1
+  });
 }
 
 // Phone manager integration functions
@@ -345,5 +488,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  console.log('Wrong fuel rescue modal v2.3 initialized - simplified for wrong fuel emergency only');
+  console.log('Service selection modal v2.3 initialized - wrong fuel rescue + contact options');
 });
