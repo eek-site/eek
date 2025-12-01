@@ -32,6 +32,7 @@ class FooterManager {
                 <a href="/fuel-extraction/fuel-extraction-equipment-methods">Fuel Extraction Equipment</a>
                 <a href="/fuel-extraction/fuel-extraction-vehicle-types">Fuel Extraction Vehicle Types</a>
                 <a href="/fuel-extraction/fuel-extraction-safety-procedures">Fuel Extraction Safety</a>
+                <a href="/fuel-extraction/insurance-claims-support">Insurance Claims Support</a>
                 <a href="/certification">NZIFDA Certification</a>
               </div>
             </div>
@@ -54,8 +55,8 @@ class FooterManager {
             <div>
               <a href="/more-options">More Options</a>
               <a href="/certification">NZIFDA Certification</a>
-              <a href="/privacy">Privacy Policy</a>
-              <a href="/terms">Terms of Service</a>
+              <a href="/privacy-policy.html">Privacy Policy</a>
+              <a href="/terms-of-service.html">Terms of Service</a>
             </div>
           </div>
         </div>
