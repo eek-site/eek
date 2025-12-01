@@ -14,7 +14,7 @@
 
   // Initialize state cache if not exists
   if (!window.eek_states) {
-    window.eek_states = { gclidState: null, callflowState: null, lastFetched: 0 };
+    window.eek_states = { gclidState: null, callflowState: null, powerAutomateDown: false, lastFetched: 0 };
   }
   let eekStatesFetchPromise = null;
 
@@ -38,6 +38,7 @@
     eekStatesFetchPromise = (async () => {
       let gclidState = window.eek_states.gclidState;
       let callflowState = window.eek_states.callflowState;
+      let powerAutomateDown = false;
 
       try {
         const [gclidResp, callflowResp] = await Promise.all([
@@ -48,17 +49,23 @@
         if (gclidResp.ok) {
           const j = await gclidResp.json();
           gclidState = (j && (j.state ?? j)) || null;
+        } else {
+          powerAutomateDown = true;
         }
         if (callflowResp.ok) {
           const j = await callflowResp.json();
           callflowState = (j && (j.state ?? j)) || null;
+        } else {
+          powerAutomateDown = true;
         }
       } catch (error) {
         console.warn('⚠️ Error fetching states:', error);
-        // Keep previous values on failure
+        // Power Automate is down - network error
+        powerAutomateDown = true;
+        console.warn('⚠️ Power Automate API unavailable - defaulting to lines open');
       }
 
-      window.eek_states = { gclidState, callflowState, lastFetched: Date.now() };
+      window.eek_states = { gclidState, callflowState, powerAutomateDown, lastFetched: Date.now() };
       eekStatesFetchPromise = null;
       return window.eek_states;
     })();
@@ -71,6 +78,13 @@
    */
   async function checkSystemStatus() {
     const states = await fetchStatesOnce(false);
+    
+    // If Power Automate is down, default to lines open
+    if (states.powerAutomateDown) {
+      console.log('🔄 Sticky Call Button: Power Automate down - defaulting to LINES OPEN');
+      return true;
+    }
+    
     const isActive = states.callflowState === 'Active' || states.callflowState === true;
     
     if (states.callflowState == null) {

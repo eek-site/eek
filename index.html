@@ -1749,7 +1749,7 @@ function extractGCLID(urlParams) {
 })();
 
 /* ------------ STATE CACHE + POLLER (single source of truth) ------------ */
-window.eek_states = { gclidState: null, callflowState: null, lastFetched: 0 };
+window.eek_states = { gclidState: null, callflowState: null, powerAutomateDown: false, lastFetched: 0 };
 let eekStatesFetchPromise = null;
 
 // Define URLs (top-level for reuse)
@@ -1766,6 +1766,7 @@ async function fetchStatesOnce(force = false) {
   eekStatesFetchPromise = (async () => {
     let gclidState = window.eek_states.gclidState;
     let callflowState = window.eek_states.callflowState;
+    let powerAutomateDown = false;
 
     try {
       const [gclidResp, callflowResp] = await Promise.all([
@@ -1776,14 +1777,22 @@ async function fetchStatesOnce(force = false) {
       if (gclidResp.ok) {
         const j = await gclidResp.json();
         gclidState = (j && (j.state ?? j)) || null;
+      } else {
+        powerAutomateDown = true;
       }
       if (callflowResp.ok) {
         const j = await callflowResp.json();
         callflowState = (j && (j.state ?? j)) || null;
+      } else {
+        powerAutomateDown = true;
       }
-    } catch (_) { /* keep previous values on failure */ }
+    } catch (_) { 
+      // Power Automate is down - network error
+      powerAutomateDown = true;
+      console.warn('⚠️ Power Automate API unavailable - defaulting to lines open');
+    }
 
-    window.eek_states = { gclidState, callflowState, lastFetched: Date.now() };
+    window.eek_states = { gclidState, callflowState, powerAutomateDown, lastFetched: Date.now() };
     eekStatesFetchPromise = null;
     return window.eek_states;
   })();
@@ -1995,6 +2004,18 @@ function updatePhoneNumbers() {
 // checkSystemStatus now reads from cached callflow state
 async function checkSystemStatus() {
   const states = await fetchStatesOnce(false);
+  
+  // If Power Automate is down, default to lines open
+  if (states.powerAutomateDown) {
+    console.log('🔄 Power Automate down - defaulting to LINES OPEN');
+    const debugSystemStatus = document.getElementById('debugSystemStatus');
+    if (debugSystemStatus) {
+      debugSystemStatus.textContent = 'ACTIVE (Power Automate Down)';
+      debugSystemStatus.style.color = '#0f0';
+    }
+    return true;
+  }
+  
   const isActive = states.callflowState === 'Active' || states.callflowState === true;
   const debugSystemStatus = document.getElementById('debugSystemStatus');
   if (debugSystemStatus) {

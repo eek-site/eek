@@ -678,10 +678,13 @@
                     return isActive;
                 } else {
                     console.warn('⚠️ Callflow status API returned non-OK status:', response.status);
+                    console.log('🔄 Power Automate down - defaulting to LINES OPEN');
                     if (debugSystemStatus) {
                         debugSystemStatus.textContent = `ERROR (${response.status})`;
                         debugSystemStatus.style.color = '#ff0';
                     }
+                    // Default to lines open when Power Automate is down
+                    return true;
                 }
             } catch (error) {
                 console.error('❌ Error checking callflow status:', error);
@@ -691,8 +694,8 @@
                 }
             }
             
-            // Default to active if check fails
-            console.log('🔄 Defaulting to ACTIVE due to API failure');
+            // Default to lines open if Power Automate is down
+            console.log('🔄 Power Automate down - defaulting to LINES OPEN');
             return true;
         }
 
