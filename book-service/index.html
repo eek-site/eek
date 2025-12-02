@@ -1016,6 +1016,20 @@ async function goToStep2(){
   document.getElementById('step1-progress').classList.remove('active');
   document.getElementById('step2-progress').classList.add('active');
 
+  // Scroll to step 2 with proper alignment
+  setTimeout(() => {
+    const step2Element = document.getElementById('step2');
+    if (step2Element) {
+      step2Element.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start',
+        inline: 'nearest'
+      });
+      // Additional offset to account for fixed header if needed
+      window.scrollBy(0, -20);
+    }
+  }, 100);
+
   if (window.currentConfig.isWinz) {
     document.getElementById('step2Title').textContent = window.currentConfig.step2Title || 'Step 2: Generate Your WINZ Quote';
     document.getElementById('timingNotice').style.display = 'none';
