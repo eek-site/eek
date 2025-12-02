@@ -561,7 +561,12 @@
         document.querySelector('input[name="REPORT_DATE"]').valueAsDate = new Date();
 
         // Load URL parameters on page load
-        window.addEventListener('DOMContentLoaded', loadFromURL);
+        // Call immediately if DOM ready, otherwise wait
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadFromURL);
+        } else {
+            loadFromURL();
+        }
 
         function loadFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
