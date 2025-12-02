@@ -565,22 +565,45 @@
 
         function loadFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
-
-            urlParams.forEach((value, key) => {
-                const field = document.querySelector(`[name="${key}"]`);
-                if (field) {
-                    if (field.tagName === 'SELECT') {
-                        field.value = decodeURIComponent(value);
-                    } else if (field.type === 'date') {
-                        field.value = value;
-                    } else {
-                        field.value = decodeURIComponent(value);
+            const base64Data = urlParams.get('data');
+            
+            if (!base64Data) {
+                console.log('No data parameter found in URL');
+                return;
+            }
+            
+            try {
+                // Decode Base64
+                const jsonString = atob(base64Data);
+                console.log('Decoded JSON:', jsonString);
+                
+                // Parse JSON
+                const data = JSON.parse(jsonString);
+                console.log('Parsed data:', data);
+                
+                // Fill all fields
+                Object.keys(data).forEach(key => {
+                    const field = document.querySelector(`[name="${key}"]`);
+                    if (field && data[key]) {
+                        if (field.tagName === 'SELECT') {
+                            field.value = data[key];
+                        } else if (field.type === 'date') {
+                            field.value = data[key];
+                        } else {
+                            field.value = data[key];
+                        }
+                        console.log(`Filled ${key}:`, data[key]);
                     }
-                }
-            });
-
-            // Recalculate totals if costs were pre-filled
-            calculateTotals();
+                });
+                
+                // Recalculate totals
+                calculateTotals();
+                
+                console.log('Data loaded successfully!');
+            } catch (e) {
+                console.error('Error loading data:', e);
+                alert('Error loading pre-filled data. Please fill in manually.');
+            }
         }
 
         // Calculate costs in real-time
