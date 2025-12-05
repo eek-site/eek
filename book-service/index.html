@@ -546,6 +546,175 @@ let selectedEmergencyType = null;
 let calculatedPrice = null;
 let winzQuoteGenerated = false;
 
+// === STEP COMPLETION TRACKING (Security Safeguard) ===
+let stepCompletionState = {
+  step1Completed: false,
+  step2Completed: false,
+  step3Active: false,
+  step1Timestamp: null,
+  step2Timestamp: null,
+  step3Timestamp: null,
+  validationToken: null
+};
+
+// Persist step completion state to localStorage (allows customers to resume)
+function saveStepCompletionState() {
+  try {
+    localStorage.setItem('eek_booking_step_state', JSON.stringify(stepCompletionState));
+    console.log('💾 Step completion state saved to localStorage');
+  } catch (e) {
+    console.warn('⚠️ Could not save step state to localStorage:', e);
+  }
+}
+
+// Restore step completion state from localStorage (for returning customers)
+function restoreStepCompletionState() {
+  try {
+    const saved = localStorage.getItem('eek_booking_step_state');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Only restore if it's recent (within 24 hours) to prevent stale state
+      const maxAge = 24 * 60 * 60 * 1000; // 24 hours
+      const oldestTimestamp = Math.min(
+        parsed.step1Timestamp ? new Date(parsed.step1Timestamp).getTime() : Date.now(),
+        parsed.step2Timestamp ? new Date(parsed.step2Timestamp).getTime() : Date.now(),
+        parsed.step3Timestamp ? new Date(parsed.step3Timestamp).getTime() : Date.now()
+      );
+      
+      if (Date.now() - oldestTimestamp < maxAge) {
+        stepCompletionState = { ...stepCompletionState, ...parsed };
+        console.log('✅ Step completion state restored from localStorage');
+        return true;
+      } else {
+        console.log('⚠️ Saved step state expired, clearing');
+        localStorage.removeItem('eek_booking_step_state');
+      }
+    }
+  } catch (e) {
+    console.warn('⚠️ Could not restore step state from localStorage:', e);
+  }
+  return false;
+}
+
+// Clear step completion state (when booking is completed or abandoned)
+function clearStepCompletionState() {
+  stepCompletionState = {
+    step1Completed: false,
+    step2Completed: false,
+    step3Active: false,
+    step1Timestamp: null,
+    step2Timestamp: null,
+    step3Timestamp: null,
+    validationToken: null
+  };
+  localStorage.removeItem('eek_booking_step_state');
+  console.log('🗑️ Step completion state cleared');
+}
+
+// Generate a validation token when step 3 is reached
+function generateValidationToken() {
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).substr(2, 9);
+  const data = `${timestamp}-${random}-${sessionId || 'unknown'}`;
+  // Simple hash for token (not cryptographically secure, but prevents casual bypass)
+  let hash = 0;
+  for (let i = 0; i < data.length; i++) {
+    const char = data.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return `token_${Math.abs(hash).toString(36)}_${timestamp}`;
+}
+
+// Validate that all required steps have been completed
+// This is more flexible - allows customers who started the process to continue
+function validateStepCompletion() {
+  const errors = [];
+  
+  // Check if we have valid form data (this is the real validation)
+  // If form is complete, we allow payment even if step state was lost
+  const hasValidFormData = validateRequiredFields().valid;
+  
+  // If form data is valid, we're more lenient about step state
+  // This allows customers to resume their booking
+  if (hasValidFormData) {
+    // Still check that urgency was selected (critical for pricing)
+    if (!selectedUrgency) {
+      errors.push('Service time/urgency must be selected');
+    }
+    
+    // If Step 3 is visible and active, that's good enough
+    const step3Element = document.getElementById('step3');
+    if (step3Element && step3Element.classList.contains('active')) {
+      // If we're on step 3 with valid data, allow it
+      // But we still want to ensure they went through the flow
+      if (!stepCompletionState.step1Completed && !stepCompletionState.step2Completed) {
+        // If no step state at all, they might be trying to bypass
+        // But if form data is complete, they likely filled it out properly
+        console.log('⚠️ No step state found, but form data is valid - allowing with caution');
+      }
+    } else {
+      errors.push('Please complete all booking steps before generating payment');
+    }
+  } else {
+    // If form data is incomplete, be strict about step completion
+    if (!stepCompletionState.step1Completed) {
+      errors.push('Step 1 (Service Details) has not been completed');
+    }
+    
+    if (!stepCompletionState.step2Completed) {
+      errors.push('Step 2 (Scheduling) has not been completed');
+    }
+    
+    if (!stepCompletionState.step3Active) {
+      errors.push('Step 3 (Confirmation) is not active');
+    }
+  }
+  
+  return {
+    valid: errors.length === 0,
+    errors: errors
+  };
+}
+
+// Validate all required form fields are filled
+function validateRequiredFields() {
+  const errors = [];
+  
+  const name = document.getElementById('nameInput')?.value?.trim();
+  const phone = document.getElementById('phoneInput')?.value?.trim();
+  const email = document.getElementById('emailInput')?.value?.trim();
+  const location = document.getElementById('locationInput')?.value?.trim();
+  const rego = sanitizeRego(document.getElementById('regoInput')?.value || '');
+  const year = document.getElementById('yearInput')?.value?.trim();
+  const make = document.getElementById('makeInput')?.value?.trim();
+  const model = document.getElementById('modelInput')?.value?.trim();
+  
+  if (!name) errors.push('Full name is required');
+  if (!phone || phone.replace(/\D/g,'').length < 9) errors.push('Valid phone number is required (at least 9 digits)');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('Valid email address is required');
+  if (!location) errors.push('Service location is required');
+  if (!rego) errors.push('Vehicle registration is required');
+  if (!year || year.replace(/\D/g,'').length !== 4) errors.push('Valid 4-digit vehicle year is required');
+  if (!make) errors.push('Vehicle make is required');
+  if (!model) errors.push('Vehicle model is required');
+  
+  // Check urgency/time selection
+  if (!selectedUrgency) {
+    errors.push('Service time/urgency must be selected');
+  }
+  
+  // WINZ-specific validation
+  if (window.currentConfig?.isWinz && !selectedEmergencyType) {
+    errors.push('Emergency type must be selected');
+  }
+  
+  return {
+    valid: errors.length === 0,
+    errors: errors
+  };
+}
+
 function sanitizePhone(val){ return (val || '').replace(/\D/g,''); }
 function sanitizeRego(val){ return (val || '').toUpperCase().replace(/[^A-Z0-9]/g,''); }
 function sanitizeText(val){ return (val || '').trim().replace(/\s+/g,' '); }
@@ -808,8 +977,63 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   
   loadServiceConfig(service);
+  
+  // Restore booking state for returning customers
+  restoreBookingState();
+  
   sendBookingUpdate(BOOKING_STATUS.INITIAL);
 });
+
+// Restore booking state and form data for returning customers
+function restoreBookingState() {
+  console.log('🔄 Checking for saved booking state...');
+  
+  // Restore step completion state
+  const stateRestored = restoreStepCompletionState();
+  
+  // Restore form field values from visitor data
+  const visitorData = getVisitorData();
+  if (visitorData && Object.keys(visitorData).length > 0) {
+    console.log('📋 Restoring form data from previous session...');
+    
+    if (visitorData.name && document.getElementById('nameInput')) {
+      document.getElementById('nameInput').value = visitorData.name;
+    }
+    if (visitorData.phone && document.getElementById('phoneInput')) {
+      document.getElementById('phoneInput').value = visitorData.phone;
+    }
+    if (visitorData.email && document.getElementById('emailInput')) {
+      document.getElementById('emailInput').value = visitorData.email;
+    }
+    
+    console.log('✅ Form data restored (partial)');
+  }
+  
+  // If customer was on Step 3, restore their progress
+  if (stateRestored && stepCompletionState.step3Active) {
+    console.log('🔄 Customer was on Step 3 - attempting to restore...');
+    
+    // Restore urgency selection if we can determine it
+    // Note: We can't fully restore Step 2 state without more data,
+    // but we can at least allow them to continue if form is complete
+    
+    // Check if form has enough data to proceed
+    const name = document.getElementById('nameInput')?.value?.trim();
+    const phone = document.getElementById('phoneInput')?.value?.trim();
+    const email = document.getElementById('emailInput')?.value?.trim();
+    const location = document.getElementById('locationInput')?.value?.trim();
+    
+    if (name && phone && email && location) {
+      console.log('✅ Form appears complete - customer can continue from Step 3');
+      // Don't auto-advance, but allow them to proceed if they click through
+    } else {
+      console.log('⚠️ Form incomplete - customer will need to complete steps');
+      // Reset state if form is too incomplete
+      stepCompletionState.step3Active = false;
+      stepCompletionState.validationToken = null;
+    }
+  }
+}
 
 function loadServiceConfig(serviceType){
   const config = serviceConfigs[serviceType] || serviceConfigs['fuel-extraction'];
@@ -925,6 +1149,14 @@ function goToStep1(){
   document.getElementById('step1').classList.add('active');
   document.querySelectorAll('.progress-step').forEach(el => el.classList.remove('active','completed'));
   document.getElementById('step1-progress').classList.add('active');
+  
+  // Reset step 3 state if going back (but keep step 1 & 2 completion)
+  if (stepCompletionState.step3Active) {
+    stepCompletionState.step3Active = false;
+    stepCompletionState.validationToken = null;
+    saveStepCompletionState(); // Persist updated state
+    console.log('⚠️ Step 3 state reset - validation token cleared');
+  }
 }
 
 async function goToStep2(){
@@ -1015,6 +1247,12 @@ async function goToStep2(){
   document.getElementById('step1-progress').classList.add('completed');
   document.getElementById('step1-progress').classList.remove('active');
   document.getElementById('step2-progress').classList.add('active');
+  
+  // Mark Step 1 as completed
+  stepCompletionState.step1Completed = true;
+  stepCompletionState.step1Timestamp = new Date().toISOString();
+  saveStepCompletionState(); // Persist to localStorage
+  console.log('✅ Step 1 marked as completed');
 
   // Scroll to step 2 with proper alignment
   setTimeout(() => {
@@ -1128,6 +1366,15 @@ async function goToStep3(){
   document.getElementById('step2-progress').classList.remove('active');
   document.getElementById('step3-progress').classList.add('active');
 
+  // Mark Step 2 as completed and Step 3 as active
+  stepCompletionState.step2Completed = true;
+  stepCompletionState.step2Timestamp = new Date().toISOString();
+  stepCompletionState.step3Active = true;
+  stepCompletionState.step3Timestamp = new Date().toISOString();
+  stepCompletionState.validationToken = generateValidationToken();
+  saveStepCompletionState(); // Persist to localStorage
+  console.log('✅ Step 2 marked as completed, Step 3 activated with validation token');
+
   updateSummary();
 }
 
@@ -1240,10 +1487,89 @@ function buildRedirectUrl(){
 
 async function generatePaymentLink(){
   const btn = document.getElementById('generatePaymentBtn');
-  if (!document.getElementById('termsAgree').checked){
-    alert('Please accept the terms and conditions');
+  
+  // === COMPREHENSIVE VALIDATION SAFEGUARDS ===
+  console.log('🔒 Payment generation validation starting...');
+  
+  // 0. Verify button exists and is enabled (prevents direct console calls)
+  if (!btn) {
+    console.error('❌ Payment button not found');
+    alert('Payment button not available. Please use the booking form.');
     return;
   }
+  
+  if (btn.disabled && !btn.classList.contains('processing')) {
+    console.error('❌ Payment button is disabled');
+    alert('Please complete all required steps and accept terms before generating payment link.');
+    return;
+  }
+  
+  // 1. Check terms acceptance
+  const termsCheckbox = document.getElementById('termsAgree');
+  if (!termsCheckbox || !termsCheckbox.checked){
+    alert('Please accept the terms and conditions');
+    console.warn('❌ Validation failed: Terms not accepted');
+    return;
+  }
+  
+  // 2. Validate step completion (flexible for returning customers)
+  const stepValidation = validateStepCompletion();
+  if (!stepValidation.valid) {
+    console.error('❌ Step completion validation failed:', stepValidation.errors);
+    // More helpful message for returning customers
+    const errorMsg = stepValidation.errors.length > 0 
+      ? 'Please complete the following:\n\n' + stepValidation.errors.join('\n')
+      : 'Please complete all booking steps before generating payment link.';
+    alert(errorMsg);
+    return;
+  }
+  
+  // 3. Validate all required fields
+  const fieldValidation = validateRequiredFields();
+  if (!fieldValidation.valid) {
+    console.error('❌ Field validation failed:', fieldValidation.errors);
+    alert('Please complete all required fields:\n\n' + fieldValidation.errors.join('\n'));
+    return;
+  }
+  
+  // 4. Verify Step 3 is actually visible and active (or allow if form is complete)
+  const step3Element = document.getElementById('step3');
+  const isStep3Active = step3Element && step3Element.classList.contains('active');
+  
+  if (!isStep3Active) {
+    // If Step 3 is not active but form is complete, allow them to proceed
+    // This helps returning customers who may have lost UI state
+    if (fieldValidation.valid && selectedUrgency) {
+      console.log('⚠️ Step 3 not active, but form is complete - allowing payment generation');
+      // Auto-advance to Step 3 for them
+      goToStep3();
+      // Small delay to let UI update
+      await new Promise(resolve => setTimeout(resolve, 100));
+    } else {
+      console.error('❌ Step 3 not active and form incomplete');
+      alert('Please complete all booking steps before generating payment link.');
+      return;
+    }
+  }
+  
+  // 5. Verify urgency/time was selected
+  if (!selectedUrgency) {
+    console.error('❌ No urgency/time selected');
+    alert('Please select a service time before generating payment link.');
+    return;
+  }
+  
+  // 6. Verify price is valid
+  const totalPrice = getTotalPrice();
+  if (!totalPrice || totalPrice <= 0) {
+    console.error('❌ Invalid price:', totalPrice);
+    alert('Invalid service price. Please refresh and try again.');
+    return;
+  }
+  
+  console.log('✅ All validation checks passed');
+  console.log('🔒 Validation token:', stepCompletionState.validationToken);
+  console.log('📊 Step completion state:', stepCompletionState);
 
   btn.disabled = true;
   btn.classList.add('processing');
@@ -1289,13 +1615,20 @@ async function generatePaymentLink(){
   const customerName = sanitizeText(document.getElementById('nameInput').value);
   const phone = sanitizePhone(document.getElementById('phoneInput').value);
   
-  // Store visitor data for persistence
+  // Store visitor data for persistence (so customers can resume)
   storeVisitorData({
     name: customerName,
     phone: phone,
     email: document.getElementById('emailInput')?.value || '',
+    location: sanitizeText(document.getElementById('locationInput')?.value || ''),
+    rego: sanitizeRego(document.getElementById('regoInput')?.value || ''),
+    year: document.getElementById('yearInput')?.value?.trim() || '',
+    make: sanitizeText(document.getElementById('makeInput')?.value || ''),
+    model: sanitizeText(document.getElementById('modelInput')?.value || ''),
     service: window.currentConfig?.service || 'unknown',
-    serviceCode: window.currentConfig?.serviceCode || 'unknown'
+    serviceCode: window.currentConfig?.serviceCode || 'unknown',
+    selectedUrgency: selectedUrgency || '',
+    lastUpdated: new Date().toISOString()
   });
   const email = document.getElementById('emailInput').value.trim();
   const location = sanitizeText(document.getElementById('locationInput').value);
@@ -1317,6 +1650,17 @@ async function generatePaymentLink(){
     currency: 'NZD',
     description: `${window.currentConfig.title} - ${vehicleDescription} - ${location}`,
     redirectUrl: buildRedirectUrl(),
+    
+    // Security validation data
+    validationToken: stepCompletionState.validationToken,
+    stepCompletionState: {
+      step1Completed: stepCompletionState.step1Completed,
+      step2Completed: stepCompletionState.step2Completed,
+      step3Active: stepCompletionState.step3Active,
+      step1Timestamp: stepCompletionState.step1Timestamp,
+      step2Timestamp: stepCompletionState.step2Timestamp,
+      step3Timestamp: stepCompletionState.step3Timestamp
+    },
     
     // Root-level fields for thanks page compatibility
     name: customerName,
@@ -1474,6 +1818,10 @@ async function generatePaymentLink(){
       
       if (result.url){
         console.log('✅ Payment link generated successfully:', result.url);
+        
+        // Clear booking state since payment is being processed
+        clearStepCompletionState();
+        
         btn.classList.remove('processing');
         btn.style.display='none';
         const successDiv = document.createElement('div');

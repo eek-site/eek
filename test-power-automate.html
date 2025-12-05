@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Power Automate API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        button { background: #0078d4; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #005a9e; }
+        .result { margin-top: 20px; padding: 15px; background: #f9f9f9; border-radius: 4px; border-left: 4px solid #0078d4; }
+        .success { border-left-color: #28a745; background: #d4edda; }
+        .error { border-left-color: #dc3545; background: #f8d7da; }
+        pre { background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 4px; overflow-x: auto; }
+        h2 { color: #333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Power Automate API Test</h1>
+        
+        <div>
+            <button onclick="testGCLID()">Test GCLID State API</button>
+            <button onclick="testCallflow()">Test Callflow State API</button>
+            <button onclick="testBoth()">Test Both APIs</button>
+        </div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const GCLID_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f20c5153e8a4de0be50a17e2dab4254/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Zw5-_6YSCNPb2cfjjfa0Oj_Fpc7N9rhHfc6fPZZhX7g";
+        const CALLFLOW_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/17b1d2990e6f4082a2b0d9c2f1a29025/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=bPyoxJ24kuxJZOyLGAclGaEuH6BHwUTFaGmYOwHofa8";
+
+        function showResult(title, data, isError = false) {
+            const resultsDiv = document.getElementById('results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `result ${isError ? 'error' : 'success'}`;
+            resultDiv.innerHTML = `
+                <h2>${title}</h2>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+            resultsDiv.appendChild(resultDiv);
+        }
+
+        async function testAPI(url, name) {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: '{}'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    showResult(`${name} - Success (${response.status})`, {
+                        status: response.status,
+                        statusText: response.statusText,
+                        data: data,
+                        state: data.state || data
+                    });
+                } else {
+                    showResult(`${name} - Error (${response.status})`, {
+                        status: response.status,
+                        statusText: response.statusText,
+                        error: 'API returned non-OK status'
+                    }, true);
+                }
+            } catch (error) {
+                showResult(`${name} - Network Error`, {
+                    error: error.message,
+                    type: error.name
+                }, true);
+            }
+        }
+
+        function testGCLID() {
+            document.getElementById('results').innerHTML = '';
+            testAPI(GCLID_URL, 'GCLID State');
+        }
+
+        function testCallflow() {
+            document.getElementById('results').innerHTML = '';
+            testAPI(CALLFLOW_URL, 'Callflow State');
+        }
+
+        function testBoth() {
+            document.getElementById('results').innerHTML = '';
+            testAPI(GCLID_URL, 'GCLID State');
+            setTimeout(() => testAPI(CALLFLOW_URL, 'Callflow State'), 500);
+        }
+    </script>
+</body>
+</html>
+
