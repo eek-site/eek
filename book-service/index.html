@@ -575,11 +575,22 @@ function restoreStepCompletionState() {
       const parsed = JSON.parse(saved);
       // Only restore if it's recent (within 24 hours) to prevent stale state
       const maxAge = 24 * 60 * 60 * 1000; // 24 hours
-      const oldestTimestamp = Math.min(
-        parsed.step1Timestamp ? new Date(parsed.step1Timestamp).getTime() : Date.now(),
-        parsed.step2Timestamp ? new Date(parsed.step2Timestamp).getTime() : Date.now(),
-        parsed.step3Timestamp ? new Date(parsed.step3Timestamp).getTime() : Date.now()
-      );
+      
+      // Collect valid timestamps (ignore null/undefined - don't default to Date.now())
+      const timestamps = [
+        parsed.step1Timestamp ? new Date(parsed.step1Timestamp).getTime() : null,
+        parsed.step2Timestamp ? new Date(parsed.step2Timestamp).getTime() : null,
+        parsed.step3Timestamp ? new Date(parsed.step3Timestamp).getTime() : null
+      ].filter(t => t !== null && !isNaN(t));
+      
+      // If no valid timestamps exist, treat as invalid/stale session
+      if (timestamps.length === 0) {
+        console.log('⚠️ No valid timestamps in saved state, clearing');
+        localStorage.removeItem('eek_booking_step_state');
+        return false;
+      }
+      
+      const oldestTimestamp = Math.min(...timestamps);
       
       if (Date.now() - oldestTimestamp < maxAge) {
         stepCompletionState = { ...stepCompletionState, ...parsed };
@@ -646,12 +657,13 @@ function validateStepCompletion() {
     // If Step 3 is visible and active, that's good enough
     const step3Element = document.getElementById('step3');
     if (step3Element && step3Element.classList.contains('active')) {
-      // If we're on step 3 with valid data, allow it
-      // But we still want to ensure they went through the flow
-      if (!stepCompletionState.step1Completed && !stepCompletionState.step2Completed) {
-        // If no step state at all, they might be trying to bypass
-        // But if form data is complete, they likely filled it out properly
-        console.log('⚠️ No step state found, but form data is valid - allowing with caution');
+      // If we're on step 3 with valid data, check step completion state
+      // Use OR logic: if EITHER step is incomplete, log warning
+      if (!stepCompletionState.step1Completed || !stepCompletionState.step2Completed) {
+        // Some step state is missing - could be bypass attempt or returning customer
+        // Log for monitoring but allow if form data is complete (likely legitimate)
+        console.log('⚠️ Step state incomplete (step1:', stepCompletionState.step1Completed, 
+                    ', step2:', stepCompletionState.step2Completed, ') - form data valid, allowing with caution');
       }
     } else {
       errors.push('Please complete all booking steps before generating payment');
@@ -1150,12 +1162,19 @@ function goToStep1(){
   document.querySelectorAll('.progress-step').forEach(el => el.classList.remove('active','completed'));
   document.getElementById('step1-progress').classList.add('active');
   
-  // Reset step 3 state if going back (but keep step 1 & 2 completion)
-  if (stepCompletionState.step3Active) {
+  // Reset ALL step completion state when going back to Step 1
+  // This ensures customers must go through the full flow again
+  // (prevents bypassing steps by going back then forward)
+  if (stepCompletionState.step1Completed || stepCompletionState.step2Completed || stepCompletionState.step3Active) {
+    stepCompletionState.step1Completed = false;
+    stepCompletionState.step2Completed = false;
     stepCompletionState.step3Active = false;
+    stepCompletionState.step1Timestamp = null;
+    stepCompletionState.step2Timestamp = null;
+    stepCompletionState.step3Timestamp = null;
     stepCompletionState.validationToken = null;
     saveStepCompletionState(); // Persist updated state
-    console.log('⚠️ Step 3 state reset - validation token cleared');
+    console.log('🔄 All step completion state reset - customer must complete flow again');
   }
 }
 
@@ -1541,10 +1560,10 @@ async function generatePaymentLink(){
     // This helps returning customers who may have lost UI state
     if (fieldValidation.valid && selectedUrgency) {
       console.log('⚠️ Step 3 not active, but form is complete - allowing payment generation');
-      // Auto-advance to Step 3 for them
-      goToStep3();
-      // Small delay to let UI update
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Auto-advance to Step 3 for them (await the async function)
+      await goToStep3();
+      // Additional delay to ensure UI and state are fully updated
+      await new Promise(resolve => setTimeout(resolve, 200));
     } else {
       console.error('❌ Step 3 not active and form incomplete');
       alert('Please complete all booking steps before generating payment link.');
