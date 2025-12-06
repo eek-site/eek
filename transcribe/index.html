@@ -671,12 +671,8 @@
   </div>
 
   <script>
-    // Encrypted API key data (AES-GCM encrypted with PBKDF2 derived key)
-    const ENCRYPTED_DATA = {
-      salt: 'a7f2c891d3e45b67',
-      iv: '3c9d8f2a1b5e7c4d',
-      ciphertext: 'U2FsdGVkX19hZjJjODkxZDNlNDViNjdbZW5jcnlwdGVkXQ=='
-    };
+    // Power Automate endpoint for passcode validation
+    const AUTH_ENDPOINT = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/04da4202e9324997ab416704e20c5701/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2Z5IlLmtgcBBEtY4_ydBdzPA2cLh57hhGd32CMxHFcA';
 
     // State
     let selectedFile = null;
@@ -700,36 +696,6 @@
     const passcodeInput = document.getElementById('passcodeInput');
     const passcodeStatus = document.getElementById('passcodeStatus');
     const unlockBtn = document.getElementById('unlockBtn');
-
-    // Simple XOR-based encryption with key derivation
-    // The actual API key is encoded here with the passcode
-    const ENCODED_KEY = [
-      83, 75, 45, 80, 82, 79, 74, 45, 121, 74, 52, 49, 104, 84, 68, 98,
-      77, 101, 66, 101, 97, 78, 120, 65, 69, 67, 74, 77, 77, 49, 65, 105,
-      83, 48, 68, 107, 120, 53, 98, 121, 100, 89, 112, 103, 52, 55, 113,
-      76, 72, 107, 74, 77, 90, 78, 70, 118, 68, 108, 108, 71, 84, 106,
-      67, 51, 89, 119, 75, 95, 113, 57, 76, 112, 71, 105, 120, 87, 110,
-      71, 106, 102, 51, 84, 84, 51, 66, 108, 98, 107, 70, 74, 53, 95,
-      111, 50, 115, 117, 116, 115, 70, 70, 53, 74, 67, 83, 84, 52, 50,
-      99, 107, 109, 87, 87, 87, 87, 83, 82, 81, 105, 65, 98, 69, 97,
-      109, 98, 81, 89, 72, 100, 74, 111, 74, 86, 120, 76, 70, 67, 87,
-      88, 106, 48, 103, 109, 118, 97, 103, 65, 105, 122, 90, 68, 117,
-      65, 85, 102, 102, 73, 99, 70, 102, 111, 49, 69, 65
-    ];
-    
-    // Derive a numeric hash from passcode for verification
-    function hashPasscode(passcode) {
-      let hash = 0;
-      for (let i = 0; i < passcode.length; i++) {
-        const char = passcode.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-      }
-      return Math.abs(hash);
-    }
-
-    // Expected hash for correct passcode
-    const EXPECTED_HASH = 1428323352;
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
@@ -775,7 +741,7 @@
       }
     }
 
-    function unlockWithPasscode() {
+    async function unlockWithPasscode() {
       const passcode = passcodeInput.value.trim();
       
       if (!passcode) {
@@ -784,29 +750,51 @@
         return;
       }
 
-      // Verify passcode hash
-      const inputHash = hashPasscode(passcode);
-      
-      if (inputHash !== EXPECTED_HASH) {
-        passcodeStatus.textContent = '❌ Incorrect passcode';
-        passcodeStatus.className = 'passcode-status error';
-        passcodeInput.value = '';
-        return;
-      }
-
-      // Decode the API key
-      decryptedApiKey = String.fromCharCode(...ENCODED_KEY);
-      isUnlocked = true;
-      
-      // Update UI
-      passcodeStatus.textContent = '✓ Unlocked! You can now transcribe audio';
-      passcodeStatus.className = 'passcode-status unlocked';
-      passcodeInput.disabled = true;
+      // Disable button while checking
       unlockBtn.disabled = true;
-      unlockBtn.textContent = '✓ Unlocked';
-      uploadZone.classList.remove('disabled');
-      
-      updateTranscribeButton();
+      unlockBtn.textContent = 'Checking...';
+      passcodeStatus.textContent = '🔄 Validating passcode...';
+      passcodeStatus.className = 'passcode-status';
+
+      try {
+        const response = await fetch(AUTH_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ passcode: passcode })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.valid) {
+          // Success - store the API key
+          decryptedApiKey = data.key;
+          isUnlocked = true;
+          
+          // Update UI
+          passcodeStatus.textContent = '✓ Unlocked! You can now transcribe audio';
+          passcodeStatus.className = 'passcode-status unlocked';
+          passcodeInput.disabled = true;
+          unlockBtn.textContent = '✓ Unlocked';
+          uploadZone.classList.remove('disabled');
+          
+          updateTranscribeButton();
+        } else {
+          // Invalid passcode
+          passcodeStatus.textContent = '❌ Incorrect passcode';
+          passcodeStatus.className = 'passcode-status error';
+          passcodeInput.value = '';
+          unlockBtn.disabled = false;
+          unlockBtn.textContent = 'Unlock';
+        }
+      } catch (error) {
+        console.error('Auth error:', error);
+        passcodeStatus.textContent = '❌ Connection error. Please try again.';
+        passcodeStatus.className = 'passcode-status error';
+        unlockBtn.disabled = false;
+        unlockBtn.textContent = 'Unlock';
+      }
     }
 
     function handleFileSelect(file) {
