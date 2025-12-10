@@ -922,6 +922,20 @@ function selectEmergencyType(id, el){
   el.classList.add('selected');
   el.querySelector('input[type="radio"]').checked = true;
   selectedEmergencyType = id;
+  
+  // Mobile-first: Scroll to show the contact info section after selection
+  setTimeout(() => {
+    const nameInput = document.getElementById('nameInput');
+    if (nameInput) {
+      nameInput.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+      // Focus the input for easy mobile entry
+      nameInput.focus();
+    }
+    console.log('📍 Emergency type selected, scrolled to contact info');
+  }, 150);
 }
 
 function selectVoltage(id, price, el){
@@ -929,38 +943,70 @@ function selectVoltage(id, price, el){
   el.classList.add('selected');
   selectedVoltageId = id;
   selectedVoltagePrice = price;
+  
+  // Mobile-first: Scroll to show next section after voltage selection
+  setTimeout(() => {
+    const locationInput = document.getElementById('locationInput');
+    if (locationInput) {
+      locationInput.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+      // Focus the input so mobile keyboard appears
+      locationInput.focus();
+    }
+    console.log('📍 Voltage selected, scrolled to location input');
+  }, 150);
 }
 
 // === SCROLL ANCHORING HELPER ===
-// Ensures consistent, smooth scrolling to steps with proper offset for visibility
+// Mobile-first: Smart scrolling that adapts to screen size
 function scrollToStep(stepId) {
   setTimeout(() => {
-    const progressBar = document.querySelector('.progress-bar');
+    const isMobile = window.innerWidth <= 768;
     const stepElement = document.getElementById(stepId);
+    const progressBar = document.querySelector('.progress-bar');
+    const bookingHeader = document.querySelector('.booking-header');
     
-    // First scroll to progress bar so user sees their progress
-    if (progressBar) {
-      const progressBarRect = progressBar.getBoundingClientRect();
-      const absoluteTop = window.pageYOffset + progressBarRect.top;
-      const offset = 20; // Small offset from top of viewport
-      
-      window.scrollTo({
-        top: Math.max(0, absoluteTop - offset),
-        behavior: 'smooth'
-      });
-    } else if (stepElement) {
-      // Fallback: scroll to the step itself
-      stepElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-      // Apply offset after scroll
-      setTimeout(() => {
-        window.scrollBy(0, -20);
-      }, 300);
+    if (isMobile) {
+      // Mobile: Scroll to step title so user sees content immediately
+      // Progress bar is visible at top, content is the priority
+      if (stepElement) {
+        const stepTitle = stepElement.querySelector('h3');
+        const targetElement = stepTitle || stepElement;
+        
+        targetElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+        // Small offset to not cut off the title
+        setTimeout(() => {
+          window.scrollBy(0, -15);
+        }, 300);
+      }
+    } else {
+      // Desktop: Show progress bar + step content
+      if (progressBar) {
+        const progressBarRect = progressBar.getBoundingClientRect();
+        const absoluteTop = window.pageYOffset + progressBarRect.top;
+        const offset = 20;
+        
+        window.scrollTo({
+          top: Math.max(0, absoluteTop - offset),
+          behavior: 'smooth'
+        });
+      } else if (stepElement) {
+        stepElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+        setTimeout(() => {
+          window.scrollBy(0, -20);
+        }, 300);
+      }
     }
     
-    console.log(`📍 Scrolled to ${stepId}`);
+    console.log(`📍 Scrolled to ${stepId} (${isMobile ? 'mobile' : 'desktop'} mode)`);
   }, 100);
 }
 
@@ -1142,6 +1188,26 @@ function selectUrgency(id, title, time, price, el){
   }
   
   document.getElementById('confirmTimeBtn').disabled = false;
+  
+  // Mobile-first: Scroll to show Continue button after selection
+  // Small delay to let the visual selection feedback register first
+  setTimeout(() => {
+    const continueBtn = document.getElementById('confirmTimeBtn');
+    if (continueBtn) {
+      // Scroll so the button is visible near bottom of viewport
+      const btnRect = continueBtn.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      
+      // Only scroll if button is not fully visible
+      if (btnRect.bottom > viewportHeight || btnRect.top < 0) {
+        continueBtn.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }
+    }
+    console.log('📍 Selection made, scrolled to Continue button');
+  }, 150);
 }
 
 async function goToStep3(){
