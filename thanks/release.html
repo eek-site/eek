@@ -12,14 +12,12 @@
   <meta property="og:url" content="https://www.eek.nz/thanks/release" />
   <meta property="og:image" content="https://www.eek.nz/sweet-ride.png" />
 
-  <!-- Security Headers -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://prod-22.australiasoutheast.logic.azure.com https://prod-26.australiasoutheast.logic.azure.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com https://static.cloudflareinsights.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
   <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
 
-  <!-- Reddit Pixel -->
   <script>
     !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
     (window,document);
@@ -27,7 +25,6 @@
     rdt('track', 'PageVisit');
   </script>
 
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -115,13 +112,11 @@
 
       <div class="processing-indicator" id="processingIndicator"></div>
 
-      <!-- Booking Details -->
       <div class="booking-details" id="bookingDetails">
         <h3>📋 Payment Details</h3>
         <div id="detailsContent"></div>
       </div>
 
-      <!-- Release Payment Section -->
       <div id="releaseSection">
         <div class="estimated-time">
           <h3>🚗 Vehicle Release Status</h3>
@@ -173,39 +168,39 @@
   </div>
 
   <script>
-    // === INITIALIZATION ===
     console.log('🚀 === RELEASE PAYMENT THANKS PAGE INITIALIZED === 🚀');
 
-    // Power Automate URL for release payment confirmation
     const RELEASE_PAYMENT_WEBHOOK_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/4c7d9551c5db4b678a54c799e09a4e0b/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ojmWoeVxo660rE1DN_WaafPN8FuMKJ38IXIscYS5efM';
 
-    // Global store
     let releaseData = {};
 
-    // === GET URL PARAMETERS ===
     function getUrlParams() {
       const params = new URLSearchParams(window.location.search);
       return {
         rego: params.get('rego') || '',
         amount: params.get('amount') || '',
         key: params.get('key') || '',
+        name: params.get('name') || '',
+        email: params.get('email') || '',
+        phone: params.get('phone') || '',
         token: params.get('token') || ''
       };
     }
 
-    // === BUILD UNIQUE KEY (fallback if not in URL) ===
     function buildUniqueKey(rego) {
       if (!rego) return '';
       return rego.toUpperCase().replace(/\s/g, '') + '|Release Payment';
     }
 
-    // === DISPLAY BOOKING DETAILS ===
     function displayBookingDetails(data) {
       const content = document.getElementById('detailsContent');
       const rows = [];
 
       if (data.rego) {
         rows.push(`<div class="detail-row"><span class="detail-label">Job Reference:</span><span class="detail-value">${data.rego}</span></div>`);
+      }
+      if (data.name) {
+        rows.push(`<div class="detail-row"><span class="detail-label">Name:</span><span class="detail-value">${data.name}</span></div>`);
       }
       if (data.amount) {
         rows.push(`<div class="detail-row"><span class="detail-label">Release Amount:</span><span class="detail-value">$${parseFloat(data.amount).toFixed(2)}</span></div>`);
@@ -216,7 +211,6 @@
       content.innerHTML = rows.length ? rows.join('') : '<p style="text-align:center;color:#64748b;">Details in your confirmation email</p>';
     }
 
-    // === SHOW INDICATOR ===
     function showIndicator(type, message, duration = 5000) {
       const indicator = document.getElementById('processingIndicator');
       if (!indicator) return;
@@ -245,7 +239,6 @@
       }
     }
 
-    // === IDEMPOTENCY CHECK ===
     function hasBeenSubmitted(key) {
       try {
         const storageKey = `eek_release_paid:${key}`;
@@ -280,7 +273,6 @@
       }
     }
 
-    // === SEND TO POWER AUTOMATE ===
     async function sendReleasePaymentConfirmation(data) {
       const uniqueKey = data.key || buildUniqueKey(data.rego);
       
@@ -290,18 +282,22 @@
         return { success: false, reason: 'missing_key' };
       }
 
-      // Check if already submitted
       const forceResend = new URLSearchParams(window.location.search).get('resend') === '1';
       if (!forceResend && hasBeenSubmitted(uniqueKey)) {
         showIndicator('info', '✓ This release payment was already confirmed', 8000);
         return { success: false, reason: 'already_submitted' };
       }
 
-      // Build payload - simple and focused
+      // Convert amount from dollars to cents for Power Automate
+      const amountInCents = Math.round(parseFloat(data.amount) * 100);
+
       const payload = {
         uniqueKey: uniqueKey,
         rego: data.rego.toUpperCase().replace(/\s/g, ''),
-        amount: data.amount,
+        amount: amountInCents,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
         timestamp: new Date().toISOString(),
         eventType: 'release_payment_confirmed',
         paymentType: 'release'
@@ -310,7 +306,6 @@
       console.log('📤 Sending release payment to Power Automate:', payload);
       showIndicator('loading', '⏳ Confirming release payment...', 0);
 
-      // Retry logic
       const maxRetries = 3;
       let lastError = null;
 
@@ -354,7 +349,6 @@
       return { success: false, error: lastError };
     }
 
-    // === TRACKING ===
     function trackCall(source) {
       if (typeof gtag !== 'undefined') {
         gtag('event', 'phone_call', { event_category: 'Contact', event_label: source, value: 1 });
@@ -395,27 +389,21 @@
       }
     }
 
-    // === BOOTSTRAP ===
     window.addEventListener('load', async () => {
       console.log('🚀 Release payment page loaded');
       
-      // Get data from URL parameters
       releaseData = getUrlParams();
       console.log('📋 URL parameters:', releaseData);
       
-      // Display details
       displayBookingDetails(releaseData);
       
-      // Send to Power Automate
       const result = await sendReleasePaymentConfirmation(releaseData);
       
-      // Track conversion
       if (result.success || result.reason === 'already_submitted') {
         trackReleaseConversion(releaseData);
       }
     });
 
-    // === DEBUG ===
     window.releaseDebug = {
       getData: () => releaseData,
       clearSubmission: () => {
