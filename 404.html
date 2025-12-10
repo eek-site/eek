@@ -8,10 +8,7 @@ GitHub Pages will automatically serve this for any 404 errors.
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting... | Eek Mechanical</title>
-    
-    <!-- Call Modal Styles -->
-    <link rel="stylesheet" href="call-modal.css?v=20250119">
+    <title>Redirecting... | Eek Mobile Mechanical</title>
     
     <!-- Reddit Pixel -->
     <script>
@@ -23,76 +20,6 @@ GitHub Pages will automatically serve this for any 404 errors.
     </script>
     
     <style>
-        :root {
-            /* Brand Colors */
-            --primary: #ff5500;
-            --primary-light: #ff7733;
-            --primary-dark: #e04400;
-            --secondary: #28a745;
-            --secondary-light: #20c997;
-            --accent: #17a2b8;
-            --danger: #dc3545;
-            --warning: #ffc107;
-            --info: #17a2b8;
-            --light: #f8f9fa;
-            --dark: #343a40;
-            
-            /* Neutral Colors */
-            --white: #ffffff;
-            --gray-100: #f8f9fa;
-            --gray-200: #e9ecef;
-            --gray-300: #dee2e6;
-            --gray-400: #ced4da;
-            --gray-500: #adb5bd;
-            --gray-600: #6c757d;
-            --gray-700: #495057;
-            --gray-800: #343a40;
-            --gray-900: #212529;
-            
-            /* Typography */
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --font-size-base: 1rem;
-            --font-size-sm: 0.875rem;
-            --font-size-lg: 1.125rem;
-            --font-size-xl: 1.25rem;
-            --font-size-2xl: 1.5rem;
-            --font-size-3xl: 1.875rem;
-            --font-size-4xl: 2.25rem;
-            
-            /* Spacing */
-            --spacing-1: 0.25rem;
-            --spacing-2: 0.5rem;
-            --spacing-3: 0.75rem;
-            --spacing-4: 1rem;
-            --spacing-5: 1.25rem;
-            --spacing-6: 1.5rem;
-            --spacing-8: 2rem;
-            --spacing-10: 2.5rem;
-            --spacing-12: 3rem;
-            --spacing-16: 4rem;
-            --spacing-20: 5rem;
-            
-            /* Border Radius */
-            --border-radius-sm: 0.25rem;
-            --border-radius: 0.5rem;
-            --border-radius-lg: 0.75rem;
-            --border-radius-xl: 1rem;
-            --border-radius-2xl: 1.5rem;
-            --border-radius-full: 9999px;
-            
-            /* Shadows */
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            
-            /* Transitions */
-            --transition-fast: 0.15s ease-in-out;
-            --transition: 0.3s ease-in-out;
-            --transition-slow: 0.5s ease-in-out;
-        }
-
         * {
             margin: 0;
             padding: 0;
@@ -100,53 +27,47 @@ GitHub Pages will automatically serve this for any 404 errors.
         }
         
         body {
-            font-family: var(--font-family);
-            background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f5f5;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            color: var(--gray-800);
-            padding: var(--spacing-5);
-        }
-        
-        .main-content {
-            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #333;
+            padding: 20px;
         }
         
         .container {
             text-align: center;
             max-width: 700px;
-            padding: var(--spacing-12);
-            background: var(--white);
-            border-radius: var(--border-radius-2xl);
-            box-shadow: var(--shadow-xl);
+            padding: 40px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             width: 100%;
         }
         
         .logo {
-            font-size: var(--font-size-4xl);
-            margin-bottom: var(--spacing-3);
+            font-size: 2.5em;
+            margin-bottom: 10px;
             font-weight: bold;
-            color: var(--primary);
+            color: #333;
         }
         
         .brand-tagline {
-            color: var(--gray-600);
-            font-size: var(--font-size-lg);
-            margin-bottom: var(--spacing-8);
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
         }
         
         .spinner {
             width: 60px;
             height: 60px;
-            border: 4px solid var(--gray-200);
-            border-top: 4px solid var(--primary);
+            border: 4px solid #f5f5f5;
+            border-top: 4px solid #ff5500;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: var(--spacing-5) auto;
+            margin: 20px auto;
         }
         
         @keyframes spin {
@@ -155,40 +76,38 @@ GitHub Pages will automatically serve this for any 404 errors.
         }
         
         .message {
-            font-size: var(--font-size-xl);
-            margin: var(--spacing-5) 0;
-            color: var(--gray-800);
+            font-size: 1.2em;
+            margin: 20px 0;
+            color: #333;
         }
         
         .countdown {
-            font-size: var(--font-size-3xl);
+            font-size: 2em;
             font-weight: bold;
-            margin: var(--spacing-5) 0;
-            color: var(--primary);
+            margin: 20px 0;
+            color: #ff5500;
         }
         
         .manual-link {
-            margin-top: var(--spacing-8);
+            margin-top: 30px;
         }
         
         .manual-link a, .cta-button {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            color: var(--white);
+            background-color: #ff5500;
+            color: white;
             text-decoration: none;
-            padding: var(--spacing-4) var(--spacing-6);
-            border-radius: var(--border-radius-xl);
-            font-size: var(--font-size-xl);
-            box-shadow: var(--shadow-lg);
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
             display: inline-block;
-            transition: var(--transition);
-            margin: 0 var(--spacing-2);
-            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0 7px;
         }
         
         .manual-link a:hover, .cta-button:hover {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            background-color: #e64a00;
             transform: translateY(-2px);
-            box-shadow: var(--shadow-xl);
         }
         
         .error-container {
@@ -288,21 +207,12 @@ GitHub Pages will automatically serve this for any 404 errors.
                 padding: 12px;
             }
         }
-        
-        /* Service Modal styles moved to call-modal.css */
     </style>
 </head>
 <body>
-    <div class="main-content">
-        <div class="container">
-        <img src="/brand-image.png" alt="Eek Mechanical - Emergency Roadside Services" style="max-width: 300px; height: auto; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 0 auto 20px auto; display: block;" />
-        <div class="logo">🔧 Eek Mechanical</div>
-        <div class="brand-tagline">353+ Vetted Mechanics Nationwide • Looking for the page you requested...</div>
-        
-        <!-- Urgency Banner -->
-        <div style="background: linear-gradient(135deg, #dc3545, #c82333); color: white; padding: 15px; border-radius: 12px; margin: 20px 0; text-align: center; box-shadow: 0 4px 12px rgba(220,53,69,0.3);">
-            <strong style="font-size: 1.2em;">⚡ URGENT? Call NOW for immediate dispatch</strong>
-        </div>
+    <div class="container">
+        <div class="logo">🔧 Eek Mobile Mechanical</div>
+        <div class="brand-tagline">Looking for the page you requested...</div>
         
         <div id="loadingContainer">
             <div class="spinner"></div>
@@ -310,23 +220,23 @@ GitHub Pages will automatically serve this for any 404 errors.
             <div class="countdown" id="countdown" style="display: none;">3</div>
             
             <!-- Trust indicators -->
-            <div style="margin-top: var(--spacing-8); padding: var(--spacing-6); background: linear-gradient(135deg, var(--info), var(--accent)); border-radius: var(--border-radius-xl); color: var(--white);">
-                <div style="display: flex; align-items: center; justify-content: center; gap: var(--spacing-8); flex-wrap: wrap;">
+            <div style="margin-top: 30px; padding: 20px; background: #f0f8ff; border-radius: 8px; border-left: 4px solid #007acc;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap;">
                     <div style="text-align: center;">
-                        <div style="font-size: var(--font-size-3xl); color: var(--white);">🔒</div>
-                        <small style="color: rgba(255,255,255,0.9);">Secure Connection</small>
+                        <div style="font-size: 1.5em; color: #007acc;">🔒</div>
+                        <small style="color: #666;">Secure Connection</small>
                     </div>
                     <div style="text-align: center;">
-                        <div style="font-size: var(--font-size-3xl); color: var(--white);">✅</div>
-                        <small style="color: rgba(255,255,255,0.9);">353+ Vetted Mechanics</small>
+                        <div style="font-size: 1.5em; color: #28a745;">✅</div>
+                        <small style="color: #666;">Verified Service</small>
                     </div>
                     <div style="text-align: center;">
-                        <div style="font-size: var(--font-size-3xl); color: var(--white);">⚡</div>
-                        <small style="color: rgba(255,255,255,0.9);">30min Response</small>
+                        <div style="font-size: 1.5em; color: #ff6b35;">⚡</div>
+                        <small style="color: #666;">Fast Response</small>
                     </div>
                 </div>
-                <p style="text-align: center; margin-top: var(--spacing-4); color: rgba(255,255,255,0.9); font-size: var(--font-size-sm);">
-                    <strong>Your safety is our priority.</strong> You're being connected to official Eek Mechanical services with 353+ vetted mechanics nationwide.
+                <p style="text-align: center; margin-top: 15px; color: #555; font-size: 0.9em;">
+                    <strong>Your safety is our priority.</strong> You're being connected to official Eek Mechanical services with bank-level security.
                 </p>
             </div>
         </div>
@@ -344,32 +254,14 @@ GitHub Pages will automatically serve this for any 404 errors.
             
             <div class="manual-link">
                 <a href="https://www.eek.nz" class="cta-button">🏠 Go to Homepage</a>
-                <a href="javascript:void(0)" class="cta-button" onclick="openServiceModal()">📞 Call Now</a>
+                <a href="tel:0800769000" class="cta-button">📞 Call 0800 769 000</a>
             </div>
-        </div>
         </div>
     </div>
 
-    <!-- Footer Placeholder -->
-    <div id="footer-placeholder"></div>
-
-    <!-- Service Selection Modal - loaded from call-modal.html -->
-
-  <!-- Centralized Phone Number Management -->
-  <script src="/phone-manager.js"></script>
-  
-  <!-- Unified Tracking System (replaces tracking-manager.js) -->
-  <script src="/unified-tracking.js?v={{ site.version }}"></script>
-  
-  <!-- Centralized Footer Management -->
-  <script src="/footer-new.js?v=20250121"></script>
-  
-  <script>
-    // REAL redirect database - keeps ALL internal redirects working
+    <script>
+        // REAL redirect database - keeps ALL internal redirects working
         const redirectDatabase = {
-            // Internal tool pages
-            '/transcribe': '/transcribe/index.html',
-            
             // Application and availability forms
             '/apply': 'https://forms.office.com/r/XLdGk4wDYY',
             '/availability': 'https://forms.office.com/r/jGgFgQUj0N',
@@ -470,15 +362,6 @@ GitHub Pages will automatically serve this for any 404 errors.
                 fireRedditPurchaseEvent();
             }
             
-            // Track redirect with enhanced tracking
-            if (window.enhancedTracking) {
-                window.enhancedTracking.trackEvent('404_redirect', 'Navigation', originalPath, {
-                    redirect_url: url,
-                    original_path: originalPath,
-                    redirect_type: '404_redirect'
-                });
-            }
-            
             // Determine what type of service they're accessing
             let serviceInfo = getServiceInfo(url, originalPath);
             
@@ -516,7 +399,7 @@ GitHub Pages will automatically serve this for any 404 errors.
                         'eventSource': 'job_redirect'
                     });
                     
-                    console.log('Reddit Pixel purchase event v2.1 fired for /job');
+                    console.log('Reddit Pixel purchase event fired for /job');
                 } else {
                     console.warn('Reddit Pixel not loaded when trying to fire purchase event');
                 }
@@ -654,19 +537,11 @@ GitHub Pages will automatically serve this for any 404 errors.
             document.getElementById('loadingContainer').style.display = 'none';
             document.getElementById('errorContainer').classList.add('show');
             
-            // Track 404 error page view
-            if (window.enhancedTracking) {
-                window.enhancedTracking.trackEvent('404_error_page', 'Error', path, {
-                    error_path: path,
-                    error_type: '404_not_found'
-                });
-            }
-            
             // Generate public-facing suggestions - only show main pages, not internal forms or private pages
             const suggestionsList = document.getElementById('suggestionsList');
             const suggestions = [
-                { url: 'https://www.eek.nz/', title: '🏠 Homepage', desc: 'Main Eek Mechanical website' },
-                { url: 'javascript:void(0)', title: '📞 Call Now', desc: 'Speak directly with our dispatch team', onclick: 'openServiceModal()' },
+                { url: 'https://www.eek.nz/', title: '🏠 Homepage', desc: 'Main Eek Mobile Mechanical website' },
+                { url: 'tel:0800769000', title: '📞 Call 0800 769 000', desc: 'Speak directly with our dispatch team' },
                 { url: 'https://www.eek.nz/more-options', title: '📋 More Options', desc: 'Complete directory of all services and forms' },
                 { url: 'https://www.eek.nz/supplier', title: '🤝 Supplier Portal', desc: 'Official supplier partnership portal' },
                 { url: 'https://www.eek.nz/mjuris', title: '⚖️ Legal Authority', desc: 'Legal enforcement and compliance matters' }
@@ -674,7 +549,7 @@ GitHub Pages will automatically serve this for any 404 errors.
             
             suggestionsList.innerHTML = suggestions.map(s => `
                 <li>
-                    <a href="${s.url}" onclick="track404Suggestion('${s.title}', '${s.url}'); ${s.onclick || ''}">
+                    <a href="${s.url}">
                         <strong>${s.title}</strong><br>
                         <small>${s.desc}</small>
                     </a>
@@ -682,37 +557,10 @@ GitHub Pages will automatically serve this for any 404 errors.
             `).join('');
         }
         
-        function track404Suggestion(title, url) {
-            if (window.enhancedTracking) {
-                window.enhancedTracking.trackEvent('404_suggestion_click', 'Navigation', title, {
-                    suggestion_title: title,
-                    suggestion_url: url,
-                    source: '404_error_page'
-                });
-            }
-        }
-        
-        // Service Modal functions moved to call-modal.js
-        
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(handleRedirect, 800); // Slightly longer to show trust indicators
         });
     </script>
-
-    <!-- Call Modal Scripts -->
-        <script src="call-modal.js?v=20250119"></script>
-
-    <!-- Include Modal HTML -->
-    <script>
-        // Load modal HTML dynamically
-        fetch('call-modal.html?v=20250119')
-            .then(response => response.text())
-            .then(html => {
-                document.body.insertAdjacentHTML('beforeend', html);
-            })
-            .catch(error => console.error('Error loading modal:', error));
-    </script>
 </body>
 </html>
-

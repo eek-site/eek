@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>More Options | Eek Mechanical</title>
-    <meta name="description" content="Complete service options and resources for Eek Mechanical. Emergency services, customer support, supplier partnerships, and employment opportunities." />
+    <title>More Options | Eek Mobile Mechanical</title>
+    <meta name="description" content="Complete service options and resources for Eek Mobile Mechanical. Emergency services, customer support, supplier partnerships, and employment opportunities." />
     <meta name="keywords" content="mobile mechanic options, emergency service, customer support, supplier partnerships, eek mechanical services" />
     
     <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com https://static.cloudflareinsights.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-
-    <!-- Call Modal Styles -->
-    <link rel="stylesheet" href="../call-modal.css?v={{ site.version }}">
 
     <!-- Reddit Pixel -->
     <script>
@@ -33,15 +30,6 @@
         gtag('config', 'AW-17084465163');
         gtag('config', 'G-DQNKF1YLWR');
     </script>
-    
-    <!-- Centralized Phone Number Management -->
-  <script src="/phone-manager.js?v={{ site.version }}"></script>
-  
-  <!-- Unified Tracking System (replaces tracking-manager.js) -->
-  <script src="/unified-tracking.js?v={{ site.version }}"></script>
-  
-  <!-- Centralized Footer Management -->
-  <script src="/footer-new.js?v={{ site.version }}"></script>
 
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
@@ -52,75 +40,12 @@
             box-sizing: border-box;
         }
         
-        :root {
-          /* Brand Colors */
-          --primary: #ff5500;
-          --primary-light: #ff7733;
-          --primary-dark: #e04400;
-          --secondary: #28a745;
-          --secondary-light: #20c997;
-          --accent: #17a2b8;
-          --danger: #dc3545;
-          --warning: #ffc107;
-          --success: #28a745;
-          
-          /* Neutral Colors */
-          --white: #ffffff;
-          --gray-50: #f8f9fa;
-          --gray-100: #f5f5f5;
-          --gray-200: #e9ecef;
-          --gray-300: #dee2e6;
-          --gray-400: #ced4da;
-          --gray-500: #adb5bd;
-          --gray-600: #6c757d;
-          --gray-700: #495057;
-          --gray-800: #343a40;
-          --gray-900: #212529;
-          
-          /* Typography */
-          --font-primary: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
-          
-          /* Spacing */
-          --space-xs: 0.25rem;
-          --space-sm: 0.5rem;
-          --space-md: 1rem;
-          --space-lg: 1.5rem;
-          --space-xl: 2rem;
-          --space-2xl: 3rem;
-          --space-3xl: 4rem;
-          
-          /* Border Radius */
-          --radius-sm: 0.375rem;
-          --radius-md: 0.5rem;
-          --radius-lg: 0.75rem;
-          --radius-xl: 1rem;
-          --radius-2xl: 1.5rem;
-          
-          /* Shadows */
-          --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-          --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-          --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-          --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-          
-          /* Transitions */
-          --transition-fast: 150ms ease-in-out;
-          --transition-normal: 300ms ease-in-out;
-          --transition-slow: 500ms ease-in-out;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: var(--font-primary);
-            background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f5f5;
             min-height: 100vh;
-            color: var(--gray-800);
-            padding: var(--space-xl);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            color: #333;
+            padding: 20px;
         }
         
         .container {
@@ -135,32 +60,19 @@
         .header {
             text-align: center;
             margin-bottom: 40px;
-            position: relative;
         }
         
         .logo {
-            font-size: 2.8em;
-            margin-bottom: 15px;
+            font-size: 2.5em;
+            margin-bottom: 10px;
             font-weight: bold;
-            color: var(--primary);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            color: #333;
         }
         
         .brand-tagline {
             color: #666;
-            font-size: 1.3em;
+            font-size: 1.2em;
             margin-bottom: 30px;
-            font-weight: 500;
-        }
-        
-        .urgency-banner {
-            background: linear-gradient(135deg, #dc3545, #c82333);
-            color: white;
-            padding: 15px;
-            border-radius: 12px;
-            margin: 20px 0;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(220,53,69,0.3);
         }
         
         .description {
@@ -485,8 +397,6 @@
                 grid-template-columns: 1fr;
             }
         }
-
-        /* Service Selection Modal styles moved to call-modal.css */
     </style>
 </head>
 <body>
@@ -528,18 +438,12 @@
 
     <div class="container">
         <div class="header">
-            <img src="/brand-image.png" alt="Eek Mechanical - Emergency Roadside Services" style="max-width: 300px; height: auto; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 0 auto 20px auto; display: block;" />
-            <div class="logo">🔧 Eek Mechanical</div>
+            <div class="logo">🔧 Eek Mobile Mechanical</div>
             <div class="brand-tagline">Complete Service Options & Resources</div>
             <div class="description">
                 Access our full range of services, forms, applications, and support options. 
                 Everything you need for mobile mechanical assistance, supplier partnerships, and customer support.
             </div>
-        </div>
-        
-        <!-- URGENCY BANNER -->
-        <div class="urgency-banner">
-            <strong style="font-size: 1.2em;">⚡ URGENT? Call NOW for immediate dispatch - 353+ vetted mechanics nationwide</strong>
         </div>
         
         <!-- EMERGENCY HELP SECTION -->
@@ -548,7 +452,7 @@
             <p>Get emergency mobile mechanical assistance or speak with our dispatch team</p>
             <div class="emergency-buttons">
                 <a href="/rescue-me" class="emergency-btn normal-hours-btn tracking-link" data-track="emergency_rescue" onclick="trackInteraction(this)">🚨 Emergency Service</a>
-                <a href="javascript:void(0)" class="emergency-btn normal-hours-btn" data-track="more_options_call" onclick="openServiceModal(); trackInteraction(this)">📞 Call Now</a>
+                <a href="tel:0800769000" class="emergency-btn phone-link normal-hours-btn" data-track="more_options_call" onclick="trackInteraction(this)">📞 Call <span class="phone-display">0800 769 000</span></a>
                 <a href="/find-me" class="emergency-btn normal-hours-btn tracking-link" data-track="find_me_tool" onclick="trackInteraction(this)">📍 Find Me Tool</a>
                 <a href="/book-service" class="emergency-btn after-hours-btn tracking-link" data-track="book_online_after_hours" onclick="trackInteraction(this)" style="background: rgba(40,167,69,0.25); display: none;">📅 Book Online Service</a>
             </div>
@@ -567,7 +471,7 @@
                     <p>Service requests, support, and assistance</p>
                     <div class="contact-buttons">
                         <a href="/rescue-me" class="contact-btn normal-hours-btn tracking-link" data-track="customer_emergency" onclick="trackInteraction(this)">🚨 Emergency Service</a>
-                        <a href="javascript:void(0)" class="contact-btn normal-hours-btn" data-track="customer_call" onclick="openServiceModal(); trackInteraction(this)">📞 Call Now</a>
+                        <a href="tel:0800769000" class="contact-btn phone-link normal-hours-btn" data-track="customer_call" onclick="trackInteraction(this)">📞 Call <span class="phone-display">0800 769 000</span></a>
                         <a href="/customer-escalation" class="contact-btn normal-hours-btn tracking-link" data-track="customer_support" onclick="trackInteraction(this)">💬 Customer Support</a>
                         <a href="/find-me" class="contact-btn normal-hours-btn tracking-link" data-track="customer_find_me" onclick="trackInteraction(this)">📍 Find Me Tool</a>
                         <a href="/book-service" class="contact-btn after-hours-btn tracking-link" data-track="customer_book_online" onclick="trackInteraction(this)" style="display: none;">📅 Book Online Service</a>
@@ -599,9 +503,9 @@
                 <h3>🛡️ Legal & Compliance Center</h3>
                 <p>Terms, policies, privacy matters, and legal authority access</p>
                 <div class="legal-buttons">
-                    <a href="/terms-of-service.html" class="legal-btn tracking-link" data-track="legal_terms" onclick="trackInteraction(this)">📋 End User Terms</a>
-                    <a href="/supplier-terms.html" class="legal-btn tracking-link" data-track="legal_supplier_terms" onclick="trackInteraction(this)">📋 Supplier Terms</a>
-                    <a href="/privacy-policy.html" class="legal-btn tracking-link" data-track="legal_privacy" onclick="trackInteraction(this)">🔒 Privacy Policy</a>
+                    <a href="/terms" class="legal-btn tracking-link" data-track="legal_terms" onclick="trackInteraction(this)">📋 End User Terms</a>
+                    <a href="/supplier-terms" class="legal-btn tracking-link" data-track="legal_supplier_terms" onclick="trackInteraction(this)">📋 Supplier Terms</a>
+                    <a href="/privacy" class="legal-btn tracking-link" data-track="legal_privacy" onclick="trackInteraction(this)">🔒 Privacy Policy</a>
                     <a href="/privacy-report" class="legal-btn tracking-link" data-track="legal_privacy_report" onclick="trackInteraction(this)">🚨 Privacy Report</a>
                     <a href="/mjuris" class="legal-btn tracking-link" data-track="legal_authority" onclick="trackInteraction(this)">⚖️ Legal Authority</a>
                 </div>
@@ -624,7 +528,10 @@
             </div>
         </div>
         
-        <!-- Footer will be added by footer.js -->
+        <div class="footer-nav">
+            <a href="/" class="tracking-link" data-track="footer_home" onclick="trackInteraction(this)">🏠 Homepage</a>
+            <a href="/privacy" class="tracking-link" data-track="footer_privacy" onclick="trackInteraction(this)">Privacy Policy</a>
+        </div>
     </div>
 
     <script>
@@ -637,7 +544,7 @@
         console.log('🚀 === MORE OPTIONS PAGE INITIALIZED === 🚀');
 
         // API Endpoints
-        // TRACKING_API_URL removed - all tracking now goes through unified-tracking.js
+        const TRACKING_API_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
         const GCLID_STATE_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f20c5153e8a4de0be50a17e2dab4254/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Zw5-_6YSCNPb2cfjjfa0Oj_Fpc7N9rhHfc6fPZZhX7g";
         const CALLFLOW_STATE_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/17b1d2990e6f4082a2b0d9c2f1a29025/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=bPyoxJ24kuxJZOyLGAclGaEuH6BHwUTFaGmYOwHofa8";
 
@@ -678,13 +585,10 @@
                     return isActive;
                 } else {
                     console.warn('⚠️ Callflow status API returned non-OK status:', response.status);
-                    console.log('🔄 Power Automate down - defaulting to LINES OPEN');
                     if (debugSystemStatus) {
                         debugSystemStatus.textContent = `ERROR (${response.status})`;
                         debugSystemStatus.style.color = '#ff0';
                     }
-                    // Default to lines open when Power Automate is down
-                    return true;
                 }
             } catch (error) {
                 console.error('❌ Error checking callflow status:', error);
@@ -694,8 +598,8 @@
                 }
             }
             
-            // Default to lines open if Power Automate is down
-            console.log('🔄 Power Automate down - defaulting to LINES OPEN');
+            // Default to active if check fails
+            console.log('🔄 Defaulting to ACTIVE due to API failure');
             return true;
         }
 
@@ -859,7 +763,7 @@
             console.log('🔘 Buttons - Normal:', showNormalButtons ? 'VISIBLE' : 'HIDDEN', 
                         'After-hours:', showAfterHoursButtons ? 'VISIBLE' : 'HIDDEN');
             
-            console.log('✅ updateHoursDisplay v2.1 completed');
+            console.log('✅ updateHoursDisplay completed');
         }
 
         // === SESSION AND TRACKING DATA MANAGEMENT ===
@@ -879,9 +783,9 @@
             updateDebugInfo();
             
             // Send page view event
-            // sendPageViewEvent() removed - unified-tracking.js automatically tracks page_view
+            sendPageViewEvent();
             
-            console.log('✅ Tracking system v2.1 initialized');
+            console.log('✅ Tracking system initialized');
             console.log('📊 Session ID:', sessionId);
             console.log('📊 GCLID/GBRAID/WBRAID:', gclid || 'None');
             console.log('📊 UTM Data:', utmData);
@@ -909,116 +813,6 @@
             }
             
             return sid;
-        }
-
-        // Enhanced visitor journey tracking
-        function trackVisitorJourney(action, data = {}) {
-            const journey = JSON.parse(localStorage.getItem('eek_visitor_journey') || '[]');
-            const sessionId = localStorage.getItem("eek_session_id");
-            const gclid = localStorage.getItem("eek_gclid");
-            
-            const journeyEntry = {
-                timestamp: new Date().toISOString(),
-                sessionId: sessionId,
-                gclid: gclid,
-                action: action,
-                page: {
-                    url: window.location.href,
-                    path: window.location.pathname,
-                    title: document.title,
-                    referrer: document.referrer
-                },
-                data: data
-            };
-            
-            journey.push(journeyEntry);
-            
-            // Keep last 20 journey entries
-            if (journey.length > 20) {
-                journey.splice(0, journey.length - 20);
-            }
-            
-            localStorage.setItem('eek_visitor_journey', JSON.stringify(journey));
-            
-            // Send to tracking API
-            sendJourneyTracking(journeyEntry);
-            
-            return journeyEntry;
-        }
-
-        async function sendJourneyTracking(journeyEntry) {
-            try {
-                const payload = {
-                    eventType: "visitor_journey",
-                    eventAction: journeyEntry.action,
-                    timestamp: journeyEntry.timestamp,
-                    sessionId: journeyEntry.sessionId,
-                    gclid: journeyEntry.gclid,
-                    page: journeyEntry.page,
-                    journeyData: journeyEntry.data,
-                    source: 'journey_tracking'
-                };
-                
-                // Use unified-tracking.js instead of direct API call
-                if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
-                    await window.unifiedTracking.sendTrackingData('visitor_journey', {
-                        eventAction: journeyEntry.action,
-                        journeyData: journeyEntry.data,
-                        page: journeyEntry.page,
-                        source: 'journey_tracking'
-                    });
-                    console.log('✅ Journey tracking sent:', journeyEntry.action);
-                } else {
-                    console.warn('⚠️ unified-tracking.js not available, skipping journey tracking');
-                }
-            } catch (error) {
-                console.error('❌ Journey tracking failed:', error);
-            }
-        }
-
-        // Check for return visit from booking link
-        function checkReturnVisit() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const callAttemptId = urlParams.get('call_attempt_id');
-            const callTimestamp = urlParams.get('call_timestamp');
-            const sessionId = urlParams.get('session_id');
-            
-            if (callAttemptId && callTimestamp) {
-                // This is a return visit from a booking link
-                const returnVisitData = {
-                    callAttemptId: callAttemptId,
-                    callTimestamp: callTimestamp,
-                    returnTimestamp: new Date().toISOString(),
-                    timeBetweenCallAndReturn: new Date() - new Date(callTimestamp),
-                    source: 'booking_link_return',
-                    page: 'more_options'
-                };
-                
-                // Track the return visit
-                trackVisitorJourney('booking_link_return_visit', returnVisitData);
-                
-                // Send return visit tracking event to Power Automate API
-                const returnVisitPayload = buildTrackingPayload('return_visit', 'return_visit', {
-                    callAttemptId: callAttemptId,
-                    callTimestamp: callTimestamp,
-                    returnTimestamp: returnVisitData.returnTimestamp,
-                    timeBetweenCallAndReturn: returnVisitData.timeBetweenCallAndReturn,
-                    returnSource: 'booking_link',
-                    page: 'more_options'
-                });
-                sendTrackingEvent(returnVisitPayload);
-                
-                console.log('✅ Return visit detected from booking link:', returnVisitData);
-            }
-            
-            // Check if this is a return visit with session continuity
-            const storedSessionId = localStorage.getItem("eek_session_id");
-            if (sessionId && storedSessionId && sessionId === storedSessionId) {
-                trackVisitorJourney('session_continuity_return', {
-                    sessionId: sessionId,
-                    returnSource: 'session_continuity'
-                });
-            }
         }
 
         function getGCLID() {
@@ -1171,15 +965,9 @@
                 showTrackingNumber = true;
             }
             
-            // Use unified tracking system for phone numbers
-            let phoneData;
-            if (window.unifiedTracking && typeof window.unifiedTracking.getModalPhoneNumber === 'function') {
-                phoneData = window.unifiedTracking.getModalPhoneNumber();
-            } else if (showTrackingNumber) {
-                phoneData = { tel: 'tel:0800447153', display: 'Call Now' };
-            } else {
-                phoneData = { tel: 'tel:0800769000', display: 'Call Now' };
-            }
+            const phoneData = showTrackingNumber ? 
+                { tel: 'tel:0800447153', display: '0800 447 153' } :
+                { tel: 'tel:0800769000', display: '0800 769 000' };
             
             // Update all phone links
             document.querySelectorAll('.phone-link').forEach(link => {
@@ -1196,178 +984,24 @@
 
         // === EVENT TRACKING ===
         function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
-            // 🆕 ENHANCED GEOLOCATION DATA - ALL AVAILABLE FIELDS
-            const geo = window.CF_GEO || {
-                country: 'Unknown',
-                city: 'Unknown', 
-                region: 'Unknown',
-                postalCode: 'Unknown',
-                latitude: null,
-                longitude: null,
-                timezone: 'Unknown',
-                continent: 'Unknown',
-                regionCode: 'Unknown',
-                countryCode: 'Unknown'
-            };
-            
             return {
-                // === ROOT LEVEL FIELDS (for direct access) ===
-                sessionId: sessionId,
-                gclid: gclid,
-                gclidState: gclidState,
                 eventType: eventType,
                 eventAction: eventAction,
                 timestamp: new Date().toISOString(),
-                bookingStatus: "page_loaded",
-                currentStep: 1,
-                totalSteps: 1,
-                stepProgress: 100,
-                termsAccepted: false,
-                marketingConsent: false,
+                sessionId: sessionId,
+                gclid: gclid,
+                gclidState: gclidState,
+                callflowState: callflowState,
                 
-                // Customer information (root level for direct access)
-                name: "",
-                phone: "",
-                email: "",
-                
-                // Root-level location object for email template compatibility (MUST be object, not string)
-                location: {
-                    city: geo.city || 'Unknown',
-                    region: geo.region || 'Unknown',
-                    country: geo.country || 'New Zealand',
-                    countryCode: geo.countryCode || 'NZ',
-                    regionCode: geo.regionCode || 'Unknown',
-                    postalCode: geo.postalCode || 'Unknown',
-                    continent: geo.continent || 'Oceania',
-                    address: '',
-                    coordinates: {
-                        latitude: geo.latitude || null,
-                        longitude: geo.longitude || null,
-                        accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
-                    },
-                    timezone: geo.timezone || 'Pacific/Auckland',
-                    raw: geo
+                // Page context
+                site: {
+                    title: document.title,
+                    url: window.location.href,
+                    path: window.location.pathname,
+                    referrer: document.referrer || null
                 },
                 
-                // Vehicle information (root level for direct access)
-                rego: "",
-                vehicleRego: "",
-                year: "",
-                vehicleYear: "",
-                make: "",
-                vehicleMake: "",
-                model: "",
-                vehicleModel: "",
-                vehicleType: "car",
-                
-                // Service information (root level for direct access)
-                service: "",
-                serviceCode: "",
-                serviceTitle: "",
-                price: 0,
-                details: "",
-                
-                // === NESTED OBJECTS (for email templates) ===
-                visitorData: {
-                    // Customer information
-                    name: "",
-                    phone: "",
-                    email: "",
-                    location: { // Object for email template compatibility
-                        city: geo.city || 'Unknown',
-                        region: geo.region || 'Unknown',
-                        country: geo.country || 'New Zealand',
-                        countryCode: geo.countryCode || 'NZ',
-                        regionCode: geo.regionCode || 'Unknown',
-                        postalCode: geo.postalCode || 'Unknown',
-                        continent: geo.continent || 'Oceania',
-                        address: '',
-                        coordinates: {
-                            latitude: geo.latitude || null,
-                            longitude: geo.longitude || null,
-                            accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
-                        },
-                        timezone: geo.timezone || 'Pacific/Auckland',
-                        raw: geo
-                    },
-                    
-                    // Vehicle information
-                    vehicleRego: "",
-                    rego: "", // Template expects both
-                    vehicleYear: "",
-                    vehicleMake: "",
-                    vehicleModel: "",
-                    vehicleType: "car",
-                    
-                    // Service information
-                    service: "",
-                    serviceCode: "",
-                    serviceTitle: ""
-                },
-                
-                journeyData: {
-                    callAttemptId: null,
-                    callTimestamp: null,
-                    returnTimestamp: null,
-                    timeBetweenCallAndReturn: null,
-                    source: 'more_options_page'
-                },
-                
-                pageSource: {
-                    type: 'direct',
-                    detail: 'Direct visit',
-                    referrer: document.referrer || null,
-                    landingPage: window.location.href,
-                    entryPoint: 'direct',
-                    clickIds: {
-                        gclid: gclid,
-                        gbraid: null,
-                        wbraid: null,
-                        msclkid: null,
-                        fbclid: null,
-                        rdtclid: null
-                    }
-                },
-                
-                device: {
-                    userAgent: navigator.userAgent,
-                    platform: navigator.platform || null,
-                    language: navigator.language || null,
-                    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    screenResolution: `${window.screen ? window.screen.width : 0}x${window.screen ? window.screen.height : 0}`,
-                    viewportSize: `${window.innerWidth}x${window.innerHeight}`,
-                    isMobile: /Mobi|Android/i.test(navigator.userAgent),
-                    isTablet: /iPad|Android(?=.*\bMobile\b)/i.test(navigator.userAgent)
-                },
-                
-                engagement: {
-                    timeOnPage: 0,
-                    timeOnSite: 0,
-                    pageViews: 1,
-                    interactions: 0,
-                    scrollDepth: 0,
-                    formInteractions: 0,
-                    buttonClicks: 0,
-                    linkClicks: 0,
-                    engagementScore: 0
-                },
-                
-                userJourney: {
-                    journeyId: `journey_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-                    journeyStart: new Date().toISOString(),
-                    journeyEnd: new Date().toISOString(),
-                    journeyDuration: 0,
-                    journeySteps: [],
-                    journeyCompleted: false,
-                    journeyAbandoned: false,
-                    journeyConversion: false,
-                    pageHistory: [],
-                    totalPages: 1,
-                    sessionDuration: 0,
-                    entryPage: window.location.href,
-                    previousPage: ''
-                },
-                
+                // UTM tracking
                 utm: {
                     source: utmData.utm_source || null,
                     medium: utmData.utm_medium || null,
@@ -1377,63 +1011,20 @@
                     gclid: gclid
                 },
                 
-                trackingData: {
-                    gclid: gclid,
-                    gclidState: gclidState,
-                    utm: {
-                        source: utmData.utm_source || null,
-                        medium: utmData.utm_medium || null,
-                        campaign: utmData.utm_campaign || null,
-                        term: utmData.utm_term || null,
-                        content: utmData.utm_content || null,
-                        gclid: gclid
-                    },
-                    pageSource: {
-                        type: 'direct',
-                        detail: 'Direct visit',
-                        referrer: document.referrer || null,
-                        landingPage: window.location.href,
-                        entryPoint: 'direct',
-                        clickIds: {
-                            gclid: gclid,
-                            gbraid: null,
-                            wbraid: null,
-                            msclkid: null,
-                            fbclid: null,
-                            rdtclid: null
-                        }
-                    },
-                    location: {
-                        city: geo.city || 'Unknown',
-                        region: geo.region || 'Unknown',
-                        country: geo.country || 'New Zealand',
-                        countryCode: geo.countryCode || 'NZ',
-                        regionCode: geo.regionCode || 'Unknown',
-                        postalCode: geo.postalCode || 'Unknown',
-                        continent: geo.continent || 'Oceania',
-                        address: '',
-                        coordinates: {
-                            latitude: geo.latitude || null,
-                            longitude: geo.longitude || null,
-                            accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
-                        },
-                        timezone: geo.timezone || 'Pacific/Auckland',
-                        raw: geo
-                    },
-                    sessionId: sessionId,
-                    pageUrl: window.location.href,
-                    pagePath: window.location.pathname,
-                    pageTitle: document.title,
-                    pageType: 'more_options_page',
-                    referrer: document.referrer || null,
-                    referrerDomain: document.referrer ? new URL(document.referrer).hostname : null,
-                    conversionValue: 0,
-                    conversionCurrency: 'NZD',
-                    conversionType: 'page_view'
+                // Device info
+                device: {
+                    userAgent: navigator.userAgent,
+                    platform: navigator.platform || null,
+                    language: navigator.language || null,
+                    mobile: /Mobi|Android/i.test(navigator.userAgent),
+                    screen: {
+                        width: window.screen ? window.screen.width : null,
+                        height: window.screen ? window.screen.height : null,
+                        pixelRatio: window.devicePixelRatio || 1
+                    }
                 },
                 
-                // Legacy fields for backward compatibility
-                callflowState: callflowState,
+                // Source tracking
                 source: 'more_options_page',
                 formVersion: '2.2',
                 
@@ -1444,22 +1035,31 @@
 
         async function sendTrackingEvent(payload) {
             try {
-                // Use unified-tracking.js instead of direct API call
-                if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
-                    await window.unifiedTracking.sendTrackingData(payload.eventType || payload.eventAction, payload);
-                    console.log(`📡 More options tracking event sent via unified-tracking.js: ${payload.eventAction}`);
-                    return true;
-                } else {
-                    console.warn('⚠️ unified-tracking.js not available, skipping tracking');
-                    return false;
-                }
+                const response = await fetch(TRACKING_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload),
+                    keepalive: true
+                });
+                
+                console.log(`📡 Tracking event sent: ${payload.eventAction} (Status: ${response.status})`);
+                return response.ok;
             } catch (error) {
-                console.error('❌ More options tracking event failed:', error);
+                console.error('❌ Tracking event failed:', error);
                 return false;
             }
         }
 
-        // sendPageViewEvent removed - unified-tracking.js automatically tracks page_view on initialization
+        function sendPageViewEvent() {
+            const payload = buildTrackingPayload('page_view', 'more_options_view', {
+                pageType: 'more_options',
+                loadTime: Date.now() - performance.navigationStart
+            });
+            
+            sendTrackingEvent(payload);
+        }
 
         // === INTERACTION TRACKING ===
         function trackInteraction(element) {
@@ -1491,7 +1091,12 @@
                     value: getEventValue(trackingAction)
                 });
                 
-                // Conversion tracking removed - only purchase conversions tracked on thanks page
+                // Track phone calls as conversions
+                if (trackingAction.includes('call')) {
+                    gtag('event', 'conversion', {
+                        send_to: 'AW-17084465163/7Mh8CKFRydsaEIuAwJI_'
+                    });
+                }
             }
             
             // Reddit Pixel tracking
@@ -1557,9 +1162,6 @@
             // Initialize tracking
             initializeTracking();
             
-            // Check for return visit from booking link
-            checkReturnVisit();
-            
             // Update phone numbers based on traffic source
             updatePhoneNumbers();
             
@@ -1605,31 +1207,23 @@
                 });
             }
             
-            console.log('✅ More Options page v2.1 initialization complete');
+            console.log('✅ More Options page initialization complete');
         });
 
         // === TIME ON PAGE TRACKING ===
-        // Note: page_exit tracking is handled by unified-tracking.js
         let startTime = Date.now();
+        window.addEventListener('beforeunload', function() {
+            const timeOnPage = Date.now() - startTime;
+            const payload = buildTrackingPayload('user_engagement', 'time_on_page', {
+                timeOnPage: timeOnPage,
+                timeOnPageSeconds: Math.round(timeOnPage / 1000)
+            });
+            
+            sendTrackingEvent(payload);
+        });
 
         // Enable debug panel for testing (uncomment to show)
         // document.getElementById('debugInfo').style.display = 'block';
-    </script>
-
-    <!-- Service Selection Modal - loaded from call-modal.html -->
-
-    <!-- Call Modal Scripts -->
-        <script src="../call-modal.js?v={{ site.version }}"></script>
-
-    <!-- Include Modal HTML -->
-    <script>
-        // Load modal HTML dynamically
-        fetch('../call-modal.html?v={{ site.version }}')
-            .then(response => response.text())
-            .then(html => {
-                document.body.insertAdjacentHTML('beforeend', html);
-            })
-            .catch(error => console.error('Error loading modal:', error));
     </script>
 </body>
 </html>

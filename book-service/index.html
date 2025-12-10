@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Wrong Fuel Rescue Booking - Emergency Fuel Extraction | Eek Mechanical</title>
-  <meta name="description" content="Book emergency wrong fuel extraction service with Eek Mechanical. Professional fuel removal, system flush, NZIFDA certified. Don't start your engine - call now!" />
-  <meta name="keywords" content="wrong fuel rescue, fuel extraction booking, misfuel service, petrol in diesel, diesel in petrol, emergency fuel removal" />
+  <title>Emergency Mobile Mechanic Services - Eek Mobile Mechanical</title>
+  <meta name="description" content="Book emergency mobile mechanic services with Eek Mobile Mechanical. Battery jump start, fuel extraction, mechanical diagnostics. Professional service across New Zealand." />
+  <meta name="keywords" content="mobile mechanic, emergency mechanic, battery jump start, wrong fuel removal, mobile mechanic NZ" />
 
   <!-- Security Headers -->
   <meta http-equiv="Content-Security-Policy" content="
@@ -25,15 +25,6 @@
     gtag('config', 'AW-17084465163');
     gtag('config', 'G-DQNKF1YLWR');
   </script>
-  
-  <!-- Centralized Phone Number Management -->
-  <script src="/phone-manager.js?v={{ site.version }}"></script>
-  
-  <!-- Unified Tracking System (replaces tracking-manager.js) -->
-  <script src="/unified-tracking.js?v={{ site.version }}"></script>
-  
-  <!-- Centralized Footer Management -->
-  <script src="/footer-new.js?v={{ site.version }}"></script>
 
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <style>
@@ -50,12 +41,10 @@
     .breadcrumb a:hover{text-decoration:underline}
 
     .booking-container{max-width:900px;margin:20px auto;background:#fff;border-radius:12px;box-shadow:0 4px 8px rgba(0,0,0,.1);overflow:hidden}
-    .booking-header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:40px 30px;text-align:center;position:relative;overflow:hidden}
-    .booking-header::before{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;animation:float 20s infinite linear}
+    .booking-header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:30px;text-align:center}
     .booking-header.winz{background:linear-gradient(135deg,var(--purple),#5a32a3)}
-    .booking-header h2{margin:0 0 10px 0;font-size:2.2em;text-shadow:2px 2px 4px rgba(0,0,0,0.3)}
-    .booking-header p{margin:0;font-size:1.2em;opacity:.95;font-weight:500}
-    @keyframes float{0%{transform:translateX(0) translateY(0)}100%{transform:translateX(-100px) translateY(-100px)}}
+    .booking-header h2{margin:0 0 10px 0;font-size:2em}
+    .booking-header p{margin:0;font-size:1.1em;opacity:.95}
     .service-stats{background:rgba(255,255,255,.15);padding:15px;border-radius:8px;margin-top:15px}
     .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:15px;text-align:center}
     .stat-item{font-size:.9em}.stat-number{font-size:1.8em;font-weight:700;display:block}
@@ -154,20 +143,20 @@
 </head>
 <body>
 <header>
-  <img id="headerImage" src="/brand-image.png" alt="Eek Mechanical - Emergency Roadside Services"/>
-  <div class="business-name">Eek Mechanical</div>
-  <h1 id="headerTitle">Wrong Fuel Rescue Service</h1>
+  <img id="headerImage" src="/sweet-ride.png" alt="Eek Mobile Mechanical"/>
+  <div class="business-name">Eek Mobile Mechanical</div>
+  <h1 id="headerTitle">Emergency Mobile Mechanic Service</h1>
   <p id="headerSubtitle" style="font-size:1.1em;color:#666;margin:10px 0;"></p>
 </header>
 
 <div class="breadcrumb">
-  <a href="/" class="tracking-link">Home</a> > <span id="breadcrumbText">Wrong Fuel Rescue</span>
+  <a href="/" class="tracking-link">Home</a> > <span id="breadcrumbText">Emergency Service</span>
 </div>
 
 <div class="booking-container">
   <div class="booking-header" id="bookingHeader">
-    <h2 id="bookingTitle">Book Wrong Fuel Rescue Service</h2>
-    <p id="bookingDescription">Emergency fuel extraction service • Don't start your engine!</p>
+    <h2 id="bookingTitle">Book Your Emergency Service</h2>
+    <p id="bookingDescription">Professional mobile mechanic service across New Zealand</p>
     <div class="service-stats">
       <div class="stats-grid" id="statsContent"></div>
     </div>
@@ -290,7 +279,7 @@
         <div class="terms-checkbox">
           <input type="checkbox" id="termsAgree" onchange="toggleBookingButton()" />
           <div class="terms-text">
-            I agree to the <a href="https://eek.nz/terms-of-service.html" target="_blank">Eek Mechanical Terms of Service</a> and understand that:
+            I agree to the <a href="https://eek.nz/terms" target="_blank">Eek Mobile Mechanical Terms of Service</a> and understand that:
             <ul style="margin:10px 0;padding-left:20px;" id="termsList"></ul>
           </div>
         </div>
@@ -490,6 +479,83 @@ const STATUS_DESCRIPTIONS = {
 
 // Service Configurations
 const serviceConfigs = {
+  'jumpstart': {
+    title:'Battery Jump Start Service',
+    subtitle:"Dead battery? We'll get you started!",
+    breadcrumb:'Battery Jump Start',
+    bookingTitle:'Battery Jump Start Service',
+    bookingDescription:'Professional jump start service • Includes battery health check',
+    step1Title:'Step 1: Tell us about your battery situation',
+    detailsLabel:'Any additional details about the battery problem:',
+    detailsPlaceholder:"e.g., Age of battery, if lights were left on, how long it's been dead, etc.",
+    serviceCode:'JUMP',
+    basePrice:149,
+    voltages: [
+      { id:'12v', label:'12V (cars, SUVs, utes)', price:149 },
+      { id:'24v', label:'24V (trucks, buses)',   price:229 }
+    ],
+    stats:[
+      {number:'30–90',text:'min arrival'},
+      {number:'Free',text:'battery test'},
+      {number:'All',text:'makes & models'},
+      {number:'Insured',text:'service'}
+    ],
+    urgencyOptions:[
+      {id:'emergency',title:'Emergency Service',time:'30–90 minutes arrival',description:'Technician dispatched immediately',hidePrice:true}
+    ],
+    infoContent:`
+      <h4>Our Jump Start Service Includes:</h4>
+      <ul>
+        <li><strong>Professional jump start</strong> using commercial-grade equipment</li>
+        <li><strong>Battery voltage test</strong> to check current condition</li>
+        <li><strong>Charging system check</strong> to ensure alternator is working</li>
+        <li><strong>Battery terminal cleaning</strong> if needed</li>
+        <li><strong>Advice on battery replacement</strong> if required</li>
+      </ul>`,
+    terms:[
+      'Service includes professional jump start and battery health assessment',
+      'Price calculated based on your vehicle type',
+      'Arrival times are approximate - we will SMS you when the technician is on the way',
+      'Payment required via secure Stripe checkout'
+    ]
+  },
+  'mechanic': {
+    title:'Mobile Mechanic Diagnostic Service',
+    subtitle:"Engine problems? We'll diagnose the issue!",
+    breadcrumb:'Mechanic Diagnostic',
+    bookingTitle:'Mobile Mechanic Diagnostic Service',
+    bookingDescription:'Professional mechanical diagnostic • On-site assessment',
+    step1Title:'Step 1: Tell us about your mechanical problem',
+    detailsLabel:'Describe the symptoms and any issues:',
+    detailsPlaceholder:"e.g., Engine won't start, warning lights, strange noises, overheating, etc.",
+    serviceCode:'DIAG',
+    basePrice:249,
+    stats:[
+      {number:'30–90',text:'min arrival'},
+      {number:'Full',text:'diagnostic scan'},
+      {number:'Expert',text:'assessment'},
+      {number:'Written',text:'report'}
+    ],
+    urgencyOptions:[
+      {id:'emergency',title:'Emergency Diagnostic',time:'30–90 minutes arrival',description:'Immediate dispatch for urgent issues',hidePrice:true},
+      {id:'scheduled',title:'Scheduled Service',time:'Within 4 hours',description:'Book for later today',hidePrice:true}
+    ],
+    infoContent:`
+      <h4>Our Diagnostic Service Includes:</h4>
+      <ul>
+        <li><strong>Professional diagnostic scanning</strong> of all vehicle systems</li>
+        <li><strong>Mechanical assessment</strong> to identify problems</li>
+        <li><strong>Written report</strong> of findings and recommendations</li>
+        <li><strong>Cost estimate</strong> for any required repairs</li>
+        <li><strong>Expert advice</strong> on next steps</li>
+      </ul>`,
+    terms:[
+      'Service includes comprehensive diagnostic scanning and assessment',
+      'Price calculated based on your requirements',
+      'Written report provided with findings',
+      'Arrival times are approximate due to the nature of mechanical work'
+    ]
+  },
   'fuel-extraction': {
     title:'Wrong Fuel Extraction Service',
     subtitle:"Put wrong fuel in? We'll extract it safely!",
@@ -531,11 +597,55 @@ const serviceConfigs = {
       ]
     }
   },
+  'winz': {
+    title:'WINZ Vehicle Repair Quote',
+    subtitle:'Get an instant quote for Work and Income assistance',
+    breadcrumb:'WINZ Quote',
+    bookingTitle:'WINZ Vehicle Repair Quote',
+    bookingDescription:'Approved WINZ supplier • Instant quotes for vehicle repairs',
+    step1Title:'Start Here.',
+    step2Title:'Step 2: Generate Your WINZ Quote',
+    detailsLabel:'2. Describe the problem in detail:',
+    detailsPlaceholder:'Please provide as much detail as possible about the issue...',
+    serviceCode:'WINZ',
+    basePrice:0,
+    hidePrice:true,
+    isWinz:true,
+    stats:[
+      {number:'WINZ',text:'approved supplier'},
+      {number:'Instant',text:'quote generation'},
+      {number:'Up to $400',text:'assistance available'},
+      {number:'1-2 days',text:'approval time'}
+    ],
+    emergencyTypes: [
+      {id:'battery',label:'Flat Battery',description:'Battery won\'t start, needs jump start or replacement'},
+      {id:'mechanical',label:'Mechanical Breakdown',description:'Engine problems, won\'t start, warning lights'},
+      {id:'misfuel',label:'Misfuel',description:'Wrong fuel in tank (petrol in diesel or vice versa)'}
+    ],
+    urgencyOptions:[
+      {id:'standard',title:'WINZ Quote Generation',time:'Instant digital quote',description:'Submit to Work and Income for approval',hidePrice:true}
+    ],
+    infoContent:`
+      <h4>How This Works:</h4>
+      <ul>
+        <li><strong>Select your emergency type</strong> from the options above</li>
+        <li><strong>Provide vehicle and contact details</strong></li>
+        <li><strong>Describe the problem</strong> in as much detail as possible</li>
+        <li><strong>Receive instant quote</strong> to submit to WINZ</li>
+        <li><strong>Take quote to WINZ</strong> or upload to MyMSD</li>
+      </ul>`,
+    terms:[
+      'Quote valid for 30 days from generation',
+      'Subject to WINZ approval and eligibility criteria',
+      'Service provided after WINZ approval confirmed',
+      'Mobile service - we come to your location'
+    ]
+  }
 };
 
 // Globals
-// TRACKING_API_URL removed - all tracking now goes through unified-tracking.js
-const PAYMENT_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
+const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
+const PRICING_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4';
 const WINZ_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/95fc801df59b4250a48919ace91c0276/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=mFpTX4gPrz1u1DbdfF3YqHBnAsW3pnAAj-GWXWvBYYc';
 
 let selectedUrgency = null;
@@ -546,196 +656,12 @@ let selectedEmergencyType = null;
 let calculatedPrice = null;
 let winzQuoteGenerated = false;
 
-// === STEP COMPLETION TRACKING (Security Safeguard) ===
-let stepCompletionState = {
-  step1Completed: false,
-  step2Completed: false,
-  step3Active: false,
-  step1Timestamp: null,
-  step2Timestamp: null,
-  step3Timestamp: null,
-  validationToken: null
-};
-
-// Persist step completion state to localStorage (allows customers to resume)
-function saveStepCompletionState() {
-  try {
-    localStorage.setItem('eek_booking_step_state', JSON.stringify(stepCompletionState));
-    console.log('💾 Step completion state saved to localStorage');
-  } catch (e) {
-    console.warn('⚠️ Could not save step state to localStorage:', e);
-  }
-}
-
-// Restore step completion state from localStorage (for returning customers)
-function restoreStepCompletionState() {
-  try {
-    const saved = localStorage.getItem('eek_booking_step_state');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      // Only restore if it's recent (within 24 hours) to prevent stale state
-      const maxAge = 24 * 60 * 60 * 1000; // 24 hours
-      
-      // Collect valid timestamps (ignore null/undefined - don't default to Date.now())
-      const timestamps = [
-        parsed.step1Timestamp ? new Date(parsed.step1Timestamp).getTime() : null,
-        parsed.step2Timestamp ? new Date(parsed.step2Timestamp).getTime() : null,
-        parsed.step3Timestamp ? new Date(parsed.step3Timestamp).getTime() : null
-      ].filter(t => t !== null && !isNaN(t));
-      
-      // If no valid timestamps exist, treat as invalid/stale session
-      if (timestamps.length === 0) {
-        console.log('⚠️ No valid timestamps in saved state, clearing');
-        localStorage.removeItem('eek_booking_step_state');
-        return false;
-      }
-      
-      const oldestTimestamp = Math.min(...timestamps);
-      
-      if (Date.now() - oldestTimestamp < maxAge) {
-        stepCompletionState = { ...stepCompletionState, ...parsed };
-        console.log('✅ Step completion state restored from localStorage');
-        return true;
-      } else {
-        console.log('⚠️ Saved step state expired, clearing');
-        localStorage.removeItem('eek_booking_step_state');
-      }
-    }
-  } catch (e) {
-    console.warn('⚠️ Could not restore step state from localStorage:', e);
-  }
-  return false;
-}
-
-// Clear step completion state (when booking is completed or abandoned)
-function clearStepCompletionState() {
-  stepCompletionState = {
-    step1Completed: false,
-    step2Completed: false,
-    step3Active: false,
-    step1Timestamp: null,
-    step2Timestamp: null,
-    step3Timestamp: null,
-    validationToken: null
-  };
-  localStorage.removeItem('eek_booking_step_state');
-  console.log('🗑️ Step completion state cleared');
-}
-
-// Generate a validation token when step 3 is reached
-function generateValidationToken() {
-  const timestamp = Date.now();
-  const random = Math.random().toString(36).substr(2, 9);
-  const data = `${timestamp}-${random}-${sessionId || 'unknown'}`;
-  // Simple hash for token (not cryptographically secure, but prevents casual bypass)
-  let hash = 0;
-  for (let i = 0; i < data.length; i++) {
-    const char = data.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
-  }
-  return `token_${Math.abs(hash).toString(36)}_${timestamp}`;
-}
-
-// Validate that all required steps have been completed
-// This is more flexible - allows customers who started the process to continue
-function validateStepCompletion() {
-  const errors = [];
-  
-  // Check if we have valid form data (this is the real validation)
-  // If form is complete, we allow payment even if step state was lost
-  const hasValidFormData = validateRequiredFields().valid;
-  
-  // If form data is valid, we're more lenient about step state
-  // This allows customers to resume their booking
-  if (hasValidFormData) {
-    // Still check that urgency was selected (critical for pricing)
-    if (!selectedUrgency) {
-      errors.push('Service time/urgency must be selected');
-    }
-    
-    // If Step 3 is visible and active, that's good enough
-    const step3Element = document.getElementById('step3');
-    if (step3Element && step3Element.classList.contains('active')) {
-      // If we're on step 3 with valid data, check step completion state
-      // Use OR logic: if EITHER step is incomplete, log warning
-      if (!stepCompletionState.step1Completed || !stepCompletionState.step2Completed) {
-        // Some step state is missing - could be bypass attempt or returning customer
-        // Log for monitoring but allow if form data is complete (likely legitimate)
-        console.log('⚠️ Step state incomplete (step1:', stepCompletionState.step1Completed, 
-                    ', step2:', stepCompletionState.step2Completed, ') - form data valid, allowing with caution');
-      }
-    } else {
-      errors.push('Please complete all booking steps before generating payment');
-    }
-  } else {
-    // If form data is incomplete, be strict about step completion
-    if (!stepCompletionState.step1Completed) {
-      errors.push('Step 1 (Service Details) has not been completed');
-    }
-    
-    if (!stepCompletionState.step2Completed) {
-      errors.push('Step 2 (Scheduling) has not been completed');
-    }
-    
-    if (!stepCompletionState.step3Active) {
-      errors.push('Step 3 (Confirmation) is not active');
-    }
-  }
-  
-  return {
-    valid: errors.length === 0,
-    errors: errors
-  };
-}
-
-// Validate all required form fields are filled
-function validateRequiredFields() {
-  const errors = [];
-  
-  const name = document.getElementById('nameInput')?.value?.trim();
-  const phone = document.getElementById('phoneInput')?.value?.trim();
-  const email = document.getElementById('emailInput')?.value?.trim();
-  const location = document.getElementById('locationInput')?.value?.trim();
-  const rego = sanitizeRego(document.getElementById('regoInput')?.value || '');
-  const year = document.getElementById('yearInput')?.value?.trim();
-  const make = document.getElementById('makeInput')?.value?.trim();
-  const model = document.getElementById('modelInput')?.value?.trim();
-  
-  if (!name) errors.push('Full name is required');
-  if (!phone || phone.replace(/\D/g,'').length < 9) errors.push('Valid phone number is required (at least 9 digits)');
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('Valid email address is required');
-  if (!location) errors.push('Service location is required');
-  if (!rego) errors.push('Vehicle registration is required');
-  if (!year || year.replace(/\D/g,'').length !== 4) errors.push('Valid 4-digit vehicle year is required');
-  if (!make) errors.push('Vehicle make is required');
-  if (!model) errors.push('Vehicle model is required');
-  
-  // Check urgency/time selection
-  if (!selectedUrgency) {
-    errors.push('Service time/urgency must be selected');
-  }
-  
-  // WINZ-specific validation
-  if (window.currentConfig?.isWinz && !selectedEmergencyType) {
-    errors.push('Emergency type must be selected');
-  }
-  
-  return {
-    valid: errors.length === 0,
-    errors: errors
-  };
-}
-
 function sanitizePhone(val){ return (val || '').replace(/\D/g,''); }
 function sanitizeRego(val){ return (val || '').toUpperCase().replace(/[^A-Z0-9]/g,''); }
 function sanitizeText(val){ return (val || '').trim().replace(/\s+/g,' '); }
 
 // === CONSISTENT DATA BUILDER ===
 function buildBookingData(status) {
-  const geo = window.CF_GEO || {};
-  const locationInputValue = sanitizeText(document.getElementById('locationInput')?.value || '');
-  
   const baseData = {
     sessionId: sessionId,
     gclid: gclid,
@@ -744,21 +670,10 @@ function buildBookingData(status) {
     statusDescription: STATUS_DESCRIPTIONS[status] || 'Unknown status',
     timestamp: new Date().toISOString(),
     
-    name: sanitizeText(document.getElementById('nameInput')?.value || ''),
-    phone: sanitizePhone(document.getElementById('phoneInput')?.value || ''),
-    email: document.getElementById('emailInput')?.value?.trim() || '',
-    // Root-level location object for email template compatibility (MUST be object, not string)
-    location: {
-      city: locationInputValue || 'Unknown',
-      region: geo?.region || 'Unknown',
-      country: geo?.country || 'New Zealand',
-      address: locationInputValue || '',
-      coordinates: {
-        latitude: geo?.latitude || null,
-        longitude: geo?.longitude || null,
-        accuracy: geo?.latitude && geo?.longitude ? 'IP-based' : null
-      }
-    },
+    name: sanitizeText(document.getElementById('nameInput').value),
+    phone: sanitizePhone(document.getElementById('phoneInput').value),
+    email: document.getElementById('emailInput').value.trim(),
+    location: sanitizeText(document.getElementById('locationInput').value),
     details: document.getElementById('detailsInput').value || '',
     
     rego: sanitizeRego(document.getElementById('regoInput').value),
@@ -785,23 +700,7 @@ function buildBookingData(status) {
     },
     
     source: 'booking_form',
-    formVersion: '2.1',
-    
-    // Add visitorData for Power Automate compatibility
-    visitorData: {
-      name: sanitizeText(document.getElementById('nameInput')?.value || ''),
-      phone: sanitizePhone(document.getElementById('phoneInput')?.value || ''),
-      email: document.getElementById('emailInput')?.value?.trim() || '',
-      // visitorData.location can be string (for backward compatibility) but root-level location must be object
-      location: locationInputValue,
-      vehicleRego: sanitizeRego(document.getElementById('regoInput').value),
-      vehicleYear: document.getElementById('yearInput').value.trim(),
-      vehicleMake: sanitizeText(document.getElementById('makeInput').value),
-      vehicleModel: sanitizeText(document.getElementById('modelInput').value),
-      service: window.currentService,
-      serviceCode: window.currentConfig.serviceCode,
-      serviceTitle: window.currentConfig.title
-    }
+    formVersion: '2.1'
   };
 
   if (status === BOOKING_STATUS.TIME_SELECTED || status === BOOKING_STATUS.TERMS_ACCEPTED || status === BOOKING_STATUS.PAYMENT_PENDING) {
@@ -818,7 +717,7 @@ function buildBookingData(status) {
     }
   }
 
-  if (false) { // Removed jumpstart voltage selection
+  if (window.currentService === 'jumpstart' && selectedVoltageId) {
     baseData.selectedVoltage = selectedVoltageId;
     baseData.batteryVoltage = selectedVoltageId === '12v' ? '12V' : '24V';
   }
@@ -855,24 +754,14 @@ async function sendBookingUpdate(status) {
   console.log(`%c${STATUS_DESCRIPTIONS[status]}`, `color: ${STATUS_COLORS[status]}; font-style: italic;`);
   console.log('📊 Complete booking data:', data);
   
-  // Use unified-tracking.js - this is the ONLY way to send tracking data
   try {
-    if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
-      await window.unifiedTracking.sendTrackingData(status, {
-        ...data,
-        eventType: status,
-        service: data.service,
-        serviceCode: data.serviceCode,
-        serviceTitle: data.serviceTitle,
-        price: data.price,
-        basePrice: data.basePrice,
-        selectedTime: data.selectedTime,
-        selectedUrgency: data.selectedUrgency
-      });
-      console.log(`%c✅ Tracking data sent via unified-tracking.js: ${status}`, `color: ${STATUS_COLORS[status]}`);
-    } else {
-      console.warn('⚠️ unified-tracking.js not available, skipping tracking');
-    }
+    const response = await fetch(PRICING_API_URL, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data)
+    });
+    console.log(`%c✅ Unified API Response: ${response.status}`, `color: ${STATUS_COLORS[status]}`);
+    return response;
   } catch (err) {
     console.error(`%c❌ Error sending ${status} update:`, `color: #dc3545`, err);
   }
@@ -883,16 +772,6 @@ async function generateWinzQuote() {
   
   console.log('📋 === WINZ QUOTE GENERATION === 📋');
   console.log('💰 Quote data:', data);
-  
-  // Mirror to unified tracking
-  try {
-    if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
-      window.unifiedTracking.sendTrackingData('winz_quote_sent', {
-        ...data,
-        eventType: 'winz_quote_sent'
-      });
-    }
-  } catch (e) {}
   
   try {
     const response = await fetch(WINZ_API_URL, {
@@ -908,56 +787,6 @@ async function generateWinzQuote() {
   }
 }
 
-// Enhanced visitor data persistence
-function storeVisitorData(data) {
-  const visitorData = JSON.parse(localStorage.getItem('eek_visitor_data') || '{}');
-  
-  // Merge new data with existing data
-  Object.assign(visitorData, data);
-  
-  // Add timestamp for data freshness
-  visitorData.lastUpdated = new Date().toISOString();
-  
-  localStorage.setItem('eek_visitor_data', JSON.stringify(visitorData));
-  
-  console.log('✅ Visitor data stored:', data);
-  return visitorData;
-}
-
-function getVisitorData() {
-  return JSON.parse(localStorage.getItem('eek_visitor_data') || '{}');
-}
-
-function clearVisitorData() {
-  localStorage.removeItem('eek_visitor_data');
-  console.log('🗑️ Visitor data cleared');
-}
-
-// Check for return visit from booking link
-function checkReturnVisit() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const callAttemptId = urlParams.get('call_attempt_id');
-  const callTimestamp = urlParams.get('call_timestamp');
-  const sessionId = urlParams.get('session_id');
-  
-  if (callAttemptId && callTimestamp) {
-    // This is a return visit from a booking link
-    const returnVisitData = {
-      callAttemptId: callAttemptId,
-      callTimestamp: callTimestamp,
-      returnTimestamp: new Date().toISOString(),
-      timeBetweenCallAndReturn: new Date() - new Date(callTimestamp),
-      source: 'booking_link_return',
-      page: 'book_service'
-    };
-    
-    // Send tracking event for return visit
-    sendBookingUpdate('return_visit_from_call', returnVisitData);
-    
-    console.log('✅ Return visit detected from booking link:', returnVisitData);
-  }
-}
-
 // Initialize
 document.addEventListener('DOMContentLoaded', function(){
   console.log('🚀 === BOOKING FORM INITIALIZED === 🚀');
@@ -965,17 +794,14 @@ document.addEventListener('DOMContentLoaded', function(){
   initializeTracking();
   updateAllTrackingLinks();
   
-  // Check for return visit from booking link
-  checkReturnVisit();
-  
   const urlParams = new URLSearchParams(window.location.search);
-  const service = urlParams.get('service') || 'fuel-extraction';
+  const service = urlParams.get('service') || 'jumpstart';
   
-  // Only allow fuel-extraction service
-  if (service !== 'fuel-extraction') {
-    console.log('🔄 Redirecting to fuel-extraction service');
+  if (service === 'inspection') {
+    console.log('🔄 Redirecting inspection service to dedicated page');
+    let redirectUrl = 'https://eek.nz/pre-purchase-vehicle-inspection/';
+    
     const redirectParams = new URLSearchParams();
-    redirectParams.append('service', 'fuel-extraction');
     if (gclid) redirectParams.append('gclid', gclid);
     if (sessionId) redirectParams.append('session_id', sessionId);
     
@@ -984,76 +810,25 @@ document.addEventListener('DOMContentLoaded', function(){
       if (value) redirectParams.append(param, value);
     });
     
-    window.location.href = '/book-service/?' + redirectParams.toString();
+    if (redirectParams.toString()) {
+      redirectUrl += '?' + redirectParams.toString();
+    }
+    
+    window.location.href = redirectUrl;
     return;
   }
   
   loadServiceConfig(service);
-  
-  // Restore booking state for returning customers
-  restoreBookingState();
-  
   sendBookingUpdate(BOOKING_STATUS.INITIAL);
 });
 
-// Restore booking state and form data for returning customers
-function restoreBookingState() {
-  console.log('🔄 Checking for saved booking state...');
-  
-  // Restore step completion state
-  const stateRestored = restoreStepCompletionState();
-  
-  // Restore form field values from visitor data
-  const visitorData = getVisitorData();
-  if (visitorData && Object.keys(visitorData).length > 0) {
-    console.log('📋 Restoring form data from previous session...');
-    
-    if (visitorData.name && document.getElementById('nameInput')) {
-      document.getElementById('nameInput').value = visitorData.name;
-    }
-    if (visitorData.phone && document.getElementById('phoneInput')) {
-      document.getElementById('phoneInput').value = visitorData.phone;
-    }
-    if (visitorData.email && document.getElementById('emailInput')) {
-      document.getElementById('emailInput').value = visitorData.email;
-    }
-    
-    console.log('✅ Form data restored (partial)');
-  }
-  
-  // If customer was on Step 3, restore their progress
-  if (stateRestored && stepCompletionState.step3Active) {
-    console.log('🔄 Customer was on Step 3 - attempting to restore...');
-    
-    // Restore urgency selection if we can determine it
-    // Note: We can't fully restore Step 2 state without more data,
-    // but we can at least allow them to continue if form is complete
-    
-    // Check if form has enough data to proceed
-    const name = document.getElementById('nameInput')?.value?.trim();
-    const phone = document.getElementById('phoneInput')?.value?.trim();
-    const email = document.getElementById('emailInput')?.value?.trim();
-    const location = document.getElementById('locationInput')?.value?.trim();
-    
-    if (name && phone && email && location) {
-      console.log('✅ Form appears complete - customer can continue from Step 3');
-      // Don't auto-advance, but allow them to proceed if they click through
-    } else {
-      console.log('⚠️ Form incomplete - customer will need to complete steps');
-      // Reset state if form is too incomplete
-      stepCompletionState.step3Active = false;
-      stepCompletionState.validationToken = null;
-    }
-  }
-}
-
 function loadServiceConfig(serviceType){
-  const config = serviceConfigs[serviceType] || serviceConfigs['fuel-extraction'];
+  const config = serviceConfigs[serviceType] || serviceConfigs['jumpstart'];
   
   console.log('⚙️ === SERVICE CONFIGURATION LOADED === ⚙️');
   console.log('📦 Service:', config.title);
 
-  document.title = `${config.title} - Eek Mechanical`;
+  document.title = `${config.title} - Eek Mobile Mechanical`;
   document.getElementById('headerTitle').textContent = config.title;
   document.getElementById('headerSubtitle').textContent = config.subtitle;
   document.getElementById('breadcrumbText').textContent = config.breadcrumb;
@@ -1161,21 +936,6 @@ function goToStep1(){
   document.getElementById('step1').classList.add('active');
   document.querySelectorAll('.progress-step').forEach(el => el.classList.remove('active','completed'));
   document.getElementById('step1-progress').classList.add('active');
-  
-  // Reset ALL step completion state when going back to Step 1
-  // This ensures customers must go through the full flow again
-  // (prevents bypassing steps by going back then forward)
-  if (stepCompletionState.step1Completed || stepCompletionState.step2Completed || stepCompletionState.step3Active) {
-    stepCompletionState.step1Completed = false;
-    stepCompletionState.step2Completed = false;
-    stepCompletionState.step3Active = false;
-    stepCompletionState.step1Timestamp = null;
-    stepCompletionState.step2Timestamp = null;
-    stepCompletionState.step3Timestamp = null;
-    stepCompletionState.validationToken = null;
-    saveStepCompletionState(); // Persist updated state
-    console.log('🔄 All step completion state reset - customer must complete flow again');
-  }
 }
 
 async function goToStep2(){
@@ -1250,7 +1010,16 @@ async function goToStep2(){
           calculatedPrice = window.currentConfig.basePrice;
         }
         
-        // Voltage selection removed - fuel extraction only
+        if (window.currentService === 'jumpstart' && window.currentConfig.voltages) {
+          document.querySelectorAll('.voltage-card').forEach(card => {
+            const isV24 = card.dataset.id === '24v';
+            const price = isV24 ? Math.round(calculatedPrice * 1.5) : calculatedPrice;
+            card.querySelector('.voltage-price').textContent = `$${price}`;
+            if (card.dataset.id === selectedVoltageId) {
+              selectedVoltagePrice = price;
+            }
+          });
+        }
       }
     } catch (err) {
       console.error('Pricing API error:', err);
@@ -1266,26 +1035,6 @@ async function goToStep2(){
   document.getElementById('step1-progress').classList.add('completed');
   document.getElementById('step1-progress').classList.remove('active');
   document.getElementById('step2-progress').classList.add('active');
-  
-  // Mark Step 1 as completed
-  stepCompletionState.step1Completed = true;
-  stepCompletionState.step1Timestamp = new Date().toISOString();
-  saveStepCompletionState(); // Persist to localStorage
-  console.log('✅ Step 1 marked as completed');
-
-  // Scroll to step 2 with proper alignment
-  setTimeout(() => {
-    const step2Element = document.getElementById('step2');
-    if (step2Element) {
-      step2Element.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start',
-        inline: 'nearest'
-      });
-      // Additional offset to account for fixed header if needed
-      window.scrollBy(0, -20);
-    }
-  }, 100);
 
   if (window.currentConfig.isWinz) {
     document.getElementById('step2Title').textContent = window.currentConfig.step2Title || 'Step 2: Generate Your WINZ Quote';
@@ -1385,15 +1134,6 @@ async function goToStep3(){
   document.getElementById('step2-progress').classList.remove('active');
   document.getElementById('step3-progress').classList.add('active');
 
-  // Mark Step 2 as completed and Step 3 as active
-  stepCompletionState.step2Completed = true;
-  stepCompletionState.step2Timestamp = new Date().toISOString();
-  stepCompletionState.step3Active = true;
-  stepCompletionState.step3Timestamp = new Date().toISOString();
-  stepCompletionState.validationToken = generateValidationToken();
-  saveStepCompletionState(); // Persist to localStorage
-  console.log('✅ Step 2 marked as completed, Step 3 activated with validation token');
-
   updateSummary();
 }
 
@@ -1401,7 +1141,9 @@ function getTotalPrice(){
   if (window.currentConfig.isWinz) {
     return calculatedPrice || 0;
   }
-  // Voltage pricing removed - fuel extraction only
+  if (window.currentService === 'jumpstart' && selectedVoltagePrice) {
+    return selectedVoltagePrice;
+  }
   if (window.currentService === 'fuel-extraction' && selectedUrgency) {
     const selectedOption = window.currentConfig.urgencyOptions.find(opt => opt.id === selectedUrgency);
     return selectedOption ? selectedOption.price : window.currentConfig.basePrice;
@@ -1427,7 +1169,12 @@ function updateSummary(){
   }
 
   const voltageRow = document.getElementById('summaryVoltageRow');
-  voltageRow.style.display = 'none'; // Voltage selection not applicable for fuel extraction
+  if (window.currentService === 'jumpstart' && selectedVoltageId && !window.currentConfig.isWinz){
+    voltageRow.style.display = '';
+    document.getElementById('summaryVoltage').textContent = (selectedVoltageId === '12v' ? '12V' : '24V');
+  } else {
+    voltageRow.style.display = 'none';
+  }
 
   if (window.currentConfig.isWinz) {
     document.getElementById('summaryUrgencyRow').style.display = 'none';
@@ -1499,107 +1246,24 @@ function buildRedirectUrl(){
     }
   }
   
-  // Battery voltage removed - fuel extraction only
+  if (window.currentService === 'jumpstart' && !window.currentConfig.isWinz){
+    params.append('batteryVoltage', selectedVoltageId || '');
+  }
 
   return `${baseUrl}?${params.toString()}`;
 }
 
 async function generatePaymentLink(){
   const btn = document.getElementById('generatePaymentBtn');
-  
-  // === COMPREHENSIVE VALIDATION SAFEGUARDS ===
-  console.log('🔒 Payment generation validation starting...');
-  
-  // 0. Verify button exists and is enabled (prevents direct console calls)
-  if (!btn) {
-    console.error('❌ Payment button not found');
-    alert('Payment button not available. Please use the booking form.');
-    return;
-  }
-  
-  if (btn.disabled && !btn.classList.contains('processing')) {
-    console.error('❌ Payment button is disabled');
-    alert('Please complete all required steps and accept terms before generating payment link.');
-    return;
-  }
-  
-  // 1. Check terms acceptance
-  const termsCheckbox = document.getElementById('termsAgree');
-  if (!termsCheckbox || !termsCheckbox.checked){
+  if (!document.getElementById('termsAgree').checked){
     alert('Please accept the terms and conditions');
-    console.warn('❌ Validation failed: Terms not accepted');
     return;
   }
-  
-  // 2. Validate step completion (flexible for returning customers)
-  const stepValidation = validateStepCompletion();
-  if (!stepValidation.valid) {
-    console.error('❌ Step completion validation failed:', stepValidation.errors);
-    // More helpful message for returning customers
-    const errorMsg = stepValidation.errors.length > 0 
-      ? 'Please complete the following:\n\n' + stepValidation.errors.join('\n')
-      : 'Please complete all booking steps before generating payment link.';
-    alert(errorMsg);
-    return;
-  }
-  
-  // 3. Validate all required fields
-  const fieldValidation = validateRequiredFields();
-  if (!fieldValidation.valid) {
-    console.error('❌ Field validation failed:', fieldValidation.errors);
-    alert('Please complete all required fields:\n\n' + fieldValidation.errors.join('\n'));
-    return;
-  }
-  
-  // 4. Verify Step 3 is actually visible and active (or allow if form is complete)
-  const step3Element = document.getElementById('step3');
-  const isStep3Active = step3Element && step3Element.classList.contains('active');
-  
-  if (!isStep3Active) {
-    // If Step 3 is not active but form is complete, allow them to proceed
-    // This helps returning customers who may have lost UI state
-    if (fieldValidation.valid && selectedUrgency) {
-      console.log('⚠️ Step 3 not active, but form is complete - allowing payment generation');
-      // Auto-advance to Step 3 for them (await the async function)
-      await goToStep3();
-      // Additional delay to ensure UI and state are fully updated
-      await new Promise(resolve => setTimeout(resolve, 200));
-    } else {
-      console.error('❌ Step 3 not active and form incomplete');
-      alert('Please complete all booking steps before generating payment link.');
-      return;
-    }
-  }
-  
-  // 5. Verify urgency/time was selected
-  if (!selectedUrgency) {
-    console.error('❌ No urgency/time selected');
-    alert('Please select a service time before generating payment link.');
-    return;
-  }
-  
-  // 6. Verify price is valid
-  const totalPrice = getTotalPrice();
-  if (!totalPrice || totalPrice <= 0) {
-    console.error('❌ Invalid price:', totalPrice);
-    alert('Invalid service price. Please refresh and try again.');
-    return;
-  }
-  
-  console.log('✅ All validation checks passed');
-  console.log('🔒 Validation token:', stepCompletionState.validationToken);
-  console.log('📊 Step completion state:', stepCompletionState);
 
   btn.disabled = true;
   btn.classList.add('processing');
   
   await sendBookingUpdate(BOOKING_STATUS.TERMS_ACCEPTED);
-  try {
-    if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
-      const mirror = buildBookingData(BOOKING_STATUS.TERMS_ACCEPTED);
-      window.unifiedTracking.sendTrackingData('terms_accepted', { ...mirror, eventType: 'terms_accepted' });
-    }
-  } catch (e) {}
   
   if (window.currentConfig.isWinz) {
     btn.textContent = 'Generating Quote';
@@ -1622,33 +1286,11 @@ async function generatePaymentLink(){
   }
   
   await sendBookingUpdate(BOOKING_STATUS.PAYMENT_PENDING);
-  try {
-    if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
-      const mirror2 = buildBookingData(BOOKING_STATUS.PAYMENT_PENDING);
-      window.unifiedTracking.sendTrackingData('payment_pending', { ...mirror2, eventType: 'payment_pending' });
-    }
-  } catch (e) {}
   
   btn.textContent = 'Generating Link';
 
   const customerName = sanitizeText(document.getElementById('nameInput').value);
   const phone = sanitizePhone(document.getElementById('phoneInput').value);
-  
-  // Store visitor data for persistence (so customers can resume)
-  storeVisitorData({
-    name: customerName,
-    phone: phone,
-    email: document.getElementById('emailInput')?.value || '',
-    location: sanitizeText(document.getElementById('locationInput')?.value || ''),
-    rego: sanitizeRego(document.getElementById('regoInput')?.value || ''),
-    year: document.getElementById('yearInput')?.value?.trim() || '',
-    make: sanitizeText(document.getElementById('makeInput')?.value || ''),
-    model: sanitizeText(document.getElementById('modelInput')?.value || ''),
-    service: window.currentConfig?.service || 'unknown',
-    serviceCode: window.currentConfig?.serviceCode || 'unknown',
-    selectedUrgency: selectedUrgency || '',
-    lastUpdated: new Date().toISOString()
-  });
   const email = document.getElementById('emailInput').value.trim();
   const location = sanitizeText(document.getElementById('locationInput').value);
   const rego = sanitizeRego(document.getElementById('regoInput').value);
@@ -1659,188 +1301,40 @@ async function generatePaymentLink(){
 
   const total = getTotalPrice();
 
-  // Get comprehensive tracking data
-  const trackingData = window.enhancedTracking ? window.enhancedTracking.getTrackingData() : {};
-  const geo = window.CF_GEO || {};
-  
   const bookingData = {
     rego: rego || 'Not provided',
     amount: total * 100,
     currency: 'NZD',
     description: `${window.currentConfig.title} - ${vehicleDescription} - ${location}`,
     redirectUrl: buildRedirectUrl(),
-    
-    // Security validation data
-    validationToken: stepCompletionState.validationToken,
-    stepCompletionState: {
-      step1Completed: stepCompletionState.step1Completed,
-      step2Completed: stepCompletionState.step2Completed,
-      step3Active: stepCompletionState.step3Active,
-      step1Timestamp: stepCompletionState.step1Timestamp,
-      step2Timestamp: stepCompletionState.step2Timestamp,
-      step3Timestamp: stepCompletionState.step3Timestamp
-    },
-    
-    // Root-level fields for thanks page compatibility
-    name: customerName,
-    phone: phone,
-    email: email,
-    // Root-level location object for email template compatibility (MUST be object, not string)
-    location: (() => {
-      const locationStr = location || '';
-      return {
-        city: locationStr || 'Unknown',
-        region: geo?.region || 'Unknown',
-        country: geo?.country || 'New Zealand',
-        address: locationStr || '',
-        coordinates: {
-          latitude: geo?.latitude || null,
-          longitude: geo?.longitude || null,
-          accuracy: geo?.latitude && geo?.longitude ? 'IP-based' : null
-        }
-      };
-    })(),
-    price: total,
-    finalPrice: total,
-    calculatedPrice: total,
-    service: window.currentService,
-    serviceCode: window.currentConfig.serviceCode,
-    serviceTitle: window.currentConfig.title,
-    year: year,
-    make: make,
-    model: model,
-    vehicleType: selectedVoltageId === '24v' ? 'truck' : 'car',
-    vehicleAddon: 0,
-    details: document.getElementById('detailsInput').value || 'No additional details provided',
-    bookingTime: nowNZ().toISOString(),
-    sessionId: sessionId,
-    urgencyLevel: selectedUrgency || 'emergency',
-    emergencyType: selectedEmergencyType || '',
-    quoteReference: window.winzQuoteReference || '',
-    isWinzService: window.currentConfig.isWinz || false,
-    batteryVoltage: '', // Not applicable for fuel extraction
-    
     customerData: {
-      name: customerName, 
-      phone, 
-      email, 
-      location,
-      vehicleRego: rego, 
-      vehicleYear: year, 
-      vehicleMake: make, 
-      vehicleModel: model, 
-      vehicleDescription,
+      name: customerName, phone, email, location,
+      vehicleRego: rego, vehicleYear: year, vehicleMake: make, vehicleModel: model, vehicleDescription,
       service: window.currentService,
       serviceCode: window.currentConfig.serviceCode,
       serviceTitle: window.currentConfig.title,
       details: document.getElementById('detailsInput').value || 'No additional details provided',
       price: `${total}`,
-      basePrice: window.currentConfig.basePrice || total,
       bookingDateTime: nowNZ().toLocaleString('en-NZ',{ timeZone:NZ_TZ }),
       scheduledDate: fmtDateNZ(nowNZ()),
       scheduledTime: selectedUrgencyDetails.time || '',
       urgencyLevel: selectedUrgency || 'emergency',
-      urgencyTitle: selectedUrgencyDetails.title || '',
-      emergencyType: selectedEmergencyType || '',
-      quoteReference: window.winzQuoteReference || '',
-      isWinzService: window.currentConfig.isWinz || false,
-      vehicleType: selectedVoltageId === '24v' ? 'truck' : 'car',
-      vehicleTypeAddon: 0,
-      scheduledDateISO: nowNZ().toISOString(),
-      timeWindow: selectedUrgencyDetails.time || '',
       gclid: gclid,
       sessionId: sessionId,
-      bookingSource: 'booking_form',
-      formVersion: '2.1',
-      // Battery voltage removed - fuel extraction only
-    },
-    
-    // Enhanced tracking data for complete attribution
-    trackingData: {
-      gclid: gclid,
-      gclidState: gclid ? 'Active' : 'Inactive',
-      utm: utmData,
-      pageSource: {
-        type: 'direct',
-        detail: 'Direct visit',
-        referrer: document.referrer || '',
-        utm: utmData,
-        clickIds: {
-          gclid: gclid,
-          fbclid: null,
-          msclkid: null
-        }
-      },
-      device: {
-        userAgent: navigator.userAgent,
-        platform: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
-        language: navigator.language || 'en-NZ',
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Pacific/Auckland',
-        screenResolution: `${window.screen?.width || 0}x${window.screen?.height || 0}`,
-        viewportSize: `${window.innerWidth || 0}x${window.innerHeight || 0}`
-      },
-      location: {
-        country: geo?.country || 'New Zealand',
-        region: geo?.region || 'Unknown',
-        city: geo?.city || 'Unknown',
-        postalCode: geo?.postalCode || 'Unknown',
-        coordinates: {
-          latitude: geo?.latitude || null,
-          longitude: geo?.longitude || null,
-          accuracy: geo?.latitude && geo?.longitude ? 'IP-based' : null
-        }
-      },
-      engagement: {
-        timeOnPage: Math.round((Date.now() - (window.pageLoadTime || Date.now())) / 1000),
-        scrollDepth: 0, // Could be enhanced with scroll tracking
-        clicks: 0, // Could be enhanced with click tracking
-        formInteractions: 0, // Could be enhanced with form tracking
-        buttonClicks: 0 // Could be enhanced with button tracking
-      },
-      userJourney: {
-        pageHistory: JSON.parse(localStorage.getItem('eek_user_journey') || '[]'),
-        totalPages: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').length || 1,
-        sessionDuration: Date.now() - (window.sessionStartTime || Date.now()),
-        entryPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]')[0]?.url || window.location.href,
-        previousPage: JSON.parse(localStorage.getItem('eek_user_journey') || '[]').slice(-2, -1)[0]?.url || ''
-      },
-      visitorData: getVisitorData(),
-      journeyData: {
-        callAttemptId: localStorage.getItem('eek_last_call_attempt_id') || null,
-        callTimestamp: localStorage.getItem('eek_last_call_timestamp') || null,
-        returnTimestamp: null, // Will be set if this is a return visit
-        timeBetweenCallAndReturn: null, // Will be calculated if this is a return visit
-        source: 'booking_form'
-      },
-      eventType: 'payment_generation',
-      eventAction: 'booking_payment_link_created',
-      timestamp: new Date().toISOString()
+      ...(window.currentService === 'jumpstart' ? { batteryVoltage: (selectedVoltageId === '12v' ? '12V' : '24V') } : {})
     }
   };
 
-  console.log('💳 PAYMENT LINK GENERATION - Starting...');
-  console.log('💳 Payment API URL:', PAYMENT_API_URL);
-  console.log('💳 Booking data:', bookingData);
-
   try{
-    const response = await fetch(PAYMENT_API_URL,{
+    const response = await fetch(POWER_AUTOMATE_URL,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify(bookingData)
     });
-    
-    console.log('💳 Payment API Response:', response.status, response.statusText);
 
     if (response.ok){
       const result = await response.json();
-      console.log('💳 Payment API Result:', result);
-      
       if (result.url){
-        console.log('✅ Payment link generated successfully:', result.url);
-        
-        // Clear booking state since payment is being processed
-        clearStepCompletionState();
-        
         btn.classList.remove('processing');
         btn.style.display='none';
         const successDiv = document.createElement('div');
@@ -1855,20 +1349,17 @@ async function generatePaymentLink(){
         btn.parentElement.appendChild(successDiv);
         setTimeout(()=>{ window.location.href = result.url; },3000);
       } else {
-        console.error('❌ No payment URL in response:', result);
         throw new Error('No payment URL received');
       }
     } else {
-      const errorText = await response.text();
-      console.error('❌ Payment API Error Response:', response.status, errorText);
-      throw new Error('Server returned '+response.status + ': ' + errorText);
+      throw new Error('Server returned '+response.status);
     }
   }catch(err){
     console.error('Error generating payment link:', err);
     btn.disabled=false;
     btn.classList.remove('processing');
     btn.textContent='Generate Payment Link';
-    alert('Unable to generate payment link automatically.\n\nPlease try one of these options:\n1. Refresh the page and try again\n2. Use the Call Now button to contact us');
+    alert('Unable to generate payment link automatically.\n\nPlease try one of these options:\n1. Refresh the page and try again\n2. Call us at 0800 769 000');
   }
 }
 </script>
