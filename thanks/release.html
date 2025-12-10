@@ -36,23 +36,8 @@
     gtag('config', 'AW-17084465163');
     gtag('config', 'G-DQNKF1YLWR');
   </script>
-  
-  <!-- Centralized Phone Number Management -->
-  <script src="/phone-manager.js?v={{ site.version }}"></script>
-  
-  <!-- Data Repository - Single Source of Truth -->
-  <script src="/data-repository.js?v={{ site.version }}"></script>
-  
-  <!-- Payment Utilities - Payment-specific data handling -->
-  <script src="/payment-utils.js?v={{ site.version }}"></script>
-  
-  <!-- Unified Tracking System (replaces tracking-manager.js) -->
-  <script src="/unified-tracking.js?v={{ site.version }}"></script>
-  
-  <!-- Centralized Footer Management -->
-  <script src="/footer-new.js?v={{ site.version }}"></script>
 
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -193,401 +178,45 @@
 
     // Power Automate URL for release payment confirmation
     const RELEASE_PAYMENT_WEBHOOK_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/4c7d9551c5db4b678a54c799e09a4e0b/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ojmWoeVxo660rE1DN_WaafPN8FuMKJ38IXIscYS5efM';
-    
-    const SHAREPOINT_LOOKUP_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c35b9414a0be42f88182ae7e6e409f1d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2ztt24wScLuAfifD0pjzovseRDKXBAEtCQtScGMgPqQ';
 
     // Global store
-    let bookingData = {};
+    let releaseData = {};
 
-    // === HELPERS ===
-    function coalesce(...vals){ for (const v of vals){ if (v !== undefined && v !== null && v !== '') return v; } return undefined; }
-    function sanitizePhone(v){ return (v||'').replace(/\D/g,''); }
-    function cleanText(v){ return (v||'').toString().trim().replace(/\s+/g,' '); }
-
-    // Canonicalizer
-    function toCanonical(raw){
-      const canonical = {};
-      canonical.sessionId   = coalesce(raw.sessionId, raw.sid, `session_${Date.now()}`);
-      
-      const gclid = coalesce(raw.gclid, localStorage.getItem("eek_gclid"));
-      canonical.source = gclid ? 'gclid' : 'organic';
-      
-      canonical.formVersion = coalesce(raw.formVersion, '2.0');
-
-      canonical.name   = cleanText(coalesce(raw.name, raw.customerName, raw.customerData?.name));
-      canonical.phone  = sanitizePhone(coalesce(raw.phone, raw.customerPhone, raw.customerData?.phone));
-      canonical.email  = cleanText(coalesce(raw.email, raw.customerEmail, raw.customerData?.email));
-      canonical.location = cleanText(coalesce(raw.location, raw.customerData?.location));
-
-      canonical.rego   = cleanText(coalesce(raw.rego, raw.vehicleRego, raw.customerData?.vehicleRego));
-      canonical.year   = cleanText(coalesce(raw.year, raw.vehicleYear, raw.customerData?.vehicleYear));
-      canonical.make   = cleanText(coalesce(raw.make, raw.vehicleMake, raw.customerData?.vehicleMake));
-      canonical.model  = cleanText(coalesce(raw.model, raw.vehicleModel, raw.customerData?.vehicleModel));
-      canonical.vehicleType  = cleanText(coalesce(raw.vehicleType, raw.customerData?.vehicleType));
-      canonical.vehicleAddon = coalesce(raw.vehicleAddon, raw.customerData?.vehicleTypeAddon, '');
-
-      canonical.batteryVoltage = cleanText(coalesce(raw.batteryVoltage, raw.selectedVoltage, raw.customerData?.batteryVoltage));
-      canonical.tyreSize = cleanText(coalesce(raw.tyreSize, raw.customerData?.tyreSize));
-
-      canonical.sellerName  = cleanText(coalesce(raw.sellerName, raw.customerData?.sellerName));
-      canonical.sellerPhone = sanitizePhone(coalesce(raw.sellerPhone, raw.customerData?.sellerPhone));
-
-      // Release payment specific
-      canonical.service      = 'release_payment';
-      canonical.serviceCode  = 'RELEASE';
-      canonical.serviceTitle = 'Release Payment';
-      canonical.paymentType  = 'release';
-
-      canonical.scheduledDate   = cleanText(coalesce(raw.scheduledDate));
-      canonical.scheduledDateNZ = cleanText(coalesce(raw.scheduledDateNZ));
-      canonical.timeWindow      = cleanText(coalesce(raw.timeWindow, raw.selectedTime));
-      canonical.urgencyLevel    = cleanText(coalesce(raw.urgencyLevel, raw.selectedUrgency));
-
-      canonical.price   = String(coalesce(raw.price, raw.amount, raw.finalPrice, raw.calculatedPrice, raw.customerData?.price, ''));
-      canonical.amount  = String(coalesce(raw.amount, raw.price, ''));
-      canonical.details = cleanText(coalesce(raw.details, raw.description, raw.customerData?.details));
-
-      canonical.bookingTime    = coalesce(raw.bookingTime, new Date().toISOString());
-
-      canonical.gclid = coalesce(raw.gclid, localStorage.getItem("eek_gclid"));
-      canonical.utm_source = coalesce(raw.utm_source, localStorage.getItem("eek_utm_source"));
-      canonical.utm_medium = coalesce(raw.utm_medium, localStorage.getItem("eek_utm_medium"));
-      canonical.utm_campaign = coalesce(raw.utm_campaign, localStorage.getItem("eek_utm_campaign"));
-      canonical.utm_term = coalesce(raw.utm_term, localStorage.getItem("eek_utm_term"));
-      canonical.utm_content = coalesce(raw.utm_content, localStorage.getItem("eek_utm_content"));
-
-      canonical.sharepointId   = cleanText(raw.sharepointId);
-      
-      const urlParams = new URLSearchParams(window.location.search);
-      canonical.token = urlParams.get('token') || raw.token || null;
-      
-      // Unique key for Power Automate row lookup
-      canonical.key = cleanText(coalesce(raw.key, ''));
-      
-      canonical._raw = raw;
-      return canonical;
-    }
-
-    async function fetchBookingDataFromSharePoint(bookingId){
-      console.log('🔍 Fetching booking from SharePoint…', bookingId);
-      
-      try{
-        const res = await fetch(SHAREPOINT_LOOKUP_URL, {
-          method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ bookingId })
-        });
-        if(!res.ok) throw new Error(`HTTP ${res.status}`);
-        const result = await res.json();
-        if(result.success && result.bookingData){
-          const json = atob(result.bookingData);
-          const decoded = JSON.parse(json);
-          decoded.sharepointId = bookingId;
-          decoded.sharepointStatus = result.status;
-          decoded.retrievedAt = new Date().toISOString();
-          console.log('✅ SharePoint data retrieved successfully');
-          return decoded;
-        }
-        console.log('⚠️ SharePoint returned success=false or no bookingData');
-        return null;
-      }catch(err){
-        console.error('❌ SharePoint fetch error:', err);
-        return null;
-      }
-    }
-
-    function normalizeValue(value) {
-      if (value === undefined || value === null || value === '') return '';
-      if (typeof value === 'string' && value.trim() === '') return '';
-      if (typeof value === 'string') return value;
-      return String(value);
-    }
-
-    function getSessionId(){
-      let sessionId = localStorage.getItem("eek_session_id");
-      
-      if (!sessionId) {
-        const params = new URLSearchParams(window.location.search);
-        sessionId = params.get('session_id');
-        
-        if (sessionId) {
-          localStorage.setItem("eek_session_id", sessionId);
-          console.log('🔄 Session ID restored from URL');
-        } else {
-          sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-          localStorage.setItem("eek_session_id", sessionId);
-          console.log('🆕 New session ID created');
-        }
-      } else {
-        console.log('✅ Existing session ID found');
-      }
-      
-      return sessionId;
-    }
-
-    function getComprehensiveBookingData(){
-      console.log('📊 Building comprehensive booking data from all sources...');
-      const data = {};
-      
+    // === GET URL PARAMETERS ===
+    function getUrlParams() {
       const params = new URLSearchParams(window.location.search);
-      console.log('🔗 URL parameters found:', params.toString());
-      
-      const encoded = params.get('d');
-      if (encoded){
-        try{ 
-          const decoded = JSON.parse(atob(encoded));
-          Object.assign(data, decoded);
-          console.log('✅ Decoded URL data blob');
-        }catch(e){ 
-          console.warn('⚠️ Legacy blob decode failed', e); 
-        }
-      }
-      
-      for (const [k,v] of params){
-        if (k !== 'd' && k !== 'bookingId'){ 
-          const mappedKey = k === 'session_id' ? 'sessionId' : k;
-          data[mappedKey] = normalizeValue(decodeURIComponent(v));
-        }
-      }
-      
-      try{ 
-        const ss = sessionStorage.getItem('eekBookingData'); 
-        if (ss) {
-          const sessionData = JSON.parse(ss);
-          Object.assign(data, sessionData);
-          console.log('✅ Session storage data merged');
-        }
-      }catch(e){
-        console.warn('⚠️ Session storage read failed', e);
-      }
-      
-      try{ 
-        const ls = localStorage.getItem('eekBookingData'); 
-        if (ls) {
-          const localData = JSON.parse(ls);
-          Object.assign(data, localData);
-          console.log('✅ Local storage data merged');
-        }
-      }catch(e){
-        console.warn('⚠️ Local storage read failed', e);
-      }
-      
-      const gclid = localStorage.getItem("eek_gclid");
-      if (gclid) {
-        data.gclid = gclid;
-      }
-      
-      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
-        const value = localStorage.getItem(`eek_${param}`);
-        if (value) data[param] = value;
-      });
-      
-      const sessionId = getSessionId();
-      if (sessionId) {
-        data.sessionId = sessionId;
-      }
-      
-      const geo = window.CF_GEO || {};
-      const userLocationAddress = typeof data.location === 'string' 
-        ? data.location 
-        : (data.location?.address || data.location?.city || '');
-      
-      data.location = {
-        address: userLocationAddress || '',
-        city: userLocationAddress || geo.city || 'Unknown',
-        country: geo.country || 'Unknown',
-        region: geo.region || 'Unknown',
-        timezone: geo.timezone || 'Unknown'
+      return {
+        rego: params.get('rego') || '',
+        amount: params.get('amount') || '',
+        key: params.get('key') || '',
+        token: params.get('token') || ''
       };
-      
-      data.bookingStatus = 'RELEASE_PAID';
-      data.eventType = 'release_payment_confirmed';
-      data.paymentType = 'release';
-      
-      console.log('📋 Final comprehensive data object:', data);
-      return data;
     }
 
-    // === IDEMPOTENCY GUARD ===
-    class SubmissionGuard {
-      constructor() {
-        this.inFlightSubmissions = new Set();
-        this.storageKey = 'eek_release_paid_posted';
-        this.lockKey = 'eek_release_submission_lock';
-        this.lockTimeout = 30000;
-      }
-
-      generateId(canon) {
-        if (canon.key) return `key_${canon.key}`;
-        if (canon.sharepointId) return `sp_${canon.sharepointId}`;
-        if (canon.rego) return `release_${canon.rego}`;
-        if (canon.sessionId) return `session_${canon.sessionId}`;
-        if (canon.phone && canon.bookingTime) {
-          return `phone_${canon.phone}_${new Date(canon.bookingTime).getTime()}`;
-        }
-        return `fallback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      }
-
-      hasBeenSubmitted(bookingId) {
-        try {
-          const key = `${this.storageKey}:${bookingId}`;
-          const stored = localStorage.getItem(key);
-          
-          if (!stored) return false;
-          
-          const record = JSON.parse(stored);
-          
-          if (record.status === 'sent' && record.timestamp) {
-            const submittedAt = new Date(record.timestamp);
-            const now = new Date();
-            const hoursSinceSubmission = (now - submittedAt) / (1000 * 60 * 60);
-            
-            if (hoursSinceSubmission > 24) {
-              console.log(`⚠️ Submission record is ${Math.floor(hoursSinceSubmission)} hours old - treating as stale`);
-              return false;
-            }
-            
-            console.log(`🛑 Release payment ${bookingId} was already submitted at ${record.timestamp}`);
-            return true;
-          }
-          
-          return false;
-        } catch (err) {
-          console.error('Error checking submission status:', err);
-          return false;
-        }
-      }
-
-      isInProgress(bookingId) {
-        return this.inFlightSubmissions.has(bookingId);
-      }
-
-      acquireLock(bookingId) {
-        try {
-          const lockKey = `${this.lockKey}:${bookingId}`;
-          const existingLock = localStorage.getItem(lockKey);
-          
-          if (existingLock) {
-            const lockData = JSON.parse(existingLock);
-            const lockAge = Date.now() - lockData.acquiredAt;
-            
-            if (lockAge < this.lockTimeout) {
-              console.log(`🔒 Lock already held by another process (age: ${lockAge}ms)`);
-              return false;
-            }
-            
-            console.log(`⚠️ Stale lock detected (age: ${lockAge}ms) - taking over`);
-          }
-          
-          const lockData = {
-            acquiredAt: Date.now(),
-            bookingId: bookingId,
-            tabId: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-          };
-          
-          localStorage.setItem(lockKey, JSON.stringify(lockData));
-          
-          const verification = localStorage.getItem(lockKey);
-          const verifiedData = JSON.parse(verification);
-          
-          if (verifiedData.tabId !== lockData.tabId) {
-            console.log('🔒 Lost race condition for lock');
-            return false;
-          }
-          
-          console.log('✅ Lock acquired successfully');
-          return true;
-          
-        } catch (err) {
-          console.error('Error acquiring lock:', err);
-          return true;
-        }
-      }
-
-      releaseLock(bookingId) {
-        try {
-          const lockKey = `${this.lockKey}:${bookingId}`;
-          localStorage.removeItem(lockKey);
-          console.log('🔓 Lock released');
-        } catch (err) {
-          console.error('Error releasing lock:', err);
-        }
-      }
-
-      markSubmitted(bookingId, additionalData = {}) {
-        try {
-          const key = `${this.storageKey}:${bookingId}`;
-          const record = {
-            status: 'sent',
-            timestamp: new Date().toISOString(),
-            bookingId: bookingId,
-            ...additionalData
-          };
-          
-          localStorage.setItem(key, JSON.stringify(record));
-          console.log(`✅ Release payment ${bookingId} marked as submitted`);
-          
-          this.inFlightSubmissions.delete(bookingId);
-          
-        } catch (err) {
-          console.error('Error marking submission:', err);
-        }
-      }
-
-      async canSubmit(canon, forceResend = false) {
-        const bookingId = this.generateId(canon);
-        
-        console.log(`🔍 Checking submission eligibility for: ${bookingId}`);
-        
-        if (forceResend) {
-          console.log('⚡ Force resend enabled - bypassing all checks');
-          return { allowed: true, bookingId, reason: 'force_resend' };
-        }
-        
-        if (this.hasBeenSubmitted(bookingId)) {
-          return { 
-            allowed: false, 
-            bookingId, 
-            reason: 'already_submitted',
-            message: 'This release payment has already been submitted successfully'
-          };
-        }
-        
-        if (this.isInProgress(bookingId)) {
-          return { 
-            allowed: false, 
-            bookingId, 
-            reason: 'in_progress',
-            message: 'Submission already in progress'
-          };
-        }
-        
-        if (!this.acquireLock(bookingId)) {
-          return { 
-            allowed: false, 
-            bookingId, 
-            reason: 'lock_failed',
-            message: 'Another tab/window is currently submitting this payment'
-          };
-        }
-        
-        this.inFlightSubmissions.add(bookingId);
-        
-        return { allowed: true, bookingId, reason: 'approved' };
-      }
-
-      cleanup(bookingId, success = false) {
-        this.inFlightSubmissions.delete(bookingId);
-        this.releaseLock(bookingId);
-        
-        if (!success) {
-          console.log(`🧹 Cleaned up failed submission for ${bookingId}`);
-        }
-      }
+    // === BUILD UNIQUE KEY (fallback if not in URL) ===
+    function buildUniqueKey(rego) {
+      if (!rego) return '';
+      return rego.toUpperCase().replace(/\s/g, '') + '|Release Payment';
     }
 
-    const submissionGuard = new SubmissionGuard();
+    // === DISPLAY BOOKING DETAILS ===
+    function displayBookingDetails(data) {
+      const content = document.getElementById('detailsContent');
+      const rows = [];
 
-    // === INDICATOR ===
+      if (data.rego) {
+        rows.push(`<div class="detail-row"><span class="detail-label">Job Reference:</span><span class="detail-value">${data.rego}</span></div>`);
+      }
+      if (data.amount) {
+        rows.push(`<div class="detail-row"><span class="detail-label">Release Amount:</span><span class="detail-value">$${parseFloat(data.amount).toFixed(2)}</span></div>`);
+      }
+      rows.push(`<div class="detail-row"><span class="detail-label">Payment Type:</span><span class="detail-value">Release Payment</span></div>`);
+      rows.push(`<div class="detail-row"><span class="detail-label">Confirmed:</span><span class="detail-value">${new Date().toLocaleString('en-NZ')}</span></div>`);
+
+      content.innerHTML = rows.length ? rows.join('') : '<p style="text-align:center;color:#64748b;">Details in your confirmation email</p>';
+    }
+
+    // === SHOW INDICATOR ===
     function showIndicator(type, message, duration = 5000) {
       const indicator = document.getElementById('processingIndicator');
       if (!indicator) return;
@@ -612,349 +241,195 @@
       indicator.textContent = message;
       
       if (duration > 0) {
-        setTimeout(() => {
-          indicator.style.display = 'none';
-        }, duration);
+        setTimeout(() => { indicator.style.display = 'none'; }, duration);
+      }
+    }
+
+    // === IDEMPOTENCY CHECK ===
+    function hasBeenSubmitted(key) {
+      try {
+        const storageKey = `eek_release_paid:${key}`;
+        const stored = localStorage.getItem(storageKey);
+        if (!stored) return false;
+        
+        const record = JSON.parse(stored);
+        const hoursSince = (new Date() - new Date(record.timestamp)) / (1000 * 60 * 60);
+        
+        if (hoursSince > 24) {
+          localStorage.removeItem(storageKey);
+          return false;
+        }
+        
+        console.log(`🛑 Release payment ${key} already submitted at ${record.timestamp}`);
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    function markAsSubmitted(key) {
+      try {
+        const storageKey = `eek_release_paid:${key}`;
+        localStorage.setItem(storageKey, JSON.stringify({
+          status: 'sent',
+          timestamp: new Date().toISOString()
+        }));
+        console.log(`✅ Release payment ${key} marked as submitted`);
+      } catch (err) {
+        console.error('Error marking submission:', err);
       }
     }
 
     // === SEND TO POWER AUTOMATE ===
-    async function sendToReleasePaymentFlow(canon) {
-      if (!canon.rego && !canon.phone && !canon.key) {
-        console.log('🛑 Missing required data (rego/phone/key) — not posting to webhook.');
-        showIndicator('error', '⚠️ Missing required payment information');
-        return { success: false, reason: 'missing_data' };
-      }
-
-      const params = new URLSearchParams(window.location.search);
-      const forceResend = params.get('resend') === '1';
-
-      const guardCheck = await submissionGuard.canSubmit(canon, forceResend);
+    async function sendReleasePaymentConfirmation(data) {
+      const uniqueKey = data.key || buildUniqueKey(data.rego);
       
-      if (!guardCheck.allowed) {
-        console.log(`🛑 Submission blocked: ${guardCheck.reason}`);
-        
-        if (guardCheck.reason === 'already_submitted') {
-          showIndicator('info', '✓ This release payment was already confirmed (no duplicate sent)', 8000);
-        } else if (guardCheck.reason === 'in_progress') {
-          showIndicator('info', '⏳ Submission in progress...', 3000);
-        } else if (guardCheck.reason === 'lock_failed') {
-          showIndicator('warning', '⚠️ Another window is processing this payment', 5000);
-        }
-        
-        return { success: false, reason: guardCheck.reason, bookingId: guardCheck.bookingId };
+      if (!uniqueKey) {
+        console.log('🛑 Missing rego/key — cannot send to Power Automate');
+        showIndicator('error', '⚠️ Missing payment reference');
+        return { success: false, reason: 'missing_key' };
       }
 
-      const bookingId = guardCheck.bookingId;
-      console.log(`✅ Proceeding with release payment submission for ${bookingId}`);
+      // Check if already submitted
+      const forceResend = new URLSearchParams(window.location.search).get('resend') === '1';
+      if (!forceResend && hasBeenSubmitted(uniqueKey)) {
+        showIndicator('info', '✓ This release payment was already confirmed', 8000);
+        return { success: false, reason: 'already_submitted' };
+      }
 
-      // Build payload with unique key for Power Automate row lookup
+      // Build payload - simple and focused
       const payload = {
-        eventType: 'release_payment_confirmed',
-        paymentType: 'release',
+        uniqueKey: uniqueKey,
+        rego: data.rego.toUpperCase().replace(/\s/g, ''),
+        amount: data.amount,
         timestamp: new Date().toISOString(),
-        bookingId: bookingId,
-        bookingStatus: 'RELEASE_PAID',
-        
-        // Unique key for Power Automate to find the row
-        uniqueKey: normalizeValue(canon.key),
-        
-        name: normalizeValue(canon.name),
-        phone: normalizeValue(canon.phone),
-        email: normalizeValue(canon.email),
-        location: typeof canon.location === 'string' ? canon.location : (canon.location?.address || ''),
-        
-        rego: normalizeValue(canon.rego),
-        amount: normalizeValue(canon.amount),
-        vehicleYear: normalizeValue(canon.year),
-        vehicleMake: normalizeValue(canon.make),
-        vehicleModel: normalizeValue(canon.model),
-        vehicleType: normalizeValue(canon.vehicleType),
-        
-        price: normalizeValue(canon.price || canon.amount),
-        currency: 'NZD',
-        stripeToken: normalizeValue(canon.token),
-        
-        service: 'release_payment',
-        serviceCode: 'RELEASE',
-        serviceTitle: 'Release Payment',
-        
-        sessionId: normalizeValue(canon.sessionId),
-        gclid: normalizeValue(canon.gclid),
-        source: normalizeValue(canon.source),
-        formVersion: normalizeValue(canon.formVersion),
-        
-        utm_source: normalizeValue(canon.utm_source),
-        utm_medium: normalizeValue(canon.utm_medium),
-        utm_campaign: normalizeValue(canon.utm_campaign),
-        utm_term: normalizeValue(canon.utm_term),
-        utm_content: normalizeValue(canon.utm_content),
-        
-        pageUrl: window.location.href,
-        pagePath: window.location.pathname,
-        pageTitle: document.title,
-        userAgent: navigator.userAgent
+        eventType: 'release_payment_confirmed',
+        paymentType: 'release'
       };
 
-      console.log('📤 Sending release payment payload:', payload);
-      console.log('🔑 Unique key for row lookup:', payload.uniqueKey);
+      console.log('📤 Sending release payment to Power Automate:', payload);
+      showIndicator('loading', '⏳ Confirming release payment...', 0);
 
+      // Retry logic
       const maxRetries = 3;
       let lastError = null;
 
       for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
-          console.log(`📤 Submission attempt ${attempt}/${maxRetries} for ${bookingId}`);
+          console.log(`📤 Attempt ${attempt}/${maxRetries}`);
           
-          showIndicator('loading', `⏳ Confirming release payment... (attempt ${attempt})`, 0);
-
           const res = await fetch(RELEASE_PAYMENT_WEBHOOK_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ...payload, submissionAttempt: attempt })
+            body: JSON.stringify(payload)
           });
 
           if (res.ok) {
             console.log(`✅ Release payment confirmed on attempt ${attempt}`);
-            
-            submissionGuard.markSubmitted(bookingId, {
-              attempt: attempt,
-              timestamp: new Date().toISOString()
-            });
-            
+            markAsSubmitted(uniqueKey);
             showIndicator('success', '✅ Release payment confirmed! Processing contractor payment...', 5000);
-            
-            return { success: true, bookingId, attempt };
-            
+            return { success: true };
           } else {
-            const errorText = await res.text();
-            lastError = `HTTP ${res.status}: ${errorText}`;
+            lastError = `HTTP ${res.status}`;
             console.error(`❌ Attempt ${attempt} failed:`, lastError);
             
-            if (res.status >= 400 && res.status < 500) {
-              console.log('🛑 Client error - not retrying');
-              break;
-            }
+            if (res.status >= 400 && res.status < 500) break;
             
             if (attempt < maxRetries) {
-              const waitTime = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
-              console.log(`⏳ Waiting ${waitTime}ms before retry...`);
-              await new Promise(resolve => setTimeout(resolve, waitTime));
+              await new Promise(r => setTimeout(r, 1000 * Math.pow(2, attempt - 1)));
             }
           }
-          
         } catch (err) {
           lastError = err.message;
           console.error(`❌ Attempt ${attempt} error:`, err);
           
           if (attempt < maxRetries) {
-            const waitTime = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
-            await new Promise(resolve => setTimeout(resolve, waitTime));
+            await new Promise(r => setTimeout(r, 1000 * Math.pow(2, attempt - 1)));
           }
         }
       }
 
-      console.error('❌ All submission attempts failed:', lastError);
-      submissionGuard.cleanup(bookingId, false);
-      
-      showIndicator('error', 
-        '⚠️ Unable to confirm automatically. Please call 0800 769 000 to verify your payment.', 
-        15000
-      );
-      
-      return { success: false, bookingId, error: lastError };
-    }
-
-    // === DISPLAY ===
-    function addDetailRow(buf, label, value){
-      if (value !== undefined && value !== null && String(value).trim() !== ''){
-        buf.push(`<div class="detail-row"><span class="detail-label">${label}:</span><span class="detail-value">${value}</span></div>`);
-      }
-    }
-
-    function displayBookingDetails(data){
-      const content = document.getElementById('detailsContent');
-      const rows = [];
-
-      addDetailRow(rows, 'Job Reference', data.rego);
-      addDetailRow(rows, 'Name', data.name);
-      addDetailRow(rows, 'Phone', data.phone);
-      addDetailRow(rows, 'Email', data.email);
-
-      const vehicleLine = [data.year, data.make, data.model].filter(Boolean).join(' ');
-      addDetailRow(rows, 'Vehicle', vehicleLine);
-      
-      addDetailRow(rows, 'Release Amount', data.amount ? `$${parseFloat(data.amount).toFixed(2)}` : (data.price ? `$${parseFloat(data.price).toFixed(2)}` : ''));
-      addDetailRow(rows, 'Payment Type', 'Release Payment');
-      addDetailRow(rows, 'Confirmed', new Date().toLocaleString('en-NZ'));
-
-      addDetailRow(rows, 'Session ID', data.sessionId);
-
-      content.innerHTML = rows.length ? rows.join('') : '<p style="text-align:center;color:#64748b;">Details in your confirmation email</p>';
+      console.error('❌ All attempts failed:', lastError);
+      showIndicator('error', '⚠️ Unable to confirm automatically. Please call 0800 769 000.', 15000);
+      return { success: false, error: lastError };
     }
 
     // === TRACKING ===
-    function trackCall(source){
-      if (typeof gtag !== 'undefined'){
-        gtag('event','phone_call',{event_category:'Contact', event_label:source, value:1});
-      }
-      if (typeof rdt !== 'undefined'){
-        rdt('track','Lead',{customEventName:'Release_Payment_Call', eventSource:source});
+    function trackCall(source) {
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'phone_call', { event_category: 'Contact', event_label: source, value: 1 });
       }
     }
 
     function trackInteraction(element) {
-      const trackingAction = element.dataset.track;
-      console.log('👆 Interaction tracked:', trackingAction);
-      
+      const action = element.dataset.track;
       if (typeof gtag !== 'undefined') {
-        gtag('event', trackingAction, {
-          event_category: 'Release_Page_Interaction',
-          event_label: element.textContent.trim()
-        });
+        gtag('event', action, { event_category: 'Release_Page_Interaction', event_label: element.textContent.trim() });
       }
     }
 
-    function trackReleaseConversion(canon) {
-      if (typeof gtag === 'undefined') {
-        console.warn('⚠️ gtag not available');
-        return;
-      }
-
-      const price = parseFloat(canon.price || canon.amount) || 0;
-      const transactionId = `release_${canon.rego || canon.sessionId || Date.now()}`;
+    function trackReleaseConversion(data) {
+      const amount = parseFloat(data.amount) || 0;
+      const transactionId = `release_${data.rego || Date.now()}`;
       
-      if (price > 0) {
+      if (typeof gtag !== 'undefined' && amount > 0) {
         gtag('event', 'conversion', {
           'send_to': 'AW-17084465163/VkFHCNfslMAbEIuAwdI_',
-          'value': price,
+          'value': amount,
           'currency': 'NZD',
           'transaction_id': transactionId
         });
         
         gtag('event', 'purchase', {
           transaction_id: transactionId,
-          value: price,
+          value: amount,
           currency: 'NZD',
-          items: [{
-            item_name: 'Release Payment',
-            price: price,
-            quantity: 1,
-            item_category: 'release_payment'
-          }]
+          items: [{ item_name: 'Release Payment', price: amount, quantity: 1, item_category: 'release_payment' }]
         });
         
-        console.log('✅ Release conversion tracked:', { price, transactionId });
+        console.log('✅ Release conversion tracked:', { amount, transactionId });
       }
 
-      if (typeof rdt !== 'undefined' && price > 0){
-        rdt('track','Purchase',{
-          customEventName:'Release_Payment_Completed', 
-          currency:'NZD', 
-          value: price, 
-          eventSource:'release_thanks_page'
-        });
+      if (typeof rdt !== 'undefined' && amount > 0) {
+        rdt('track', 'Purchase', { customEventName: 'Release_Payment_Completed', currency: 'NZD', value: amount });
       }
     }
 
     // === BOOTSTRAP ===
     window.addEventListener('load', async () => {
-      console.log('🚀 === RELEASE PAYMENT PAGE LOADED === 🚀');
+      console.log('🚀 Release payment page loaded');
       
-      const params = new URLSearchParams(window.location.search);
-      const bookingId = params.get('bookingId');
-
-      if (bookingId){
-        const sp = await fetchBookingDataFromSharePoint(bookingId);
-        bookingData = sp || getComprehensiveBookingData();
-      }else{
-        bookingData = getComprehensiveBookingData();
-      }
-
-      bookingData = toCanonical(bookingData);
-      console.log('✅ Canonical release payment data:', bookingData);
-      console.log('🔑 Unique key:', bookingData.key);
-
-      displayBookingDetails(bookingData);
-
-      if (window.skipSubmission) {
-        console.log('🛑 Submission skipped (page restored from cache)');
-        window.skipSubmission = false;
-        return;
-      }
-
-      const submissionResult = await sendToReleasePaymentFlow(bookingData);
+      // Get data from URL parameters
+      releaseData = getUrlParams();
+      console.log('📋 URL parameters:', releaseData);
       
-      if (submissionResult.success) {
-        console.log('✅ Release payment submission completed');
-        trackReleaseConversion(bookingData);
-      } else if (submissionResult.reason === 'already_submitted') {
-        console.log('ℹ️ Already submitted - tracking conversion anyway');
-        trackReleaseConversion(bookingData);
-      } else {
-        console.error('❌ Submission failed:', submissionResult.reason);
-      }
-
-      try {
-        sessionStorage.setItem('lastReleasePageData', JSON.stringify({
-          bookingData,
-          submissionResult,
-          timestamp: new Date().toISOString()
-        }));
-      } catch {}
-    });
-
-    // === PREVENT RELOAD SPAM ===
-    window.addEventListener('beforeunload', () => {
-      sessionStorage.setItem('eek_release_page_was_unloaded', 'true');
-    });
-
-    window.addEventListener('pageshow', (event) => {
-      if (event.persisted || sessionStorage.getItem('eek_release_page_was_unloaded') === 'true') {
-        console.log('⚠️ Page was restored from cache');
-        sessionStorage.removeItem('eek_release_page_was_unloaded');
-        
-        const rawData = getComprehensiveBookingData();
-        const canon = toCanonical(rawData);
-        const bookingId = submissionGuard.generateId(canon);
-        
-        if (submissionGuard.hasBeenSubmitted(bookingId)) {
-          console.log('🛑 Already submitted - preventing re-submission');
-          showIndicator('info', '✓ Release payment already confirmed', 8000);
-          window.skipSubmission = true;
-        }
+      // Display details
+      displayBookingDetails(releaseData);
+      
+      // Send to Power Automate
+      const result = await sendReleasePaymentConfirmation(releaseData);
+      
+      // Track conversion
+      if (result.success || result.reason === 'already_submitted') {
+        trackReleaseConversion(releaseData);
       }
     });
 
     // === DEBUG ===
     window.releaseDebug = {
-      checkStatus: () => {
-        const id = submissionGuard.generateId(bookingData);
-        console.log('Status:', {
-          id,
-          submitted: submissionGuard.hasBeenSubmitted(id),
-          data: bookingData,
-          uniqueKey: bookingData.key
-        });
+      getData: () => releaseData,
+      clearSubmission: () => {
+        const key = releaseData.key || buildUniqueKey(releaseData.rego);
+        localStorage.removeItem(`eek_release_paid:${key}`);
+        console.log('✅ Submission record cleared');
       },
-      clearRecords: () => {
-        const keys = Object.keys(localStorage);
-        keys.forEach(key => {
-          if (key.startsWith('eek_release_paid_posted:') || key.startsWith('eek_release_submission_lock:')) {
-            localStorage.removeItem(key);
-            console.log('Removed:', key);
-          }
-        });
-        console.log('✅ Release submission records cleared');
-      },
-      forceResend: async () => {
-        console.log('⚡ Forcing resubmission...');
-        const result = await sendToReleasePaymentFlow(bookingData);
+      resend: async () => {
+        const result = await sendReleasePaymentConfirmation(releaseData);
         console.log('Result:', result);
       }
     };
-
-    console.log('💡 Debug: window.releaseDebug.checkStatus(), window.releaseDebug.clearRecords(), window.releaseDebug.forceResend()');
+    
+    console.log('💡 Debug: window.releaseDebug.getData(), clearSubmission(), resend()');
   </script>
 </body>
 </html>
