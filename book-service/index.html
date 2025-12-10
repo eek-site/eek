@@ -820,6 +820,9 @@ document.addEventListener('DOMContentLoaded', function(){
   
   loadServiceConfig(service);
   sendBookingUpdate(BOOKING_STATUS.INITIAL);
+  
+  // Initial anchor to first required input on page load
+  scrollToStep('step1');
 });
 
 function loadServiceConfig(serviceType){
@@ -960,53 +963,58 @@ function selectVoltage(id, price, el){
 }
 
 // === SCROLL ANCHORING HELPER ===
-// Mobile-first: Smart scrolling that adapts to screen size
+// Mobile-first: Scroll to first required input on each step
 function scrollToStep(stepId) {
   setTimeout(() => {
     const isMobile = window.innerWidth <= 768;
-    const stepElement = document.getElementById(stepId);
-    const progressBar = document.querySelector('.progress-bar');
-    const bookingHeader = document.querySelector('.booking-header');
     
-    if (isMobile) {
-      // Mobile: Scroll to step title so user sees content immediately
-      // Progress bar is visible at top, content is the priority
-      if (stepElement) {
-        const stepTitle = stepElement.querySelector('h3');
-        const targetElement = stepTitle || stepElement;
-        
-        targetElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-        // Small offset to not cut off the title
-        setTimeout(() => {
-          window.scrollBy(0, -15);
-        }, 300);
+    // Define the first required element for each step
+    let targetElement = null;
+    let shouldFocus = false;
+    
+    if (stepId === 'step1') {
+      // Step 1: First required field depends on service type
+      if (window.currentConfig && window.currentConfig.isWinz) {
+        // WINZ: Emergency type selector is first
+        targetElement = document.getElementById('emergencySelector');
+      } else {
+        // Normal: Name input is first required field
+        targetElement = document.getElementById('nameInput');
+        shouldFocus = true;
       }
-    } else {
-      // Desktop: Show progress bar + step content
-      if (progressBar) {
-        const progressBarRect = progressBar.getBoundingClientRect();
-        const absoluteTop = window.pageYOffset + progressBarRect.top;
-        const offset = 20;
-        
-        window.scrollTo({
-          top: Math.max(0, absoluteTop - offset),
-          behavior: 'smooth'
-        });
-      } else if (stepElement) {
-        stepElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-        setTimeout(() => {
-          window.scrollBy(0, -20);
-        }, 300);
-      }
+    } else if (stepId === 'step2') {
+      // Step 2: Urgency/price options are the first required selection
+      targetElement = document.getElementById('urgencyOptions');
+    } else if (stepId === 'step3') {
+      // Step 3: Summary is first thing to review, then terms checkbox
+      targetElement = document.querySelector('.reservation-summary');
     }
     
-    console.log(`📍 Scrolled to ${stepId} (${isMobile ? 'mobile' : 'desktop'} mode)`);
+    // Fallback to step title if no specific target found
+    if (!targetElement) {
+      const stepElement = document.getElementById(stepId);
+      targetElement = stepElement ? stepElement.querySelector('h3') : null;
+    }
+    
+    if (targetElement) {
+      // Scroll to the target element
+      targetElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+      
+      // Apply small offset so element isn't cut off at very top
+      setTimeout(() => {
+        window.scrollBy(0, -15);
+        
+        // Focus input if appropriate (helps mobile keyboard appear)
+        if (shouldFocus && targetElement.focus) {
+          targetElement.focus();
+        }
+      }, 300);
+    }
+    
+    console.log(`📍 Scrolled to first input in ${stepId} (${isMobile ? 'mobile' : 'desktop'} mode)`);
   }, 100);
 }
 
