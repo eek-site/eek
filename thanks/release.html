@@ -244,6 +244,7 @@
       canonical.urgencyLevel    = cleanText(coalesce(raw.urgencyLevel, raw.selectedUrgency));
 
       canonical.price   = String(coalesce(raw.price, raw.amount, raw.finalPrice, raw.calculatedPrice, raw.customerData?.price, ''));
+      canonical.amount  = String(coalesce(raw.amount, raw.price, ''));
       canonical.details = cleanText(coalesce(raw.details, raw.description, raw.customerData?.details));
 
       canonical.bookingTime    = coalesce(raw.bookingTime, new Date().toISOString());
@@ -259,6 +260,9 @@
       
       const urlParams = new URLSearchParams(window.location.search);
       canonical.token = urlParams.get('token') || raw.token || null;
+      
+      // Unique key for Power Automate row lookup
+      canonical.key = cleanText(coalesce(raw.key, ''));
       
       canonical._raw = raw;
       return canonical;
@@ -413,6 +417,7 @@
       }
 
       generateId(canon) {
+        if (canon.key) return `key_${canon.key}`;
         if (canon.sharepointId) return `sp_${canon.sharepointId}`;
         if (canon.rego) return `release_${canon.rego}`;
         if (canon.sessionId) return `session_${canon.sessionId}`;
@@ -615,8 +620,8 @@
 
     // === SEND TO POWER AUTOMATE ===
     async function sendToReleasePaymentFlow(canon) {
-      if (!canon.rego && !canon.phone) {
-        console.log('🛑 Missing required data (rego/phone) — not posting to webhook.');
+      if (!canon.rego && !canon.phone && !canon.key) {
+        console.log('🛑 Missing required data (rego/phone/key) — not posting to webhook.');
         showIndicator('error', '⚠️ Missing required payment information');
         return { success: false, reason: 'missing_data' };
       }
@@ -643,7 +648,7 @@
       const bookingId = guardCheck.bookingId;
       console.log(`✅ Proceeding with release payment submission for ${bookingId}`);
 
-      // Build payload
+      // Build payload with unique key for Power Automate row lookup
       const payload = {
         eventType: 'release_payment_confirmed',
         paymentType: 'release',
@@ -651,18 +656,22 @@
         bookingId: bookingId,
         bookingStatus: 'RELEASE_PAID',
         
+        // Unique key for Power Automate to find the row
+        uniqueKey: normalizeValue(canon.key),
+        
         name: normalizeValue(canon.name),
         phone: normalizeValue(canon.phone),
         email: normalizeValue(canon.email),
         location: typeof canon.location === 'string' ? canon.location : (canon.location?.address || ''),
         
         rego: normalizeValue(canon.rego),
+        amount: normalizeValue(canon.amount),
         vehicleYear: normalizeValue(canon.year),
         vehicleMake: normalizeValue(canon.make),
         vehicleModel: normalizeValue(canon.model),
         vehicleType: normalizeValue(canon.vehicleType),
         
-        price: normalizeValue(canon.price),
+        price: normalizeValue(canon.price || canon.amount),
         currency: 'NZD',
         stripeToken: normalizeValue(canon.token),
         
@@ -688,6 +697,7 @@
       };
 
       console.log('📤 Sending release payment payload:', payload);
+      console.log('🔑 Unique key for row lookup:', payload.uniqueKey);
 
       const maxRetries = 3;
       let lastError = null;
@@ -774,7 +784,7 @@
       const vehicleLine = [data.year, data.make, data.model].filter(Boolean).join(' ');
       addDetailRow(rows, 'Vehicle', vehicleLine);
       
-      addDetailRow(rows, 'Release Amount', data.price ? `$${parseFloat(data.price).toFixed(2)}` : '');
+      addDetailRow(rows, 'Release Amount', data.amount ? `$${parseFloat(data.amount).toFixed(2)}` : (data.price ? `$${parseFloat(data.price).toFixed(2)}` : ''));
       addDetailRow(rows, 'Payment Type', 'Release Payment');
       addDetailRow(rows, 'Confirmed', new Date().toLocaleString('en-NZ'));
 
@@ -811,7 +821,7 @@
         return;
       }
 
-      const price = parseFloat(canon.price) || 0;
+      const price = parseFloat(canon.price || canon.amount) || 0;
       const transactionId = `release_${canon.rego || canon.sessionId || Date.now()}`;
       
       if (price > 0) {
@@ -863,6 +873,7 @@
 
       bookingData = toCanonical(bookingData);
       console.log('✅ Canonical release payment data:', bookingData);
+      console.log('🔑 Unique key:', bookingData.key);
 
       displayBookingDetails(bookingData);
 
@@ -922,7 +933,8 @@
         console.log('Status:', {
           id,
           submitted: submissionGuard.hasBeenSubmitted(id),
-          data: bookingData
+          data: bookingData,
+          uniqueKey: bookingData.key
         });
       },
       clearRecords: () => {
