@@ -931,11 +931,47 @@ function selectVoltage(id, price, el){
   selectedVoltagePrice = price;
 }
 
+// === SCROLL ANCHORING HELPER ===
+// Ensures consistent, smooth scrolling to steps with proper offset for visibility
+function scrollToStep(stepId) {
+  setTimeout(() => {
+    const progressBar = document.querySelector('.progress-bar');
+    const stepElement = document.getElementById(stepId);
+    
+    // First scroll to progress bar so user sees their progress
+    if (progressBar) {
+      const progressBarRect = progressBar.getBoundingClientRect();
+      const absoluteTop = window.pageYOffset + progressBarRect.top;
+      const offset = 20; // Small offset from top of viewport
+      
+      window.scrollTo({
+        top: Math.max(0, absoluteTop - offset),
+        behavior: 'smooth'
+      });
+    } else if (stepElement) {
+      // Fallback: scroll to the step itself
+      stepElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+      // Apply offset after scroll
+      setTimeout(() => {
+        window.scrollBy(0, -20);
+      }, 300);
+    }
+    
+    console.log(`📍 Scrolled to ${stepId}`);
+  }, 100);
+}
+
 function goToStep1(){
   document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
   document.getElementById('step1').classList.add('active');
   document.querySelectorAll('.progress-step').forEach(el => el.classList.remove('active','completed'));
   document.getElementById('step1-progress').classList.add('active');
+  
+  // Scroll to Step 1 with proper anchoring
+  scrollToStep('step1');
 }
 
 async function goToStep2(){
@@ -1084,6 +1120,9 @@ async function goToStep2(){
     const firstOption = window.currentConfig.urgencyOptions[0];
     selectUrgency(firstOption.id, firstOption.title, firstOption.time, calculatedPrice || 0, urgencyContainer.querySelector('.urgency-option'));
   }
+  
+  // Scroll to Step 2 with proper anchoring
+  scrollToStep('step2');
 }
 
 function selectUrgency(id, title, time, price, el){
@@ -1135,6 +1174,9 @@ async function goToStep3(){
   document.getElementById('step3-progress').classList.add('active');
 
   updateSummary();
+  
+  // Scroll to Step 3 with proper anchoring
+  scrollToStep('step3');
 }
 
 function getTotalPrice(){
