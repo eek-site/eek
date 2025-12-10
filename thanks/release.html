@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Release Payment Confirmed | Eek Mechanical</title>
+  <meta name="description" content="Release payment confirmed! We're now processing payment to the contractor so you can collect your vehicle." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:title" content="Release Payment Confirmed | Eek Mechanical" />
+  <meta property="og:description" content="Release payment confirmed! Your vehicle will be ready for collection soon." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.eek.nz/thanks/release" />
+  <meta property="og:image" content="https://www.eek.nz/sweet-ride.png" />
+
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://prod-22.australiasoutheast.logic.azure.com https://prod-26.australiasoutheast.logic.azure.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com https://static.cloudflareinsights.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+
+  <!-- Reddit Pixel -->
+  <script>
+    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
+    (window,document);
+    rdt('init', 'a2_hf16791nsdhx');
+    rdt('track', 'PageVisit');
+  </script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-17084465163');
+    gtag('config', 'G-DQNKF1YLWR');
+  </script>
+  
+  <!-- Centralized Phone Number Management -->
+  <script src="/phone-manager.js?v={{ site.version }}"></script>
+  
+  <!-- Data Repository - Single Source of Truth -->
+  <script src="/data-repository.js?v={{ site.version }}"></script>
+  
+  <!-- Payment Utilities - Payment-specific data handling -->
+  <script src="/payment-utils.js?v={{ site.version }}"></script>
+  
+  <!-- Unified Tracking System (replaces tracking-manager.js) -->
+  <script src="/unified-tracking.js?v={{ site.version }}"></script>
+  
+  <!-- Centralized Footer Management -->
+  <script src="/footer-new.js?v={{ site.version }}"></script>
+
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f5f5f5 0%, #e0f2fe 100%);
+      margin: 0; padding: 0; color: #333; text-align: center;
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+    .container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+    .success-card { background: white; padding: 50px; border-radius: 20px; box-shadow: 0 12px 40px rgba(0,0,0,0.15); max-width: 700px; width: 100%; margin: 20px; position: relative; overflow: hidden; }
+    .success-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, #0ea5e9, #06b6d4, #14b8a6); }
+    .success-card::after { content: '✨'; position: absolute; top: 20px; right: 20px; font-size: 2em; opacity: 0.3; animation: sparkle 2s ease-in-out infinite; }
+    @keyframes sparkle { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.1); } }
+    .success-icon { font-size: 4em; color: #0ea5e9; margin-bottom: 20px; animation: bounce 1s ease-in-out; }
+    @keyframes bounce { 0%,20%,50%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-20px)} 60%{transform:translateY(-10px)} }
+    h1 { color: #0ea5e9; font-size: 2.5em; margin: 0 0 10px 0; font-weight: 700; }
+    .subtitle { font-size: 1.3em; color: #666; margin-bottom: 30px; font-weight: 500; }
+    .booking-details { background: #f0f9ff; padding: 25px; border-radius: 15px; margin: 20px 0; border: 2px solid #0ea5e9; text-align: left; }
+    .booking-details h3 { color: #0369a1; margin-bottom: 15px; font-size: 1.3em; text-align: center; }
+    .detail-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e0f2fe; align-items: flex-start; }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-label { font-weight: 600; color: #64748b; flex-shrink: 0; min-width: 120px; }
+    .detail-value { color: #0f172a; text-align: right; flex: 1; word-break: break-word; }
+    .next-steps { background: #f8f9fa; padding: 30px; border-radius: 15px; margin: 30px 0; border-left: 5px solid #0ea5e9; }
+    .next-steps h2 { color: #0ea5e9; font-size: 1.5em; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .steps-list { text-align: left; margin: 0; padding: 0; list-style: none; }
+    .steps-list li { padding: 12px 0; font-size: 1.1em; display: flex; align-items: flex-start; gap: 12px; }
+    .step-number { background: #0ea5e9; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9em; font-weight: bold; flex-shrink: 0; margin-top: 2px; }
+    .contact-info { background: #e3f2fd; padding: 25px; border-radius: 15px; margin: 30px 0; border: 2px solid #2196f3; }
+    .contact-info h3 { color: #1976d2; margin-bottom: 15px; font-size: 1.3em; }
+    .contact-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+    .btn { display: inline-block; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1em; transition: all 0.3s ease; border: none; cursor: pointer; }
+    .btn-primary { background: #0ea5e9; color: white; }
+    .btn-primary:hover { background: #0284c7; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(14,165,233,0.3); }
+    .warning-box { background: #fef3c7; padding: 20px; border-radius: 12px; margin: 20px 0; border: 2px solid #fbbf24; text-align: left; }
+    .warning-box h4 { color: #92400e; margin: 0 0 10px 0; }
+    .warning-box ul { margin: 0; padding-left: 20px; color: #92400e; }
+    .warning-box li { margin: 8px 0; }
+    .estimated-time { background: linear-gradient(135deg, #e0f2fe, #bae6fd); padding: 20px; border-radius: 12px; margin: 20px 0; border: 2px solid #0ea5e9; }
+    .estimated-time .time-display { font-size: 2em; font-weight: bold; color: #0369a1; margin: 10px 0; }
+    .additional-services { background: #f0f9ff; padding: 25px; border-radius: 15px; margin: 30px 0; border: 2px solid #0ea5e9; }
+    .additional-services h3 { color: #0369a1; margin-bottom: 15px; font-size: 1.3em; }
+    .service-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px; }
+    .service-links a { background: white; padding: 12px 16px; border-radius: 8px; text-decoration: none; color: #0369a1; font-size: 0.9em; transition: all 0.3s ease; border: 1px solid #e0f2fe; }
+    .service-links a:hover { background: #0ea5e9; color: white; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(14,165,233,0.2); }
+    .footer-links { margin-top: 40px; padding-top: 20px; border-top: 1px solid #dee2e6; }
+    .footer-links a { color: #6c757d; text-decoration: none; margin: 0 15px; font-size: 0.9em; }
+    .footer-links a:hover { color: #0ea5e9; text-decoration: underline; }
+    .loading-animation { display: inline-block; width: 20px; height: 20px; border: 3px solid #f3f3f3; border-top: 3px solid #0ea5e9; border-radius: 50%; animation: spin 1s linear infinite; margin-left: 10px; }
+    @keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
+    .processing-indicator { display: none; }
+    @media (max-width:768px){
+      .success-card{padding:30px 20px;margin:10px}
+      h1{font-size:2em}
+      .contact-buttons{flex-direction:column;align-items:center}
+      .btn{width:100%;max-width:250px}
+      .service-links{grid-template-columns:1fr}
+      .detail-row{flex-direction:column;gap:4px}
+      .detail-label{min-width:unset}
+      .detail-value{text-align:left}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+      <img src="https://www.eek.nz/sweet-ride.png" alt="Sweet! - Eek Mechanical Success" style="max-width: 300px; height: auto; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
+      <h1 style="margin: 0.5em 0 0.2em; font-size: 2em; color: #0ea5e9;">Eek Mechanical</h1>
+      <p style="font-size: 1.2em; color: #666; margin-bottom: 0;">NZ-Wide Mobile Mechanics</p>
+    </header>
+
+    <div class="success-card" id="successCard">
+      <div class="success-icon" id="successIcon">💳✅</div>
+      <h1 id="mainTitle">Release Payment Received!</h1>
+      <p class="subtitle" id="mainSubtitle">Thank you — we're now processing your vehicle release</p>
+
+      <div class="processing-indicator" id="processingIndicator"></div>
+
+      <!-- Booking Details -->
+      <div class="booking-details" id="bookingDetails">
+        <h3>📋 Payment Details</h3>
+        <div id="detailsContent"></div>
+      </div>
+
+      <!-- Release Payment Section -->
+      <div id="releaseSection">
+        <div class="estimated-time">
+          <h3>🚗 Vehicle Release Status</h3>
+          <div class="time-display">Processing<div class="loading-animation"></div></div>
+          <p id="serviceTypeText">We're now paying the contractor so you can collect your vehicle</p>
+        </div>
+
+        <div class="next-steps">
+          <h2>📋 What Happens Next</h2>
+          <ol class="steps-list">
+            <li><span class="step-number">✓</span><span>Payment received — your release payment has been confirmed</span></li>
+            <li><span class="step-number">2</span><span>We're now processing payment to the workshop/contractor</span></li>
+            <li><span class="step-number">3</span><span>You'll receive an SMS & email once payment clears</span></li>
+            <li><span class="step-number">4</span><span>Head to the workshop to collect your vehicle</span></li>
+          </ol>
+        </div>
+
+        <div class="warning-box">
+          <h4>⚠️ Important — Please Read</h4>
+          <ul>
+            <li><strong>Do not go to collect your vehicle yet</strong> — the workshop cannot release it until they receive payment from us</li>
+            <li>Contractor payment typically processes within <strong>1-2 business hours</strong></li>
+            <li>You will receive an <strong>SMS and email</strong> confirming when your vehicle is ready</li>
+            <li>If you haven't heard from us within 4 hours during business hours, please call</li>
+          </ul>
+        </div>
+
+        <div class="contact-info">
+          <h3>📞 Questions About Your Vehicle Release?</h3>
+          <p>If you need to check on your vehicle release status or have any questions</p>
+          <div class="contact-buttons">
+            <a href="tel:0800769000" class="btn btn-primary" onclick="trackCall('release_page_call')">📞 Call 0800 769 000</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="additional-services">
+        <h3>🛠️ Need Additional Help?</h3>
+        <p>Access our support options</p>
+        <div class="service-links">
+          <a href="https://www.eek.nz/customer-escalation" data-track="customer_support" onclick="trackInteraction(this)">📝 Customer Support</a>
+          <a href="https://www.eek.nz/review-form" data-track="leave_review" onclick="trackInteraction(this)">⭐ Leave a Review</a>
+          <a href="https://www.eek.nz/insurance-form" data-track="insurance_claims" onclick="trackInteraction(this)">🛡️ Insurance Claims</a>
+          <a href="https://www.eek.nz/more-options" data-track="more_services" onclick="trackInteraction(this)">📋 More Services</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // === INITIALIZATION ===
+    console.log('🚀 === RELEASE PAYMENT THANKS PAGE INITIALIZED === 🚀');
+
+    // Power Automate URL for release payment confirmation
+    const RELEASE_PAYMENT_WEBHOOK_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/4c7d9551c5db4b678a54c799e09a4e0b/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=ojmWoeVxo660rE1DN_WaafPN8FuMKJ38IXIscYS5efM';
+    
+    const SHAREPOINT_LOOKUP_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c35b9414a0be42f88182ae7e6e409f1d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2ztt24wScLuAfifD0pjzovseRDKXBAEtCQtScGMgPqQ';
+
+    // Global store
+    let bookingData = {};
+
+    // === HELPERS ===
+    function coalesce(...vals){ for (const v of vals){ if (v !== undefined && v !== null && v !== '') return v; } return undefined; }
+    function sanitizePhone(v){ return (v||'').replace(/\D/g,''); }
+    function cleanText(v){ return (v||'').toString().trim().replace(/\s+/g,' '); }
+
+    // Canonicalizer
+    function toCanonical(raw){
+      const canonical = {};
+      canonical.sessionId   = coalesce(raw.sessionId, raw.sid, `session_${Date.now()}`);
+      
+      const gclid = coalesce(raw.gclid, localStorage.getItem("eek_gclid"));
+      canonical.source = gclid ? 'gclid' : 'organic';
+      
+      canonical.formVersion = coalesce(raw.formVersion, '2.0');
+
+      canonical.name   = cleanText(coalesce(raw.name, raw.customerName, raw.customerData?.name));
+      canonical.phone  = sanitizePhone(coalesce(raw.phone, raw.customerPhone, raw.customerData?.phone));
+      canonical.email  = cleanText(coalesce(raw.email, raw.customerEmail, raw.customerData?.email));
+      canonical.location = cleanText(coalesce(raw.location, raw.customerData?.location));
+
+      canonical.rego   = cleanText(coalesce(raw.rego, raw.vehicleRego, raw.customerData?.vehicleRego));
+      canonical.year   = cleanText(coalesce(raw.year, raw.vehicleYear, raw.customerData?.vehicleYear));
+      canonical.make   = cleanText(coalesce(raw.make, raw.vehicleMake, raw.customerData?.vehicleMake));
+      canonical.model  = cleanText(coalesce(raw.model, raw.vehicleModel, raw.customerData?.vehicleModel));
+      canonical.vehicleType  = cleanText(coalesce(raw.vehicleType, raw.customerData?.vehicleType));
+      canonical.vehicleAddon = coalesce(raw.vehicleAddon, raw.customerData?.vehicleTypeAddon, '');
+
+      canonical.batteryVoltage = cleanText(coalesce(raw.batteryVoltage, raw.selectedVoltage, raw.customerData?.batteryVoltage));
+      canonical.tyreSize = cleanText(coalesce(raw.tyreSize, raw.customerData?.tyreSize));
+
+      canonical.sellerName  = cleanText(coalesce(raw.sellerName, raw.customerData?.sellerName));
+      canonical.sellerPhone = sanitizePhone(coalesce(raw.sellerPhone, raw.customerData?.sellerPhone));
+
+      // Release payment specific
+      canonical.service      = 'release_payment';
+      canonical.serviceCode  = 'RELEASE';
+      canonical.serviceTitle = 'Release Payment';
+      canonical.paymentType  = 'release';
+
+      canonical.scheduledDate   = cleanText(coalesce(raw.scheduledDate));
+      canonical.scheduledDateNZ = cleanText(coalesce(raw.scheduledDateNZ));
+      canonical.timeWindow      = cleanText(coalesce(raw.timeWindow, raw.selectedTime));
+      canonical.urgencyLevel    = cleanText(coalesce(raw.urgencyLevel, raw.selectedUrgency));
+
+      canonical.price   = String(coalesce(raw.price, raw.amount, raw.finalPrice, raw.calculatedPrice, raw.customerData?.price, ''));
+      canonical.details = cleanText(coalesce(raw.details, raw.description, raw.customerData?.details));
+
+      canonical.bookingTime    = coalesce(raw.bookingTime, new Date().toISOString());
+
+      canonical.gclid = coalesce(raw.gclid, localStorage.getItem("eek_gclid"));
+      canonical.utm_source = coalesce(raw.utm_source, localStorage.getItem("eek_utm_source"));
+      canonical.utm_medium = coalesce(raw.utm_medium, localStorage.getItem("eek_utm_medium"));
+      canonical.utm_campaign = coalesce(raw.utm_campaign, localStorage.getItem("eek_utm_campaign"));
+      canonical.utm_term = coalesce(raw.utm_term, localStorage.getItem("eek_utm_term"));
+      canonical.utm_content = coalesce(raw.utm_content, localStorage.getItem("eek_utm_content"));
+
+      canonical.sharepointId   = cleanText(raw.sharepointId);
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      canonical.token = urlParams.get('token') || raw.token || null;
+      
+      canonical._raw = raw;
+      return canonical;
+    }
+
+    async function fetchBookingDataFromSharePoint(bookingId){
+      console.log('🔍 Fetching booking from SharePoint…', bookingId);
+      
+      try{
+        const res = await fetch(SHAREPOINT_LOOKUP_URL, {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ bookingId })
+        });
+        if(!res.ok) throw new Error(`HTTP ${res.status}`);
+        const result = await res.json();
+        if(result.success && result.bookingData){
+          const json = atob(result.bookingData);
+          const decoded = JSON.parse(json);
+          decoded.sharepointId = bookingId;
+          decoded.sharepointStatus = result.status;
+          decoded.retrievedAt = new Date().toISOString();
+          console.log('✅ SharePoint data retrieved successfully');
+          return decoded;
+        }
+        console.log('⚠️ SharePoint returned success=false or no bookingData');
+        return null;
+      }catch(err){
+        console.error('❌ SharePoint fetch error:', err);
+        return null;
+      }
+    }
+
+    function normalizeValue(value) {
+      if (value === undefined || value === null || value === '') return '';
+      if (typeof value === 'string' && value.trim() === '') return '';
+      if (typeof value === 'string') return value;
+      return String(value);
+    }
+
+    function getSessionId(){
+      let sessionId = localStorage.getItem("eek_session_id");
+      
+      if (!sessionId) {
+        const params = new URLSearchParams(window.location.search);
+        sessionId = params.get('session_id');
+        
+        if (sessionId) {
+          localStorage.setItem("eek_session_id", sessionId);
+          console.log('🔄 Session ID restored from URL');
+        } else {
+          sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+          localStorage.setItem("eek_session_id", sessionId);
+          console.log('🆕 New session ID created');
+        }
+      } else {
+        console.log('✅ Existing session ID found');
+      }
+      
+      return sessionId;
+    }
+
+    function getComprehensiveBookingData(){
+      console.log('📊 Building comprehensive booking data from all sources...');
+      const data = {};
+      
+      const params = new URLSearchParams(window.location.search);
+      console.log('🔗 URL parameters found:', params.toString());
+      
+      const encoded = params.get('d');
+      if (encoded){
+        try{ 
+          const decoded = JSON.parse(atob(encoded));
+          Object.assign(data, decoded);
+          console.log('✅ Decoded URL data blob');
+        }catch(e){ 
+          console.warn('⚠️ Legacy blob decode failed', e); 
+        }
+      }
+      
+      for (const [k,v] of params){
+        if (k !== 'd' && k !== 'bookingId'){ 
+          const mappedKey = k === 'session_id' ? 'sessionId' : k;
+          data[mappedKey] = normalizeValue(decodeURIComponent(v));
+        }
+      }
+      
+      try{ 
+        const ss = sessionStorage.getItem('eekBookingData'); 
+        if (ss) {
+          const sessionData = JSON.parse(ss);
+          Object.assign(data, sessionData);
+          console.log('✅ Session storage data merged');
+        }
+      }catch(e){
+        console.warn('⚠️ Session storage read failed', e);
+      }
+      
+      try{ 
+        const ls = localStorage.getItem('eekBookingData'); 
+        if (ls) {
+          const localData = JSON.parse(ls);
+          Object.assign(data, localData);
+          console.log('✅ Local storage data merged');
+        }
+      }catch(e){
+        console.warn('⚠️ Local storage read failed', e);
+      }
+      
+      const gclid = localStorage.getItem("eek_gclid");
+      if (gclid) {
+        data.gclid = gclid;
+      }
+      
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+        const value = localStorage.getItem(`eek_${param}`);
+        if (value) data[param] = value;
+      });
+      
+      const sessionId = getSessionId();
+      if (sessionId) {
+        data.sessionId = sessionId;
+      }
+      
+      const geo = window.CF_GEO || {};
+      const userLocationAddress = typeof data.location === 'string' 
+        ? data.location 
+        : (data.location?.address || data.location?.city || '');
+      
+      data.location = {
+        address: userLocationAddress || '',
+        city: userLocationAddress || geo.city || 'Unknown',
+        country: geo.country || 'Unknown',
+        region: geo.region || 'Unknown',
+        timezone: geo.timezone || 'Unknown'
+      };
+      
+      data.bookingStatus = 'RELEASE_PAID';
+      data.eventType = 'release_payment_confirmed';
+      data.paymentType = 'release';
+      
+      console.log('📋 Final comprehensive data object:', data);
+      return data;
+    }
+
+    // === IDEMPOTENCY GUARD ===
+    class SubmissionGuard {
+      constructor() {
+        this.inFlightSubmissions = new Set();
+        this.storageKey = 'eek_release_paid_posted';
+        this.lockKey = 'eek_release_submission_lock';
+        this.lockTimeout = 30000;
+      }
+
+      generateId(canon) {
+        if (canon.sharepointId) return `sp_${canon.sharepointId}`;
+        if (canon.rego) return `release_${canon.rego}`;
+        if (canon.sessionId) return `session_${canon.sessionId}`;
+        if (canon.phone && canon.bookingTime) {
+          return `phone_${canon.phone}_${new Date(canon.bookingTime).getTime()}`;
+        }
+        return `fallback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      }
+
+      hasBeenSubmitted(bookingId) {
+        try {
+          const key = `${this.storageKey}:${bookingId}`;
+          const stored = localStorage.getItem(key);
+          
+          if (!stored) return false;
+          
+          const record = JSON.parse(stored);
+          
+          if (record.status === 'sent' && record.timestamp) {
+            const submittedAt = new Date(record.timestamp);
+            const now = new Date();
+            const hoursSinceSubmission = (now - submittedAt) / (1000 * 60 * 60);
+            
+            if (hoursSinceSubmission > 24) {
+              console.log(`⚠️ Submission record is ${Math.floor(hoursSinceSubmission)} hours old - treating as stale`);
+              return false;
+            }
+            
+            console.log(`🛑 Release payment ${bookingId} was already submitted at ${record.timestamp}`);
+            return true;
+          }
+          
+          return false;
+        } catch (err) {
+          console.error('Error checking submission status:', err);
+          return false;
+        }
+      }
+
+      isInProgress(bookingId) {
+        return this.inFlightSubmissions.has(bookingId);
+      }
+
+      acquireLock(bookingId) {
+        try {
+          const lockKey = `${this.lockKey}:${bookingId}`;
+          const existingLock = localStorage.getItem(lockKey);
+          
+          if (existingLock) {
+            const lockData = JSON.parse(existingLock);
+            const lockAge = Date.now() - lockData.acquiredAt;
+            
+            if (lockAge < this.lockTimeout) {
+              console.log(`🔒 Lock already held by another process (age: ${lockAge}ms)`);
+              return false;
+            }
+            
+            console.log(`⚠️ Stale lock detected (age: ${lockAge}ms) - taking over`);
+          }
+          
+          const lockData = {
+            acquiredAt: Date.now(),
+            bookingId: bookingId,
+            tabId: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+          };
+          
+          localStorage.setItem(lockKey, JSON.stringify(lockData));
+          
+          const verification = localStorage.getItem(lockKey);
+          const verifiedData = JSON.parse(verification);
+          
+          if (verifiedData.tabId !== lockData.tabId) {
+            console.log('🔒 Lost race condition for lock');
+            return false;
+          }
+          
+          console.log('✅ Lock acquired successfully');
+          return true;
+          
+        } catch (err) {
+          console.error('Error acquiring lock:', err);
+          return true;
+        }
+      }
+
+      releaseLock(bookingId) {
+        try {
+          const lockKey = `${this.lockKey}:${bookingId}`;
+          localStorage.removeItem(lockKey);
+          console.log('🔓 Lock released');
+        } catch (err) {
+          console.error('Error releasing lock:', err);
+        }
+      }
+
+      markSubmitted(bookingId, additionalData = {}) {
+        try {
+          const key = `${this.storageKey}:${bookingId}`;
+          const record = {
+            status: 'sent',
+            timestamp: new Date().toISOString(),
+            bookingId: bookingId,
+            ...additionalData
+          };
+          
+          localStorage.setItem(key, JSON.stringify(record));
+          console.log(`✅ Release payment ${bookingId} marked as submitted`);
+          
+          this.inFlightSubmissions.delete(bookingId);
+          
+        } catch (err) {
+          console.error('Error marking submission:', err);
+        }
+      }
+
+      async canSubmit(canon, forceResend = false) {
+        const bookingId = this.generateId(canon);
+        
+        console.log(`🔍 Checking submission eligibility for: ${bookingId}`);
+        
+        if (forceResend) {
+          console.log('⚡ Force resend enabled - bypassing all checks');
+          return { allowed: true, bookingId, reason: 'force_resend' };
+        }
+        
+        if (this.hasBeenSubmitted(bookingId)) {
+          return { 
+            allowed: false, 
+            bookingId, 
+            reason: 'already_submitted',
+            message: 'This release payment has already been submitted successfully'
+          };
+        }
+        
+        if (this.isInProgress(bookingId)) {
+          return { 
+            allowed: false, 
+            bookingId, 
+            reason: 'in_progress',
+            message: 'Submission already in progress'
+          };
+        }
+        
+        if (!this.acquireLock(bookingId)) {
+          return { 
+            allowed: false, 
+            bookingId, 
+            reason: 'lock_failed',
+            message: 'Another tab/window is currently submitting this payment'
+          };
+        }
+        
+        this.inFlightSubmissions.add(bookingId);
+        
+        return { allowed: true, bookingId, reason: 'approved' };
+      }
+
+      cleanup(bookingId, success = false) {
+        this.inFlightSubmissions.delete(bookingId);
+        this.releaseLock(bookingId);
+        
+        if (!success) {
+          console.log(`🧹 Cleaned up failed submission for ${bookingId}`);
+        }
+      }
+    }
+
+    const submissionGuard = new SubmissionGuard();
+
+    // === INDICATOR ===
+    function showIndicator(type, message, duration = 5000) {
+      const indicator = document.getElementById('processingIndicator');
+      if (!indicator) return;
+      
+      const styles = {
+        success: { background: '#d4edda', color: '#155724', border: '2px solid #c3e6cb' },
+        error: { background: '#f8d7da', color: '#721c24', border: '2px solid #f5c6cb' },
+        warning: { background: '#fff3cd', color: '#856404', border: '2px solid #ffeaa7' },
+        info: { background: '#d1ecf1', color: '#0c5460', border: '2px solid #bee5eb' },
+        loading: { background: '#e7f3ff', color: '#004085', border: '2px solid #b8daff' }
+      };
+      
+      const style = styles[type] || styles.info;
+      
+      indicator.style.display = 'block';
+      indicator.style.background = style.background;
+      indicator.style.color = style.color;
+      indicator.style.border = style.border;
+      indicator.style.padding = '15px 20px';
+      indicator.style.borderRadius = '8px';
+      indicator.style.marginTop = '20px';
+      indicator.textContent = message;
+      
+      if (duration > 0) {
+        setTimeout(() => {
+          indicator.style.display = 'none';
+        }, duration);
+      }
+    }
+
+    // === SEND TO POWER AUTOMATE ===
+    async function sendToReleasePaymentFlow(canon) {
+      if (!canon.rego && !canon.phone) {
+        console.log('🛑 Missing required data (rego/phone) — not posting to webhook.');
+        showIndicator('error', '⚠️ Missing required payment information');
+        return { success: false, reason: 'missing_data' };
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const forceResend = params.get('resend') === '1';
+
+      const guardCheck = await submissionGuard.canSubmit(canon, forceResend);
+      
+      if (!guardCheck.allowed) {
+        console.log(`🛑 Submission blocked: ${guardCheck.reason}`);
+        
+        if (guardCheck.reason === 'already_submitted') {
+          showIndicator('info', '✓ This release payment was already confirmed (no duplicate sent)', 8000);
+        } else if (guardCheck.reason === 'in_progress') {
+          showIndicator('info', '⏳ Submission in progress...', 3000);
+        } else if (guardCheck.reason === 'lock_failed') {
+          showIndicator('warning', '⚠️ Another window is processing this payment', 5000);
+        }
+        
+        return { success: false, reason: guardCheck.reason, bookingId: guardCheck.bookingId };
+      }
+
+      const bookingId = guardCheck.bookingId;
+      console.log(`✅ Proceeding with release payment submission for ${bookingId}`);
+
+      // Build payload
+      const payload = {
+        eventType: 'release_payment_confirmed',
+        paymentType: 'release',
+        timestamp: new Date().toISOString(),
+        bookingId: bookingId,
+        bookingStatus: 'RELEASE_PAID',
+        
+        name: normalizeValue(canon.name),
+        phone: normalizeValue(canon.phone),
+        email: normalizeValue(canon.email),
+        location: typeof canon.location === 'string' ? canon.location : (canon.location?.address || ''),
+        
+        rego: normalizeValue(canon.rego),
+        vehicleYear: normalizeValue(canon.year),
+        vehicleMake: normalizeValue(canon.make),
+        vehicleModel: normalizeValue(canon.model),
+        vehicleType: normalizeValue(canon.vehicleType),
+        
+        price: normalizeValue(canon.price),
+        currency: 'NZD',
+        stripeToken: normalizeValue(canon.token),
+        
+        service: 'release_payment',
+        serviceCode: 'RELEASE',
+        serviceTitle: 'Release Payment',
+        
+        sessionId: normalizeValue(canon.sessionId),
+        gclid: normalizeValue(canon.gclid),
+        source: normalizeValue(canon.source),
+        formVersion: normalizeValue(canon.formVersion),
+        
+        utm_source: normalizeValue(canon.utm_source),
+        utm_medium: normalizeValue(canon.utm_medium),
+        utm_campaign: normalizeValue(canon.utm_campaign),
+        utm_term: normalizeValue(canon.utm_term),
+        utm_content: normalizeValue(canon.utm_content),
+        
+        pageUrl: window.location.href,
+        pagePath: window.location.pathname,
+        pageTitle: document.title,
+        userAgent: navigator.userAgent
+      };
+
+      console.log('📤 Sending release payment payload:', payload);
+
+      const maxRetries = 3;
+      let lastError = null;
+
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          console.log(`📤 Submission attempt ${attempt}/${maxRetries} for ${bookingId}`);
+          
+          showIndicator('loading', `⏳ Confirming release payment... (attempt ${attempt})`, 0);
+
+          const res = await fetch(RELEASE_PAYMENT_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...payload, submissionAttempt: attempt })
+          });
+
+          if (res.ok) {
+            console.log(`✅ Release payment confirmed on attempt ${attempt}`);
+            
+            submissionGuard.markSubmitted(bookingId, {
+              attempt: attempt,
+              timestamp: new Date().toISOString()
+            });
+            
+            showIndicator('success', '✅ Release payment confirmed! Processing contractor payment...', 5000);
+            
+            return { success: true, bookingId, attempt };
+            
+          } else {
+            const errorText = await res.text();
+            lastError = `HTTP ${res.status}: ${errorText}`;
+            console.error(`❌ Attempt ${attempt} failed:`, lastError);
+            
+            if (res.status >= 400 && res.status < 500) {
+              console.log('🛑 Client error - not retrying');
+              break;
+            }
+            
+            if (attempt < maxRetries) {
+              const waitTime = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+              console.log(`⏳ Waiting ${waitTime}ms before retry...`);
+              await new Promise(resolve => setTimeout(resolve, waitTime));
+            }
+          }
+          
+        } catch (err) {
+          lastError = err.message;
+          console.error(`❌ Attempt ${attempt} error:`, err);
+          
+          if (attempt < maxRetries) {
+            const waitTime = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+          }
+        }
+      }
+
+      console.error('❌ All submission attempts failed:', lastError);
+      submissionGuard.cleanup(bookingId, false);
+      
+      showIndicator('error', 
+        '⚠️ Unable to confirm automatically. Please call 0800 769 000 to verify your payment.', 
+        15000
+      );
+      
+      return { success: false, bookingId, error: lastError };
+    }
+
+    // === DISPLAY ===
+    function addDetailRow(buf, label, value){
+      if (value !== undefined && value !== null && String(value).trim() !== ''){
+        buf.push(`<div class="detail-row"><span class="detail-label">${label}:</span><span class="detail-value">${value}</span></div>`);
+      }
+    }
+
+    function displayBookingDetails(data){
+      const content = document.getElementById('detailsContent');
+      const rows = [];
+
+      addDetailRow(rows, 'Job Reference', data.rego);
+      addDetailRow(rows, 'Name', data.name);
+      addDetailRow(rows, 'Phone', data.phone);
+      addDetailRow(rows, 'Email', data.email);
+
+      const vehicleLine = [data.year, data.make, data.model].filter(Boolean).join(' ');
+      addDetailRow(rows, 'Vehicle', vehicleLine);
+      
+      addDetailRow(rows, 'Release Amount', data.price ? `$${parseFloat(data.price).toFixed(2)}` : '');
+      addDetailRow(rows, 'Payment Type', 'Release Payment');
+      addDetailRow(rows, 'Confirmed', new Date().toLocaleString('en-NZ'));
+
+      addDetailRow(rows, 'Session ID', data.sessionId);
+
+      content.innerHTML = rows.length ? rows.join('') : '<p style="text-align:center;color:#64748b;">Details in your confirmation email</p>';
+    }
+
+    // === TRACKING ===
+    function trackCall(source){
+      if (typeof gtag !== 'undefined'){
+        gtag('event','phone_call',{event_category:'Contact', event_label:source, value:1});
+      }
+      if (typeof rdt !== 'undefined'){
+        rdt('track','Lead',{customEventName:'Release_Payment_Call', eventSource:source});
+      }
+    }
+
+    function trackInteraction(element) {
+      const trackingAction = element.dataset.track;
+      console.log('👆 Interaction tracked:', trackingAction);
+      
+      if (typeof gtag !== 'undefined') {
+        gtag('event', trackingAction, {
+          event_category: 'Release_Page_Interaction',
+          event_label: element.textContent.trim()
+        });
+      }
+    }
+
+    function trackReleaseConversion(canon) {
+      if (typeof gtag === 'undefined') {
+        console.warn('⚠️ gtag not available');
+        return;
+      }
+
+      const price = parseFloat(canon.price) || 0;
+      const transactionId = `release_${canon.rego || canon.sessionId || Date.now()}`;
+      
+      if (price > 0) {
+        gtag('event', 'conversion', {
+          'send_to': 'AW-17084465163/VkFHCNfslMAbEIuAwdI_',
+          'value': price,
+          'currency': 'NZD',
+          'transaction_id': transactionId
+        });
+        
+        gtag('event', 'purchase', {
+          transaction_id: transactionId,
+          value: price,
+          currency: 'NZD',
+          items: [{
+            item_name: 'Release Payment',
+            price: price,
+            quantity: 1,
+            item_category: 'release_payment'
+          }]
+        });
+        
+        console.log('✅ Release conversion tracked:', { price, transactionId });
+      }
+
+      if (typeof rdt !== 'undefined' && price > 0){
+        rdt('track','Purchase',{
+          customEventName:'Release_Payment_Completed', 
+          currency:'NZD', 
+          value: price, 
+          eventSource:'release_thanks_page'
+        });
+      }
+    }
+
+    // === BOOTSTRAP ===
+    window.addEventListener('load', async () => {
+      console.log('🚀 === RELEASE PAYMENT PAGE LOADED === 🚀');
+      
+      const params = new URLSearchParams(window.location.search);
+      const bookingId = params.get('bookingId');
+
+      if (bookingId){
+        const sp = await fetchBookingDataFromSharePoint(bookingId);
+        bookingData = sp || getComprehensiveBookingData();
+      }else{
+        bookingData = getComprehensiveBookingData();
+      }
+
+      bookingData = toCanonical(bookingData);
+      console.log('✅ Canonical release payment data:', bookingData);
+
+      displayBookingDetails(bookingData);
+
+      if (window.skipSubmission) {
+        console.log('🛑 Submission skipped (page restored from cache)');
+        window.skipSubmission = false;
+        return;
+      }
+
+      const submissionResult = await sendToReleasePaymentFlow(bookingData);
+      
+      if (submissionResult.success) {
+        console.log('✅ Release payment submission completed');
+        trackReleaseConversion(bookingData);
+      } else if (submissionResult.reason === 'already_submitted') {
+        console.log('ℹ️ Already submitted - tracking conversion anyway');
+        trackReleaseConversion(bookingData);
+      } else {
+        console.error('❌ Submission failed:', submissionResult.reason);
+      }
+
+      try {
+        sessionStorage.setItem('lastReleasePageData', JSON.stringify({
+          bookingData,
+          submissionResult,
+          timestamp: new Date().toISOString()
+        }));
+      } catch {}
+    });
+
+    // === PREVENT RELOAD SPAM ===
+    window.addEventListener('beforeunload', () => {
+      sessionStorage.setItem('eek_release_page_was_unloaded', 'true');
+    });
+
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted || sessionStorage.getItem('eek_release_page_was_unloaded') === 'true') {
+        console.log('⚠️ Page was restored from cache');
+        sessionStorage.removeItem('eek_release_page_was_unloaded');
+        
+        const rawData = getComprehensiveBookingData();
+        const canon = toCanonical(rawData);
+        const bookingId = submissionGuard.generateId(canon);
+        
+        if (submissionGuard.hasBeenSubmitted(bookingId)) {
+          console.log('🛑 Already submitted - preventing re-submission');
+          showIndicator('info', '✓ Release payment already confirmed', 8000);
+          window.skipSubmission = true;
+        }
+      }
+    });
+
+    // === DEBUG ===
+    window.releaseDebug = {
+      checkStatus: () => {
+        const id = submissionGuard.generateId(bookingData);
+        console.log('Status:', {
+          id,
+          submitted: submissionGuard.hasBeenSubmitted(id),
+          data: bookingData
+        });
+      },
+      clearRecords: () => {
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+          if (key.startsWith('eek_release_paid_posted:') || key.startsWith('eek_release_submission_lock:')) {
+            localStorage.removeItem(key);
+            console.log('Removed:', key);
+          }
+        });
+        console.log('✅ Release submission records cleared');
+      },
+      forceResend: async () => {
+        console.log('⚡ Forcing resubmission...');
+        const result = await sendToReleasePaymentFlow(bookingData);
+        console.log('Result:', result);
+      }
+    };
+
+    console.log('💡 Debug: window.releaseDebug.checkStatus(), window.releaseDebug.clearRecords(), window.releaseDebug.forceResend()');
+  </script>
+</body>
+</html>
