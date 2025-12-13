@@ -388,17 +388,14 @@ GitHub Pages will automatically serve this for any 404 errors.
             '/supplier-terms': 'https://roadandrescue.sharepoint.com/:b:/s/rar/EVItR9WqSDBHpBgS4t5JFhQBLl0heypp7-CjIRgkV-4ytg?e=bajD4c',
             '/supplier': 'https://www.eek.nz/supplier',
             
-            // Customer support and escalation forms
-            '/customer-escalation': 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUQ0JBUlZHTDNBQkNESTBSTUJRWFFGTlZWRy4u',
-            '/dispute-form': 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUQ0JBUlZHTDNBQkNESTBSTUJRWFFGTlZWRy4u',
+            // Customer support and escalation forms (now using Power Automate)
+            '/customer-escalation': '/contact.html?formType=customer-escalation',
+            '/dispute-form': '/contact.html?formType=dispute-form',
             '/disputes-tribunal': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUODNFNFRRQTQ4UU9ETkdRMk1BWEwyM1VSRC4u',
             '/tribunal': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUODNFNFRRQTQ4UU9ETkdRMk1BWEwyM1VSRC4u',
             '/authorize': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNDlJVldJUlJKOVRJTVJUVThTRk40N0JPRC4u',
             '/third-party': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNDlJVldJUlJKOVRJTVJUVThTRk40N0JPRC4u',
-            '/helper-form': 'https://form.jotform.com/251017058434047',
-            '/triage': 'https://forms.office.com/r/hLJkX3NeLq',
-            '/job': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNU1UVUNVOEMwMzFSMjBEVlVHRDlIVlBBNC4u&lang=en',
-            '/winz': 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUQ1kwRFQ0MjROQTZCUjVIR0tVQUhJT1pRMS4u',
+            '/helper-form': '/contact.html?formType=helper-form',
             
             // Review form
             '/review-form': 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUQVpUTzg4SktURE5PSk1RWkFTTVJPUUhTMC4u',
@@ -407,11 +404,7 @@ GitHub Pages will automatically serve this for any 404 errors.
             '/insurance-form': 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUM1kwODkxSlVRTkJBNFM0RlY1NUxSTE8yNi4u',
             
             // Service and job forms
-            '/rescue-me': 'https://forms.office.com/r/sdf0YirK6s',
-            '/start': 'https://forms.office.com/r/sdf0YirK6s',
-            '/job-sheet': 'https://forms.office.com/r/FNTtRBwQtT',
             '/find-me': 'https://form.jotform.com/251017058434047',
-            '/cc': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUOTk5T0ZQNzFUTFg0TUZMTk01WTlKVk8xMy4u',
             
             // Legal and utility redirects
             '/mjuris': 'https://www.eek.nz/mjuris',
@@ -498,33 +491,6 @@ GitHub Pages will automatically serve this for any 404 errors.
             }, 1500);
         }
         
-        function fireRedditPurchaseEvent() {
-            try {
-                if (typeof rdt !== 'undefined') {
-                    // Track as a purchase/conversion event
-                    rdt('track', 'Purchase', {
-                        'customEventName': 'Job_Form_Access',
-                        'currency': 'NZD',
-                        'eventSource': 'job_redirect',
-                        'transactionId': 'job_' + Date.now(),
-                        'value': 1
-                    });
-                    
-                    // Also track as a Lead event
-                    rdt('track', 'Lead', {
-                        'customEventName': 'Job_Form_Lead',
-                        'eventSource': 'job_redirect'
-                    });
-                    
-                    console.log('Reddit Pixel purchase event v2.1 fired for /job');
-                } else {
-                    console.warn('Reddit Pixel not loaded when trying to fire purchase event');
-                }
-            } catch (error) {
-                console.error('Error firing Reddit Pixel event:', error);
-            }
-        }
-        
         function getServiceInfo(url, path) {
             // Handle trackable URLs
             if (path.startsWith('/trackable/')) {
@@ -571,12 +537,6 @@ GitHub Pages will automatically serve this for any 404 errors.
                     description: 'Opening our secure location service to help us find you quickly for faster emergency response.'
                 };
             }
-            if (path === '/rescue-me' || path === '/start') {
-                return {
-                    title: 'Emergency Service Request',
-                    description: 'Taking you to our secure emergency booking system. Our dispatch team will contact you within minutes.'
-                };
-            }
             if (path === '/customer-escalation' || path === '/dispute-form') {
                 return {
                     title: 'Customer Support',
@@ -605,18 +565,6 @@ GitHub Pages will automatically serve this for any 404 errors.
                 return {
                     title: 'Customer Experience Feedback',
                     description: 'Taking you to our secure feedback form. Your experience matters to us and helps us improve our services.'
-                };
-            }
-            if (path === '/cc') {
-                return {
-                    title: 'Customer Care Form',
-                    description: 'Taking you to our secure customer care form. Our support team will review your request and respond promptly.'
-                };
-            }
-            if (path === '/job') {
-                return {
-                    title: 'Service Request Form',
-                    description: 'Taking you to our secure job booking form. Our team will process your request and contact you with next steps.'
                 };
             }
             if (path === '/map') {

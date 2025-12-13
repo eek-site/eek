@@ -332,20 +332,12 @@ class EekDataRepository {
 
         // === SERVICE TYPES ===
         this.SERVICE_TYPES = {
-            JUMPSTART: 'jumpstart',
-            INSPECTION_BASIC: 'inspection_basic',
-            INSPECTION_COMPREHENSIVE: 'inspection_comprehensive',
-            MOBILE_MECHANIC: 'mobile_mechanic',
-            WINZ: 'winz'
+            FUEL_EXTRACTION: 'fuel-extraction'
         };
 
         // === SERVICE CODES ===
         this.SERVICE_CODES = {
-            JUMPSTART: 'JUMP',
-            INSPECTION_BASIC: 'INSP_BASIC',
-            INSPECTION_COMPREHENSIVE: 'INSP_COMP',
-            MOBILE_MECHANIC: 'MECH',
-            WINZ: 'WINZ'
+            FUEL_EXTRACTION: 'FUEL'
         };
     }
 

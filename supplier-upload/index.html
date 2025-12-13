@@ -424,6 +424,64 @@
   </div>
 </section>
 
+<!-- Contact Form Section (shown when no query string) -->
+<section id="contactFormSection" class="auth-section" style="display: none;">
+  <div class="container">
+    <div class="auth-container">
+      <h2>📧 Request New Upload Path</h2>
+      <p>The supplier upload system has been updated. If you need a new upload path for your supplier payment submissions, please complete the form below.</p>
+      
+      <div class="status-message info">
+        <strong>ℹ️ What's Changed:</strong> The upload system now requires authentication. If you're a supplier and need access, please request a new upload path using this form.
+      </div>
+      
+      <form id="contactForm" style="margin-top: 30px;">
+        <div style="margin-bottom: 20px;">
+          <label for="contactName" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Your Name <span style="color: #dc3545;">*</span></label>
+          <input type="text" id="contactName" name="name" required style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;" placeholder="John Smith">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+          <label for="contactEmail" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Email Address <span style="color: #dc3545;">*</span></label>
+          <input type="email" id="contactEmail" name="email" required style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;" placeholder="your.email@example.com">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+          <label for="contactPhone" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Phone Number</label>
+          <input type="tel" id="contactPhone" name="phone" style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;" placeholder="021 123 4567">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+          <label for="contactSubject" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Subject <span style="color: #dc3545;">*</span></label>
+          <select id="contactSubject" name="subject" required style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;">
+            <option value="Request New Upload Path" selected>Request New Upload Path</option>
+            <option value="General Inquiry">General Inquiry</option>
+            <option value="Technical Support">Technical Support</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+          <label for="contactMessage" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Message <span style="color: #dc3545;">*</span></label>
+          <textarea id="contactMessage" name="message" required rows="5" style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em; resize: vertical;" placeholder="Please provide details about your supplier account and why you need a new upload path..."></textarea>
+        </div>
+        
+        <button type="submit" id="contactSubmitBtn" class="auth-button" style="width: 100%; margin-top: 10px;">
+          📧 Send Request
+        </button>
+      </form>
+      
+      <div id="contactSuccessMessage" class="status-message info hidden" style="margin-top: 20px;">
+        <strong>✅ Success!</strong> Your request has been submitted. We'll get back to you soon.
+      </div>
+      
+      <div id="contactErrorMessage" class="status-message error hidden" style="margin-top: 20px;">
+        <strong>❌ Error:</strong> Something went wrong. Please try again or call us at <a href="tel:0800769000" style="color: #dc3545;">0800 769 000</a>.
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="guidelines" class="upload-section">
   <div class="container">
     <div class="upload-guidelines">
@@ -489,12 +547,104 @@ const config = {
   ppFormUrl: "https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUMTg2OVQ5OFo5U0NYTFNOV09HWktHUjJKSy4u&login_hint=supplier.upload@eek.nz"
 };
 
+// Power Automate endpoint for general contact forms
+const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/252cde504791494e823972d9651d0cee/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Qw5TH6rHqrevOeXH2VjtBtLGb1ggI7zRCIYEhBl3Xrw';
+
 // Check authentication status on page load
 document.addEventListener('DOMContentLoaded', function() {
-  checkAuthenticationStatus();
-  setupEventListeners();
-  configureFormType(); // Configure which form to show based on URL parameters
+  // Check if there's a query string - if not, show contact form
+  const hasQueryString = window.location.search.length > 0;
+  
+  if (!hasQueryString) {
+    // Hide the auth section and show contact form
+    document.getElementById('auth').style.display = 'none';
+    document.getElementById('contactFormSection').style.display = 'block';
+    document.getElementById('guidelines').style.display = 'none';
+    
+    // Setup contact form submission
+    setupContactForm();
+  } else {
+    // Show normal auth flow
+    checkAuthenticationStatus();
+    setupEventListeners();
+    configureFormType(); // Configure which form to show based on URL parameters
+  }
 });
+
+function setupContactForm() {
+  const form = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('contactSubmitBtn');
+  const successMsg = document.getElementById('contactSuccessMessage');
+  const errorMsg = document.getElementById('contactErrorMessage');
+  
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Hide previous messages
+    successMsg.classList.add('hidden');
+    errorMsg.classList.add('hidden');
+    
+    // Disable submit button
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '⏳ Sending...';
+    
+    try {
+      const formData = {
+        formType: 'supplier_upload_request',
+        formVersion: '1.0',
+        submittedAt: new Date().toISOString(),
+        
+        // Form fields
+        name: document.getElementById('contactName').value.trim(),
+        email: document.getElementById('contactEmail').value.trim(),
+        phone: document.getElementById('contactPhone').value.trim(),
+        subject: document.getElementById('contactSubject').value,
+        message: document.getElementById('contactMessage').value.trim(),
+        
+        // Fields array for dynamic email builder
+        fields: [
+          { name: 'Name', value: document.getElementById('contactName').value.trim() },
+          { name: 'Email', value: document.getElementById('contactEmail').value.trim() },
+          { name: 'Phone', value: document.getElementById('contactPhone').value.trim() || 'Not provided' },
+          { name: 'Subject', value: document.getElementById('contactSubject').value },
+          { name: 'Message', value: document.getElementById('contactMessage').value.trim() }
+        ]
+      };
+      
+      const response = await fetch(POWER_AUTOMATE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      
+      if (response.ok) {
+        successMsg.classList.remove('hidden');
+        form.reset();
+        
+        if (typeof gtag === 'function') {
+          gtag('event', 'form_submit_success', {
+            form_type: 'supplier_upload_request'
+          });
+        }
+      } else {
+        throw new Error('Server returned ' + response.status);
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      errorMsg.classList.remove('hidden');
+      
+      if (typeof gtag === 'function') {
+        gtag('event', 'form_submit_error', {
+          form_type: 'supplier_upload_request',
+          error_message: error.message
+        });
+      }
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '📧 Send Request';
+    }
+  });
+}
 
 function configureFormType() {
   const urlParams = new URLSearchParams(window.location.search);
