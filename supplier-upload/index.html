@@ -1183,6 +1183,9 @@ function setupInvoiceUploadForm() {
           document.getElementById('invoiceBookingId').value = bookingIdValue;
         }
         
+        // Reset isSubmitting to allow form reuse after success
+        isSubmitting = false;
+        
       } else {
         throw new Error('Server returned ' + response.status);
       }
@@ -1202,7 +1205,8 @@ function setupInvoiceUploadForm() {
         });
       }
     } finally {
-      if (!isSubmitting || !alertSuccess.classList.contains('hidden')) {
+      // Only re-enable button on error (when success alert is hidden), not on success
+      if (alertSuccess.classList.contains('hidden') && !isSubmitting) {
         submitBtn.disabled = false;
         submitBtn.innerHTML = '📤 Upload Invoice';
       }
