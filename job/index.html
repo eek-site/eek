@@ -546,32 +546,68 @@
       // Vehicle Information
       const regoValue = getValue('rego', 'vehicleRego');
       if (regoValue) {
-        document.getElementById('rego').value = normalizeValue(regoValue);
+        const field = document.getElementById('rego');
+        if (field) {
+          field.value = normalizeValue(regoValue);
+          console.log('✅ Set rego =', regoValue);
+        }
       }
       
       // Contact Information
       const nameValue = getValue('name', 'customerName');
       if (nameValue) {
-        document.getElementById('name').value = normalizeValue(nameValue);
+        const field = document.getElementById('name');
+        if (field) {
+          field.value = normalizeValue(nameValue);
+          console.log('✅ Set name =', nameValue);
+        } else {
+          console.warn('⚠️ Field not found: name');
+        }
+      } else {
+        console.log('⚠️ No name value found. customerData:', customerData);
       }
       
       const emailValue = getValue('email', 'customerEmail');
       if (emailValue) {
-        document.getElementById('email').value = normalizeValue(emailValue);
+        const field = document.getElementById('email');
+        if (field) {
+          field.value = normalizeValue(emailValue);
+          console.log('✅ Set email =', emailValue);
+        } else {
+          console.warn('⚠️ Field not found: email');
+        }
+      } else {
+        console.log('⚠️ No email value found. customerData:', customerData);
       }
       
       const phoneValue = getValue('phone', 'customerPhone');
       if (phoneValue) {
-        document.getElementById('clientMobileNumber').value = normalizeValue(phoneValue);
+        const field = document.getElementById('clientMobileNumber');
+        if (field) {
+          field.value = normalizeValue(phoneValue);
+          console.log('✅ Set clientMobileNumber =', phoneValue);
+        } else {
+          console.warn('⚠️ Field not found: clientMobileNumber');
+        }
+      } else {
+        console.log('⚠️ No phone value found. customerData:', customerData);
       }
 
       // Amount
       const amountValue = getValue('amount');
       if (amountValue) {
-        document.getElementById('amount').value = normalizeValue(amountValue);
-        // Trigger GST calculation
-        const event = new Event('input', { bubbles: true });
-        document.getElementById('amount').dispatchEvent(event);
+        const field = document.getElementById('amount');
+        if (field) {
+          field.value = normalizeValue(amountValue);
+          console.log('✅ Set amount =', amountValue);
+          // Trigger GST calculation
+          const event = new Event('input', { bubbles: true });
+          field.dispatchEvent(event);
+        } else {
+          console.warn('⚠️ Field not found: amount');
+        }
+      } else {
+        console.log('⚠️ No amount value found');
       }
 
       // Handle type selection if present
