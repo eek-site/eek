@@ -515,163 +515,72 @@
     }
 
     // Populate form from data
-    function populateFormFromData(data) {
-      if (!data) return;
+    // Populate form from booking data (copied from customer-reply.html)
+    function populateFormFromData(bookingData) {
+      if (!bookingData) return;
 
-      console.log('📝 Populating form from data:', data);
+      console.log('📝 Populating form from booking data:', bookingData);
 
-      // Get customerData if it exists (nested structure from SharePoint)
-      const customerData = data.customerData || {};
-      const trackingData = data.trackingData || {};
+      // Get customerData if it exists (nested structure)
+      const customerData = bookingData.customerData || {};
       
-      // Helper to get value from root, customerData, or trackingData
+      // Helper to get value from root or customerData
       const getValue = (...keys) => {
         for (const key of keys) {
-          // Check root level first
-          if (data[key] !== undefined && data[key] !== null && data[key] !== '') {
-            console.log(`  📍 Found ${key} at root level:`, data[key]);
-            return data[key];
+          if (bookingData[key] !== undefined && bookingData[key] !== null && bookingData[key] !== '') {
+            return bookingData[key];
           }
-          // Check customerData
           if (customerData[key] !== undefined && customerData[key] !== null && customerData[key] !== '') {
-            console.log(`  📍 Found ${key} in customerData:`, customerData[key]);
             return customerData[key];
-          }
-          // Check trackingData
-          if (trackingData[key] !== undefined && trackingData[key] !== null && trackingData[key] !== '') {
-            console.log(`  📍 Found ${key} in trackingData:`, trackingData[key]);
-            return trackingData[key];
           }
         }
         return null;
       };
 
-      // Normalize value helper
-      const normalizeValue = (value) => {
+      // Normalize field values
+      function normalizeValue(value) {
         if (value === null || value === undefined) return '';
         return String(value).trim();
-      };
+      }
 
-      // Map fields from data to form inputs (supports both old and new field names)
-      const fieldMapping = {
-        'Id': 'id',
-        'ID': 'id',
-        'id': 'id',
-        'Email': 'email',
-        'email': 'email',
-        'customerEmail': 'email',
-        'Name': 'name',
-        'name': 'name',
-        'customerName': 'name',
-        'Rego': 'rego',
-        'rego': 'rego',
-        'vehicleRego': 'rego',
-        'Type': 'jobType',
-        'type': 'jobType',
-        'ClientMobileNumber': 'clientMobileNumber',
-        'clientMobileNumber': 'clientMobileNumber',
-        'Client Mobile Number': 'clientMobileNumber',
-        'phone': 'clientMobileNumber',
-        'customerPhone': 'clientMobileNumber',
-        'StartTime': 'startTime',
-        'startTime': 'startTime',
-        'Start time': 'startTime',
-        'Supplier': 'supplierName',
-        'supplier': 'supplierName',
-        'supplierName': 'supplierName',
-        'EmailJobToSupplier': 'supplierEmail',
-        'Email Job to Supplier': 'supplierEmail',
-        'supplierEmail': 'supplierEmail',
-        'TextJobToMobileNumber': 'supplierPhone',
-        'Text Job to Mobile Number': 'supplierPhone',
-        'supplierPhone': 'supplierPhone',
-        'TextSupplier': 'textSupplier',
-        'Text Supplier?': 'textSupplier',
-        'textSupplier': 'textSupplier',
-        'Bank': 'bankAccount',
-        'bank': 'bankAccount',
-        'Bank_Account': 'bankAccount',
-        'bankAccount': 'bankAccount',
-        'Amount': 'amount',
-        'amount': 'amount',
-        'Reimbursement': 'amount',
-        'GSTAmount': 'gstAmount',
-        'gstAmount': 'gstAmount',
-        'TotalIncGST': 'totalAmount',
-        'Costings': 'totalAmount',
-        'totalAmount': 'totalAmount',
-        'JobNotes': 'jobNotes',
-        'Job Notes': 'jobNotes',
-        'jobNotes': 'jobNotes',
-        'notes': 'jobNotes',
-        'description': 'jobNotes',
-        'Paid': 'paidFlag',
-        'Paid?': 'paidFlag',
-        'paid': 'paidFlag',
-        'CloseAndPostJobForBilling': 'closePostFlag',
-        'Close and Post Job For Billing': 'closePostFlag',
-        'closeAndPostJobForBilling': 'closePostFlag',
-        'ExistingClient': 'existingClient',
-        'Existing Client': 'existingClient',
-        'existingClient': 'existingClient',
-        'Chargeables': 'chargeables',
-        'Chargables': 'chargeables',
-        'chargeables': 'chargeables'
-      };
+      // Vehicle Information
+      const regoValue = getValue('rego', 'vehicleRego');
+      if (regoValue) {
+        document.getElementById('rego').value = normalizeValue(regoValue);
+      }
+      
+      // Contact Information
+      const nameValue = getValue('name', 'customerName');
+      if (nameValue) {
+        document.getElementById('name').value = normalizeValue(nameValue);
+      }
+      
+      const emailValue = getValue('email', 'customerEmail');
+      if (emailValue) {
+        document.getElementById('email').value = normalizeValue(emailValue);
+      }
+      
+      const phoneValue = getValue('phone', 'customerPhone');
+      if (phoneValue) {
+        document.getElementById('clientMobileNumber').value = normalizeValue(phoneValue);
+      }
 
-      // Populate fields using getValue helper for nested data support
-      Object.keys(fieldMapping).forEach(dataKey => {
-        const formFieldId = fieldMapping[dataKey];
-        const value = getValue(dataKey);
-        
-        if (value === null) {
-          // Only log missing values for important fields to avoid console spam
-          if (['name', 'email', 'customerName', 'customerEmail', 'phone', 'customerPhone', 'clientMobileNumber', 'amount'].includes(dataKey)) {
-            console.log(`⚠️ No value found for ${dataKey} → ${formFieldId}`);
-          }
-          return;
-        }
-        
-        const field = document.getElementById(formFieldId);
-        if (field) {
-          console.log(`✅ Setting ${formFieldId} = ${value} (from ${dataKey})`);
-          if (field.type === 'checkbox') {
-            // Handle various truthy values
-            const val = value;
-            field.checked = val === 'Yes' || val === 'yes' || val === true || val === 'true' || val === 'Bank' || val === 'Cash' || val === 'Credit Card' || val === 'Reimbursable';
-            if (field.checked) {
-              field.closest('.flag-item')?.classList.add('checked');
-            }
-          } else if (field.type === 'datetime-local') {
-            // Convert ISO date to datetime-local format
-            const date = new Date(value);
-            if (!isNaN(date.getTime())) {
-              const year = date.getFullYear();
-              const month = String(date.getMonth() + 1).padStart(2, '0');
-              const day = String(date.getDate()).padStart(2, '0');
-              const hours = String(date.getHours()).padStart(2, '0');
-              const minutes = String(date.getMinutes()).padStart(2, '0');
-              field.value = `${year}-${month}-${day}T${hours}:${minutes}`;
-            }
-          } else {
-            field.value = normalizeValue(value);
-          }
-        } else {
-          console.warn(`⚠️ Form field not found: ${formFieldId}`);
-        }
-      });
+      // Amount
+      const amountValue = getValue('amount');
+      if (amountValue) {
+        document.getElementById('amount').value = normalizeValue(amountValue);
+        // Trigger GST calculation
+        const event = new Event('input', { bubbles: true });
+        document.getElementById('amount').dispatchEvent(event);
+      }
 
       // Handle type selection if present
-      const typeValue = data.Type || data.type;
+      const typeValue = bookingData.Type || bookingData.type;
       if (typeValue) {
         selectType(typeValue);
       }
 
-      // Trigger GST calculation if amount is present
-      if (data.Amount || data.amount || data.Reimbursement) {
-        const event = new Event('input', { bubbles: true });
-        document.getElementById('amount').dispatchEvent(event);
-      }
+      console.log('✅ Form populated from booking data');
     }
 
     // Initialize page
