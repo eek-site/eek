@@ -91,13 +91,7 @@
     .flag-checkbox{width:20px;height:20px;cursor:pointer}
     .flag-item.checked{background:linear-gradient(135deg,rgba(255,85,0,.1),rgba(255,119,0,.1));border-color:var(--primary-color)}
     
-    /* Quick Fill */
-    .quick-fill{background:var(--bg-light);padding:16px;border-radius:10px;margin-bottom:20px;border:2px dashed var(--primary-color)}
-    .quick-fill-title{font-weight:600;color:var(--primary-color);margin-bottom:10px}
-    .quick-actions{display:flex;gap:10px;flex-wrap:wrap}
-    .quick-btn{padding:8px 16px;background:var(--bg-white);border:1px solid var(--border-color);border-radius:6px;cursor:pointer;font-size:.9em;transition:all .2s;color:var(--text-primary)}
-    .quick-btn:hover{background:var(--primary-color);color:#fff;transform:translateY(-1px)}
-    
+
     /* Submit Section */
     .submit-section{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:2px solid var(--border-color);margin-top:32px}
     .submit-actions{display:flex;gap:12px}
@@ -154,18 +148,7 @@
     <div class="form-container">
       <form id="jobForm" onsubmit="handleSubmit(event)">
         
-        <!-- Quick Fill Section -->
-        <div class="quick-fill">
-          <div class="quick-fill-title">⚡ Quick Fill Templates</div>
-          <div class="quick-actions" id="quickFillButtons">
-            <button type="button" class="quick-btn" onclick="quickFill('fuel-extraction')">Fuel Extraction</button>
-            <button type="button" class="quick-btn" onclick="quickFill('tyre-change')">Tyre Change</button>
-            <button type="button" class="quick-btn" onclick="quickFill('jump-start')">Jump Start</button>
-            <button type="button" class="quick-btn" onclick="quickFill('fuel-delivery')">Fuel Delivery</button>
-            <button type="button" class="quick-btn" onclick="quickFill('lockout')">Lockout</button>
-            <button type="button" class="quick-btn" onclick="quickFill('towing')">Towing</button>
-          </div>
-        </div>
+
 
         <!-- Basic Information -->
         <div class="form-section">
@@ -182,25 +165,19 @@
             </div>
             <div class="form-group">
               <label class="form-label">
-                Email <span class="required">*</span>
-              </label>
-              <input type="email" id="email" name="Email" class="form-input" placeholder="customer@email.com" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label">
-                Name <span class="required">*</span>
-              </label>
-              <input type="text" id="name" name="Name" class="form-input" placeholder="John Smith" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label">
                 Rego <span class="required">*</span>
               </label>
               <input type="text" id="rego" name="Rego" class="form-input" placeholder="ABC123" style="text-transform:uppercase" maxlength="10" required>
             </div>
             <div class="form-group">
               <label class="form-label">
-                Client Mobile Number
+                Email
+              </label>
+              <input type="email" id="email" name="Email" class="form-input" placeholder="customer@email.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">
+                Client Mobile
               </label>
               <input type="tel" id="clientMobileNumber" name="ClientMobileNumber" class="form-input" placeholder="021 123 4567">
             </div>
@@ -214,13 +191,17 @@
             <span>Job Type (Tab through or click)</span>
           </div>
           <div class="type-selector" id="typeSelector">
+            <button type="button" class="type-btn" data-type="Supplier" tabindex="0">
+              <span class="type-icon">🏭</span>
+              <span class="type-label">Supplier</span>
+            </button>
             <button type="button" class="type-btn" data-type="Billable" tabindex="0">
               <span class="type-icon">💵</span>
               <span class="type-label">Billable</span>
             </button>
-            <button type="button" class="type-btn" data-type="Supplier" tabindex="0">
-              <span class="type-icon">🏭</span>
-              <span class="type-label">Supplier</span>
+            <button type="button" class="type-btn" data-type="Deposit" tabindex="0">
+              <span class="type-icon">🏦</span>
+              <span class="type-label">Deposit</span>
             </button>
             <button type="button" class="type-btn" data-type="Refund" tabindex="0">
               <span class="type-icon">↩️</span>
@@ -230,24 +211,37 @@
               <span class="type-icon">💳</span>
               <span class="type-label">Reimbursement</span>
             </button>
-            <button type="button" class="type-btn" data-type="Deposit" tabindex="0">
-              <span class="type-icon">🏦</span>
-              <span class="type-label">Deposit</span>
+            <button type="button" class="type-btn" data-type="Close Job" tabindex="0">
+              <span class="type-icon">✅</span>
+              <span class="type-label">Close Job</span>
             </button>
-            <button type="button" class="type-btn" data-type="Warranty" tabindex="0">
-              <span class="type-icon">🛡️</span>
-              <span class="type-label">Warranty</span>
-            </button>
-            <button type="button" class="type-btn" data-type="Internal" tabindex="0">
-              <span class="type-icon">🏢</span>
-              <span class="type-label">Internal</span>
-            </button>
-            <button type="button" class="type-btn" data-type="Other" tabindex="0">
-              <span class="type-icon">📦</span>
-              <span class="type-label">Other</span>
+            <button type="button" class="type-btn" data-type="DNC" tabindex="0">
+              <span class="type-icon">🚫</span>
+              <span class="type-label">DNC</span>
             </button>
           </div>
           <input type="hidden" id="jobType" name="Type" required>
+        </div>
+
+        <!-- Category Selection (Billable only) -->
+        <div class="form-section conditional-section" id="categorySection">
+          <div class="section-title">
+            <div class="section-icon">📦</div>
+            <span>Category</span>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">
+                Select Category <span class="required">*</span>
+              </label>
+              <select id="categorySelect" name="Category" class="form-input">
+                <option value="">Select...</option>
+                <option value="Labour">Labour</option>
+                <option value="FuelDisposal">Fuel Disposal</option>
+                <option value="Parts">Parts</option>
+              </select>
+            </div>
+          </div>
         </div>
 
         <!-- Financial Information (Conditional) -->
@@ -258,8 +252,8 @@
           </div>
           <div class="form-grid">
             <div class="form-group">
-              <label class="form-label">
-                Amount (excl. GST)
+              <label class="form-label" id="amountLabel">
+                Amount
               </label>
               <input type="number" id="amount" name="Amount" class="form-input" placeholder="0.00" step="0.01" min="0">
             </div>
@@ -307,7 +301,7 @@
               <label class="form-label">
                 Bank Account
               </label>
-              <input type="text" id="bankAccount" name="Bank" class="form-input" placeholder="12-3456-7890123-00">
+              <input type="text" id="bankAccount" name="Bank" class="form-input" placeholder="02-0131-0566457-00" value="02-0131-0566457-00">
             </div>
             <div class="form-group">
               <label class="form-label">
@@ -321,24 +315,10 @@
           </div>
         </div>
 
-        <!-- Timing Information -->
-        <div class="form-section">
-          <div class="section-title">
-            <div class="section-icon">⏰</div>
-            <span>Timing Information</span>
-          </div>
-          <div class="form-grid">
-            <div class="form-group">
-              <label class="form-label">
-                Start Time
-              </label>
-              <input type="datetime-local" id="startTime" name="StartTime" class="form-input">
-            </div>
-          </div>
-        </div>
+
 
         <!-- Job Details -->
-        <div class="form-section">
+        <div class="form-section" id="jobNotesSection">
           <div class="section-title">
             <div class="section-icon">📝</div>
             <span>Job Details</span>
@@ -358,12 +338,12 @@
             <span>Additional Options</span>
           </div>
           <div class="form-grid">
-            <div class="form-group">
+            <div class="form-group" id="paidGroup">
               <label class="form-label">
                 Payment Type (Paid?)
               </label>
               <select id="paidFlag" name="Paid" class="form-input">
-                <option value="">Not Paid</option>
+                <option value="">Select...</option>
                 <option value="Bank">Bank</option>
                 <option value="Cash">Cash</option>
                 <option value="Credit Card">Credit Card</option>
@@ -372,18 +352,10 @@
               </select>
             </div>
           </div>
-          <div class="flag-group" style="margin-top:20px">
+          <div class="flag-group" style="margin-top:20px" id="closePostGroup">
             <label class="flag-item">
               <input type="checkbox" id="closePostFlag" name="CloseAndPostJobForBilling" class="flag-checkbox" value="Yes">
               <span>Close and Post Job For Billing</span>
-            </label>
-            <label class="flag-item">
-              <input type="checkbox" id="existingClient" name="ExistingClient" class="flag-checkbox" value="Yes">
-              <span>Existing Client</span>
-            </label>
-            <label class="flag-item">
-              <input type="checkbox" id="chargeables" name="Chargeables" class="flag-checkbox" value="Yes">
-              <span>Chargeables</span>
             </label>
           </div>
         </div>
@@ -425,45 +397,20 @@
     let selectedType = null;
     let sharepointId = null; // Store SharePoint ID for submission
 
-    // Base64 Decode Function - handles URL params format (same as customer-reply.html)
+    // Base64 Decode Function - decodes SharePoint ID
     function decodeBase64(encoded) {
       try {
-        // Decode Base64
-        const decoded = atob(encoded);
-        console.log('🔓 Base64 decoded to string:', decoded);
+        const decoded = atob(encoded).trim();
+        console.log('🔓 Base64 decoded:', decoded);
         
-        // Parse the query string format (same approach as customer-reply.html)
-        const params = new URLSearchParams(decoded);
-        const data = {};
-        
-        for (const [key, value] of params) {
-          data[key] = value;
+        if (decoded) {
+          return { bookingId: decoded };
         }
         
-        // Check if we got meaningful key-value pairs
-        // If all values are empty, it's likely just a plain string treated as a key
-        const hasValues = Object.values(data).some(val => val && val.trim().length > 0);
-        const hasMultipleKeys = Object.keys(data).length > 1;
-        
-        // If we have actual key-value pairs with values, return the data object
-        if (hasValues || hasMultipleKeys) {
-          console.log('✅ Parsed as URL params:', data);
-          return data;
-        }
-        
-        // If we only have one key with empty value, it's likely a plain string
-        // Fall back: treat decoded string as plain bookingId
-        // This handles cases where just the bookingId number/string is encoded (e.g., "292")
-        if (decoded && decoded.trim()) {
-          const result = { bookingId: decoded.trim() };
-          console.log('✅ Treated as plain bookingId:', result);
-          return result;
-        }
-        
-        console.warn('⚠️ Decoded string is empty or whitespace');
+        console.warn('⚠️ Decoded string is empty');
         return null;
       } catch (e) {
-        console.error('❌ Failed to decode data:', e);
+        console.error('❌ Failed to decode:', e);
         return null;
       }
     }
@@ -528,8 +475,7 @@
       }
     }
 
-    // Populate form from data
-    // Populate form from booking data (copied from customer-reply.html)
+    // Populate form from booking data
     function populateFormFromData(bookingData) {
       if (!bookingData) return;
 
@@ -551,7 +497,7 @@
         return null;
       };
 
-      // Normalize value helper (same as customer-reply.html)
+      // Normalize value helper
       const normalizeValue = (value) => {
         if (value === null || value === undefined) return '';
         return String(value).trim();
@@ -568,30 +514,13 @@
       }
       
       // Contact Information
-      const nameValue = getValue('name', 'customerName');
-      if (nameValue) {
-        const field = document.getElementById('name');
-        if (field) {
-          field.value = normalizeValue(nameValue);
-          console.log('✅ Set name =', nameValue);
-        } else {
-          console.warn('⚠️ Field not found: name');
-        }
-      } else {
-        console.log('⚠️ No name value found. customerData:', customerData);
-      }
-      
       const emailValue = getValue('email', 'customerEmail');
       if (emailValue) {
         const field = document.getElementById('email');
         if (field) {
           field.value = normalizeValue(emailValue);
           console.log('✅ Set email =', emailValue);
-        } else {
-          console.warn('⚠️ Field not found: email');
         }
-      } else {
-        console.log('⚠️ No email value found. customerData:', customerData);
       }
       
       const phoneValue = getValue('phone', 'customerPhone');
@@ -599,12 +528,8 @@
         const field = document.getElementById('clientMobileNumber');
         if (field) {
           field.value = normalizeValue(phoneValue);
-          console.log('✅ Set clientMobileNumber =', phoneValue);
-        } else {
-          console.warn('⚠️ Field not found: clientMobileNumber');
+          console.log('✅ Set phone =', phoneValue);
         }
-      } else {
-        console.log('⚠️ No phone value found. customerData:', customerData);
       }
 
       // Amount (convert from cents to dollars for Stripe)
@@ -620,11 +545,7 @@
           // Trigger GST calculation
           const event = new Event('input', { bubbles: true });
           field.dispatchEvent(event);
-        } else {
-          console.warn('⚠️ Field not found: amount');
         }
-      } else {
-        console.log('⚠️ No amount value found');
       }
 
       // Job Notes (from description)
@@ -634,8 +555,6 @@
         if (field) {
           field.value = normalizeValue(descriptionValue);
           console.log('✅ Set jobNotes =', descriptionValue);
-        } else {
-          console.warn('⚠️ Field not found: jobNotes');
         }
       }
 
@@ -649,49 +568,35 @@
         }
       }
 
-      const supplierEmailValue = getValue('supplierEmail', 'EmailJobToSupplier', 'Email Job to Supplier', 'SuppEmail', 'EmailJobToSupplier');
+      const supplierEmailValue = getValue('supplierEmail', 'EmailJobToSupplier');
       if (supplierEmailValue) {
         const field = document.getElementById('supplierEmail');
         if (field) {
           field.value = normalizeValue(supplierEmailValue);
           console.log('✅ Set supplierEmail =', supplierEmailValue);
-        } else {
-          console.warn('⚠️ Field not found: supplierEmail');
         }
-      } else {
-        console.log('⚠️ No supplierEmail value found. Root keys:', Object.keys(bookingData), 'customerData keys:', Object.keys(customerData));
       }
 
-      const supplierPhoneValue = getValue('supplierPhone', 'TextJobToMobileNumber', 'Text Job to Mobile Number', 'SuppPhone', 'TextSupplierPhone', 'Text Job to Mobile Number');
+      const supplierPhoneValue = getValue('supplierPhone', 'TextJobToMobileNumber');
       if (supplierPhoneValue) {
         const field = document.getElementById('supplierPhone');
         if (field) {
           field.value = normalizeValue(supplierPhoneValue);
           console.log('✅ Set supplierPhone =', supplierPhoneValue);
-        } else {
-          console.warn('⚠️ Field not found: supplierPhone');
         }
-      } else {
-        console.log('⚠️ No supplierPhone value found. Root keys:', Object.keys(bookingData), 'customerData keys:', Object.keys(customerData));
       }
 
-      // Payment Type (Paid) - dropdown (Bank, Cash, Credit Card, No, Reimbursable)
+      // Payment Type (Paid) dropdown
       const paidValue = getValue('Paid', 'paid', 'PaymentType', 'paymentType');
       if (paidValue) {
         const field = document.getElementById('paidFlag');
         if (field) {
-          // Normalize the value to match dropdown options
           const normalizedPaid = normalizeValue(paidValue);
-          // Check if the value matches one of the dropdown options
           const validOptions = ['Bank', 'Cash', 'Credit Card', 'No', 'Reimbursable'];
           if (validOptions.includes(normalizedPaid)) {
             field.value = normalizedPaid;
             console.log('✅ Set paidFlag =', normalizedPaid);
-          } else {
-            console.warn('⚠️ Invalid paid value:', normalizedPaid, '(expected one of:', validOptions.join(', '), ')');
           }
-        } else {
-          console.warn('⚠️ Field not found: paidFlag');
         }
       }
 
@@ -712,64 +617,36 @@
       const encodedData = urlParams.get('d');
       
       let bookingId = null;
-      let decodedData = null;
       
-      // Decode base64 data if present
+      // Decode base64 SharePoint ID if present
       if (encodedData) {
-        decodedData = decodeBase64(encodedData);
-        if (decodedData) {
-          console.log('📋 Decoded data:', decodedData);
-          
-          // Extract bookingId from decoded data
-          // Handle case where decodeBase64 might return a string instead of object
-          if (typeof decodedData === 'string') {
-            console.log('⚠️ decodedData is a string, converting to object');
-            bookingId = decodedData.trim();
-            decodedData = { bookingId: bookingId };
-          } else {
-            bookingId = decodedData.bookingId || decodedData.bookingid || decodedData.Id || decodedData.ID || null;
-          }
-          
-          console.log('🔑 Extracted bookingId:', bookingId);
-          console.log('📦 Final decodedData object:', decodedData);
-          
-          // Populate form from decoded data (will be overridden by SharePoint if available)
-          populateFormFromData(decodedData);
+        const decoded = decodeBase64(encodedData);
+        if (decoded) {
+          bookingId = decoded.bookingId;
+          console.log('🔑 Decoded bookingId:', bookingId);
         }
       } else {
-        // Fall back to regular URL parameters
+        // Fall back to regular URL parameter
         bookingId = urlParams.get('bookingId');
       }
       
-      // Fetch additional data from SharePoint if bookingId is provided
+      // Fetch data from SharePoint and prefill form
       if (bookingId) {
-        console.log('🔄 Attempting to fetch SharePoint data for bookingId:', bookingId);
+        console.log('🔄 Fetching SharePoint data for bookingId:', bookingId);
         const sharePointData = await fetchJobDataFromSharePoint(bookingId);
         if (sharePointData) {
           console.log('✅ SharePoint data received:', sharePointData);
-          // Store sharepointId for form submission
           sharepointId = bookingId;
-          // Merge data: SharePoint as base, URL/base64 data overrides it
-          const mergedData = { ...sharePointData, ...decodedData };
-          populateFormFromData(mergedData);
+          populateFormFromData(sharePointData);
         } else {
           console.warn('⚠️ No SharePoint data returned for bookingId:', bookingId);
-          sharepointId = null; // Clear if fetch failed
-          if (decodedData) {
-            // If SharePoint fetch fails but we have decoded data, use that
-            console.log('📝 Using decoded data only (no SharePoint data available)');
-            populateFormFromData(decodedData);
-          }
+          showWarning('Could not load booking data');
         }
-      } else if (decodedData) {
-        // No bookingId, but we have decoded data - use it directly
-        console.log('📝 Using decoded data only (no bookingId for SharePoint lookup)');
-        sharepointId = null; // No SharePoint ID available
-        populateFormFromData(decodedData);
       }
 
       // Setup form handlers
       setupTypeSelector();
+      setupCategorySelector();
       setupAmountCalculations();
       setupKeyboardShortcuts();
       setupFlagToggles();
@@ -811,30 +688,101 @@
         btn.classList.toggle('selected', btn.dataset.type === type);
       });
 
-      // Show/hide conditional sections
-      const financialSection = document.getElementById('financialSection');
-      const supplierSection = document.getElementById('supplierSection');
-
-      // Financial section for Billable, Supplier, Refund, Reimbursement, Deposit
-      const showFinancial = ['Billable', 'Supplier', 'Refund', 'Reimbursement', 'Deposit'].includes(type);
-      financialSection.classList.toggle('show', showFinancial);
+      // Reset form sections
+      document.getElementById('categorySection').classList.remove('show');
+      document.getElementById('financialSection').classList.remove('show');
+      document.getElementById('supplierSection').classList.remove('show');
+      document.getElementById('jobNotesSection').style.display = 'none';
+      document.getElementById('paidGroup').style.display = 'none';
+      document.getElementById('closePostGroup').style.display = 'none';
       
-      // Supplier section only for Supplier type
-      supplierSection.classList.toggle('show', type === 'Supplier');
+      // Clear defaults
+      document.getElementById('jobNotes').value = '';
+      document.getElementById('amount').value = '';
+      document.getElementById('gstAmount').value = '';
+      document.getElementById('totalAmount').value = '';
+      document.getElementById('amount').required = false;
 
-      // Update required fields
-      if (type === 'Supplier') {
-        document.getElementById('supplierEmail').required = true;
-        document.getElementById('supplierPhone').required = true;
-        document.getElementById('supplierName').required = true;
-      } else {
-        document.getElementById('supplierEmail').required = false;
-        document.getElementById('supplierPhone').required = false;
-        document.getElementById('supplierName').required = false;
+      // DNC - just rego and fixed job notes, nothing editable
+      if (type === 'DNC') {
+        // Auto-set job notes and submit immediately possible
+        document.getElementById('jobNotes').value = '[DNC]';
+        return;
       }
 
-      // Update financial fields requirement
-      document.getElementById('amount').required = showFinancial;
+      // Close Job - rego, editable job notes, auto-set Close/Post=Yes
+      if (type === 'Close Job') {
+        document.getElementById('jobNotesSection').style.display = '';
+        document.getElementById('jobNotes').value = 'Release Payment Received (Stripe)';
+        document.getElementById('closePostFlag').checked = true;
+        return;
+      }
+
+      // Supplier - Name=Mechanic, optional amount/bank, supplier details
+      if (type === 'Supplier') {
+        document.getElementById('financialSection').classList.add('show');
+        document.getElementById('supplierSection').classList.add('show');
+        document.getElementById('jobNotesSection').style.display = '';
+        document.getElementById('paidGroup').style.display = '';
+        document.getElementById('closePostGroup').style.display = '';
+        document.getElementById('amountLabel').textContent = 'Costings';
+        return;
+      }
+
+      // Deposit - Name=Payment, amount, job notes
+      if (type === 'Deposit') {
+        document.getElementById('financialSection').classList.add('show');
+        document.getElementById('jobNotesSection').style.display = '';
+        document.getElementById('paidGroup').style.display = '';
+        document.getElementById('closePostGroup').style.display = '';
+        document.getElementById('amountLabel').textContent = 'Reimbursement';
+        document.getElementById('amount').required = true;
+        return;
+      }
+
+      // Billable - category dropdown with defaults
+      if (type === 'Billable') {
+        document.getElementById('categorySection').classList.add('show');
+        document.getElementById('financialSection').classList.add('show');
+        document.getElementById('jobNotesSection').style.display = '';
+        document.getElementById('paidGroup').style.display = '';
+        document.getElementById('closePostGroup').style.display = '';
+        document.getElementById('amountLabel').textContent = 'Chargeables';
+        document.getElementById('amount').required = true;
+        return;
+      }
+
+      // Refund / Reimbursement - amount, job notes, paid, close/post
+      if (type === 'Refund' || type === 'Reimbursement') {
+        document.getElementById('financialSection').classList.add('show');
+        document.getElementById('jobNotesSection').style.display = '';
+        document.getElementById('paidGroup').style.display = '';
+        document.getElementById('closePostGroup').style.display = '';
+        document.getElementById('amountLabel').textContent = 'Reimbursement';
+        document.getElementById('amount').required = true;
+        return;
+      }
+    }
+
+    // Handle Billable category selection - set defaults
+    function setupCategorySelector() {
+      const categorySelect = document.getElementById('categorySelect');
+      categorySelect.addEventListener('change', function() {
+        const defaults = {
+          'Labour': { notes: 'Labour @ 4 hrs x $172.50/hr', amount: 690 },
+          'FuelDisposal': { notes: 'Fuel Disposal Fee @ 80Ltrs x $4.31/Ltr', amount: 344.8 },
+          'Parts': { notes: 'Filter/Freight/Sundries', amount: 280 }
+        };
+        
+        const selected = this.value;
+        if (defaults[selected]) {
+          document.getElementById('jobNotes').value = defaults[selected].notes;
+          document.getElementById('amount').value = defaults[selected].amount;
+          // Trigger GST calculation
+          const event = new Event('input', { bubbles: true });
+          document.getElementById('amount').dispatchEvent(event);
+        }
+      });
     }
 
     // Amount Calculations
@@ -862,57 +810,7 @@
       });
     }
 
-    // Quick Fill Templates
-    function quickFill(template) {
-      const templates = {
-        'fuel-extraction': {
-          fault: 'Wrong fuel in vehicle',
-          serviceRequired: 'Fuel extraction and system flush',
-          type: 'Billable',
-          amount: 399
-        },
-        'tyre-change': {
-          fault: 'Flat tyre',
-          serviceRequired: 'Tyre change service',
-          type: 'Billable'
-        },
-        'jump-start': {
-          fault: 'Dead battery',
-          serviceRequired: 'Jump start service',
-          type: 'Billable'
-        },
-        'fuel-delivery': {
-          fault: 'Out of fuel',
-          serviceRequired: 'Fuel delivery',
-          type: 'Billable'
-        },
-        'lockout': {
-          fault: 'Keys locked in vehicle',
-          serviceRequired: 'Vehicle unlock service',
-          type: 'Billable'
-        },
-        'towing': {
-          fault: 'Vehicle breakdown',
-          serviceRequired: 'Towing service',
-          type: 'Billable'
-        }
-      };
-
-      const data = templates[template];
-      if (data) {
-        document.getElementById('jobNotes').value = `Fault: ${data.fault}\nService Required: ${data.serviceRequired}`;
-        if (data.amount) {
-          document.getElementById('amount').value = data.amount;
-          // Trigger GST calculation
-          const event = new Event('input', { bubbles: true });
-          document.getElementById('amount').dispatchEvent(event);
-        }
-        selectType(data.type);
-        showSuccess('Template applied');
-      }
-    }
-
-    // Form Submission
+// Form Submission
     async function handleSubmit(event) {
       event.preventDefault();
       
@@ -970,7 +868,7 @@
       }
     }
 
-    // Collect form data - sends BOTH flat fields AND fields array for Power Automate flexibility
+    // Collect form data
     function collectFormData() {
       const fields = [];
       const formData = {
@@ -989,12 +887,22 @@
 
       // Basic fields
       addField('Id', document.getElementById('id').value);
-      addField('Email', document.getElementById('email').value);
-      addField('Name', document.getElementById('name').value);
       addField('Rego', document.getElementById('rego').value.toUpperCase());
-      addField('Type', document.getElementById('jobType').value);
+      addField('Email', document.getElementById('email').value);
       addField('ClientMobileNumber', document.getElementById('clientMobileNumber').value);
-      addField('StartTime', document.getElementById('startTime').value || new Date().toISOString());
+      addField('Type', document.getElementById('jobType').value);
+      addField('StartTime', new Date().toISOString());
+      
+      // Name field based on type
+      const type = document.getElementById('jobType').value;
+      if (type === 'Supplier') {
+        addField('Name', 'Mechanic');
+      } else if (type === 'Deposit') {
+        addField('Name', 'Payment');
+      } else if (type === 'Billable') {
+        addField('Name', document.getElementById('categorySelect').value);
+      }
+      // Close Job and DNC don't send Name
       
       // SharePoint ID (if data was fetched from SharePoint)
       if (sharepointId) {
@@ -1022,9 +930,12 @@
 
       // Flags
       addField('Paid', document.getElementById('paidFlag').value || '');
-      addField('CloseAndPostJobForBilling', document.getElementById('closePostFlag').checked ? 'Yes' : 'No');
-      addField('ExistingClient', document.getElementById('existingClient').checked ? 'Yes' : '');
-      addField('Chargeables', document.getElementById('chargeables').checked ? 'Yes' : '');
+      // Close Job always sets Close/Post to Yes
+      if (type === 'Close Job') {
+        addField('CloseAndPostJobForBilling', 'Yes');
+      } else {
+        addField('CloseAndPostJobForBilling', document.getElementById('closePostFlag').checked ? 'Yes' : 'No');
+      }
 
       // Add the fields array
       formData.fields = fields;
@@ -1050,20 +961,41 @@
 
       // Supplier validation
       if (selectedType === 'Supplier') {
-        const requiredSupplierFields = ['supplierName', 'supplierEmail', 'supplierPhone'];
-        for (const fieldId of requiredSupplierFields) {
-          if (!document.getElementById(fieldId).value) {
-            showError('All supplier fields are required for Supplier type jobs');
-            document.getElementById(fieldId).focus();
-            return false;
-          }
+        if (!document.getElementById('supplierName').value) {
+          showError('Supplier name is required');
+          document.getElementById('supplierName').focus();
+          return false;
+        }
+        if (!document.getElementById('supplierEmail').value) {
+          showError('Supplier email is required');
+          document.getElementById('supplierEmail').focus();
+          return false;
+        }
+        if (!document.getElementById('supplierPhone').value) {
+          showError('Supplier phone is required');
+          document.getElementById('supplierPhone').focus();
+          return false;
         }
       }
 
-      // Financial validation for applicable types
-      if (['Billable', 'Supplier', 'Refund', 'Reimbursement', 'Deposit'].includes(selectedType)) {
+      // Billable validation - must select category
+      if (selectedType === 'Billable') {
+        if (!document.getElementById('categorySelect').value) {
+          showError('Please select a category');
+          document.getElementById('categorySelect').focus();
+          return false;
+        }
         if (!document.getElementById('amount').value || parseFloat(document.getElementById('amount').value) <= 0) {
-          showError('Please enter a valid amount for this job type');
+          showError('Please enter a valid amount');
+          document.getElementById('amount').focus();
+          return false;
+        }
+      }
+
+      // Financial validation for Deposit, Refund, Reimbursement
+      if (['Deposit', 'Refund', 'Reimbursement'].includes(selectedType)) {
+        if (!document.getElementById('amount').value || parseFloat(document.getElementById('amount').value) <= 0) {
+          showError('Please enter a valid amount');
           document.getElementById('amount').focus();
           return false;
         }
@@ -1081,6 +1013,9 @@
       document.querySelectorAll('.flag-item').forEach(item => item.classList.remove('checked'));
       document.getElementById('gstAmount').value = '';
       document.getElementById('totalAmount').value = '';
+      document.getElementById('jobNotesSection').style.display = 'none';
+      document.getElementById('paidGroup').style.display = 'none';
+      document.getElementById('closePostGroup').style.display = 'none';
       generateJobId();
     }
 
@@ -1098,9 +1033,9 @@
           document.activeElement.blur();
         }
 
-        // Alt+1-8 for type selection
-        if (e.altKey && e.key >= '1' && e.key <= '8') {
-          const types = ['Billable', 'Supplier', 'Refund', 'Reimbursement', 'Deposit', 'Warranty', 'Internal', 'Other'];
+        // Alt+1-7 for type selection
+        if (e.altKey && e.key >= '1' && e.key <= '7') {
+          const types = ['Supplier', 'Billable', 'Deposit', 'Refund', 'Reimbursement', 'Close Job', 'DNC'];
           const index = parseInt(e.key) - 1;
           if (types[index]) {
             selectType(types[index]);
