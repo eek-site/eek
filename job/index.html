@@ -413,61 +413,41 @@
     // State
     let selectedType = null;
 
-    // Base64 Decode Function - handles both JSON and URL params format
+    // Base64 Decode Function - handles URL params format (same as customer-reply.html)
     function decodeBase64(encoded) {
       try {
+        // Decode Base64
         const decoded = atob(encoded);
         console.log('🔓 Base64 decoded to string:', decoded);
         
-        // Try parsing as JSON first (new format from Power Automate)
-        try {
-          const jsonData = JSON.parse(decoded);
-          console.log('✅ Parsed as JSON:', jsonData);
-          // If it has fields array, convert to flat object for form population
-          if (jsonData.fields && Array.isArray(jsonData.fields)) {
-            const flatData = { ...jsonData };
-            jsonData.fields.forEach(field => {
-              flatData[field.name] = field.value;
-            });
-            delete flatData.fields;
-            return flatData;
-          }
-          return jsonData;
-        } catch (jsonError) {
-          console.log('⚠️ Not valid JSON, trying URL params format...');
-          // Try URL params format (legacy format)
-          try {
-            const params = new URLSearchParams(decoded);
-            const data = {};
-            for (const [key, value] of params) {
-              data[key] = value;
-            }
-            // Only return if we got key-value pairs
-            if (Object.keys(data).length > 0) {
-              console.log('✅ Parsed as URL params:', data);
-              return data;
-            }
-          } catch (paramsError) {
-            console.log('⚠️ Not URL params format either');
-          }
-          
-          // Fall back: treat decoded string as plain bookingId
-          // This handles cases where just the bookingId number/string is encoded
-          if (decoded && decoded.trim()) {
-            const result = { bookingId: decoded.trim() };
-            console.log('✅ Treated as plain bookingId:', result);
-            return result;
-          } else {
-            console.warn('⚠️ Decoded string is empty or whitespace');
-            return null;
-          }
+        // Parse the query string format (same approach as customer-reply.html)
+        const params = new URLSearchParams(decoded);
+        const data = {};
+        
+        for (const [key, value] of params) {
+          data[key] = value;
         }
+        
+        // If we got key-value pairs, return the data object
+        if (Object.keys(data).length > 0) {
+          console.log('✅ Parsed as URL params:', data);
+          return data;
+        }
+        
+        // Fall back: treat decoded string as plain bookingId
+        // This handles cases where just the bookingId number/string is encoded (e.g., "292")
+        if (decoded && decoded.trim()) {
+          const result = { bookingId: decoded.trim() };
+          console.log('✅ Treated as plain bookingId:', result);
+          return result;
+        }
+        
+        console.warn('⚠️ Decoded string is empty or whitespace');
+        return null;
       } catch (e) {
         console.error('❌ Failed to decode data:', e);
         return null;
       }
-      console.warn('⚠️ decodeBase64 returned null (unexpected code path)');
-      return null;
     }
 
     // Fetch job data from SharePoint (if bookingId is provided)
