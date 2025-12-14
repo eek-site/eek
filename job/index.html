@@ -462,7 +462,8 @@
 
     // Fetch job data from SharePoint (if bookingId is provided)
     async function fetchJobDataFromSharePoint(bookingId) {
-      console.log('🔍 Fetching job data from SharePoint…', bookingId);
+      console.log('🔍 Fetching job data from SharePoint for bookingId:', bookingId);
+      console.log('🔗 Using API endpoint:', SHAREPOINT_LOOKUP_URL);
       
       if (!bookingId) {
         console.warn('⚠️ No bookingId provided');
@@ -470,28 +471,49 @@
       }
       
       try {
+        const requestBody = { bookingId: String(bookingId) };
+        console.log('📤 Sending request:', requestBody);
+        
         const res = await fetch(SHAREPOINT_LOOKUP_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ bookingId })
+          body: JSON.stringify(requestBody)
         });
         
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        console.log('📥 Response status:', res.status, res.statusText);
+        
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error('❌ HTTP Error Response:', errorText);
+          throw new Error(`HTTP ${res.status}: ${errorText}`);
+        }
         
         const result = await res.json();
+        console.log('📦 Raw API response:', result);
+        
         if (result.success && result.bookingData) {
           const json = atob(result.bookingData);
           const decoded = JSON.parse(json);
           decoded.sharepointId = bookingId;
           decoded.sharepointStatus = result.status;
           decoded.retrievedAt = new Date().toISOString();
-          console.log('✅ SharePoint data retrieved successfully');
+          console.log('✅ SharePoint data retrieved and decoded successfully:', decoded);
           return decoded;
+        } else {
+          console.warn('⚠️ SharePoint API returned:', {
+            success: result.success,
+            hasBookingData: !!result.bookingData,
+            fullResponse: result
+          });
         }
-        console.log('⚠️ SharePoint returned success=false or no bookingData');
         return null;
       } catch (err) {
         console.error('❌ SharePoint fetch error:', err);
+        console.error('❌ Error details:', {
+          message: err.message,
+          stack: err.stack,
+          name: err.name
+        });
         return null;
       }
     }
@@ -621,10 +643,20 @@
       if (encodedData) {
         decodedData = decodeBase64(encodedData);
         if (decodedData) {
-          bookingId = decodedData.bookingId || decodedData.bookingid || decodedData.Id || decodedData.ID || null;
           console.log('📋 Decoded data:', decodedData);
           
-          // Populate form from decoded data
+          // Extract bookingId from decoded data
+          bookingId = decodedData.bookingId || decodedData.bookingid || decodedData.Id || decodedData.ID || null;
+          
+          // If decodedData is just a string (plain bookingId), convert it
+          if (typeof decodedData === 'string') {
+            bookingId = decodedData.trim();
+            decodedData = { bookingId: bookingId };
+          }
+          
+          console.log('🔑 Extracted bookingId:', bookingId);
+          
+          // Populate form from decoded data (will be overridden by SharePoint if available)
           populateFormFromData(decodedData);
         }
       } else {
@@ -634,17 +666,24 @@
       
       // Fetch additional data from SharePoint if bookingId is provided
       if (bookingId) {
+        console.log('🔄 Attempting to fetch SharePoint data for bookingId:', bookingId);
         const sharePointData = await fetchJobDataFromSharePoint(bookingId);
         if (sharePointData) {
+          console.log('✅ SharePoint data received:', sharePointData);
           // Merge data: SharePoint as base, URL/base64 data overrides it
           const mergedData = { ...sharePointData, ...decodedData };
           populateFormFromData(mergedData);
-        } else if (decodedData) {
-          // If SharePoint fetch fails but we have decoded data, use that
-          populateFormFromData(decodedData);
+        } else {
+          console.warn('⚠️ No SharePoint data returned for bookingId:', bookingId);
+          if (decodedData) {
+            // If SharePoint fetch fails but we have decoded data, use that
+            console.log('📝 Using decoded data only (no SharePoint data available)');
+            populateFormFromData(decodedData);
+          }
         }
       } else if (decodedData) {
         // No bookingId, but we have decoded data - use it directly
+        console.log('📝 Using decoded data only (no bookingId for SharePoint lookup)');
         populateFormFromData(decodedData);
       }
 
