@@ -423,6 +423,7 @@
 
     // State
     let selectedType = null;
+    let sharepointId = null; // Store SharePoint ID for submission
 
     // Base64 Decode Function - handles URL params format (same as customer-reply.html)
     function decodeBase64(encoded) {
@@ -504,6 +505,8 @@
           decoded.sharepointId = bookingId;
           decoded.sharepointStatus = result.status;
           decoded.retrievedAt = new Date().toISOString();
+          // Store sharepointId for form submission
+          sharepointId = bookingId;
           console.log('✅ SharePoint data retrieved and decoded successfully:', decoded);
           return decoded;
         } else {
@@ -744,11 +747,14 @@
         const sharePointData = await fetchJobDataFromSharePoint(bookingId);
         if (sharePointData) {
           console.log('✅ SharePoint data received:', sharePointData);
+          // Store sharepointId for form submission
+          sharepointId = bookingId;
           // Merge data: SharePoint as base, URL/base64 data overrides it
           const mergedData = { ...sharePointData, ...decodedData };
           populateFormFromData(mergedData);
         } else {
           console.warn('⚠️ No SharePoint data returned for bookingId:', bookingId);
+          sharepointId = null; // Clear if fetch failed
           if (decodedData) {
             // If SharePoint fetch fails but we have decoded data, use that
             console.log('📝 Using decoded data only (no SharePoint data available)');
@@ -758,6 +764,7 @@
       } else if (decodedData) {
         // No bookingId, but we have decoded data - use it directly
         console.log('📝 Using decoded data only (no bookingId for SharePoint lookup)');
+        sharepointId = null; // No SharePoint ID available
         populateFormFromData(decodedData);
       }
 
@@ -988,6 +995,12 @@
       addField('Type', document.getElementById('jobType').value);
       addField('ClientMobileNumber', document.getElementById('clientMobileNumber').value);
       addField('StartTime', document.getElementById('startTime').value || new Date().toISOString());
+      
+      // SharePoint ID (if data was fetched from SharePoint)
+      if (sharepointId) {
+        addField('SharePointId', sharepointId);
+        addField('BookingId', sharepointId);
+      }
       
       // Financial fields
       const amount = parseFloat(document.getElementById('amount').value) || 0;
