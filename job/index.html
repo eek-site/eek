@@ -390,12 +390,16 @@
     // SharePoint Lookup API URL (for fetching existing data)
     const SHAREPOINT_LOOKUP_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c35b9414a0be42f88182ae7e6e409f1d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2ztt24wScLuAfifD0pjzovseRDKXBAEtCQtScGMgPqQ';
 
-    // Power Automate endpoint for job submission
-    const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/ca2a97affbc449419b28ecb274d4c737/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=s2OFNz6J6KdjOKUUF1SRkZKo4UiPh01_uSzxy4Bg7Yw';
+    // SharePoint Update API URL (for saving full merged data to EncodedData)
+    const SHAREPOINT_UPDATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/ebc96da57e35479b8dd03a6abd06686c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=abw4-RdaVDllhMuODkPGn0iMZtuXjhmnaYyUOefn5F4';
+
+    // Excel API URL (for writing job-specific fields to xlsm)
+    const EXCEL_WRITE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/ca2a97affbc449419b28ecb274d4c737/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=s2OFNz6J6KdjOKUUF1SRkZKo4UiPh01_uSzxy4Bg7Yw';
 
     // State
     let selectedType = null;
     let sharepointId = null; // Store SharePoint ID for submission
+    let originalBookingData = null; // Store original booking data for merging
 
     // Base64 Decode Function - decodes SharePoint ID
     function decodeBase64(encoded) {
@@ -454,6 +458,8 @@
           decoded.retrievedAt = new Date().toISOString();
           // Store sharepointId for form submission
           sharepointId = bookingId;
+          // Store original data for merging on submit
+          originalBookingData = decoded;
           console.log('✅ SharePoint data retrieved and decoded successfully:', decoded);
           return decoded;
         } else {
@@ -533,23 +539,24 @@
         }
       }
 
-      // Amount - check both EncodedData (Amount) and BookingData (amount in cents)
-      const amountValue = getValue('Amount', 'amount');
+      // Amount - only populate from EncodedData (job form), not from BookingData (Stripe)
+      // Check for Costings, Chargeables, or Reimbursement field names
+      const costingsValue = getValue('Costings');
+      const chargeablesValue = getValue('Chargeables');
+      const reimbursementValue = getValue('Reimbursement');
+      const amountValue = costingsValue || chargeablesValue || reimbursementValue;
+      
       if (amountValue) {
         const field = document.getElementById('amount');
         if (field) {
-          let amountInDollars = parseFloat(amountValue);
-          // If amount > 1000, assume it's in cents (from Stripe) and convert
-          if (amountInDollars > 1000) {
-            amountInDollars = (amountInDollars / 100).toFixed(2);
-          }
-          field.value = amountInDollars;
-          console.log('✅ Set amount =', amountInDollars);
+          field.value = parseFloat(amountValue);
+          console.log('✅ Set amount =', amountValue);
           // Trigger GST calculation
           const event = new Event('input', { bubbles: true });
           field.dispatchEvent(event);
         }
       }
+      // Note: Do NOT populate from BookingData 'amount' field - that's Stripe cents
 
       // Job Notes (from description or JobNotes)
       const descriptionValue = getValue('JobNotes', 'description', 'jobNotes', 'notes');
@@ -845,7 +852,7 @@
       });
     }
 
-// Form Submission
+// Form Submission - two calls: SharePoint (full data) and Excel (job fields only)
     async function handleSubmit(event) {
       event.preventDefault();
       
@@ -854,56 +861,37 @@
       showLoading(true);
 
       try {
-        const formData = collectFormData();
+        // Collect both data sets
+        const fullData = collectFormData();  // Full merged data for SharePoint
+        const excelData = collectExcelData(); // Job-specific fields for Excel
 
-        // Check if endpoint is configured
-        if (POWER_AUTOMATE_URL === 'YOUR_POWER_AUTOMATE_ENDPOINT_HERE') {
-          throw new Error('Power Automate endpoint not configured. Please update POWER_AUTOMATE_URL in the script.');
-        }
-
-        // Submit to Power Automate
-        const response = await fetch(POWER_AUTOMATE_URL, {
+        // 1. Update SharePoint with full merged data
+        console.log('📤 Updating SharePoint with full data:', fullData);
+        const spResponse = await fetch(SHAREPOINT_UPDATE_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
+          body: JSON.stringify(fullData)
         });
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Server returned ${response.status}: ${errorText}`);
+        if (!spResponse.ok) {
+          const errorText = await spResponse.text();
+          throw new Error(`SharePoint update failed: ${spResponse.status} - ${errorText}`);
         }
+        console.log('✅ SharePoint updated successfully');
 
-        // Try to parse as JSON, but handle non-JSON/empty responses gracefully
-        // Power Automate may return success with non-JSON response (plain text, HTML, or empty)
-        try {
-          const contentType = response.headers.get('content-type') || '';
-          
-          // Get response text first (can only read once)
-          const responseText = await response.text();
-          
-          if (responseText && responseText.trim()) {
-            // Only try to parse if there's actual content
-            if (contentType.includes('application/json')) {
-              try {
-                const result = JSON.parse(responseText);
-                console.log('✅ Parsed JSON response:', result);
-              } catch (jsonError) {
-                console.warn('⚠️ Response marked as JSON but failed to parse:', jsonError);
-                console.warn('Response text:', responseText.substring(0, 200));
-                // Request succeeded, just couldn't parse JSON
-              }
-            } else {
-              // Not JSON - just log for debugging
-              console.log('📄 Non-JSON response received:', responseText.substring(0, 200));
-            }
-          } else {
-            // Empty response - this is fine, request succeeded
-            console.log('✅ Request succeeded with empty response');
-          }
-        } catch (responseError) {
-          // Even if response parsing fails, if status is OK, consider it a success
-          console.warn('⚠️ Error reading response, but status was OK:', responseError);
+        // 2. Write to Excel with job-specific fields only
+        console.log('📤 Writing to Excel:', excelData);
+        const excelResponse = await fetch(EXCEL_WRITE_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(excelData)
+        });
+
+        if (!excelResponse.ok) {
+          const errorText = await excelResponse.text();
+          throw new Error(`Excel write failed: ${excelResponse.status} - ${errorText}`);
         }
+        console.log('✅ Excel updated successfully');
         
         showSuccess('Job submitted successfully!');
         
@@ -933,14 +921,71 @@
       }
     }
 
-    // Collect form data
+    // Collect Excel-specific data (only fields relevant to job type)
+    function collectExcelData() {
+      const type = document.getElementById('jobType').value;
+      const data = {
+        Rego: document.getElementById('rego').value.toUpperCase(),
+        Type: type
+      };
+
+      if (type === 'Supplier') {
+        data.Name = 'Mechanic';
+        data.Supplier = document.getElementById('supplierName').value;
+        data.Costings = parseFloat(document.getElementById('amount').value) || '';
+        data.JobNotes = document.getElementById('jobNotes').value;
+        data.Paid = document.getElementById('paidFlag').value || '';
+        data.CloseAndPostJobForBilling = document.getElementById('closePostFlag').checked ? 'Yes' : 'No';
+        data.Bank_Account = document.getElementById('bankAccount').value;
+        data.Supp_Email = document.getElementById('supplierEmail').value;
+        data.Supp_Phone = document.getElementById('supplierPhone').value;
+      }
+      
+      else if (type === 'Billable') {
+        data.Name = document.getElementById('categorySelect').value;
+        data.JobNotes = document.getElementById('jobNotes').value;
+        data.Chargeables = parseFloat(document.getElementById('amount').value) || '';
+        data.Paid = document.getElementById('paidFlag').value || '';
+        data.CloseAndPostJobForBilling = document.getElementById('closePostFlag').checked ? 'Yes' : 'No';
+      }
+      
+      else if (type === 'Deposit') {
+        data.Name = 'Payment';
+        data.Reimbursement = parseFloat(document.getElementById('amount').value) || '';
+        data.JobNotes = document.getElementById('jobNotes').value;
+        data.Paid = document.getElementById('paidFlag').value || '';
+        data.CloseAndPostJobForBilling = document.getElementById('closePostFlag').checked ? 'Yes' : 'No';
+      }
+      
+      else if (type === 'Refund' || type === 'Reimbursement') {
+        data.Reimbursement = parseFloat(document.getElementById('amount').value) || '';
+        data.JobNotes = document.getElementById('jobNotes').value;
+        data.Paid = document.getElementById('paidFlag').value || '';
+        data.CloseAndPostJobForBilling = document.getElementById('closePostFlag').checked ? 'Yes' : 'No';
+      }
+      
+      else if (type === 'Close Job') {
+        data.JobNotes = document.getElementById('jobNotes').value;
+      }
+      
+      else if (type === 'DNC') {
+        data.JobNotes = '[DNC]';
+      }
+
+      return data;
+    }
+
+    // Collect form data - merges with original data
     function collectFormData() {
       const fields = [];
-      const formData = {
-        formType: 'job',
-        formVersion: '2.0',
-        submittedAt: new Date().toISOString()
-      };
+      
+      // Start with original booking data if it exists
+      const formData = originalBookingData ? { ...originalBookingData } : {};
+      
+      // Add form metadata
+      formData.formType = 'job';
+      formData.formVersion = '2.0';
+      formData.submittedAt = new Date().toISOString();
       
       // Helper to add field to both flat and array format
       const addField = (name, value) => {
@@ -950,56 +995,83 @@
         }
       };
 
-      // Basic fields
+      const type = document.getElementById('jobType').value;
+
+      // Basic fields - always sent
       addField('Id', document.getElementById('id').value);
       addField('Rego', document.getElementById('rego').value.toUpperCase());
       addField('Email', document.getElementById('email').value);
       addField('ClientMobileNumber', document.getElementById('clientMobileNumber').value);
-      addField('Type', document.getElementById('jobType').value);
+      addField('Type', type);
       addField('StartTime', new Date().toISOString());
-      
-      // Name field based on type
-      const type = document.getElementById('jobType').value;
-      if (type === 'Supplier') {
-        addField('Name', 'Mechanic');
-      } else if (type === 'Deposit') {
-        addField('Name', 'Payment');
-      } else if (type === 'Billable') {
-        addField('Name', document.getElementById('categorySelect').value);
-      }
-      // Close Job and DNC don't send Name
       
       // SharePoint ID (if data was fetched from SharePoint)
       if (sharepointId) {
         addField('SharePointId', sharepointId);
         addField('BookingId', sharepointId);
       }
-      
-      // Financial fields
-      const amount = parseFloat(document.getElementById('amount').value) || 0;
-      if (amount > 0) {
-        addField('Amount', amount);
-        addField('GSTAmount', parseFloat(document.getElementById('gstAmount').value) || 0);
-        addField('TotalIncGST', parseFloat(document.getElementById('totalAmount').value) || amount);
-      }
 
-      // Supplier fields
-      addField('Supplier', document.getElementById('supplierName').value);
-      addField('EmailJobToSupplier', document.getElementById('supplierEmail').value);
-      addField('TextJobToMobileNumber', document.getElementById('supplierPhone').value);
-      addField('Bank', document.getElementById('bankAccount').value);
-      addField('TextSupplier', document.getElementById('textSupplier').checked ? 'Yes' : '');
-
-      // Job details
-      addField('JobNotes', document.getElementById('jobNotes').value);
-
-      // Flags
-      addField('Paid', document.getElementById('paidFlag').value || '');
-      // Close Job always sets Close/Post to Yes
-      if (type === 'Close Job') {
-        addField('CloseAndPostJobForBilling', 'Yes');
-      } else {
+      // Type-specific fields
+      if (type === 'Supplier') {
+        addField('Name', 'Mechanic');
+        // Supplier fields
+        addField('Supplier', document.getElementById('supplierName').value);
+        addField('EmailJobToSupplier', document.getElementById('supplierEmail').value);
+        addField('TextJobToMobileNumber', document.getElementById('supplierPhone').value);
+        addField('Bank', document.getElementById('bankAccount').value);
+        addField('TextSupplier', document.getElementById('textSupplier').checked ? 'Yes' : '');
+        // Financial - Costings
+        const costings = parseFloat(document.getElementById('amount').value) || 0;
+        if (costings > 0) {
+          addField('Costings', costings);
+        }
+        addField('JobNotes', document.getElementById('jobNotes').value);
+        addField('Paid', document.getElementById('paidFlag').value || '');
         addField('CloseAndPostJobForBilling', document.getElementById('closePostFlag').checked ? 'Yes' : 'No');
+      }
+      
+      else if (type === 'Billable') {
+        addField('Name', document.getElementById('categorySelect').value);
+        addField('JobNotes', document.getElementById('jobNotes').value);
+        // Financial - Chargeables
+        const chargeables = parseFloat(document.getElementById('amount').value) || 0;
+        if (chargeables > 0) {
+          addField('Chargeables', chargeables);
+        }
+        addField('Paid', document.getElementById('paidFlag').value || '');
+        addField('CloseAndPostJobForBilling', document.getElementById('closePostFlag').checked ? 'Yes' : 'No');
+      }
+      
+      else if (type === 'Deposit') {
+        addField('Name', 'Payment');
+        addField('JobNotes', document.getElementById('jobNotes').value);
+        // Financial - Reimbursement
+        const reimbursement = parseFloat(document.getElementById('amount').value) || 0;
+        if (reimbursement > 0) {
+          addField('Reimbursement', reimbursement);
+        }
+        addField('Paid', document.getElementById('paidFlag').value || '');
+        addField('CloseAndPostJobForBilling', document.getElementById('closePostFlag').checked ? 'Yes' : 'No');
+      }
+      
+      else if (type === 'Refund' || type === 'Reimbursement') {
+        addField('JobNotes', document.getElementById('jobNotes').value);
+        // Financial - Reimbursement
+        const reimbursement = parseFloat(document.getElementById('amount').value) || 0;
+        if (reimbursement > 0) {
+          addField('Reimbursement', reimbursement);
+        }
+        addField('Paid', document.getElementById('paidFlag').value || '');
+        addField('CloseAndPostJobForBilling', document.getElementById('closePostFlag').checked ? 'Yes' : 'No');
+      }
+      
+      else if (type === 'Close Job') {
+        addField('JobNotes', document.getElementById('jobNotes').value);
+        addField('CloseAndPostJobForBilling', 'Yes');
+      }
+      
+      else if (type === 'DNC') {
+        addField('JobNotes', '[DNC]');
       }
 
       // Add the fields array
