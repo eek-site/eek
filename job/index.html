@@ -29,9 +29,11 @@
       const emailParam = urlParams.get('email');
       if (emailParam) return emailParam;
       
+      // Wait for DOM to be ready before querying
+      if (document.readyState === 'loading') return null;
       const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"], input[id*="email"]');
       for (let input of emailInputs) {
-        if (input.value && input.value.includes('@')) {
+        if (input && input.value && input.value.includes('@')) {
           return input.value;
         }
       }
@@ -43,9 +45,11 @@
       const phoneParam = urlParams.get('phone');
       if (phoneParam) return phoneParam;
       
+      // Wait for DOM to be ready before querying
+      if (document.readyState === 'loading') return null;
       const phoneInputs = document.querySelectorAll('input[type="tel"], input[name*="phone"], input[id*="phone"]');
       for (let input of phoneInputs) {
-        if (input.value) {
+        if (input && input.value) {
           return input.value;
         }
       }
@@ -65,21 +69,31 @@
       };
     }
     
-    const mobileIds = getMobileIds();
-    const initConfig = {};
+    // Initialize Reddit Pixel after DOM is ready
+    function initRedditPixel() {
+      const mobileIds = getMobileIds();
+      const initConfig = {};
+      
+      const email = getEmailFromForm();
+      const phoneNumber = getPhoneFromForm();
+      const externalId = getUserId();
+      
+      if (email) initConfig.email = email;
+      if (phoneNumber) initConfig.phoneNumber = phoneNumber;
+      if (externalId) initConfig.externalId = externalId;
+      if (mobileIds.idfa) initConfig.idfa = mobileIds.idfa;
+      if (mobileIds.aaid) initConfig.aaid = mobileIds.aaid;
+      
+      rdt('init', 'a2_hf16791nsdhx', Object.keys(initConfig).length > 0 ? initConfig : undefined);
+      rdt('track', 'PageVisit');
+    }
     
-    const email = getEmailFromForm();
-    const phoneNumber = getPhoneFromForm();
-    const externalId = getUserId();
-    
-    if (email) initConfig.email = email;
-    if (phoneNumber) initConfig.phoneNumber = phoneNumber;
-    if (externalId) initConfig.externalId = externalId;
-    if (mobileIds.idfa) initConfig.idfa = mobileIds.idfa;
-    if (mobileIds.aaid) initConfig.aaid = mobileIds.aaid;
-    
-    rdt('init', 'a2_hf16791nsdhx', Object.keys(initConfig).length > 0 ? initConfig : undefined);
-    rdt('track', 'PageVisit');
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initRedditPixel);
+    } else {
+      initRedditPixel();
+    }
   </script>
 
   <!-- Google tag (gtag.js) -->
@@ -96,10 +110,10 @@
   <script src="/phone-manager.js"></script>
   
   <!-- Unified Tracking System -->
-  <script src="/unified-tracking.js?v={{ site.version }}"></script>
+  <script src="/unified-tracking.js"></script>
   
   <!-- Centralized Footer Management -->
-  <script src="/footer-new.js?v={{ site.version }}"></script>
+  <script src="/footer-new.js"></script>
 
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   
