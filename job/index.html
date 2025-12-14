@@ -503,10 +503,14 @@
         return null;
       };
 
-      // Normalize value helper
+      // Normalize value helper - decodes HTML entities for proper rendering
       const normalizeValue = (value) => {
         if (value === null || value === undefined) return '';
-        return String(value).trim();
+        let str = String(value).trim();
+        // Decode HTML entities (apostrophes, ampersands, etc.)
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = str;
+        return textarea.value;
       };
 
       // Vehicle Information - check both EncodedData (Rego) and BookingData (rego, vehicleRego)
