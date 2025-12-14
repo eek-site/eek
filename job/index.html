@@ -417,10 +417,12 @@
     function decodeBase64(encoded) {
       try {
         const decoded = atob(encoded);
+        console.log('🔓 Base64 decoded to string:', decoded);
         
         // Try parsing as JSON first (new format from Power Automate)
         try {
           const jsonData = JSON.parse(decoded);
+          console.log('✅ Parsed as JSON:', jsonData);
           // If it has fields array, convert to flat object for form population
           if (jsonData.fields && Array.isArray(jsonData.fields)) {
             const flatData = { ...jsonData };
@@ -432,6 +434,7 @@
           }
           return jsonData;
         } catch (jsonError) {
+          console.log('⚠️ Not valid JSON, trying URL params format...');
           // Try URL params format (legacy format)
           try {
             const params = new URLSearchParams(decoded);
@@ -441,22 +444,29 @@
             }
             // Only return if we got key-value pairs
             if (Object.keys(data).length > 0) {
+              console.log('✅ Parsed as URL params:', data);
               return data;
             }
           } catch (paramsError) {
-            // If URL params also fails, treat as plain bookingId
+            console.log('⚠️ Not URL params format either');
           }
           
           // Fall back: treat decoded string as plain bookingId
           // This handles cases where just the bookingId number/string is encoded
           if (decoded && decoded.trim()) {
-            return { bookingId: decoded.trim() };
+            const result = { bookingId: decoded.trim() };
+            console.log('✅ Treated as plain bookingId:', result);
+            return result;
+          } else {
+            console.warn('⚠️ Decoded string is empty or whitespace');
+            return null;
           }
         }
       } catch (e) {
-        console.error('Failed to decode data:', e);
+        console.error('❌ Failed to decode data:', e);
         return null;
       }
+      console.warn('⚠️ decodeBase64 returned null (unexpected code path)');
       return null;
     }
 
@@ -646,15 +656,17 @@
           console.log('📋 Decoded data:', decodedData);
           
           // Extract bookingId from decoded data
-          bookingId = decodedData.bookingId || decodedData.bookingid || decodedData.Id || decodedData.ID || null;
-          
-          // If decodedData is just a string (plain bookingId), convert it
+          // Handle case where decodeBase64 might return a string instead of object
           if (typeof decodedData === 'string') {
+            console.log('⚠️ decodedData is a string, converting to object');
             bookingId = decodedData.trim();
             decodedData = { bookingId: bookingId };
+          } else {
+            bookingId = decodedData.bookingId || decodedData.bookingid || decodedData.Id || decodedData.ID || null;
           }
           
           console.log('🔑 Extracted bookingId:', bookingId);
+          console.log('📦 Final decodedData object:', decodedData);
           
           // Populate form from decoded data (will be overridden by SharePoint if available)
           populateFormFromData(decodedData);
