@@ -314,6 +314,66 @@
     html {
       scroll-behavior: smooth;
     }
+
+    /* File Upload Zone */
+    #fileDropZone {
+      transition: all 0.3s ease;
+    }
+
+    #fileDropZone:hover {
+      border-color: #ff5500;
+      background: rgba(255,85,0,0.1);
+    }
+
+    #fileDropZone.dragover {
+      border-color: #ff5500;
+      background: rgba(255,85,0,0.2);
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      margin: 5px 0;
+      background: rgba(255,255,255,0.05);
+      border-radius: 6px;
+      border: 1px solid #444;
+    }
+
+    .file-item-name {
+      flex: 1;
+      color: #fff;
+      font-size: 0.9em;
+      margin-right: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-item-size {
+      color: #888;
+      font-size: 0.85em;
+      margin-right: 10px;
+    }
+
+    .file-item-remove {
+      background: #dc3545;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.85em;
+    }
+
+    .file-item-remove:hover {
+      background: #c82333;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
   
   <!-- Centralized Phone Number Management -->
@@ -347,6 +407,7 @@
     </div>
   </div>
 </nav>
+
 
 
 <!-- Fuel Extraction Job Submission Form (shown when query string present) -->
@@ -404,6 +465,90 @@
       <div id="jobErrorMessage" class="status-message error hidden" style="margin-top: 20px;">
         <strong>❌ Error:</strong> <span id="jobErrorText">Something went wrong. Please try again.</span>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- Invoice Upload Form Section (shown when query string with bookingId present) -->
+<section id="invoiceUploadSection" class="auth-section" style="display: none;">
+  <div class="container">
+    <div class="auth-container">
+      <h2>📄 Invoice Upload</h2>
+      <p>Upload your invoice documents. Data will be loaded from SharePoint using the booking ID.</p>
+      
+      <div id="invoiceAlertSuccess" class="status-message info hidden" style="margin-top: 20px;">
+        <strong>✅ Success!</strong> Your invoice has been uploaded successfully.
+      </div>
+      <div id="invoiceAlertError" class="status-message error hidden" style="margin-top: 20px;">
+        <strong>❌ Error:</strong> <span id="invoiceErrorText">Something went wrong. Please try again.</span>
+      </div>
+      
+      <form id="invoiceUploadForm" style="margin-top: 30px;" novalidate>
+        <!-- Vehicle Section -->
+        <div style="margin-bottom: 28px;">
+          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ff5500; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid rgba(255,255,255,0.2);">Vehicle Details</div>
+          <div style="margin-bottom: 20px;">
+            <label for="invoiceRego" style="display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem;">Registration <span style="color: #dc3545;">*</span></label>
+            <input type="text" id="invoiceRego" name="rego" required style="width: 100%; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff; text-transform: uppercase;" placeholder="ABC123" maxlength="10">
+          </div>
+        </div>
+
+        <!-- Supplier Section -->
+        <div style="margin-bottom: 28px;">
+          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ff5500; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid rgba(255,255,255,0.2);">Supplier / Mechanic Details</div>
+          <div style="margin-bottom: 20px;">
+            <label for="invoiceSupplierName" style="display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem;">Name <span style="color: #dc3545;">*</span></label>
+            <input type="text" id="invoiceSupplierName" name="supplierName" required style="width: 100%; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;" placeholder="John Smith">
+          </div>
+          <div style="margin-bottom: 20px;">
+            <label for="invoiceSupplierEmail" style="display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem;">Email <span style="color: #dc3545;">*</span></label>
+            <input type="email" id="invoiceSupplierEmail" name="supplierEmail" required style="width: 100%; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;" placeholder="mechanic@example.com">
+          </div>
+          <div style="margin-bottom: 20px;">
+            <label for="invoiceSupplierPhone" style="display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem;">Phone</label>
+            <input type="tel" id="invoiceSupplierPhone" name="supplierPhone" style="width: 100%; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;" placeholder="021 123 4567">
+          </div>
+        </div>
+
+        <!-- Payment Section -->
+        <div style="margin-bottom: 28px;">
+          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ff5500; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid rgba(255,255,255,0.2);">Payment Details</div>
+          <div style="margin-bottom: 20px;">
+            <label for="invoiceAmount" style="display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem;">Amount <span style="color: #dc3545;">*</span></label>
+            <div style="position: relative;">
+              <span style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #ccc; font-weight: 500;">$</span>
+              <input type="number" id="invoiceAmount" name="amount" required step="0.01" min="0" style="width: 100%; padding: 12px 16px; padding-left: 32px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;" placeholder="0.00">
+            </div>
+          </div>
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem;">Bank Account <span style="color: #dc3545;">*</span></label>
+            <div style="display: grid; grid-template-columns: 80px 80px 120px 60px; gap: 8px;">
+              <input type="text" id="invoiceBank1" name="bank1" placeholder="XX" maxlength="2" required style="text-align: center; padding: 12px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;">
+              <input type="text" id="invoiceBank2" name="bank2" placeholder="XXXX" maxlength="4" required style="text-align: center; padding: 12px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;">
+              <input type="text" id="invoiceBank3" name="bank3" placeholder="XXXXXXX" maxlength="8" required style="text-align: center; padding: 12px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;">
+              <input type="text" id="invoiceBank4" name="bank4" placeholder="XXX" maxlength="3" required style="text-align: center; padding: 12px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;">
+            </div>
+            <div style="font-size: 0.8rem; color: #888; margin-top: 4px;">NZ bank account format: XX-XXXX-XXXXXXX-XXX</div>
+          </div>
+        </div>
+
+        <!-- Invoice Section -->
+        <div style="margin-bottom: 28px;">
+          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ff5500; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid rgba(255,255,255,0.2);">Invoice</div>
+          <div style="margin-bottom: 20px;">
+            <label for="invoiceFile" style="display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem;">Invoice PDF/Image <span style="color: #dc3545;">*</span></label>
+            <input type="file" id="invoiceFile" name="invoiceFile" accept=".pdf,.jpg,.jpeg,.png" required style="width: 100%; padding: 10px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff; cursor: pointer;">
+            <div style="font-size: 0.8rem; color: #888; margin-top: 4px;">Accepted formats: PDF, JPG, PNG (max 10MB)</div>
+          </div>
+        </div>
+
+        <!-- Hidden fields -->
+        <input type="hidden" id="invoiceBookingId" name="bookingId" value="">
+
+        <button type="submit" id="invoiceSubmitBtn" class="auth-button upload-button" style="width: 100%; margin-top: 10px;">
+          📤 Upload Invoice
+        </button>
+      </form>
     </div>
   </div>
 </section>
@@ -532,6 +677,9 @@ const SHAREPOINT_UPDATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.
 // Excel API URL (for writing job-specific fields to xlsm)
 const EXCEL_WRITE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/ca2a97affbc449419b28ecb274d4c737/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=s2OFNz6J6KdjOKUUF1SRkZKo4UiPh01_uSzxy4Bg7Yw';
 
+// Invoice Upload API URL (for submitting invoices with file attachments)
+const INVOICE_UPLOAD_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/b884bb04c6594edb906cdfdb22193b2f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=z7Dd14tvZp2UVGe4DfXewImCbHHJmo3lXsTJmle1jA8';
+
 // State
 let sharepointId = null;
 let originalBookingData = null;
@@ -603,43 +751,89 @@ function populateFormFromData(bookingData) {
     return textarea.value;
   };
   
-  // Vehicle Registration
+  // Vehicle Registration (for job form)
   const regoValue = getValue('Rego', 'rego', 'vehicleRego');
   if (regoValue) {
-    document.getElementById('jobRego').value = normalizeValue(regoValue);
+    const jobRegoField = document.getElementById('jobRego');
+    const invoiceRegoField = document.getElementById('invoiceRego');
+    if (jobRegoField) jobRegoField.value = normalizeValue(regoValue);
+    if (invoiceRegoField) invoiceRegoField.value = normalizeValue(regoValue);
   }
   
-  // Supplier Information
+  // Supplier Information (for both forms)
   const supplierNameValue = getValue('Supplier', 'supplierName', 'supplier');
   if (supplierNameValue) {
-    document.getElementById('supplierName').value = normalizeValue(supplierNameValue);
+    const supplierNameField = document.getElementById('supplierName');
+    const invoiceSupplierNameField = document.getElementById('invoiceSupplierName');
+    if (supplierNameField) supplierNameField.value = normalizeValue(supplierNameValue);
+    if (invoiceSupplierNameField) invoiceSupplierNameField.value = normalizeValue(supplierNameValue);
   }
   
   const supplierEmailValue = getValue('EmailJobToSupplier', 'supplierEmail', 'SupplierEmail');
   if (supplierEmailValue) {
-    document.getElementById('supplierEmail').value = normalizeValue(supplierEmailValue);
+    const supplierEmailField = document.getElementById('supplierEmail');
+    const invoiceSupplierEmailField = document.getElementById('invoiceSupplierEmail');
+    if (supplierEmailField) supplierEmailField.value = normalizeValue(supplierEmailValue);
+    if (invoiceSupplierEmailField) invoiceSupplierEmailField.value = normalizeValue(supplierEmailValue);
   }
   
   const supplierPhoneValue = getValue('TextJobToMobileNumber', 'supplierPhone', 'SupplierPhone');
   if (supplierPhoneValue) {
-    document.getElementById('supplierPhone').value = normalizeValue(supplierPhoneValue);
+    const supplierPhoneField = document.getElementById('supplierPhone');
+    const invoiceSupplierPhoneField = document.getElementById('invoiceSupplierPhone');
+    if (supplierPhoneField) supplierPhoneField.value = normalizeValue(supplierPhoneValue);
+    if (invoiceSupplierPhoneField) invoiceSupplierPhoneField.value = normalizeValue(supplierPhoneValue);
   }
   
-  // Customer Information
+  // Customer Information (for job form)
   const emailValue = getValue('Email', 'email', 'customerEmail');
   if (emailValue) {
-    document.getElementById('jobEmail').value = normalizeValue(emailValue);
+    const jobEmailField = document.getElementById('jobEmail');
+    if (jobEmailField) jobEmailField.value = normalizeValue(emailValue);
   }
   
   const phoneValue = getValue('ClientMobileNumber', 'phone', 'customerPhone');
   if (phoneValue) {
-    document.getElementById('jobPhone').value = normalizeValue(phoneValue);
+    const jobPhoneField = document.getElementById('jobPhone');
+    if (jobPhoneField) jobPhoneField.value = normalizeValue(phoneValue);
   }
   
-  // Job Notes
+  // Job Notes (for job form)
   const notesValue = getValue('JobNotes', 'description', 'jobNotes', 'notes');
   if (notesValue) {
-    document.getElementById('jobNotes').value = normalizeValue(notesValue);
+    const jobNotesField = document.getElementById('jobNotes');
+    if (jobNotesField) jobNotesField.value = normalizeValue(notesValue);
+  }
+  
+  // Invoice Amount (convert from cents to dollars if present)
+  const amountValue = getValue('Costings', 'Chargeables', 'Reimbursement', 'amount');
+  if (amountValue) {
+    const invoiceAmountField = document.getElementById('invoiceAmount');
+    if (invoiceAmountField) {
+      // If amount is in cents (large number), convert to dollars
+      const numValue = parseFloat(amountValue);
+      if (numValue > 1000 && numValue % 100 === 0) {
+        invoiceAmountField.value = (numValue / 100).toFixed(2);
+      } else {
+        invoiceAmountField.value = numValue;
+      }
+    }
+  }
+  
+  // Bank Account (if present in booking data)
+  const bankValue = getValue('Bank', 'bankAccount');
+  if (bankValue && typeof bankValue === 'string') {
+    const bankParts = bankValue.split('-');
+    if (bankParts.length === 4) {
+      const bank1Field = document.getElementById('invoiceBank1');
+      const bank2Field = document.getElementById('invoiceBank2');
+      const bank3Field = document.getElementById('invoiceBank3');
+      const bank4Field = document.getElementById('invoiceBank4');
+      if (bank1Field) bank1Field.value = bankParts[0];
+      if (bank2Field) bank2Field.value = bankParts[1];
+      if (bank3Field) bank3Field.value = bankParts[2];
+      if (bank4Field) bank4Field.value = bankParts[3];
+    }
   }
 }
 
@@ -650,13 +844,15 @@ document.addEventListener('DOMContentLoaded', async function() {
   if (!hasQueryString) {
     // Show contact form
     document.getElementById('jobSubmissionSection').style.display = 'none';
+    document.getElementById('invoiceUploadSection').style.display = 'none';
     document.getElementById('contactFormSection').style.display = 'block';
     document.getElementById('guidelines').style.display = 'none';
     setupContactForm();
   } else {
-    // Check if this is a job submission (has 'd' parameter for bookingId)
+    // Check if this is a job submission or invoice upload (has 'd' parameter for bookingId)
     const urlParams = new URLSearchParams(window.location.search);
     const encodedData = urlParams.get('d');
+    const formType = urlParams.get('type'); // 'invoice' or 'job' or default to 'job'
     let bookingId = null;
     
     if (encodedData) {
@@ -669,10 +865,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     
     if (bookingId) {
-      // Show job submission form
-      document.getElementById('contactFormSection').style.display = 'none';
-      document.getElementById('jobSubmissionSection').style.display = 'block';
-      document.getElementById('guidelines').style.display = 'none';
+      // Set bookingId in invoice form if it exists
+      const invoiceBookingIdField = document.getElementById('invoiceBookingId');
+      if (invoiceBookingIdField) {
+        invoiceBookingIdField.value = bookingId;
+      }
       
       // Fetch and populate data
       const sharePointData = await fetchJobDataFromSharePoint(bookingId);
@@ -680,10 +877,26 @@ document.addEventListener('DOMContentLoaded', async function() {
         populateFormFromData(sharePointData);
       }
       
-      setupJobSubmissionForm();
+      // Show appropriate form based on type parameter
+      if (formType === 'invoice') {
+        // Show invoice upload form
+        document.getElementById('contactFormSection').style.display = 'none';
+        document.getElementById('jobSubmissionSection').style.display = 'none';
+        document.getElementById('invoiceUploadSection').style.display = 'block';
+        document.getElementById('guidelines').style.display = 'none';
+        setupInvoiceUploadForm();
+      } else {
+        // Show job submission form (default)
+        document.getElementById('contactFormSection').style.display = 'none';
+        document.getElementById('invoiceUploadSection').style.display = 'none';
+        document.getElementById('jobSubmissionSection').style.display = 'block';
+        document.getElementById('guidelines').style.display = 'none';
+        setupJobSubmissionForm();
+      }
     } else {
       // No bookingId - show contact form
       document.getElementById('jobSubmissionSection').style.display = 'none';
+      document.getElementById('invoiceUploadSection').style.display = 'none';
       document.getElementById('contactFormSection').style.display = 'block';
       setupContactForm();
     }
@@ -804,6 +1017,195 @@ function setupJobSubmissionForm() {
     } finally {
       submitBtn.disabled = false;
       submitBtn.innerHTML = '⛽ Submit Fuel Extraction Job';
+    }
+  });
+}
+
+// Convert file to base64
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const base64 = reader.result.split(',')[1];
+      resolve(base64);
+    };
+    reader.onerror = error => reject(error);
+  });
+}
+
+function setupInvoiceUploadForm() {
+  const form = document.getElementById('invoiceUploadForm');
+  const submitBtn = document.getElementById('invoiceSubmitBtn');
+  const alertSuccess = document.getElementById('invoiceAlertSuccess');
+  const alertError = document.getElementById('invoiceAlertError');
+  const errorText = document.getElementById('invoiceErrorText');
+  
+  // Auto-advance bank account fields
+  const bankFields = ['invoiceBank1', 'invoiceBank2', 'invoiceBank3', 'invoiceBank4'];
+  bankFields.forEach((fieldId, index) => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+      field.addEventListener('input', function(e) {
+        this.value = this.value.replace(/\D/g, '');
+        if (this.value.length >= this.maxLength && index < bankFields.length - 1) {
+          const nextField = document.getElementById(bankFields[index + 1]);
+          if (nextField) nextField.focus();
+        }
+      });
+    }
+  });
+  
+  // Uppercase rego
+  const regoField = document.getElementById('invoiceRego');
+  if (regoField) {
+    regoField.addEventListener('input', function(e) {
+      this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    });
+  }
+  
+  // Form submission protection
+  let isSubmitting = false;
+  let submissionId = null;
+  
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    if (isSubmitting) {
+      console.warn('Form submission already in progress, ignoring duplicate submit');
+      return;
+    }
+    
+    submissionId = `submission_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    isSubmitting = true;
+    
+    alertSuccess.classList.add('hidden');
+    alertError.classList.add('hidden');
+    
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span style="display: inline-flex; align-items: center; gap: 10px;"><span style="width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite;"></span> Uploading...</span>';
+    
+    try {
+      // Build bank account string
+      const bankAccount = [
+        document.getElementById('invoiceBank1').value,
+        document.getElementById('invoiceBank2').value,
+        document.getElementById('invoiceBank3').value,
+        document.getElementById('invoiceBank4').value
+      ].join('-');
+      
+      // Get form values
+      const rego = document.getElementById('invoiceRego').value.trim();
+      const supplierName = document.getElementById('invoiceSupplierName').value.trim();
+      const supplierEmail = document.getElementById('invoiceSupplierEmail').value.trim();
+      const supplierPhone = document.getElementById('invoiceSupplierPhone').value.trim();
+      const amount = parseFloat(document.getElementById('invoiceAmount').value) || 0;
+      
+      // Build formData with fields array for dynamic email builder
+      const formData = {
+        formType: 'invoice_upload',
+        formVersion: '1.0',
+        submissionId: submissionId,
+        submittedAt: new Date().toISOString(),
+        
+        // Flat fields for flow processing
+        rego: rego,
+        supplierName: supplierName,
+        supplierEmail: supplierEmail,
+        supplierPhone: supplierPhone,
+        amount: amount,
+        bankAccount: bankAccount,
+        
+        // Fields array for dynamic email builder
+        fields: [
+          { name: 'Rego', value: rego },
+          { name: 'Supplier Name', value: supplierName },
+          { name: 'Supplier Email', value: supplierEmail },
+          { name: 'Supplier Phone', value: supplierPhone },
+          { name: 'Amount', value: '$' + amount.toFixed(2) },
+          { name: 'Bank Account', value: bankAccount }
+        ]
+      };
+      
+      // Include bookingId if available
+      const bookingIdValue = document.getElementById('invoiceBookingId').value;
+      if (bookingIdValue) {
+        formData.bookingId = bookingIdValue;
+        formData.SharePointId = bookingIdValue;
+        formData.BookingId = bookingIdValue;
+        formData.fields.push({ name: 'BookingId', value: bookingIdValue });
+      }
+      
+      // Handle file upload - convert to base64
+      const fileInput = document.getElementById('invoiceFile');
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        formData.invoiceFileName = file.name;
+        formData.invoiceFileType = file.type;
+        formData.invoiceFileBase64 = await fileToBase64(file);
+        formData.fields.push({ name: 'Invoice File', value: file.name });
+      }
+      
+      // Merge with original booking data if available
+      const fullData = originalBookingData ? { ...originalBookingData, ...formData } : formData;
+      
+      if (typeof gtag === 'function') {
+        gtag('event', 'form_submit', {
+          form_type: 'invoice_upload',
+          amount: formData.amount
+        });
+      }
+      
+      const response = await fetch(INVOICE_UPLOAD_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(fullData)
+      });
+      
+      if (response.ok) {
+        if (typeof gtag === 'function') {
+          gtag('event', 'form_submit_success', {
+            form_type: 'invoice_upload',
+            amount: formData.amount,
+            submission_id: submissionId
+          });
+        }
+        
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Invoice Uploaded ✓';
+        alertSuccess.classList.remove('hidden');
+        form.reset();
+        
+        // Reset bookingId if it was set
+        if (bookingIdValue) {
+          document.getElementById('invoiceBookingId').value = bookingIdValue;
+        }
+        
+      } else {
+        throw new Error('Server returned ' + response.status);
+      }
+      
+    } catch (error) {
+      console.error('Submission error:', error);
+      errorText.textContent = '❌ ' + (error.message || 'Something went wrong. Please try again.');
+      alertError.classList.remove('hidden');
+      
+      isSubmitting = false;
+      
+      if (typeof gtag === 'function') {
+        gtag('event', 'form_submit_error', {
+          form_type: 'invoice_upload',
+          error_message: error.message,
+          submission_id: submissionId
+        });
+      }
+    } finally {
+      if (!isSubmitting || !alertSuccess.classList.contains('hidden')) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '📤 Upload Invoice';
+      }
     }
   });
 }
