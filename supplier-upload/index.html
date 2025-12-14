@@ -1,26 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Supplier Upload Portal | Eek Mechanical</title>
-  <meta name="description" content="Secure document upload portal for Eek Mechanical suppliers. Submit invoices, job sheets, certificates, and other required documentation." />
-  <meta name="keywords" content="supplier upload, invoice submission, document portal, job sheets, certificates, eek suppliers" />
-  <meta property="og:title" content="Supplier Upload Portal | Eek Mechanical" />
-  <meta property="og:description" content="Secure portal for suppliers to upload invoices and documents to the Eek Mechanical system." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.eek.nz/supplier-upload" />
-  <meta property="og:image" content="https://www.eek.nz/supplier-upload-og-image.jpg" />
+  <meta name="description" content="Secure document upload portal for Eek Mechanical suppliers. Submit invoices, job sheets, and documentation.">
+  <meta name="keywords" content="supplier upload, invoice submission, document portal, eek mechanical">
+  <meta property="og:title" content="Supplier Upload Portal | Eek Mechanical">
+  <meta property="og:description" content="Secure portal for suppliers to upload invoices and documents.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.eek.nz/supplier-upload">
 
-  <!-- Centralized Phone Number Management -->
-  <script src="/phone-manager.js"></script>
-  
-  <!-- Unified Tracking System (Internal Analytics) -->
-  <script src="/unified-tracking.js?v={{ site.version }}"></script>
-  
-  <!-- Centralized Footer Management -->
-  <script src="/footer-new.js?v=20250121"></script>
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com;
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data: https:;
+    connect-src 'self' https://www.eek.nz https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com https://static.cloudflareinsights.com;
+    frame-src 'self';
+    font-src 'self' data:;">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 
+  <!-- Centralized Scripts -->
+  <script src="/phone-manager.js?v=20251020"></script>
+  <script src="/unified-tracking.js?v=20251020"></script>
+  <script src="/footer-new.js?v=20251020"></script>
+
+  <!-- Schema.org Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -37,13 +45,10 @@
   }
   </script>
 
-  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -53,11 +58,8 @@
       min-height: 100vh;
     }
 
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+    .container-narrow { max-width: 650px; margin: 0 auto; padding: 0 20px; }
 
     /* Header */
     .header {
@@ -70,10 +72,8 @@
     .header::before {
       content: '';
       position: absolute;
-      top: -50%;
-      right: -50%;
-      width: 200%;
-      height: 200%;
+      top: -50%; right: -50%;
+      width: 200%; height: 200%;
       background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
       animation: float 15s infinite linear;
     }
@@ -83,23 +83,9 @@
       100% { transform: translateX(-50px) translateY(-50px); }
     }
 
-    .header-content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-    }
-
-    .header h1 {
-      font-size: 2.8em;
-      margin-bottom: 15px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-
-    .header .subtitle {
-      font-size: 1.2em;
-      opacity: 0.9;
-      margin-bottom: 20px;
-    }
+    .header-content { position: relative; z-index: 2; text-align: center; }
+    .header h1 { font-size: 2.5em; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .header .subtitle { font-size: 1.1em; opacity: 0.9; margin-bottom: 20px; }
 
     .security-badge {
       display: inline-block;
@@ -122,137 +108,185 @@
       border-bottom: 1px solid #333;
     }
 
-    .nav-content {
-      display: flex;
-      justify-content: center;
-      padding: 15px 0;
-      gap: 30px;
-    }
+    .nav-content { display: flex; justify-content: center; padding: 15px 0; gap: 30px; flex-wrap: wrap; }
+    .nav a { color: #ccc; text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+    .nav a:hover { color: #ff5500; }
 
-    .nav a {
-      color: #ccc;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s ease;
-      position: relative;
-    }
+    /* Main Section */
+    .main-section { padding: 50px 0; }
 
-    .nav a:hover {
-      color: #ff5500;
-    }
-
-    /* Authentication Section */
-    .auth-section {
-      padding: 60px 0;
-    }
-
-    .auth-container {
-      background: rgba(255,255,255,0.1);
+    /* Form Card */
+    .form-card {
+      background: rgba(255,255,255,0.08);
       backdrop-filter: blur(15px);
       border-radius: 20px;
-      padding: 50px;
-      border: 1px solid rgba(255,255,255,0.2);
+      padding: 40px;
+      border: 1px solid rgba(255,255,255,0.15);
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-      text-align: center;
     }
 
-    .auth-container h2 {
+    .form-card h2 { color: #ff5500; font-size: 1.8em; margin-bottom: 10px; }
+    .form-card > p { color: #bbb; margin-bottom: 25px; font-size: 1.05em; }
+
+    .form-section { margin-bottom: 28px; }
+
+    .form-section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
       color: #ff5500;
-      font-size: 2.2em;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid rgba(255,255,255,0.15);
     }
 
-    .auth-container p {
-      font-size: 1.2em;
-      margin-bottom: 30px;
-      color: #ddd;
+    .form-group { margin-bottom: 20px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      .form-card { padding: 25px 20px; }
+      .header h1 { font-size: 1.8em; }
+      .nav-content { flex-direction: column; align-items: center; gap: 12px; }
     }
 
-    .auth-button {
-      background: linear-gradient(135deg, #0078d4, #106ebe);
-      color: white;
-      padding: 18px 40px;
-      border: none;
-      border-radius: 50px;
-      font-size: 1.2em;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin: 10px;
-      box-shadow: 0 10px 30px rgba(0,120,212,0.3);
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-    }
+    label { display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem; }
+    label .required { color: #ef4444; }
 
-    .auth-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 15px 40px rgba(0,120,212,0.4);
-      background: linear-gradient(135deg, #106ebe, #005a9e);
-    }
-
-    .upload-button {
-      background: linear-gradient(135deg, #ff5500, #ff7700);
-      box-shadow: 0 10px 30px rgba(255,85,0,0.3);
-    }
-
-    .upload-button:hover {
-      background: linear-gradient(135deg, #ff7700, #e04400);
-      box-shadow: 0 15px 40px rgba(255,85,0,0.4);
-    }
-
-    /* Status Messages */
-    .status-message {
-      padding: 20px;
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid rgba(255,255,255,0.2);
       border-radius: 10px;
-      margin: 20px 0;
-      text-align: center;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #ff5500;
+      background: rgba(255,255,255,0.12);
+      box-shadow: 0 0 0 4px rgba(255,85,0,0.15);
+    }
+
+    input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.4); }
+
+    input[type="file"] { padding: 10px; cursor: pointer; }
+    input[type="file"]::file-selector-button {
+      background: #ff5500;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 12px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    input[type="file"]::file-selector-button:hover { background: #e04400; }
+
+    textarea { resize: vertical; min-height: 100px; }
+    select option { background: #1a1a2e; color: #fff; }
+
+    .input-prefix, .input-suffix { position: relative; }
+    .input-prefix span, .input-suffix span {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.5);
       font-weight: 500;
     }
+    .input-prefix span { left: 16px; }
+    .input-suffix span { right: 16px; }
+    .input-prefix input { padding-left: 32px; }
+    .input-suffix input { padding-right: 32px; }
 
-    .status-message.info {
-      background: rgba(23,162,184,0.2);
-      border: 1px solid #17a2b8;
-      color: #17a2b8;
+    .bank-inputs { display: grid; grid-template-columns: 70px 80px 110px 60px; gap: 8px; }
+    @media (max-width: 500px) { .bank-inputs { grid-template-columns: 1fr 1fr; } }
+    .bank-inputs input { text-align: center; }
+
+    .help-text { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+    input:disabled, input[readonly], textarea:disabled, textarea[readonly] {
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.6);
+      cursor: not-allowed;
     }
 
-    .status-message.warning {
-      background: rgba(255,193,7,0.2);
-      border: 1px solid #ffc107;
-      color: #ffc107;
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #ff5500 0%, #ff7700 100%);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      box-shadow: 0 10px 30px rgba(255,85,0,0.3);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
 
-    .status-message.error {
-      background: rgba(220,53,69,0.2);
-      border: 1px solid #dc3545;
-      color: #dc3545;
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(255,85,0,0.4); }
+    .btn:active { transform: translateY(0); }
+    .btn:disabled { background: #555; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .btn-secondary { background: linear-gradient(135deg, #0078d4, #106ebe); box-shadow: 0 10px 30px rgba(0,120,212,0.3); }
+    .btn-secondary:hover { box-shadow: 0 15px 40px rgba(0,120,212,0.4); }
+
+    .spinner {
+      width: 20px; height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
     }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Alerts */
+    .alert {
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-weight: 500;
+      display: none;
+    }
+    .alert-success { background: rgba(40,167,69,0.15); color: #5cb85c; border: 1px solid rgba(40,167,69,0.3); }
+    .alert-error { background: rgba(220,53,69,0.15); color: #e74c3c; border: 1px solid rgba(220,53,69,0.3); }
+    .alert-info { background: rgba(23,162,184,0.15); color: #17a2b8; border: 1px solid rgba(23,162,184,0.3); }
+    .alert a { color: inherit; }
+
+    .hidden { display: none !important; }
 
     /* Guidelines */
+    .guidelines-section { padding: 30px 0 50px; }
+
     .upload-guidelines {
       background: rgba(255,255,255,0.05);
       border-left: 4px solid #ff5500;
-      padding: 25px;
-      margin: 30px 0;
-      border-radius: 10px;
+      padding: 20px 25px;
+      margin: 15px 0;
+      border-radius: 8px;
     }
 
-    .upload-guidelines h4 {
-      color: #ff5500;
-      margin-bottom: 15px;
-    }
-
-    .upload-guidelines ul {
-      list-style: none;
-      padding: 0;
-    }
-
+    .upload-guidelines h4 { color: #ff5500; margin-bottom: 12px; font-size: 1em; }
+    .upload-guidelines ul { list-style: none; padding: 0; }
     .upload-guidelines li {
-      padding: 5px 0;
-      position: relative;
+      padding: 6px 0;
       padding-left: 25px;
+      position: relative;
+      color: #aaa;
+      font-size: 0.95em;
     }
-
     .upload-guidelines li::before {
       content: '✓';
       position: absolute;
@@ -261,132 +295,44 @@
       font-weight: bold;
     }
 
-    /* Footer */
-    .footer {
-      background: rgba(0,0,0,0.8);
-      color: #666;
-      padding: 30px 0;
-      text-align: center;
-      margin-top: 60px;
-    }
-
-    .footer a {
-      color: #ff5500;
-      text-decoration: none;
-    }
-
-    /* Hidden state */
-    .hidden {
-      display: none !important;
-    }
-
-    /* Microsoft branding */
-    .ms-logo {
-      width: 20px;
-      height: 20px;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23"><path fill="%23f35325" d="M1 1h10v10H1z"/><path fill="%2381bc06" d="M12 1h10v10H12z"/><path fill="%2305a6f0" d="M1 12h10v10H1z"/><path fill="%23ffba08" d="M12 12h10v10H12z"/></svg>') no-repeat center;
-      background-size: contain;
-      display: inline-block;
-    }
-
-    /* Mobile Responsive */
-    @media (max-width: 768px) {
-      .header h1 {
-        font-size: 2em;
-      }
-      
-      .auth-container {
-        padding: 30px 20px;
-      }
-      
-      .nav-content {
-        flex-direction: column;
-        gap: 15px;
-      }
-      
-      .auth-button {
-        width: 100%;
-        justify-content: center;
-      }
-    }
-
-    /* Smooth scrolling */
-    html {
-      scroll-behavior: smooth;
-    }
-
-    /* File Upload Zone */
-    #fileDropZone {
-      transition: all 0.3s ease;
-    }
-
-    #fileDropZone:hover {
-      border-color: #ff5500;
-      background: rgba(255,85,0,0.1);
-    }
-
-    #fileDropZone.dragover {
-      border-color: #ff5500;
-      background: rgba(255,85,0,0.2);
-    }
-
-    .file-item {
-      display: flex;
+    /* Success Modal */
+    .success-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 10000;
       align-items: center;
-      justify-content: space-between;
-      padding: 10px;
-      margin: 5px 0;
-      background: rgba(255,255,255,0.05);
-      border-radius: 6px;
-      border: 1px solid #444;
+      justify-content: center;
+    }
+    .success-modal.show { display: flex; }
+
+    .success-modal-content {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 20px;
+      padding: 50px;
+      max-width: 480px;
+      width: 90%;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+      animation: modalSlide 0.3s ease;
     }
 
-    .file-item-name {
-      flex: 1;
-      color: #fff;
-      font-size: 0.9em;
-      margin-right: 10px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    @keyframes modalSlide {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
-    .file-item-size {
-      color: #888;
-      font-size: 0.85em;
-      margin-right: 10px;
-    }
-
-    .file-item-remove {
-      background: #dc3545;
-      color: #fff;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.85em;
-    }
-
-    .file-item-remove:hover {
-      background: #c82333;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    .success-icon { font-size: 4em; margin-bottom: 20px; }
+    .success-modal-content h2 { color: #28a745; margin-bottom: 15px; font-size: 1.6em; }
+    .success-modal-content p { color: #8892b0; margin-bottom: 25px; }
   </style>
-  
-  <!-- Centralized Phone Number Management -->
-  <script src="/phone-manager.js"></script>
-  
-  <!-- Unified Tracking System (replaces tracking-manager.js) -->
-  <script src="/unified-tracking.js?v={{ site.version }}"></script>
-  
-  <!-- Centralized Footer Management -->
-  <script src="/footer-new.js?v=20250121"></script>
 </head>
 <body>
 
+<!-- Header -->
 <header class="header">
   <div class="container">
     <div class="header-content">
@@ -397,313 +343,331 @@
   </div>
 </header>
 
+<!-- Navigation -->
 <nav class="nav">
   <div class="container">
     <div class="nav-content">
-      <a href="#auth">Secure Access</a>
+      <a href="#form">Upload Form</a>
       <a href="#guidelines">Guidelines</a>
-      <a href="/supplier">← Supplier Portal</a>
-      <a href="tel:+6498724612">📞 Support</a>
+      <a href="/">← Back to Home</a>
+      <a href="tel:0800769000">📞 0800 769 000</a>
     </div>
   </div>
 </nav>
 
+<!-- Main Content -->
+<main class="main-section" id="form">
+  <div class="container-narrow">
 
+    <!-- ======================================== -->
+    <!-- CONTACT FORM (no ?d= parameter)         -->
+    <!-- ======================================== -->
+    <div id="contactSection" class="form-card hidden" style="scroll-margin-top:100px;">
+      <h2>📧 Request Upload Access</h2>
+      <p>Need to submit an invoice or documentation? Request your secure upload link below.</p>
 
-<!-- Fuel Extraction Job Submission Form (shown when query string present) -->
-<section id="jobSubmissionSection" class="auth-section" style="display: none;">
-  <div class="container">
-    <div class="auth-container">
-      <h2>⛽ Fuel Extraction Job Submission</h2>
-      <p>Submit a fuel extraction job for processing. Data will be loaded from SharePoint using the booking ID.</p>
-      
-      <form id="fuelExtractionForm" style="margin-top: 30px;">
-        <div style="margin-bottom: 20px;">
-          <label for="jobRego" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Vehicle Registration <span style="color: #dc3545;">*</span></label>
-          <input type="text" id="jobRego" name="rego" required style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em; text-transform: uppercase;" placeholder="ABC123" maxlength="10">
+      <div id="contactAlertSuccess" class="alert alert-success">
+        ✅ Request submitted successfully! We'll send your upload link shortly.
+      </div>
+      <div id="contactAlertError" class="alert alert-error">
+        ❌ Something went wrong. Please try again or call <a href="tel:0800769000">0800 769 000</a>
+      </div>
+
+      <form id="contactForm" novalidate>
+        <div class="form-section">
+          <div class="form-section-title">Your Details</div>
+          
+          <div class="form-group">
+            <label for="contactName">Full Name <span class="required">*</span></label>
+            <input type="text" id="contactName" name="name" required placeholder="John Smith">
+          </div>
+
+          <div class="form-group">
+            <label for="contactEmail">Email Address <span class="required">*</span></label>
+            <input type="email" id="contactEmail" name="email" required placeholder="you@company.com">
+          </div>
+
+          <div class="form-group">
+            <label for="contactPhone">Phone Number</label>
+            <input type="tel" id="contactPhone" name="phone" placeholder="021 123 4567">
+          </div>
+
+          <div class="form-group">
+            <label for="contactCompany">Company Name</label>
+            <input type="text" id="contactCompany" name="company" placeholder="Your Company Ltd">
+          </div>
         </div>
-        
-        <div style="margin-bottom: 20px;">
-          <label for="supplierName" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Supplier Name <span style="color: #dc3545;">*</span></label>
-          <input type="text" id="supplierName" name="supplierName" required style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;" placeholder="Supplier Company Ltd">
+
+        <div class="form-section">
+          <div class="form-section-title">Request Details</div>
+          
+          <div class="form-group">
+            <label for="contactSubject">Subject <span class="required">*</span></label>
+            <select id="contactSubject" name="subject" required>
+              <option value="Request Upload Path">Request Upload Path</option>
+              <option value="Invoice Submission Query">Invoice Submission Query</option>
+              <option value="Technical Support">Technical Support</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="contactMessage">Message <span class="required">*</span></label>
+            <textarea id="contactMessage" name="message" required placeholder="Please describe what you need to upload and any relevant job or reference numbers..."></textarea>
+          </div>
         </div>
-        
-        <div style="margin-bottom: 20px;">
-          <label for="supplierEmail" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Supplier Email <span style="color: #dc3545;">*</span></label>
-          <input type="email" id="supplierEmail" name="supplierEmail" required style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;" placeholder="supplier@company.com">
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-          <label for="supplierPhone" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Supplier Phone <span style="color: #dc3545;">*</span></label>
-          <input type="tel" id="supplierPhone" name="supplierPhone" required style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;" placeholder="09 123 4567">
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-          <label for="jobEmail" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Customer Email</label>
-          <input type="email" id="jobEmail" name="email" style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;" placeholder="customer@email.com">
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-          <label for="jobPhone" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Customer Mobile</label>
-          <input type="tel" id="jobPhone" name="phone" style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;" placeholder="021 123 4567">
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-          <label for="jobNotes" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Job Notes</label>
-          <textarea id="jobNotes" name="notes" rows="4" style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em; resize: vertical;" placeholder="Enter job details, location, and any relevant information..."></textarea>
-        </div>
-        
-        <button type="submit" id="jobSubmitBtn" class="auth-button upload-button" style="width: 100%; margin-top: 10px;">
-          ⛽ Submit Fuel Extraction Job
+
+        <button type="submit" class="btn btn-secondary" id="contactSubmitBtn">
+          📧 Send Request
         </button>
       </form>
-        
-      <div id="jobSuccessMessage" class="status-message info hidden" style="margin-top: 20px;">
-        <strong>✅ Success!</strong> Your fuel extraction job has been submitted successfully.
-        </div>
-      
-      <div id="jobErrorMessage" class="status-message error hidden" style="margin-top: 20px;">
-        <strong>❌ Error:</strong> <span id="jobErrorText">Something went wrong. Please try again.</span>
-      </div>
     </div>
-  </div>
-</section>
 
-<!-- Invoice Upload Form Section (shown when query string with bookingId present) -->
-<section id="invoiceUploadSection" class="auth-section" style="display: none;">
-  <div class="container">
-    <div class="auth-container">
-      <h2>📄 Invoice Upload</h2>
-      <p>Upload your invoice documents. Data will be loaded from SharePoint using the booking ID.</p>
-      
-      <div id="invoiceAlertSuccess" class="status-message info hidden" style="margin-top: 20px;">
-        <strong>✅ Success!</strong> Your invoice has been uploaded successfully.
+    <!-- ======================================== -->
+    <!-- INVOICE UPLOAD FORM (with ?d= parameter) -->
+    <!-- ======================================== -->
+    <div id="invoiceSection" class="form-card hidden">
+      <h2>⛽ Fuel Extraction Invoice</h2>
+      <p>Submit your job details and invoice for payment processing.</p>
+
+      <div id="invoiceAlertSuccess" class="alert alert-success">
+        ✅ Invoice submitted successfully! Payment will be processed shortly.
       </div>
-      <div id="invoiceAlertError" class="status-message error hidden" style="margin-top: 20px;">
-        <strong>❌ Error:</strong> <span id="invoiceErrorText">Something went wrong. Please try again.</span>
-        </div>
-        
-      <form id="invoiceUploadForm" style="margin-top: 30px;" novalidate>
+      <div id="invoiceAlertError" class="alert alert-error">
+        ❌ <span id="invoiceErrorText">Something went wrong. Please try again.</span>
+      </div>
+      <div id="invoiceAlertLoading" class="alert alert-info">
+        ⏳ Loading job data from system...
+      </div>
+
+      <form id="invoiceForm" novalidate>
         <!-- Vehicle Section -->
-        <div style="margin-bottom: 28px;">
-          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ff5500; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid rgba(255,255,255,0.2);">Vehicle Details</div>
-          <div style="margin-bottom: 20px;">
-            <label for="invoiceRego" style="display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem;">Registration <span style="color: #dc3545;">*</span></label>
-            <input type="text" id="invoiceRego" name="rego" required style="width: 100%; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff; text-transform: uppercase;" placeholder="ABC123" maxlength="10">
+        <div class="form-section">
+          <div class="form-section-title">Vehicle Details</div>
+          <div class="form-group">
+            <label for="rego">Registration <span class="required">*</span></label>
+            <input type="text" id="rego" name="rego" required placeholder="ABC123" maxlength="10" style="text-transform:uppercase;">
+          </div>
+        </div>
+
+        <!-- Fuel Section -->
+        <div class="form-section">
+          <div class="form-section-title">Fuel Details</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="litresExtracted">Litres Extracted <span class="required">*</span></label>
+              <div class="input-suffix">
+                <input type="number" id="litresExtracted" name="litresExtracted" required placeholder="0" min="0" step="0.1">
+                <span>L</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="litresIntroduced">Litres Introduced <span class="required">*</span></label>
+              <div class="input-suffix">
+                <input type="number" id="litresIntroduced" name="litresIntroduced" required placeholder="0" min="0" step="0.1">
+                <span>L</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="description">Job Description</label>
+            <textarea id="description" name="description" placeholder="E.g., Petrol in diesel tank, drained fuel system, flushed lines, added 50L diesel..."></textarea>
           </div>
         </div>
 
         <!-- Supplier Section -->
-        <div style="margin-bottom: 28px;">
-          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ff5500; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid rgba(255,255,255,0.2);">Supplier / Mechanic Details</div>
-          <div style="margin-bottom: 20px;">
-            <label for="invoiceSupplierName" style="display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem;">Name <span style="color: #dc3545;">*</span></label>
-            <input type="text" id="invoiceSupplierName" name="supplierName" required style="width: 100%; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;" placeholder="John Smith">
+        <div class="form-section">
+          <div class="form-section-title">Supplier / Mechanic Details</div>
+          <div class="form-group">
+            <label for="supplierName">Name <span class="required">*</span></label>
+            <input type="text" id="supplierName" name="supplierName" required placeholder="John Smith">
           </div>
-          <div style="margin-bottom: 20px;">
-            <label for="invoiceSupplierEmail" style="display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem;">Email <span style="color: #dc3545;">*</span></label>
-            <input type="email" id="invoiceSupplierEmail" name="supplierEmail" required style="width: 100%; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;" placeholder="mechanic@example.com">
-          </div>
-          <div style="margin-bottom: 20px;">
-            <label for="invoiceSupplierPhone" style="display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem;">Phone</label>
-            <input type="tel" id="invoiceSupplierPhone" name="supplierPhone" style="width: 100%; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;" placeholder="021 123 4567">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="supplierEmail">Email <span class="required">*</span></label>
+              <input type="email" id="supplierEmail" name="supplierEmail" required placeholder="mechanic@example.com">
+            </div>
+            <div class="form-group">
+              <label for="supplierPhone">Phone</label>
+              <input type="tel" id="supplierPhone" name="supplierPhone" placeholder="021 123 4567">
+            </div>
           </div>
         </div>
-        
+
         <!-- Payment Section -->
-        <div style="margin-bottom: 28px;">
-          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ff5500; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid rgba(255,255,255,0.2);">Payment Details</div>
-          <div style="margin-bottom: 20px;">
-            <label for="invoiceAmount" style="display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem;">Amount <span style="color: #dc3545;">*</span></label>
-            <div style="position: relative;">
-              <span style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #ccc; font-weight: 500;">$</span>
-              <input type="number" id="invoiceAmount" name="amount" required step="0.01" min="0" style="width: 100%; padding: 12px 16px; padding-left: 32px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;" placeholder="0.00">
+        <div class="form-section">
+          <div class="form-section-title">Payment Details</div>
+          <div class="form-group">
+            <label for="amount">Invoice Amount <span class="required">*</span></label>
+            <div class="input-prefix">
+              <span>$</span>
+              <input type="number" id="amount" name="amount" required placeholder="0.00" min="0" step="0.01">
             </div>
           </div>
-          <div style="margin-bottom: 20px;">
-            <label style="display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem;">Bank Account <span style="color: #dc3545;">*</span></label>
-            <div style="display: grid; grid-template-columns: 80px 80px 120px 60px; gap: 8px;">
-              <input type="text" id="invoiceBank1" name="bank1" placeholder="XX" maxlength="2" required style="text-align: center; padding: 12px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;">
-              <input type="text" id="invoiceBank2" name="bank2" placeholder="XXXX" maxlength="4" required style="text-align: center; padding: 12px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;">
-              <input type="text" id="invoiceBank3" name="bank3" placeholder="XXXXXXX" maxlength="8" required style="text-align: center; padding: 12px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;">
-              <input type="text" id="invoiceBank4" name="bank4" placeholder="XXX" maxlength="3" required style="text-align: center; padding: 12px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;">
+          <div class="form-group">
+            <label>Bank Account <span class="required">*</span></label>
+            <div class="bank-inputs">
+              <input type="text" id="bank1" name="bank1" placeholder="XX" maxlength="2" required>
+              <input type="text" id="bank2" name="bank2" placeholder="XXXX" maxlength="4" required>
+              <input type="text" id="bank3" name="bank3" placeholder="XXXXXXX" maxlength="8" required>
+              <input type="text" id="bank4" name="bank4" placeholder="XXX" maxlength="3" required>
             </div>
-            <div style="font-size: 0.8rem; color: #888; margin-top: 4px;">NZ bank account format: XX-XXXX-XXXXXXX-XXX</div>
-        </div>
-      </div>
-
-        <!-- Invoice Section -->
-        <div style="margin-bottom: 28px;">
-          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ff5500; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid rgba(255,255,255,0.2);">Invoice</div>
-          <div style="margin-bottom: 20px;">
-            <label for="invoiceFile" style="display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem;">Invoice PDF/Image <span style="color: #dc3545;">*</span></label>
-            <input type="file" id="invoiceFile" name="invoiceFile" accept=".pdf,.jpg,.jpeg,.png" required style="width: 100%; padding: 10px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff; cursor: pointer;">
-            <div style="font-size: 0.8rem; color: #888; margin-top: 4px;">Accepted formats: PDF, JPG, PNG (max 10MB)</div>
-        </div>
+            <div class="help-text">NZ bank account format: XX-XXXX-XXXXXXX-XXX</div>
+          </div>
         </div>
 
-        <!-- Hidden fields -->
-        <input type="hidden" id="invoiceBookingId" name="bookingId" value="">
+        <!-- Invoice Upload Section -->
+        <div class="form-section">
+          <div class="form-section-title">Invoice Document</div>
+          <div class="form-group">
+            <label for="invoiceFile">Upload Invoice <span class="required">*</span></label>
+            <input type="file" id="invoiceFile" name="invoiceFile" accept=".pdf,.jpg,.jpeg,.png" required>
+            <div class="help-text">Accepted: PDF, JPG, PNG (max 10MB)</div>
+          </div>
+        </div>
 
-        <button type="submit" id="invoiceSubmitBtn" class="auth-button upload-button" style="width: 100%; margin-top: 10px;">
-          📤 Upload Invoice
+        <!-- Hidden Tracking Fields -->
+        <input type="hidden" id="bookingId" name="bookingId">
+        <input type="hidden" id="sessionId" name="sessionId">
+        <input type="hidden" id="timestamp" name="timestamp">
+        <input type="hidden" id="timezone" name="timezone">
+        <input type="hidden" id="userAgent" name="userAgent">
+        <input type="hidden" id="referrer" name="referrer">
+        <input type="hidden" id="screenResolution" name="screenResolution">
+        <input type="hidden" id="language" name="language">
+        <input type="hidden" id="platform" name="platform">
+
+        <button type="submit" class="btn" id="invoiceSubmitBtn">
+          📤 Submit Invoice for Payment
         </button>
       </form>
     </div>
-  </div>
-</section>
 
-<!-- Contact Form Section (shown when no query string) -->
-<section id="contactFormSection" class="auth-section" style="display: none;">
-  <div class="container">
-    <div class="auth-container">
-      <h2>📧 Request New Upload Path</h2>
-      <p>The supplier upload system has been updated. If you need a new upload path for your supplier payment submissions, please complete the form below.</p>
-      
-      <div class="status-message info">
-        <strong>ℹ️ What's Changed:</strong> The upload system now requires authentication. If you're a supplier and need access, please request a new upload path using this form.
-      </div>
-      
-      <form id="contactForm" style="margin-top: 30px;">
-        <div style="margin-bottom: 20px;">
-          <label for="contactName" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Your Name <span style="color: #dc3545;">*</span></label>
-          <input type="text" id="contactName" name="name" required style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;" placeholder="John Smith">
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-          <label for="contactEmail" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Email Address <span style="color: #dc3545;">*</span></label>
-          <input type="email" id="contactEmail" name="email" required style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;" placeholder="your.email@example.com">
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-          <label for="contactPhone" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Phone Number</label>
-          <input type="tel" id="contactPhone" name="phone" style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;" placeholder="021 123 4567">
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-          <label for="contactSubject" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Subject <span style="color: #dc3545;">*</span></label>
-          <select id="contactSubject" name="subject" required style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;">
-            <option value="Request New Upload Path" selected>Request New Upload Path</option>
-            <option value="General Inquiry">General Inquiry</option>
-            <option value="Technical Support">Technical Support</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-        
-        <div style="margin-bottom: 20px;">
-          <label for="contactMessage" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Message <span style="color: #dc3545;">*</span></label>
-          <textarea id="contactMessage" name="message" required rows="5" style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em; resize: vertical;" placeholder="Please provide details about your supplier account and why you need a new upload path..."></textarea>
-        </div>
-        
-        <button type="submit" id="contactSubmitBtn" class="auth-button" style="width: 100%; margin-top: 10px;">
-          📧 Send Request
-        </button>
-      </form>
-      
-      <div id="contactSuccessMessage" class="status-message info hidden" style="margin-top: 20px;">
-        <strong>✅ Success!</strong> Your request has been submitted. We'll get back to you soon.
-      </div>
-      
-      <div id="contactErrorMessage" class="status-message error hidden" style="margin-top: 20px;">
-        <strong>❌ Error:</strong> Something went wrong. Please try again or call us at <a href="tel:0800769000" style="color: #dc3545;">0800 769 000</a>.
-      </div>
-    </div>
   </div>
-</section>
+</main>
 
-<section id="guidelines" class="upload-section">
+<!-- Guidelines Section -->
+<section class="guidelines-section" id="guidelines">
   <div class="container">
     <div class="upload-guidelines">
       <h4>📋 Upload Guidelines</h4>
-      <ul id="generalGuidelines">
-        <li>Documents should be clear, legible, and in acceptable formats</li>
-        <li>Maximum file size: 10MB per file</li>
-        <li>Supported formats: PDF, JPG, PNG</li>
-        <li>Ensure contact information matches your supplier records</li>
-      </ul>
-      
-      <!-- Invoice-specific guidelines -->
-      <ul id="invoiceGuidelines">
-        <li>All invoices must include job reference numbers when applicable</li>
-        <li>Include GST details on all invoices (if applicable)</li>
-        <li>Include purchase order numbers when provided</li>
-      </ul>
-      
-      <!-- Pre-purchase inspection guidelines -->
-      <ul id="ppGuidelines" class="hidden">
-        <li>Include all required inspection photos and documentation</li>
-        <li>Clearly label each inspection item with reference numbers</li>
-        <li>Include inspection date and inspector details</li>
-        <li>Submit reports within 24 hours of inspection completion</li>
+      <ul>
+        <li>Invoices must include your business name and bank account details</li>
+        <li>Include the vehicle registration and job description</li>
+        <li>Maximum file size: 10MB per document</li>
+        <li>Accepted formats: PDF, JPG, PNG</li>
+        <li>Ensure all figures are clearly legible</li>
       </ul>
     </div>
-    
+
     <div class="upload-guidelines">
       <h4>🔒 Security & Privacy</h4>
       <ul>
         <li>All uploads are encrypted using bank-level SSL security</li>
         <li>Documents are stored in secure, access-controlled systems</li>
-        <li>Only authorized Eek personnel can access your submissions</li>
-        <li>Files are automatically scanned for viruses and malware</li>
-        <li>Data is retained according to our privacy policy</li>
+        <li>Only authorized Eek Mechanical personnel can access submissions</li>
+        <li>Files are automatically scanned for security threats</li>
         <li>You will receive email confirmation of successful uploads</li>
       </ul>
     </div>
 
     <div class="upload-guidelines">
-      <h4>🔧 Technical Requirements</h4>
+      <h4>💳 Payment Processing</h4>
       <ul>
-        <li>Azure AD application must be configured with correct redirect URIs</li>
-        <li>Redirect URI must exactly match: https://www.eek.nz/supplier-upload</li>
-        <li>Application requires proper permissions and tenant configuration</li>
-        <li>Contact IT support if authentication issues persist</li>
+        <li>Payments are processed via <a href="https://www.anz.co.nz/business/manage-your-banking/digital-banking-tools/direct-online/" target="_blank" rel="noopener" style="color:#ff5500;">ANZ Direct Online</a> batch payment system</li>
+        <li>Domestic NZ payments are available 7 days a week, including weekends and public holidays</li>
+        <li>Same-day payments are processed immediately when submitted before cut-off</li>
+        <li>ANZ processes payments from 4am on the payment date to ANZ accounts instantly</li>
+        <li>Payments to other NZ banks are sent from 9am on the payment date</li>
+        <li>Ensure your bank account details are correct — incorrect details will delay payment</li>
+        <li>You'll receive confirmation when your invoice is processed</li>
+        <li>For payment queries, <a href="#contact" id="showContactLink" style="color:#ff5500;cursor:pointer;">submit a request here</a></li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- Footer will be added by footer.js -->
+<!-- Success Modal -->
+<div class="success-modal" id="successModal">
+  <div class="success-modal-content">
+    <div class="success-icon">✅</div>
+    <h2>Invoice Submitted!</h2>
+    <p>Thank you. Your invoice has been received and queued for payment via ANZ batch processing.</p>
+    <button class="btn" id="modalCloseBtn">Return to Home</button>
+  </div>
+</div>
+
+<!-- Footer injected by footer-new.js -->
 
 <script>
-// Power Automate endpoint for general contact forms
-const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/252cde504791494e823972d9651d0cee/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Qw5TH6rHqrevOeXH2VjtBtLGb1ggI7zRCIYEhBl3Xrw';
-
-// SharePoint Lookup API URL (for fetching existing data)
-const SHAREPOINT_LOOKUP_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c35b9414a0be42f88182ae7e6e409f1d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2ztt24wScLuAfifD0pjzovseRDKXBAEtCQtScGMgPqQ';
-
-// SharePoint Update API URL (for saving full merged data to EncodedData)
-const SHAREPOINT_UPDATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/ebc96da57e35479b8dd03a6abd06686c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=abw4-RdaVDllhMuODkPGn0iMZtuXjhmnaYyUOefn5F4';
-
-// Excel API URL (for writing job-specific fields to xlsm)
-const EXCEL_WRITE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/ca2a97affbc449419b28ecb274d4c737/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=s2OFNz6J6KdjOKUUF1SRkZKo4UiPh01_uSzxy4Bg7Yw';
-
-// Invoice Upload API URL (for submitting invoices with file attachments)
-const INVOICE_UPLOAD_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/b884bb04c6594edb906cdfdb22193b2f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=z7Dd14tvZp2UVGe4DfXewImCbHHJmo3lXsTJmle1jA8';
+// ============================================
+// CONFIGURATION
+// ============================================
+const CONFIG = {
+  CONTACT_URL: 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/252cde504791494e823972d9651d0cee/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Qw5TH6rHqrevOeXH2VjtBtLGb1ggI7zRCIYEhBl3Xrw',
+  
+  SHAREPOINT_LOOKUP_URL: 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c35b9414a0be42f88182ae7e6e409f1d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2ztt24wScLuAfifD0pjzovseRDKXBAEtCQtScGMgPqQ',
+  
+  INVOICE_URL: 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/b884bb04c6594edb906cdfdb22193b2f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=z7Dd14tvZp2UVGe4DfXewImCbHHJmo3lXsTJmle1jA8'
+};
 
 // State
-let sharepointId = null;
-let originalBookingData = null;
+let bookingData = null;
 
-// Base64 Decode Function
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
 function decodeBase64(encoded) {
   try {
-    const decoded = atob(encoded).trim();
-    if (decoded) {
-      return { bookingId: decoded };
-    }
-    return null;
+    return atob(encoded).trim();
   } catch (e) {
-    console.error('Failed to decode:', e);
+    console.error('Decode error:', e);
     return null;
   }
 }
 
-// Fetch job data from SharePoint
-async function fetchJobDataFromSharePoint(bookingId) {
+function normalizeValue(val) {
+  if (val === null || val === undefined) return '';
+  return String(val).trim();
+}
+
+async function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+  });
+}
+
+function getOrCreateSessionId() {
+  let sid = localStorage.getItem('eek_session_id');
+  if (!sid) {
+    sid = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem('eek_session_id', sid);
+  }
+  return sid;
+}
+
+function captureTrackingData() {
+  document.getElementById('sessionId').value = getOrCreateSessionId();
+  document.getElementById('timestamp').value = new Date().toISOString();
+  document.getElementById('timezone').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  document.getElementById('userAgent').value = navigator.userAgent;
+  document.getElementById('referrer').value = document.referrer;
+  document.getElementById('screenResolution').value = `${screen.width}x${screen.height}`;
+  document.getElementById('language').value = navigator.language;
+  document.getElementById('platform').value = navigator.platform;
+}
+
+// ============================================
+// SHAREPOINT DATA FETCH
+// ============================================
+async function fetchBookingData(bookingId) {
   if (!bookingId) return null;
   
   try {
-    const res = await fetch(SHAREPOINT_LOOKUP_URL, {
+    const res = await fetch(CONFIG.SHAREPOINT_LOOKUP_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ bookingId: String(bookingId) })
@@ -713,12 +677,7 @@ async function fetchJobDataFromSharePoint(bookingId) {
     
     const result = await res.json();
     if (result.success && result.bookingData) {
-      const json = atob(result.bookingData);
-      const decoded = JSON.parse(json);
-      decoded.sharepointId = bookingId;
-      sharepointId = bookingId;
-      originalBookingData = decoded;
-      return decoded;
+      return JSON.parse(atob(result.bookingData));
     }
     return null;
   } catch (err) {
@@ -727,560 +686,149 @@ async function fetchJobDataFromSharePoint(bookingId) {
   }
 }
 
-// Populate form from booking data
-function populateFormFromData(bookingData) {
-  if (!bookingData) return;
+// ============================================
+// FORM POPULATION FROM SHAREPOINT
+// ============================================
+function populateInvoiceForm(data) {
+  if (!data) return;
   
-  const customerData = bookingData.customerData || {};
+  const customerData = data.customerData || {};
+  const supplierData = data.supplierData || {};
+  
   const getValue = (...keys) => {
     for (const key of keys) {
-      if (bookingData[key] !== undefined && bookingData[key] !== null && bookingData[key] !== '') {
-        return bookingData[key];
-      }
-      if (customerData[key] !== undefined && customerData[key] !== null && customerData[key] !== '') {
-        return customerData[key];
-      }
+      if (data[key]) return data[key];
+      if (customerData[key]) return customerData[key];
+      if (supplierData[key]) return supplierData[key];
     }
     return null;
   };
   
-  const normalizeValue = (value) => {
-    if (value === null || value === undefined) return '';
-    const textarea = document.createElement('textarea');
-    textarea.innerHTML = String(value).trim();
-    return textarea.value;
-  };
-  
-  // Vehicle Registration (for job form)
-  const regoValue = getValue('Rego', 'rego', 'vehicleRego');
-  if (regoValue) {
-    const jobRegoField = document.getElementById('jobRego');
-    const invoiceRegoField = document.getElementById('invoiceRego');
-    if (jobRegoField) jobRegoField.value = normalizeValue(regoValue);
-    if (invoiceRegoField) invoiceRegoField.value = normalizeValue(regoValue);
+  // Vehicle
+  const rego = getValue('rego', 'Rego', 'vehicleRego');
+  if (rego) {
+    document.getElementById('rego').value = normalizeValue(rego).toUpperCase();
   }
   
-  // Supplier Information (for both forms)
-  const supplierNameValue = getValue('Supplier', 'supplierName', 'supplier');
-  if (supplierNameValue) {
-    const supplierNameField = document.getElementById('supplierName');
-    const invoiceSupplierNameField = document.getElementById('invoiceSupplierName');
-    if (supplierNameField) supplierNameField.value = normalizeValue(supplierNameValue);
-    if (invoiceSupplierNameField) invoiceSupplierNameField.value = normalizeValue(supplierNameValue);
+  // Supplier - lock if pre-populated
+  const supplierName = getValue('supplierName', 'Supplier', 'mechanicName');
+  if (supplierName) {
+    const el = document.getElementById('supplierName');
+    el.value = normalizeValue(supplierName);
+    el.readOnly = true;
   }
   
-  const supplierEmailValue = getValue('EmailJobToSupplier', 'supplierEmail', 'SupplierEmail');
-  if (supplierEmailValue) {
-    const supplierEmailField = document.getElementById('supplierEmail');
-    const invoiceSupplierEmailField = document.getElementById('invoiceSupplierEmail');
-    if (supplierEmailField) supplierEmailField.value = normalizeValue(supplierEmailValue);
-    if (invoiceSupplierEmailField) invoiceSupplierEmailField.value = normalizeValue(supplierEmailValue);
+  const supplierEmail = getValue('supplierEmail', 'EmailJobToSupplier', 'mechanicEmail');
+  if (supplierEmail) {
+    const el = document.getElementById('supplierEmail');
+    el.value = normalizeValue(supplierEmail);
+    el.readOnly = true;
   }
   
-  const supplierPhoneValue = getValue('TextJobToMobileNumber', 'supplierPhone', 'SupplierPhone');
-  if (supplierPhoneValue) {
-    const supplierPhoneField = document.getElementById('supplierPhone');
-    const invoiceSupplierPhoneField = document.getElementById('invoiceSupplierPhone');
-    if (supplierPhoneField) supplierPhoneField.value = normalizeValue(supplierPhoneValue);
-    if (invoiceSupplierPhoneField) invoiceSupplierPhoneField.value = normalizeValue(supplierPhoneValue);
+  const supplierPhone = getValue('supplierPhone', 'TextJobToMobileNumber', 'mechanicPhone');
+  if (supplierPhone) {
+    const el = document.getElementById('supplierPhone');
+    el.value = normalizeValue(supplierPhone);
+    el.readOnly = true;
   }
   
-  // Customer Information (for job form)
-  const emailValue = getValue('Email', 'email', 'customerEmail');
-  if (emailValue) {
-    const jobEmailField = document.getElementById('jobEmail');
-    if (jobEmailField) jobEmailField.value = normalizeValue(emailValue);
+  // Description
+  const notes = getValue('description', 'JobNotes', 'jobNotes', 'notes');
+  if (notes) {
+    document.getElementById('description').value = normalizeValue(notes);
   }
   
-  const phoneValue = getValue('ClientMobileNumber', 'phone', 'customerPhone');
-  if (phoneValue) {
-    const jobPhoneField = document.getElementById('jobPhone');
-    if (jobPhoneField) jobPhoneField.value = normalizeValue(phoneValue);
-  }
-  
-  // Job Notes (for job form)
-  const notesValue = getValue('JobNotes', 'description', 'jobNotes', 'notes');
-  if (notesValue) {
-    const jobNotesField = document.getElementById('jobNotes');
-    if (jobNotesField) jobNotesField.value = normalizeValue(notesValue);
-  }
-  
-  // Invoice Amount (convert from cents to dollars if present)
-  const amountValue = getValue('Costings', 'Chargeables', 'Reimbursement', 'amount');
-  if (amountValue) {
-    const invoiceAmountField = document.getElementById('invoiceAmount');
-    if (invoiceAmountField) {
-      // If amount is in cents (large number), convert to dollars
-      const numValue = parseFloat(amountValue);
-      if (numValue > 1000 && numValue % 100 === 0) {
-        invoiceAmountField.value = (numValue / 100).toFixed(2);
-      } else {
-        invoiceAmountField.value = numValue;
-      }
+  // Bank Account
+  const bank = getValue('bankAccount', 'Bank');
+  if (bank && typeof bank === 'string') {
+    const parts = bank.split('-');
+    if (parts.length === 4) {
+      document.getElementById('bank1').value = parts[0];
+      document.getElementById('bank2').value = parts[1];
+      document.getElementById('bank3').value = parts[2];
+      document.getElementById('bank4').value = parts[3];
     }
   }
   
-  // Bank Account (if present in booking data)
-  const bankValue = getValue('Bank', 'bankAccount');
-  if (bankValue && typeof bankValue === 'string') {
-    const bankParts = bankValue.split('-');
-    if (bankParts.length === 4) {
-      const bank1Field = document.getElementById('invoiceBank1');
-      const bank2Field = document.getElementById('invoiceBank2');
-      const bank3Field = document.getElementById('invoiceBank3');
-      const bank4Field = document.getElementById('invoiceBank4');
-      if (bank1Field) bank1Field.value = bankParts[0];
-      if (bank2Field) bank2Field.value = bankParts[1];
-      if (bank3Field) bank3Field.value = bankParts[2];
-      if (bank4Field) bank4Field.value = bankParts[3];
-    }
-  }
+  console.log('✅ Form populated from SharePoint data');
 }
 
-// Page initialization
-document.addEventListener('DOMContentLoaded', async function() {
-  const hasQueryString = window.location.search.length > 0;
-  
-  if (!hasQueryString) {
-    // Show contact form
-    document.getElementById('jobSubmissionSection').style.display = 'none';
-    document.getElementById('invoiceUploadSection').style.display = 'none';
-    document.getElementById('contactFormSection').style.display = 'block';
-    document.getElementById('guidelines').style.display = 'none';
-    setupContactForm();
-  } else {
-    // Check if this is a job submission or invoice upload (has 'd' parameter for bookingId)
-    const urlParams = new URLSearchParams(window.location.search);
-    const encodedData = urlParams.get('d');
-    const formType = urlParams.get('type'); // 'invoice' or 'job' or default to 'job'
-    let bookingId = null;
-    
-    if (encodedData) {
-      const decoded = decodeBase64(encodedData);
-      if (decoded) {
-        bookingId = decoded.bookingId;
-      }
-    } else {
-      bookingId = urlParams.get('bookingId');
-    }
-    
-    if (bookingId) {
-      // Set bookingId in invoice form if it exists
-      const invoiceBookingIdField = document.getElementById('invoiceBookingId');
-      if (invoiceBookingIdField) {
-        invoiceBookingIdField.value = bookingId;
-      }
-      
-      // Fetch and populate data
-      const sharePointData = await fetchJobDataFromSharePoint(bookingId);
-      if (sharePointData) {
-        populateFormFromData(sharePointData);
-      }
-      
-      // Show appropriate form based on type parameter
-      if (formType === 'invoice') {
-        // Show invoice upload form
-        document.getElementById('contactFormSection').style.display = 'none';
-        document.getElementById('jobSubmissionSection').style.display = 'none';
-        document.getElementById('invoiceUploadSection').style.display = 'block';
-        document.getElementById('guidelines').style.display = 'none';
-        setupInvoiceUploadForm();
-      } else {
-        // Show job submission form (default)
-        document.getElementById('contactFormSection').style.display = 'none';
-        document.getElementById('invoiceUploadSection').style.display = 'none';
-        document.getElementById('jobSubmissionSection').style.display = 'block';
-        document.getElementById('guidelines').style.display = 'none';
-        setupJobSubmissionForm();
-      }
-    } else {
-      // No bookingId - show contact form
-      document.getElementById('jobSubmissionSection').style.display = 'none';
-      document.getElementById('invoiceUploadSection').style.display = 'none';
-      document.getElementById('contactFormSection').style.display = 'block';
-      setupContactForm();
-    }
-  }
-});
-
-function setupJobSubmissionForm() {
-  const form = document.getElementById('fuelExtractionForm');
-  const submitBtn = document.getElementById('jobSubmitBtn');
-  const successMsg = document.getElementById('jobSuccessMessage');
-  const errorMsg = document.getElementById('jobErrorMessage');
-  const errorText = document.getElementById('jobErrorText');
-  
-  form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    // Hide previous messages
-    successMsg.classList.add('hidden');
-    errorMsg.classList.add('hidden');
-    
-    // Disable submit button
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '⏳ Submitting...';
-    
-    try {
-      // Collect form data
-      const formData = {
-        formType: 'fuel_extraction_job',
-        formVersion: '1.0',
-        submittedAt: new Date().toISOString(),
-        
-        // Basic fields
-        Rego: document.getElementById('jobRego').value.toUpperCase(),
-        Email: document.getElementById('jobEmail').value.trim(),
-        ClientMobileNumber: document.getElementById('jobPhone').value.trim(),
-        JobNotes: document.getElementById('jobNotes').value.trim(),
-        
-        // Supplier fields
-        Supplier: document.getElementById('supplierName').value.trim(),
-        EmailJobToSupplier: document.getElementById('supplierEmail').value.trim(),
-        TextJobToMobileNumber: document.getElementById('supplierPhone').value.trim(),
-        
-        // SharePoint ID if available
-        SharePointId: sharepointId,
-        BookingId: sharepointId,
-        
-        // Fields array for Power Automate
-        fields: [
-          { name: 'Rego', value: document.getElementById('jobRego').value.toUpperCase() },
-          { name: 'Email', value: document.getElementById('jobEmail').value.trim() },
-          { name: 'ClientMobileNumber', value: document.getElementById('jobPhone').value.trim() },
-          { name: 'JobNotes', value: document.getElementById('jobNotes').value.trim() },
-          { name: 'Supplier', value: document.getElementById('supplierName').value.trim() },
-          { name: 'EmailJobToSupplier', value: document.getElementById('supplierEmail').value.trim() },
-          { name: 'TextJobToMobileNumber', value: document.getElementById('supplierPhone').value.trim() }
-        ]
-      };
-      
-      // Add SharePoint ID if available
-      if (sharepointId) {
-        formData.fields.push({ name: 'SharePointId', value: sharepointId });
-        formData.fields.push({ name: 'BookingId', value: sharepointId });
-      }
-      
-      // Merge with original booking data if available
-      const fullData = originalBookingData ? { ...originalBookingData, ...formData } : formData;
-      
-      // 1. Update SharePoint with full merged data
-      const spResponse = await fetch(SHAREPOINT_UPDATE_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(fullData)
-      });
-      
-      if (!spResponse.ok) {
-        const errorText = await spResponse.text();
-        throw new Error(`SharePoint update failed: ${spResponse.status} - ${errorText}`);
-      }
-      
-      // 2. Write to Excel
-      const excelData = {
-        Rego: formData.Rego,
-        Type: 'Supplier',
-        Name: 'Mechanic',
-        Supplier: formData.Supplier,
-        JobNotes: formData.JobNotes,
-        Supp_Email: formData.EmailJobToSupplier,
-        Supp_Phone: formData.TextJobToMobileNumber,
-        fields: [
-          { name: 'Rego', value: formData.Rego },
-          { name: 'Type', value: 'Supplier' },
-          { name: 'Name', value: 'Mechanic' },
-          { name: 'Supplier', value: formData.Supplier },
-          { name: 'JobNotes', value: formData.JobNotes },
-          { name: 'Supp_Email', value: formData.EmailJobToSupplier },
-          { name: 'Supp_Phone', value: formData.TextJobToMobileNumber }
-        ]
-      };
-      
-      const excelResponse = await fetch(EXCEL_WRITE_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(excelData)
-      });
-      
-      if (!excelResponse.ok) {
-        const errorText = await excelResponse.text();
-        throw new Error(`Excel write failed: ${excelResponse.status} - ${errorText}`);
-      }
-      
-      successMsg.classList.remove('hidden');
-      form.reset();
-      
-    } catch (error) {
-      console.error('Form submission error:', error);
-      errorText.textContent = error.message;
-      errorMsg.classList.remove('hidden');
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = '⛽ Submit Fuel Extraction Job';
-    }
-  });
-}
-
-// Convert file to base64
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      const base64 = reader.result.split(',')[1];
-      resolve(base64);
-    };
-    reader.onerror = error => reject(error);
-  });
-}
-
-function setupInvoiceUploadForm() {
-  const form = document.getElementById('invoiceUploadForm');
-  const submitBtn = document.getElementById('invoiceSubmitBtn');
-  const alertSuccess = document.getElementById('invoiceAlertSuccess');
-  const alertError = document.getElementById('invoiceAlertError');
-  const errorText = document.getElementById('invoiceErrorText');
-  
-  // Auto-advance bank account fields
-  const bankFields = ['invoiceBank1', 'invoiceBank2', 'invoiceBank3', 'invoiceBank4'];
-  bankFields.forEach((fieldId, index) => {
-    const field = document.getElementById(fieldId);
-    if (field) {
-      field.addEventListener('input', function(e) {
-        this.value = this.value.replace(/\D/g, '');
-        if (this.value.length >= this.maxLength && index < bankFields.length - 1) {
-          const nextField = document.getElementById(bankFields[index + 1]);
-          if (nextField) nextField.focus();
-        }
-      });
-    }
-  });
-  
-  // Uppercase rego
-  const regoField = document.getElementById('invoiceRego');
-  if (regoField) {
-    regoField.addEventListener('input', function(e) {
-      this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-    });
-  }
-  
-  // Form submission protection
-  let isSubmitting = false;
-  let submissionId = null;
-  
-  form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    if (isSubmitting) {
-      console.warn('Form submission already in progress, ignoring duplicate submit');
-      return;
-    }
-    
-    submissionId = `submission_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    isSubmitting = true;
-    
-    alertSuccess.classList.add('hidden');
-    alertError.classList.add('hidden');
-    
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span style="display: inline-flex; align-items: center; gap: 10px;"><span style="width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite;"></span> Uploading...</span>';
-    
-    try {
-      // Build bank account string
-      const bankAccount = [
-        document.getElementById('invoiceBank1').value,
-        document.getElementById('invoiceBank2').value,
-        document.getElementById('invoiceBank3').value,
-        document.getElementById('invoiceBank4').value
-      ].join('-');
-      
-      // Get form values
-      const rego = document.getElementById('invoiceRego').value.trim();
-      const supplierName = document.getElementById('invoiceSupplierName').value.trim();
-      const supplierEmail = document.getElementById('invoiceSupplierEmail').value.trim();
-      const supplierPhone = document.getElementById('invoiceSupplierPhone').value.trim();
-      const amount = parseFloat(document.getElementById('invoiceAmount').value) || 0;
-      
-      // Build formData with fields array for dynamic email builder
-      const formData = {
-        formType: 'invoice_upload',
-        formVersion: '1.0',
-        submissionId: submissionId,
-        submittedAt: new Date().toISOString(),
-        
-        // Flat fields for flow processing
-        rego: rego,
-        supplierName: supplierName,
-        supplierEmail: supplierEmail,
-        supplierPhone: supplierPhone,
-        amount: amount,
-        bankAccount: bankAccount,
-        
-        // Fields array for dynamic email builder
-        fields: [
-          { name: 'Rego', value: rego },
-          { name: 'Supplier Name', value: supplierName },
-          { name: 'Supplier Email', value: supplierEmail },
-          { name: 'Supplier Phone', value: supplierPhone },
-          { name: 'Amount', value: '$' + amount.toFixed(2) },
-          { name: 'Bank Account', value: bankAccount }
-        ]
-      };
-      
-      // Include bookingId if available
-      const bookingIdValue = document.getElementById('invoiceBookingId').value;
-      if (bookingIdValue) {
-        formData.bookingId = bookingIdValue;
-        formData.SharePointId = bookingIdValue;
-        formData.BookingId = bookingIdValue;
-        formData.fields.push({ name: 'BookingId', value: bookingIdValue });
-      }
-      
-      // Handle file upload - convert to base64
-      const fileInput = document.getElementById('invoiceFile');
-      if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        formData.invoiceFileName = file.name;
-        formData.invoiceFileType = file.type;
-        formData.invoiceFileBase64 = await fileToBase64(file);
-        formData.fields.push({ name: 'Invoice File', value: file.name });
-      }
-      
-      // Merge with original booking data if available
-      const fullData = originalBookingData ? { ...originalBookingData, ...formData } : formData;
-      
-      if (typeof gtag === 'function') {
-        gtag('event', 'form_submit', {
-          form_type: 'invoice_upload',
-          amount: formData.amount
-        });
-      }
-      
-      const response = await fetch(INVOICE_UPLOAD_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(fullData)
-      });
-      
-      if (response.ok) {
-        if (typeof gtag === 'function') {
-          gtag('event', 'form_submit_success', {
-            form_type: 'invoice_upload',
-            amount: formData.amount,
-            submission_id: submissionId
-          });
-        }
-        
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Invoice Uploaded ✓';
-        alertSuccess.classList.remove('hidden');
-        form.reset();
-        
-        // Reset bookingId if it was set
-        if (bookingIdValue) {
-          document.getElementById('invoiceBookingId').value = bookingIdValue;
-        }
-        
-        // Reset isSubmitting to allow form reuse after success
-        isSubmitting = false;
-        
-      } else {
-        throw new Error('Server returned ' + response.status);
-      }
-      
-    } catch (error) {
-      console.error('Submission error:', error);
-      errorText.textContent = '❌ ' + (error.message || 'Something went wrong. Please try again.');
-      alertError.classList.remove('hidden');
-      
-      isSubmitting = false;
-      
-      if (typeof gtag === 'function') {
-        gtag('event', 'form_submit_error', {
-          form_type: 'invoice_upload',
-          error_message: error.message,
-          submission_id: submissionId
-        });
-      }
-    } finally {
-      // Only re-enable button on error (when success alert is hidden), not on success
-      if (alertSuccess.classList.contains('hidden') && !isSubmitting) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '📤 Upload Invoice';
-      }
-    }
-  });
-}
-
+// ============================================
+// CONTACT FORM HANDLER
+// ============================================
 function setupContactForm() {
   const form = document.getElementById('contactForm');
   const submitBtn = document.getElementById('contactSubmitBtn');
-  const successMsg = document.getElementById('contactSuccessMessage');
-  const errorMsg = document.getElementById('contactErrorMessage');
+  const alertSuccess = document.getElementById('contactAlertSuccess');
+  const alertError = document.getElementById('contactAlertError');
   
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
     
-    // Hide previous messages
-    successMsg.classList.add('hidden');
-    errorMsg.classList.add('hidden');
+    alertSuccess.style.display = 'none';
+    alertError.style.display = 'none';
     
-    // Disable submit button
     submitBtn.disabled = true;
-    submitBtn.innerHTML = '⏳ Sending...';
+    submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
     
     try {
-      const formData = {
+      const payload = {
         formType: 'supplier_upload_request',
         formVersion: '1.0',
         submittedAt: new Date().toISOString(),
+        sessionId: getOrCreateSessionId(),
         
         // Form fields
         name: document.getElementById('contactName').value.trim(),
         email: document.getElementById('contactEmail').value.trim(),
         phone: document.getElementById('contactPhone').value.trim(),
+        company: document.getElementById('contactCompany').value.trim(),
         subject: document.getElementById('contactSubject').value,
         message: document.getElementById('contactMessage').value.trim(),
         
-        // Fields array for dynamic email builder
+        // Fields array for dynamic email
         fields: [
           { name: 'Name', value: document.getElementById('contactName').value.trim() },
           { name: 'Email', value: document.getElementById('contactEmail').value.trim() },
           { name: 'Phone', value: document.getElementById('contactPhone').value.trim() || 'Not provided' },
+          { name: 'Company', value: document.getElementById('contactCompany').value.trim() || 'Not provided' },
           { name: 'Subject', value: document.getElementById('contactSubject').value },
           { name: 'Message', value: document.getElementById('contactMessage').value.trim() }
-        ]
+        ],
+        
+        // Tracking
+        referrer: document.referrer,
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString()
       };
       
-      const response = await fetch(POWER_AUTOMATE_URL, {
+      // Internal tracking
+      if (window.unifiedTracking?.sendTrackingData) {
+        window.unifiedTracking.sendTrackingData('contact_form_submit', payload);
+      }
+      
+      const response = await fetch(CONFIG.CONTACT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       });
       
       if (response.ok) {
-        successMsg.classList.remove('hidden');
+        alertSuccess.style.display = 'block';
         form.reset();
         
-        if (typeof gtag === 'function') {
-          gtag('event', 'form_submit_success', {
-            form_type: 'supplier_upload_request'
-          });
+        if (window.unifiedTracking?.sendTrackingData) {
+          window.unifiedTracking.sendTrackingData('contact_form_success', { formType: 'supplier_upload_request' });
         }
       } else {
         throw new Error('Server returned ' + response.status);
       }
     } catch (error) {
-      console.error('Form submission error:', error);
-      errorMsg.classList.remove('hidden');
+      console.error('Contact form error:', error);
+      alertError.style.display = 'block';
       
-      if (typeof gtag === 'function') {
-        gtag('event', 'form_submit_error', {
-          form_type: 'supplier_upload_request',
-          error_message: error.message
-        });
+      if (window.unifiedTracking?.sendTrackingData) {
+        window.unifiedTracking.sendTrackingData('contact_form_error', { error: error.message });
       }
     } finally {
       submitBtn.disabled = false;
@@ -1289,6 +837,233 @@ function setupContactForm() {
   });
 }
 
+// ============================================
+// INVOICE FORM HANDLER
+// ============================================
+function setupInvoiceForm() {
+  const form = document.getElementById('invoiceForm');
+  const submitBtn = document.getElementById('invoiceSubmitBtn');
+  const alertSuccess = document.getElementById('invoiceAlertSuccess');
+  const alertError = document.getElementById('invoiceAlertError');
+  const errorText = document.getElementById('invoiceErrorText');
+  const successModal = document.getElementById('successModal');
+  
+  // Bank field auto-advance
+  const bankFields = ['bank1', 'bank2', 'bank3', 'bank4'];
+  bankFields.forEach((id, i) => {
+    document.getElementById(id).addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '');
+      if (this.value.length >= this.maxLength && i < bankFields.length - 1) {
+        document.getElementById(bankFields[i + 1]).focus();
+      }
+    });
+  });
+  
+  // Rego uppercase
+  document.getElementById('rego').addEventListener('input', function() {
+    this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  });
+  
+  // Capture tracking data
+  captureTrackingData();
+  
+  // Submission protection
+  let isSubmitting = false;
+  
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    if (isSubmitting) return;
+    isSubmitting = true;
+    
+    const submissionId = `sub_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    alertSuccess.style.display = 'none';
+    alertError.style.display = 'none';
+    
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span> Uploading...';
+    
+    try {
+      // Collect form values
+      const bankAccount = bankFields.map(id => document.getElementById(id).value).join('-');
+      const rego = document.getElementById('rego').value.trim();
+      const supplierName = document.getElementById('supplierName').value.trim();
+      const supplierEmail = document.getElementById('supplierEmail').value.trim();
+      const supplierPhone = document.getElementById('supplierPhone').value.trim();
+      const amount = parseFloat(document.getElementById('amount').value) || 0;
+      const litresExtracted = parseFloat(document.getElementById('litresExtracted').value) || 0;
+      const litresIntroduced = parseFloat(document.getElementById('litresIntroduced').value) || 0;
+      const description = document.getElementById('description').value.trim();
+      
+      // Build payload
+      const payload = {
+        formType: 'fuel_extraction_job',
+        formVersion: '1.0',
+        submissionId: submissionId,
+        submittedAt: new Date().toISOString(),
+        
+        // Flat fields for Power Automate processing
+        rego: rego,
+        supplierName: supplierName,
+        supplierEmail: supplierEmail,
+        supplierPhone: supplierPhone,
+        amount: amount,
+        bankAccount: bankAccount,
+        litresExtracted: litresExtracted,
+        litresIntroduced: litresIntroduced,
+        description: description,
+        
+        // Fields array for dynamic email builder
+        fields: [
+          { name: 'Rego', value: rego },
+          { name: 'Supplier Name', value: supplierName },
+          { name: 'Supplier Email', value: supplierEmail },
+          { name: 'Supplier Phone', value: supplierPhone || 'Not provided' },
+          { name: 'Amount', value: '$' + amount.toFixed(2) },
+          { name: 'Bank Account', value: bankAccount },
+          { name: 'Litres Extracted', value: litresExtracted + ' L' },
+          { name: 'Litres Introduced', value: litresIntroduced + ' L' },
+          { name: 'Description', value: description || 'No description provided' }
+        ],
+        
+        // Tracking data
+        bookingId: document.getElementById('bookingId').value,
+        sessionId: document.getElementById('sessionId').value,
+        timestamp: document.getElementById('timestamp').value,
+        timezone: document.getElementById('timezone').value,
+        userAgent: document.getElementById('userAgent').value,
+        referrer: document.getElementById('referrer').value,
+        screenResolution: document.getElementById('screenResolution').value,
+        language: document.getElementById('language').value,
+        platform: document.getElementById('platform').value
+      };
+      
+      // File upload - convert to base64
+      const fileInput = document.getElementById('invoiceFile');
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        
+        // Validate file size (10MB)
+        if (file.size > 10 * 1024 * 1024) {
+          throw new Error('File size exceeds 10MB limit');
+        }
+        
+        payload.invoiceFileName = file.name;
+        payload.invoiceFileType = file.type;
+        payload.invoiceFileSize = file.size;
+        payload.invoiceFileBase64 = await fileToBase64(file);
+      }
+      
+      // Internal tracking - submission attempt
+      if (window.unifiedTracking?.sendTrackingData) {
+        window.unifiedTracking.sendTrackingData('invoice_submit_attempt', {
+          formType: 'fuel_extraction_job',
+          amount: amount,
+          submissionId: submissionId
+        });
+      }
+      
+      // Submit to Power Automate
+      const response = await fetch(CONFIG.INVOICE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      if (response.ok) {
+        // Success
+        submitBtn.disabled = true;
+        submitBtn.textContent = '✓ Submitted Successfully';
+        successModal.classList.add('show');
+        
+        // Internal tracking - success
+        if (window.unifiedTracking?.sendTrackingData) {
+          window.unifiedTracking.sendTrackingData('invoice_submit_success', {
+            formType: 'fuel_extraction_job',
+            amount: amount,
+            submissionId: submissionId
+          });
+        }
+        
+        // Redirect after 8 seconds
+        setTimeout(() => { window.location.href = '/'; }, 8000);
+        
+      } else {
+        throw new Error('Server returned ' + response.status);
+      }
+      
+    } catch (error) {
+      console.error('Invoice submission error:', error);
+      errorText.textContent = error.message || 'Something went wrong. Please try again.';
+      alertError.style.display = 'block';
+      isSubmitting = false;
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '📤 Submit Invoice for Payment';
+      
+      // Internal tracking - error
+      if (window.unifiedTracking?.sendTrackingData) {
+        window.unifiedTracking.sendTrackingData('invoice_submit_error', { error: error.message });
+      }
+    }
+  });
+  
+  // Modal close
+  document.getElementById('modalCloseBtn').addEventListener('click', () => {
+    window.location.href = '/';
+  });
+}
+
+// ============================================
+// PAGE INITIALIZATION
+// ============================================
+document.addEventListener('DOMContentLoaded', async function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const encodedData = urlParams.get('d');
+  
+  // Track page view
+  if (window.unifiedTracking?.trackEvent) {
+    window.unifiedTracking.trackEvent('page_view', {
+      page: 'supplier-upload',
+      hasBookingId: !!encodedData
+    });
+  }
+  
+  // Handle "submit a request here" link click - show contact form
+  document.getElementById('showContactLink')?.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('contactSection').classList.remove('hidden');
+    document.getElementById('contactSection').scrollIntoView({ behavior: 'smooth' });
+    setupContactForm();
+  });
+  
+  // STATE 1: No ?d= parameter → Contact Form
+  if (!encodedData) {
+    document.getElementById('contactSection').classList.remove('hidden');
+    setupContactForm();
+    return;
+  }
+  
+  // STATE 2: Has ?d= parameter → Invoice Upload Form
+  document.getElementById('invoiceSection').classList.remove('hidden');
+  document.getElementById('invoiceAlertLoading').style.display = 'block';
+  
+  // Decode booking ID from base64
+  const bookingId = decodeBase64(encodedData);
+  
+  if (bookingId) {
+    document.getElementById('bookingId').value = bookingId;
+    
+    // Fetch data from SharePoint and populate form
+    bookingData = await fetchBookingData(bookingId);
+    if (bookingData) {
+      populateInvoiceForm(bookingData);
+    }
+  }
+  
+  document.getElementById('invoiceAlertLoading').style.display = 'none';
+  setupInvoiceForm();
+});
 </script>
 
 </body>
