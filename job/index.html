@@ -873,27 +873,36 @@
           throw new Error(`Server returned ${response.status}: ${errorText}`);
         }
 
-        // Try to parse as JSON, but handle non-JSON responses gracefully
+        // Try to parse as JSON, but handle non-JSON/empty responses gracefully
         // Power Automate may return success with non-JSON response (plain text, HTML, or empty)
-        let result = null;
-        const contentType = response.headers.get('content-type') || '';
-        
-        if (contentType.includes('application/json')) {
-          try {
-            const text = await response.text();
-            if (text.trim()) {
-              result = JSON.parse(text);
+        try {
+          const contentType = response.headers.get('content-type') || '';
+          
+          // Get response text first (can only read once)
+          const responseText = await response.text();
+          
+          if (responseText && responseText.trim()) {
+            // Only try to parse if there's actual content
+            if (contentType.includes('application/json')) {
+              try {
+                const result = JSON.parse(responseText);
+                console.log('✅ Parsed JSON response:', result);
+              } catch (jsonError) {
+                console.warn('⚠️ Response marked as JSON but failed to parse:', jsonError);
+                console.warn('Response text:', responseText.substring(0, 200));
+                // Request succeeded, just couldn't parse JSON
+              }
+            } else {
+              // Not JSON - just log for debugging
+              console.log('📄 Non-JSON response received:', responseText.substring(0, 200));
             }
-          } catch (jsonError) {
-            console.warn('Response marked as JSON but failed to parse:', jsonError);
-            // Request succeeded, just couldn't parse JSON
+          } else {
+            // Empty response - this is fine, request succeeded
+            console.log('✅ Request succeeded with empty response');
           }
-        } else {
-          // Not JSON - just log the response for debugging
-          const textResponse = await response.text();
-          if (textResponse.trim()) {
-            console.log('Non-JSON response received:', textResponse.substring(0, 200));
-          }
+        } catch (responseError) {
+          // Even if response parsing fails, if status is OK, consider it a success
+          console.warn('⚠️ Error reading response, but status was OK:', responseError);
         }
         
         showSuccess('Job submitted successfully!');
