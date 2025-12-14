@@ -428,12 +428,18 @@
           data[key] = value;
         }
         
-        // If we got key-value pairs, return the data object
-        if (Object.keys(data).length > 0) {
+        // Check if we got meaningful key-value pairs
+        // If all values are empty, it's likely just a plain string treated as a key
+        const hasValues = Object.values(data).some(val => val && val.trim().length > 0);
+        const hasMultipleKeys = Object.keys(data).length > 1;
+        
+        // If we have actual key-value pairs with values, return the data object
+        if (hasValues || hasMultipleKeys) {
           console.log('✅ Parsed as URL params:', data);
           return data;
         }
         
+        // If we only have one key with empty value, it's likely a plain string
         // Fall back: treat decoded string as plain bookingId
         // This handles cases where just the bookingId number/string is encoded (e.g., "292")
         if (decoded && decoded.trim()) {
