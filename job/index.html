@@ -873,7 +873,28 @@
           throw new Error(`Server returned ${response.status}: ${errorText}`);
         }
 
-        const result = await response.json();
+        // Try to parse as JSON, but handle non-JSON responses gracefully
+        // Power Automate may return success with non-JSON response (plain text, HTML, or empty)
+        let result = null;
+        const contentType = response.headers.get('content-type') || '';
+        
+        if (contentType.includes('application/json')) {
+          try {
+            const text = await response.text();
+            if (text.trim()) {
+              result = JSON.parse(text);
+            }
+          } catch (jsonError) {
+            console.warn('Response marked as JSON but failed to parse:', jsonError);
+            // Request succeeded, just couldn't parse JSON
+          }
+        } else {
+          // Not JSON - just log the response for debugging
+          const textResponse = await response.text();
+          if (textResponse.trim()) {
+            console.log('Non-JSON response received:', textResponse.substring(0, 200));
+          }
+        }
         
         showSuccess('Job submitted successfully!');
         
