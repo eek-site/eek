@@ -1415,7 +1415,7 @@
           
           showIndicator('loading', `⏳ Sending booking confirmation... (attempt ${attempt})`, 0);
 
-          const res = await fetch(PAYMENT_CONFIRMED_WEBHOOK_URL, {
+        const res = await fetch(PAYMENT_CONFIRMED_WEBHOOK_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ...payload, submissionAttempt: attempt })
@@ -1749,7 +1749,7 @@
       }
 
       if (!submissionResult.reason || submissionResult.reason === 'force_resend') {
-        trackConversion(bookingData);
+      trackConversion(bookingData);
       }
 
       try {

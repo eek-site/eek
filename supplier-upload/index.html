@@ -457,10 +457,10 @@
           ⛽ Submit Fuel Extraction Job
         </button>
       </form>
-      
+        
       <div id="jobSuccessMessage" class="status-message info hidden" style="margin-top: 20px;">
         <strong>✅ Success!</strong> Your fuel extraction job has been submitted successfully.
-      </div>
+        </div>
       
       <div id="jobErrorMessage" class="status-message error hidden" style="margin-top: 20px;">
         <strong>❌ Error:</strong> <span id="jobErrorText">Something went wrong. Please try again.</span>
@@ -481,8 +481,8 @@
       </div>
       <div id="invoiceAlertError" class="status-message error hidden" style="margin-top: 20px;">
         <strong>❌ Error:</strong> <span id="invoiceErrorText">Something went wrong. Please try again.</span>
-      </div>
-      
+        </div>
+        
       <form id="invoiceUploadForm" style="margin-top: 30px;" novalidate>
         <!-- Vehicle Section -->
         <div style="margin-bottom: 28px;">
@@ -509,7 +509,7 @@
             <input type="tel" id="invoiceSupplierPhone" name="supplierPhone" style="width: 100%; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;" placeholder="021 123 4567">
           </div>
         </div>
-
+        
         <!-- Payment Section -->
         <div style="margin-bottom: 28px;">
           <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #ff5500; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid rgba(255,255,255,0.2);">Payment Details</div>
@@ -529,8 +529,8 @@
               <input type="text" id="invoiceBank4" name="bank4" placeholder="XXX" maxlength="3" required style="text-align: center; padding: 12px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff;">
             </div>
             <div style="font-size: 0.8rem; color: #888; margin-top: 4px;">NZ bank account format: XX-XXXX-XXXXXXX-XXX</div>
-          </div>
         </div>
+      </div>
 
         <!-- Invoice Section -->
         <div style="margin-bottom: 28px;">
@@ -539,7 +539,7 @@
             <label for="invoiceFile" style="display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem;">Invoice PDF/Image <span style="color: #dc3545;">*</span></label>
             <input type="file" id="invoiceFile" name="invoiceFile" accept=".pdf,.jpg,.jpeg,.png" required style="width: 100%; padding: 10px; border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; font-size: 1rem; background: rgba(255,255,255,0.1); color: #fff; cursor: pointer;">
             <div style="font-size: 0.8rem; color: #888; margin-top: 4px;">Accepted formats: PDF, JPG, PNG (max 10MB)</div>
-          </div>
+        </div>
         </div>
 
         <!-- Hidden fields -->
