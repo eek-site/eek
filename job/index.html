@@ -259,7 +259,7 @@
           <div class="form-grid">
             <div class="form-group">
               <label class="form-label">
-                Amount (excl. GST) <span class="required">*</span>
+                Amount (excl. GST)
               </label>
               <input type="number" id="amount" name="Amount" class="form-input" placeholder="0.00" step="0.01" min="0">
             </div>
@@ -357,11 +357,22 @@
             <div class="section-icon">🏴</div>
             <span>Additional Options</span>
           </div>
-          <div class="flag-group">
-            <label class="flag-item">
-              <input type="checkbox" id="paidFlag" name="Paid" class="flag-checkbox" value="Bank">
-              <span>Paid?</span>
-            </label>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">
+                Payment Type (Paid?)
+              </label>
+              <select id="paidFlag" name="Paid" class="form-input">
+                <option value="">Not Paid</option>
+                <option value="Bank">Bank</option>
+                <option value="Cash">Cash</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="No">No</option>
+                <option value="Reimbursable">Reimbursable</option>
+              </select>
+            </div>
+          </div>
+          <div class="flag-group" style="margin-top:20px">
             <label class="flag-item">
               <input type="checkbox" id="closePostFlag" name="CloseAndPostJobForBilling" class="flag-checkbox" value="Yes">
               <span>Close and Post Job For Billing</span>
@@ -593,13 +604,16 @@
         console.log('⚠️ No phone value found. customerData:', customerData);
       }
 
-      // Amount
+      // Amount (convert from cents to dollars for Stripe)
       const amountValue = getValue('amount');
       if (amountValue) {
         const field = document.getElementById('amount');
         if (field) {
-          field.value = normalizeValue(amountValue);
-          console.log('✅ Set amount =', amountValue);
+          // Convert from cents (raw Stripe amount) to dollars
+          const amountInCents = parseFloat(amountValue);
+          const amountInDollars = (amountInCents / 100).toFixed(2);
+          field.value = amountInDollars;
+          console.log('✅ Set amount =', amountInDollars, '(converted from', amountValue, 'cents)');
           // Trigger GST calculation
           const event = new Event('input', { bubbles: true });
           field.dispatchEvent(event);
@@ -608,6 +622,74 @@
         }
       } else {
         console.log('⚠️ No amount value found');
+      }
+
+      // Job Notes (from description)
+      const descriptionValue = getValue('description', 'JobNotes', 'jobNotes', 'notes');
+      if (descriptionValue) {
+        const field = document.getElementById('jobNotes');
+        if (field) {
+          field.value = normalizeValue(descriptionValue);
+          console.log('✅ Set jobNotes =', descriptionValue);
+        } else {
+          console.warn('⚠️ Field not found: jobNotes');
+        }
+      }
+
+      // Supplier Information
+      const supplierNameValue = getValue('supplierName', 'Supplier', 'supplier');
+      if (supplierNameValue) {
+        const field = document.getElementById('supplierName');
+        if (field) {
+          field.value = normalizeValue(supplierNameValue);
+          console.log('✅ Set supplierName =', supplierNameValue);
+        }
+      }
+
+      const supplierEmailValue = getValue('supplierEmail', 'EmailJobToSupplier', 'Email Job to Supplier', 'SuppEmail', 'EmailJobToSupplier');
+      if (supplierEmailValue) {
+        const field = document.getElementById('supplierEmail');
+        if (field) {
+          field.value = normalizeValue(supplierEmailValue);
+          console.log('✅ Set supplierEmail =', supplierEmailValue);
+        } else {
+          console.warn('⚠️ Field not found: supplierEmail');
+        }
+      } else {
+        console.log('⚠️ No supplierEmail value found. Root keys:', Object.keys(bookingData), 'customerData keys:', Object.keys(customerData));
+      }
+
+      const supplierPhoneValue = getValue('supplierPhone', 'TextJobToMobileNumber', 'Text Job to Mobile Number', 'SuppPhone', 'TextSupplierPhone', 'Text Job to Mobile Number');
+      if (supplierPhoneValue) {
+        const field = document.getElementById('supplierPhone');
+        if (field) {
+          field.value = normalizeValue(supplierPhoneValue);
+          console.log('✅ Set supplierPhone =', supplierPhoneValue);
+        } else {
+          console.warn('⚠️ Field not found: supplierPhone');
+        }
+      } else {
+        console.log('⚠️ No supplierPhone value found. Root keys:', Object.keys(bookingData), 'customerData keys:', Object.keys(customerData));
+      }
+
+      // Payment Type (Paid) - dropdown (Bank, Cash, Credit Card, No, Reimbursable)
+      const paidValue = getValue('Paid', 'paid', 'PaymentType', 'paymentType');
+      if (paidValue) {
+        const field = document.getElementById('paidFlag');
+        if (field) {
+          // Normalize the value to match dropdown options
+          const normalizedPaid = normalizeValue(paidValue);
+          // Check if the value matches one of the dropdown options
+          const validOptions = ['Bank', 'Cash', 'Credit Card', 'No', 'Reimbursable'];
+          if (validOptions.includes(normalizedPaid)) {
+            field.value = normalizedPaid;
+            console.log('✅ Set paidFlag =', normalizedPaid);
+          } else {
+            console.warn('⚠️ Invalid paid value:', normalizedPaid, '(expected one of:', validOptions.join(', '), ')');
+          }
+        } else {
+          console.warn('⚠️ Field not found: paidFlag');
+        }
       }
 
       // Handle type selection if present
@@ -926,7 +1008,7 @@
       addField('JobNotes', document.getElementById('jobNotes').value);
 
       // Flags
-      addField('Paid', document.getElementById('paidFlag').checked ? 'Bank' : '');
+      addField('Paid', document.getElementById('paidFlag').value || '');
       addField('CloseAndPostJobForBilling', document.getElementById('closePostFlag').checked ? 'Yes' : 'No');
       addField('ExistingClient', document.getElementById('existingClient').checked ? 'Yes' : '');
       addField('Chargeables', document.getElementById('chargeables').checked ? 'Yes' : '');
