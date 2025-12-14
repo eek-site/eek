@@ -348,63 +348,61 @@
   </div>
 </nav>
 
-<section id="auth" class="auth-section">
+
+<!-- Fuel Extraction Job Submission Form (shown when query string present) -->
+<section id="jobSubmissionSection" class="auth-section" style="display: none;">
   <div class="container">
     <div class="auth-container">
-      <!-- Login Button (shown when not authenticated) -->
-      <div id="loginContainer">
-        <h2>🔐 Secure Supplier Access</h2>
-        <p>Access the secure Microsoft Forms upload system for invoices, job sheets, and supplier documentation.</p>
-        
-        <div class="status-message info">
-          <strong>🔒 Enhanced Security:</strong> This system uses Microsoft Enterprise authentication to ensure your documents are submitted securely to the correct Eek supplier account.
+      <h2>⛽ Fuel Extraction Job Submission</h2>
+      <p>Submit a fuel extraction job for processing. Data will be loaded from SharePoint using the booking ID.</p>
+      
+      <form id="fuelExtractionForm" style="margin-top: 30px;">
+        <div style="margin-bottom: 20px;">
+          <label for="jobRego" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Vehicle Registration <span style="color: #dc3545;">*</span></label>
+          <input type="text" id="jobRego" name="rego" required style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em; text-transform: uppercase;" placeholder="ABC123" maxlength="10">
         </div>
         
-        <button id="loginButton" class="auth-button">
-          <div class="ms-logo"></div>
-          Sign in with Microsoft
+        <div style="margin-bottom: 20px;">
+          <label for="supplierName" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Supplier Name <span style="color: #dc3545;">*</span></label>
+          <input type="text" id="supplierName" name="supplierName" required style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;" placeholder="Supplier Company Ltd">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+          <label for="supplierEmail" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Supplier Email <span style="color: #dc3545;">*</span></label>
+          <input type="email" id="supplierEmail" name="supplierEmail" required style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;" placeholder="supplier@company.com">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+          <label for="supplierPhone" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Supplier Phone <span style="color: #dc3545;">*</span></label>
+          <input type="tel" id="supplierPhone" name="supplierPhone" required style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;" placeholder="09 123 4567">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+          <label for="jobEmail" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Customer Email</label>
+          <input type="email" id="jobEmail" name="email" style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;" placeholder="customer@email.com">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+          <label for="jobPhone" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Customer Mobile</label>
+          <input type="tel" id="jobPhone" name="phone" style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em;" placeholder="021 123 4567">
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+          <label for="jobNotes" style="display: block; margin-bottom: 8px; font-weight: 600; color: #fff;">Job Notes</label>
+          <textarea id="jobNotes" name="notes" rows="4" style="width: 100%; padding: 12px; border: 2px solid #444; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; font-size: 1em; resize: vertical;" placeholder="Enter job details, location, and any relevant information..."></textarea>
+        </div>
+        
+        <button type="submit" id="jobSubmitBtn" class="auth-button upload-button" style="width: 100%; margin-top: 10px;">
+          ⛽ Submit Fuel Extraction Job
         </button>
-        
-        <div style="margin-top: 20px; font-size: 0.9em; color: #ccc;">
-          <p>You'll be redirected to Microsoft's secure login system</p>
-        </div>
+      </form>
+      
+      <div id="jobSuccessMessage" class="status-message info hidden" style="margin-top: 20px;">
+        <strong>✅ Success!</strong> Your fuel extraction job has been submitted successfully.
       </div>
-
-      <!-- Upload Button (shown when authenticated) -->
-      <div id="uploadContainer" class="hidden">
-        <h2>✅ Authentication Successful</h2>
-        <p id="uploadDescription">You're now authenticated as an Eek supplier. Click below to access the secure document upload form.</p>
-        
-        <div id="uploadInfoMessage" class="status-message info">
-          <strong>📋 Ready to Upload:</strong> You can now submit invoices, job sheets, certificates, and other supplier documentation through our secure Microsoft Forms system.
-        </div>
-        
-        <div id="uploadButtons">
-          <!-- Invoice Upload Button (default) -->
-          <a id="invoiceUploadButton" href="#" class="auth-button upload-button" target="_blank">
-            📄 Upload Invoice Documents
-          </a>
-          
-          <!-- Pre-purchase Inspection Button (when ?pp parameter) -->
-          <a id="ppUploadButton" href="#" class="auth-button upload-button" target="_blank" style="background: linear-gradient(135deg, #28a745, #20c997);">
-            🔍 Upload Pre-Purchase Inspection
-          </a>
-        </div>
-        
-        <div style="margin-top: 20px; font-size: 0.9em; color: #ccc;">
-          <p>The form will open in a new tab with your supplier credentials pre-filled</p>
-        </div>
-      </div>
-
-      <!-- Error Message Container -->
-      <div id="errorContainer" class="hidden">
-        <div class="status-message error">
-          <strong>⚠️ Authentication Configuration Issue:</strong><br>
-          The authentication system needs to be configured properly. Please contact IT support at 
-          <a href="tel:+6498724612" style="color: #dc3545;">+64 9 872 4612</a> for assistance.
-          <br><br>
-          <small>Error: Redirect URI mismatch in Azure AD application registration</small>
-        </div>
+      
+      <div id="jobErrorMessage" class="status-message error hidden" style="margin-top: 20px;">
+        <strong>❌ Error:</strong> <span id="jobErrorText">Something went wrong. Please try again.</span>
       </div>
     </div>
   </div>
@@ -522,40 +520,293 @@
 <!-- Footer will be added by footer.js -->
 
 <script>
-// Microsoft Authentication Configuration
-const config = {
-  clientId: "23549916-65b7-485c-aca0-55ca600331a2",
-  tenantId: "61ffc6bc-d9ce-458b-8120-d32187c3770d", // Correct tenant ID with the missing '1'
-  loginHint: "supplier.upload@eek.nz",
-  redirectUri: "https://www.eek.nz/supplier-upload",
-  // Form URLs
-  invoiceFormUrl: "https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFURFAwNUxPNVUxWEpBNDJKWlhZV0tLR0I4VC4u&login_hint=supplier.upload@eek.nz",
-  ppFormUrl: "https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUMTg2OVQ5OFo5U0NYTFNOV09HWktHUjJKSy4u&login_hint=supplier.upload@eek.nz"
-};
-
 // Power Automate endpoint for general contact forms
 const POWER_AUTOMATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/252cde504791494e823972d9651d0cee/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Qw5TH6rHqrevOeXH2VjtBtLGb1ggI7zRCIYEhBl3Xrw';
 
-// Check authentication status on page load
-document.addEventListener('DOMContentLoaded', function() {
-  // Check if there's a query string - if not, show contact form
+// SharePoint Lookup API URL (for fetching existing data)
+const SHAREPOINT_LOOKUP_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c35b9414a0be42f88182ae7e6e409f1d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2ztt24wScLuAfifD0pjzovseRDKXBAEtCQtScGMgPqQ';
+
+// SharePoint Update API URL (for saving full merged data to EncodedData)
+const SHAREPOINT_UPDATE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/ebc96da57e35479b8dd03a6abd06686c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=abw4-RdaVDllhMuODkPGn0iMZtuXjhmnaYyUOefn5F4';
+
+// Excel API URL (for writing job-specific fields to xlsm)
+const EXCEL_WRITE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/ca2a97affbc449419b28ecb274d4c737/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=s2OFNz6J6KdjOKUUF1SRkZKo4UiPh01_uSzxy4Bg7Yw';
+
+// State
+let sharepointId = null;
+let originalBookingData = null;
+
+// Base64 Decode Function
+function decodeBase64(encoded) {
+  try {
+    const decoded = atob(encoded).trim();
+    if (decoded) {
+      return { bookingId: decoded };
+    }
+    return null;
+  } catch (e) {
+    console.error('Failed to decode:', e);
+    return null;
+  }
+}
+
+// Fetch job data from SharePoint
+async function fetchJobDataFromSharePoint(bookingId) {
+  if (!bookingId) return null;
+  
+  try {
+    const res = await fetch(SHAREPOINT_LOOKUP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bookingId: String(bookingId) })
+    });
+    
+    if (!res.ok) return null;
+    
+    const result = await res.json();
+    if (result.success && result.bookingData) {
+      const json = atob(result.bookingData);
+      const decoded = JSON.parse(json);
+      decoded.sharepointId = bookingId;
+      sharepointId = bookingId;
+      originalBookingData = decoded;
+      return decoded;
+    }
+    return null;
+  } catch (err) {
+    console.error('SharePoint fetch error:', err);
+    return null;
+  }
+}
+
+// Populate form from booking data
+function populateFormFromData(bookingData) {
+  if (!bookingData) return;
+  
+  const customerData = bookingData.customerData || {};
+  const getValue = (...keys) => {
+    for (const key of keys) {
+      if (bookingData[key] !== undefined && bookingData[key] !== null && bookingData[key] !== '') {
+        return bookingData[key];
+      }
+      if (customerData[key] !== undefined && customerData[key] !== null && customerData[key] !== '') {
+        return customerData[key];
+      }
+    }
+    return null;
+  };
+  
+  const normalizeValue = (value) => {
+    if (value === null || value === undefined) return '';
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = String(value).trim();
+    return textarea.value;
+  };
+  
+  // Vehicle Registration
+  const regoValue = getValue('Rego', 'rego', 'vehicleRego');
+  if (regoValue) {
+    document.getElementById('jobRego').value = normalizeValue(regoValue);
+  }
+  
+  // Supplier Information
+  const supplierNameValue = getValue('Supplier', 'supplierName', 'supplier');
+  if (supplierNameValue) {
+    document.getElementById('supplierName').value = normalizeValue(supplierNameValue);
+  }
+  
+  const supplierEmailValue = getValue('EmailJobToSupplier', 'supplierEmail', 'SupplierEmail');
+  if (supplierEmailValue) {
+    document.getElementById('supplierEmail').value = normalizeValue(supplierEmailValue);
+  }
+  
+  const supplierPhoneValue = getValue('TextJobToMobileNumber', 'supplierPhone', 'SupplierPhone');
+  if (supplierPhoneValue) {
+    document.getElementById('supplierPhone').value = normalizeValue(supplierPhoneValue);
+  }
+  
+  // Customer Information
+  const emailValue = getValue('Email', 'email', 'customerEmail');
+  if (emailValue) {
+    document.getElementById('jobEmail').value = normalizeValue(emailValue);
+  }
+  
+  const phoneValue = getValue('ClientMobileNumber', 'phone', 'customerPhone');
+  if (phoneValue) {
+    document.getElementById('jobPhone').value = normalizeValue(phoneValue);
+  }
+  
+  // Job Notes
+  const notesValue = getValue('JobNotes', 'description', 'jobNotes', 'notes');
+  if (notesValue) {
+    document.getElementById('jobNotes').value = normalizeValue(notesValue);
+  }
+}
+
+// Page initialization
+document.addEventListener('DOMContentLoaded', async function() {
   const hasQueryString = window.location.search.length > 0;
   
   if (!hasQueryString) {
-    // Hide the auth section and show contact form
-    document.getElementById('auth').style.display = 'none';
+    // Show contact form
+    document.getElementById('jobSubmissionSection').style.display = 'none';
     document.getElementById('contactFormSection').style.display = 'block';
     document.getElementById('guidelines').style.display = 'none';
-    
-    // Setup contact form submission
     setupContactForm();
   } else {
-    // Show normal auth flow
-    checkAuthenticationStatus();
-    setupEventListeners();
-    configureFormType(); // Configure which form to show based on URL parameters
+    // Check if this is a job submission (has 'd' parameter for bookingId)
+    const urlParams = new URLSearchParams(window.location.search);
+    const encodedData = urlParams.get('d');
+    let bookingId = null;
+    
+    if (encodedData) {
+      const decoded = decodeBase64(encodedData);
+      if (decoded) {
+        bookingId = decoded.bookingId;
+      }
+    } else {
+      bookingId = urlParams.get('bookingId');
+    }
+    
+    if (bookingId) {
+      // Show job submission form
+      document.getElementById('contactFormSection').style.display = 'none';
+      document.getElementById('jobSubmissionSection').style.display = 'block';
+      document.getElementById('guidelines').style.display = 'none';
+      
+      // Fetch and populate data
+      const sharePointData = await fetchJobDataFromSharePoint(bookingId);
+      if (sharePointData) {
+        populateFormFromData(sharePointData);
+      }
+      
+      setupJobSubmissionForm();
+    } else {
+      // No bookingId - show contact form
+      document.getElementById('jobSubmissionSection').style.display = 'none';
+      document.getElementById('contactFormSection').style.display = 'block';
+      setupContactForm();
+    }
   }
 });
+
+function setupJobSubmissionForm() {
+  const form = document.getElementById('fuelExtractionForm');
+  const submitBtn = document.getElementById('jobSubmitBtn');
+  const successMsg = document.getElementById('jobSuccessMessage');
+  const errorMsg = document.getElementById('jobErrorMessage');
+  const errorText = document.getElementById('jobErrorText');
+  
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Hide previous messages
+    successMsg.classList.add('hidden');
+    errorMsg.classList.add('hidden');
+    
+    // Disable submit button
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '⏳ Submitting...';
+    
+    try {
+      // Collect form data
+      const formData = {
+        formType: 'fuel_extraction_job',
+        formVersion: '1.0',
+        submittedAt: new Date().toISOString(),
+        
+        // Basic fields
+        Rego: document.getElementById('jobRego').value.toUpperCase(),
+        Email: document.getElementById('jobEmail').value.trim(),
+        ClientMobileNumber: document.getElementById('jobPhone').value.trim(),
+        JobNotes: document.getElementById('jobNotes').value.trim(),
+        
+        // Supplier fields
+        Supplier: document.getElementById('supplierName').value.trim(),
+        EmailJobToSupplier: document.getElementById('supplierEmail').value.trim(),
+        TextJobToMobileNumber: document.getElementById('supplierPhone').value.trim(),
+        
+        // SharePoint ID if available
+        SharePointId: sharepointId,
+        BookingId: sharepointId,
+        
+        // Fields array for Power Automate
+        fields: [
+          { name: 'Rego', value: document.getElementById('jobRego').value.toUpperCase() },
+          { name: 'Email', value: document.getElementById('jobEmail').value.trim() },
+          { name: 'ClientMobileNumber', value: document.getElementById('jobPhone').value.trim() },
+          { name: 'JobNotes', value: document.getElementById('jobNotes').value.trim() },
+          { name: 'Supplier', value: document.getElementById('supplierName').value.trim() },
+          { name: 'EmailJobToSupplier', value: document.getElementById('supplierEmail').value.trim() },
+          { name: 'TextJobToMobileNumber', value: document.getElementById('supplierPhone').value.trim() }
+        ]
+      };
+      
+      // Add SharePoint ID if available
+      if (sharepointId) {
+        formData.fields.push({ name: 'SharePointId', value: sharepointId });
+        formData.fields.push({ name: 'BookingId', value: sharepointId });
+      }
+      
+      // Merge with original booking data if available
+      const fullData = originalBookingData ? { ...originalBookingData, ...formData } : formData;
+      
+      // 1. Update SharePoint with full merged data
+      const spResponse = await fetch(SHAREPOINT_UPDATE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fullData)
+      });
+      
+      if (!spResponse.ok) {
+        const errorText = await spResponse.text();
+        throw new Error(`SharePoint update failed: ${spResponse.status} - ${errorText}`);
+      }
+      
+      // 2. Write to Excel
+      const excelData = {
+        Rego: formData.Rego,
+        Type: 'Supplier',
+        Name: 'Mechanic',
+        Supplier: formData.Supplier,
+        JobNotes: formData.JobNotes,
+        Supp_Email: formData.EmailJobToSupplier,
+        Supp_Phone: formData.TextJobToMobileNumber,
+        fields: [
+          { name: 'Rego', value: formData.Rego },
+          { name: 'Type', value: 'Supplier' },
+          { name: 'Name', value: 'Mechanic' },
+          { name: 'Supplier', value: formData.Supplier },
+          { name: 'JobNotes', value: formData.JobNotes },
+          { name: 'Supp_Email', value: formData.EmailJobToSupplier },
+          { name: 'Supp_Phone', value: formData.TextJobToMobileNumber }
+        ]
+      };
+      
+      const excelResponse = await fetch(EXCEL_WRITE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(excelData)
+      });
+      
+      if (!excelResponse.ok) {
+        const errorText = await excelResponse.text();
+        throw new Error(`Excel write failed: ${excelResponse.status} - ${errorText}`);
+      }
+      
+      successMsg.classList.remove('hidden');
+      form.reset();
+      
+    } catch (error) {
+      console.error('Form submission error:', error);
+      errorText.textContent = error.message;
+      errorMsg.classList.remove('hidden');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '⛽ Submit Fuel Extraction Job';
+    }
+  });
+}
 
 function setupContactForm() {
   const form = document.getElementById('contactForm');
@@ -632,252 +883,6 @@ function setupContactForm() {
   });
 }
 
-function configureFormType() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const isPP = urlParams.has('pp');
-  
-  // Store the form type in sessionStorage to persist through authentication
-  if (isPP) {
-    sessionStorage.setItem('formType', 'pp');
-  } else if (!sessionStorage.getItem('formType')) {
-    sessionStorage.setItem('formType', 'invoice');
-  }
-  
-  // Get the actual form type (from URL or sessionStorage)
-  const formType = isPP ? 'pp' : sessionStorage.getItem('formType');
-  const isPrePurchase = (formType === 'pp');
-  
-  // Get elements
-  const invoiceButton = document.getElementById('invoiceUploadButton');
-  const ppButton = document.getElementById('ppUploadButton');
-  const description = document.getElementById('uploadDescription');
-  const infoMessage = document.getElementById('uploadInfoMessage');
-  const invoiceGuidelines = document.getElementById('invoiceGuidelines');
-  const ppGuidelines = document.getElementById('ppGuidelines');
-  
-  if (isPrePurchase) {
-    // Pre-purchase inspection mode
-    invoiceButton.style.display = 'none';
-    ppButton.style.display = 'inline-flex';
-    
-    description.textContent = "You're authenticated for pre-purchase inspection upload. Click below to submit inspection documentation.";
-    infoMessage.innerHTML = '<strong>🔍 Pre-Purchase Inspection:</strong> Upload inspection reports, photos, and documentation through our secure Microsoft Forms system.';
-    
-    // Show PP guidelines, hide invoice guidelines
-    invoiceGuidelines.classList.add('hidden');
-    ppGuidelines.classList.remove('hidden');
-    
-    // Update page title and header
-    document.title = 'Pre-Purchase Inspection Upload | Eek Mechanical';
-    document.querySelector('.header h1').textContent = '🔍 Pre-Purchase Inspection Upload';
-    document.querySelector('.header .subtitle').textContent = 'Secure Inspection Documentation System';
-  } else {
-    // Default invoice mode
-    invoiceButton.style.display = 'inline-flex';
-    ppButton.style.display = 'none';
-    
-    description.textContent = "You're now authenticated as an Eek supplier. Click below to access the secure document upload form.";
-    infoMessage.innerHTML = '<strong>📋 Ready to Upload:</strong> You can now submit invoices, job sheets, certificates, and other supplier documentation through our secure Microsoft Forms system.';
-    
-    // Show invoice guidelines, hide PP guidelines
-    invoiceGuidelines.classList.remove('hidden');
-    ppGuidelines.classList.add('hidden');
-    
-    // Keep default title and header
-    document.title = 'Supplier Upload Portal | Eek Mechanical';
-    document.querySelector('.header h1').textContent = '📁 Supplier Upload Portal';
-    document.querySelector('.header .subtitle').textContent = 'Secure Document Submission System';
-  }
-}
-
-function checkAuthenticationStatus() {
-  // Check URL fragment for authentication token
-  const fragment = window.location.hash.substring(1);
-  const params = new URLSearchParams(fragment);
-  
-  // Check for authentication errors first
-  if (params.has('error')) {
-    const error = params.get('error');
-    const errorDescription = params.get('error_description');
-    
-    console.error('Authentication error:', error, errorDescription);
-    showErrorInterface('Authentication error: ' + error);
-    return;
-  }
-  
-  // Check for ID token (successful authentication)
-  if (params.has('id_token')) {
-    // Token received - show upload interface
-    showUploadInterface();
-    
-    // Clean up URL
-    window.history.replaceState({}, document.title, window.location.pathname);
-    
-    // Track successful authentication
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'supplier_authentication_success', {
-        'event_category': 'Authentication',
-        'event_label': 'Microsoft Auth Success'
-      });
-    }
-  } else {
-    // No authentication yet - show login interface
-    showLoginInterface();
-  }
-}
-
-function showLoginInterface() {
-  document.getElementById('loginContainer').classList.remove('hidden');
-  document.getElementById('uploadContainer').classList.add('hidden');
-  document.getElementById('errorContainer').classList.add('hidden');
-}
-
-function showUploadInterface() {
-  document.getElementById('loginContainer').classList.add('hidden');
-  document.getElementById('uploadContainer').classList.remove('hidden');
-  document.getElementById('errorContainer').classList.add('hidden');
-  
-  // Re-configure the form type after authentication to ensure correct button shows
-  configureFormType();
-  
-  // Set the upload button links based on stored form type
-  const formType = sessionStorage.getItem('formType');
-  const isPP = (formType === 'pp');
-  
-  if (isPP) {
-    document.getElementById('ppUploadButton').href = config.ppFormUrl;
-  } else {
-    document.getElementById('invoiceUploadButton').href = config.invoiceFormUrl;
-  }
-}
-
-function showErrorInterface(errorMessage) {
-  document.getElementById('loginContainer').classList.add('hidden');
-  document.getElementById('uploadContainer').classList.add('hidden');
-  document.getElementById('errorContainer').classList.remove('hidden');
-  
-  // Update error message if needed
-  const errorContainer = document.querySelector('#errorContainer .status-message');
-  if (errorMessage.includes('redirect_uri')) {
-    errorContainer.innerHTML = `
-      <strong>⚠️ Azure AD Configuration Issue:</strong><br>
-      The redirect URI is not properly configured in the Azure AD application registration. 
-      The IT administrator needs to add this exact URL to the application:
-      <br><br>
-      <code style="background: rgba(0,0,0,0.3); padding: 5px; border-radius: 3px;">https://www.eek.nz/supplier-upload</code>
-      <br><br>
-      Please contact IT support at <a href="tel:+6498724612" style="color: #dc3545;">+64 9 872 4612</a> for assistance.
-      <br><br>
-      <small>Technical details: ${errorMessage}</small>
-    `;
-  }
-}
-
-function setupEventListeners() {
-  // Login button click handler
-  document.getElementById('loginButton').addEventListener('click', function() {
-    initiateAuthentication();
-  });
-
-  // Invoice upload button click handler
-  document.getElementById('invoiceUploadButton').addEventListener('click', function() {
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'supplier_invoice_form_access', {
-        'event_category': 'Supplier',
-        'event_label': 'Invoice Upload Form Access'
-      });
-    }
-  });
-
-  // Pre-purchase upload button click handler
-  document.getElementById('ppUploadButton').addEventListener('click', function() {
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'supplier_pp_form_access', {
-        'event_category': 'Supplier',
-        'event_label': 'Pre-Purchase Inspection Form Access'
-      });
-    }
-  });
-}
-
-async function initiateAuthentication() {
-  const nonce = Date.now().toString();
-  
-  // Microsoft OAuth 2.0 implicit flow with ID tokens
-  const authUrl = `https://login.microsoftonline.com/${config.tenantId}/oauth2/v2.0/authorize` +
-    `?client_id=${encodeURIComponent(config.clientId)}` +
-    `&response_type=id_token` +
-    `&redirect_uri=${encodeURIComponent(config.redirectUri)}` +
-    `&response_mode=fragment` +
-    `&scope=openid` +
-    `&login_hint=${encodeURIComponent(config.loginHint)}` +
-    `&domain_hint=organizations` +
-    `&prompt=login` +
-    `&nonce=${nonce}`;
-  
-  // Track authentication attempt
-  if (typeof gtag !== 'undefined') {
-    gtag('event', 'supplier_authentication_attempt', {
-      'event_category': 'Authentication',
-      'event_label': 'Microsoft Auth Initiated'
-    });
-  }
-  
-  try {
-    // Redirect to Microsoft authentication
-    window.location.href = authUrl;
-  } catch (error) {
-    console.error('Failed to initiate authentication:', error);
-    showErrorInterface('Failed to start authentication process');
-  }
-}
-
-// PKCE helper functions
-function generateCodeVerifier() {
-  const array = new Uint8Array(32);
-  crypto.getRandomValues(array);
-  return base64URLEncode(array);
-}
-
-async function generateCodeChallenge(verifier) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(verifier);
-  const hash = await crypto.subtle.digest('SHA-256', data);
-  return base64URLEncode(new Uint8Array(hash));
-}
-
-function base64URLEncode(buffer) {
-  return btoa(String.fromCharCode.apply(null, buffer))
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=/g, '');
-}
-
-// Track page visits
-window.addEventListener('load', function() {
-  if (typeof gtag !== 'undefined') {
-    gtag('event', 'supplier_upload_page_view', {
-      'page_title': 'Supplier Upload Portal',
-      'page_location': window.location.href,
-      'event_category': 'Supplier'
-    });
-  }
-});
-
-// Handle authentication errors more gracefully
-window.addEventListener('error', function(e) {
-  console.error('Application error:', e);
-  
-  // Only show error UI if it's auth-related
-  if (e.message && e.message.toLowerCase().includes('auth')) {
-    showErrorInterface('An authentication error occurred');
-  }
-});
-
-// Handle URL hash changes (for Single Page App behavior)
-window.addEventListener('hashchange', function() {
-  checkAuthenticationStatus();
-});
 </script>
 
 </body>
