@@ -481,10 +481,10 @@
 
       console.log('📝 Populating form from booking data:', bookingData);
 
-      // Get customerData if it exists (nested structure)
+      // Get customerData if it exists (nested structure from BookingData)
       const customerData = bookingData.customerData || {};
       
-      // Helper to get value from root or customerData
+      // Helper to get value from root or customerData (checks multiple key variations)
       const getValue = (...keys) => {
         for (const key of keys) {
           if (bookingData[key] !== undefined && bookingData[key] !== null && bookingData[key] !== '') {
@@ -503,8 +503,8 @@
         return String(value).trim();
       };
 
-      // Vehicle Information
-      const regoValue = getValue('rego', 'vehicleRego');
+      // Vehicle Information - check both EncodedData (Rego) and BookingData (rego, vehicleRego)
+      const regoValue = getValue('Rego', 'rego', 'vehicleRego');
       if (regoValue) {
         const field = document.getElementById('rego');
         if (field) {
@@ -513,8 +513,8 @@
         }
       }
       
-      // Contact Information
-      const emailValue = getValue('email', 'customerEmail');
+      // Contact Information - check both EncodedData (Email) and BookingData (email, customerEmail)
+      const emailValue = getValue('Email', 'email', 'customerEmail');
       if (emailValue) {
         const field = document.getElementById('email');
         if (field) {
@@ -523,7 +523,8 @@
         }
       }
       
-      const phoneValue = getValue('phone', 'customerPhone');
+      // Phone - check both EncodedData (ClientMobileNumber) and BookingData (phone, customerPhone)
+      const phoneValue = getValue('ClientMobileNumber', 'phone', 'customerPhone');
       if (phoneValue) {
         const field = document.getElementById('clientMobileNumber');
         if (field) {
@@ -532,24 +533,26 @@
         }
       }
 
-      // Amount (convert from cents to dollars for Stripe)
-      const amountValue = getValue('amount');
+      // Amount - check both EncodedData (Amount) and BookingData (amount in cents)
+      const amountValue = getValue('Amount', 'amount');
       if (amountValue) {
         const field = document.getElementById('amount');
         if (field) {
-          // Convert from cents (raw Stripe amount) to dollars
-          const amountInCents = parseFloat(amountValue);
-          const amountInDollars = (amountInCents / 100).toFixed(2);
+          let amountInDollars = parseFloat(amountValue);
+          // If amount > 1000, assume it's in cents (from Stripe) and convert
+          if (amountInDollars > 1000) {
+            amountInDollars = (amountInDollars / 100).toFixed(2);
+          }
           field.value = amountInDollars;
-          console.log('✅ Set amount =', amountInDollars, '(converted from', amountValue, 'cents)');
+          console.log('✅ Set amount =', amountInDollars);
           // Trigger GST calculation
           const event = new Event('input', { bubbles: true });
           field.dispatchEvent(event);
         }
       }
 
-      // Job Notes (from description)
-      const descriptionValue = getValue('description', 'JobNotes', 'jobNotes', 'notes');
+      // Job Notes (from description or JobNotes)
+      const descriptionValue = getValue('JobNotes', 'description', 'jobNotes', 'notes');
       if (descriptionValue) {
         const field = document.getElementById('jobNotes');
         if (field) {
@@ -559,7 +562,7 @@
       }
 
       // Supplier Information
-      const supplierNameValue = getValue('supplierName', 'Supplier', 'supplier');
+      const supplierNameValue = getValue('Supplier', 'supplierName', 'supplier');
       if (supplierNameValue) {
         const field = document.getElementById('supplierName');
         if (field) {
@@ -568,7 +571,7 @@
         }
       }
 
-      const supplierEmailValue = getValue('supplierEmail', 'EmailJobToSupplier');
+      const supplierEmailValue = getValue('EmailJobToSupplier', 'supplierEmail');
       if (supplierEmailValue) {
         const field = document.getElementById('supplierEmail');
         if (field) {
@@ -577,12 +580,33 @@
         }
       }
 
-      const supplierPhoneValue = getValue('supplierPhone', 'TextJobToMobileNumber');
+      const supplierPhoneValue = getValue('TextJobToMobileNumber', 'supplierPhone');
       if (supplierPhoneValue) {
         const field = document.getElementById('supplierPhone');
         if (field) {
           field.value = normalizeValue(supplierPhoneValue);
           console.log('✅ Set supplierPhone =', supplierPhoneValue);
+        }
+      }
+
+      // Bank Account
+      const bankValue = getValue('Bank', 'bankAccount');
+      if (bankValue) {
+        const field = document.getElementById('bankAccount');
+        if (field) {
+          field.value = normalizeValue(bankValue);
+          console.log('✅ Set bankAccount =', bankValue);
+        }
+      }
+
+      // Text Supplier checkbox
+      const textSupplierValue = getValue('TextSupplier');
+      if (textSupplierValue === 'Yes') {
+        const field = document.getElementById('textSupplier');
+        if (field) {
+          field.checked = true;
+          field.closest('.flag-item')?.classList.add('checked');
+          console.log('✅ Set textSupplier = Yes');
         }
       }
 
@@ -600,8 +624,19 @@
         }
       }
 
+      // Close and Post flag
+      const closePostValue = getValue('CloseAndPostJobForBilling');
+      if (closePostValue === 'Yes') {
+        const field = document.getElementById('closePostFlag');
+        if (field) {
+          field.checked = true;
+          field.closest('.flag-item')?.classList.add('checked');
+          console.log('✅ Set closePostFlag = Yes');
+        }
+      }
+
       // Handle type selection if present
-      const typeValue = bookingData.Type || bookingData.type;
+      const typeValue = getValue('Type', 'type');
       if (typeValue) {
         selectType(typeValue);
       }
