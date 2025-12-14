@@ -537,11 +537,11 @@
         return null;
       };
 
-      // Normalize field values
-      function normalizeValue(value) {
+      // Normalize value helper (same as customer-reply.html)
+      const normalizeValue = (value) => {
         if (value === null || value === undefined) return '';
         return String(value).trim();
-      }
+      };
 
       // Vehicle Information
       const regoValue = getValue('rego', 'vehicleRego');
