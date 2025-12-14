@@ -506,18 +506,32 @@
           }
           return jsonData;
         } catch (jsonError) {
-          // Fall back to URL params format (legacy format)
-          const params = new URLSearchParams(decoded);
-          const data = {};
-          for (const [key, value] of params) {
-            data[key] = value;
+          // Try URL params format (legacy format)
+          try {
+            const params = new URLSearchParams(decoded);
+            const data = {};
+            for (const [key, value] of params) {
+              data[key] = value;
+            }
+            // Only return if we got key-value pairs
+            if (Object.keys(data).length > 0) {
+              return data;
+            }
+          } catch (paramsError) {
+            // If URL params also fails, treat as plain bookingId
           }
-          return data;
+          
+          // Fall back: treat decoded string as plain bookingId
+          // This handles cases where just the bookingId number/string is encoded
+          if (decoded && decoded.trim()) {
+            return { bookingId: decoded.trim() };
+          }
         }
       } catch (e) {
         console.error('Failed to decode data:', e);
         return null;
       }
+      return null;
     }
 
     // Fetch job data from SharePoint (if bookingId is provided)
