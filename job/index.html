@@ -518,6 +518,40 @@
     function populateFormFromData(data) {
       if (!data) return;
 
+      console.log('📝 Populating form from data:', data);
+
+      // Get customerData if it exists (nested structure from SharePoint)
+      const customerData = data.customerData || {};
+      const trackingData = data.trackingData || {};
+      
+      // Helper to get value from root, customerData, or trackingData
+      const getValue = (...keys) => {
+        for (const key of keys) {
+          // Check root level first
+          if (data[key] !== undefined && data[key] !== null && data[key] !== '') {
+            console.log(`  📍 Found ${key} at root level:`, data[key]);
+            return data[key];
+          }
+          // Check customerData
+          if (customerData[key] !== undefined && customerData[key] !== null && customerData[key] !== '') {
+            console.log(`  📍 Found ${key} in customerData:`, customerData[key]);
+            return customerData[key];
+          }
+          // Check trackingData
+          if (trackingData[key] !== undefined && trackingData[key] !== null && trackingData[key] !== '') {
+            console.log(`  📍 Found ${key} in trackingData:`, trackingData[key]);
+            return trackingData[key];
+          }
+        }
+        return null;
+      };
+
+      // Normalize value helper
+      const normalizeValue = (value) => {
+        if (value === null || value === undefined) return '';
+        return String(value).trim();
+      };
+
       // Map fields from data to form inputs (supports both old and new field names)
       const fieldMapping = {
         'Id': 'id',
@@ -525,6 +559,7 @@
         'id': 'id',
         'Email': 'email',
         'email': 'email',
+        'customerEmail': 'email',
         'Name': 'name',
         'name': 'name',
         'customerName': 'name',
@@ -537,6 +572,7 @@
         'clientMobileNumber': 'clientMobileNumber',
         'Client Mobile Number': 'clientMobileNumber',
         'phone': 'clientMobileNumber',
+        'customerPhone': 'clientMobileNumber',
         'StartTime': 'startTime',
         'startTime': 'startTime',
         'Start time': 'startTime',
@@ -568,6 +604,7 @@
         'Job Notes': 'jobNotes',
         'jobNotes': 'jobNotes',
         'notes': 'jobNotes',
+        'description': 'jobNotes',
         'Paid': 'paidFlag',
         'Paid?': 'paidFlag',
         'paid': 'paidFlag',
@@ -582,22 +619,32 @@
         'chargeables': 'chargeables'
       };
 
-      Object.keys(data).forEach(dataKey => {
+      // Populate fields using getValue helper for nested data support
+      Object.keys(fieldMapping).forEach(dataKey => {
         const formFieldId = fieldMapping[dataKey];
-        if (!formFieldId) return;
+        const value = getValue(dataKey);
+        
+        if (value === null) {
+          // Only log missing values for important fields to avoid console spam
+          if (['name', 'email', 'customerName', 'customerEmail', 'phone', 'customerPhone', 'clientMobileNumber', 'amount'].includes(dataKey)) {
+            console.log(`⚠️ No value found for ${dataKey} → ${formFieldId}`);
+          }
+          return;
+        }
         
         const field = document.getElementById(formFieldId);
-        if (field && data[dataKey]) {
+        if (field) {
+          console.log(`✅ Setting ${formFieldId} = ${value} (from ${dataKey})`);
           if (field.type === 'checkbox') {
             // Handle various truthy values
-            const val = data[dataKey];
+            const val = value;
             field.checked = val === 'Yes' || val === 'yes' || val === true || val === 'true' || val === 'Bank' || val === 'Cash' || val === 'Credit Card' || val === 'Reimbursable';
             if (field.checked) {
               field.closest('.flag-item')?.classList.add('checked');
             }
           } else if (field.type === 'datetime-local') {
             // Convert ISO date to datetime-local format
-            const date = new Date(data[dataKey]);
+            const date = new Date(value);
             if (!isNaN(date.getTime())) {
               const year = date.getFullYear();
               const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -607,8 +654,10 @@
               field.value = `${year}-${month}-${day}T${hours}:${minutes}`;
             }
           } else {
-            field.value = data[dataKey];
+            field.value = normalizeValue(value);
           }
+        } else {
+          console.warn(`⚠️ Form field not found: ${formFieldId}`);
         }
       });
 
