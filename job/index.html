@@ -901,6 +901,10 @@
         Rego: document.getElementById('rego').value.toUpperCase(),
         Type: type
       };
+      const fields = [
+        { name: 'Rego', value: data.Rego },
+        { name: 'Type', value: type }
+      ];
 
       if (type === 'Supplier') {
         data.Name = 'Mechanic';
@@ -912,6 +916,16 @@
         data.Bank_Account = document.getElementById('bankAccount').value;
         data.Supp_Email = document.getElementById('supplierEmail').value;
         data.Supp_Phone = document.getElementById('supplierPhone').value;
+        
+        fields.push({ name: 'Name', value: data.Name });
+        fields.push({ name: 'Supplier', value: data.Supplier });
+        if (data.Costings) fields.push({ name: 'Costings', value: data.Costings });
+        fields.push({ name: 'JobNotes', value: data.JobNotes });
+        fields.push({ name: 'Paid', value: data.Paid });
+        fields.push({ name: 'CloseAndPostJobForBilling', value: data.CloseAndPostJobForBilling });
+        fields.push({ name: 'Bank_Account', value: data.Bank_Account });
+        fields.push({ name: 'Supp_Email', value: data.Supp_Email });
+        fields.push({ name: 'Supp_Phone', value: data.Supp_Phone });
       }
       
       else if (type === 'Billable') {
@@ -920,6 +934,12 @@
         data.Chargeables = parseFloat(document.getElementById('amount').value) || '';
         data.Paid = document.getElementById('paidFlag').value || '';
         data.CloseAndPostJobForBilling = document.getElementById('closePostFlag').checked ? 'Yes' : 'No';
+        
+        fields.push({ name: 'Name', value: data.Name });
+        fields.push({ name: 'JobNotes', value: data.JobNotes });
+        if (data.Chargeables) fields.push({ name: 'Chargeables', value: data.Chargeables });
+        fields.push({ name: 'Paid', value: data.Paid });
+        fields.push({ name: 'CloseAndPostJobForBilling', value: data.CloseAndPostJobForBilling });
       }
       
       else if (type === 'Deposit') {
@@ -928,6 +948,12 @@
         data.JobNotes = document.getElementById('jobNotes').value;
         data.Paid = document.getElementById('paidFlag').value || '';
         data.CloseAndPostJobForBilling = document.getElementById('closePostFlag').checked ? 'Yes' : 'No';
+        
+        fields.push({ name: 'Name', value: data.Name });
+        if (data.Reimbursement) fields.push({ name: 'Reimbursement', value: data.Reimbursement });
+        fields.push({ name: 'JobNotes', value: data.JobNotes });
+        fields.push({ name: 'Paid', value: data.Paid });
+        fields.push({ name: 'CloseAndPostJobForBilling', value: data.CloseAndPostJobForBilling });
       }
       
       else if (type === 'Refund' || type === 'Reimbursement') {
@@ -935,16 +961,24 @@
         data.JobNotes = document.getElementById('jobNotes').value;
         data.Paid = document.getElementById('paidFlag').value || '';
         data.CloseAndPostJobForBilling = document.getElementById('closePostFlag').checked ? 'Yes' : 'No';
+        
+        if (data.Reimbursement) fields.push({ name: 'Reimbursement', value: data.Reimbursement });
+        fields.push({ name: 'JobNotes', value: data.JobNotes });
+        fields.push({ name: 'Paid', value: data.Paid });
+        fields.push({ name: 'CloseAndPostJobForBilling', value: data.CloseAndPostJobForBilling });
       }
       
       else if (type === 'Close Job') {
         data.JobNotes = document.getElementById('jobNotes').value;
+        fields.push({ name: 'JobNotes', value: data.JobNotes });
       }
       
       else if (type === 'DNC') {
         data.JobNotes = '[DNC]';
+        fields.push({ name: 'JobNotes', value: '[DNC]' });
       }
 
+      data.fields = fields;
       return data;
     }
 
