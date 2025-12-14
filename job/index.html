@@ -970,7 +970,9 @@
       
       else if (type === 'Close Job') {
         data.JobNotes = document.getElementById('jobNotes').value;
+        data.CloseAndPostJobForBilling = 'Yes';
         fields.push({ name: 'JobNotes', value: data.JobNotes });
+        fields.push({ name: 'CloseAndPostJobForBilling', value: 'Yes' });
       }
       
       else if (type === 'DNC') {
