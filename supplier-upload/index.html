@@ -1292,50 +1292,54 @@ function setupInvoiceForm() {
       const litresIntroduced = parseFloat(document.getElementById('litresIntroduced').value) || 0;
       const description = document.getElementById('description').value.trim();
       
-      // Build payload
+      // Build payload - always include all fields to prevent null errors in Power Automate
       const payload = {
         formType: 'fuel_extraction_job',
-        formVersion: '2.0',
+        formVersion: '2.1',
         submissionId: submissionId,
         submittedAt: new Date().toISOString(),
         
         // Flat fields for Power Automate processing
-        rego: rego,
-        supplierName: supplierName,
-        supplierEmail: supplierEmail,
-        supplierPhone: supplierPhone,
+        rego: rego || '',
+        supplierName: supplierName || '',
+        supplierEmail: supplierEmail || '',
+        supplierPhone: supplierPhone || '',
         amount: amount,
-        bankAccount: bankAccount,
+        bankAccount: bankAccount || '',
         litresExtracted: litresExtracted,
         litresIntroduced: litresIntroduced,
-        description: description,
+        description: description || '',
         
-        // Invoice link (if provided)
+        // Invoice - always include both fields (empty string if not provided)
         invoiceLink: hasLink ? invoiceLink : '',
+        invoiceFileName: '',
+        invoiceFileType: '',
+        invoiceFileSize: 0,
+        invoiceFileBase64: '',
         
         // Fields array for dynamic email builder
         fields: [
-          { name: 'Rego', value: rego },
-          { name: 'Supplier Name', value: supplierName },
-          { name: 'Supplier Email', value: supplierEmail },
+          { name: 'Rego', value: rego || '' },
+          { name: 'Supplier Name', value: supplierName || '' },
+          { name: 'Supplier Email', value: supplierEmail || '' },
           { name: 'Supplier Phone', value: supplierPhone || 'Not provided' },
           { name: 'Amount', value: '$' + amount.toFixed(2) },
-          { name: 'Bank Account', value: bankAccount },
+          { name: 'Bank Account', value: bankAccount || '' },
           { name: 'Litres Extracted', value: litresExtracted + ' L' },
           { name: 'Litres Introduced', value: litresIntroduced + ' L' },
           { name: 'Description', value: description || 'No description provided' }
         ],
         
-        // Tracking data
-        bookingId: document.getElementById('bookingId').value,
-        sessionId: document.getElementById('sessionId').value,
-        timestamp: document.getElementById('timestamp').value,
-        timezone: document.getElementById('timezone').value,
-        userAgent: document.getElementById('userAgent').value,
-        referrer: document.getElementById('referrer').value,
-        screenResolution: document.getElementById('screenResolution').value,
-        language: document.getElementById('language').value,
-        platform: document.getElementById('platform').value
+        // Tracking data - always include with defaults
+        bookingId: document.getElementById('bookingId').value || '',
+        sessionId: document.getElementById('sessionId').value || '',
+        timestamp: document.getElementById('timestamp').value || new Date().toISOString(),
+        timezone: document.getElementById('timezone').value || '',
+        userAgent: document.getElementById('userAgent').value || '',
+        referrer: document.getElementById('referrer').value || '',
+        screenResolution: document.getElementById('screenResolution').value || '',
+        language: document.getElementById('language').value || '',
+        platform: document.getElementById('platform').value || ''
       };
       
       // Add invoice link to fields if provided
