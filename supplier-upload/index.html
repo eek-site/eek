@@ -216,6 +216,171 @@
       cursor: not-allowed;
     }
 
+    /* Help Popout Modals */
+    .help-triggers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .help-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.8);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .help-trigger:hover {
+      background: rgba(255,85,0,0.2);
+      border-color: #ff5500;
+      color: #fff;
+    }
+
+    .help-trigger .help-icon {
+      font-size: 1em;
+    }
+
+    .help-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .help-modal.show {
+      display: flex;
+    }
+
+    .help-modal-content {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 550px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+      animation: modalSlide 0.3s ease;
+    }
+
+    .help-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .help-modal-header h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ff5500;
+      font-size: 1.3em;
+    }
+
+    .help-modal-close {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.6);
+      font-size: 1.5em;
+      cursor: pointer;
+      padding: 5px;
+      line-height: 1;
+    }
+
+    .help-modal-close:hover {
+      color: #fff;
+    }
+
+    .help-steps {
+      margin-bottom: 20px;
+    }
+
+    .help-step {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+    }
+
+    .help-step-number {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      background: #ff5500;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+
+    .help-step-content {
+      flex: 1;
+    }
+
+    .help-step-content strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #fff;
+    }
+
+    .help-step-content p {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    .help-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #ff5500 0%, #ff7700 100%);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .help-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(255,85,0,0.4);
+    }
+
+    .help-tip {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: rgba(255,85,0,0.1);
+      border-left: 3px solid #ff5500;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+    }
+
     /* Buttons */
     .btn {
       width: 100%;
@@ -516,13 +681,33 @@
           </div>
         </div>
 
-        <!-- Invoice Upload Section -->
+        <!-- Invoice Document Section - SIMPLE -->
         <div class="form-section">
-          <div class="form-section-title">Invoice Document</div>
+          <div class="form-section-title">Invoice <span class="required">*</span></div>
+          
           <div class="form-group">
-            <label for="invoiceFile">Upload Invoice <span class="required">*</span></label>
-            <input type="file" id="invoiceFile" name="invoiceFile" accept=".pdf,.jpg,.jpeg,.png" required>
-            <div class="help-text">Accepted: PDF, JPG, PNG (max 10MB)</div>
+            <label for="invoiceLink">Invoice Link</label>
+            <input type="url" id="invoiceLink" name="invoiceLink" placeholder="https://in.xero.com/...">
+            <div class="help-text">Paste your invoice link from Xero, MYOB, or QuickBooks</div>
+            
+            <!-- Help triggers -->
+            <div class="help-triggers">
+              <span class="help-trigger" onclick="showHelpModal('xero')">
+                <span class="help-icon">❓</span> How to get Xero link
+              </span>
+              <span class="help-trigger" onclick="showHelpModal('myob')">
+                <span class="help-icon">❓</span> How to get MYOB link
+              </span>
+              <span class="help-trigger" onclick="showHelpModal('quickbooks')">
+                <span class="help-icon">❓</span> How to get QuickBooks link
+              </span>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 16px;">
+            <label>Or upload a file instead</label>
+            <input type="file" id="invoiceFile" name="invoiceFile" accept=".pdf,.jpg,.jpeg,.png">
+            <div class="help-text">PDF, JPG, PNG (max 10MB)</div>
           </div>
         </div>
 
@@ -555,8 +740,18 @@
         <li>Invoices must include your business name and bank account details</li>
         <li>Include the vehicle registration and job description</li>
         <li>Maximum file size: 10MB per document</li>
-        <li>Accepted formats: PDF, JPG, PNG</li>
+        <li>Accepted formats: PDF, JPG, PNG — or paste a link from Xero/MYOB</li>
         <li>Ensure all figures are clearly legible</li>
+      </ul>
+    </div>
+
+    <div class="upload-guidelines">
+      <h4>🔗 Using Invoice Links</h4>
+      <ul>
+        <li>Copy the invoice link directly from Xero, MYOB, or your accounting software</li>
+        <li>In Xero: Click "Email" on the invoice, then copy the online invoice link</li>
+        <li>We'll store the link with your submission for reference</li>
+        <li>If you prefer, you can also upload a PDF copy instead</li>
       </ul>
     </div>
 
@@ -599,7 +794,185 @@
 
 <!-- Footer injected by footer-new.js -->
 
+<!-- Help Modals -->
+<!-- Xero Help Modal -->
+<div class="help-modal" id="helpModalXero">
+  <div class="help-modal-content">
+    <div class="help-modal-header">
+      <h3>📘 Get Invoice Link from Xero</h3>
+      <button class="help-modal-close" onclick="closeHelpModal('xero')">&times;</button>
+    </div>
+    
+    <div class="help-steps">
+      <div class="help-step">
+        <div class="help-step-number">1</div>
+        <div class="help-step-content">
+          <strong>Open Your Invoice</strong>
+          <p>Go to Business → Invoices and find the invoice you want to share</p>
+        </div>
+      </div>
+      
+      <div class="help-step">
+        <div class="help-step-number">2</div>
+        <div class="help-step-content">
+          <strong>Click "Copy link"</strong>
+          <p>Look for the "Copy" or "Copy link" option - this creates a shareable online invoice link</p>
+        </div>
+      </div>
+      
+      <div class="help-step">
+        <div class="help-step-number">3</div>
+        <div class="help-step-content">
+          <strong>Paste the Link</strong>
+          <p>Paste the copied link into the Invoice Link field above</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="help-tip">
+      💡 <strong>Tip:</strong> Draft invoices will be automatically approved when you copy the link. The link lets us view the invoice online - it updates in real-time if you make changes.
+    </div>
+    
+    <div style="margin-top: 20px;">
+      <a href="https://central.xero.com/s/article/Share-an-online-invoice-link-with-your-customer" target="_blank" rel="noopener" class="help-link">
+        📖 View Xero Help Article →
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- MYOB Help Modal -->
+<div class="help-modal" id="helpModalMyob">
+  <div class="help-modal-content">
+    <div class="help-modal-header">
+      <h3>📗 Get Invoice Link from MYOB</h3>
+      <button class="help-modal-close" onclick="closeHelpModal('myob')">&times;</button>
+    </div>
+    
+    <div class="help-steps">
+      <div class="help-step">
+        <div class="help-step-number">1</div>
+        <div class="help-step-content">
+          <strong>Open Your Invoice</strong>
+          <p>Go to Sales → Invoices and open the invoice you want to share</p>
+        </div>
+      </div>
+      
+      <div class="help-step">
+        <div class="help-step-number">2</div>
+        <div class="help-step-content">
+          <strong>Click Share → Copy Link</strong>
+          <p>From the Share menu, select "Copy link" to generate a unique online invoice URL</p>
+        </div>
+      </div>
+      
+      <div class="help-step">
+        <div class="help-step-number">3</div>
+        <div class="help-step-content">
+          <strong>Paste the Link</strong>
+          <p>Paste the copied link into the Invoice Link field above</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="help-tip">
+      💡 <strong>Tip:</strong> Online invoices in MYOB are "live" - if you update the invoice, your customer sees the changes in real-time. You can also click "View PDF" then "Copy Link" as an alternative method.
+    </div>
+    
+    <div style="margin-top: 20px;">
+      <a href="https://www.myob.com/au/support/myob-business/sales/online-invoicing/sending-an-online-invoice-link-to-a-customer" target="_blank" rel="noopener" class="help-link">
+        📖 View MYOB Help Article →
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- QuickBooks Help Modal -->
+<div class="help-modal" id="helpModalQuickbooks">
+  <div class="help-modal-content">
+    <div class="help-modal-header">
+      <h3>📕 Get Invoice Link from QuickBooks</h3>
+      <button class="help-modal-close" onclick="closeHelpModal('quickbooks')">&times;</button>
+    </div>
+    
+    <div class="help-steps">
+      <div class="help-step">
+        <div class="help-step-number">1</div>
+        <div class="help-step-content">
+          <strong>Open Your Invoice</strong>
+          <p>Go to Sales → Customers, select the customer, then open the invoice</p>
+        </div>
+      </div>
+      
+      <div class="help-step">
+        <div class="help-step-number">2</div>
+        <div class="help-step-content">
+          <strong>Save and Share Link</strong>
+          <p>Click the dropdown arrow next to "Save and Close" and select "Share link" or "Save and share link"</p>
+        </div>
+      </div>
+      
+      <div class="help-step">
+        <div class="help-step-number">3</div>
+        <div class="help-step-content">
+          <strong>Copy and Paste</strong>
+          <p>Click "Copy link" in the popup, then paste it into the Invoice Link field above</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="help-tip">
+      💡 <strong>Note:</strong> QuickBooks requires a customer email address to be entered before the share link option becomes available. You can enter your own email as a workaround if needed.
+    </div>
+    
+    <div style="margin-top: 20px;">
+      <a href="https://quickbooks.intuit.com/learn-support/en-us/reports-and-accounting/how-do-i-send-invoices-through-text-messages/00/1107539" target="_blank" rel="noopener" class="help-link">
+        📖 View QuickBooks Help Article →
+      </a>
+    </div>
+  </div>
+</div>
+
 <script>
+// ============================================
+// HELP MODAL FUNCTIONS
+// ============================================
+function showHelpModal(platform) {
+  const modalId = 'helpModal' + platform.charAt(0).toUpperCase() + platform.slice(1);
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeHelpModal(platform) {
+  const modalId = 'helpModal' + platform.charAt(0).toUpperCase() + platform.slice(1);
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('help-modal')) {
+    e.target.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.help-modal.show').forEach(modal => {
+      modal.classList.remove('show');
+    });
+    document.body.style.overflow = '';
+  }
+});
+
 // ============================================
 // CONFIGURATION
 // ============================================
@@ -885,6 +1258,17 @@ function setupInvoiceForm() {
     submitBtn.innerHTML = '<span class="spinner"></span> Uploading...';
     
     try {
+      // Get invoice inputs
+      const invoiceFile = document.getElementById('invoiceFile');
+      const invoiceLink = document.getElementById('invoiceLink').value.trim();
+      const hasFile = invoiceFile.files.length > 0;
+      const hasLink = invoiceLink !== '';
+      
+      // Must have at least one
+      if (!hasFile && !hasLink) {
+        throw new Error('Please provide an invoice link or upload a file');
+      }
+      
       // Collect form values
       const bankAccount = bankFields.map(id => document.getElementById(id).value).join('-');
       const rego = document.getElementById('rego').value.trim();
@@ -899,7 +1283,7 @@ function setupInvoiceForm() {
       // Build payload
       const payload = {
         formType: 'fuel_extraction_job',
-        formVersion: '1.0',
+        formVersion: '2.0',
         submissionId: submissionId,
         submittedAt: new Date().toISOString(),
         
@@ -913,6 +1297,9 @@ function setupInvoiceForm() {
         litresExtracted: litresExtracted,
         litresIntroduced: litresIntroduced,
         description: description,
+        
+        // Invoice link (if provided)
+        invoiceLink: hasLink ? invoiceLink : '',
         
         // Fields array for dynamic email builder
         fields: [
@@ -939,10 +1326,14 @@ function setupInvoiceForm() {
         platform: document.getElementById('platform').value
       };
       
-      // File upload - convert to base64
-      const fileInput = document.getElementById('invoiceFile');
-      if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
+      // Add invoice link to fields if provided
+      if (hasLink) {
+        payload.fields.push({ name: 'Invoice Link', value: invoiceLink });
+      }
+      
+      // Handle file upload if provided (and no link - link takes priority)
+      if (hasFile && !hasLink) {
+        const file = invoiceFile.files[0];
         
         // Validate file size (10MB)
         if (file.size > 10 * 1024 * 1024) {
@@ -960,7 +1351,9 @@ function setupInvoiceForm() {
         window.unifiedTracking.sendTrackingData('invoice_submit_attempt', {
           formType: 'fuel_extraction_job',
           amount: amount,
-          submissionId: submissionId
+          submissionId: submissionId,
+          hasLink: hasLink,
+          hasFile: hasFile
         });
       }
       
