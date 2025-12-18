@@ -566,6 +566,30 @@
         textarea:valid:not(:placeholder-shown) {
             border-color: var(--success);
         }
+
+        /* Customer Support Section Styles */
+        .customer-support-section {
+            background: var(--gray-50);
+            padding: var(--space-xl);
+            border-radius: var(--radius-md);
+            border: 2px dashed var(--primary);
+            margin: var(--space-xl) 0;
+        }
+
+        .customer-support-section h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: var(--space-sm);
+        }
+
+        .customer-support-section .form-group {
+            margin-bottom: var(--space-lg);
+        }
+
+        .customer-support-section .info-text {
+            color: var(--gray-600);
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -598,17 +622,17 @@
                     <div class="info-text">Enter your vehicle's registration number</div>
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group customer-only-field">
                     <label for="vehicleMake">Vehicle Make</label>
                     <input type="text" id="vehicleMake" name="vehicleMake" placeholder="e.g., Toyota">
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group customer-only-field">
                     <label for="vehicleModel">Vehicle Model</label>
                     <input type="text" id="vehicleModel" name="vehicleModel" placeholder="e.g., Camry">
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group customer-only-field">
                     <label for="vehicleYear">Vehicle Year</label>
                     <input type="text" id="vehicleYear" name="vehicleYear" placeholder="e.g., 2020" maxlength="4" pattern="\d{4}" inputmode="numeric">
                 </div>
@@ -617,22 +641,29 @@
                 <div class="section-divider"></div>
                 <h2 style="color: var(--primary); margin-bottom: var(--space-lg); font-size: 1.3em;" id="contactSectionTitle">Your Information</h2>
                 
-                <div class="form-group">
+                <div class="form-group customer-only-field">
                     <label for="customerName" id="nameLabel">Your Name <span class="required">*</span></label>
                     <input type="text" id="customerName" name="customerName" required placeholder="Full name" autocomplete="name">
                 </div>
                 
-                <div class="form-group">
+                <!-- Supplier view: Customer Name (read-only, restricted data) -->
+                <div class="form-group supplier-only-field" style="display: none;">
+                    <label for="customerNameSupplier">Customer Name</label>
+                    <input type="text" id="customerNameSupplier" name="customerNameSupplier" readonly placeholder="Customer name will appear here" style="background-color: var(--gray-100);">
+                    <div class="info-text">This is the only customer information available to suppliers</div>
+                </div>
+                
+                <div class="form-group customer-only-field">
                     <label for="email" id="emailLabel">Email Address <span class="required">*</span></label>
                     <input type="email" id="email" name="email" required placeholder="your.email@example.com" autocomplete="email">
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group customer-only-field">
                     <label for="phone" id="phoneLabel">Phone Number <span class="required">*</span></label>
                     <input type="tel" id="phone" name="phone" required placeholder="+64 21 123 4567" autocomplete="tel">
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group customer-only-field">
                     <label for="preferredContact">Preferred Contact Method</label>
                     <select id="preferredContact" name="preferredContact">
                         <option value="email">Email</option>
@@ -640,6 +671,22 @@
                         <option value="text">Text Message</option>
                         <option value="any">Any Method</option>
                     </select>
+                </div>
+                
+                <!-- Supplier Information Section -->
+                <div class="form-group supplier-only-field" style="display: none;">
+                    <label for="supplierName" id="supplierNameLabel">Your Name <span class="required">*</span></label>
+                    <input type="text" id="supplierName" name="supplierName" placeholder="Your full name" autocomplete="name">
+                </div>
+                
+                <div class="form-group supplier-only-field" style="display: none;">
+                    <label for="supplierEmail" id="supplierEmailLabel">Your Email Address <span class="required">*</span></label>
+                    <input type="email" id="supplierEmail" name="supplierEmail" placeholder="your.email@example.com" autocomplete="email">
+                </div>
+                
+                <div class="form-group supplier-only-field" style="display: none;">
+                    <label for="supplierPhone" id="supplierPhoneLabel">Your Phone Number <span class="required">*</span></label>
+                    <input type="tel" id="supplierPhone" name="supplierPhone" placeholder="+64 21 123 4567" autocomplete="tel">
                 </div>
                 
                 <!-- Message Details Section -->
@@ -670,7 +717,7 @@
                 <div class="section-divider"></div>
                 <h2 style="color: var(--primary); margin-bottom: var(--space-lg); font-size: 1.3em;">Additional Information</h2>
                 
-                <div class="form-group">
+                <div class="form-group customer-only-field">
                     <label for="serviceLocation">Preferred Service Location</label>
                     <input type="text" id="serviceLocation" name="serviceLocation" placeholder="e.g., Auckland CBD, Home address" autocomplete="street-address">
                 </div>
@@ -685,9 +732,73 @@
                     </select>
                 </div>
                 
-                <div class="checkbox-group">
+                <div class="checkbox-group customer-only-field">
                     <input type="checkbox" id="allowMarketing" name="allowMarketing">
                     <label for="allowMarketing" id="marketingLabel">I'd like to receive service reminders and special offers</label>
+                </div>
+                
+                <!-- Customer Support Section (Staff Only) -->
+                <div class="section-divider customer-support-divider" style="display: none;"></div>
+                <div class="customer-support-section" style="display: none;">
+                    <h2 style="color: var(--primary); margin-bottom: var(--space-lg); font-size: 1.3em;">Customer Support (Staff Only)</h2>
+                    
+                    <div class="form-group">
+                        <label for="internalNotes">Internal Notes</label>
+                        <textarea id="internalNotes" name="internalNotes" placeholder="Add internal notes or observations about this customer interaction..." rows="4"></textarea>
+                        <div class="info-text">These notes are only visible to staff and will not be shared with the customer</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="staffPriority">Priority Level (Staff Override)</label>
+                        <select id="staffPriority" name="staffPriority">
+                            <option value="">Use customer-selected urgency</option>
+                            <option value="low">Low Priority</option>
+                            <option value="normal">Normal Priority</option>
+                            <option value="high">High Priority</option>
+                            <option value="urgent">Urgent</option>
+                            <option value="emergency">Emergency</option>
+                        </select>
+                        <div class="info-text">Override the customer's urgency selection if needed</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ticketStatus">Ticket Status</label>
+                        <select id="ticketStatus" name="ticketStatus">
+                            <option value="">Not Set</option>
+                            <option value="new">New</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="waiting-customer">Waiting for Customer</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="closed">Closed</option>
+                            <option value="escalated">Escalated</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="assignedTo">Assigned To</label>
+                        <input type="text" id="assignedTo" name="assignedTo" placeholder="Staff member name or email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="followUpDate">Follow-Up Date</label>
+                        <input type="date" id="followUpDate" name="followUpDate">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tags">Tags (comma-separated)</label>
+                        <input type="text" id="tags" name="tags" placeholder="e.g., warranty, billing, technical">
+                        <div class="info-text">Add tags to categorize this ticket</div>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="requiresEscalation" name="requiresEscalation">
+                        <label for="requiresEscalation">Requires Escalation</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="customerFollowUp" name="customerFollowUp">
+                        <label for="customerFollowUp">Schedule Customer Follow-Up</label>
+                    </div>
                 </div>
                 
                 <!-- Hidden fields for tracking -->
@@ -790,14 +901,14 @@
             supplier: {
                 pageTitle: 'Supplier Contact Form',
                 pageTagline: 'Send us a message about your service or parts',
-                sectionTitle: 'Get in Touch',
-                sectionSubtitle: 'We\'re here to help with supplier and mechanic communications',
-                contactSectionTitle: 'Your Information',
+                sectionTitle: 'Supplier Communication',
+                sectionSubtitle: 'Contact us about parts, services, or job updates',
+                contactSectionTitle: 'Supplier Information',
                 nameLabel: 'Your Name',
-                emailLabel: 'Email Address',
-                phoneLabel: 'Phone Number',
+                emailLabel: 'Your Email Address',
+                phoneLabel: 'Your Phone Number',
                 messageLabel: 'Your Message',
-                messagePlaceholder: 'Please describe your inquiry or update...',
+                messagePlaceholder: 'Please describe your inquiry, update, or message...',
                 marketingLabel: 'I\'d like to receive updates and communications',
                 submitButton: 'Send Message',
                 messageTypeOptions: [
@@ -806,6 +917,7 @@
                     { value: 'invoice', text: 'Invoice Query' },
                     { value: 'availability', text: 'Availability Check' },
                     { value: 'quote', text: 'Quote Request' },
+                    { value: 'job-update', text: 'Job Status Update' },
                     { value: 'urgent', text: 'Urgent Matter' },
                     { value: 'other', text: 'Other' }
                 ]
@@ -898,10 +1010,11 @@
         }
 
         // Populate form from booking data
-        function populateFormFromBookingData(bookingData) {
+        function populateFormFromBookingData(bookingData, contactType) {
             if (!bookingData) return;
 
             console.log('📝 Populating form from booking data:', bookingData);
+            console.log('📋 Contact type:', contactType);
 
             // Get customerData if it exists (nested structure)
             const customerData = bookingData.customerData || {};
@@ -919,75 +1032,94 @@
                 return null;
             };
 
-            // Vehicle Information
+            // Vehicle Information - ALWAYS show rego (suppliers can see this)
             const regoValue = getValue('rego', 'vehicleRego');
             if (regoValue) {
                 document.getElementById('rego').value = normalizeValue(regoValue);
             }
             
-            const makeValue = getValue('make', 'vehicleMake');
-            if (makeValue) {
-                document.getElementById('vehicleMake').value = normalizeValue(makeValue);
-            }
-            
-            const modelValue = getValue('model', 'vehicleModel');
-            if (modelValue) {
-                document.getElementById('vehicleModel').value = normalizeValue(modelValue);
-            }
-            
-            const yearValue = getValue('year', 'vehicleYear');
-            if (yearValue) {
-                document.getElementById('vehicleYear').value = normalizeValue(yearValue);
-            }
-
-            // Contact Information
-            const nameValue = getValue('name', 'customerName');
-            if (nameValue) {
-                document.getElementById('customerName').value = normalizeValue(nameValue);
-            }
-            
-            const emailValue = getValue('email', 'customerEmail');
-            if (emailValue) {
-                document.getElementById('email').value = normalizeValue(emailValue);
-            }
-            
-            const phoneValue = getValue('phone', 'customerPhone');
-            if (phoneValue) {
-                document.getElementById('phone').value = normalizeValue(phoneValue);
-            }
-
-            // Location - check root level, customerData, and trackingData
-            let locationValue = null;
-            if (bookingData.location) {
-                if (typeof bookingData.location === 'string') {
-                    locationValue = bookingData.location;
-                } else if (bookingData.location.address || bookingData.location.city) {
-                    locationValue = bookingData.location.address || bookingData.location.city;
+            // Vehicle details - only for customers
+            if (contactType !== 'supplier') {
+                const makeValue = getValue('make', 'vehicleMake');
+                if (makeValue) {
+                    document.getElementById('vehicleMake').value = normalizeValue(makeValue);
+                }
+                
+                const modelValue = getValue('model', 'vehicleModel');
+                if (modelValue) {
+                    document.getElementById('vehicleModel').value = normalizeValue(modelValue);
+                }
+                
+                const yearValue = getValue('year', 'vehicleYear');
+                if (yearValue) {
+                    document.getElementById('vehicleYear').value = normalizeValue(yearValue);
                 }
             }
-            if (!locationValue && customerData.location) {
-                locationValue = typeof customerData.location === 'string' 
-                    ? customerData.location 
-                    : (customerData.location.address || customerData.location.city || '');
-            }
-            if (!locationValue && bookingData.trackingData && bookingData.trackingData.location) {
-                try {
-                    const trackingLocation = typeof bookingData.trackingData.location === 'string'
-                        ? JSON.parse(bookingData.trackingData.location)
-                        : bookingData.trackingData.location;
-                    locationValue = trackingLocation.address || trackingLocation.city || '';
-                } catch (e) {
-                    // Ignore parse errors
+
+            // Contact Information - RESTRICTED FOR SUPPLIERS
+            if (contactType === 'supplier') {
+                // Suppliers ONLY see customer name (read-only)
+                const nameValue = getValue('name', 'customerName');
+                if (nameValue) {
+                    const supplierNameField = document.getElementById('customerNameSupplier');
+                    if (supplierNameField) {
+                        supplierNameField.value = normalizeValue(nameValue);
+                    }
+                }
+                // DO NOT populate email, phone, or any other customer details for suppliers
+                console.log('🔒 Supplier view: Only showing rego and customer name (data restricted)');
+            } else {
+                // Customers see full contact information
+                const nameValue = getValue('name', 'customerName');
+                if (nameValue) {
+                    document.getElementById('customerName').value = normalizeValue(nameValue);
+                }
+                
+                const emailValue = getValue('email', 'customerEmail');
+                if (emailValue) {
+                    document.getElementById('email').value = normalizeValue(emailValue);
+                }
+                
+                const phoneValue = getValue('phone', 'customerPhone');
+                if (phoneValue) {
+                    document.getElementById('phone').value = normalizeValue(phoneValue);
                 }
             }
-            if (locationValue) {
-                document.getElementById('serviceLocation').value = normalizeValue(locationValue);
+
+            // Location - ONLY for customers (suppliers cannot see location)
+            if (contactType !== 'supplier') {
+                let locationValue = null;
+                if (bookingData.location) {
+                    if (typeof bookingData.location === 'string') {
+                        locationValue = bookingData.location;
+                    } else if (bookingData.location.address || bookingData.location.city) {
+                        locationValue = bookingData.location.address || bookingData.location.city;
+                    }
+                }
+                if (!locationValue && customerData.location) {
+                    locationValue = typeof customerData.location === 'string' 
+                        ? customerData.location 
+                        : (customerData.location.address || customerData.location.city || '');
+                }
+                if (!locationValue && bookingData.trackingData && bookingData.trackingData.location) {
+                    try {
+                        const trackingLocation = typeof bookingData.trackingData.location === 'string'
+                            ? JSON.parse(bookingData.trackingData.location)
+                            : bookingData.trackingData.location;
+                        locationValue = trackingLocation.address || trackingLocation.city || '';
+                    } catch (e) {
+                        // Ignore parse errors
+                    }
+                }
+                if (locationValue) {
+                    document.getElementById('serviceLocation').value = normalizeValue(locationValue);
+                }
             }
 
-            console.log('✅ Form populated from booking data');
+            console.log('✅ Form populated from booking data (with data restrictions applied)');
         }
 
-        // Update page language based on contact type
+        // Update page language and form visibility based on contact type
         function updatePageLanguage(contactType) {
             const config = CONTACT_TYPE_CONFIG[contactType] || CONTACT_TYPE_CONFIG.customer;
             
@@ -998,12 +1130,69 @@
             document.getElementById('sectionSubtitle').textContent = config.sectionSubtitle;
             document.getElementById('contactSectionTitle').textContent = config.contactSectionTitle;
             
-            // Update labels
-            document.getElementById('nameLabel').innerHTML = config.nameLabel + ' <span class="required">*</span>';
-            document.getElementById('emailLabel').innerHTML = config.emailLabel + ' <span class="required">*</span>';
-            document.getElementById('phoneLabel').innerHTML = config.phoneLabel + ' <span class="required">*</span>';
+            // Show/hide form sections based on contact type
+            const customerOnlyFields = document.querySelectorAll('.customer-only-field');
+            const supplierOnlyFields = document.querySelectorAll('.supplier-only-field');
+            
+            if (contactType === 'supplier') {
+                // Hide customer-only fields
+                customerOnlyFields.forEach(field => {
+                    field.style.display = 'none';
+                });
+                // Show supplier-only fields
+                supplierOnlyFields.forEach(field => {
+                    field.style.display = 'block';
+                });
+                // Update supplier-specific labels
+                const supplierNameLabel = document.getElementById('supplierNameLabel');
+                const supplierEmailLabel = document.getElementById('supplierEmailLabel');
+                const supplierPhoneLabel = document.getElementById('supplierPhoneLabel');
+                if (supplierNameLabel) supplierNameLabel.innerHTML = config.nameLabel + ' <span class="required">*</span>';
+                if (supplierEmailLabel) supplierEmailLabel.innerHTML = config.emailLabel + ' <span class="required">*</span>';
+                if (supplierPhoneLabel) supplierPhoneLabel.innerHTML = config.phoneLabel + ' <span class="required">*</span>';
+                // Make supplier fields required
+                const supplierName = document.getElementById('supplierName');
+                const supplierEmail = document.getElementById('supplierEmail');
+                const supplierPhone = document.getElementById('supplierPhone');
+                if (supplierName) supplierName.required = true;
+                if (supplierEmail) supplierEmail.required = true;
+                if (supplierPhone) supplierPhone.required = true;
+                // Make customer fields not required (they're hidden)
+                document.getElementById('customerName').required = false;
+                document.getElementById('email').required = false;
+                document.getElementById('phone').required = false;
+            } else {
+                // Show customer-only fields
+                customerOnlyFields.forEach(field => {
+                    field.style.display = 'block';
+                });
+                // Hide supplier-only fields
+                supplierOnlyFields.forEach(field => {
+                    field.style.display = 'none';
+                });
+                // Update customer labels
+                document.getElementById('nameLabel').innerHTML = config.nameLabel + ' <span class="required">*</span>';
+                document.getElementById('emailLabel').innerHTML = config.emailLabel + ' <span class="required">*</span>';
+                document.getElementById('phoneLabel').innerHTML = config.phoneLabel + ' <span class="required">*</span>';
+                // Make customer fields required
+                document.getElementById('customerName').required = true;
+                document.getElementById('email').required = true;
+                document.getElementById('phone').required = true;
+                // Make supplier fields not required (they're hidden)
+                const supplierName = document.getElementById('supplierName');
+                const supplierEmail = document.getElementById('supplierEmail');
+                const supplierPhone = document.getElementById('supplierPhone');
+                if (supplierName) supplierName.required = false;
+                if (supplierEmail) supplierEmail.required = false;
+                if (supplierPhone) supplierPhone.required = false;
+            }
+            
+            // Update labels (for visible fields)
             document.getElementById('messageLabel').innerHTML = config.messageLabel + ' <span class="required">*</span>';
-            document.getElementById('marketingLabel').textContent = config.marketingLabel;
+            const marketingLabel = document.getElementById('marketingLabel');
+            if (marketingLabel && contactType !== 'supplier') {
+                marketingLabel.textContent = config.marketingLabel;
+            }
             document.getElementById('submitBtn').textContent = config.submitButton;
             
             // Update placeholders
@@ -1023,6 +1212,8 @@
             
             // Update document title
             document.title = config.pageTitle + ' - Eek Mechanical';
+            
+            console.log('✅ Form updated for contact type:', contactType);
         }
 
         // Get URL parameters (in case you pass data from email/SMS)
@@ -1128,25 +1319,61 @@
             let bookingId = null;
             let contactType = 'customer'; // Default to customer
             
-            // Decode hash to get bookingId and contactType
+            // Decode hash to get bookingId, contactType, customerSupport, and supplierSupport
+            let customerSupport = false;
+            let supplierSupport = false;
             if (encodedData) {
                 const decodedData = decodeBase64(encodedData);
                 if (decodedData) {
                     bookingId = decodedData.bookingId || null;
                     contactType = decodedData.contactType || decodedData.contacttype || 'customer';
+                    // Check for customerSupport parameter (case-insensitive)
+                    const customerSupportValue = decodedData.customerSupport || decodedData.customersupport || decodedData.customer_support || '';
+                    customerSupport = customerSupportValue === 'true' || customerSupportValue === true;
+                    // Check for supplierSupport parameter (case-insensitive)
+                    const supplierSupportValue = decodedData.supplierSupport || decodedData.suppliersupport || decodedData.supplier_support || '';
+                    supplierSupport = supplierSupportValue === 'true' || supplierSupportValue === true;
                     
-                    console.log('📋 Decoded hash data:', { bookingId, contactType });
+                    console.log('📋 Decoded hash data:', { bookingId, contactType, customerSupport, supplierSupport });
                 }
             } else {
                 // Fall back to regular URL parameters (for backward compatibility)
                 bookingId = getUrlParameter('bookingId');
                 contactType = getUrlParameter('contactType') || getUrlParameter('contacttype') || 'customer';
+                const customerSupportValue = getUrlParameter('customerSupport') || getUrlParameter('customersupport') || getUrlParameter('customer_support') || '';
+                customerSupport = customerSupportValue === 'true' || customerSupportValue === true;
+                const supplierSupportValue = getUrlParameter('supplierSupport') || getUrlParameter('suppliersupport') || getUrlParameter('supplier_support') || '';
+                supplierSupport = supplierSupportValue === 'true' || supplierSupportValue === true;
             }
             
             // Validate contactType
             if (!['customer', 'supplier', 'seller'].includes(contactType)) {
                 console.warn('⚠️ Invalid contactType, defaulting to customer:', contactType);
                 contactType = 'customer';
+            }
+            
+            // Show/hide customer support section based on customerSupport OR supplierSupport flag
+            const customerSupportSection = document.querySelector('.customer-support-section');
+            const customerSupportDivider = document.querySelector('.customer-support-divider');
+            const showStaffItems = (contactType === 'customer' && customerSupport === true) || 
+                                  (contactType === 'supplier' && supplierSupport === true);
+            
+            if (showStaffItems) {
+                if (customerSupportSection) {
+                    customerSupportSection.style.display = 'block';
+                }
+                if (customerSupportDivider) {
+                    customerSupportDivider.style.display = 'block';
+                }
+                console.log('✅ Staff mode enabled - staff-only items visible for', contactType);
+            } else {
+                if (customerSupportSection) {
+                    customerSupportSection.style.display = 'none';
+                }
+                if (customerSupportDivider) {
+                    customerSupportDivider.style.display = 'none';
+                }
+                console.log('ℹ️', contactType, 'view - staff-only items hidden');
             }
             
             // Set contactType in hidden field
@@ -1164,7 +1391,7 @@
                 try {
                     const bookingData = await fetchBookingDataFromSharePoint(bookingId);
                     if (bookingData) {
-                        populateFormFromBookingData(bookingData);
+                        populateFormFromBookingData(bookingData, contactType);
                     } else {
                         console.log('ℹ️ No booking data found, form will remain empty');
                     }
@@ -1222,14 +1449,29 @@
         
         // Create a hash of form data to detect duplicates
         function createFormHash(data) {
-            const keyFields = [
-                data.rego,
-                data.customerName,
-                data.email,
-                data.phone,
-                data.messageType,
-                data.message
-            ].join('|');
+            // Use appropriate fields based on contact type
+            const contactType = data.contactType || 'customer';
+            let keyFields;
+            
+            if (contactType === 'supplier') {
+                keyFields = [
+                    data.rego,
+                    data.supplierName || '',
+                    data.supplierEmail || '',
+                    data.supplierPhone || '',
+                    data.messageType,
+                    data.message
+                ].join('|');
+            } else {
+                keyFields = [
+                    data.rego,
+                    data.customerName || '',
+                    data.email || '',
+                    data.phone || '',
+                    data.messageType,
+                    data.message
+                ].join('|');
+            }
             return btoa(keyFields).substring(0, 20); // Short hash
         }
 
@@ -1265,8 +1507,41 @@
                 data[key] = value;
             });
             
-            // Add checkbox value explicitly
-            data.allowMarketing = document.getElementById('allowMarketing').checked;
+            // Get contact type to determine which fields to include
+            const contactTypeValue = document.getElementById('contactType').value || 'customer';
+            
+            // Add checkbox value explicitly (only for customers)
+            if (contactTypeValue !== 'supplier') {
+                data.allowMarketing = document.getElementById('allowMarketing').checked;
+            }
+            
+            // For suppliers, use supplier-specific fields
+            if (contactTypeValue === 'supplier') {
+                const supplierName = document.getElementById('supplierName');
+                const supplierEmail = document.getElementById('supplierEmail');
+                const supplierPhone = document.getElementById('supplierPhone');
+                if (supplierName) data.supplierName = supplierName.value || '';
+                if (supplierEmail) data.supplierEmail = supplierEmail.value || '';
+                if (supplierPhone) data.supplierPhone = supplierPhone.value || '';
+                // Include read-only customer name (only data suppliers can see)
+                const customerNameSupplier = document.getElementById('customerNameSupplier');
+                if (customerNameSupplier) data.customerNameReadOnly = customerNameSupplier.value || '';
+            }
+            
+            // Include customer support fields if visible (staff-only)
+            const customerSupportSection = document.querySelector('.customer-support-section');
+            if (customerSupportSection && customerSupportSection.style.display !== 'none') {
+                data.internalNotes = document.getElementById('internalNotes').value || '';
+                data.staffPriority = document.getElementById('staffPriority').value || '';
+                data.ticketStatus = document.getElementById('ticketStatus').value || '';
+                data.assignedTo = document.getElementById('assignedTo').value || '';
+                data.followUpDate = document.getElementById('followUpDate').value || '';
+                data.tags = document.getElementById('tags').value || '';
+                data.requiresEscalation = document.getElementById('requiresEscalation').checked;
+                data.customerFollowUp = document.getElementById('customerFollowUp').checked;
+                data.isStaffSubmission = true;
+                console.log('📋 Including customer support fields in submission');
+            }
             
             // Check for duplicate submission (same content within 5 seconds)
             const formHash = createFormHash(data);
