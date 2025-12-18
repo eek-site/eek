@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Road and Rescue Admin</title>
+    <!-- Prevent search engine indexing - secure area -->
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        .login-container h1 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+        
+        .login-container p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 60, 114, 0.4);
+        }
+        
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8d7da;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .loading {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1e3c72;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .config-warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .config-warning strong {
+            display: block;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>ROAD AND RESCUE</h1>
+        <h2>Admin Panel Login</h2>
+        <p>Sign in with your Microsoft account to access the admin panel.</p>
+        
+        <div id="configWarning" class="config-warning" style="display: none;">
+            <strong>⚠️ Configuration Required</strong>
+            <p>Please configure authentication in <code>auth-config.js</code> before logging in.</p>
+            <ul style="margin: 10px 0 0 20px; font-size: 0.9em;">
+                <li>Set your Azure AD Client ID</li>
+                <li>Configure redirect URIs</li>
+                <li>Set SharePoint site URL</li>
+            </ul>
+        </div>
+        
+        <button id="loginBtn" class="login-btn" onclick="handleLogin()">
+            Sign in with Microsoft
+        </button>
+        
+        <div id="errorMessage" class="error-message"></div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Signing in...</p>
+        </div>
+    </div>
+    
+    <!-- MSAL.js library -->
+    <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
+    
+    <!-- Authentication configuration -->
+    <script src="auth-config.js"></script>
+    
+    <!-- Authentication helper functions -->
+    <script src="auth.js"></script>
+    
+    <script>
+        // Check if configuration is set up
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof AUTH_CONFIG === 'undefined' || 
+                AUTH_CONFIG.msalConfig.auth.clientId === 'YOUR_CLIENT_ID_HERE' ||
+                AUTH_CONFIG.msalConfig.auth.authority.includes('YOUR_TENANT')) {
+                document.getElementById('configWarning').style.display = 'block';
+                document.getElementById('loginBtn').disabled = true;
+            }
+            
+            // Check if already authenticated
+            if (typeof auth !== 'undefined' && auth.isAuthenticated()) {
+                window.location.href = 'index.html';
+            }
+        });
+        
+        // Handle login button click
+        async function handleLogin() {
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const loading = document.getElementById('loading');
+            
+            loginBtn.disabled = true;
+            errorMessage.style.display = 'none';
+            loading.style.display = 'block';
+            
+            try {
+                // Initialize auth if not already done
+                if (!auth || !auth.isAuthenticated()) {
+                    if (typeof auth === 'undefined') {
+                        throw new Error('Authentication library not loaded');
+                    }
+                    
+                    // Try popup first (better UX)
+                    try {
+                        await auth.signInPopup();
+                        // Success - redirect handled by handleResponse
+                        window.location.href = 'index.html';
+                    } catch (popupError) {
+                        // If popup fails (blocked), use redirect
+                        console.log('Popup blocked or failed, using redirect...');
+                        auth.signInRedirect();
+                        // Redirect will happen automatically
+                    }
+                } else {
+                    // Already authenticated
+                    window.location.href = 'index.html';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorMessage.textContent = 'Login failed: ' + error.message;
+                errorMessage.style.display = 'block';
+                loginBtn.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>`n    <!-- Prevent search engine indexing - secure area -->`n    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete API Number - Road and Rescue</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="forms.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ROAD AND RESCUE</h1>
+            <h2>Delete API Number</h2>
+        </header>
+        
+        <div class="form-container">
+            <a href="../../../EEK%20VBA%20Clone/Road%20and%20Rescue%20Roadside%20Assistance%20Request%20Form/admin/api-call-menu.html" class="back-button">Back to API Call Menu</a>
+            
+            <form id="deleteAPINumberForm" onsubmit="handleDeleteAPINumber(event)">
+                <div class="form-group">
+                    <label for="apiNumber">API Number *</label>
+                    <input type="text" id="apiNumber" name="apiNumber" required placeholder="Enter API number to delete">
+                    <div class="help-text">The API number to delete from the system</div>
+                </div>
+                
+                <div class="warning-box">
+                    <strong>Warning:</strong> This will permanently delete the API number from BO2 and BP2, and notify SharePoint.
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit danger">Delete API Number</button>
+                    <button type="button" class="btn-cancel" onclick="window.location.href='api-call-menu.html'">Cancel</button>
+                </div>
+            </form>
+        </div>
+        
+        <footer>
+            <button onclick="window.close()" class="btn-exit">Exit</button>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+    <script>
+        function handleDeleteAPINumber(event) {
+            event.preventDefault();
+            const apiNumber = document.getElementById('apiNumber').value.trim();
+            
+            if (!apiNumber) {
+                alert('Please enter an API number.');
+                return;
+            }
+            
+            if (!confirm(`Are you sure you want to delete API number ${apiNumber}? This action cannot be undone.`)) {
+                return;
+            }
+            
+            executeAction('DeleteAPINumber', { apiNumber: apiNumber });
+        }
+    </script>
+</body>
+</html>
+

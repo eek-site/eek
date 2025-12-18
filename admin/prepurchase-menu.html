@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>`n    <!-- Prevent search engine indexing - secure area -->`n    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prepurchase Inspection Menu - Road and Rescue</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ROAD AND RESCUE</h1>
+            <h2>Prepurchase Inspection Menu (Seller Communications)</h2>
+        </header>
+        
+        <div class="submenu-container">
+            <a href="../../../EEK%20VBA%20Clone/Road%20and%20Rescue%20Roadside%20Assistance%20Request%20Form/admin/special.html" class="back-button">Back to Special Services</a>
+            
+            <div class="action-buttons">
+                <button class="action-btn" onclick="executeAction('ExecuteCallSeller')">
+                    <strong>1. Call Seller</strong>
+                </button>
+                <button class="action-btn" onclick="executeAction('ExecuteNotifySellerEnRoute')">
+                    <strong>2. Notify Seller: Mechanic En Route / Visit Workshop</strong>
+                </button>
+                <button class="action-btn" onclick="executeAction('ExecuteRevisedETA')">
+                    <strong>3. Send Revised ETA to Seller</strong>
+                </button>
+                <button class="action-btn" onclick="executeAction('ExecuteManualMessage')">
+                    <strong>4. Send Manual Text to Seller</strong>
+                </button>
+                <button class="action-btn secondary" onclick="executeAction('PPI_SetupInspectionFolder')">
+                    <strong>5. Prepare Inspection Folder</strong>
+                </button>
+                <button class="action-btn" onclick="executeAction('PPI_SendSellerDetailsToMechanic')">
+                    <strong>6. Send Seller Details to Mechanic</strong>
+                </button>
+                <button class="action-btn secondary" onclick="executeAction('CarJam_Submenu')">
+                    <strong>7. CarJam Lookup</strong>
+                </button>
+                <button class="action-btn" onclick="executeAction('GeneratePrepurchaseReport')">
+                    <strong>8. Generate Prepurchase Report</strong>
+                </button>
+            </div>
+        </div>
+        
+        <footer>
+            <button onclick="window.close()" class="btn-exit">Exit</button>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
+

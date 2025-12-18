@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>`n    <!-- Prevent search engine indexing - secure area -->`n    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - Road and Rescue</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ROAD AND RESCUE</h1>
+            <h2>Administration</h2>
+        </header>
+        
+        <div class="submenu-container">
+            <a href="../../../EEK%20VBA%20Clone/Road%20and%20Rescue%20Roadside%20Assistance%20Request%20Form/admin/index.html" class="back-button">Back to Main Menu</a>
+            
+            <div class="action-buttons">
+                <button class="action-btn danger" onclick="executeAction('BadDebtNotice')">
+                    <strong>1. Bad Debt Notice</strong>
+                </button>
+                <button class="action-btn" onclick="executeAction('ComplaintResponse')">
+                    <strong>2. Complaint Response</strong>
+                </button>
+                <button class="action-btn danger" onclick="executeAction('AddToBlacklist')">
+                    <strong>3. Add to Blacklist</strong>
+                </button>
+                <button class="action-btn secondary" onclick="window.location.href='api-call-menu.html'">
+                    <strong>4. API Call Menu</strong>
+                </button>
+                <button class="action-btn danger" onclick="executeAction('SendDefamationNotice')">
+                    <strong>5. Send Defamation Notice</strong>
+                </button>
+                <a href="all-items.html" class="action-btn" style="text-decoration: none; display: block;">
+                    <strong>?. Show All Menu Items (Helper)</strong>
+                </a>
+            </div>
+        </div>
+        
+        <footer>
+            <button onclick="window.close()" class="btn-exit">Exit</button>
+            <a href="login.html" class="footer-login-link" title="Login">🔐</a>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
+

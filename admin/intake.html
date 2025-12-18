@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>`n    <!-- Prevent search engine indexing - secure area -->`n    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intake & Booking - Road and Rescue</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ROAD AND RESCUE</h1>
+            <h2>Intake & Booking</h2>
+        </header>
+        
+        <div class="submenu-container">
+            <a href="index.html" class="back-button">Back to Main Menu</a>
+            
+            <div class="action-buttons">
+                <button class="action-btn warning" onclick="executeAction('MarkDNCJob')">
+                    <strong>1. Mark DNC Job</strong>
+                </button>
+                <button class="action-btn" onclick="executeAction('TriageForm')">
+                    <strong>2. Triage Form</strong>
+                </button>
+                <button class="action-btn" onclick="executeAction('BookingForm')">
+                    <strong>3. Booking Form</strong>
+                </button>
+                <button class="action-btn" onclick="executeAction('AddRecordToBookingData')">
+                    <strong>4. Add Record to Booking Data</strong>
+                </button>
+                <a href="all-items.html" class="action-btn" style="text-decoration: none; display: block;">
+                    <strong>?. Show All Menu Items (Helper)</strong>
+                </a>
+            </div>
+        </div>
+        
+        <footer>
+            <button onclick="window.close()" class="btn-exit">Exit</button>
+            <a href="login.html" class="footer-login-link" title="Login">🔐</a>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
+

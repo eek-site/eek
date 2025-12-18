@@ -1,0 +1,6 @@
+# Robots.txt for Road and Rescue Admin Panel
+# This is a secure area - no robots allowed
+
+User-agent: *
+Disallow: /
+

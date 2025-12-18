@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>`n    <!-- Prevent search engine indexing - secure area -->`n    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuel Extraction Insurance Menu - Road and Rescue</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ROAD AND RESCUE</h1>
+            <h2>Fuel Extraction Insurance Menu</h2>
+        </header>
+        
+        <div class="submenu-container">
+            <a href="../../../EEK%20VBA%20Clone/Road%20and%20Rescue%20Roadside%20Assistance%20Request%20Form/admin/special.html" class="back-button">Back to Special Services</a>
+            
+            <div class="action-buttons">
+                <button class="action-btn" onclick="executeAction('CreateInsuranceFolder')">
+                    <strong>1. Create Insurance Folder</strong>
+                </button>
+                <button class="action-btn secondary" onclick="executeAction('OpenWebFormWithData')">
+                    <strong>2. Open Web Form (collect/edit data)</strong>
+                </button>
+                <button class="action-btn" onclick="executeAction('GenerateWordReportFromTable')">
+                    <strong>3. Generate Word Report (from InsurerRecord table)</strong>
+                </button>
+                <button class="action-btn" onclick="executeAction('SendInsuranceReport')">
+                    <strong>4. Send Report Email (to customer and/or insurer)</strong>
+                </button>
+            </div>
+        </div>
+        
+        <footer>
+            <button onclick="window.close()" class="btn-exit">Exit</button>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
+

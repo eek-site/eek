@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>`n    <!-- Prevent search engine indexing - secure area -->`n    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Call Menu - Road and Rescue</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ROAD AND RESCUE</h1>
+            <h2>API Call Table Menu</h2>
+        </header>
+        
+        <div class="submenu-container">
+            <a href="administration.html" class="back-button">Back to Administration</a>
+            
+            <div class="action-buttons">
+                <button class="action-btn" onclick="window.location.href='api-add-number.html'">
+                    <strong>1. Add Number</strong>
+                </button>
+                <button class="action-btn secondary" onclick="window.location.href='api-update-extension.html'">
+                    <strong>2. Update Extension</strong>
+                </button>
+                <button class="action-btn danger" onclick="window.location.href='api-delete-number.html'">
+                    <strong>3. Delete Number</strong>
+                </button>
+            </div>
+        </div>
+        
+        <footer>
+            <button onclick="window.close()" class="btn-exit">Exit</button>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
+
