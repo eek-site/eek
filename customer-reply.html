@@ -871,6 +871,10 @@
     <script>
         // SharePoint Lookup API URL
         const SHAREPOINT_LOOKUP_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c35b9414a0be42f88182ae7e6e409f1d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2ztt24wScLuAfifD0pjzovseRDKXBAEtCQtScGMgPqQ';
+        
+        // SharePoint Write API URL (SPI - SharePoint Integration)
+        // This flow should write customer reply data to SharePoint
+        const SHAREPOINT_WRITE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/d7b779dc910d4a39afb0ab37eea63aea/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SbV2SpR0S7muf9RC2KiAa6AE1CgCzqGYtTyzprK2I6I';
 
         // Contact type configuration
         const CONTACT_TYPE_CONFIG = {
@@ -1447,29 +1451,35 @@
         let lastSubmissionHash = null;
         let lastSubmissionTime = null;
         
+        // Helper function to get field value from fields array
+        function getFieldValue(fields, fieldName) {
+            const field = fields.find(f => f.name === fieldName);
+            return field ? field.value : null;
+        }
+
         // Create a hash of form data to detect duplicates
         function createFormHash(data) {
             // Use appropriate fields based on contact type
-            const contactType = data.contactType || 'customer';
+            const contactType = getFieldValue(data.fields, 'contactType') || 'customer';
             let keyFields;
             
             if (contactType === 'supplier') {
                 keyFields = [
-                    data.rego,
-                    data.supplierName || '',
-                    data.supplierEmail || '',
-                    data.supplierPhone || '',
-                    data.messageType,
-                    data.message
+                    getFieldValue(data.fields, 'rego'),
+                    getFieldValue(data.fields, 'supplierName') || '',
+                    getFieldValue(data.fields, 'supplierEmail') || '',
+                    getFieldValue(data.fields, 'supplierPhone') || '',
+                    getFieldValue(data.fields, 'messageType'),
+                    getFieldValue(data.fields, 'message')
                 ].join('|');
             } else {
                 keyFields = [
-                    data.rego,
-                    data.customerName || '',
-                    data.email || '',
-                    data.phone || '',
-                    data.messageType,
-                    data.message
+                    getFieldValue(data.fields, 'rego'),
+                    getFieldValue(data.fields, 'customerName') || '',
+                    getFieldValue(data.fields, 'email') || '',
+                    getFieldValue(data.fields, 'phone') || '',
+                    getFieldValue(data.fields, 'messageType'),
+                    getFieldValue(data.fields, 'message')
                 ].join('|');
             }
             return btoa(keyFields).substring(0, 20); // Short hash
@@ -1500,19 +1510,28 @@
             successModal.classList.remove('show');
             errorMessage.style.display = 'none';
             
-            // Collect form data
+            // Collect form data - restructure as fields array for Power Automate
             const formData = new FormData(this);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
+            const fields = [];
             
             // Get contact type to determine which fields to include
             const contactTypeValue = document.getElementById('contactType').value || 'customer';
             
+            // Collect all form fields into fields array
+            formData.forEach((value, key) => {
+                fields.push({
+                    name: key,
+                    value: value
+                });
+            });
+            
             // Add checkbox value explicitly (only for customers)
             if (contactTypeValue !== 'supplier') {
-                data.allowMarketing = document.getElementById('allowMarketing').checked;
+                const allowMarketing = document.getElementById('allowMarketing').checked;
+                fields.push({
+                    name: 'allowMarketing',
+                    value: allowMarketing
+                });
             }
             
             // For suppliers, use supplier-specific fields
@@ -1520,28 +1539,63 @@
                 const supplierName = document.getElementById('supplierName');
                 const supplierEmail = document.getElementById('supplierEmail');
                 const supplierPhone = document.getElementById('supplierPhone');
-                if (supplierName) data.supplierName = supplierName.value || '';
-                if (supplierEmail) data.supplierEmail = supplierEmail.value || '';
-                if (supplierPhone) data.supplierPhone = supplierPhone.value || '';
+                if (supplierName && supplierName.value) {
+                    fields.push({ name: 'supplierName', value: supplierName.value });
+                }
+                if (supplierEmail && supplierEmail.value) {
+                    fields.push({ name: 'supplierEmail', value: supplierEmail.value });
+                }
+                if (supplierPhone && supplierPhone.value) {
+                    fields.push({ name: 'supplierPhone', value: supplierPhone.value });
+                }
                 // Include read-only customer name (only data suppliers can see)
                 const customerNameSupplier = document.getElementById('customerNameSupplier');
-                if (customerNameSupplier) data.customerNameReadOnly = customerNameSupplier.value || '';
+                if (customerNameSupplier && customerNameSupplier.value) {
+                    fields.push({ name: 'customerNameReadOnly', value: customerNameSupplier.value });
+                }
             }
             
             // Include customer support fields if visible (staff-only)
             const customerSupportSection = document.querySelector('.customer-support-section');
             if (customerSupportSection && customerSupportSection.style.display !== 'none') {
-                data.internalNotes = document.getElementById('internalNotes').value || '';
-                data.staffPriority = document.getElementById('staffPriority').value || '';
-                data.ticketStatus = document.getElementById('ticketStatus').value || '';
-                data.assignedTo = document.getElementById('assignedTo').value || '';
-                data.followUpDate = document.getElementById('followUpDate').value || '';
-                data.tags = document.getElementById('tags').value || '';
-                data.requiresEscalation = document.getElementById('requiresEscalation').checked;
-                data.customerFollowUp = document.getElementById('customerFollowUp').checked;
-                data.isStaffSubmission = true;
+                const internalNotes = document.getElementById('internalNotes');
+                const staffPriority = document.getElementById('staffPriority');
+                const ticketStatus = document.getElementById('ticketStatus');
+                const assignedTo = document.getElementById('assignedTo');
+                const followUpDate = document.getElementById('followUpDate');
+                const tags = document.getElementById('tags');
+                const requiresEscalation = document.getElementById('requiresEscalation');
+                const customerFollowUp = document.getElementById('customerFollowUp');
+                
+                if (internalNotes && internalNotes.value) {
+                    fields.push({ name: 'internalNotes', value: internalNotes.value });
+                }
+                if (staffPriority && staffPriority.value) {
+                    fields.push({ name: 'staffPriority', value: staffPriority.value });
+                }
+                if (ticketStatus && ticketStatus.value) {
+                    fields.push({ name: 'ticketStatus', value: ticketStatus.value });
+                }
+                if (assignedTo && assignedTo.value) {
+                    fields.push({ name: 'assignedTo', value: assignedTo.value });
+                }
+                if (followUpDate && followUpDate.value) {
+                    fields.push({ name: 'followUpDate', value: followUpDate.value });
+                }
+                if (tags && tags.value) {
+                    fields.push({ name: 'tags', value: tags.value });
+                }
+                fields.push({ name: 'requiresEscalation', value: document.getElementById('requiresEscalation').checked });
+                fields.push({ name: 'customerFollowUp', value: document.getElementById('customerFollowUp').checked });
+                fields.push({ name: 'isStaffSubmission', value: true });
                 console.log('📋 Including customer support fields in submission');
             }
+            
+            // Build data object with fields array structure
+            const data = {
+                formType: 'customer_reply',
+                fields: fields
+            };
             
             // Check for duplicate submission (same content within 5 seconds)
             const formHash = createFormHash(data);
@@ -1560,36 +1614,45 @@
             lastSubmissionHash = formHash;
             lastSubmissionTime = now;
             
-            // Add form metadata
-            data.formType = 'customer_reply';
-            data.formVersion = '2.0';
-            data.submissionTimestamp = new Date().toISOString();
-            data.submissionId = submissionId; // Unique ID to track this specific submission
+            // Add form metadata to fields array
+            data.fields.push({ name: 'formVersion', value: '2.0' });
+            data.fields.push({ name: 'submissionTimestamp', value: new Date().toISOString() });
+            data.fields.push({ name: 'submissionId', value: submissionId }); // Unique ID to track this specific submission
             
             // Ensure contactType is included (from hidden field)
-            const contactTypeValue = document.getElementById('contactType').value || 'customer';
-            data.contactType = contactTypeValue;
+            const contactTypeField = data.fields.find(f => f.name === 'contactType');
+            if (!contactTypeField) {
+                data.fields.push({ name: 'contactType', value: contactTypeValue });
+            }
             
             // Include bookingId if available
             const bookingIdValue = document.getElementById('bookingId').value;
             if (bookingIdValue) {
-                data.bookingId = bookingIdValue;
+                const bookingIdField = data.fields.find(f => f.name === 'bookingId');
+                if (!bookingIdField) {
+                    data.fields.push({ name: 'bookingId', value: bookingIdValue });
+                }
             }
             
             // Track form submission attempt
             if (typeof gtag === 'function') {
                 gtag('event', 'form_submit', {
                     form_type: 'customer_reply',
-                    message_type: data.messageType,
-                    urgency: data.urgency
+                    message_type: getFieldValue(data.fields, 'messageType'),
+                    urgency: getFieldValue(data.fields, 'urgency')
                 });
             }
 
             // Track with unified tracking if available
             if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
                 try {
+                    // Convert fields array back to flat object for tracking compatibility
+                    const trackingData = { formType: data.formType };
+                    data.fields.forEach(field => {
+                        trackingData[field.name] = field.value;
+                    });
                     await window.unifiedTracking.sendTrackingData('customer_reply_submission', {
-                        ...data,
+                        ...trackingData,
                         eventType: 'customer_reply_submission',
                         formType: 'customer_reply'
                     });
@@ -1599,8 +1662,9 @@
             }
             
             try {
-                // Send to Power Automate webhook
-                const response = await fetch('https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/d7b779dc910d4a39afb0ab37eea63aea/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SbV2SpR0S7muf9RC2KiAa6AE1CgCzqGYtTyzprK2I6I', {
+                // Send to Power Automate webhook (SharePoint Integration - SPI)
+                console.log('📤 Sending data to SharePoint via Power Automate (SPI):', data);
+                const response = await fetch(SHAREPOINT_WRITE_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1608,7 +1672,18 @@
                     body: JSON.stringify(data)
                 });
                 
+                // Log response for debugging
+                let responseText = '';
+                try {
+                    responseText = await response.text();
+                    console.log('📥 SharePoint response status:', response.status);
+                    console.log('📥 SharePoint response:', responseText);
+                } catch (textError) {
+                    console.warn('⚠️ Could not read response text:', textError);
+                }
+                
                 if (response.ok) {
+                    console.log('✅ Data successfully sent to SharePoint (SPI)');
                     // Success - prevent any further submissions
                     // Keep isSubmitting = true to prevent duplicate submissions
                     // Don't reset it so form can't be submitted again
@@ -1617,7 +1692,7 @@
                     if (typeof gtag === 'function') {
                         gtag('event', 'form_submit_success', {
                             form_type: 'customer_reply',
-                            message_type: data.messageType,
+                            message_type: getFieldValue(data.fields, 'messageType'),
                             submission_id: submissionId
                         });
                     }
@@ -1625,8 +1700,13 @@
                     // Track conversion with unified tracking
                     if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
                         try {
+                            // Convert fields array back to flat object for tracking compatibility
+                            const trackingData = { formType: data.formType };
+                            data.fields.forEach(field => {
+                                trackingData[field.name] = field.value;
+                            });
                             await window.unifiedTracking.sendTrackingData('customer_reply_success', {
-                                ...data,
+                                ...trackingData,
                                 eventType: 'customer_reply_success',
                                 formType: 'customer_reply'
                             });
@@ -1702,10 +1782,22 @@
                     };
                     
                 } else {
-                    throw new Error(`Server returned ${response.status}`);
+                    // Try to parse error response
+                    let errorDetails = `Server returned ${response.status}`;
+                    try {
+                        const errorData = JSON.parse(responseText);
+                        if (errorData.error || errorData.message) {
+                            errorDetails += `: ${errorData.error || errorData.message}`;
+                        }
+                    } catch (e) {
+                        errorDetails += `: ${responseText.substring(0, 200)}`;
+                    }
+                    console.error('❌ SharePoint write failed:', errorDetails);
+                    throw new Error(errorDetails);
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('❌ Error submitting to SharePoint:', error);
+                errorMessage.textContent = `Error: ${error.message}. Please try again or contact support.`;
                 errorMessage.style.display = 'block';
                 
                 // Reset submission flag on error so user can try again
