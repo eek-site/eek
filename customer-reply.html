@@ -1435,24 +1435,23 @@
             
             let bookingId = null;
             let contactType = 'customer'; // Default to customer
+            let decodedData = {}; // Store all decoded params
             
-            // Decode hash to get bookingId, contactType, customerSupport, and supplierSupport
+            // Decode hash to get bookingId, contactType, customerSupport, supplierSupport, and contact details
             let customerSupport = false;
             let supplierSupport = false;
             if (encodedData) {
-                const decodedData = decodeBase64(encodedData);
-                if (decodedData) {
-                    bookingId = decodedData.bookingId || null;
-                    contactType = decodedData.contactType || decodedData.contacttype || 'customer';
-                    // Check for customerSupport parameter (case-insensitive)
-                    const customerSupportValue = decodedData.customerSupport || decodedData.customersupport || decodedData.customer_support || '';
-                    customerSupport = customerSupportValue === 'true' || customerSupportValue === true;
-                    // Check for supplierSupport parameter (case-insensitive)
-                    const supplierSupportValue = decodedData.supplierSupport || decodedData.suppliersupport || decodedData.supplier_support || '';
-                    supplierSupport = supplierSupportValue === 'true' || supplierSupportValue === true;
-                    
-                    console.log('📋 Decoded hash data:', { bookingId, contactType, customerSupport, supplierSupport });
-                }
+                decodedData = decodeBase64(encodedData) || {};
+                bookingId = decodedData.bookingId || null;
+                contactType = decodedData.contactType || decodedData.contacttype || 'customer';
+                // Check for customerSupport parameter (case-insensitive)
+                const customerSupportValue = decodedData.customerSupport || decodedData.customersupport || decodedData.customer_support || '';
+                customerSupport = customerSupportValue === 'true' || customerSupportValue === true;
+                // Check for supplierSupport parameter (case-insensitive)
+                const supplierSupportValue = decodedData.supplierSupport || decodedData.suppliersupport || decodedData.supplier_support || '';
+                supplierSupport = supplierSupportValue === 'true' || supplierSupportValue === true;
+                
+                console.log('📋 Decoded hash data:', decodedData);
             } else {
                 // Fall back to regular URL parameters (for backward compatibility)
                 bookingId = getUrlParameter('bookingId');
@@ -1479,10 +1478,28 @@
             // Set staff mode in hidden field
             document.getElementById('isStaffMode').value = isStaffMode ? 'true' : 'false';
             
+            // Extract supplier details from URL (supplier data comes from URL, not SharePoint)
+            const supplierDataFromUrl = {
+                supplierName: decodedData.supplierName || decodedData.suppliername || '',
+                supplierEmail: decodedData.supplierEmail || decodedData.supplieremail || '',
+                supplierPhone: decodedData.supplierPhone || decodedData.supplierphone || '',
+                rego: decodedData.rego || decodedData.vehicleRego || ''
+            };
+            console.log('📧 Supplier data from URL:', supplierDataFromUrl);
+            
             // Generate reply link for recipient (they'll use this to reply back)
             // Reply link does NOT include support flags - recipient sees normal form
+            // For suppliers, include their details in the reply link so they're pre-filled
             if (bookingId && isStaffMode) {
-                const replyBase64 = btoa(`bookingId=${bookingId}&contactType=${contactType}`);
+                let replyParams = `bookingId=${bookingId}&contactType=${contactType}`;
+                // Include supplier details in reply link so their form is pre-filled
+                if (contactType === 'supplier') {
+                    if (supplierDataFromUrl.supplierName) replyParams += `&supplierName=${encodeURIComponent(supplierDataFromUrl.supplierName)}`;
+                    if (supplierDataFromUrl.supplierEmail) replyParams += `&supplierEmail=${encodeURIComponent(supplierDataFromUrl.supplierEmail)}`;
+                    if (supplierDataFromUrl.supplierPhone) replyParams += `&supplierPhone=${encodeURIComponent(supplierDataFromUrl.supplierPhone)}`;
+                    if (supplierDataFromUrl.rego) replyParams += `&rego=${encodeURIComponent(supplierDataFromUrl.rego)}`;
+                }
+                const replyBase64 = btoa(replyParams);
                 const replyLink = `https://www.eek.nz/customer-reply?d=${replyBase64}`;
                 document.getElementById('replyLinkForRecipient').value = replyLink;
                 console.log('🔗 Reply link for recipient:', replyLink);
@@ -1519,9 +1536,46 @@
             // Update page language based on contact type AND staff mode
             updatePageLanguage(contactType, isStaffMode);
             
-            // Fetch booking data if bookingId is provided
-            if (bookingId) {
-                console.log('🔄 Fetching booking data for bookingId:', bookingId);
+            // SUPPLIER: Get details from URL params (not SharePoint)
+            if (contactType === 'supplier') {
+                console.log('📋 Supplier mode - using URL params for contact details');
+                
+                // Set rego from URL
+                if (supplierDataFromUrl.rego) {
+                    document.getElementById('rego').value = supplierDataFromUrl.rego;
+                }
+                
+                if (isStaffMode) {
+                    // STAFF → SUPPLIER: Show supplier name in read-only display
+                    const recipientDisplay = document.getElementById('recipientDisplay');
+                    if (recipientDisplay && supplierDataFromUrl.supplierName) {
+                        recipientDisplay.value = supplierDataFromUrl.supplierName;
+                    }
+                    // Store in hidden fields for submission
+                    document.getElementById('recipientNameHidden').value = supplierDataFromUrl.supplierName;
+                    document.getElementById('recipientEmailHidden').value = supplierDataFromUrl.supplierEmail;
+                    document.getElementById('recipientPhoneHidden').value = supplierDataFromUrl.supplierPhone;
+                    console.log('✅ Staff mode: Supplier recipient details loaded');
+                } else {
+                    // SUPPLIER → EEK: Pre-fill their own details
+                    const supplierNameField = document.getElementById('supplierName');
+                    const supplierEmailField = document.getElementById('supplierEmail');
+                    const supplierPhoneField = document.getElementById('supplierPhone');
+                    if (supplierNameField && supplierDataFromUrl.supplierName) {
+                        supplierNameField.value = supplierDataFromUrl.supplierName;
+                    }
+                    if (supplierEmailField && supplierDataFromUrl.supplierEmail) {
+                        supplierEmailField.value = supplierDataFromUrl.supplierEmail;
+                    }
+                    if (supplierPhoneField && supplierDataFromUrl.supplierPhone) {
+                        supplierPhoneField.value = supplierDataFromUrl.supplierPhone;
+                    }
+                    console.log('✅ Supplier mode: Contact details pre-filled from URL');
+                }
+            }
+            // CUSTOMER: Get details from SharePoint
+            else if (bookingId) {
+                console.log('🔄 Customer mode - fetching booking data from SharePoint for bookingId:', bookingId);
                 try {
                     const bookingData = await fetchBookingDataFromSharePoint(bookingId);
                     if (bookingData) {
@@ -1537,41 +1591,47 @@
                 console.log('ℹ️ No bookingId provided, form will remain empty');
             }
             
-            // Set hidden tracking fields
-            const sessionId = getOrCreateSessionId();
-            const gclid = getGCLID();
-            const utmData = getUTMData();
-            
-            document.getElementById('timestamp').value = new Date().toISOString();
-            document.getElementById('timezone').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            document.getElementById('userAgent').value = navigator.userAgent;
-            document.getElementById('referrer').value = document.referrer;
-            document.getElementById('screenResolution').value = `${screen.width}x${screen.height}`;
-            document.getElementById('language').value = navigator.language;
-            document.getElementById('platform').value = navigator.platform;
-            document.getElementById('sessionId').value = sessionId;
-            document.getElementById('gclid').value = gclid || '';
-            document.getElementById('utmSource').value = utmData.utm_source || '';
-            document.getElementById('utmMedium').value = utmData.utm_medium || '';
-            document.getElementById('utmCampaign').value = utmData.utm_campaign || '';
-            document.getElementById('utmTerm').value = utmData.utm_term || '';
-            document.getElementById('utmContent').value = utmData.utm_content || '';
+            // Set hidden tracking fields - SKIP for staff mode (no need to track internal messages)
+            if (!isStaffMode) {
+                const sessionId = getOrCreateSessionId();
+                const gclid = getGCLID();
+                const utmData = getUTMData();
+                
+                document.getElementById('timestamp').value = new Date().toISOString();
+                document.getElementById('timezone').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                document.getElementById('userAgent').value = navigator.userAgent;
+                document.getElementById('referrer').value = document.referrer;
+                document.getElementById('screenResolution').value = `${screen.width}x${screen.height}`;
+                document.getElementById('language').value = navigator.language;
+                document.getElementById('platform').value = navigator.platform;
+                document.getElementById('sessionId').value = sessionId;
+                document.getElementById('gclid').value = gclid || '';
+                document.getElementById('utmSource').value = utmData.utm_source || '';
+                document.getElementById('utmMedium').value = utmData.utm_medium || '';
+                document.getElementById('utmCampaign').value = utmData.utm_campaign || '';
+                document.getElementById('utmTerm').value = utmData.utm_term || '';
+                document.getElementById('utmContent').value = utmData.utm_content || '';
 
-            // Track page view
-            if (typeof gtag === 'function') {
-                gtag('event', 'page_view', {
-                    page_title: 'Customer Reply Form',
-                    page_location: window.location.href,
-                    page_path: window.location.pathname
-                });
-            }
+                // Track page view
+                if (typeof gtag === 'function') {
+                    gtag('event', 'page_view', {
+                        page_title: 'Customer Reply Form',
+                        page_location: window.location.href,
+                        page_path: window.location.pathname
+                    });
+                }
 
-            // Track with unified tracking if available
-            if (window.unifiedTracking && typeof window.unifiedTracking.trackEvent === 'function') {
-                window.unifiedTracking.trackEvent('form_view', {
-                    formType: 'customer_reply',
-                    pageUrl: window.location.href
-                });
+                // Track with unified tracking if available
+                if (window.unifiedTracking && typeof window.unifiedTracking.trackEvent === 'function') {
+                    window.unifiedTracking.trackEvent('form_view', {
+                        formType: 'customer_reply',
+                        pageUrl: window.location.href
+                    });
+                }
+            } else {
+                // Staff mode - just set timestamp for record keeping
+                document.getElementById('timestamp').value = new Date().toISOString();
+                console.log('⏭️ Staff mode - skipping tracking fields');
             }
         });
 
