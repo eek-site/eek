@@ -1569,8 +1569,27 @@
             }
             
             // Build final data object with fields array structure
+            // Include key fields at top level for easy access in Power Automate
+            // Pre-compute recipient so Power Automate doesn't need a switch
+            const isSupplier = contactTypeValue === 'supplier';
             const data = {
                 formType: 'customer_reply',
+                // Top-level fields for Power Automate (no filter or switch needed)
+                contactType: contactTypeValue,
+                rego: document.getElementById('rego').value || '',
+                bookingId: bookingIdValue || '',
+                isStaffSubmission: customerSupportSection && customerSupportSection.style.display !== 'none',
+                // Pre-computed recipient fields - Power Automate just uses these directly
+                recipientEmail: isSupplier 
+                    ? (document.getElementById('supplierEmail')?.value || '') 
+                    : (document.getElementById('email').value || ''),
+                recipientName: isSupplier 
+                    ? (document.getElementById('supplierName')?.value || '') 
+                    : (document.getElementById('customerName')?.value || ''),
+                recipientPhone: isSupplier 
+                    ? (document.getElementById('supplierPhone')?.value || '') 
+                    : (document.getElementById('phone')?.value || ''),
+                // Fields array for dynamic table
                 fields: fields
             };
             
