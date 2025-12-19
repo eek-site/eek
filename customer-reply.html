@@ -1451,35 +1451,29 @@
         let lastSubmissionHash = null;
         let lastSubmissionTime = null;
         
-        // Helper function to get field value from fields array
-        function getFieldValue(fields, fieldName) {
-            const field = fields.find(f => f.name === fieldName);
-            return field ? field.value : null;
-        }
-
         // Create a hash of form data to detect duplicates
         function createFormHash(data) {
             // Use appropriate fields based on contact type
-            const contactType = getFieldValue(data.fields, 'contactType') || 'customer';
+            const contactType = data.contactType || 'customer';
             let keyFields;
             
             if (contactType === 'supplier') {
                 keyFields = [
-                    getFieldValue(data.fields, 'rego'),
-                    getFieldValue(data.fields, 'supplierName') || '',
-                    getFieldValue(data.fields, 'supplierEmail') || '',
-                    getFieldValue(data.fields, 'supplierPhone') || '',
-                    getFieldValue(data.fields, 'messageType'),
-                    getFieldValue(data.fields, 'message')
+                    data.rego,
+                    data.supplierName || '',
+                    data.supplierEmail || '',
+                    data.supplierPhone || '',
+                    data.messageType,
+                    data.message
                 ].join('|');
             } else {
                 keyFields = [
-                    getFieldValue(data.fields, 'rego'),
-                    getFieldValue(data.fields, 'customerName') || '',
-                    getFieldValue(data.fields, 'email') || '',
-                    getFieldValue(data.fields, 'phone') || '',
-                    getFieldValue(data.fields, 'messageType'),
-                    getFieldValue(data.fields, 'message')
+                    data.rego,
+                    data.customerName || '',
+                    data.email || '',
+                    data.phone || '',
+                    data.messageType,
+                    data.message
                 ].join('|');
             }
             return btoa(keyFields).substring(0, 20); // Short hash
@@ -1510,28 +1504,19 @@
             successModal.classList.remove('show');
             errorMessage.style.display = 'none';
             
-            // Collect form data - restructure as fields array for Power Automate
+            // Collect form data as flat object
             const formData = new FormData(this);
-            const fields = [];
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
             
             // Get contact type to determine which fields to include
             const contactTypeValue = document.getElementById('contactType').value || 'customer';
             
-            // Collect all form fields into fields array
-            formData.forEach((value, key) => {
-                fields.push({
-                    name: key,
-                    value: value
-                });
-            });
-            
             // Add checkbox value explicitly (only for customers)
             if (contactTypeValue !== 'supplier') {
-                const allowMarketing = document.getElementById('allowMarketing').checked;
-                fields.push({
-                    name: 'allowMarketing',
-                    value: allowMarketing
-                });
+                data.allowMarketing = document.getElementById('allowMarketing').checked;
             }
             
             // For suppliers, use supplier-specific fields
@@ -1539,63 +1524,28 @@
                 const supplierName = document.getElementById('supplierName');
                 const supplierEmail = document.getElementById('supplierEmail');
                 const supplierPhone = document.getElementById('supplierPhone');
-                if (supplierName && supplierName.value) {
-                    fields.push({ name: 'supplierName', value: supplierName.value });
-                }
-                if (supplierEmail && supplierEmail.value) {
-                    fields.push({ name: 'supplierEmail', value: supplierEmail.value });
-                }
-                if (supplierPhone && supplierPhone.value) {
-                    fields.push({ name: 'supplierPhone', value: supplierPhone.value });
-                }
+                if (supplierName) data.supplierName = supplierName.value || '';
+                if (supplierEmail) data.supplierEmail = supplierEmail.value || '';
+                if (supplierPhone) data.supplierPhone = supplierPhone.value || '';
                 // Include read-only customer name (only data suppliers can see)
                 const customerNameSupplier = document.getElementById('customerNameSupplier');
-                if (customerNameSupplier && customerNameSupplier.value) {
-                    fields.push({ name: 'customerNameReadOnly', value: customerNameSupplier.value });
-                }
+                if (customerNameSupplier) data.customerNameReadOnly = customerNameSupplier.value || '';
             }
             
             // Include customer support fields if visible (staff-only)
             const customerSupportSection = document.querySelector('.customer-support-section');
             if (customerSupportSection && customerSupportSection.style.display !== 'none') {
-                const internalNotes = document.getElementById('internalNotes');
-                const staffPriority = document.getElementById('staffPriority');
-                const ticketStatus = document.getElementById('ticketStatus');
-                const assignedTo = document.getElementById('assignedTo');
-                const followUpDate = document.getElementById('followUpDate');
-                const tags = document.getElementById('tags');
-                const requiresEscalation = document.getElementById('requiresEscalation');
-                const customerFollowUp = document.getElementById('customerFollowUp');
-                
-                if (internalNotes && internalNotes.value) {
-                    fields.push({ name: 'internalNotes', value: internalNotes.value });
-                }
-                if (staffPriority && staffPriority.value) {
-                    fields.push({ name: 'staffPriority', value: staffPriority.value });
-                }
-                if (ticketStatus && ticketStatus.value) {
-                    fields.push({ name: 'ticketStatus', value: ticketStatus.value });
-                }
-                if (assignedTo && assignedTo.value) {
-                    fields.push({ name: 'assignedTo', value: assignedTo.value });
-                }
-                if (followUpDate && followUpDate.value) {
-                    fields.push({ name: 'followUpDate', value: followUpDate.value });
-                }
-                if (tags && tags.value) {
-                    fields.push({ name: 'tags', value: tags.value });
-                }
-                fields.push({ name: 'requiresEscalation', value: document.getElementById('requiresEscalation').checked });
-                fields.push({ name: 'customerFollowUp', value: document.getElementById('customerFollowUp').checked });
-                fields.push({ name: 'isStaffSubmission', value: true });
+                data.internalNotes = document.getElementById('internalNotes').value || '';
+                data.staffPriority = document.getElementById('staffPriority').value || '';
+                data.ticketStatus = document.getElementById('ticketStatus').value || '';
+                data.assignedTo = document.getElementById('assignedTo').value || '';
+                data.followUpDate = document.getElementById('followUpDate').value || '';
+                data.tags = document.getElementById('tags').value || '';
+                data.requiresEscalation = document.getElementById('requiresEscalation').checked;
+                data.customerFollowUp = document.getElementById('customerFollowUp').checked;
+                data.isStaffSubmission = true;
                 console.log('📋 Including customer support fields in submission');
             }
-            
-            // Build data object with fields array structure
-            const data = {
-                formType: 'customer_reply',
-                fields: fields
-            };
             
             // Check for duplicate submission (same content within 5 seconds)
             const formHash = createFormHash(data);
@@ -1614,45 +1564,33 @@
             lastSubmissionHash = formHash;
             lastSubmissionTime = now;
             
-            // Add form metadata to fields array
-            data.fields.push({ name: 'formVersion', value: '2.0' });
-            data.fields.push({ name: 'submissionTimestamp', value: new Date().toISOString() });
-            data.fields.push({ name: 'submissionId', value: submissionId }); // Unique ID to track this specific submission
-            
-            // Ensure contactType is included (from hidden field)
-            const contactTypeField = data.fields.find(f => f.name === 'contactType');
-            if (!contactTypeField) {
-                data.fields.push({ name: 'contactType', value: contactTypeValue });
-            }
+            // Add form metadata
+            data.formType = 'customer_reply';
+            data.formVersion = '2.0';
+            data.submissionTimestamp = new Date().toISOString();
+            data.submissionId = submissionId;
+            data.contactType = contactTypeValue;
             
             // Include bookingId if available
             const bookingIdValue = document.getElementById('bookingId').value;
             if (bookingIdValue) {
-                const bookingIdField = data.fields.find(f => f.name === 'bookingId');
-                if (!bookingIdField) {
-                    data.fields.push({ name: 'bookingId', value: bookingIdValue });
-                }
+                data.bookingId = bookingIdValue;
             }
             
             // Track form submission attempt
             if (typeof gtag === 'function') {
                 gtag('event', 'form_submit', {
                     form_type: 'customer_reply',
-                    message_type: getFieldValue(data.fields, 'messageType'),
-                    urgency: getFieldValue(data.fields, 'urgency')
+                    message_type: data.messageType,
+                    urgency: data.urgency
                 });
             }
 
             // Track with unified tracking if available
             if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
                 try {
-                    // Convert fields array back to flat object for tracking compatibility
-                    const trackingData = { formType: data.formType };
-                    data.fields.forEach(field => {
-                        trackingData[field.name] = field.value;
-                    });
                     await window.unifiedTracking.sendTrackingData('customer_reply_submission', {
-                        ...trackingData,
+                        ...data,
                         eventType: 'customer_reply_submission',
                         formType: 'customer_reply'
                     });
@@ -1692,7 +1630,7 @@
                     if (typeof gtag === 'function') {
                         gtag('event', 'form_submit_success', {
                             form_type: 'customer_reply',
-                            message_type: getFieldValue(data.fields, 'messageType'),
+                            message_type: data.messageType,
                             submission_id: submissionId
                         });
                     }
@@ -1700,13 +1638,8 @@
                     // Track conversion with unified tracking
                     if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
                         try {
-                            // Convert fields array back to flat object for tracking compatibility
-                            const trackingData = { formType: data.formType };
-                            data.fields.forEach(field => {
-                                trackingData[field.name] = field.value;
-                            });
                             await window.unifiedTracking.sendTrackingData('customer_reply_success', {
-                                ...trackingData,
+                                ...data,
                                 eventType: 'customer_reply_success',
                                 formType: 'customer_reply'
                             });
