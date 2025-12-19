@@ -641,7 +641,21 @@
                 <div class="section-divider"></div>
                 <h2 style="color: var(--primary); margin-bottom: var(--space-lg); font-size: 1.3em;" id="contactSectionTitle">Your Information</h2>
                 
-                <div class="form-group customer-only-field">
+                <!-- STAFF MODE: Read-only recipient display -->
+                <div class="form-group staff-mode-field" style="display: none;">
+                    <label for="recipientDisplay">Sending To</label>
+                    <input type="text" id="recipientDisplay" name="recipientDisplay" readonly placeholder="Recipient name" style="background-color: var(--gray-100); font-weight: 600;">
+                    <div class="info-text">Message will be sent from EEK Mechanical</div>
+                </div>
+                
+                <!-- Hidden fields for recipient info (staff mode) -->
+                <input type="hidden" id="recipientNameHidden" name="recipientNameHidden" value="">
+                <input type="hidden" id="recipientEmailHidden" name="recipientEmailHidden" value="">
+                <input type="hidden" id="recipientPhoneHidden" name="recipientPhoneHidden" value="">
+                <input type="hidden" id="isStaffMode" name="isStaffMode" value="false">
+                <input type="hidden" id="replyLinkForRecipient" name="replyLinkForRecipient" value="">
+                
+                <div class="form-group customer-only-field non-staff-field">
                     <label for="customerName" id="nameLabel">Your Name <span class="required">*</span></label>
                     <input type="text" id="customerName" name="customerName" required placeholder="Full name" autocomplete="name">
                 </div>
@@ -947,6 +961,51 @@
                     { value: 'question', text: 'Question About Inspection' },
                     { value: 'other', text: 'Other' }
                 ]
+            },
+            // STAFF MODE configurations - when staff is sending TO customers/suppliers
+            staff_to_customer: {
+                pageTitle: 'Message to Customer',
+                pageTagline: 'Send a message to this customer',
+                sectionTitle: 'Contact Customer',
+                sectionSubtitle: 'Message from EEK Mechanical',
+                contactSectionTitle: 'Recipient',
+                messageLabel: 'Your Message',
+                messagePlaceholder: 'Enter your message to the customer...',
+                submitButton: 'Send to Customer',
+                messageTypeOptions: [
+                    { value: 'booking-confirm', text: 'Booking Confirmation' },
+                    { value: 'service-update', text: 'Service Update' },
+                    { value: 'quote', text: 'Quote' },
+                    { value: 'payment-request', text: 'Payment Request' },
+                    { value: 'job-complete', text: 'Job Complete' },
+                    { value: 'inspection-ready', text: 'Inspection Report Ready' },
+                    { value: 'schedule-change', text: 'Schedule Change' },
+                    { value: 'follow-up', text: 'Follow Up' },
+                    { value: 'general', text: 'General Message' },
+                    { value: 'other', text: 'Other' }
+                ]
+            },
+            staff_to_supplier: {
+                pageTitle: 'Message to Supplier',
+                pageTagline: 'Send a message to this supplier',
+                sectionTitle: 'Contact Supplier',
+                sectionSubtitle: 'Message from EEK Mechanical',
+                contactSectionTitle: 'Recipient',
+                messageLabel: 'Your Message',
+                messagePlaceholder: 'Enter your message to the supplier...',
+                submitButton: 'Send to Supplier',
+                messageTypeOptions: [
+                    { value: 'job-assignment', text: 'Job Assignment' },
+                    { value: 'job-update', text: 'Job Update' },
+                    { value: 'job-cancellation', text: 'Job Cancellation' },
+                    { value: 'parts-request', text: 'Parts Request' },
+                    { value: 'schedule-query', text: 'Schedule Query' },
+                    { value: 'payment-sent', text: 'Payment Sent' },
+                    { value: 'availability-check', text: 'Availability Check' },
+                    { value: 'follow-up', text: 'Follow Up' },
+                    { value: 'general', text: 'General Message' },
+                    { value: 'other', text: 'Other' }
+                ]
             }
         };
 
@@ -1014,11 +1073,12 @@
         }
 
         // Populate form from booking data
-        function populateFormFromBookingData(bookingData, contactType) {
+        function populateFormFromBookingData(bookingData, contactType, isStaffMode) {
             if (!bookingData) return;
 
             console.log('📝 Populating form from booking data:', bookingData);
             console.log('📋 Contact type:', contactType);
+            console.log('👤 Staff mode:', isStaffMode);
 
             // Get customerData if it exists (nested structure)
             const customerData = bookingData.customerData || {};
@@ -1036,11 +1096,36 @@
                 return null;
             };
 
-            // Vehicle Information - ALWAYS show rego (suppliers can see this)
+            // Vehicle Information - ALWAYS show rego
             const regoValue = getValue('rego', 'vehicleRego');
             if (regoValue) {
                 document.getElementById('rego').value = normalizeValue(regoValue);
             }
+            
+            // STAFF MODE: Only show recipient context, don't populate editable contact fields
+            if (isStaffMode) {
+                // Store recipient info for display and submission
+                const recipientName = getValue('name', 'customerName', 'supplierName');
+                const recipientEmail = getValue('email', 'customerEmail', 'supplierEmail');
+                const recipientPhone = getValue('phone', 'customerPhone', 'supplierPhone');
+                
+                // Populate the read-only recipient display field
+                const recipientDisplayField = document.getElementById('recipientDisplay');
+                if (recipientDisplayField && recipientName) {
+                    recipientDisplayField.value = recipientName;
+                }
+                
+                // Store in hidden fields for submission
+                document.getElementById('recipientNameHidden').value = recipientName || '';
+                document.getElementById('recipientEmailHidden').value = recipientEmail || '';
+                document.getElementById('recipientPhoneHidden').value = recipientPhone || '';
+                
+                console.log('✅ Staff mode: Recipient context loaded (no editable contact fields)');
+                console.log('📧 Recipient:', recipientName, recipientEmail, recipientPhone);
+                return;
+            }
+            
+            // NON-STAFF MODE: Normal behavior - populate editable fields
             
             // Vehicle details - only for customers
             if (contactType !== 'supplier') {
@@ -1123,9 +1208,16 @@
             console.log('✅ Form populated from booking data (with data restrictions applied)');
         }
 
-        // Update page language and form visibility based on contact type
-        function updatePageLanguage(contactType) {
-            const config = CONTACT_TYPE_CONFIG[contactType] || CONTACT_TYPE_CONFIG.customer;
+        // Update page language and form visibility based on contact type and staff mode
+        function updatePageLanguage(contactType, isStaffMode) {
+            // Determine which config to use
+            let configKey = contactType;
+            if (isStaffMode) {
+                configKey = contactType === 'supplier' ? 'staff_to_supplier' : 'staff_to_customer';
+            }
+            const config = CONTACT_TYPE_CONFIG[configKey] || CONTACT_TYPE_CONFIG.customer;
+            
+            console.log('🎨 Updating page language for:', configKey, 'Staff mode:', isStaffMode);
             
             // Update page elements
             document.getElementById('pageTitle').textContent = config.pageTitle;
@@ -1134,19 +1226,38 @@
             document.getElementById('sectionSubtitle').textContent = config.sectionSubtitle;
             document.getElementById('contactSectionTitle').textContent = config.contactSectionTitle;
             
-            // Show/hide form sections based on contact type
+            // Show/hide form sections based on contact type AND staff mode
             const customerOnlyFields = document.querySelectorAll('.customer-only-field');
             const supplierOnlyFields = document.querySelectorAll('.supplier-only-field');
+            const staffModeFields = document.querySelectorAll('.staff-mode-field');
+            const nonStaffFields = document.querySelectorAll('.non-staff-field');
             
-            if (contactType === 'supplier') {
-                // Hide customer-only fields
-                customerOnlyFields.forEach(field => {
-                    field.style.display = 'none';
-                });
-                // Show supplier-only fields
-                supplierOnlyFields.forEach(field => {
-                    field.style.display = 'block';
-                });
+            if (isStaffMode) {
+                // STAFF MODE: Hide all contact input fields, show recipient display
+                customerOnlyFields.forEach(field => field.style.display = 'none');
+                supplierOnlyFields.forEach(field => field.style.display = 'none');
+                staffModeFields.forEach(field => field.style.display = 'block');
+                nonStaffFields.forEach(field => field.style.display = 'none');
+                
+                // Make contact fields not required (they're hidden)
+                document.getElementById('customerName').required = false;
+                document.getElementById('email').required = false;
+                document.getElementById('phone').required = false;
+                const supplierName = document.getElementById('supplierName');
+                const supplierEmail = document.getElementById('supplierEmail');
+                const supplierPhone = document.getElementById('supplierPhone');
+                if (supplierName) supplierName.required = false;
+                if (supplierEmail) supplierEmail.required = false;
+                if (supplierPhone) supplierPhone.required = false;
+                
+                console.log('✅ Staff mode UI enabled - contact fields hidden, recipient display shown');
+            } else if (contactType === 'supplier') {
+                // SUPPLIER MODE (non-staff): Supplier contacting EEK
+                customerOnlyFields.forEach(field => field.style.display = 'none');
+                supplierOnlyFields.forEach(field => field.style.display = 'block');
+                staffModeFields.forEach(field => field.style.display = 'none');
+                nonStaffFields.forEach(field => field.style.display = 'block');
+                
                 // Update supplier-specific labels
                 const supplierNameLabel = document.getElementById('supplierNameLabel');
                 const supplierEmailLabel = document.getElementById('supplierEmailLabel');
@@ -1154,6 +1265,7 @@
                 if (supplierNameLabel) supplierNameLabel.innerHTML = config.nameLabel + ' <span class="required">*</span>';
                 if (supplierEmailLabel) supplierEmailLabel.innerHTML = config.emailLabel + ' <span class="required">*</span>';
                 if (supplierPhoneLabel) supplierPhoneLabel.innerHTML = config.phoneLabel + ' <span class="required">*</span>';
+                
                 // Make supplier fields required
                 const supplierName = document.getElementById('supplierName');
                 const supplierEmail = document.getElementById('supplierEmail');
@@ -1161,27 +1273,28 @@
                 if (supplierName) supplierName.required = true;
                 if (supplierEmail) supplierEmail.required = true;
                 if (supplierPhone) supplierPhone.required = true;
+                
                 // Make customer fields not required (they're hidden)
                 document.getElementById('customerName').required = false;
                 document.getElementById('email').required = false;
                 document.getElementById('phone').required = false;
             } else {
-                // Show customer-only fields
-                customerOnlyFields.forEach(field => {
-                    field.style.display = 'block';
-                });
-                // Hide supplier-only fields
-                supplierOnlyFields.forEach(field => {
-                    field.style.display = 'none';
-                });
+                // CUSTOMER MODE (non-staff): Customer contacting EEK
+                customerOnlyFields.forEach(field => field.style.display = 'block');
+                supplierOnlyFields.forEach(field => field.style.display = 'none');
+                staffModeFields.forEach(field => field.style.display = 'none');
+                nonStaffFields.forEach(field => field.style.display = 'block');
+                
                 // Update customer labels
                 document.getElementById('nameLabel').innerHTML = config.nameLabel + ' <span class="required">*</span>';
                 document.getElementById('emailLabel').innerHTML = config.emailLabel + ' <span class="required">*</span>';
                 document.getElementById('phoneLabel').innerHTML = config.phoneLabel + ' <span class="required">*</span>';
+                
                 // Make customer fields required
                 document.getElementById('customerName').required = true;
                 document.getElementById('email').required = true;
                 document.getElementById('phone').required = true;
+                
                 // Make supplier fields not required (they're hidden)
                 const supplierName = document.getElementById('supplierName');
                 const supplierEmail = document.getElementById('supplierEmail');
@@ -1194,7 +1307,7 @@
             // Update labels (for visible fields)
             document.getElementById('messageLabel').innerHTML = config.messageLabel + ' <span class="required">*</span>';
             const marketingLabel = document.getElementById('marketingLabel');
-            if (marketingLabel && contactType !== 'supplier') {
+            if (marketingLabel && !isStaffMode && contactType !== 'supplier') {
                 marketingLabel.textContent = config.marketingLabel;
             }
             document.getElementById('submitBtn').textContent = config.submitButton;
@@ -1217,7 +1330,7 @@
             // Update document title
             document.title = config.pageTitle + ' - Eek Mechanical';
             
-            console.log('✅ Form updated for contact type:', contactType);
+            console.log('✅ Form updated for:', configKey);
         }
 
         // Get URL parameters (in case you pass data from email/SMS)
@@ -1356,13 +1469,30 @@
                 contactType = 'customer';
             }
             
-            // Show/hide customer support section based on customerSupport OR supplierSupport flag
+            // STAFF MODE: customerSupport=true (for customers) or supplierSupport=true (for suppliers)
+            // This means STAFF is sending a message TO a customer/supplier
+            const isStaffMode = (contactType === 'customer' && customerSupport === true) || 
+                               (contactType === 'supplier' && supplierSupport === true);
+            
+            console.log('👤 Staff mode:', isStaffMode);
+            
+            // Set staff mode in hidden field
+            document.getElementById('isStaffMode').value = isStaffMode ? 'true' : 'false';
+            
+            // Generate reply link for recipient (they'll use this to reply back)
+            // Reply link does NOT include support flags - recipient sees normal form
+            if (bookingId && isStaffMode) {
+                const replyBase64 = btoa(`bookingId=${bookingId}&contactType=${contactType}`);
+                const replyLink = `https://www.eek.nz/customer-reply?d=${replyBase64}`;
+                document.getElementById('replyLinkForRecipient').value = replyLink;
+                console.log('🔗 Reply link for recipient:', replyLink);
+            }
+            
+            // Show/hide customer support section (internal staff fields) - only in staff mode
             const customerSupportSection = document.querySelector('.customer-support-section');
             const customerSupportDivider = document.querySelector('.customer-support-divider');
-            const showStaffItems = (contactType === 'customer' && customerSupport === true) || 
-                                  (contactType === 'supplier' && supplierSupport === true);
             
-            if (showStaffItems) {
+            if (isStaffMode) {
                 if (customerSupportSection) {
                     customerSupportSection.style.display = 'block';
                 }
@@ -1386,8 +1516,8 @@
                 document.getElementById('bookingId').value = bookingId;
             }
             
-            // Update page language based on contact type
-            updatePageLanguage(contactType);
+            // Update page language based on contact type AND staff mode
+            updatePageLanguage(contactType, isStaffMode);
             
             // Fetch booking data if bookingId is provided
             if (bookingId) {
@@ -1395,7 +1525,7 @@
                 try {
                     const bookingData = await fetchBookingDataFromSharePoint(bookingId);
                     if (bookingData) {
-                        populateFormFromBookingData(bookingData, contactType);
+                        populateFormFromBookingData(bookingData, contactType, isStaffMode);
                     } else {
                         console.log('ℹ️ No booking data found, form will remain empty');
                     }
@@ -1572,7 +1702,15 @@
             // Include key fields at top level for easy access in Power Automate
             // Pre-compute everything so Power Automate doesn't need any conditions
             const isSupplier = contactTypeValue === 'supplier';
+            const isStaffModeValue = document.getElementById('isStaffMode').value === 'true';
             const isStaff = customerSupportSection && customerSupportSection.style.display !== 'none';
+            
+            // Get recipient info from hidden fields (populated in staff mode)
+            const recipientNameHidden = document.getElementById('recipientNameHidden').value || '';
+            const recipientEmailHidden = document.getElementById('recipientEmailHidden').value || '';
+            const recipientPhoneHidden = document.getElementById('recipientPhoneHidden').value || '';
+            const replyLinkForRecipient = document.getElementById('replyLinkForRecipient').value || '';
+            
             const data = {
                 formType: 'customer_reply',
                 // Top-level fields for Power Automate (no filter, no switch, no condition needed)
@@ -1580,25 +1718,40 @@
                 rego: document.getElementById('rego').value || '',
                 bookingId: bookingIdValue || '',
                 isStaffSubmission: isStaff,
+                isStaffMode: isStaffModeValue,
                 // Pre-computed recipient fields
-                recipientEmail: isSupplier 
-                    ? (document.getElementById('supplierEmail')?.value || '') 
-                    : (document.getElementById('email').value || ''),
-                recipientName: isSupplier 
-                    ? (document.getElementById('supplierName')?.value || '') 
-                    : (document.getElementById('customerName')?.value || ''),
-                recipientPhone: isSupplier 
-                    ? (document.getElementById('supplierPhone')?.value || '') 
-                    : (document.getElementById('phone')?.value || ''),
+                // In staff mode: use hidden fields (recipient from booking data)
+                // In non-staff mode: use form input fields (sender's own info)
+                recipientEmail: isStaffModeValue 
+                    ? recipientEmailHidden
+                    : (isSupplier 
+                        ? (document.getElementById('supplierEmail')?.value || '') 
+                        : (document.getElementById('email').value || '')),
+                recipientName: isStaffModeValue 
+                    ? recipientNameHidden
+                    : (isSupplier 
+                        ? (document.getElementById('supplierName')?.value || '') 
+                        : (document.getElementById('customerName')?.value || '')),
+                recipientPhone: isStaffModeValue 
+                    ? recipientPhoneHidden
+                    : (isSupplier 
+                        ? (document.getElementById('supplierPhone')?.value || '') 
+                        : (document.getElementById('phone')?.value || '')),
+                // Sender info (for staff mode, always EEK Mechanical)
+                senderName: isStaffModeValue ? 'EEK Mechanical' : '',
+                senderEmail: isStaffModeValue ? 'support@eek.nz' : '',
+                senderPhone: isStaffModeValue ? (isSupplier ? '09 872 4612' : '0800 769 000') : '',
                 // Pre-computed support phone (different for customer vs supplier)
                 supportPhone: isSupplier ? '09 872 4612' : '0800 769 000',
-                // Pre-computed reply link
-                replyLink: `https://www.eek.nz/customer-reply?d=${btoa('bookingId=' + (bookingIdValue || '') + '&contactType=' + contactTypeValue)}`,
+                // Reply link for recipient to respond
+                replyLink: isStaffModeValue 
+                    ? replyLinkForRecipient 
+                    : `https://www.eek.nz/customer-reply?d=${btoa('bookingId=' + (bookingIdValue || '') + '&contactType=' + contactTypeValue)}`,
                 // Pre-computed email wording
-                emailGreeting: isStaff 
+                emailGreeting: isStaffModeValue 
                     ? (isSupplier ? 'You have a new message from EEK Mechanical regarding a job.' : 'You have a new message from EEK Mechanical regarding your vehicle.')
                     : (isSupplier ? 'Thank you for contacting us. We have received your message and will review it shortly.' : 'Thank you for contacting us. We have received your message and will get back to you soon.'),
-                emailSubjectPrefix: isStaff ? 'Message from EEK Mechanical' : 'We received your message',
+                emailSubjectPrefix: isStaffModeValue ? 'Message from EEK Mechanical' : 'We received your message',
                 // Fields array for dynamic table
                 fields: fields
             };
@@ -1828,4 +1981,3 @@
     </script>
 </body>
 </html>
-
