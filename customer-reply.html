@@ -1570,16 +1570,17 @@
             
             // Build final data object with fields array structure
             // Include key fields at top level for easy access in Power Automate
-            // Pre-compute recipient so Power Automate doesn't need a switch
+            // Pre-compute everything so Power Automate doesn't need any conditions
             const isSupplier = contactTypeValue === 'supplier';
+            const isStaff = customerSupportSection && customerSupportSection.style.display !== 'none';
             const data = {
                 formType: 'customer_reply',
-                // Top-level fields for Power Automate (no filter or switch needed)
+                // Top-level fields for Power Automate (no filter, no switch, no condition needed)
                 contactType: contactTypeValue,
                 rego: document.getElementById('rego').value || '',
                 bookingId: bookingIdValue || '',
-                isStaffSubmission: customerSupportSection && customerSupportSection.style.display !== 'none',
-                // Pre-computed recipient fields - Power Automate just uses these directly
+                isStaffSubmission: isStaff,
+                // Pre-computed recipient fields
                 recipientEmail: isSupplier 
                     ? (document.getElementById('supplierEmail')?.value || '') 
                     : (document.getElementById('email').value || ''),
@@ -1589,6 +1590,15 @@
                 recipientPhone: isSupplier 
                     ? (document.getElementById('supplierPhone')?.value || '') 
                     : (document.getElementById('phone')?.value || ''),
+                // Pre-computed support phone (different for customer vs supplier)
+                supportPhone: isSupplier ? '09 872 4612' : '0800 769 000',
+                // Pre-computed reply link
+                replyLink: `https://www.eek.nz/customer-reply?d=${btoa('bookingId=' + (bookingIdValue || '') + '&contactType=' + contactTypeValue)}`,
+                // Pre-computed email wording
+                emailGreeting: isStaff 
+                    ? (isSupplier ? 'You have a new message from EEK Mechanical regarding a job.' : 'You have a new message from EEK Mechanical regarding your vehicle.')
+                    : (isSupplier ? 'Thank you for contacting us. We have received your message and will review it shortly.' : 'Thank you for contacting us. We have received your message and will get back to you soon.'),
+                emailSubjectPrefix: isStaff ? 'Message from EEK Mechanical' : 'We received your message',
                 // Fields array for dynamic table
                 fields: fields
             };
