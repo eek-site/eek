@@ -246,14 +246,6 @@ class EnhancedTrackingManager {
             });
         }
 
-        if (typeof rdt !== 'undefined') {
-            rdt('track', 'PageVisit', {
-                pageType: this.trackingData.pageType,
-                sourceType: this.trackingData.pageSource.type,
-                sessionId: this.trackingData.sessionId
-            });
-        }
-
         // Send to Power Automate API
         console.log('📤 Sending page view to API...');
         this.sendTrackingData('page_view');
@@ -457,16 +449,6 @@ class EnhancedTrackingManager {
                 session_id: this.trackingData.sessionId,
                 page_type: this.trackingData.pageType,
                 source_type: this.trackingData.pageSource.type,
-                ...additionalData
-            });
-        }
-
-        if (typeof rdt !== 'undefined') {
-            rdt('track', 'Custom', {
-                customEventName: eventName,
-                eventCategory: category,
-                eventLabel: label,
-                sessionId: this.trackingData.sessionId,
                 ...additionalData
             });
         }

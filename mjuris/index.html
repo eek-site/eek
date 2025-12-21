@@ -1317,21 +1317,6 @@
         
         // Conversion tracking removed - only purchase conversions tracked on thanks page
       }
-      
-      // Reddit Pixel tracking for legal authority interactions
-      if (typeof rdt !== 'undefined') {
-        const eventValue = getEventValue(trackingAction);
-        rdt('track', 'Lead', {
-          customEventName: 'legal_authority_' + trackingAction,
-          conversionId: `mjuris_${Date.now()}`,
-          value: eventValue,
-          currency: 'NZD',
-          eventSource: 'mjuris_portal',
-          authorityType: authorityType,
-          priority: isPriorityContact ? 'high' : 'standard',
-          gclid: gclid
-        });
-      }
     }
 
     function getEventValue(action) {

@@ -18,76 +18,12 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 
-    <!-- Reddit Pixel -->
-    <script>
-        !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
-        (window,document);
-        
-        function getEmailFromForm() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const emailParam = urlParams.get('email');
-            if (emailParam) return emailParam;
-            
-            const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"], input[id*="email"]');
-            for (let input of emailInputs) {
-                if (input.value && input.value.includes('@')) {
-                    return input.value;
-                }
-            }
-            return null;
-        }
-        
-        function getPhoneFromForm() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const phoneParam = urlParams.get('phone');
-            if (phoneParam) return phoneParam;
-            
-            const phoneInputs = document.querySelectorAll('input[type="tel"], input[name*="phone"], input[id*="phone"]');
-            for (let input of phoneInputs) {
-                if (input.value) {
-                    return input.value;
-                }
-            }
-            return null;
-        }
-        
-        function getUserId() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('uid') || urlParams.get('user_id') || urlParams.get('customer_id');
-        }
-        
-        function getMobileIds() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return {
-                idfa: urlParams.get('idfa'),
-                aaid: urlParams.get('aaid')
-            };
-        }
-        
-        const mobileIds = getMobileIds();
-        const initConfig = {};
-        
-        const email = getEmailFromForm();
-        const phoneNumber = getPhoneFromForm();
-        const externalId = getUserId();
-        
-        if (email) initConfig.email = email;
-        if (phoneNumber) initConfig.phoneNumber = phoneNumber;
-        if (externalId) initConfig.externalId = externalId;
-        if (mobileIds.idfa) initConfig.idfa = mobileIds.idfa;
-        if (mobileIds.aaid) initConfig.aaid = mobileIds.aaid;
-        
-        rdt('init', 'a2_hf16791nsdhx', Object.keys(initConfig).length > 0 ? initConfig : undefined);
-        rdt('track', 'PageVisit');
-    </script>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
+    <!-- Google Analytics (GA4 only - no ads tracking) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DQNKF1YLWR"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'AW-17084465163');
         gtag('config', 'G-DQNKF1YLWR');
     </script>
     

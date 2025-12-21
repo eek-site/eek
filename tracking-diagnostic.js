@@ -90,22 +90,10 @@ function testGoogleAnalytics() {
     }
 }
 
-// Test 4: Check Reddit Pixel
+// Test 4: Check Reddit Pixel (removed - ads tracking disabled)
 function testRedditPixel() {
     console.log('=== TEST 4: REDDIT PIXEL ===');
-    console.log('rdt function exists:', typeof rdt !== 'undefined');
-    
-    if (typeof rdt !== 'undefined') {
-        console.log('✅ Reddit Pixel is loaded');
-        // Test Reddit tracking
-        rdt('track', 'Custom', {
-            'customEventName': 'diagnostic_test',
-            'eventCategory': 'Diagnostic'
-        });
-        console.log('📊 Test event sent to Reddit Pixel');
-    } else {
-        console.error('❌ Reddit Pixel not loaded');
-    }
+    console.log('⏭️ Reddit Pixel tracking has been disabled (ads tracking removed except for thanks page)');
 }
 
 // Test 5: Check click tracking

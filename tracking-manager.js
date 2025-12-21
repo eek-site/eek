@@ -73,10 +73,6 @@ class TrackingManager {
                 'page_path': window.location.pathname
             });
         }
-
-        if (typeof rdt !== 'undefined') {
-            rdt('track', 'PageVisit');
-        }
     }
 
     /**
@@ -172,21 +168,6 @@ class TrackingManager {
             // Conversion tracking removed - only purchase conversions tracked on thanks page
         }
 
-        // Reddit Pixel tracking
-        if (typeof rdt !== 'undefined') {
-            rdt('track', 'Lead', {
-                'customEventName': 'Phone_Call_Click',
-                'conversionId': conversionId,
-                'value': eventValue,
-                'currency': 'NZD',
-                'itemCount': 1,
-                'eventSource': eventAction,
-                'eventCategory': eventCategory,
-                'serviceType': serviceType,
-                ...additionalData
-            });
-        }
-
         console.log(`📊 Tracked conversion: ${eventAction} (${eventCategory}) - Value: $${eventValue/100}`);
     }
 
@@ -203,16 +184,6 @@ class TrackingManager {
             gtag('event', eventAction, {
                 'event_category': eventCategory,
                 'event_label': eventLabel,
-                ...additionalData
-            });
-        }
-
-        // Reddit Pixel tracking
-        if (typeof rdt !== 'undefined') {
-            rdt('track', 'Custom', {
-                'customEventName': eventAction.replace(/_/g, '_'),
-                'eventCategory': eventCategory,
-                'eventLabel': eventLabel,
                 ...additionalData
             });
         }

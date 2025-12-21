@@ -10,19 +10,18 @@
   <!-- Security Headers -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
-    script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com https://googleads.g.doubleclick.net;
+    script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://js.stripe.com;
     style-src 'self' 'unsafe-inline';
     img-src 'self' data: https:;
     frame-src https://js.stripe.com https://hooks.stripe.com https://www.googletagmanager.com;
-    connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://api.stripe.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com;">
+    connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://api.stripe.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com;">
 
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
+  <!-- Google Analytics (GA4 only - no ads tracking) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DQNKF1YLWR"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'AW-17084465163');
     gtag('config', 'G-DQNKF1YLWR');
   </script>
   

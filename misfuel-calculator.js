@@ -34,14 +34,6 @@
       });
     }
 
-    // Reddit tracking
-    if (typeof rdt !== 'undefined') {
-      rdt('track', 'Custom', {
-        'customEventName': 'Misfuel_Calculator_' + eventName,
-        ...trackingData
-      });
-    }
-
     console.log(`📊 Calculator Event: ${eventName}`, trackingData);
   }
 

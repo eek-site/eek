@@ -512,14 +512,6 @@ class UnifiedTrackingSystem {
             });
         }
 
-        if (typeof rdt !== 'undefined') {
-            rdt('track', 'PageVisit', {
-                pageType: this.trackingData[this.STANDARD_FIELDS.pageType],
-                sourceType: this.trackingData.pageSource.type,
-                sessionId: this.trackingData[this.STANDARD_FIELDS.sessionId]
-            });
-        }
-
         // Send to Power Automate API
         this.sendTrackingData('page_view');
     }
@@ -802,16 +794,6 @@ class UnifiedTrackingSystem {
                 session_id: this.trackingData[this.STANDARD_FIELDS.sessionId],
                 page_type: this.trackingData[this.STANDARD_FIELDS.pageType],
                 source_type: this.trackingData.pageSource.type,
-                ...additionalData
-            });
-        }
-
-        if (typeof rdt !== 'undefined') {
-            rdt('track', 'Custom', {
-                customEventName: eventName,
-                eventCategory: category,
-                eventLabel: label,
-                sessionId: this.trackingData[this.STANDARD_FIELDS.sessionId],
                 ...additionalData
             });
         }
