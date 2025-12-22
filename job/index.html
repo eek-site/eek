@@ -897,13 +897,24 @@
     // Collect Excel-specific data (only fields relevant to job type)
     function collectExcelData() {
       const type = document.getElementById('jobType').value;
+      const booking = window.bookingData || {};
+      
       const data = {
         Rego: document.getElementById('rego').value.toUpperCase(),
-        Type: type
+        Type: type,
+        // Include booking data fields
+        Id: booking.Id || booking.SharePointId || '',
+        StartTime: booking.StartTime || '',
+        Email: booking.Email || '',
+        ClientMobileNumber: booking.ClientMobileNumber || ''
       };
       const fields = [
         { name: 'Rego', value: data.Rego },
-        { name: 'Type', value: type }
+        { name: 'Type', value: type },
+        { name: 'Id', value: data.Id },
+        { name: 'StartTime', value: data.StartTime },
+        { name: 'Email', value: data.Email },
+        { name: 'ClientMobileNumber', value: data.ClientMobileNumber }
       ];
 
       if (type === 'Supplier') {
@@ -916,6 +927,7 @@
         data.Bank_Account = document.getElementById('bankAccount').value;
         data.Supp_Email = document.getElementById('supplierEmail').value;
         data.Supp_Phone = document.getElementById('supplierPhone').value;
+        data.TextSupplier = document.getElementById('textSupplier').checked ? 'Yes' : '';
         
         fields.push({ name: 'Name', value: data.Name });
         fields.push({ name: 'Supplier', value: data.Supplier });
@@ -926,6 +938,7 @@
         fields.push({ name: 'Bank_Account', value: data.Bank_Account });
         fields.push({ name: 'Supp_Email', value: data.Supp_Email });
         fields.push({ name: 'Supp_Phone', value: data.Supp_Phone });
+        fields.push({ name: 'TextSupplier', value: data.TextSupplier });
       }
       
       else if (type === 'Billable') {
