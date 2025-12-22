@@ -1,4 +1,6 @@
 // Road and Rescue Admin Panel JavaScript
+// Version: 1.1 - Added data sanitization for flow payloads
+// Last Updated: 2025-12-23
 
 // Load API configuration
 let API_CONFIG = {};
@@ -12,6 +14,54 @@ try {
     document.head.appendChild(script);
 } catch (e) {
     console.warn('API config not loaded, using defaults');
+}
+
+/**
+ * Sanitize payload before sending to Power Automate flow
+ * Removes corrupted characters, encoding issues, and other anomalies
+ * @param {Object} payload - Payload to sanitize
+ * @returns {Object} Sanitized payload
+ */
+function sanitizePayload(payload) {
+    // Use global sanitizer if available
+    if (window.dataSanitizer) {
+        return window.dataSanitizer.sanitizeForFlow(payload);
+    }
+    
+    // Fallback basic sanitization
+    return basicSanitize(payload);
+}
+
+/**
+ * Basic fallback sanitization if data-sanitizer.js is not loaded
+ * @param {*} value - Value to sanitize
+ * @returns {*} Sanitized value
+ */
+function basicSanitize(value) {
+    if (typeof value === 'string') {
+        return value
+            .replace(/\uFFFD/g, '')           // Unicode replacement char (�)
+            .replace(/[\u200B-\u200D\uFEFF]/g, '') // Zero-width chars
+            .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '') // Control chars
+            .replace(/[\uE000-\uF8FF]/g, '')  // Private use area
+            .replace(/[\uD800-\uDFFF]/g, '')  // Invalid surrogates
+            .replace(/\s{2,}/g, ' ')          // Multiple spaces
+            .trim();
+    }
+    
+    if (Array.isArray(value)) {
+        return value.map(item => basicSanitize(item));
+    }
+    
+    if (value && typeof value === 'object') {
+        const sanitized = {};
+        for (const [key, val] of Object.entries(value)) {
+            sanitized[key] = basicSanitize(val);
+        }
+        return sanitized;
+    }
+    
+    return value;
 }
 
 /**
@@ -41,13 +91,17 @@ async function executeAction(actionName, formData = null) {
             ...formData
         };
         
+        // Sanitize payload before sending to prevent anomalies
+        const sanitizedPayload = sanitizePayload(payload);
+        console.log('🧹 Sanitized payload for flow:', sanitizedPayload);
+        
         // Execute via Power Automate
         const response = await fetch(flowUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(sanitizedPayload)
         });
         
         if (!response.ok) {
@@ -87,10 +141,14 @@ async function executeViaPowerAutomate(actionName, formData = null) {
         data: formData
     };
     
+    // Sanitize payload before sending to prevent anomalies
+    const sanitizedPayload = sanitizePayload(payload);
+    console.log('🧹 Sanitized payload for direct flow:', sanitizedPayload);
+    
     const response = await fetch(flowUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(sanitizedPayload)
     });
     
     if (!response.ok) {

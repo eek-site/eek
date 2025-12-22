@@ -30,8 +30,10 @@
     <!-- Centralized Phone Number Management -->
     <script src="/phone-manager.js?v=20251020.39"></script>
     
+    <!-- Data Sanitizer (must load before tracking systems) -->
+    <script src="/data-sanitizer.js?v=20251223.1"></script>
     <!-- Unified Tracking System -->
-    <script src="/unified-tracking.js?v=20251020.39"></script>
+    <script src="/unified-tracking.js?v=20251223.1"></script>
     
     <!-- Centralized Footer Management -->
     <script src="/footer-new.js?v=20251020.39"></script>
@@ -1795,14 +1797,19 @@
             }
             
             try {
+                // Sanitize data before sending to prevent anomalies like corrupted characters
+                const sanitizedData = window.dataSanitizer 
+                    ? window.dataSanitizer.sanitizeForFlow(data)
+                    : data;
+                
                 // Send to Power Automate webhook (SharePoint Integration - SPI)
-                console.log('📤 Sending data to SharePoint via Power Automate (SPI):', data);
+                console.log('📤 Sending data to SharePoint via Power Automate (SPI):', sanitizedData);
                 const response = await fetch(SHAREPOINT_WRITE_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(sanitizedData)
                 });
                 
                 // Log response for debugging

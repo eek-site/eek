@@ -7,17 +7,20 @@
   <meta name="description" content="Create new service jobs for Eek Mechanical">
   <meta name="robots" content="noindex, nofollow">
 
-  <!-- Security Headers - No external tracking allowed -->
+  <!-- Security Headers -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
-    script-src 'self' 'unsafe-inline';
+    script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com;
     style-src 'self' 'unsafe-inline';
-    img-src 'self' data:;
-    connect-src 'self' https://www.eek.nz https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com;
+    img-src 'self' data: https:;
+    connect-src 'self' https://www.eek.nz https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com https://cloudflareinsights.com;
     font-src 'self' data:;">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 
+  <!-- Data Sanitizer for cleaning data before sending to flows -->
+  <script src="/data-sanitizer.js?v=20251223.1"></script>
+  
   <!-- Centralized Phone Number Management -->
   <script src="/phone-manager.js"></script>
   
@@ -848,13 +851,21 @@
         const fullData = collectFormData();  // Full merged data for SharePoint
         const excelData = collectExcelData(); // Job-specific fields for Excel
 
+        // Sanitize data before sending to prevent anomalies (corrupted chars, encoding issues)
+        const sanitizedFullData = window.dataSanitizer 
+          ? window.dataSanitizer.sanitizeForFlow(fullData)
+          : fullData;
+        const sanitizedExcelData = window.dataSanitizer 
+          ? window.dataSanitizer.sanitizeForFlow(excelData)
+          : excelData;
+
         // 1. Update SharePoint with full merged data (only if we have a booking ID)
         if (sharepointId) {
-          console.log('📤 Updating SharePoint with full data:', fullData);
+          console.log('📤 Updating SharePoint with full data:', sanitizedFullData);
           const spResponse = await fetch(SHAREPOINT_UPDATE_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(fullData)
+            body: JSON.stringify(sanitizedFullData)
           });
 
           if (!spResponse.ok) {
@@ -867,11 +878,11 @@
         }
 
         // 2. Write to Excel with job-specific fields only
-        console.log('📤 Writing to Excel:', excelData);
+        console.log('📤 Writing to Excel:', sanitizedExcelData);
         const excelResponse = await fetch(EXCEL_WRITE_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(excelData)
+          body: JSON.stringify(sanitizedExcelData)
         });
 
         if (!excelResponse.ok) {

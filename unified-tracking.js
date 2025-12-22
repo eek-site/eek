@@ -2,11 +2,13 @@
  * Unified Tracking System - Single Source of Truth
  * Standardizes all tracking data, field names, and API calls across the entire platform
  * Replaces: enhanced-tracking.js, tracking-manager.js, phone-manager.js
- * Cache busting: v20251020.7
+ * Cache busting: v20251223.1
  */
 
 class UnifiedTrackingSystem {
     constructor() {
+        // Get sanitizer instance for cleaning data before flow submission
+        this.sanitizer = null; // Will be set after DOM ready
         // Standardized field names - these are the ONLY field names used across the platform
         this.STANDARD_FIELDS = {
             // Session & Identity
@@ -127,8 +129,15 @@ class UnifiedTrackingSystem {
      * Initialize the tracking system
      */
     init() {
+        // Initialize sanitizer reference
+        this.sanitizer = window.dataSanitizer || null;
+        
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.initializeTracking().catch(console.error));
+            document.addEventListener('DOMContentLoaded', () => {
+                // Re-check for sanitizer after DOM ready
+                this.sanitizer = window.dataSanitizer || null;
+                this.initializeTracking().catch(console.error);
+            });
         } else {
             this.initializeTracking().catch(console.error);
         }
@@ -1207,17 +1216,21 @@ class UnifiedTrackingSystem {
             })()
         };
 
+        // Sanitize payload before sending to prevent anomalies like corrupted characters
+        const sanitizedPayload = this.sanitizePayload(trackingPayload);
+
         console.log('📊 SENDING TRACKING DATA:', {
             eventType: eventType,
-            payload: trackingPayload,
-            payloadSize: JSON.stringify(trackingPayload).length
+            payload: sanitizedPayload,
+            payloadSize: JSON.stringify(sanitizedPayload).length,
+            wasSanitized: this.sanitizer !== null
         });
         
         // Debug Google Ads data
         console.log('🎯 Google Ads Debug:', {
-            gclid: trackingPayload.gclid,
-            utm: trackingPayload.utm,
-            pageSource: trackingPayload.pageSource
+            gclid: sanitizedPayload.gclid,
+            utm: sanitizedPayload.utm,
+            pageSource: sanitizedPayload.pageSource
         });
 
         try {
@@ -1227,7 +1240,7 @@ class UnifiedTrackingSystem {
                     'Content-Type': 'application/json',
                     'User-Agent': navigator.userAgent
                 },
-                body: JSON.stringify(trackingPayload)
+                body: JSON.stringify(sanitizedPayload)
             });
             
             console.log('📡 Tracking API Response:', {
@@ -1266,13 +1279,16 @@ class UnifiedTrackingSystem {
             paymentStatus: 'confirmed'
         };
 
+        // Sanitize payload before sending
+        const sanitizedPayload = this.sanitizePayload(payload);
+
         try {
             const response = await fetch(this.API_ENDPOINTS.paymentConfirmed, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(sanitizedPayload)
             });
             
             return response.ok;
@@ -1408,6 +1424,55 @@ class UnifiedTrackingSystem {
         if (hasSignificantChanges) {
             this.sendTrackingData(eventType, updates);
         }
+    }
+
+    /**
+     * Sanitize payload before sending to flow
+     * Removes corrupted characters, encoding issues, and other anomalies
+     * @param {Object} payload - Payload to sanitize
+     * @returns {Object} Sanitized payload
+     */
+    sanitizePayload(payload) {
+        // Use global sanitizer if available
+        if (window.dataSanitizer) {
+            return window.dataSanitizer.sanitizeForFlow(payload);
+        }
+        
+        // Fallback basic sanitization
+        return this.basicSanitize(payload);
+    }
+
+    /**
+     * Basic fallback sanitization if data-sanitizer.js is not loaded
+     * @param {*} value - Value to sanitize
+     * @returns {*} Sanitized value
+     */
+    basicSanitize(value) {
+        if (typeof value === 'string') {
+            // Remove Unicode replacement character and other common issues
+            return value
+                .replace(/\uFFFD/g, '')           // Unicode replacement char (�)
+                .replace(/[\u200B-\u200D\uFEFF]/g, '') // Zero-width chars
+                .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '') // Control chars
+                .replace(/[\uE000-\uF8FF]/g, '')  // Private use area
+                .replace(/[\uD800-\uDFFF]/g, '')  // Invalid surrogates
+                .replace(/\s{2,}/g, ' ')          // Multiple spaces
+                .trim();
+        }
+        
+        if (Array.isArray(value)) {
+            return value.map(item => this.basicSanitize(item));
+        }
+        
+        if (value && typeof value === 'object') {
+            const sanitized = {};
+            for (const [key, val] of Object.entries(value)) {
+                sanitized[key] = this.basicSanitize(val);
+            }
+            return sanitized;
+        }
+        
+        return value;
     }
 
     // Helper methods for urgency mapping

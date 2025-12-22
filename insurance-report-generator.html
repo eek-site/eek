@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EEK Insurance Report Generator</title>
+    <!-- Data Sanitizer for cleaning data before sending to flows -->
+    <script src="/data-sanitizer.js?v=20251223.1"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes slideIn {
@@ -715,6 +717,11 @@
             statusText.className = 'text-center text-lg font-semibold text-blue-600';
 
             try {
+                // Sanitize data before sending to prevent anomalies
+                const sanitizedData = window.dataSanitizer 
+                    ? window.dataSanitizer.sanitizeForFlow(data)
+                    : data;
+                
                 // Power Automate HTTP trigger URL
                 const powerAutomateURL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/410623b8b5d34c35b981a022a916a9a8/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=TW94Td80KAoXk_CEVPd7UiCRxm4ANOkVgw9yGfi1o6E';
 
@@ -723,7 +730,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(sanitizedData)
                 });
 
                 if (response.ok) {

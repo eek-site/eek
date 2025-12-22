@@ -8,14 +8,17 @@
  * - Payment: Uses empty strings (''), not null, for Power Automate Excel trim() compatibility
  * - Tracking: Can use null values where appropriate
  * 
- * Version: 1.0
- * Last Updated: 2025-01-24
+ * Version: 1.1
+ * Last Updated: 2025-12-23
  */
 
 class PaymentUtils {
     constructor() {
         // Use data repository as SSOT
         this.dataRepo = window.EekDataRepository ? new window.EekDataRepository() : null;
+        
+        // Use data sanitizer for cleaning data before sending to flows
+        this.sanitizer = window.dataSanitizer || null;
         
         if (!this.dataRepo) {
             console.warn('⚠️ EekDataRepository not found. Payment utilities may not work correctly.');
@@ -25,8 +28,9 @@ class PaymentUtils {
     /**
      * Normalize value for Power Automate Excel compatibility
      * Power Automate Excel trim() requires strings, not null
+     * Also sanitizes the value to remove corrupted characters and encoding issues
      * @param {*} value - Value to normalize
-     * @returns {string} Normalized string value
+     * @returns {string} Normalized and sanitized string value
      */
     normalizeForPayment(value) {
         // If value is undefined, null, or empty string, return empty string
@@ -38,12 +42,38 @@ class PaymentUtils {
         if (typeof value === 'string' && value.trim() === '') {
             return '';
         }
-        // If it's already a string, return as-is
+        // If it's already a string, sanitize and return
         if (typeof value === 'string') {
-            return value;
+            return this.sanitizeString(value);
         }
         // For other types (numbers, booleans), convert to string
         return String(value);
+    }
+
+    /**
+     * Sanitize a string value to remove corrupted characters and encoding issues
+     * @param {string} value - String to sanitize
+     * @returns {string} Sanitized string
+     */
+    sanitizeString(value) {
+        if (typeof value !== 'string') {
+            return value;
+        }
+        
+        // Use global sanitizer if available
+        if (window.dataSanitizer) {
+            return window.dataSanitizer.sanitizeString(value);
+        }
+        
+        // Fallback basic sanitization
+        return value
+            .replace(/\uFFFD/g, '')           // Unicode replacement char (�)
+            .replace(/[\u200B-\u200D\uFEFF]/g, '') // Zero-width chars
+            .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '') // Control chars
+            .replace(/[\uE000-\uF8FF]/g, '')  // Private use area
+            .replace(/[\uD800-\uDFFF]/g, '')  // Invalid surrogates
+            .replace(/\s{2,}/g, ' ')          // Multiple spaces
+            .trim();
     }
 
     /**
@@ -406,7 +436,51 @@ class PaymentUtils {
             }
         }
 
-        return payload;
+        // Sanitize the entire payload before returning
+        return this.sanitizePayload(payload);
+    }
+
+    /**
+     * Sanitize entire payload before sending to flow
+     * Removes corrupted characters, encoding issues, and other anomalies
+     * @param {Object} payload - Payload to sanitize
+     * @returns {Object} Sanitized payload
+     */
+    sanitizePayload(payload) {
+        console.log('🧹 Sanitizing payment payload for flow...');
+        
+        // Use global sanitizer if available
+        if (window.dataSanitizer) {
+            return window.dataSanitizer.sanitizeForFlow(payload);
+        }
+        
+        // Fallback: recursively sanitize the object
+        return this.recursiveSanitize(payload);
+    }
+
+    /**
+     * Recursively sanitize an object (fallback if sanitizer not loaded)
+     * @param {*} value - Value to sanitize
+     * @returns {*} Sanitized value
+     */
+    recursiveSanitize(value) {
+        if (typeof value === 'string') {
+            return this.sanitizeString(value);
+        }
+        
+        if (Array.isArray(value)) {
+            return value.map(item => this.recursiveSanitize(item));
+        }
+        
+        if (value && typeof value === 'object') {
+            const sanitized = {};
+            for (const [key, val] of Object.entries(value)) {
+                sanitized[key] = this.recursiveSanitize(val);
+            }
+            return sanitized;
+        }
+        
+        return value;
     }
 }
 
