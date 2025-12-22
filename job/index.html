@@ -21,11 +21,21 @@
   <!-- Centralized Phone Number Management -->
   <script src="/phone-manager.js"></script>
   
-  <!-- Unified Tracking System (Internal Analytics) -->
-  <script src="/unified-tracking.js"></script>
+  <!-- No tracking on internal job form -->
   
   <!-- Centralized Footer Management -->
   <script src="/footer-new.js"></script>
+  
+  <!-- Redirect non-EEK access to home -->
+  <script>
+    (function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      // If no ?d= parameter at all, this is not EEK-initiated - redirect
+      if (!urlParams.has('d')) {
+        window.location.href = '/?msg=unauthorized';
+      }
+    })();
+  </script>
 
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   
@@ -872,12 +882,6 @@
         
         showSuccess('Job submitted successfully!');
         
-        if (typeof gtag === 'function') {
-          gtag('event', 'form_submit_success', {
-            form_type: 'job'
-          });
-        }
-        
         // Clear form after 2 seconds
         setTimeout(() => {
           clearForm();
@@ -886,13 +890,6 @@
       } catch (error) {
         console.error('Submission error:', error);
         showError(`Failed to submit job: ${error.message}`);
-        
-        if (typeof gtag === 'function') {
-          gtag('event', 'form_submit_error', {
-            form_type: 'job',
-            error_message: error.message
-          });
-        }
       } finally {
         showLoading(false);
       }

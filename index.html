@@ -1612,6 +1612,22 @@ font-src 'self' data:;">
 <!-- Service Selection Modal - loaded from call-modal.html -->
 
 <script>
+// HANDLE REDIRECT MESSAGES
+(function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const msg = urlParams.get('msg');
+  if (msg === 'unauthorized') {
+    // Show a brief notification then clear the URL param
+    setTimeout(() => {
+      alert('Access to that page requires authorization.');
+      // Clean up URL
+      const url = new URL(window.location);
+      url.searchParams.delete('msg');
+      window.history.replaceState({}, '', url);
+    }, 100);
+  }
+})();
+
 // CENTRALIZED GCLID EXTRACTION UTILITY
 function extractGCLID(urlParams) {
   return urlParams.get('gclid') || urlParams.get('gbraid') || urlParams.get('wbraid') || null;
