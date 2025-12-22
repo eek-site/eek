@@ -838,19 +838,23 @@
         const fullData = collectFormData();  // Full merged data for SharePoint
         const excelData = collectExcelData(); // Job-specific fields for Excel
 
-        // 1. Update SharePoint with full merged data
-        console.log('📤 Updating SharePoint with full data:', fullData);
-        const spResponse = await fetch(SHAREPOINT_UPDATE_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(fullData)
-        });
+        // 1. Update SharePoint with full merged data (only if we have a booking ID)
+        if (sharepointId) {
+          console.log('📤 Updating SharePoint with full data:', fullData);
+          const spResponse = await fetch(SHAREPOINT_UPDATE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(fullData)
+          });
 
-        if (!spResponse.ok) {
-          const errorText = await spResponse.text();
-          throw new Error(`SharePoint update failed: ${spResponse.status} - ${errorText}`);
+          if (!spResponse.ok) {
+            const errorText = await spResponse.text();
+            throw new Error(`SharePoint update failed: ${spResponse.status} - ${errorText}`);
+          }
+          console.log('✅ SharePoint updated successfully');
+        } else {
+          console.log('⏭️ Skipping SharePoint update (no booking ID - manual entry mode)');
         }
-        console.log('✅ SharePoint updated successfully');
 
         // 2. Write to Excel with job-specific fields only
         console.log('📤 Writing to Excel:', excelData);
