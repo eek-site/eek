@@ -11,8 +11,11 @@
  * - Zero-width characters
  * - Invalid UTF-8 sequences
  * 
- * Version: 1.0
- * Last Updated: 2025-12-23
+ * Version: 1.1
+ * Last Updated: 2025-12-24
+ * 
+ * IMPORTANT: Date fields are sanitized to ISO 8601 format (e.g., 2025-12-24T00:00:00.000Z)
+ * Power Automate requires ISO 8601 format for formatDateTime() function to work correctly.
  */
 
 class DataSanitizer {
@@ -233,9 +236,10 @@ class DataSanitizer {
     }
 
     /**
-     * Sanitize a date string and format as NZ standard (DD/MM/YYYY)
+     * Sanitize a date string and ensure ISO 8601 format for Power Automate compatibility
+     * Power Automate requires ISO 8601 format (e.g., 2025-12-22T00:00:00.000Z)
      * @param {string} dateStr - Date string to sanitize
-     * @returns {string} Sanitized date string in DD/MM/YYYY format
+     * @returns {string} Sanitized date string in ISO 8601 format
      */
     sanitizeDate(dateStr) {
         if (typeof dateStr !== 'string') {
@@ -244,20 +248,36 @@ class DataSanitizer {
 
         // First apply general string sanitization (removes corrupted chars)
         let sanitized = this.sanitizeString(dateStr);
-
-        // If it's already in NZ format (DD/MM/YYYY), keep it
-        if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(sanitized)) {
+        
+        // If empty, return empty
+        if (!sanitized) {
             return sanitized;
         }
 
-        // Try to parse and convert to NZ format (DD/MM/YYYY)
+        // If it's already in ISO 8601 format, keep it as-is
+        if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(sanitized)) {
+            return sanitized;
+        }
+
+        // If it's in NZ format (DD/MM/YYYY), convert to ISO 8601
+        const nzMatch = sanitized.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (nzMatch) {
+            const [, day, month, year] = nzMatch;
+            try {
+                const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                if (!isNaN(date.getTime())) {
+                    return date.toISOString();
+                }
+            } catch (e) {
+                // If conversion fails, continue to general parsing
+            }
+        }
+
+        // Try to parse and convert to ISO 8601 format
         try {
             const date = new Date(sanitized);
             if (!isNaN(date.getTime())) {
-                const day = String(date.getDate()).padStart(2, '0');
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const year = date.getFullYear();
-                return `${day}/${month}/${year}`;
+                return date.toISOString();
             }
         } catch (e) {
             // If parsing fails, return the sanitized string

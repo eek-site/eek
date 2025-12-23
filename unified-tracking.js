@@ -2,7 +2,7 @@
  * Unified Tracking System - Single Source of Truth
  * Standardizes all tracking data, field names, and API calls across the entire platform
  * Replaces: enhanced-tracking.js, tracking-manager.js, phone-manager.js
- * Cache busting: v20251223.1
+ * Cache busting: v20251224.1
  */
 
 class UnifiedTrackingSystem {
