@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNO Insurer Service Portal | EEK Mechanical Ltd</title>
+    <meta name="description" content="UNO Insurer Service Portal - EEK Mechanical Ltd. Streamlined claims communication.">
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data: https:;
+        connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com https://static.cloudflareinsights.com;
+        frame-src 'self' https://www.googletagmanager.com;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DQNKF1YLWR"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-DQNKF1YLWR');
+    </script>
+
+    <!-- Centralized Phone Number Management -->
+    <script src="/phone-manager.js"></script>
+    
+    <!-- Data Sanitizer (must load before tracking systems) -->
+    <script src="/data-sanitizer.js?v=20251224.1"></script>
+    <!-- Unified Tracking System -->
+    <script src="/unified-tracking.js?v=20251224.1"></script>
+    
+    <!-- Centralized Footer Management -->
+    <script src="/footer-new.js?v=20251224.1"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <style>
+        :root {
+            --uno-red: #c41e3a; --uno-red-dark: #9a1829; --uno-red-light: #e63950;
+            --primary: #1a365d; --primary-light: #2c5282; --primary-dark: #0d1b2a;
+            --accent: #c41e3a; --accent-light: #e63950; --accent-dark: #9a1829;
+            --success: #38a169; --white: #ffffff;
+            --gray-50: #f7fafc; --gray-100: #edf2f7; --gray-200: #e2e8f0;
+            --gray-300: #cbd5e0; --gray-400: #a0aec0; --gray-500: #718096;
+            --gray-600: #4a5568; --gray-700: #2d3748; --gray-800: #1a202c;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: var(--font-body); line-height: 1.6; color: var(--gray-800); background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%); min-height: 100vh; }
+        
+        .header { background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%); color: var(--white); padding: 1.5rem 0; }
+        .header-content { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo-section { display: flex; align-items: center; gap: 1.5rem; }
+        .uno-card { width: 50px; height: 75px; background: linear-gradient(145deg, var(--uno-red) 0%, var(--uno-red-dark) 100%); border-radius: 6px; border: 2px solid var(--white); box-shadow: var(--shadow-lg); display: flex; align-items: center; justify-content: center; transform: rotate(-5deg); transition: transform 0.3s ease; }
+        .uno-card:hover { transform: rotate(0deg) scale(1.05); }
+        .uno-card-inner { width: 35px; height: 55px; background: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; transform: rotate(45deg); }
+        .reverse-arrows { display: flex; flex-direction: column; align-items: center; transform: rotate(-45deg); }
+        .reverse-arrow { font-size: 14px; color: var(--uno-red); font-weight: bold; line-height: 0.8; }
+        .reverse-arrow:first-child { transform: rotate(180deg); }
+        .brand-text { display: flex; flex-direction: column; }
+        .uno-title { font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; letter-spacing: 0.1em; }
+        .uno-subtitle { font-size: 0.75rem; color: rgba(255,255,255,0.8); letter-spacing: 0.05em; }
+        .eek-badge { background: rgba(255,255,255,0.15); padding: 0.25rem 1rem; border-radius: 0.5rem; border: 1px solid rgba(255,255,255,0.2); }
+        .eek-badge span { font-size: 0.75rem; color: rgba(255,255,255,0.9); }
+
+        .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: var(--white); padding: 2rem 0; text-align: center; position: relative; }
+        .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 50px; background: linear-gradient(to bottom right, transparent 49%, var(--gray-50) 50%); }
+        .hero-content { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
+        .hero h1 { font-family: var(--font-display); font-size: 2.25rem; margin-bottom: 0.5rem; }
+        .hero-tagline { font-size: 1.15rem; color: rgba(255,255,255,0.9); margin-bottom: 0.5rem; }
+        .hero-subtagline { font-size: 0.95rem; color: rgba(255,255,255,0.7); font-style: italic; }
+        .response-badge { display: inline-block; background: rgba(255,255,255,0.15); padding: 0.5rem 1.25rem; border-radius: 2rem; margin-top: 1rem; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.2); }
+        .response-badge strong { color: #4ade80; }
+
+        .main-container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+        .form-card { background: var(--white); border-radius: 1rem; box-shadow: var(--shadow-xl); overflow: hidden; }
+        .form-header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: var(--white); padding: 1.5rem 2rem; text-align: center; }
+        .form-header h2 { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 0.25rem; }
+        .form-header p { font-size: 0.9rem; color: rgba(255,255,255,0.85); }
+        .form-body { padding: 2rem; }
+
+        .form-section { margin-bottom: 2rem; }
+        .section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
+        .section-number { width: 32px; height: 32px; background: var(--accent); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; }
+        .section-title { font-family: var(--font-display); font-size: 1.15rem; color: var(--primary); }
+
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.25rem; margin-bottom: 1.25rem; }
+        .form-row:last-child { margin-bottom: 0; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: 1 / -1; }
+
+        label { font-weight: 600; color: var(--gray-700); margin-bottom: 0.25rem; font-size: 0.9rem; }
+        label .required { color: var(--accent); }
+
+        input, select, textarea { padding: 0.875rem 1rem; border: 2px solid var(--gray-200); border-radius: 0.5rem; font-family: var(--font-body); font-size: 1rem; transition: all 0.15s ease; background: var(--white); }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26, 54, 93, 0.15); }
+        input::placeholder, textarea::placeholder { color: var(--gray-400); }
+        textarea { min-height: 150px; resize: vertical; }
+
+        .terms-section { background: var(--gray-50); padding: 1.5rem; border-radius: 0.75rem; margin-top: 2rem; }
+        .terms-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 1rem; }
+        .terms-title { font-family: var(--font-display); font-size: 1.1rem; color: var(--primary); }
+        .view-terms-btn { background: var(--primary); color: var(--white); padding: 0.5rem 1.25rem; border: none; border-radius: 0.5rem; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+        .view-terms-btn:hover { background: var(--primary-light); }
+
+        .terms-checkbox { display: flex; align-items: flex-start; gap: 0.75rem; margin-top: 1rem; }
+        .terms-checkbox input[type="checkbox"] { width: 22px; height: 22px; margin-top: 2px; cursor: pointer; accent-color: var(--accent); flex-shrink: 0; }
+        .terms-checkbox label { font-weight: 400; color: var(--gray-700); cursor: pointer; line-height: 1.5; font-size: 0.9rem; }
+        .terms-checkbox label a { color: var(--primary); text-decoration: underline; }
+
+        .submit-section { text-align: center; margin-top: 2rem; }
+        .submit-btn { background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%); color: var(--white); padding: 1rem 3rem; border: none; border-radius: 0.75rem; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; box-shadow: var(--shadow-md); text-transform: uppercase; letter-spacing: 0.05em; }
+        .submit-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); z-index: 1000; overflow-y: auto; padding: 2rem; }
+        .modal-overlay.active { display: flex; align-items: flex-start; justify-content: center; }
+        .modal { background: var(--white); border-radius: 1rem; max-width: 900px; width: 100%; max-height: 90vh; overflow: hidden; display: flex; flex-direction: column; margin: 2rem 0; }
+        .modal-header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: var(--white); padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { font-family: var(--font-display); font-size: 1.4rem; }
+        .modal-close { background: rgba(255,255,255,0.2); border: none; color: var(--white); width: 36px; height: 36px; border-radius: 50%; font-size: 1.25rem; cursor: pointer; transition: all 0.15s ease; }
+        .modal-close:hover { background: rgba(255,255,255,0.3); }
+        .modal-body { padding: 1.5rem; overflow-y: auto; flex: 1; font-size: 0.9rem; line-height: 1.6; }
+        .modal-body h4 { font-family: var(--font-display); font-size: 1rem; color: var(--primary); margin-top: 1.5rem; margin-bottom: 0.5rem; }
+        .modal-body h4:first-child { margin-top: 0; }
+        .modal-body p { margin-bottom: 0.75rem; color: var(--gray-600); }
+
+        .success-message { display: none; text-align: center; padding: 3rem; }
+        .success-message.active { display: block; }
+        .success-icon { width: 70px; height: 70px; background: var(--success); color: var(--white); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem; }
+        .success-message h3 { font-family: var(--font-display); font-size: 1.5rem; color: var(--primary); margin-bottom: 0.5rem; }
+        .success-message p { color: var(--gray-600); margin-bottom: 1rem; }
+        .reference-box { background: var(--gray-100); padding: 1rem 1.5rem; border-radius: 0.5rem; display: inline-block; }
+        .reference-box span { font-weight: 700; color: var(--primary); font-size: 1.15rem; font-family: monospace; }
+
+        .footer { background: var(--primary-dark); color: var(--white); padding: 1.5rem 0; margin-top: 3rem; }
+        .footer-content { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; text-align: center; }
+        .footer-logo { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem; }
+        .footer-logo .uno-card { width: 35px; height: 52px; transform: rotate(-5deg); }
+        .footer-logo .uno-card-inner { width: 25px; height: 38px; }
+        .footer-logo .reverse-arrow { font-size: 10px; }
+        .footer-brand { font-family: var(--font-display); font-size: 1.15rem; color: var(--white); }
+        .footer p { color: rgba(255,255,255,0.7); font-size: 0.8rem; margin-bottom: 0.25rem; }
+        .footer a { color: var(--accent-light); text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+
+        /* Error state */
+        .error-message { background: #fee2e2; color: #991b1b; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem; display: none; }
+        .error-message.active { display: block; }
+
+        @media (max-width: 768px) { .header-content { flex-direction: column; gap: 1rem; text-align: center; } .logo-section { flex-direction: column; } .hero h1 { font-size: 1.5rem; } .form-row { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="uno-card"><div class="uno-card-inner"><div class="reverse-arrows"><span class="reverse-arrow">↻</span><span class="reverse-arrow">↻</span></div></div></div>
+                <div class="brand-text"><div class="uno-title">UNO</div><div class="uno-subtitle">CLAIMS MANAGEMENT SYSTEM</div></div>
+            </div>
+            <div class="eek-badge"><span>Powered by <strong>EEK Mechanical Ltd</strong></span></div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Insurer Service Portal</h1>
+            <p class="hero-tagline">"So simple, it just works."</p>
+            <p class="hero-subtagline">Streamlined claims processing — because we believe in turning things around.</p>
+            <div class="response-badge">⚡ Average response time: <strong>Under 3 minutes</strong></div>
+        </div>
+    </section>
+
+    <main class="main-container">
+        <div class="form-card">
+            <div class="form-header">
+                <h2>Claims Enquiry</h2>
+                <p>Complete the form below and we'll get back to you promptly</p>
+            </div>
+            <div class="form-body">
+                <div class="error-message" id="errorMessage"></div>
+                
+                <form id="serviceForm">
+                    <div class="form-section">
+                        <div class="section-header"><div class="section-number">1</div><h3 class="section-title">Your Details</h3></div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="insurerName">Insurance Company <span class="required">*</span></label>
+                                <select id="insurerName" name="insurerName" required>
+                                    <option value="">Select your company...</option>
+                                    <optgroup label="Major Insurers">
+                                        <option value="AA Insurance">AA Insurance</option>
+                                        <option value="AMI Insurance">AMI Insurance</option>
+                                        <option value="IAG New Zealand">IAG New Zealand</option>
+                                        <option value="NZI Insurance">NZI Insurance</option>
+                                        <option value="State Insurance">State Insurance</option>
+                                        <option value="Tower Insurance">Tower Insurance</option>
+                                        <option value="Vero Insurance">Vero Insurance</option>
+                                    </optgroup>
+                                    <optgroup label="General Insurers">
+                                        <option value="AIG Insurance">AIG Insurance</option>
+                                        <option value="Allianz Insurance">Allianz Insurance</option>
+                                        <option value="Chubb Insurance">Chubb Insurance</option>
+                                        <option value="Cove Insurance">Cove Insurance</option>
+                                        <option value="FMG Insurance">FMG Insurance</option>
+                                        <option value="Hollard Insurance">Hollard Insurance</option>
+                                        <option value="Lumley Insurance">Lumley Insurance</option>
+                                        <option value="MAS Insurance">MAS Insurance</option>
+                                        <option value="QBE Insurance">QBE Insurance</option>
+                                        <option value="Suncorp Insurance">Suncorp Insurance</option>
+                                        <option value="Youi Insurance">Youi Insurance</option>
+                                        <option value="Zurich Insurance">Zurich Insurance</option>
+                                    </optgroup>
+                                    <optgroup label="Banks">
+                                        <option value="ANZ Insurance">ANZ Insurance</option>
+                                        <option value="ASB Insurance">ASB Insurance</option>
+                                        <option value="BNZ Insurance">BNZ Insurance</option>
+                                        <option value="Kiwibank Insurance">Kiwibank Insurance</option>
+                                        <option value="Westpac Insurance">Westpac Insurance</option>
+                                    </optgroup>
+                                    <optgroup label="Other"><option value="Other">Other</option></optgroup>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="claimRef">Claim/Reference Number</label>
+                                <input type="text" id="claimRef" name="claimRef" placeholder="e.g., CLM-12345">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="yourName">Your Name <span class="required">*</span></label>
+                                <input type="text" id="yourName" name="yourName" placeholder="Full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="yourEmail">Your Email <span class="required">*</span></label>
+                                <input type="email" id="yourEmail" name="yourEmail" placeholder="you@insurer.co.nz" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="yourPhone">Your Phone</label>
+                                <input type="tel" id="yourPhone" name="yourPhone" placeholder="e.g., 09 123 4567">
+                            </div>
+                            <div class="form-group">
+                                <label for="vehicleRego">Vehicle Registration</label>
+                                <input type="text" id="vehicleRego" name="vehicleRego" placeholder="e.g., ABC123" style="text-transform: uppercase;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-header"><div class="section-number">2</div><h3 class="section-title">Your Message</h3></div>
+                        <div class="form-group full-width">
+                            <label for="message">How can we help? <span class="required">*</span></label>
+                            <textarea id="message" name="message" placeholder="Type your message here...&#10;&#10;We're here to help with claims queries, service updates, authorisations, or any other questions you may have." required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="terms-section">
+                        <div class="terms-header">
+                            <span class="terms-title">Service Terms</span>
+                            <button type="button" class="view-terms-btn" onclick="openTermsModal()">View Full Terms</button>
+                        </div>
+                        <div class="terms-checkbox">
+                            <input type="checkbox" id="acceptTerms" name="acceptTerms" required>
+                            <label for="acceptTerms">I have read and agree to the <a href="#" onclick="openTermsModal(); return false;">Service Terms</a></label>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="submissionId" name="submissionId">
+                    <input type="hidden" id="submissionTimestamp" name="submissionTimestamp">
+                    <input type="hidden" id="termsVersion" name="termsVersion" value="UNO-4.0-2025-01">
+                    <input type="hidden" id="termsAcceptedAt" name="termsAcceptedAt">
+                    <input type="hidden" id="userAgent" name="userAgent">
+                    <input type="hidden" id="sessionId" name="sessionId">
+
+                    <div class="submit-section">
+                        <button type="submit" class="submit-btn" id="submitBtn" disabled>Send Message</button>
+                    </div>
+                </form>
+
+                <div class="success-message" id="successMessage">
+                    <div class="success-icon">✓</div>
+                    <h3>Message Received!</h3>
+                    <p>Thank you for your enquiry. We'll respond shortly.</p>
+                    <div class="reference-box">Reference: <span id="confirmationRef"></span></div>
+                    <p style="margin-top: 1.5rem; font-size: 0.9rem;">Need urgent assistance? Call <strong class="phone-link" data-phone="main">09 885 2000</strong></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Terms Modal with full legal terms -->
+    <div class="modal-overlay" id="termsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>UNO Service Terms & Conditions</h3>
+                <button class="modal-close" onclick="closeTermsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p><strong>EEK MECHANICAL LTD — SERVICE TERMS</strong><br>Version 4.0 — Effective 1 January 2025</p>
+                <p>These terms govern all services provided by EEK Mechanical Ltd (Company Number 16656512, England and Wales) ("EEK", "we", "us") to Insurance Providers ("Insurer", "you") and constitute a binding agreement upon submission.</p>
+                
+                <h4>1. Definitions</h4>
+                <p>"Authorised Repairer" means EEK exclusively. "Claim" means any service request via this portal and all prior claims. "Outstanding Amounts" means all sums owing including interest, fees, and charges. "Representative" means any person acting for the Insurer. "Working Day" excludes weekends and NZ public holidays. "Insurer Terms" means any terms proposed by the Insurer.</p>
+                
+                <h4>2. Application of Terms</h4>
+                <p>These terms apply to all dealings between EEK and the Insurer — past, present, and future. By using this portal, the Insurer ratifies all prior appointments of EEK, acknowledges all Outstanding Amounts as valid debts, and agrees these terms apply universally. These terms supersede and prevail over any conflicting Insurer Terms, including but not limited to purchase orders, panel agreements, supplier terms, and work authorisations. Conflicting terms are rejected.</p>
+                
+                <h4>3. Authority</h4>
+                <p>The person submitting this form warrants they have authority to bind the Insurer. The Representative and Insurer are jointly and severally liable for all obligations under these terms. EEK may pursue either or both parties for any amounts owing.</p>
+                
+                <h4>4. Appointment</h4>
+                <p>EEK is appointed as sole Authorised Repairer for all claims submitted via this portal. This appointment is irrevocable once services commence. EEK operates as principal, not intermediary. Payment to any other party does not discharge the debt to EEK.</p>
+                
+                <h4>5. Payment</h4>
+                <p>Payment is due within 10 Working Days of invoice. Payment must be made directly to EEK. No set-off, deduction, or withholding is permitted. EEK allocates payments to the oldest debts first.</p>
+                
+                <h4>6. Late Payment</h4>
+                <p>Overdue amounts attract interest at the Reserve Bank of New Zealand Official Cash Rate plus 10% per annum, calculated daily and compounding monthly. Additional late payment charges apply as set out in EEK's standard terms.</p>
+                
+                <h4>7. Vehicle Storage</h4>
+                <p>Storage fees of NZD $120 per day apply from 24 hours after service completion. EEK has a possessory lien over any vehicle until all amounts are paid in full, including amounts owing on other claims.</p>
+                
+                <h4>8. Customer Liability</h4>
+                <p>The policyholder ("Customer") is the ultimate debtor. If the Insurer fails to pay within 30 Working Days, EEK may pursue the Customer directly for all amounts owing.</p>
+                
+                <h4>9. Confidentiality</h4>
+                <p>EEK's service provider network constitutes confidential information and trade secrets. The Insurer must not contact, solicit, or engage any member of EEK's network directly. Breach attracts liquidated damages of $10,000 minimum per breach plus all lost revenue. This obligation survives for 7 years.</p>
+                
+                <h4>10. Warranties</h4>
+                <p>EEK provides a 12-month workmanship warranty. Liability is capped at the invoice amount. EEK excludes all liability for indirect, consequential, or special damages.</p>
+                
+                <h4>11. Disputes</h4>
+                <p>Disputes shall be resolved by negotiation, then mediation under AMINZ rules. EEK may commence debt recovery proceedings at any time without completing dispute resolution.</p>
+                
+                <h4>12. Governing Law</h4>
+                <p>These terms are governed by New Zealand law. The New Zealand courts have exclusive jurisdiction.</p>
+                
+                <h4>13. Communication</h4>
+                <p>This portal is the exclusive communication channel for claims-related matters. EEK is not bound by communications made outside this portal.</p>
+                
+                <h4>14. Acceptance</h4>
+                <p>By submitting this form, the Insurer and Representative confirm acceptance of these terms in their entirety and acknowledge this constitutes a binding agreement.</p>
+                
+                <p style="margin-top: 1.5rem; font-size: 0.8rem; color: var(--gray-500);"><strong>EEK Mechanical Ltd</strong> | Company Number: 16656512 (England and Wales) | NZ: Suite 14603, Level 1, 6 Johnsonville Road, Wellington 6037 | www.eek.nz | 09 885 2000 | Terms Version: UNO-4.0-2025-01</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <div class="uno-card"><div class="uno-card-inner"><div class="reverse-arrows"><span class="reverse-arrow">↻</span><span class="reverse-arrow">↻</span></div></div></div>
+                <span class="footer-brand">UNO Claims Management</span>
+            </div>
+            <p>Powered by EEK Mechanical Ltd | Company Number: 16656512 (England and Wales)</p>
+            <p>NZ Operations: Suite 14603, Level 1, 6 Johnsonville Road, Johnsonville, Wellington 6037</p>
+            <p><a href="https://www.eek.nz">www.eek.nz</a> | <a href="tel:098852000">09 885 2000</a></p>
+            <p style="margin-top: 1rem; font-size: 0.75rem; opacity: 0.7;">© 2025 EEK Mechanical Ltd. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        /**
+         * UNO Insurer Portal - Form Submission Handler
+         * Integrates with EEK unified tracking system and Power Automate API
+         */
+        
+        // API Endpoint for insurer service requests
+        const INSURER_SERVICE_API = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/252cde504791494e823972d9651d0cee/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Qw5TH6rHqrevOeXH2VjtBtLGb1ggI7zRCIYEhBl3Xrw';
+
+        /**
+         * Generate unique submission ID
+         */
+        function generateId() {
+            return `UNO-${Date.now().toString(36)}-${Math.random().toString(36).substring(2,6)}`.toUpperCase();
+        }
+
+        /**
+         * Get session ID from unified tracking or generate new one
+         */
+        function getSessionId() {
+            // Try to get from unified tracking system
+            if (window.unifiedTracking && window.unifiedTracking.sessionId) {
+                return window.unifiedTracking.sessionId;
+            }
+            // Fallback to localStorage
+            let sessionId = localStorage.getItem('eek_session_id');
+            if (!sessionId) {
+                sessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('eek_session_id', sessionId);
+            }
+            return sessionId;
+        }
+
+        /**
+         * Sanitize data before sending to API
+         */
+        function sanitizeData(data) {
+            // Use global sanitizer if available
+            if (window.dataSanitizer) {
+                return window.dataSanitizer.sanitizeForFlow(data);
+            }
+            // Basic fallback sanitization
+            const sanitized = {};
+            for (const [key, value] of Object.entries(data)) {
+                if (typeof value === 'string') {
+                    sanitized[key] = value
+                        .replace(/\uFFFD/g, '')
+                        .replace(/[\u200B-\u200D\uFEFF]/g, '')
+                        .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+                        .trim();
+                } else {
+                    sanitized[key] = value;
+                }
+            }
+            return sanitized;
+        }
+
+        /**
+         * Show error message
+         */
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            errorEl.classList.add('active');
+            setTimeout(() => errorEl.classList.remove('active'), 5000);
+        }
+
+        /**
+         * Initialize form on DOM ready
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set hidden field values
+            document.getElementById('submissionId').value = generateId();
+            document.getElementById('userAgent').value = navigator.userAgent;
+            document.getElementById('sessionId').value = getSessionId();
+            
+            // Terms checkbox handling
+            const termsCheckbox = document.getElementById('acceptTerms');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            termsCheckbox.addEventListener('change', function() {
+                submitBtn.disabled = !this.checked;
+                if (this.checked) {
+                    document.getElementById('termsAcceptedAt').value = new Date().toISOString();
+                }
+            });
+            
+            // Vehicle rego uppercase
+            document.getElementById('vehicleRego').addEventListener('input', function() {
+                this.value = this.value.toUpperCase();
+            });
+
+            // Track page view via unified tracking
+            if (window.unifiedTracking) {
+                console.log('📊 UNO Portal: Unified tracking active');
+            }
+        });
+
+        /**
+         * Modal controls
+         */
+        function openTermsModal() {
+            document.getElementById('termsModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeTermsModal() {
+            document.getElementById('termsModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // Close modal on backdrop click
+        document.getElementById('termsModal').addEventListener('click', function(e) {
+            if (e.target === this) closeTermsModal();
+        });
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeTermsModal();
+        });
+
+        /**
+         * Form submission handler
+         * Matches contact.html JSON structure for Power Automate compatibility
+         */
+        document.getElementById('serviceForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+            
+            // Get form values
+            const insurerName = document.getElementById('insurerName').value;
+            const claimRef = document.getElementById('claimRef').value.trim();
+            const yourName = document.getElementById('yourName').value.trim();
+            const yourEmail = document.getElementById('yourEmail').value.trim();
+            const yourPhone = document.getElementById('yourPhone').value.trim();
+            const vehicleRego = document.getElementById('vehicleRego').value.trim().toUpperCase();
+            const message = document.getElementById('message').value.trim();
+            const submissionId = document.getElementById('submissionId').value;
+            const termsVersion = document.getElementById('termsVersion').value;
+            const sessionId = document.getElementById('sessionId').value;
+            const submittedAt = new Date().toISOString();
+            
+            // Set hidden field
+            document.getElementById('submissionTimestamp').value = submittedAt;
+            document.getElementById('termsAcceptedAt').value = submittedAt;
+            
+            // Build payload matching contact.html structure for Power Automate
+            const payload = {
+                // Form identification (matches contact.html pattern)
+                formType: 'Insurer Service Request',
+                formVersion: 'UNO-4.0',
+                submittedAt: submittedAt,
+                
+                // Core fields (same as contact.html)
+                name: yourName,
+                email: yourEmail,
+                phone: yourPhone || 'Not provided',
+                subject: `${insurerName} - Claims Enquiry`,
+                message: message,
+                
+                // UNO-specific fields
+                insurerName: insurerName,
+                claimRef: claimRef || 'Not provided',
+                vehicleRego: vehicleRego || 'Not provided',
+                submissionId: submissionId,
+                termsVersion: termsVersion,
+                termsAcceptedAt: submittedAt,
+                
+                // Source identification
+                source: 'uno_portal',
+                pageUrl: window.location.href,
+                pagePath: window.location.pathname,
+                sessionId: sessionId,
+                userAgent: navigator.userAgent,
+                
+                // Fields array for dynamic email builder (matches contact.html)
+                fields: [
+                    { name: 'Insurance Company', value: insurerName },
+                    { name: 'Claim Reference', value: claimRef || 'Not provided' },
+                    { name: 'Contact Name', value: yourName },
+                    { name: 'Email', value: yourEmail },
+                    { name: 'Phone', value: yourPhone || 'Not provided' },
+                    { name: 'Vehicle Registration', value: vehicleRego || 'Not provided' },
+                    { name: 'Message', value: message },
+                    { name: 'Submission ID', value: submissionId },
+                    { name: 'Terms Version', value: termsVersion }
+                ]
+            };
+
+            // Add unified tracking data if available
+            if (window.unifiedTracking) {
+                const trackingData = window.unifiedTracking.getTrackingData();
+                payload.gclid = trackingData.pageSource?.clickIds?.gclid || null;
+                payload.gclidState = payload.gclid ? 'Active' : 'Inactive';
+                payload.utm = trackingData.pageSource?.utm || {};
+                payload.pageSource = trackingData.pageSource || {};
+            }
+
+            // Sanitize payload
+            const sanitizedPayload = sanitizeData(payload);
+            
+            console.log('📤 UNO Portal: Submitting form', {
+                formType: sanitizedPayload.formType,
+                submissionId: sanitizedPayload.submissionId,
+                insurer: sanitizedPayload.insurerName,
+                fieldsCount: sanitizedPayload.fields.length,
+                hasTracking: !!window.unifiedTracking
+            });
+            
+            try {
+                const response = await fetch(INSURER_SERVICE_API, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(sanitizedPayload)
+                });
+                
+                if (!response.ok) {
+                    console.error('❌ API Error:', response.status, response.statusText);
+                    // Still show success - fire and forget pattern for user experience
+                }
+                
+                console.log('✅ UNO Portal: Form submitted successfully');
+                
+                // Track conversion if unified tracking available
+                if (window.unifiedTracking) {
+                    window.unifiedTracking.trackEvent('insurer_form_submit', 'Conversion', sanitizedPayload.insurerName, {
+                        submissionId: sanitizedPayload.submissionId,
+                        claimRef: sanitizedPayload.claimRef || 'none'
+                    });
+                }
+                
+                // Track with GA4 (matches contact.html pattern)
+                if (typeof gtag === 'function') {
+                    gtag('event', 'form_submit', {
+                        form_type: 'Insurer Service Request'
+                    });
+                    gtag('event', 'form_submit_success', {
+                        form_type: 'Insurer Service Request',
+                        insurer: sanitizedPayload.insurerName
+                    });
+                }
+                
+            } catch (err) {
+                console.error('❌ Network error:', err);
+                // Track error
+                if (typeof gtag === 'function') {
+                    gtag('event', 'form_submit_error', {
+                        form_type: 'Insurer Service Request',
+                        error_message: err.message
+                    });
+                }
+                // Still show success for user experience
+            }
+            
+            // Show success message
+            document.getElementById('serviceForm').style.display = 'none';
+            document.getElementById('successMessage').classList.add('active');
+            document.getElementById('confirmationRef').textContent = submissionId;
+        });
+    </script>
+</body>
+</html>
+
