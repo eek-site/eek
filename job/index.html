@@ -906,28 +906,139 @@
       }
     }
 
-    // Collect Excel-specific data (only fields relevant to job type)
+    // Collect Excel-specific data - COMPREHENSIVE for all Excel columns
     function collectExcelData() {
       const type = document.getElementById('jobType').value;
-      const booking = window.bookingData || {};
+      const booking = originalBookingData || {};
+      const customerData = booking.customerData || {};
+      const visitorData = booking.visitorData || {};
       
-      const data = {
-        Rego: document.getElementById('rego').value.toUpperCase(),
-        Type: type,
-        // Include booking data fields
-        Id: booking.Id || booking.SharePointId || '',
-        StartTime: booking.StartTime || '',
-        Email: booking.Email || '',
-        ClientMobileNumber: booking.ClientMobileNumber || ''
+      // Helper to get value from multiple sources
+      const getVal = (...keys) => {
+        for (const key of keys) {
+          if (booking[key] !== undefined && booking[key] !== null && booking[key] !== '') return booking[key];
+          if (customerData[key] !== undefined && customerData[key] !== null && customerData[key] !== '') return customerData[key];
+          if (visitorData[key] !== undefined && visitorData[key] !== null && visitorData[key] !== '') return visitorData[key];
+        }
+        return '';
       };
-      const fields = [
-        { name: 'Rego', value: data.Rego },
-        { name: 'Type', value: type },
-        { name: 'Id', value: data.Id },
-        { name: 'StartTime', value: data.StartTime },
-        { name: 'Email', value: data.Email },
-        { name: 'ClientMobileNumber', value: data.ClientMobileNumber }
-      ];
+      
+      // Extract location string from location object
+      const getLocationString = (locField) => {
+        const loc = getVal(locField, 'location', 'address');
+        if (typeof loc === 'object' && loc !== null) {
+          return loc.address || loc.city || loc.region || '';
+        }
+        return loc || '';
+      };
+      
+      // Get form values
+      const formRego = document.getElementById('rego').value.toUpperCase();
+      const formEmail = document.getElementById('email').value;
+      const formPhone = document.getElementById('clientMobileNumber').value;
+      const formSupplierName = document.getElementById('supplierName')?.value || '';
+      const formSupplierEmail = document.getElementById('supplierEmail')?.value || '';
+      const formSupplierPhone = document.getElementById('supplierPhone')?.value || '';
+      const formBankAccount = document.getElementById('bankAccount')?.value || '';
+      const formJobNotes = document.getElementById('jobNotes')?.value || '';
+      const formAmount = parseFloat(document.getElementById('amount')?.value) || '';
+      const formPaid = document.getElementById('paidFlag')?.value || '';
+      const formClosePost = document.getElementById('closePostFlag')?.checked ? 'Yes' : 'No';
+      const formTextSupplier = document.getElementById('textSupplier')?.checked ? 'Yes' : '';
+      const now = new Date().toISOString();
+      
+      // Build complete data object matching ALL Excel columns
+      const data = {
+        // === CORE IDENTIFICATION ===
+        Id: sharepointId || getVal('Id', 'SharePointId', 'bookingId') || document.getElementById('id').value,
+        StartTime: now,
+        Timestamp: now,
+        
+        // === CONTACT INFORMATION ===
+        Email: formEmail || getVal('Email', 'email', 'customerEmail'),
+        Name: '', // Set per job type below
+        ClientMobileNumber: formPhone || getVal('ClientMobileNumber', 'phone', 'customerPhone', 'phoneNumber'),
+        
+        // === VEHICLE INFORMATION ===
+        Rego: formRego || getVal('Rego', 'rego', 'vehicleRego'),
+        Make: getVal('vehicleMake', 'make', 'Make'),
+        Model: getVal('vehicleModel', 'model', 'Model'),
+        TyreSize: getVal('tyreSize', 'TyreSize', 'tyre_size'),
+        
+        // === JOB/SERVICE INFO ===
+        Type: type,
+        ServiceRequired: getVal('service', 'serviceType', 'serviceCode', 'serviceTitle', 'ServiceRequired'),
+        Fault: getVal('details', 'description', 'Fault', 'fault'),
+        JobNotes: formJobNotes,
+        
+        // === CLIENT INFO ===
+        Client: getVal('name', 'Name', 'customerName', 'fullName', 'Client'),
+        
+        // === SUPPLIER INFO ===
+        Supplier: formSupplierName || getVal('Supplier', 'supplier', 'supplierName'),
+        Supp_Email: formSupplierEmail || getVal('Supp_Email', 'supplierEmail', 'EmailJobToSupplier'),
+        Supp_Phone: formSupplierPhone || getVal('Supp_Phone', 'supplierPhone', 'TextJobToMobileNumber'),
+        Supp_Ph_Nbr: formSupplierPhone || getVal('Supp_Ph_Nbr', 'supplierPhone'),
+        TextSupplier: formTextSupplier,
+        
+        // === FINANCIAL ===
+        Reimbursement: '',
+        Chargeables: '',
+        Costings: '',
+        Paid: formPaid,
+        
+        // === BANKING ===
+        Bank_Account: formBankAccount || getVal('Bank_Account', 'Bank', 'bankAccount'),
+        Bank_Supplier: getVal('Bank_Supplier', 'bankSupplier'),
+        Bank_Amount: getVal('Bank_Amount', 'bankAmount'),
+        Bank_Particulars: getVal('Bank_Particulars', 'bankParticulars'),
+        Bank_Code: getVal('Bank_Code', 'bankCode'),
+        Bank_Reference: getVal('Bank_Reference', 'bankReference'),
+        
+        // === LOCATION ===
+        FromLocation: getLocationString('fromLocation') || getLocationString('location'),
+        ToLocation: getLocationString('toLocation') || getLocationString('destination'),
+        
+        // === STATUS FLAGS ===
+        CloseAndPostJobForBilling: formClosePost,
+        Entered: '',
+        BatchFileCreated: '',
+        Supp_Phone_Open: '',
+        Supp_Update: '',
+        
+        // === PAYMENT ===
+        Payment_ID: getVal('Payment_ID', 'paymentId', 'stripePaymentId', 'payment_intent'),
+        GST_EXCL: ''
+      };
+      
+      // Set Name and financial fields based on job type
+      if (type === 'Supplier') {
+        data.Name = 'Mechanic';
+        data.Costings = formAmount;
+      } else if (type === 'Billable') {
+        data.Name = document.getElementById('categorySelect')?.value || 'Billable';
+        data.Chargeables = formAmount;
+      } else if (type === 'Deposit') {
+        data.Name = 'Payment';
+        data.Reimbursement = formAmount;
+      } else if (type === 'Refund' || type === 'Reimbursement') {
+        data.Name = type;
+        data.Reimbursement = formAmount;
+      } else if (type === 'Close Job') {
+        data.Name = 'Close Job';
+        data.CloseAndPostJobForBilling = 'Yes';
+      } else if (type === 'DNC') {
+        data.Name = 'DNC';
+        data.JobNotes = '[DNC]';
+      }
+      
+      // Build fields array for logging/debugging
+      const fields = Object.entries(data).map(([name, value]) => ({ name, value }));
+      data.fields = fields;
+      
+      console.log('📤 Excel data prepared:', data);
+      return data;
+    }
 
       if (type === 'Supplier') {
         data.Name = 'Mechanic';
