@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bank Transfer Confirmed | Eek Mechanical</title>
+  <meta name="description" content="Your bank transfer payment has been received. Your mobile mechanic service booking is now confirmed." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:title" content="Bank Transfer Confirmed | Eek Mechanical" />
+  <meta property="og:description" content="Your bank transfer payment has been confirmed. Service is being dispatched." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.eek.nz/job/ad-hoc" />
+  <meta property="og:image" content="https://www.eek.nz/sweet-ride.png" />
+
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com https://static.cloudflareinsights.com; frame-src 'self' https://www.googletagmanager.com;">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DQNKF1YLWR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-DQNKF1YLWR');
+  </script>
+  
+  <!-- Centralized Phone Number Management -->
+  <script src="/phone-manager.js?v={{ site.version }}"></script>
+  
+  <!-- Data Repository - Single Source of Truth -->
+  <script src="/data-repository.js?v={{ site.version }}"></script>
+  
+  <!-- Payment Utilities - Payment-specific data handling -->
+  <script src="/payment-utils.js?v={{ site.version }}"></script>
+  
+  <!-- Data Sanitizer (must load before tracking systems) -->
+  <script src="/data-sanitizer.js?v=20251224.1"></script>
+  <!-- Unified Tracking System -->
+  <script src="/unified-tracking.js?v=20251224.1"></script>
+  
+  <!-- Centralized Footer Management -->
+  <script src="/footer-new.js?v={{ site.version }}"></script>
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f5f5f5 0%, #e8f5e8 100%);
+      margin: 0; padding: 0; color: #333; text-align: center;
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+    .container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+    .success-card { background: white; padding: 50px; border-radius: 20px; box-shadow: 0 12px 40px rgba(0,0,0,0.15); max-width: 700px; width: 100%; margin: 20px; position: relative; overflow: hidden; }
+    .success-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, #28a745, #20c997, #17a2b8); }
+    .success-card::after { content: '🏦'; position: absolute; top: 20px; right: 20px; font-size: 2em; opacity: 0.3; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.05); } }
+    .success-icon { font-size: 4em; color: #28a745; margin-bottom: 20px; animation: bounce 1s ease-in-out; }
+    @keyframes bounce { 0%,20%,50%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-20px)} 60%{transform:translateY(-10px)} }
+    h1 { color: #28a745; font-size: 2.5em; margin: 0 0 10px 0; font-weight: 700; }
+    .subtitle { font-size: 1.3em; color: #666; margin-bottom: 30px; font-weight: 500; }
+    .booking-details { background: #f0f9ff; padding: 25px; border-radius: 15px; margin: 20px 0; border: 2px solid #0ea5e9; text-align: left; }
+    .booking-details h3 { color: #0369a1; margin-bottom: 15px; font-size: 1.3em; text-align: center; }
+    .detail-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e0f2fe; align-items: flex-start; }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-label { font-weight: 600; color: #64748b; flex-shrink: 0; min-width: 120px; }
+    .detail-value { color: #0f172a; text-align: right; flex: 1; word-break: break-word; }
+    .next-steps { background: #f8f9fa; padding: 30px; border-radius: 15px; margin: 30px 0; border-left: 5px solid #28a745; }
+    .next-steps h2 { color: #28a745; font-size: 1.5em; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .steps-list { text-align: left; margin: 0; padding: 0; list-style: none; }
+    .steps-list li { padding: 12px 0; font-size: 1.1em; display: flex; align-items: flex-start; gap: 12px; }
+    .step-number { background: #28a745; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9em; font-weight: bold; flex-shrink: 0; margin-top: 2px; }
+    .contact-info { background: #e3f2fd; padding: 25px; border-radius: 15px; margin: 30px 0; border: 2px solid #2196f3; }
+    .contact-info h3 { color: #1976d2; margin-bottom: 15px; font-size: 1.3em; }
+    .contact-buttons { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+    .btn { display: inline-block; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1em; transition: all 0.3s ease; border: none; cursor: pointer; }
+    .btn-primary { background: #28a745; color: white; }
+    .btn-primary:hover { background: #218838; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(40,167,69,0.3); }
+    .btn-secondary { background: #6c757d; color: white; }
+    .btn-secondary:hover { background: #545b62; transform: translateY(-2px); }
+    .payment-badge { display: inline-flex; align-items: center; gap: 8px; background: #d4edda; color: #155724; padding: 8px 16px; border-radius: 20px; font-weight: 600; margin-bottom: 20px; }
+    .payment-badge::before { content: '✓'; font-size: 1.2em; }
+    .loading-state { text-align: center; padding: 40px; }
+    .loading-spinner { width: 50px; height: 50px; border: 4px solid #f3f3f3; border-top: 4px solid #28a745; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+    @keyframes spin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+    .error-state { background: #f8d7da; border: 2px solid #f5c6cb; border-radius: 15px; padding: 30px; margin: 20px 0; }
+    .error-state h3 { color: #721c24; margin-bottom: 10px; }
+    .error-state p { color: #721c24; margin: 0; }
+    .status-indicator { display: none; padding: 15px 20px; border-radius: 8px; margin-top: 20px; font-weight: 500; }
+    @media (max-width:768px){
+      .success-card{padding:30px 20px;margin:10px}
+      h1{font-size:2em}
+      .contact-buttons{flex-direction:column;align-items:center}
+      .btn{width:100%;max-width:250px}
+      .detail-row{flex-direction:column;gap:4px}
+      .detail-label{min-width:unset}
+      .detail-value{text-align:left}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="success-card">
+      <!-- Loading State -->
+      <div id="loadingState" class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Processing your booking confirmation...</p>
+      </div>
+
+      <!-- Error State -->
+      <div id="errorState" class="error-state" style="display: none;">
+        <h3>⚠️ Invalid Link</h3>
+        <p id="errorMessage">This booking link appears to be invalid or has expired. Please contact us for assistance.</p>
+      </div>
+
+      <!-- Success State -->
+      <div id="successState" style="display: none;">
+        <div class="success-icon">✓</div>
+        <div class="payment-badge">Bank Transfer Received</div>
+        <h1>Payment Confirmed!</h1>
+        <p class="subtitle">Thank you for your payment. Your service is now booked.</p>
+
+        <div class="booking-details">
+          <h3>📋 Your Booking Details</h3>
+          <div class="detail-row">
+            <span class="detail-label">Name:</span>
+            <span class="detail-value" id="displayName">-</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Phone:</span>
+            <span class="detail-value" id="displayPhone">-</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Email:</span>
+            <span class="detail-value" id="displayEmail">-</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Vehicle:</span>
+            <span class="detail-value" id="displayRego">-</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Service:</span>
+            <span class="detail-value" id="displayService">-</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Amount Paid:</span>
+            <span class="detail-value" id="displayAmount" style="font-weight: 700; color: #28a745;">-</span>
+          </div>
+        </div>
+
+        <div class="next-steps">
+          <h2>📞 What Happens Next</h2>
+          <ul class="steps-list">
+            <li>
+              <span class="step-number">1</span>
+              <span>A technician will be assigned to your job within <strong>minutes</strong></span>
+            </li>
+            <li>
+              <span class="step-number">2</span>
+              <span>You'll receive a text with your technician's <strong>name and ETA</strong></span>
+            </li>
+            <li>
+              <span class="step-number">3</span>
+              <span>Our technician will come to you and complete the service</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="contact-info">
+          <h3>📱 Questions?</h3>
+          <p>If you have any questions or need to update your booking, please contact us:</p>
+          <div class="contact-buttons">
+            <a href="tel:0800769000" class="btn btn-primary" onclick="trackCall('bank_transfer_page')">📞 Call 0800 769 000</a>
+            <a href="/" class="btn btn-secondary">🏠 Back to Home</a>
+          </div>
+        </div>
+
+        <div id="statusIndicator" class="status-indicator"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Power Automate Webhook URL (same as /thanks page - creates SharePoint entry)
+    const PAYMENT_CONFIRMED_WEBHOOK_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c8ac1b8ac2574f66ad4efcdc23165379/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kg6bffZKUQzUVR7jzpdTRaeudIa_T99V1hpzb_VlXPk';
+
+    // Global booking data
+    let bookingData = {};
+
+    // === HELPERS ===
+    function sanitizePhone(v) { return (v || '').replace(/\D/g, ''); }
+    function cleanText(v) { return (v || '').toString().trim().replace(/\s+/g, ' '); }
+    function formatPhone(phone) {
+      const digits = sanitizePhone(phone);
+      if (digits.startsWith('64') && digits.length >= 11) {
+        return '+' + digits.substring(0, 2) + ' ' + digits.substring(2, 4) + ' ' + digits.substring(4, 7) + ' ' + digits.substring(7);
+      }
+      if (digits.length === 10 && digits.startsWith('02')) {
+        return digits.substring(0, 3) + ' ' + digits.substring(3, 6) + ' ' + digits.substring(6);
+      }
+      return phone;
+    }
+    function formatAmount(amount) {
+      const num = parseFloat(amount);
+      if (isNaN(num)) return amount;
+      return '$' + num.toFixed(2);
+    }
+
+    // === DECODE URL PARAMETERS ===
+    function decodeBookingData() {
+      const params = new URLSearchParams(window.location.search);
+      
+      // Try encoded 'd' parameter first (base64)
+      const encoded = params.get('d');
+      if (encoded) {
+        try {
+          const decoded = atob(encoded);
+          console.log('🔓 Decoded base64:', decoded);
+          
+          // Check if it's pipe-separated format: rego|name|phone|email|amount|service
+          if (decoded.includes('|')) {
+            const parts = decoded.split('|');
+            const data = {
+              rego: parts[0] || '',
+              name: parts[1] || '',
+              phone: parts[2] || '',
+              email: parts[3] || '',
+              amount: parts[4] || '',
+              service: parts[5] || ''
+            };
+            console.log('✅ Parsed pipe-separated data:', data);
+            return data;
+          }
+          
+          // Try JSON format as fallback
+          try {
+            const jsonData = JSON.parse(decoded);
+            console.log('✅ Parsed JSON data:', jsonData);
+            return jsonData;
+          } catch (jsonErr) {
+            console.warn('⚠️ Not JSON format, treating as single value');
+          }
+        } catch (e) {
+          console.warn('⚠️ Failed to decode base64 data:', e);
+        }
+      }
+      
+      // Fallback: read individual URL parameters
+      const data = {};
+      const paramMapping = {
+        rego: 'rego',
+        name: 'name',
+        phone: 'phone',
+        email: 'email',
+        amount: 'amount',
+        price: 'price',
+        service: 'service',
+        location: 'location',
+        details: 'details',
+        make: 'make',
+        model: 'model',
+        year: 'year'
+      };
+      
+      for (const [urlKey, dataKey] of Object.entries(paramMapping)) {
+        const value = params.get(urlKey);
+        if (value) {
+          data[dataKey] = decodeURIComponent(value);
+        }
+      }
+      
+      // Map price to amount if only price is provided
+      if (data.price && !data.amount) {
+        data.amount = data.price;
+      }
+      
+      console.log('📋 Parsed URL parameters:', data);
+      return Object.keys(data).length > 0 ? data : null;
+    }
+
+    // === DISPLAY BOOKING DATA ===
+    function displayBookingData(data) {
+      document.getElementById('displayName').textContent = cleanText(data.name) || '-';
+      document.getElementById('displayPhone').textContent = data.phone ? formatPhone(data.phone) : '-';
+      document.getElementById('displayEmail').textContent = cleanText(data.email) || '-';
+      document.getElementById('displayRego').textContent = (data.rego || '').toUpperCase() || '-';
+      document.getElementById('displayService').textContent = cleanText(data.service) || 'Mobile Mechanic Service';
+      document.getElementById('displayAmount').textContent = data.amount ? formatAmount(data.amount) : '-';
+    }
+
+    // === STATUS INDICATOR ===
+    function showIndicator(type, message, duration = 5000) {
+      const indicator = document.getElementById('statusIndicator');
+      const styles = {
+        loading: { background: '#e3f2fd', color: '#1976d2', border: '1px solid #2196f3' },
+        success: { background: '#d4edda', color: '#155724', border: '1px solid #28a745' },
+        error: { background: '#f8d7da', color: '#721c24', border: '1px solid #f5c6cb' },
+        info: { background: '#d1ecf1', color: '#0c5460', border: '1px solid #17a2b8' },
+        warning: { background: '#fff3cd', color: '#856404', border: '1px solid #ffc107' }
+      };
+      
+      const style = styles[type] || styles.info;
+      indicator.style.display = 'block';
+      indicator.style.background = style.background;
+      indicator.style.color = style.color;
+      indicator.style.border = style.border;
+      indicator.textContent = message;
+      
+      if (duration > 0) {
+        setTimeout(() => { indicator.style.display = 'none'; }, duration);
+      }
+    }
+
+    // === IDEMPOTENCY ===
+    function generateBookingId(data) {
+      const phone = sanitizePhone(data.phone);
+      const rego = (data.rego || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+      const amount = data.amount || data.price || '0';
+      return `adhoc_${phone}_${rego}_${amount}_${Date.now()}`;
+    }
+
+    function hasBeenSubmitted(bookingId) {
+      try {
+        const key = `eek_adhoc_submitted:${bookingId}`;
+        const stored = localStorage.getItem(key);
+        if (!stored) return false;
+        
+        const record = JSON.parse(stored);
+        if (record.status === 'sent' && record.timestamp) {
+          const submittedAt = new Date(record.timestamp);
+          const hoursSince = (new Date() - submittedAt) / (1000 * 60 * 60);
+          if (hoursSince < 24) {
+            console.log(`🛑 Already submitted at ${record.timestamp}`);
+            return true;
+          }
+        }
+        return false;
+      } catch (err) {
+        console.error('Error checking submission status:', err);
+        return false;
+      }
+    }
+
+    function markSubmitted(bookingId) {
+      try {
+        const key = `eek_adhoc_submitted:${bookingId}`;
+        localStorage.setItem(key, JSON.stringify({
+          status: 'sent',
+          timestamp: new Date().toISOString(),
+          bookingId: bookingId
+        }));
+        console.log(`✅ Marked ${bookingId} as submitted`);
+      } catch (err) {
+        console.error('Error marking submission:', err);
+      }
+    }
+
+    // === BUILD PAYLOAD (matches /thanks page structure) ===
+    function buildPayload(data, bookingId) {
+      const geo = window.CF_GEO || {};
+      const locationStr = cleanText(data.location || geo.city || 'Unknown');
+      const sessionId = `adhoc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Use PaymentUtils if available for consistent payload structure
+      if (window.PaymentUtils) {
+        const paymentUtils = new window.PaymentUtils();
+        const canonicalData = {
+          name: cleanText(data.name),
+          phone: sanitizePhone(data.phone),
+          email: cleanText(data.email),
+          location: locationStr,
+          rego: (data.rego || '').toUpperCase(),
+          year: data.year || '',
+          make: data.make || '',
+          model: data.model || '',
+          vehicleType: 'car',
+          service: data.service || 'adhoc',
+          serviceCode: 'ADHOC',
+          serviceTitle: data.service || 'Mobile Mechanic Service',
+          price: data.amount || data.price || '',
+          details: data.details || 'Bank transfer payment',
+          sessionId: sessionId,
+          bookingTime: new Date().toISOString()
+        };
+        
+        const payload = paymentUtils.buildPaymentConfirmedPayload(canonicalData, bookingId);
+        // Override specific fields for bank transfer
+        payload.paymentMethod = 'bank_transfer';
+        payload.bookingSource = 'ad_hoc_bank_transfer';
+        payload.eventAction = 'bank_transfer_confirmed';
+        return payload;
+      }
+      
+      // Fallback: Build payload manually
+      return {
+        name: cleanText(data.name),
+        phone: sanitizePhone(data.phone),
+        email: cleanText(data.email),
+        location: locationStr,
+        rego: (data.rego || '').toUpperCase(),
+        vehicleRego: (data.rego || '').toUpperCase(),
+        year: data.year || '',
+        make: data.make || '',
+        model: data.model || '',
+        vehicleType: 'car',
+        service: data.service || 'adhoc',
+        serviceCode: 'ADHOC',
+        serviceTitle: data.service || 'Mobile Mechanic Service',
+        price: data.amount || data.price || '',
+        finalPrice: data.amount || data.price || '',
+        calculatedPrice: data.amount || data.price || '',
+        details: data.details || 'Bank transfer payment',
+        sessionId: sessionId,
+        bookingTime: new Date().toISOString(),
+        timestamp: new Date().toISOString(),
+        eventType: 'payment_confirmed',
+        eventAction: 'bank_transfer_confirmed',
+        bookingStatus: 'payment_confirmed',
+        paymentMethod: 'bank_transfer',
+        bookingSource: 'ad_hoc_bank_transfer',
+        idempotencyKey: bookingId,
+        paymentConfirmedAt: new Date().toISOString(),
+        paymentStatus: 'confirmed',
+        termsAccepted: true,
+        customerData: {
+          name: cleanText(data.name),
+          phone: sanitizePhone(data.phone),
+          email: cleanText(data.email),
+          location: locationStr,
+          vehicleRego: (data.rego || '').toUpperCase(),
+          service: data.service || 'adhoc',
+          serviceCode: 'ADHOC',
+          serviceTitle: data.service || 'Mobile Mechanic Service',
+          price: data.amount || data.price || '',
+          bookingSource: 'ad_hoc_bank_transfer',
+          formVersion: '1.0'
+        },
+        visitorData: {
+          name: cleanText(data.name),
+          phone: sanitizePhone(data.phone),
+          email: cleanText(data.email),
+          location: {
+            city: locationStr,
+            region: geo.region || 'Unknown',
+            country: geo.country || 'New Zealand',
+            countryCode: geo.countryCode || 'NZ'
+          },
+          vehicleRego: (data.rego || '').toUpperCase(),
+          service: data.service || 'adhoc',
+          serviceCode: 'ADHOC',
+          price: data.amount || data.price || ''
+        },
+        device: {
+          userAgent: navigator.userAgent,
+          platform: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+          language: navigator.language || 'en-NZ'
+        }
+      };
+    }
+
+    // === SUBMIT TO SHAREPOINT ===
+    async function submitToSharePoint(data) {
+      const bookingId = generateBookingId(data);
+      
+      // Check idempotency
+      if (hasBeenSubmitted(bookingId)) {
+        console.log('🛑 Already submitted - skipping duplicate');
+        showIndicator('info', '✓ This booking was already confirmed', 5000);
+        return { success: true, skipped: true };
+      }
+      
+      // Validate required fields
+      if (!data.name || !data.phone) {
+        console.log('⚠️ Missing required data (name/phone)');
+        return { success: false, reason: 'missing_data' };
+      }
+      
+      const payload = buildPayload(data, bookingId);
+      console.log('📤 Submitting to SharePoint:', payload);
+      
+      const maxRetries = 3;
+      let lastError = null;
+      
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          console.log(`📤 Attempt ${attempt}/${maxRetries}...`);
+          showIndicator('loading', `⏳ Confirming booking... (attempt ${attempt})`, 0);
+          
+          const res = await fetch(PAYMENT_CONFIRMED_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...payload, submissionAttempt: attempt })
+          });
+          
+          if (res.ok) {
+            console.log('✅ Submitted successfully');
+            markSubmitted(bookingId);
+            showIndicator('success', '✅ Booking confirmed successfully!', 5000);
+            return { success: true, bookingId };
+          } else {
+            const errorText = await res.text();
+            lastError = `HTTP ${res.status}: ${errorText}`;
+            console.error(`❌ Attempt ${attempt} failed:`, lastError);
+            
+            if (res.status >= 400 && res.status < 500) {
+              break; // Client error - don't retry
+            }
+            
+            if (attempt < maxRetries) {
+              await new Promise(r => setTimeout(r, 1000 * Math.pow(2, attempt - 1)));
+            }
+          }
+        } catch (err) {
+          lastError = err.message;
+          console.error(`❌ Attempt ${attempt} error:`, err);
+          if (attempt < maxRetries) {
+            await new Promise(r => setTimeout(r, 1000 * Math.pow(2, attempt - 1)));
+          }
+        }
+      }
+      
+      console.error('❌ All attempts failed:', lastError);
+      showIndicator('warning', '⚠️ Booking received but confirmation pending. We\'ll contact you shortly.', 10000);
+      return { success: false, error: lastError };
+    }
+
+    // === TRACK PHONE CALL ===
+    function trackCall(source) {
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'phone_call', { event_category: 'Contact', event_label: source, value: 1 });
+      }
+    }
+
+    // === INITIALIZATION ===
+    async function init() {
+      console.log('🚀 Ad-hoc bank transfer page initializing...');
+      
+      const data = decodeBookingData();
+      
+      if (!data || !data.rego) {
+        // No valid data - show error
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('errorState').style.display = 'block';
+        document.getElementById('errorMessage').textContent = 
+          'This booking link is invalid or missing required information. Please contact us at 0800 769 000.';
+        return;
+      }
+      
+      // Store globally
+      bookingData = data;
+      
+      // Display the data
+      displayBookingData(data);
+      
+      // Show success state
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('successState').style.display = 'block';
+      
+      // Submit to SharePoint
+      const result = await submitToSharePoint(data);
+      console.log('📊 Submission result:', result);
+      
+      // Track conversion
+      if (typeof gtag !== 'undefined' && result.success) {
+        const amount = parseFloat(data.amount || data.price || 0);
+        gtag('event', 'purchase', {
+          transaction_id: result.bookingId || `adhoc_${Date.now()}`,
+          value: amount,
+          currency: 'NZD',
+          payment_type: 'bank_transfer'
+        });
+        console.log('📊 Purchase conversion tracked');
+      }
+    }
+
+    // Run on page load
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
+
