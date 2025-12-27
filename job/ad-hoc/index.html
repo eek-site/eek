@@ -184,8 +184,8 @@
   </div>
 
   <script>
-    // Power Automate Webhook URL (same as /thanks page - creates SharePoint entry)
-    const PAYMENT_CONFIRMED_WEBHOOK_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c8ac1b8ac2574f66ad4efcdc23165379/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kg6bffZKUQzUVR7jzpdTRaeudIa_T99V1hpzb_VlXPk';
+    // Power Automate Webhook URL (same as book-service - CREATES SharePoint entry)
+    const PAYMENT_API_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/dbc93a177083499caf5a06eeac87683c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vXidGdo8qErY4QVv03JeNaGbA79eWEoiOxuDocljL6Q';
 
     // Global booking data
     let bookingData = {};
@@ -358,105 +358,123 @@
       }
     }
 
-    // === BUILD PAYLOAD (matches /thanks page structure) ===
+    // === BUILD PAYLOAD (matches book-service structure) ===
     function buildPayload(data, bookingId) {
       const geo = window.CF_GEO || {};
       const locationStr = cleanText(data.location || geo.city || 'Unknown');
       const sessionId = `adhoc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const price = data.amount || data.price || '';
+      const now = new Date();
+      const nowISO = now.toISOString();
       
-      // Use PaymentUtils if available for consistent payload structure
-      if (window.PaymentUtils) {
-        const paymentUtils = new window.PaymentUtils();
-        const canonicalData = {
-          name: cleanText(data.name),
-          phone: sanitizePhone(data.phone),
-          email: cleanText(data.email),
-          location: locationStr,
-          rego: (data.rego || '').toUpperCase(),
-          year: data.year || '',
-          make: data.make || '',
-          model: data.model || '',
-          vehicleType: 'car',
-          service: data.service || 'adhoc',
-          serviceCode: 'ADHOC',
-          serviceTitle: data.service || 'Mobile Mechanic Service',
-          price: data.amount || data.price || '',
-          details: data.details || 'Bank transfer payment',
-          sessionId: sessionId,
-          bookingTime: new Date().toISOString()
-        };
-        
-        const payload = paymentUtils.buildPaymentConfirmedPayload(canonicalData, bookingId);
-        // Override specific fields for bank transfer
-        payload.paymentMethod = 'bank_transfer';
-        payload.bookingSource = 'ad_hoc_bank_transfer';
-        payload.eventAction = 'bank_transfer_confirmed';
-        return payload;
-      }
-      
-      // Fallback: Build payload manually
+      // Build payload matching book-service structure exactly
       return {
+        sessionId: sessionId,
+        gclid: localStorage.getItem('eek_gclid') || '',
+        bookingStatus: 'PAID',
+        statusColor: '#28a745',
+        statusDescription: 'Bank transfer payment confirmed',
+        timestamp: nowISO,
+        
         name: cleanText(data.name),
         phone: sanitizePhone(data.phone),
         email: cleanText(data.email),
-        location: locationStr,
+        location: {
+          city: locationStr,
+          region: geo.region || 'Unknown',
+          country: geo.country || 'New Zealand',
+          address: locationStr,
+          coordinates: {
+            latitude: geo.latitude || null,
+            longitude: geo.longitude || null,
+            accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+          }
+        },
+        details: data.details || 'Bank transfer payment - ad-hoc booking',
+        
         rego: (data.rego || '').toUpperCase(),
         vehicleRego: (data.rego || '').toUpperCase(),
         year: data.year || '',
+        vehicleYear: data.year || '',
         make: data.make || '',
+        vehicleMake: data.make || '',
         model: data.model || '',
+        vehicleModel: data.model || '',
         vehicleType: 'car',
-        service: data.service || 'adhoc',
-        serviceCode: 'ADHOC',
+        
+        service: 'adhoc',
+        serviceCode: 'ADHOC-BANK',
         serviceTitle: data.service || 'Mobile Mechanic Service',
-        price: data.amount || data.price || '',
-        finalPrice: data.amount || data.price || '',
-        calculatedPrice: data.amount || data.price || '',
-        details: data.details || 'Bank transfer payment',
-        sessionId: sessionId,
-        bookingTime: new Date().toISOString(),
-        timestamp: new Date().toISOString(),
-        eventType: 'payment_confirmed',
-        eventAction: 'bank_transfer_confirmed',
-        bookingStatus: 'payment_confirmed',
-        paymentMethod: 'bank_transfer',
-        bookingSource: 'ad_hoc_bank_transfer',
-        idempotencyKey: bookingId,
-        paymentConfirmedAt: new Date().toISOString(),
-        paymentStatus: 'confirmed',
-        termsAccepted: true,
+        
+        price: price,
+        finalPrice: price,
+        calculatedPrice: price,
+        bookingTime: nowISO,
+        urgencyLevel: 'bank_transfer',
+        
+        // Customer data object (matches book-service)
         customerData: {
           name: cleanText(data.name),
           phone: sanitizePhone(data.phone),
           email: cleanText(data.email),
           location: locationStr,
           vehicleRego: (data.rego || '').toUpperCase(),
-          service: data.service || 'adhoc',
-          serviceCode: 'ADHOC',
+          vehicleYear: data.year || '',
+          vehicleMake: data.make || '',
+          vehicleModel: data.model || '',
+          vehicleDescription: `${data.year || ''} ${data.make || ''} ${data.model || ''}`.trim() || 'Vehicle',
+          service: 'adhoc',
+          serviceCode: 'ADHOC-BANK',
           serviceTitle: data.service || 'Mobile Mechanic Service',
-          price: data.amount || data.price || '',
+          details: data.details || 'Bank transfer payment - ad-hoc booking',
+          price: price,
+          basePrice: price,
+          bookingDateTime: now.toLocaleString('en-NZ', { timeZone: 'Pacific/Auckland' }),
+          scheduledDate: now.toLocaleDateString('en-NZ', { timeZone: 'Pacific/Auckland' }),
+          scheduledTime: 'ASAP',
+          urgencyLevel: 'bank_transfer',
+          urgencyTitle: 'Bank Transfer Payment',
+          vehicleType: 'car',
+          vehicleTypeAddon: 0,
+          scheduledDateISO: nowISO,
+          timeWindow: 'ASAP',
+          gclid: localStorage.getItem('eek_gclid') || '',
+          sessionId: sessionId,
           bookingSource: 'ad_hoc_bank_transfer',
-          formVersion: '1.0'
+          formVersion: '1.0',
+          paymentMethod: 'bank_transfer'
         },
-        visitorData: {
-          name: cleanText(data.name),
-          phone: sanitizePhone(data.phone),
-          email: cleanText(data.email),
-          location: {
-            city: locationStr,
-            region: geo.region || 'Unknown',
-            country: geo.country || 'New Zealand',
-            countryCode: geo.countryCode || 'NZ'
+        
+        // Tracking data
+        trackingData: {
+          gclid: localStorage.getItem('eek_gclid') || '',
+          gclidState: localStorage.getItem('eek_gclid') ? 'Active' : 'Inactive',
+          utm: {
+            source: localStorage.getItem('eek_utm_source') || '',
+            medium: localStorage.getItem('eek_utm_medium') || '',
+            campaign: localStorage.getItem('eek_utm_campaign') || '',
+            term: localStorage.getItem('eek_utm_term') || '',
+            content: localStorage.getItem('eek_utm_content') || ''
           },
-          vehicleRego: (data.rego || '').toUpperCase(),
-          service: data.service || 'adhoc',
-          serviceCode: 'ADHOC',
-          price: data.amount || data.price || ''
-        },
-        device: {
-          userAgent: navigator.userAgent,
-          platform: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
-          language: navigator.language || 'en-NZ'
+          pageSource: {
+            type: 'direct',
+            detail: 'Ad-hoc bank transfer link',
+            referrer: document.referrer || ''
+          },
+          device: {
+            userAgent: navigator.userAgent,
+            platform: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
+            language: navigator.language || 'en-NZ',
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Pacific/Auckland'
+          },
+          location: {
+            country: geo.country || 'New Zealand',
+            region: geo.region || 'Unknown',
+            city: geo.city || 'Unknown'
+          },
+          eventType: 'booking_created',
+          eventAction: 'ad_hoc_bank_transfer',
+          timestamp: nowISO
         }
       };
     }
@@ -489,17 +507,20 @@
           console.log(`📤 Attempt ${attempt}/${maxRetries}...`);
           showIndicator('loading', `⏳ Confirming booking... (attempt ${attempt})`, 0);
           
-          const res = await fetch(PAYMENT_CONFIRMED_WEBHOOK_URL, {
+          const res = await fetch(PAYMENT_API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ...payload, submissionAttempt: attempt })
           });
           
           if (res.ok) {
-            console.log('✅ Submitted successfully');
+            const result = await res.json().catch(() => ({}));
+            console.log('✅ Submitted successfully:', result);
+            // Note: PAYMENT_API_URL returns a Stripe URL which we ignore for bank transfers
+            // The SharePoint entry is created regardless
             markSubmitted(bookingId);
-            showIndicator('success', '✅ Booking confirmed successfully!', 5000);
-            return { success: true, bookingId };
+            showIndicator('success', '✅ Booking created successfully!', 5000);
+            return { success: true, bookingId, sharepointCreated: true };
           } else {
             const errorText = await res.text();
             lastError = `HTTP ${res.status}: ${errorText}`;
