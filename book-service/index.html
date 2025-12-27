@@ -1274,20 +1274,6 @@ async function goToStep2(){
   saveStepCompletionState(); // Persist to localStorage
   console.log('✅ Step 1 marked as completed');
 
-  // Scroll to step 2 with proper alignment
-  setTimeout(() => {
-    const step2Element = document.getElementById('step2');
-    if (step2Element) {
-      step2Element.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start',
-        inline: 'nearest'
-      });
-      // Additional offset to account for fixed header if needed
-      window.scrollBy(0, -20);
-    }
-  }, 100);
-
   if (window.currentConfig.isWinz) {
     document.getElementById('step2Title').textContent = window.currentConfig.step2Title || 'Step 2: Generate Your WINZ Quote';
     document.getElementById('timingNotice').style.display = 'none';
@@ -1336,6 +1322,25 @@ async function goToStep2(){
     const firstOption = window.currentConfig.urgencyOptions[0];
     selectUrgency(firstOption.id, firstOption.title, firstOption.time, calculatedPrice || 0, urgencyContainer.querySelector('.urgency-option'));
   }
+
+  // Scroll to step 2 AFTER all DOM updates are complete
+  // Use requestAnimationFrame to ensure DOM is painted, then scroll
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const step2Element = document.getElementById('step2');
+      if (step2Element) {
+        // Get the position of step2 relative to the document
+        const rect = step2Element.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const targetY = rect.top + scrollTop - 20; // 20px offset from top
+        
+        window.scrollTo({
+          top: Math.max(0, targetY),
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
 }
 
 function selectUrgency(id, title, time, price, el){
