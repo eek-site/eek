@@ -69,8 +69,8 @@
     .progress-step span{font-size:.9em;color:#666}
     .progress-step.active span{color:var(--brand);font-weight:700}
 
-    .booking-steps{padding:30px}
-    .step{display:none;text-align:left}
+    .booking-steps{padding:30px;overflow-anchor:none}
+    .step{display:none;text-align:left;overflow-anchor:none}
     .step.active{display:block}
     .step h3{color:var(--brand);margin-bottom:20px;font-size:1.4em}
     
@@ -93,8 +93,8 @@
     .timing-notice h4{margin:0 0 10px 0;color:#856404}
     .timing-notice p{margin:8px 0;color:#856404;line-height:1.5}
 
-    .urgency-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;margin:20px 0}
-    .urgency-option{border:2px solid #ddd;border-radius:12px;padding:20px;cursor:pointer;text-align:center;transition:all .3s;background:#fff}
+    .urgency-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;margin:20px 0;overflow-anchor:none}
+    .urgency-option{border:2px solid #ddd;border-radius:12px;padding:20px;cursor:pointer;text-align:center;transition:all .3s;background:#fff;overflow-anchor:none}
     .urgency-option:hover{border-color:var(--brand);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,85,0,.15)}
     .urgency-option.selected{border-color:var(--brand);background:linear-gradient(135deg,#fff5f0,#ffe5d9);border-width:3px}
     .urgency-title{font-weight:700;margin-bottom:8px;font-size:1.1em}
@@ -128,7 +128,7 @@
     .button.processing::after{content:'...';animation:dots 1.5s steps(3,end) infinite}
     @keyframes dots{0%,20%{content:'.'}40%{content:'..'}60%,100%{content:'...'}}
 
-    .terms-section{background:#f8f9fa;border-radius:8px;padding:20px;margin:20px 0;text-align:left}
+    .terms-section{background:#f8f9fa;border-radius:8px;padding:20px;margin:20px 0;text-align:left;overflow-anchor:none}
     .terms-checkbox{display:flex;align-items:flex-start;gap:10px;margin:15px 0}
     .terms-checkbox input{margin-top:4px;transform:scale(1.2)}
     .terms-text{font-size:.95em;line-height:1.5}
@@ -1339,6 +1339,10 @@ async function goToStep2(){
 }
 
 function selectUrgency(id, title, time, price, el){
+  // Preserve scroll position to prevent anchor jumping
+  const scrollY = window.scrollY;
+  const scrollX = window.scrollX;
+  
   document.querySelectorAll('.urgency-option.selected').forEach(x => x.classList.remove('selected'));
   el.classList.add('selected');
   selectedUrgency = id;
@@ -1355,6 +1359,11 @@ function selectUrgency(id, title, time, price, el){
   }
   
   document.getElementById('confirmTimeBtn').disabled = false;
+  
+  // Restore scroll position after DOM updates
+  requestAnimationFrame(() => {
+    window.scrollTo(scrollX, scrollY);
+  });
 }
 
 async function goToStep3(){
