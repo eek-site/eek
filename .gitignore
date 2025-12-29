@@ -1,0 +1,36 @@
+# Environment variables (NEVER commit these!)
+.env
+.env.local
+.env.production
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dependencies (if using npm)
+node_modules/
+
+# Build output
+.vercel/
+dist/
+build/
+
+# Temp files
+*.tmp
+*.temp
+
+# Editor backups
+*~
+\#*\#
+

@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <title>Supplier Communication - Road and Rescue</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="forms.css">
+    <style>
+        .supplier-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 900px) {
+            .supplier-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .panel {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .panel h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .supplier-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .supplier-card:hover {
+            border-color: #667eea;
+        }
+        .supplier-card.selected {
+            border-color: #28a745;
+            background: #e8f5e9;
+        }
+        .supplier-card h4 {
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+        .supplier-card .type-badge {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            color: #666;
+        }
+        .supplier-card .contact {
+            margin-top: 10px;
+            font-size: 0.85em;
+            color: #555;
+        }
+        .job-supplier-list {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .job-supplier-list h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        .job-supplier-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        .job-supplier-item:last-child {
+            border-bottom: none;
+        }
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .action-btn {
+            padding: 15px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .action-btn:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        .action-btn.primary {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .action-btn.success {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+        .action-btn.warning {
+            background: #ffc107;
+            color: #333;
+            border-color: #ffc107;
+        }
+        .action-btn.danger {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+        .action-btn h4 {
+            margin-bottom: 5px;
+        }
+        .action-btn p {
+            font-size: 0.8em;
+            margin: 0;
+            opacity: 0.9;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .btn-success { background: #28a745; color: white; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .search-box {
+            margin-bottom: 15px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        .rego-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .rego-display h2 {
+            margin: 0;
+        }
+        .rego-display button {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width: 1200px;">
+        <header>
+            <h1>ROAD AND RESCUE</h1>
+            <h2>Supplier Communication</h2>
+        </header>
+        
+        <div class="submenu-container">
+            <a href="index.html" class="back-button">Back to Main Menu</a>
+            
+            <!-- Current Rego Display -->
+            <div class="rego-display">
+                <h2 id="current-rego">No Job Selected</h2>
+                <button onclick="changeRego()">Change Rego</button>
+            </div>
+            
+            <!-- Job Suppliers Section -->
+            <div class="job-supplier-list" id="job-suppliers-section" style="display: none;">
+                <h4>Suppliers Assigned to This Job</h4>
+                <div id="job-suppliers-list"></div>
+            </div>
+            
+            <div class="supplier-grid">
+                <!-- Left Panel: Supplier List -->
+                <div class="panel">
+                    <h3>All Suppliers</h3>
+                    
+                    <div class="search-box">
+                        <input type="text" id="supplier-search" placeholder="Search suppliers..." 
+                               onkeyup="filterSuppliers()">
+                    </div>
+                    
+                    <div class="form-group">
+                        <select id="type-filter" onchange="filterSuppliers()">
+                            <option value="">All Types</option>
+                            <option value="Tow">Tow</option>
+                            <option value="Workshop">Workshop</option>
+                            <option value="Fuel Extraction">Fuel Extraction</option>
+                            <option value="Locksmith">Locksmith</option>
+                            <option value="Storage">Storage</option>
+                        </select>
+                    </div>
+                    
+                    <div id="supplier-list" style="max-height: 500px; overflow-y: auto;">
+                        <p>Loading suppliers...</p>
+                    </div>
+                </div>
+                
+                <!-- Right Panel: Actions & Messages -->
+                <div>
+                    <!-- Quick Actions -->
+                    <div class="panel" style="margin-bottom: 20px;">
+                        <h3>Quick Actions</h3>
+                        
+                        <div class="action-grid">
+                            <div class="action-btn primary" onclick="sendJobToSupplier()">
+                                <h4>📧 Send Job</h4>
+                                <p>Email job details to supplier</p>
+                            </div>
+                            <div class="action-btn" onclick="callSupplier()">
+                                <h4>📞 Call Supplier</h4>
+                                <p>Initiate phone call</p>
+                            </div>
+                            <div class="action-btn warning" onclick="notifyVehicleHold()">
+                                <h4>⚠️ Vehicle Hold</h4>
+                                <p>Don't release until notified</p>
+                            </div>
+                            <div class="action-btn success" onclick="notifyVehicleRelease()">
+                                <h4>✅ Vehicle Release</h4>
+                                <p>OK to release vehicle</p>
+                            </div>
+                        </div>
+                        
+                        <div class="action-grid" style="margin-top: 10px;">
+                            <div class="action-btn" onclick="requestQuote()">
+                                <h4>💰 Request Quote</h4>
+                                <p>Ask for pricing</p>
+                            </div>
+                            <div class="action-btn" onclick="requestUpdate()">
+                                <h4>📋 Request Update</h4>
+                                <p>Ask for job status</p>
+                            </div>
+                            <div class="action-btn" onclick="sendCustomMessage()">
+                                <h4>✉️ Custom Message</h4>
+                                <p>Send custom text/email</p>
+                            </div>
+                            <div class="action-btn" onclick="updateSupplierDetails()">
+                                <h4>✏️ Edit Details</h4>
+                                <p>Update supplier info</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notify All Section -->
+                    <div class="panel">
+                        <h3>Bulk Notifications</h3>
+                        
+                        <div class="form-group">
+                            <label>Send notification to all job suppliers:</label>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <button class="btn btn-success" onclick="notifyAllRelease()">
+                                ✅ Release All - Vehicle Can Be Collected
+                            </button>
+                            <button class="btn" style="background: #ffc107; color: #333;" onclick="notifyAllHold()">
+                                ⚠️ Hold All - Do Not Release
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Selected Supplier Details -->
+                    <div class="panel" id="supplier-details" style="margin-top: 20px; display: none;">
+                        <h3>Selected Supplier</h3>
+                        
+                        <div id="supplier-info">
+                            <!-- Populated dynamically -->
+                        </div>
+                        
+                        <div style="margin-top: 15px;">
+                            <button class="btn btn-primary" onclick="sendJobToSelected()">
+                                Send Job to This Supplier
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <button onclick="window.close()" class="btn-exit">Exit</button>
+        </footer>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/messaging.js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        let allSuppliers = [];
+        let jobSuppliers = [];
+        let selectedSupplier = null;
+        let currentRego = '';
+        let currentJob = null;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async function() {
+            initSupabase();
+            await loadSuppliers();
+            
+            // Check for session rego
+            const sessionRego = sessionStorage.getItem('selectedJobRego');
+            if (sessionRego) {
+                await loadJobData(sessionRego);
+            }
+        });
+        
+        // Change rego
+        async function changeRego() {
+            const rego = prompt('Enter vehicle rego:');
+            if (rego) {
+                await loadJobData(rego);
+            }
+        }
+        
+        // Load job data
+        async function loadJobData(rego) {
+            currentRego = rego.toUpperCase();
+            sessionStorage.setItem('selectedJobRego', currentRego);
+            document.getElementById('current-rego').textContent = currentRego;
+            
+            const config = window.APP_CONFIG || {};
+            
+            // Load job
+            if (config.dataSource === 'supabase') {
+                currentJob = await db.jobs.getByRego(rego);
+                jobSuppliers = await db.buildNotes.getSuppliersForRego(rego);
+            } else {
+                // Demo data
+                currentJob = {
+                    rego: currentRego,
+                    customer_name: 'John Smith',
+                    phone1: '021 123 4567'
+                };
+                jobSuppliers = [
+                    { supplier_name: 'Wellington Towing', supplier_type: 'Tow', supplier_phone: '04 123 4567', supplier_email: 'jobs@welltow.co.nz' }
+                ];
+            }
+            
+            // Show job suppliers
+            if (jobSuppliers.length > 0) {
+                document.getElementById('job-suppliers-section').style.display = 'block';
+                document.getElementById('job-suppliers-list').innerHTML = jobSuppliers.map(s => `
+                    <div class="job-supplier-item">
+                        <span><strong>${s.supplier_name}</strong> (${s.supplier_type || 'General'})</span>
+                        <span>
+                            <button onclick="selectJobSupplier('${s.supplier_name}')" style="padding: 5px 10px; cursor: pointer;">Select</button>
+                        </span>
+                    </div>
+                `).join('');
+            } else {
+                document.getElementById('job-suppliers-section').style.display = 'none';
+            }
+        }
+        
+        // Load all suppliers
+        async function loadSuppliers() {
+            const config = window.APP_CONFIG || {};
+            
+            if (config.dataSource === 'supabase') {
+                allSuppliers = await db.suppliers.getAll();
+            } else {
+                // Demo data
+                allSuppliers = [
+                    { id: '1', supplier_name: 'Wellington Towing', supplier_type: 'Tow', region: 'Wellington', phone: '04 123 4567', email: 'jobs@welltow.co.nz' },
+                    { id: '2', supplier_name: 'Central Workshop', supplier_type: 'Workshop', region: 'Wellington', phone: '04 234 5678', email: 'service@central.co.nz' },
+                    { id: '3', supplier_name: 'Auckland Roadside', supplier_type: 'Tow', region: 'Auckland', phone: '09 345 6789', email: 'dispatch@aklroad.co.nz' },
+                    { id: '4', supplier_name: 'Fuel Doctors NZ', supplier_type: 'Fuel Extraction', region: 'NZ Wide', phone: '0800 383 537', email: 'help@fueldoctors.co.nz' },
+                ];
+            }
+            
+            renderSuppliers();
+        }
+        
+        // Render suppliers
+        function renderSuppliers(suppliers = allSuppliers) {
+            const listDiv = document.getElementById('supplier-list');
+            
+            if (suppliers.length === 0) {
+                listDiv.innerHTML = '<p>No suppliers found</p>';
+                return;
+            }
+            
+            listDiv.innerHTML = suppliers.map(s => `
+                <div class="supplier-card ${selectedSupplier?.id === s.id ? 'selected' : ''}" 
+                     onclick="selectSupplier('${s.id}')">
+                    <h4>${s.supplier_name}</h4>
+                    <span class="type-badge">${s.supplier_type || 'General'}</span>
+                    <div class="contact">
+                        <div>📞 ${s.phone || s.mobile || 'No phone'}</div>
+                        <div>📧 ${s.email || 'No email'}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Filter suppliers
+        function filterSuppliers() {
+            const search = document.getElementById('supplier-search').value.toLowerCase();
+            const typeFilter = document.getElementById('type-filter').value;
+            
+            let filtered = allSuppliers.filter(s => {
+                if (typeFilter && s.supplier_type !== typeFilter) return false;
+                if (search && !s.supplier_name.toLowerCase().includes(search)) return false;
+                return true;
+            });
+            
+            renderSuppliers(filtered);
+        }
+        
+        // Select supplier
+        function selectSupplier(supplierId) {
+            selectedSupplier = allSuppliers.find(s => s.id === supplierId);
+            renderSuppliers();
+            showSupplierDetails();
+        }
+        
+        // Select job supplier
+        function selectJobSupplier(supplierName) {
+            const supplier = jobSuppliers.find(s => s.supplier_name === supplierName);
+            if (supplier) {
+                selectedSupplier = {
+                    id: supplier.id,
+                    supplier_name: supplier.supplier_name,
+                    supplier_type: supplier.supplier_type,
+                    phone: supplier.supplier_phone,
+                    email: supplier.supplier_email
+                };
+                showSupplierDetails();
+            }
+        }
+        
+        // Show supplier details
+        function showSupplierDetails() {
+            if (!selectedSupplier) return;
+            
+            const detailsDiv = document.getElementById('supplier-details');
+            const infoDiv = document.getElementById('supplier-info');
+            
+            infoDiv.innerHTML = `
+                <p><strong>Name:</strong> ${selectedSupplier.supplier_name}</p>
+                <p><strong>Type:</strong> ${selectedSupplier.supplier_type || 'General'}</p>
+                <p><strong>Phone:</strong> ${selectedSupplier.phone || selectedSupplier.supplier_phone || 'N/A'}</p>
+                <p><strong>Email:</strong> ${selectedSupplier.email || selectedSupplier.supplier_email || 'N/A'}</p>
+            `;
+            
+            detailsDiv.style.display = 'block';
+        }
+        
+        // Send job to supplier
+        async function sendJobToSupplier() {
+            if (!selectedSupplier) {
+                alert('Please select a supplier first');
+                return;
+            }
+            if (!currentRego) {
+                alert('Please select a job (rego) first');
+                return;
+            }
+            
+            const jobData = currentJob || { rego: currentRego };
+            
+            await messaging.sendJobToSupplier(selectedSupplier, jobData);
+            
+            // Add to job build notes
+            const config = window.APP_CONFIG || {};
+            if (config.dataSource === 'supabase') {
+                await db.buildNotes.addSupplier(currentRego, {
+                    name: selectedSupplier.supplier_name,
+                    email: selectedSupplier.email || selectedSupplier.supplier_email,
+                    phone: selectedSupplier.phone || selectedSupplier.supplier_phone,
+                    type: selectedSupplier.supplier_type
+                });
+            }
+            
+            alert(`Job sent to ${selectedSupplier.supplier_name}!`);
+        }
+        
+        function sendJobToSelected() {
+            sendJobToSupplier();
+        }
+        
+        // Call supplier
+        function callSupplier() {
+            if (!selectedSupplier) {
+                alert('Please select a supplier first');
+                return;
+            }
+            
+            const phone = selectedSupplier.phone || selectedSupplier.supplier_phone;
+            if (phone) {
+                window.open(`tel:${phone.replace(/\s/g, '')}`);
+            } else {
+                alert('No phone number available');
+            }
+        }
+        
+        // Vehicle hold notification
+        async function notifyVehicleHold() {
+            if (!selectedSupplier) {
+                alert('Please select a supplier first');
+                return;
+            }
+            if (!currentRego) {
+                alert('Please select a job first');
+                return;
+            }
+            
+            await messaging.notifySupplierVehicleHold(selectedSupplier, currentRego);
+            alert(`Vehicle hold notification sent to ${selectedSupplier.supplier_name}`);
+        }
+        
+        // Vehicle release notification
+        async function notifyVehicleRelease() {
+            if (!selectedSupplier) {
+                alert('Please select a supplier first');
+                return;
+            }
+            if (!currentRego) {
+                alert('Please select a job first');
+                return;
+            }
+            
+            await messaging.notifySupplierVehicleRelease(selectedSupplier, currentRego);
+            alert(`Vehicle release notification sent to ${selectedSupplier.supplier_name}`);
+        }
+        
+        // Notify all - hold
+        async function notifyAllHold() {
+            if (!currentRego) {
+                alert('Please select a job first');
+                return;
+            }
+            
+            if (jobSuppliers.length === 0) {
+                alert('No suppliers assigned to this job');
+                return;
+            }
+            
+            if (confirm(`Send "DO NOT RELEASE" notification to all ${jobSuppliers.length} supplier(s)?`)) {
+                await messaging.notifyAllSuppliersForRego(currentRego, 'hold');
+                alert('Hold notifications sent to all suppliers');
+            }
+        }
+        
+        // Notify all - release
+        async function notifyAllRelease() {
+            if (!currentRego) {
+                alert('Please select a job first');
+                return;
+            }
+            
+            if (jobSuppliers.length === 0) {
+                alert('No suppliers assigned to this job');
+                return;
+            }
+            
+            if (confirm(`Send "RELEASE VEHICLE" notification to all ${jobSuppliers.length} supplier(s)?`)) {
+                await messaging.notifyAllSuppliersForRego(currentRego, 'release');
+                alert('Release notifications sent to all suppliers');
+            }
+        }
+        
+        // Request quote
+        async function requestQuote() {
+            if (!selectedSupplier) {
+                alert('Please select a supplier first');
+                return;
+            }
+            
+            const details = prompt('Enter job details for quote:');
+            if (!details) return;
+            
+            const message = `Hi, EEK Mechanical here. Can you please provide a quote for:\n\n${details}\n\nRego: ${currentRego || 'TBA'}\n\nThank you.`;
+            
+            await messaging.sendSms(
+                selectedSupplier.phone || selectedSupplier.supplier_phone,
+                message
+            );
+            
+            alert('Quote request sent');
+        }
+        
+        // Request update
+        async function requestUpdate() {
+            if (!selectedSupplier) {
+                alert('Please select a supplier first');
+                return;
+            }
+            if (!currentRego) {
+                alert('Please select a job first');
+                return;
+            }
+            
+            const message = `Hi, EEK Mechanical here. Can you please provide an update on ${currentRego}? Thank you.`;
+            
+            await messaging.sendSms(
+                selectedSupplier.phone || selectedSupplier.supplier_phone,
+                message
+            );
+            
+            alert('Update request sent');
+        }
+        
+        // Custom message
+        async function sendCustomMessage() {
+            if (!selectedSupplier) {
+                alert('Please select a supplier first');
+                return;
+            }
+            
+            const message = prompt('Enter your message:');
+            if (!message) return;
+            
+            await messaging.sendSms(
+                selectedSupplier.phone || selectedSupplier.supplier_phone,
+                message
+            );
+            
+            alert('Message sent');
+        }
+        
+        // Update supplier details
+        function updateSupplierDetails() {
+            window.location.href = 'update-supplier-details.html';
+        }
+    </script>
+</body>
+</html>

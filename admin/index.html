@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road and Rescue - Admin Panel</title>
+    <!-- Prevent search engine indexing - secure area -->
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ROAD AND RESCUE</h1>
+            <h2>Main Menu</h2>
+            <div style="text-align: right; margin-top: 10px; font-size: 0.9em;">
+                <span class="user-name" style="color: rgba(255,255,255,0.9); margin-right: 15px;"></span>
+                <button class="btn-logout" onclick="auth.signOut()" style="display: none; padding: 5px 15px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 4px; cursor: pointer; font-size: 0.9em;">Sign Out</button>
+            </div>
+        </header>
+        
+        <!-- Session Rego Display -->
+        <div id="session-rego-display" class="session-rego" style="display: none; background: rgba(255,255,255,0.1); padding: 10px 20px; margin: 0 20px 15px; border-radius: 8px; text-align: center;">
+            <span style="color: rgba(255,255,255,0.7); font-size: 0.9em;">Current Rego: </span>
+            <strong id="current-rego" style="color: #ffd700; font-size: 1.1em;">-</strong>
+            <button onclick="changeSessionRego()" style="margin-left: 15px; padding: 3px 10px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; border-radius: 4px; cursor: pointer; font-size: 0.8em;">Change</button>
+        </div>
+        
+        <nav class="main-menu">
+            <a href="#" class="menu-item change-rego" onclick="changeSessionRego(); return false;">
+                <span class="menu-number">0</span>
+                <span class="menu-text">Change Rego</span>
+            </a>
+            <a href="intake.html" class="menu-item">
+                <span class="menu-number">1</span>
+                <span class="menu-text">Intake & Booking</span>
+            </a>
+            <a href="dispatch.html" class="menu-item">
+                <span class="menu-number">2</span>
+                <span class="menu-text">Dispatch & Setup</span>
+            </a>
+            <a href="customer.html" class="menu-item">
+                <span class="menu-number">3</span>
+                <span class="menu-text">Customer Communication</span>
+            </a>
+            <a href="supplier.html" class="menu-item">
+                <span class="menu-number">4</span>
+                <span class="menu-text">Supplier Communication</span>
+            </a>
+            <a href="completion.html" class="menu-item">
+                <span class="menu-number">5</span>
+                <span class="menu-text">Job Completion & Billing</span>
+            </a>
+            <a href="accounting.html" class="menu-item">
+                <span class="menu-number">6</span>
+                <span class="menu-text">Accounting & Financial</span>
+            </a>
+            <a href="administration.html" class="menu-item">
+                <span class="menu-number">7</span>
+                <span class="menu-text">Administration</span>
+            </a>
+            <a href="special.html" class="menu-item">
+                <span class="menu-number">8</span>
+                <span class="menu-text">Special Services</span>
+            </a>
+            <a href="#" class="menu-item primary" onclick="sendReleasePaymentWithInvoice(); return false;">
+                <span class="menu-number">9</span>
+                <span class="menu-text">Send Release Payment (Invoice + Pay Link)</span>
+            </a>
+            <a href="#" class="menu-item secondary" onclick="confirmBankPaymentAndRelease(); return false;">
+                <span class="menu-number">10</span>
+                <span class="menu-text">Confirm Bank Payment & Release</span>
+            </a>
+            <a href="all-items.html" class="menu-item helper">
+                <span class="menu-number">11</span>
+                <span class="menu-text">Show All Menu Items (Helper)</span>
+            </a>
+        </nav>
+        
+        <footer>
+            <button onclick="window.close()" class="btn-exit">Exit</button>
+            <a href="login.html" class="footer-login-link" title="Login">🔐</a>
+        </footer>
+    </div>
+    
+    <!-- MSAL.js library -->
+    <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
+    
+    <!-- Authentication configuration -->
+    <script src="auth-config.js"></script>
+    
+    <!-- Authentication helper functions -->
+    <script src="auth.js"></script>
+    
+    <!-- API configuration -->
+    <script src="api-config.js"></script>
+    
+    <!-- Main script -->
+    <script src="script.js"></script>
+    
+    <script>
+        // Update user display on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof auth !== 'undefined' && auth.isAuthenticated && auth.isAuthenticated()) {
+                auth.updateUserDisplay();
+            }
+        });
+    </script>
+</body>
+</html>
+

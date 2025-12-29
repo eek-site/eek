@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <title>Dispatch & Setup - Road and Rescue</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="forms.css">
+    <style>
+        .dispatch-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 900px) {
+            .dispatch-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .panel {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .panel h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .job-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .job-summary h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .job-summary .detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .job-summary .detail:last-child {
+            border-bottom: none;
+        }
+        .supplier-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .supplier-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .supplier-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+        .supplier-card.selected {
+            border-color: #28a745;
+            background: #e8f5e9;
+        }
+        .supplier-card h4 {
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+        .supplier-card .type {
+            display: inline-block;
+            background: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            color: #666;
+        }
+        .supplier-card .contact {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .supplier-card.preferred {
+            border-left: 4px solid #ffc107;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 5px 0;
+        }
+        .btn-success { background: #28a745; color: white; }
+        .btn-success:hover { background: #218838; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-primary:hover { background: #5a6fd6; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #5a6268; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-info:hover { background: #138496; }
+        .btn-full { width: 100%; }
+        .dispatch-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .filter-bar select {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        .assigned-suppliers {
+            margin-top: 20px;
+        }
+        .assigned-supplier {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #e8f5e9;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        .assigned-supplier .remove {
+            color: #dc3545;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width: 1200px;">
+        <header>
+            <h1>ROAD AND RESCUE</h1>
+            <h2>Dispatch & Setup</h2>
+        </header>
+        
+        <div class="submenu-container">
+            <a href="index.html" class="back-button">Back to Main Menu</a>
+            
+            <!-- Job Summary -->
+            <div class="job-summary" id="job-summary">
+                <h2 id="summary-rego">Select a Job</h2>
+                <div class="detail">
+                    <span>Customer:</span>
+                    <span id="summary-customer">-</span>
+                </div>
+                <div class="detail">
+                    <span>Phone:</span>
+                    <span id="summary-phone">-</span>
+                </div>
+                <div class="detail">
+                    <span>Pickup:</span>
+                    <span id="summary-pickup">-</span>
+                </div>
+                <div class="detail">
+                    <span>Job Type:</span>
+                    <span id="summary-type">-</span>
+                </div>
+                <div class="detail">
+                    <span>Status:</span>
+                    <span id="summary-status">-</span>
+                </div>
+            </div>
+            
+            <div class="dispatch-grid">
+                <!-- Left Panel: Supplier Selection -->
+                <div class="panel">
+                    <h3>Select Supplier</h3>
+                    
+                    <div class="filter-bar">
+                        <select id="filter-type" onchange="filterSuppliers()">
+                            <option value="">All Types</option>
+                            <option value="Tow">Tow</option>
+                            <option value="Workshop">Workshop</option>
+                            <option value="Fuel Extraction">Fuel Extraction</option>
+                            <option value="Locksmith">Locksmith</option>
+                            <option value="Glass">Glass</option>
+                            <option value="Tyres">Tyres</option>
+                            <option value="Parts">Parts</option>
+                            <option value="Storage">Storage</option>
+                        </select>
+                        <select id="filter-region" onchange="filterSuppliers()">
+                            <option value="">All Regions</option>
+                            <option value="Northland">Northland</option>
+                            <option value="Auckland">Auckland</option>
+                            <option value="Waikato">Waikato</option>
+                            <option value="Bay of Plenty">Bay of Plenty</option>
+                            <option value="Wellington">Wellington</option>
+                            <option value="Canterbury">Canterbury</option>
+                            <option value="Otago">Otago</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="text" id="search-supplier" placeholder="Search suppliers..." 
+                               onkeyup="filterSuppliers()">
+                    </div>
+                    
+                    <div class="supplier-list" id="supplier-list">
+                        <!-- Suppliers loaded dynamically -->
+                        <p class="loading">Loading suppliers...</p>
+                    </div>
+                </div>
+                
+                <!-- Right Panel: Dispatch Details -->
+                <div class="panel">
+                    <h3>Dispatch Details</h3>
+                    
+                    <div class="form-group">
+                        <label>Selected Rego</label>
+                        <input type="text" id="dispatch-rego" placeholder="Enter or select rego" 
+                               onchange="loadJobDetails(this.value)">
+                    </div>
+                    
+                    <div class="assigned-suppliers" id="assigned-suppliers">
+                        <h4>Assigned Suppliers</h4>
+                        <div id="assigned-list">
+                            <p style="color: #666; font-style: italic;">No suppliers assigned yet</p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Special Instructions</label>
+                        <textarea id="dispatch-instructions" rows="3" 
+                                  placeholder="Any special instructions for the supplier..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>ETA to Customer</label>
+                        <input type="text" id="dispatch-eta" placeholder="e.g., 30-45 minutes">
+                    </div>
+                    
+                    <div class="dispatch-actions">
+                        <button class="btn btn-success btn-full" onclick="sendJobToSupplier()">
+                            📧 Send Job to Supplier
+                        </button>
+                        <button class="btn btn-info btn-full" onclick="notifyDriverEnRoute()">
+                            🚗 Notify Customer - Driver En Route
+                        </button>
+                        <button class="btn btn-primary btn-full" onclick="callSupplier()">
+                            📞 Call Supplier
+                        </button>
+                        <button class="btn btn-secondary btn-full" onclick="updateJobAddress()">
+                            📍 Update Job Address
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="panel" style="margin-top: 20px;">
+                <h3>Quick Actions</h3>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="addNewSupplier()">+ Add New Supplier</button>
+                    <button class="btn btn-secondary" onclick="window.location.href='update-supplier-details.html'">
+                        Edit Supplier Details
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.location.href='update-job-address.html'">
+                        Update Job Address
+                    </button>
+                    <button class="btn btn-info" onclick="refreshSuppliers()">🔄 Refresh Suppliers</button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <button onclick="window.close()" class="btn-exit">Exit</button>
+        </footer>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/supabase.js"></script>
+    <script src="js/messaging.js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        let allSuppliers = [];
+        let selectedSupplier = null;
+        let assignedSuppliers = [];
+        let currentJob = null;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async function() {
+            initSupabase();
+            await loadSuppliers();
+            
+            // Check for session rego
+            const sessionRego = sessionStorage.getItem('selectedJobRego');
+            if (sessionRego) {
+                document.getElementById('dispatch-rego').value = sessionRego;
+                await loadJobDetails(sessionRego);
+            }
+        });
+        
+        // Load suppliers
+        async function loadSuppliers() {
+            const config = window.APP_CONFIG || {};
+            
+            if (config.dataSource === 'supabase') {
+                allSuppliers = await db.suppliers.getAll();
+            } else {
+                // Demo data
+                allSuppliers = [
+                    { id: '1', supplier_name: 'Wellington Towing', supplier_type: 'Tow', region: 'Wellington', phone: '04 123 4567', email: 'jobs@welltow.co.nz', is_preferred: true },
+                    { id: '2', supplier_name: 'Central Workshop', supplier_type: 'Workshop', region: 'Wellington', phone: '04 234 5678', email: 'service@centralws.co.nz', is_preferred: false },
+                    { id: '3', supplier_name: 'Auckland Roadside', supplier_type: 'Tow', region: 'Auckland', phone: '09 345 6789', email: 'dispatch@aklroad.co.nz', is_preferred: true },
+                    { id: '4', supplier_name: 'Fuel Doctors NZ', supplier_type: 'Fuel Extraction', region: 'Auckland', phone: '0800 FUEL DR', email: 'help@fueldoctors.co.nz', is_preferred: false },
+                    { id: '5', supplier_name: 'Quick Keys Locksmith', supplier_type: 'Locksmith', region: 'Wellington', phone: '04 456 7890', email: 'urgent@quickkeys.co.nz', is_preferred: false },
+                ];
+            }
+            
+            renderSuppliers();
+        }
+        
+        // Render supplier list
+        function renderSuppliers(suppliers = allSuppliers) {
+            const listDiv = document.getElementById('supplier-list');
+            
+            if (suppliers.length === 0) {
+                listDiv.innerHTML = '<p style="color: #666;">No suppliers found</p>';
+                return;
+            }
+            
+            // Sort: preferred first, then alphabetically
+            suppliers.sort((a, b) => {
+                if (a.is_preferred && !b.is_preferred) return -1;
+                if (!a.is_preferred && b.is_preferred) return 1;
+                return a.supplier_name.localeCompare(b.supplier_name);
+            });
+            
+            listDiv.innerHTML = suppliers.map(s => `
+                <div class="supplier-card ${s.is_preferred ? 'preferred' : ''} ${selectedSupplier?.id === s.id ? 'selected' : ''}" 
+                     onclick="selectSupplier('${s.id}')">
+                    <h4>${s.supplier_name} ${s.is_preferred ? '⭐' : ''}</h4>
+                    <span class="type">${s.supplier_type || 'General'}</span>
+                    <span class="type">${s.region || 'NZ Wide'}</span>
+                    <div class="contact">
+                        <div>📞 ${s.phone || s.mobile || 'No phone'}</div>
+                        <div>📧 ${s.email || 'No email'}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Filter suppliers
+        function filterSuppliers() {
+            const typeFilter = document.getElementById('filter-type').value;
+            const regionFilter = document.getElementById('filter-region').value;
+            const searchQuery = document.getElementById('search-supplier').value.toLowerCase();
+            
+            let filtered = allSuppliers.filter(s => {
+                if (typeFilter && s.supplier_type !== typeFilter) return false;
+                if (regionFilter && s.region !== regionFilter) return false;
+                if (searchQuery && !s.supplier_name.toLowerCase().includes(searchQuery)) return false;
+                return true;
+            });
+            
+            renderSuppliers(filtered);
+        }
+        
+        // Select supplier
+        function selectSupplier(supplierId) {
+            selectedSupplier = allSuppliers.find(s => s.id === supplierId);
+            
+            // Update UI
+            document.querySelectorAll('.supplier-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // Add to assigned list
+            if (!assignedSuppliers.find(s => s.id === supplierId)) {
+                assignedSuppliers.push(selectedSupplier);
+                updateAssignedList();
+            }
+        }
+        
+        // Update assigned suppliers display
+        function updateAssignedList() {
+            const listDiv = document.getElementById('assigned-list');
+            
+            if (assignedSuppliers.length === 0) {
+                listDiv.innerHTML = '<p style="color: #666; font-style: italic;">No suppliers assigned yet</p>';
+                return;
+            }
+            
+            listDiv.innerHTML = assignedSuppliers.map(s => `
+                <div class="assigned-supplier">
+                    <span><strong>${s.supplier_name}</strong> (${s.supplier_type})</span>
+                    <span class="remove" onclick="removeAssignedSupplier('${s.id}')">✕</span>
+                </div>
+            `).join('');
+        }
+        
+        // Remove assigned supplier
+        function removeAssignedSupplier(supplierId) {
+            assignedSuppliers = assignedSuppliers.filter(s => s.id !== supplierId);
+            updateAssignedList();
+            renderSuppliers();
+        }
+        
+        // Load job details
+        async function loadJobDetails(rego) {
+            if (!rego) return;
+            
+            const config = window.APP_CONFIG || {};
+            
+            if (config.dataSource === 'supabase') {
+                currentJob = await db.jobs.getByRego(rego);
+            } else {
+                // Demo data
+                currentJob = {
+                    rego: rego.toUpperCase(),
+                    customer_name: 'John Smith',
+                    phone1: '021 123 4567',
+                    email: 'john@example.com',
+                    pickup_address: '123 Main Street, Wellington',
+                    destination_address: 'Central Workshop, Wellington',
+                    job_type: 'Tow',
+                    fault_description: 'Vehicle won\'t start - possible battery issue',
+                    status: 'Booked'
+                };
+            }
+            
+            if (currentJob) {
+                document.getElementById('summary-rego').textContent = currentJob.rego;
+                document.getElementById('summary-customer').textContent = currentJob.customer_name || '-';
+                document.getElementById('summary-phone').textContent = currentJob.phone1 || '-';
+                document.getElementById('summary-pickup').textContent = currentJob.pickup_address || '-';
+                document.getElementById('summary-type').textContent = currentJob.job_type || '-';
+                document.getElementById('summary-status').textContent = currentJob.status || '-';
+                
+                // Load assigned suppliers for this job
+                await loadAssignedSuppliers(rego);
+            } else {
+                alert('No job found for rego: ' + rego);
+            }
+        }
+        
+        // Load already assigned suppliers
+        async function loadAssignedSuppliers(rego) {
+            const config = window.APP_CONFIG || {};
+            
+            if (config.dataSource === 'supabase') {
+                const suppliers = await db.buildNotes.getSuppliersForRego(rego);
+                assignedSuppliers = suppliers.map(s => ({
+                    id: s.id,
+                    supplier_name: s.supplier_name,
+                    supplier_type: s.supplier_type,
+                    email: s.supplier_email,
+                    phone: s.supplier_phone
+                }));
+            }
+            
+            updateAssignedList();
+        }
+        
+        // Send job to supplier
+        async function sendJobToSupplier() {
+            const rego = document.getElementById('dispatch-rego').value;
+            
+            if (!rego) {
+                alert('Please enter a rego first');
+                return;
+            }
+            
+            if (assignedSuppliers.length === 0) {
+                alert('Please select a supplier first');
+                return;
+            }
+            
+            const instructions = document.getElementById('dispatch-instructions').value;
+            
+            // Send to each assigned supplier
+            for (const supplier of assignedSuppliers) {
+                const jobData = currentJob || {
+                    rego: rego,
+                    customer_name: 'Customer',
+                    internal_notes: instructions
+                };
+                
+                // Add supplier to job build notes
+                const config = window.APP_CONFIG || {};
+                if (config.dataSource === 'supabase') {
+                    await db.buildNotes.addSupplier(rego, {
+                        name: supplier.supplier_name,
+                        email: supplier.email,
+                        phone: supplier.phone,
+                        type: supplier.supplier_type,
+                        notes: instructions
+                    });
+                }
+                
+                // Send notification
+                await messaging.sendJobToSupplier(supplier, jobData);
+                
+                console.log('Job sent to supplier:', supplier.supplier_name);
+            }
+            
+            // Update job status
+            if (config.dataSource === 'supabase' && currentJob) {
+                await db.jobs.updateByRego(rego, { status: 'Dispatched' });
+            }
+            
+            alert(`Job ${rego} sent to ${assignedSuppliers.length} supplier(s)!`);
+        }
+        
+        // Notify customer - Driver En Route
+        async function notifyDriverEnRoute() {
+            const rego = document.getElementById('dispatch-rego').value;
+            const eta = document.getElementById('dispatch-eta').value;
+            
+            if (!rego) {
+                alert('Please enter a rego first');
+                return;
+            }
+            
+            if (!currentJob) {
+                await loadJobDetails(rego);
+            }
+            
+            const customerData = {
+                customerName: currentJob?.customer_name,
+                phone: currentJob?.phone1,
+                email: currentJob?.email,
+                countryCode: '64'
+            };
+            
+            await messaging.sendDriverEnRoute(customerData, rego, eta);
+            
+            alert(`"Driver En Route" notification sent to customer for ${rego}`);
+        }
+        
+        // Call supplier
+        function callSupplier() {
+            if (!selectedSupplier) {
+                alert('Please select a supplier first');
+                return;
+            }
+            
+            const phone = selectedSupplier.phone || selectedSupplier.mobile;
+            if (phone) {
+                window.open(`tel:${phone.replace(/\s/g, '')}`);
+            } else {
+                alert('No phone number available for this supplier');
+            }
+        }
+        
+        // Update job address
+        function updateJobAddress() {
+            window.location.href = 'update-job-address.html';
+        }
+        
+        // Add new supplier
+        function addNewSupplier() {
+            const name = prompt('Supplier Name:');
+            if (!name) return;
+            
+            const type = prompt('Supplier Type (Tow, Workshop, Fuel Extraction, etc.):');
+            const phone = prompt('Phone Number:');
+            const email = prompt('Email:');
+            const region = prompt('Region:');
+            
+            const newSupplier = {
+                id: Date.now().toString(),
+                supplier_name: name,
+                supplier_type: type,
+                phone: phone,
+                email: email,
+                region: region,
+                is_preferred: false
+            };
+            
+            // Save to database
+            const config = window.APP_CONFIG || {};
+            if (config.dataSource === 'supabase') {
+                db.suppliers.create(newSupplier);
+            }
+            
+            allSuppliers.push(newSupplier);
+            renderSuppliers();
+            
+            alert('Supplier added successfully!');
+        }
+        
+        // Refresh suppliers
+        async function refreshSuppliers() {
+            await loadSuppliers();
+            alert('Suppliers refreshed');
+        }
+    </script>
+</body>
+</html>
