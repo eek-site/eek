@@ -4,311 +4,556 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Login | EEK Mechanical</title>
-  <meta name="description" content="Secure administrator access portal for EEK Mechanical management platform" />
+  <meta name="description" content="Secure admin access for EEK Mechanical NZ-Wide Mobile Mechanics" />
   <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
 
   <!-- Microsoft Authentication Library -->
   <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
   
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    :root{--primary-color:#1a237e;--primary-dark:#0d1421;--secondary-color:#3949ab;--accent-color:#ffd700;--success-color:#22c55e;--error-color:#ef4444;--warning-color:#f59e0b;--text-primary:#1e293b;--text-secondary:#64748b;--border-color:#e2e8f0;--bg-light:#f8fafc}
-    body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary-color) 50%,var(--secondary-color) 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden}
-    .bg-pattern{position:absolute;width:100%;height:100%;opacity:.1;background-image:radial-gradient(circle at 20% 80%,#fff 0%,transparent 50%),radial-gradient(circle at 80% 20%,#fff 0%,transparent 50%),radial-gradient(circle at 40% 40%,#fff 0%,transparent 50%);animation:float 20s ease-in-out infinite}
-    @keyframes float{0%,100%{transform:translate(0,0) rotate(0)}33%{transform:translate(-20px,-20px) rotate(1deg)}66%{transform:translate(20px,-10px) rotate(-1deg)}}
-    .login-container{background:#fff;border-radius:24px;box-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 10px 10px -5px rgba(0,0,0,.04);width:100%;max-width:460px;padding:48px 40px;animation:slideUp .6s cubic-bezier(.34,1.56,.64,1);position:relative;z-index:1}
-    @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-    .logo-section{text-align:center;margin-bottom:32px}
-    .logo{width:90px;height:90px;background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));border-radius:20px;display:inline-flex;align-items:center;justify-content:center;color:var(--accent-color);font-weight:700;font-size:32px;margin-bottom:24px;box-shadow:0 10px 25px -5px rgba(26,35,126,.3);position:relative;overflow:hidden}
-    .logo::after{content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent,rgba(255,255,255,.1),transparent);transform:rotate(45deg);animation:shine 3s infinite}
-    @keyframes shine{0%{transform:translateX(-100%) translateY(-100%) rotate(45deg)}100%{transform:translateX(100%) translateY(100%) rotate(45deg)}}
-    h1{color:var(--text-primary);font-size:28px;font-weight:700;margin-bottom:8px;letter-spacing:-.5px}
-    .subtitle{color:var(--text-secondary);font-size:16px}
-    .divider{position:relative;margin:32px 0;text-align:center}
-    .divider::before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border-color)}
-    .divider span{background:#fff;padding:0 16px;color:var(--text-secondary);font-size:14px;position:relative}
-    .login-methods{display:flex;flex-direction:column;gap:12px}
-    .login-button{width:100%;padding:16px;background:#fff;border:2px solid var(--border-color);border-radius:12px;font-size:16px;font-weight:600;color:var(--text-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;transition:all .2s ease;position:relative;overflow:hidden}
-    .login-button:hover{background:var(--bg-light);border-color:var(--primary-color);transform:translateY(-2px);box-shadow:0 8px 16px -4px rgba(26,35,126,.15)}
-    .login-button:active{transform:translateY(0);box-shadow:0 2px 4px -1px rgba(26,35,126,.1)}
-    .login-button.primary{background:linear-gradient(135deg,var(--primary-color),var(--secondary-color));color:#fff;border:none}
-    .login-button.primary:hover{background:linear-gradient(135deg,var(--primary-dark),var(--primary-color));transform:translateY(-2px)}
-    .login-button.skip{background:transparent;border:1px dashed var(--border-color);color:var(--text-secondary);font-weight:400}
-    .login-button.skip:hover{border-color:var(--primary-color);color:var(--primary-color)}
-    .login-button:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
-    .microsoft-logo{width:20px;height:20px}
-    .message{padding:14px 16px;border-radius:10px;margin-top:20px;font-size:14px;display:none;animation:slideDown .3s ease}
-    @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-    .error-message{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
-    .success-message{background:#f0fdf4;border:1px solid #bbf7d0;color:#14532d}
-    .warning-message{background:#fffbeb;border:1px solid #fed7aa;color:#92400e}
-    .info-message{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
-    .loading{display:none;text-align:center;padding:20px}
-    .loading.active{display:block}
-    .spinner{width:48px;height:48px;border:4px solid var(--border-color);border-top:4px solid var(--primary-color);border-radius:50%;animation:spin 1s cubic-bezier(.68,-.55,.265,1.55) infinite;margin:20px auto}
-    @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
-    .security-features{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:24px;padding-top:24px;border-top:1px solid var(--border-color)}
-    .security-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary)}
-    .security-icon{width:16px;height:16px;color:var(--success-color)}
-    .footer-links{display:flex;justify-content:center;gap:24px;margin-top:24px;padding-top:24px;border-top:1px solid var(--border-color)}
-    .footer-links a{color:var(--text-secondary);text-decoration:none;font-size:14px;transition:color .2s ease}
-    .footer-links a:hover{color:var(--primary-color)}
-    .session-warning{position:fixed;top:20px;right:20px;background:var(--warning-color);color:#fff;padding:16px 20px;border-radius:10px;display:none;animation:slideInRight .3s ease;box-shadow:0 10px 25px -5px rgba(245,158,11,.3)}
-    @keyframes slideInRight{from{opacity:0;transform:translateX(100%)}to{opacity:1;transform:translateX(0)}}
-    @media (max-width:480px){.login-container{padding:32px 24px}h1{font-size:24px}.security-features{grid-template-columns:1fr}.footer-links{flex-direction:column;align-items:center;gap:12px}}
+    
+    :root {
+      --eek-cyan: #0ea5e9;
+      --eek-cyan-dark: #0284c7;
+      --eek-cyan-light: #38bdf8;
+      --eek-teal: #14b8a6;
+      --eek-dark: #0f172a;
+      --eek-gray: #64748b;
+      --eek-light: #f0f9ff;
+      --eek-white: #ffffff;
+      --eek-success: #22c55e;
+      --eek-warning: #f59e0b;
+      --eek-error: #ef4444;
+    }
+    
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Animated background pattern */
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(14, 165, 233, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(14, 165, 233, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridMove 20s linear infinite;
+    }
+    
+    @keyframes gridMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+    
+    /* Floating orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.4;
+      animation: float 15s ease-in-out infinite;
+    }
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--eek-cyan);
+      top: -200px;
+      right: -100px;
+      animation-delay: 0s;
+    }
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--eek-teal);
+      bottom: -150px;
+      left: -100px;
+      animation-delay: -5s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.05); }
+      66% { transform: translate(-20px, 20px) scale(0.95); }
+    }
+    
+    .login-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+      width: 100%;
+      max-width: 420px;
+      padding: 48px 40px;
+      position: relative;
+      z-index: 1;
+      animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(40px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    
+    /* Accent bar */
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--eek-cyan), var(--eek-teal));
+      border-radius: 0 0 4px 4px;
+    }
+    
+    .logo-section {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    
+    .logo-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, var(--eek-cyan), var(--eek-teal));
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px -10px rgba(14, 165, 233, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .logo-icon::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+      transform: rotate(45deg);
+      animation: shimmer 3s infinite;
+    }
+    
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+    
+    .logo-icon span {
+      font-size: 28px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -1px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .brand-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--eek-cyan);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 8px;
+    }
+    
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--eek-dark);
+      margin-bottom: 8px;
+    }
+    
+    .subtitle {
+      color: var(--eek-gray);
+      font-size: 15px;
+    }
+    
+    .login-form {
+      margin-top: 32px;
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 16px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: all 0.2s ease;
+      margin-bottom: 12px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, var(--eek-cyan), var(--eek-cyan-dark));
+      color: white;
+      box-shadow: 0 4px 14px -4px rgba(14, 165, 233, 0.5);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px -4px rgba(14, 165, 233, 0.6);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+    
+    .btn-secondary {
+      background: var(--eek-light);
+      color: var(--eek-gray);
+      border: 1px dashed #cbd5e1;
+    }
+    
+    .btn-secondary:hover {
+      background: #e0f2fe;
+      color: var(--eek-cyan-dark);
+      border-color: var(--eek-cyan);
+    }
+    
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    
+    .microsoft-icon {
+      width: 20px;
+      height: 20px;
+    }
+    
+    /* Messages */
+    .message {
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-top: 16px;
+      font-size: 14px;
+      display: none;
+      animation: msgIn 0.3s ease;
+    }
+    
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .msg-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+    .msg-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #14532d; }
+    .msg-warning { background: #fffbeb; border: 1px solid #fed7aa; color: #92400e; }
+    .msg-info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+    
+    /* Loading */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+    
+    .loading.active { display: block; }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e2e8f0;
+      border-top-color: var(--eek-cyan);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Security badges */
+    .security-row {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid #e2e8f0;
+    }
+    
+    .security-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--eek-gray);
+    }
+    
+    .security-badge svg {
+      width: 14px;
+      height: 14px;
+      color: var(--eek-success);
+    }
+    
+    /* Footer */
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .footer-links a {
+      color: var(--eek-gray);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+    }
+    
+    .footer-links a:hover {
+      color: var(--eek-cyan);
+    }
+    
+    @media (max-width: 480px) {
+      .login-card { padding: 36px 24px; }
+      h1 { font-size: 22px; }
+      .security-row { flex-direction: column; gap: 12px; align-items: center; }
+    }
   </style>
 </head>
 <body>
-  <div class="bg-pattern"></div>
+  <div class="bg-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
 
-  <div class="login-container">
+  <div class="login-card">
     <div class="logo-section">
-      <div class="logo">EEK</div>
+      <div class="logo-icon">
+        <span>EEK</span>
+      </div>
+      <div class="brand-name">EEK Mechanical</div>
       <h1>Admin Portal</h1>
-      <p class="subtitle">EEK Mechanical Management System</p>
+      <p class="subtitle">NZ-Wide Mobile Mechanics</p>
     </div>
 
-    <div class="divider"><span>Sign in with</span></div>
-
-    <div class="login-methods">
-      <button id="primaryLoginBtn" class="login-button primary" onclick="signIn()">
-        <svg class="microsoft-logo" viewBox="0 0 21 21">
+    <div class="login-form">
+      <button id="loginBtn" class="btn btn-primary" onclick="signIn()">
+        <svg class="microsoft-icon" viewBox="0 0 21 21">
           <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
           <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
           <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
           <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
         </svg>
-        Microsoft Work Account
+        Sign in with Microsoft
       </button>
 
-      <button id="skipLoginBtn" class="login-button skip" onclick="skipLogin()">
-        Continue without sign-in (Demo Mode)
+      <button id="demoBtn" class="btn btn-secondary" onclick="skipLogin()">
+        Continue in Demo Mode
       </button>
     </div>
 
-    <div id="errorMessage" class="message error-message"></div>
-    <div id="successMessage" class="message success-message"></div>
-    <div id="warningMessage" class="message warning-message"></div>
-    <div id="infoMessage" class="message info-message"></div>
+    <div id="errorMsg" class="message msg-error"></div>
+    <div id="successMsg" class="message msg-success"></div>
+    <div id="warningMsg" class="message msg-warning"></div>
+    <div id="infoMsg" class="message msg-info"></div>
 
-    <div id="loadingIndicator" class="loading">
+    <div id="loadingDiv" class="loading">
       <div class="spinner"></div>
-      <p style="color:var(--text-secondary);margin-top:16px">Authenticating your credentials...</p>
+      <p style="color: var(--eek-gray);">Authenticating...</p>
     </div>
 
-    <div class="security-features">
-      <div class="security-item">
-        <svg class="security-icon" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 015.905-.75 1 1 0 001.937-.5A5.002 5.002 0 0010 2z"/></svg>
-        <span>256-bit encryption</span>
+    <div class="security-row">
+      <div class="security-badge">
+        <svg fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 015.905-.75 1 1 0 001.937-.5A5.002 5.002 0 0010 2z"/></svg>
+        <span>Encrypted</span>
       </div>
-      <div class="security-item">
-        <svg class="security-icon" fill="currentColor" viewBox="0 0 20 20"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/></svg>
-        <span>Single Sign-On</span>
+      <div class="security-badge">
+        <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+        <span>SSO</span>
       </div>
-      <div class="security-item">
-        <svg class="security-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"/></svg>
-        <span>Activity monitoring</span>
-      </div>
-      <div class="security-item">
-        <svg class="security-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
-        <span>Audit logging</span>
+      <div class="security-badge">
+        <svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"/></svg>
+        <span>Audit Log</span>
       </div>
     </div>
 
     <div class="footer-links">
-      <a href="/">Home</a>
+      <a href="https://www.eek.nz">Home</a>
       <a href="mailto:zx@eek.nz">Support</a>
-      <a href="/privacy">Privacy</a>
     </div>
   </div>
 
-  <div id="sessionWarning" class="session-warning">
-    Your session will expire in 5 minutes. Please complete your login.
-  </div>
-
   <script>
-    // --- Safety: work even if MSAL CDN fails ---
+    // Safety: work even if MSAL CDN fails
     const LogLevel = (window.msal && window.msal.LogLevel) ? window.msal.LogLevel
       : { Error: 0, Warning: 1, Info: 2, Verbose: 3 };
 
-    let msalInstance=null, authInProgress=false;
-    let sessionTimer, warningTimer;
+    let msalInstance = null, authInProgress = false;
 
-    // MSAL Configuration - Update these with your Azure AD details
-    const msalConfig={
-      auth:{
-        clientId:'YOUR_CLIENT_ID_HERE', // Replace with your Azure AD App Client ID
-        authority:'https://login.microsoftonline.com/common', // Or your tenant ID
+    // MSAL Configuration - Update with your Azure AD details
+    const msalConfig = {
+      auth: {
+        clientId: 'YOUR_CLIENT_ID_HERE', // Replace with Azure AD App Client ID
+        authority: 'https://login.microsoftonline.com/common',
         redirectUri: window.location.origin + '/admin/',
-        navigateToLoginRequestUrl:false
+        navigateToLoginRequestUrl: false
       },
-      cache:{
-        cacheLocation:'sessionStorage',
-        storeAuthStateInCookie:true
+      cache: {
+        cacheLocation: 'sessionStorage',
+        storeAuthStateInCookie: true
       },
-      system:{
+      system: {
         allowNativeBroker: false,
-        windowHashTimeout:60000,
-        iframeHashTimeout:60000,
-        loadFrameTimeout:10000,
-        loggerOptions:{
-          loggerCallback:(level,message,containsPii)=>{
-            if(containsPii) return;
-            if(message?.includes('popup') || message?.includes('window closed') || message?.includes('Cross-Origin')) return;
-            if(level===LogLevel.Error) console.error('[MSAL Error]',message);
-            else if(level===LogLevel.Warning) console.warn('[MSAL Warning]',message);
+        windowHashTimeout: 60000,
+        iframeHashTimeout: 60000,
+        loadFrameTimeout: 10000,
+        loggerOptions: {
+          loggerCallback: (level, message, containsPii) => {
+            if (containsPii) return;
+            if (message?.includes('popup') || message?.includes('window closed')) return;
+            if (level === LogLevel.Error) console.error('[MSAL]', message);
           },
           logLevel: LogLevel.Warning
         }
       }
     };
 
-    const loginRequest={scopes:['openid','profile','user.read'],prompt:'select_account'};
+    const loginRequest = { scopes: ['openid', 'profile', 'user.read'], prompt: 'select_account' };
 
-    function startSessionTimer(){
-      clearTimeout(sessionTimer); clearTimeout(warningTimer);
-      warningTimer=setTimeout(()=>{document.getElementById('sessionWarning').style.display='block';},25*60*1000);
-      sessionTimer=setTimeout(()=>{signOut();},30*60*1000);
-    }
-
-    function handleResponse(response){
-      if(response){
-        const account=response.account;
+    function handleResponse(response) {
+      if (response) {
+        const account = response.account;
         msalInstance.setActiveAccount(account);
         sessionStorage.setItem('msalAccount', JSON.stringify(account));
         sessionStorage.setItem('userAuthenticated', 'true');
         sessionStorage.setItem('userName', account.name || account.username);
-        showSuccess(`Welcome, ${account.name || 'user'}! Redirecting to dashboard...`);
-        startSessionTimer();
-        setTimeout(()=>{ window.location.href='/admin/'; },1500);
+        showMsg('success', `Welcome, ${account.name || 'user'}! Redirecting...`);
+        setTimeout(() => { window.location.href = '/admin/'; }, 1200);
       }
     }
 
-    async function initializeMsal(){
-      try{
-        if(!window.msal || !window.msal.PublicClientApplication){
-          console.warn('Microsoft sign-in library not loaded. Demo mode available.');
+    async function initializeMsal() {
+      try {
+        if (!window.msal || !window.msal.PublicClientApplication) {
+          console.warn('MSAL not loaded. Demo mode available.');
           return;
         }
-        msalInstance=new msal.PublicClientApplication(msalConfig);
+        msalInstance = new msal.PublicClientApplication(msalConfig);
 
         if (typeof msalInstance.initialize === 'function') {
           await msalInstance.initialize();
         }
 
         const response = await msalInstance.handleRedirectPromise();
-        if(response){ handleResponse(response); return; }
+        if (response) { handleResponse(response); return; }
 
         checkExistingSession();
-      }catch(error){
-        console.error('MSAL initialization error:',error);
+      } catch (error) {
+        console.error('MSAL init error:', error);
       }
     }
 
-    function checkExistingSession(){
-      // Check session storage first
-      if(sessionStorage.getItem('userAuthenticated') === 'true'){
-        showSuccess('You are already signed in. Redirecting...');
-        setTimeout(()=>{ window.location.href='/admin/'; },1000);
+    function checkExistingSession() {
+      if (sessionStorage.getItem('userAuthenticated') === 'true') {
+        showMsg('success', 'Already signed in. Redirecting...');
+        setTimeout(() => { window.location.href = '/admin/'; }, 800);
         return;
       }
       
-      if(!msalInstance) return;
-      const active=msalInstance.getActiveAccount();
-      const accounts=msalInstance.getAllAccounts();
-      const account=active || accounts[0];
-      if(account){
+      if (!msalInstance) return;
+      const account = msalInstance.getActiveAccount() || msalInstance.getAllAccounts()[0];
+      if (account) {
         msalInstance.setActiveAccount(account);
         sessionStorage.setItem('userAuthenticated', 'true');
         sessionStorage.setItem('userName', account.name || account.username);
-        showSuccess('You are already signed in. Redirecting...');
-        setTimeout(()=>{ window.location.href='/admin/'; },1000);
+        showMsg('success', 'Already signed in. Redirecting...');
+        setTimeout(() => { window.location.href = '/admin/'; }, 800);
       }
     }
 
-    async function signIn(){
-      if(authInProgress){ showInfo('Authentication already in progress. Please wait...'); return; }
-      hideAllMessages();
+    async function signIn() {
+      if (authInProgress) { showMsg('info', 'Authentication in progress...'); return; }
+      hideAllMsgs();
 
-      if(!window.msal || !msalInstance){
-        showWarning('Microsoft sign-in unavailable. Using demo mode...');
-        setTimeout(()=>{ skipLogin(); }, 1500);
+      if (!window.msal || !msalInstance) {
+        showMsg('warning', 'Microsoft sign-in unavailable. Using demo mode...');
+        setTimeout(() => { skipLogin(); }, 1500);
         return;
       }
 
-      authInProgress=true; disableButtons();
-      const loadingDiv=document.getElementById('loadingIndicator'); loadingDiv.classList.add('active');
+      authInProgress = true;
+      setButtons(false);
+      document.getElementById('loadingDiv').classList.add('active');
 
-      try{
+      try {
         await msalInstance.loginRedirect(loginRequest);
-      }catch(error){
+      } catch (error) {
         handleAuthError(error);
-        loadingDiv.classList.remove('active');
-        authInProgress=false; enableButtons();
+        document.getElementById('loadingDiv').classList.remove('active');
+        authInProgress = false;
+        setButtons(true);
       }
     }
 
-    function skipLogin(){
-      // Demo mode - skip authentication
+    function skipLogin() {
       sessionStorage.setItem('userAuthenticated', 'true');
       sessionStorage.setItem('userName', 'Demo User');
       sessionStorage.setItem('demoMode', 'true');
-      showSuccess('Demo mode activated. Redirecting...');
-      setTimeout(()=>{ window.location.href='/admin/'; },1000);
+      showMsg('success', 'Demo mode. Redirecting...');
+      setTimeout(() => { window.location.href = '/admin/'; }, 800);
     }
 
-    function handleAuthError(error){
-      console.error('Authentication error:',error);
+    function handleAuthError(error) {
+      console.error('Auth error:', error);
       const code = error?.errorCode || '';
-      const msg  = (error?.errorMessage || error?.message || '').toLowerCase();
+      const msg = (error?.errorMessage || error?.message || '').toLowerCase();
 
-      if(code==='user_cancelled' || msg.includes('user_cancelled')){
-        showWarning('Sign-in cancelled. Please try again when ready.');
-      }else if(code==='interaction_in_progress'){
-        showWarning('Another sign-in is in progress. Please wait...');
-      }else if(code==='network_error' || msg.includes('network')){
-        showError('Network error. Please check your internet connection.');
-      }else if(code==='consent_required'){
-        showWarning('Additional permissions required. Please try again.');
-      }else if(code==='login_required'){
-        showWarning('Login required. Please sign in.');
-      }else{
-        showError('Authentication failed. Please try again or use demo mode.');
+      if (code === 'user_cancelled' || msg.includes('user_cancelled')) {
+        showMsg('warning', 'Sign-in cancelled.');
+      } else if (code === 'interaction_in_progress') {
+        showMsg('warning', 'Sign-in in progress...');
+      } else if (code === 'network_error' || msg.includes('network')) {
+        showMsg('error', 'Network error. Check your connection.');
+      } else {
+        showMsg('error', 'Authentication failed. Try again or use demo mode.');
       }
     }
 
-    function signOut(){
-      sessionStorage.clear();
-      if(msalInstance){
-        const account = msalInstance.getActiveAccount() || msalInstance.getAllAccounts?.()?.[0];
-        if(account){
-          msalInstance.logoutRedirect({account, postLogoutRedirectUri: window.location.origin + '/admin/login.html'});
-          return;
-        }
-      }
-      window.location.href='/admin/login.html';
+    function setButtons(enabled) {
+      document.getElementById('loginBtn').disabled = !enabled;
+      document.getElementById('demoBtn').disabled = !enabled;
     }
 
-    function disableButtons(){
-      document.getElementById('primaryLoginBtn').disabled=true;
-      document.getElementById('skipLoginBtn').disabled=true;
-    }
-    function enableButtons(){
-      document.getElementById('primaryLoginBtn').disabled=false;
-      document.getElementById('skipLoginBtn').disabled=false;
+    function showMsg(type, text) {
+      hideAllMsgs();
+      const el = document.getElementById(type + 'Msg');
+      if (el) { el.textContent = text; el.style.display = 'block'; }
     }
 
-    function showError(m){hideAllMessages();const d=document.getElementById('errorMessage');d.textContent=m;d.style.display='block'}
-    function showSuccess(m){hideAllMessages();const d=document.getElementById('successMessage');d.textContent=m;d.style.display='block'}
-    function showWarning(m){hideAllMessages();const d=document.getElementById('warningMessage');d.textContent=m;d.style.display='block'}
-    function showInfo(m){hideAllMessages();const d=document.getElementById('infoMessage');d.textContent=m;d.style.display='block'}
-    function hideAllMessages(){['errorMessage','successMessage','warningMessage','infoMessage'].forEach(id=>{const el=document.getElementById(id); if(el) el.style.display='none';});}
+    function hideAllMsgs() {
+      ['error', 'success', 'warning', 'info'].forEach(t => {
+        const el = document.getElementById(t + 'Msg');
+        if (el) el.style.display = 'none';
+      });
+    }
 
-    window.addEventListener('online',()=>{ if(authInProgress){ showInfo('Connection restored. You can try signing in again.'); }});
-    window.addEventListener('offline',()=>{ showError('No internet connection. Please check your network.'); authInProgress=false; enableButtons(); });
-
-    window.addEventListener('DOMContentLoaded',()=>{ initializeMsal(); });
+    window.addEventListener('DOMContentLoaded', () => { initializeMsal(); });
   </script>
 </body>
 </html>
-
