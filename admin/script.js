@@ -364,6 +364,43 @@ async function openCustomerReplyFormWithJobSelection(contactType = 'customer', s
 }
 
 /**
+ * Open Buyer Created Invoice form
+ * Prompts for job reference and opens BCI page with encoded parameter
+ */
+async function openBuyerCreatedInvoice() {
+    // Get rego or booking ID from user
+    const reference = prompt('Enter Vehicle Registration or Booking ID for Buyer Created Invoice:');
+    if (!reference) {
+        return; // User cancelled
+    }
+    
+    const trimmedRef = reference.trim().toUpperCase();
+    
+    // Try to get booking ID from SharePoint if it looks like a rego
+    let bookingId = trimmedRef;
+    
+    try {
+        // If it looks like a rego (not a number), try to fetch the booking ID
+        if (isNaN(trimmedRef)) {
+            const jobs = await getJobsByRego(trimmedRef, false);
+            if (jobs && jobs.length > 0) {
+                const job = jobs[0];
+                bookingId = job.Id || job.ID || job.SharePointId || trimmedRef;
+            }
+        }
+    } catch (error) {
+        console.warn('Could not fetch booking ID, using reference directly:', error);
+    }
+    
+    // Encode to Base64
+    const encoded = btoa(String(bookingId));
+    
+    // Open BCI page
+    const url = `/bci/?${encoded}`;
+    window.open(url, '_blank');
+}
+
+/**
  * Initialize page
  */
 document.addEventListener('DOMContentLoaded', function() {

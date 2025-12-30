@@ -361,6 +361,11 @@ GitHub Pages will automatically serve this for any 404 errors.
             // Internal tool pages
             '/transcribe': '/transcribe/index.html',
             
+            // BCI - Buyer Created Invoice (internal, uses encoded parameter in query string)
+            // NOTE: BCI page accepts ?<encoded> parameter for job reference, routing preserves query string
+            '/bci': '/bci/index.html',
+            '/bci/': '/bci/index.html',
+            
             // Application and availability forms
             '/apply': 'https://forms.office.com/r/XLdGk4wDYY',
             '/availability': 'https://forms.office.com/r/jGgFgQUj0N',
@@ -476,9 +481,15 @@ GitHub Pages will automatically serve this for any 404 errors.
             
             document.getElementById('countdown').style.display = 'none';
             
+            // Preserve query string for internal redirects (e.g., /bci?MzE2 -> /bci/index.html?MzE2)
+            let finalUrl = url;
+            if (url.startsWith('/') && window.location.search) {
+                finalUrl = url + window.location.search;
+            }
+            
             // Show loading for a brief moment for UX, then redirect immediately
             setTimeout(() => {
-                window.location.href = url;
+                window.location.href = finalUrl;
             }, 1500);
         }
         
@@ -492,6 +503,12 @@ GitHub Pages will automatically serve this for any 404 errors.
             }
             
             // Customer-friendly explanations for each service
+            if (path === '/bci' || path === '/bci/') {
+                return {
+                    title: 'Buyer Created Invoice',
+                    description: 'Opening the secure invoice generation system for supplier payments.'
+                };
+            }
             if (path === '/apply') {
                 return {
                     title: 'Joining Our Team',
