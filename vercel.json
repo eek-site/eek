@@ -36,6 +36,11 @@
   ],
   "redirects": [
     {
+      "source": "/admin",
+      "destination": "/admin/",
+      "statusCode": 301
+    },
+    {
       "source": "/job",
       "destination": "/job/index.html",
       "statusCode": 301
