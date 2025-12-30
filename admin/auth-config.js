@@ -1,4 +1,4 @@
-// Authentication Configuration for Road and Rescue Admin Panel
+// Authentication Configuration for EEK Mechanical Admin Panel
 // This can be configured for Microsoft 365 / Azure AD authentication later
 
 const authConfig = {

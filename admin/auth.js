@@ -1,4 +1,4 @@
-// Authentication Helper for Road and Rescue Admin Panel
+// Authentication Helper for EEK Mechanical Admin Panel
 // Provides authentication functions - can be extended for Azure AD / Microsoft 365
 
 const auth = {
