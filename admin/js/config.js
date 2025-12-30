@@ -1,6 +1,6 @@
 /**
- * Road and Rescue - Application Configuration
- * Version: 2.0 - Complete cloud system
+ * EEK Mechanical - Application Configuration
+ * Version: 2.1 - Supplier phone number added
  */
 
 const APP_CONFIG = {
@@ -42,8 +42,9 @@ const APP_CONFIG = {
     // ========================================================================
     company: {
         name: 'EEK Mechanical',
-        tradingName: 'Road and Rescue',
-        phone: '0800 769 000',
+        tradingName: 'EEK Mechanical',
+        phone: '0800 769 000',           // Customer line
+        supplierPhone: '09 872 4612',    // Supplier enquiries (direct line)
         email: 'info@eek.nz',
         website: 'www.eek.nz',
         address: {

@@ -1,7 +1,7 @@
 /**
- * Road and Rescue - Messaging System
+ * EEK Mechanical - Messaging System
  * SMS via TNZ Gateway + Email
- * Version: 2.0 - Cloud implementation
+ * Version: 2.1 - Supplier phone number fix
  */
 
 const messaging = {
@@ -194,9 +194,13 @@ const messaging = {
      * Matches VBA NotifySupplierVehicleHold
      */
     async notifySupplierVehicleHold(supplierData, rego) {
+        const config = window.APP_CONFIG || {};
+        const supplierPhone = config.company?.supplierPhone || '09 872 4612';
+        
         const message = `EEK Mechanical Update - Rego ${rego}\n\n` +
             `Final billing has been issued to the customer.\n\n` +
             `IMPORTANT: Please DO NOT release the vehicle until you receive confirmation from EEK Mechanical that payment has been received.\n\n` +
+            `Questions? Call ${supplierPhone}\n` +
             `Thank you for your cooperation.`;
         
         const emailSubject = `EEK Mechanical - DO NOT RELEASE - ${rego}`;
@@ -227,9 +231,13 @@ const messaging = {
      * Matches VBA NotifySupplierVehicleRelease
      */
     async notifySupplierVehicleRelease(supplierData, rego) {
+        const config = window.APP_CONFIG || {};
+        const supplierPhone = config.company?.supplierPhone || '09 872 4612';
+        
         const message = `EEK Mechanical Update - Rego ${rego}\n\n` +
             `Payment has been received from the customer.\n\n` +
             `You may now RELEASE THE VEHICLE to the customer.\n\n` +
+            `Questions? Call ${supplierPhone}\n` +
             `Thank you for your assistance with this job.`;
         
         const emailSubject = `EEK Mechanical - RELEASE VEHICLE - ${rego}`;
@@ -376,13 +384,16 @@ const messaging = {
      * Matches VBA SendJobToSupplier
      */
     async sendJobToSupplier(supplierData, jobData) {
+        const config = window.APP_CONFIG || {};
+        const supplierPhone = config.company?.supplierPhone || '09 872 4612';
+        
         const message = `New job from EEK Mechanical\n\n` +
             `Rego: ${jobData.rego}\n` +
             `Customer: ${jobData.customer_name || 'See email'}\n` +
             `Phone: ${jobData.phone1 || 'N/A'}\n` +
             `Location: ${jobData.pickup_address || 'TBA'}\n` +
             `Fault: ${jobData.fault_description || 'See notes'}\n\n` +
-            `Please confirm receipt. EEK - 0800 769 000`;
+            `Please confirm receipt. EEK - ${supplierPhone}`;
         
         const emailSubject = `EEK Mechanical - Job Dispatch - ${jobData.rego}`;
         
@@ -399,8 +410,8 @@ const messaging = {
                 <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Fault:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${jobData.fault_description || 'N/A'}</td></tr>
                 <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Notes:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${jobData.internal_notes || 'N/A'}</td></tr>
             </table>
-            <p style="margin-top: 20px;">Please confirm receipt of this job by replying to this email or calling 0800 769 000.</p>
-            <p style="color: #666;">EEK Mechanical | www.eek.nz</p>
+            <p style="margin-top: 20px;">Please confirm receipt of this job by replying to this email or calling ${supplierPhone}.</p>
+            <p style="color: #666;">EEK Mechanical | www.eek.nz | ${supplierPhone}</p>
         `;
         
         const results = { sms: null, email: null };
