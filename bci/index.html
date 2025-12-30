@@ -1331,7 +1331,7 @@ async function submitBCI(e) {
       invoiceNumber: invoiceNumber,
       invoiceDate: document.getElementById('invoiceDate').textContent,
       
-      // Supplier details
+      // Supplier details (matching supplier-upload field names)
       supplierName: document.getElementById('supplierName').value.trim(),
       supplierGst: document.getElementById('supplierGst').value.trim(),
       supplierAddress: document.getElementById('supplierAddress').value.trim(),
@@ -1339,15 +1339,13 @@ async function submitBCI(e) {
       supplierEmail: document.getElementById('supplierEmail').value.trim(),
       bankAccount: bankAccount,
       
-      // Buyer details (EEK)
-      buyerName: CONFIG.EEK_DETAILS.name,
-      buyerAddress: CONFIG.EEK_DETAILS.address,
-      buyerPhone: CONFIG.EEK_DETAILS.phone,
-      
-      // Job details
-      jobRego: document.getElementById('jobRego').value.trim().toUpperCase(),
+      // Job details (matching supplier-upload field names)
+      rego: document.getElementById('jobRego').value.trim().toUpperCase(),
       jobDate: document.getElementById('jobDate').value,
-      jobDescription: document.getElementById('jobDescription').value.trim(),
+      description: document.getElementById('jobDescription').value.trim(),
+      
+      // Amount field for compatibility
+      amount: totals.total,
       
       // Line items
       labourQty: parseFloat(document.getElementById('labourQty').value) || 0,
@@ -1360,14 +1358,44 @@ async function submitBCI(e) {
       towingAmount: parseFloat(document.getElementById('towingAmount').value) || 0,
       partsAmount: parseFloat(document.getElementById('partsAmount').value) || 0,
       
+      // Fuel litres for compatibility with supplier-upload
+      litresExtracted: parseFloat(document.getElementById('fuelExtractedQty').value) || 0,
+      litresIntroduced: parseFloat(document.getElementById('fuelReplacedQty').value) || 0,
+      
       // Totals
       subtotal: totals.subtotal,
       gstAmount: totals.gst,
       totalAmount: totals.total,
       
-      // PDF
-      pdfFileName: `${invoiceNumber}.pdf`,
-      pdfFileBase64: pdfBase64,
+      // Invoice file fields (matching supplier-upload exactly)
+      invoiceLink: '',
+      invoiceFileName: `${invoiceNumber}.pdf`,
+      invoiceFileType: 'application/pdf',
+      invoiceFileSize: pdfBase64.length,
+      invoiceFileBase64: pdfBase64,
+      
+      // Fields array for dynamic email builder (matching supplier-upload)
+      fields: [
+        { name: 'Invoice Number', value: invoiceNumber },
+        { name: 'Invoice Type', value: 'Buyer Created Invoice (BCI)' },
+        { name: 'Supplier Name', value: document.getElementById('supplierName').value.trim() },
+        { name: 'Supplier GST', value: document.getElementById('supplierGst').value.trim() },
+        { name: 'Supplier Address', value: document.getElementById('supplierAddress').value.trim() },
+        { name: 'Supplier Phone', value: document.getElementById('supplierPhone').value.trim() || 'Not provided' },
+        { name: 'Supplier Email', value: document.getElementById('supplierEmail').value.trim() || 'Not provided' },
+        { name: 'Bank Account', value: bankAccount },
+        { name: 'Rego', value: document.getElementById('jobRego').value.trim().toUpperCase() || '-' },
+        { name: 'Date of Service', value: document.getElementById('jobDate').value },
+        { name: 'Description', value: document.getElementById('jobDescription').value.trim() || 'Buyer Created Invoice' },
+        { name: 'Labour', value: '$' + (parseFloat(document.getElementById('labourAmount').value) || 0).toFixed(2) },
+        { name: 'Fuel Extracted', value: '$' + (parseFloat(document.getElementById('fuelExtractedAmount').value) || 0).toFixed(2) },
+        { name: 'Fuel Replaced', value: '$' + (parseFloat(document.getElementById('fuelReplacedAmount').value) || 0).toFixed(2) },
+        { name: 'Towing', value: '$' + (parseFloat(document.getElementById('towingAmount').value) || 0).toFixed(2) },
+        { name: 'Parts/Sundries', value: '$' + (parseFloat(document.getElementById('partsAmount').value) || 0).toFixed(2) },
+        { name: 'Subtotal', value: '$' + totals.subtotal.toFixed(2) },
+        { name: 'GST (15%)', value: '$' + totals.gst.toFixed(2) },
+        { name: 'Total (Incl. GST)', value: '$' + totals.total.toFixed(2) }
+      ],
       
       // Tracking
       bookingId: document.getElementById('bookingId').value || '',
