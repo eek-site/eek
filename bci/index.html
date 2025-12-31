@@ -1595,10 +1595,17 @@ document.addEventListener('DOMContentLoaded', async function() {
   // Check for encoded parameter (can be ?d= or just the value after ?)
   let encodedData = urlParams.get('d');
   if (!encodedData) {
-    // Check if the entire query string is the encoded value
+    // Check if the entire query string is the encoded value (base64 or simple ID)
     const queryString = window.location.search.substring(1);
-    if (queryString && !queryString.includes('=')) {
-      encodedData = queryString;
+    if (queryString) {
+      // If it looks like a URL param (e.g., "bookingId=123"), don't use it
+      // But base64 strings may contain = as padding (at end) or within encoded content
+      // Check if it starts with a short key followed by = (URL param pattern)
+      const urlParamPattern = /^[a-zA-Z_][a-zA-Z0-9_]{0,20}=/;
+      if (!urlParamPattern.test(queryString)) {
+        // Not a URL param pattern - treat as encoded data (base64 or simple ID)
+        encodedData = queryString;
+      }
     }
   }
   
