@@ -671,6 +671,11 @@
             </div>
           </div>
           <div class="form-group">
+            <label for="billableHours">Billable Hours <span class="required">*</span></label>
+            <input type="number" id="billableHours" name="billableHours" required placeholder="0.0" min="0" step="0.5">
+            <div class="help-text">Total hours worked for this job (e.g., 1.5, 2, 3.5)</div>
+          </div>
+          <div class="form-group">
             <label>Bank Account <span class="required">*</span></label>
             <div class="bank-inputs">
               <input type="text" id="bank1" name="bank1" placeholder="XX" maxlength="2" required>
@@ -1289,6 +1294,7 @@ function setupInvoiceForm() {
       const supplierEmail = document.getElementById('supplierEmail').value.trim();
       const supplierPhone = document.getElementById('supplierPhone').value.trim();
       const amount = parseFloat(document.getElementById('amount').value) || 0;
+      const billableHours = parseFloat(document.getElementById('billableHours').value) || 0;
       const litresExtracted = parseFloat(document.getElementById('litresExtracted').value) || 0;
       const litresIntroduced = parseFloat(document.getElementById('litresIntroduced').value) || 0;
       const description = document.getElementById('description').value.trim();
@@ -1306,6 +1312,7 @@ function setupInvoiceForm() {
         supplierEmail: supplierEmail || '',
         supplierPhone: supplierPhone || '',
         amount: amount,
+        billableHours: billableHours,
         bankAccount: bankAccount || '',
         litresExtracted: litresExtracted,
         litresIntroduced: litresIntroduced,
@@ -1325,6 +1332,7 @@ function setupInvoiceForm() {
           { name: 'Supplier Email', value: supplierEmail || '' },
           { name: 'Supplier Phone', value: supplierPhone || 'Not provided' },
           { name: 'Amount', value: '$' + amount.toFixed(2) },
+          { name: 'Billable Hours', value: billableHours > 0 ? billableHours + ' hrs' : 'Not specified' },
           { name: 'Bank Account', value: bankAccount || '' },
           { name: 'Litres Extracted', value: litresExtracted + ' L' },
           { name: 'Litres Introduced', value: litresIntroduced + ' L' },
