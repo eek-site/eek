@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" fill="none">
+  <!-- The Hook - bold, premium, unmistakable -->
+  <path 
+    d="M12 8 
+       L12 52 
+       Q12 72 32 72 
+       L48 72 
+       Q68 72 68 52 
+       L68 40"
+    stroke="#DC2626" 
+    stroke-width="10" 
+    stroke-linecap="round" 
+    stroke-linejoin="round"
+    fill="none"
+  />
+  <!-- The arrow tip - forward motion, getting going -->
+  <path 
+    d="M56 28 L68 16 L80 28" 
+    stroke="#DC2626" 
+    stroke-width="10" 
+    stroke-linecap="round" 
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>

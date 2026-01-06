@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Red background -->
+  <rect width="512" height="512" fill="#DC2626"/>
+  <!-- White hook -->
+  <path 
+    d="M160 80 
+       L160 320 
+       Q160 420 260 420 
+       L300 420 
+       Q400 420 400 320 
+       L400 240"
+    stroke="#FFFFFF" 
+    stroke-width="50" 
+    stroke-linecap="round" 
+    stroke-linejoin="round"
+    fill="none"
+  />
+  <!-- Arrow tip -->
+  <path 
+    d="M340 180 L400 120 L460 180" 
+    stroke="#FFFFFF" 
+    stroke-width="50" 
+    stroke-linecap="round" 
+    stroke-linejoin="round"
+    fill="none"
+  />
+</svg>
