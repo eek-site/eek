@@ -217,6 +217,104 @@
       cursor: not-allowed;
     }
 
+    /* Invoice Method Toggle */
+    .invoice-toggle {
+      display: flex;
+      background: rgba(255,255,255,0.08);
+      border-radius: 30px;
+      padding: 4px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .toggle-option {
+      flex: 1;
+      padding: 12px 16px;
+      text-align: center;
+      border-radius: 26px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      color: rgba(255,255,255,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .toggle-option:hover {
+      color: rgba(255,255,255,0.9);
+    }
+
+    .toggle-option.active {
+      background: linear-gradient(135deg, #ff5500 0%, #ff7700 100%);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(255,85,0,0.4);
+    }
+
+    .toggle-option .toggle-icon {
+      font-size: 1.1em;
+    }
+
+    .invoice-method-section {
+      display: none;
+      animation: fadeSlideIn 0.3s ease;
+    }
+
+    .invoice-method-section.active {
+      display: block;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Buyer Invoice Notice */
+    .buyer-invoice-notice {
+      display: flex;
+      gap: 16px;
+      padding: 20px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 16px;
+    }
+
+    .buyer-invoice-icon {
+      font-size: 2.5em;
+      flex-shrink: 0;
+    }
+
+    .buyer-invoice-content strong {
+      display: block;
+      color: #ff5500;
+      margin-bottom: 6px;
+      font-size: 1.05em;
+    }
+
+    .buyer-invoice-content p {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .invoice-method-section label input[type="checkbox"] {
+      width: auto;
+      margin-right: 10px;
+      accent-color: #ff5500;
+    }
+
+    .invoice-method-section label {
+      display: flex;
+      align-items: flex-start;
+      cursor: pointer;
+      font-weight: normal;
+      color: rgba(255,255,255,0.9);
+    }
+
     /* Help Popout Modals */
     .help-triggers {
       display: flex;
@@ -687,33 +785,72 @@
           </div>
         </div>
 
-        <!-- Invoice Document Section - SIMPLE -->
+        <!-- Invoice Document Section with Toggle -->
         <div class="form-section">
           <div class="form-section-title">Invoice <span class="required">*</span></div>
           
-          <div class="form-group">
-            <label for="invoiceLink">Invoice Link</label>
-            <input type="url" id="invoiceLink" name="invoiceLink" placeholder="https://in.xero.com/...">
-            <div class="help-text">Paste your invoice link from Xero, MYOB, or QuickBooks</div>
-            
-            <!-- Help triggers -->
-            <div class="help-triggers">
-              <span class="help-trigger" onclick="showHelpModal('xero')">
-                <span class="help-icon">❓</span> How to get Xero link
-              </span>
-              <span class="help-trigger" onclick="showHelpModal('myob')">
-                <span class="help-icon">❓</span> How to get MYOB link
-              </span>
-              <span class="help-trigger" onclick="showHelpModal('quickbooks')">
-                <span class="help-icon">❓</span> How to get QuickBooks link
-              </span>
+          <!-- Toggle Slider -->
+          <div class="invoice-toggle">
+            <div class="toggle-option active" data-method="link" onclick="setInvoiceMethod('link')">
+              <span class="toggle-icon">🔗</span>
+              <span>Invoice Link</span>
+            </div>
+            <div class="toggle-option" data-method="file" onclick="setInvoiceMethod('file')">
+              <span class="toggle-icon">📄</span>
+              <span>Upload File</span>
+            </div>
+            <div class="toggle-option" data-method="buyer" onclick="setInvoiceMethod('buyer')">
+              <span class="toggle-icon">🧾</span>
+              <span>Eek Invoice</span>
             </div>
           </div>
 
-          <div class="form-group" style="margin-top: 16px;">
-            <label>Or upload a file instead</label>
-            <input type="file" id="invoiceFile" name="invoiceFile" accept=".pdf,.jpg,.jpeg,.png">
-            <div class="help-text">PDF, JPG, PNG (max 10MB)</div>
+          <!-- Invoice Link Section -->
+          <div class="invoice-method-section active" id="invoiceLinkSection">
+            <div class="form-group">
+              <label for="invoiceLink">Invoice Link <span class="required">*</span></label>
+              <input type="url" id="invoiceLink" name="invoiceLink" placeholder="https://in.xero.com/...">
+              <div class="help-text">Paste your invoice link from Xero, MYOB, or QuickBooks</div>
+              
+              <!-- Help triggers -->
+              <div class="help-triggers">
+                <span class="help-trigger" onclick="showHelpModal('xero')">
+                  <span class="help-icon">❓</span> How to get Xero link
+                </span>
+                <span class="help-trigger" onclick="showHelpModal('myob')">
+                  <span class="help-icon">❓</span> How to get MYOB link
+                </span>
+                <span class="help-trigger" onclick="showHelpModal('quickbooks')">
+                  <span class="help-icon">❓</span> How to get QuickBooks link
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- File Upload Section -->
+          <div class="invoice-method-section" id="invoiceFileSection">
+            <div class="form-group">
+              <label for="invoiceFile">Upload Invoice <span class="required">*</span></label>
+              <input type="file" id="invoiceFile" name="invoiceFile" accept=".pdf,.jpg,.jpeg,.png">
+              <div class="help-text">PDF, JPG, PNG (max 10MB)</div>
+            </div>
+          </div>
+
+          <!-- Buyer Created Invoice Section -->
+          <div class="invoice-method-section" id="invoiceBuyerSection">
+            <div class="buyer-invoice-notice">
+              <div class="buyer-invoice-icon">🧾</div>
+              <div class="buyer-invoice-content">
+                <strong>Buyer-Created Tax Invoice</strong>
+                <p>Eek Mechanical will generate a compliant tax invoice on your behalf. By submitting this form, you agree to accept a buyer-created tax invoice for this job.</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>
+                <input type="checkbox" id="buyerInvoiceConsent" name="buyerInvoiceConsent">
+                I agree to receive a buyer-created tax invoice from Eek Mechanical
+              </label>
+            </div>
           </div>
         </div>
 
@@ -952,6 +1089,37 @@
 </div>
 
 <script>
+// ============================================
+// INVOICE METHOD TOGGLE
+// ============================================
+let currentInvoiceMethod = 'link';
+
+function setInvoiceMethod(method) {
+  currentInvoiceMethod = method;
+  
+  // Update toggle buttons
+  document.querySelectorAll('.toggle-option').forEach(opt => {
+    opt.classList.toggle('active', opt.dataset.method === method);
+  });
+  
+  // Show/hide sections
+  document.getElementById('invoiceLinkSection').classList.toggle('active', method === 'link');
+  document.getElementById('invoiceFileSection').classList.toggle('active', method === 'file');
+  document.getElementById('invoiceBuyerSection').classList.toggle('active', method === 'buyer');
+  
+  // Clear other fields when switching
+  if (method !== 'link') {
+    document.getElementById('invoiceLink').value = '';
+  }
+  if (method !== 'file') {
+    document.getElementById('invoiceFile').value = '';
+  }
+  if (method !== 'buyer') {
+    const consent = document.getElementById('buyerInvoiceConsent');
+    if (consent) consent.checked = false;
+  }
+}
+
 // ============================================
 // HELP MODAL FUNCTIONS
 // ============================================
@@ -1276,15 +1444,22 @@ function setupInvoiceForm() {
     submitBtn.innerHTML = '<span class="spinner"></span> Uploading...';
     
     try {
-      // Get invoice inputs
+      // Get invoice inputs based on selected method
       const invoiceFile = document.getElementById('invoiceFile');
       const invoiceLink = document.getElementById('invoiceLink').value.trim();
+      const buyerConsent = document.getElementById('buyerInvoiceConsent')?.checked;
       const hasFile = invoiceFile.files.length > 0;
       const hasLink = invoiceLink !== '';
       
-      // Must have at least one
-      if (!hasFile && !hasLink) {
-        throw new Error('Please provide an invoice link or upload a file');
+      // Validate based on selected method
+      if (currentInvoiceMethod === 'link' && !hasLink) {
+        throw new Error('Please provide an invoice link from Xero, MYOB, or QuickBooks');
+      }
+      if (currentInvoiceMethod === 'file' && !hasFile) {
+        throw new Error('Please upload an invoice file');
+      }
+      if (currentInvoiceMethod === 'buyer' && !buyerConsent) {
+        throw new Error('Please agree to receive a buyer-created tax invoice');
       }
       
       // Collect form values
@@ -1318,8 +1493,10 @@ function setupInvoiceForm() {
         litresIntroduced: litresIntroduced,
         description: description || '',
         
-        // Invoice - always include both fields (empty string if not provided)
-        invoiceLink: hasLink ? invoiceLink : '',
+        // Invoice - include based on method selected
+        invoiceMethod: currentInvoiceMethod,
+        invoiceLink: (currentInvoiceMethod === 'link' && hasLink) ? invoiceLink : '',
+        buyerCreatedInvoice: currentInvoiceMethod === 'buyer',
         invoiceFileName: '',
         invoiceFileType: '',
         invoiceFileSize: 0,
@@ -1351,13 +1528,17 @@ function setupInvoiceForm() {
         platform: document.getElementById('platform').value || ''
       };
       
-      // Add invoice link to fields if provided
-      if (hasLink) {
+      // Add invoice info to fields based on method
+      if (currentInvoiceMethod === 'link' && hasLink) {
         payload.fields.push({ name: 'Invoice Link', value: invoiceLink });
+      } else if (currentInvoiceMethod === 'file' && hasFile) {
+        payload.fields.push({ name: 'Invoice File', value: invoiceFile.files[0].name });
+      } else if (currentInvoiceMethod === 'buyer') {
+        payload.fields.push({ name: 'Invoice Type', value: 'Buyer-Created Tax Invoice (Eek to generate)' });
       }
       
-      // Handle file upload if provided (and no link - link takes priority)
-      if (hasFile && !hasLink) {
+      // Handle file upload if file method selected
+      if (currentInvoiceMethod === 'file' && hasFile) {
         const file = invoiceFile.files[0];
         
         // Validate file size (10MB)
@@ -1377,6 +1558,7 @@ function setupInvoiceForm() {
           formType: 'fuel_extraction_job',
           amount: amount,
           submissionId: submissionId,
+          invoiceMethod: currentInvoiceMethod,
           hasLink: hasLink,
           hasFile: hasFile
         });
