@@ -1,33 +1,20 @@
-<!-- 
-Save this as "404.html" in your GitHub Pages repository root.
-GitHub Pages will automatically serve this for any 404 errors.
--->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting... | Eek Mobile Mechanical</title>
-    
-    <!-- Reddit Pixel -->
-    <script>
-        !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
-        (window,document);
-        
-        rdt('init', 'a2_hf16791nsdhx');
-        rdt('track', 'PageVisit');
-    </script>
-    
+    <title>We'll Be Right Back | Eek Mobile Mechanical</title>
+    <meta name="description" content="Eek Mobile Mechanical is currently experiencing a technical issue. Call us on 0800 769 000 for immediate assistance.">
+    <meta name="robots" content="noindex, nofollow">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f5f5;
             min-height: 100vh;
             display: flex;
@@ -36,531 +23,228 @@ GitHub Pages will automatically serve this for any 404 errors.
             color: #333;
             padding: 20px;
         }
-        
+
         .container {
             text-align: center;
             max-width: 700px;
-            padding: 40px;
+            width: 100%;
+        }
+
+        .card {
             background: #ffffff;
             border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            width: 100%;
-        }
-        
-        .logo {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        .brand-tagline {
-            color: #666;
-            font-size: 1.1em;
-            margin-bottom: 30px;
-        }
-        
-        .spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid #f5f5f5;
-            border-top: 4px solid #ff5500;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .message {
-            font-size: 1.2em;
-            margin: 20px 0;
-            color: #333;
-        }
-        
-        .countdown {
-            font-size: 2em;
-            font-weight: bold;
-            margin: 20px 0;
-            color: #ff5500;
-        }
-        
-        .manual-link {
-            margin-top: 30px;
-        }
-        
-        .manual-link a, .cta-button {
-            background-color: #ff5500;
-            color: white;
-            text-decoration: none;
-            padding: 15px 25px;
-            border-radius: 8px;
-            font-size: 1.2em;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            display: inline-block;
-            transition: all 0.3s ease;
-            margin: 0 7px;
-        }
-        
-        .manual-link a:hover, .cta-button:hover {
-            background-color: #e64a00;
-            transform: translateY(-2px);
-        }
-        
-        .error-container {
-            display: none;
-        }
-        
-        .error-container.show {
-            display: block;
-        }
-        
-        .error-container h2 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-        
-        .error-container p {
-            color: #666;
+            padding: 50px 40px 40px;
             margin-bottom: 20px;
         }
-        
-        .suggestions {
-            margin-top: 30px;
-            text-align: left;
-            background: #f5f5f5;
-            padding: 20px;
-            border-radius: 12px;
-        }
-        
-        .suggestions h3 {
+
+        .brand {
+            font-size: 2.5em;
+            font-weight: bold;
             color: #333;
-            margin-bottom: 15px;
-            text-align: center;
+            margin-bottom: 6px;
         }
-        
-        .suggestions ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .suggestions li {
-            margin: 10px 0;
-            padding: 15px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-        }
-        
-        .suggestions li:hover {
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transform: translateY(-2px);
-        }
-        
-        .suggestions a {
-            color: #333;
-            text-decoration: none;
-            display: block;
-        }
-        
-        .suggestions a strong {
+
+        .brand-accent {
             color: #ff5500;
-            font-size: 1.1em;
         }
-        
-        .suggestions a small {
+
+        .tagline {
             color: #666;
+            font-size: 1.1em;
+            margin-bottom: 35px;
+        }
+
+        .status-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff5500, #ff7733);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4em;
+            box-shadow: 0 4px 12px rgba(255, 85, 0, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 4px 12px rgba(255,85,0,0.3); }
+            50% { box-shadow: 0 4px 24px rgba(255,85,0,0.5); }
+        }
+
+        h1 {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .message {
+            font-size: 1.15em;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 35px;
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .phone-banner {
+            background: linear-gradient(135deg, #ff5500, #cc4400);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(255,85,0,0.25);
+        }
+
+        .phone-banner p {
+            font-size: 1.05em;
+            margin-bottom: 15px;
+            opacity: 0.95;
+        }
+
+        .phone-link {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            padding: 16px 36px;
+            border-radius: 50px;
+            font-size: 1.5em;
+            font-weight: bold;
+            border: 2px solid rgba(255,255,255,0.4);
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .phone-link:hover {
+            background: white;
+            color: #ff5500;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+
+        .phone-label {
+            display: block;
+            font-size: 0.55em;
+            font-weight: normal;
+            opacity: 0.85;
+            margin-bottom: 2px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .info-row {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+
+        .info-item {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 20px 15px;
+            border-radius: 12px;
+            border-left: 4px solid #ff5500;
+        }
+
+        .info-item .icon {
+            font-size: 1.6em;
+            margin-bottom: 8px;
+        }
+
+        .info-item h3 {
+            font-size: 1em;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .info-item p {
             font-size: 0.9em;
+            color: #666;
+            line-height: 1.4;
         }
-        
-        .suggestions a:hover strong {
-            color: #e64a00;
+
+        .footer-note {
+            color: #999;
+            font-size: 0.85em;
+            margin-top: 25px;
         }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-                margin: 10px;
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 35px 20px 30px;
             }
-            
-            .logo {
+
+            .brand {
                 font-size: 2em;
             }
-            
-            .manual-link a, .cta-button {
-                padding: 12px 20px;
-                font-size: 1.1em;
-                margin: 5px;
-                display: block;
+
+            h1 {
+                font-size: 1.5em;
             }
-            
-            .suggestions {
-                padding: 15px;
+
+            .message {
+                font-size: 1.05em;
             }
-            
-            .suggestions li {
-                padding: 12px;
+
+            .phone-link {
+                font-size: 1.3em;
+                padding: 14px 28px;
+            }
+
+            .info-row {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo">🔧 Eek Mobile Mechanical</div>
-        <div class="brand-tagline">Looking for the page you requested...</div>
-        
-        <div id="loadingContainer">
-            <div class="spinner"></div>
-            <div class="message">Checking our redirect database</div>
-            <div class="countdown" id="countdown" style="display: none;">3</div>
-            
-            <!-- Trust indicators -->
-            <div style="margin-top: 30px; padding: 20px; background: #f0f8ff; border-radius: 8px; border-left: 4px solid #007acc;">
-                <div style="display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap;">
-                    <div style="text-align: center;">
-                        <div style="font-size: 1.5em; color: #007acc;">🔒</div>
-                        <small style="color: #666;">Secure Connection</small>
-                    </div>
-                    <div style="text-align: center;">
-                        <div style="font-size: 1.5em; color: #28a745;">✅</div>
-                        <small style="color: #666;">Verified Service</small>
-                    </div>
-                    <div style="text-align: center;">
-                        <div style="font-size: 1.5em; color: #ff6b35;">⚡</div>
-                        <small style="color: #666;">Fast Response</small>
-                    </div>
+        <div class="card">
+            <div class="brand">🔧 <span class="brand-accent">Eek</span> Mobile Mechanical</div>
+            <div class="tagline">Mobile Mechanics — Dispatched in 30 Minutes NZ-Wide</div>
+
+            <div class="status-icon">🛠️</div>
+
+            <h1>We'll Be Right Back</h1>
+            <p class="message">
+                Our website is currently down due to a technical fault.
+                Our team is working to restore service as quickly as possible.
+                In the meantime, please give us a call — we're still fully operational and ready to help.
+            </p>
+
+            <div class="phone-banner">
+                <p>Need a mobile mechanic? We're still taking bookings by phone.</p>
+                <a href="tel:0800769000" class="phone-link">
+                    <span class="phone-label">Call us free</span>
+                    0800 769 000
+                </a>
+            </div>
+
+            <div class="info-row">
+                <div class="info-item">
+                    <div class="icon">📞</div>
+                    <h3>Phone Lines Open</h3>
+                    <p>Our dispatch team is standing by to take your call right now.</p>
                 </div>
-                <p style="text-align: center; margin-top: 15px; color: #555; font-size: 0.9em;">
-                    <strong>Your safety is our priority.</strong> You're being connected to official Eek Mechanical services with bank-level security.
-                </p>
+                <div class="info-item">
+                    <div class="icon">⚡</div>
+                    <h3>30 Min Dispatch</h3>
+                    <p>Mechanics dispatched to your location within 30 minutes.</p>
+                </div>
+                <div class="info-item">
+                    <div class="icon">🔧</div>
+                    <h3>Fully Operational</h3>
+                    <p>Only the website is affected — all services are running normally.</p>
+                </div>
             </div>
         </div>
-        
-        <div id="errorContainer" class="error-container">
-            <h2>Page Not Found</h2>
-            <p>We couldn't find the page you're looking for, and no redirect was configured for this URL.</p>
-            
-            <div class="suggestions">
-                <h3>🔧 Try These Popular Pages Instead:</h3>
-                <ul id="suggestionsList">
-                    <!-- Suggestions will be populated here -->
-                </ul>
-            </div>
-            
-            <div class="manual-link">
-                <a href="https://www.eek.nz" class="cta-button">🏠 Go to Homepage</a>
-                <a href="tel:0800769000" class="cta-button">📞 Call 0800 769 000</a>
-            </div>
-        </div>
+
+        <p class="footer-note">© Eek Mobile Mechanical — We come to you, anywhere in New Zealand.</p>
     </div>
-
-    <script>
-        // REAL redirect database - keeps ALL internal redirects working
-        const redirectDatabase = {
-            // Application and availability forms
-            '/apply': 'https://forms.office.com/r/XLdGk4wDYY',
-            '/availability': 'https://forms.office.com/r/jGgFgQUj0N',
-            '/candidate': 'https://forms.office.com/r/EsHxc7mAb4',
-            
-            // Legal and policy documents
-            '/privacy': 'https://roadandrescue.sharepoint.com/:b:/s/rar/EWXiDhEQikFPtsjmoapkdWMBeytvuyMEsmlIchxhPdwyXg?e=YcldRN',
-            '/terms': 'https://roadandrescue.sharepoint.com/:b:/s/rar/EbMAsktroaFEkKbFZUeYxPgBm1SDkvxru4fVlG360u3i9w?e=1CDNtc',
-            '/terms-of-service': 'https://roadandrescue.sharepoint.com/:b:/s/rar/EbMAsktroaFEkKbFZUeYxPgBm1SDkvxru4fVlG360u3i9w?e=1CDNtc',
-            
-            // Private pages (not shown in public suggestions)
-            '/thanks': 'https://www.eek.nz/thanks',
-            
-            // Supplier forms and pages
-            '/supplier-relations': 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNjZUMFRNN0ZMQldGSDdYM0FYRDRLWEFVOS4u',
-            '/supplier-terms': 'https://roadandrescue.sharepoint.com/:b:/s/rar/EVItR9WqSDBHpBgS4t5JFhQBLl0heypp7-CjIRgkV-4ytg?e=bajD4c',
-            '/supplier': 'https://www.eek.nz/supplier',
-            
-            // Customer support and escalation forms
-            '/customer-escalation': 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUQ0JBUlZHTDNBQkNESTBSTUJRWFFGTlZWRy4u',
-            '/dispute-form': 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUQ0JBUlZHTDNBQkNESTBSTUJRWFFGTlZWRy4u',
-            '/disputes-tribunal': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUODNFNFRRQTQ4UU9ETkdRMk1BWEwyM1VSRC4u',
-            '/tribunal': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUODNFNFRRQTQ4UU9ETkdRMk1BWEwyM1VSRC4u',
-            '/authorize': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNDlJVldJUlJKOVRJTVJUVThTRk40N0JPRC4u',
-            '/third-party': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNDlJVldJUlJKOVRJTVJUVThTRk40N0JPRC4u',
-            '/helper-form': 'https://form.jotform.com/251017058434047',
-            '/triage': 'https://forms.office.com/r/hLJkX3NeLq',
-            '/job': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNU1UVUNVOEMwMzFSMjBEVlVHRDlIVlBBNC4u&lang=en',
-            '/winz': 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUQ1kwRFQ0MjROQTZCUjVIR0tVQUhJT1pRMS4u',
-            
-            // Review form
-            '/review-form': 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUQVpUTzg4SktURE5PSk1RWkFTTVJPUUhTMC4u',
-            
-            // Insurance and claims
-            '/insurance-form': 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUM1kwODkxSlVRTkJBNFM0RlY1NUxSTE8yNi4u',
-            
-            // Service and job forms
-            '/rescue-me': 'https://forms.office.com/r/sdf0YirK6s',
-            '/start': 'https://forms.office.com/r/sdf0YirK6s',
-            '/job-sheet': 'https://forms.office.com/r/FNTtRBwQtT',
-            '/find-me': 'https://form.jotform.com/251017058434047',
-            '/cc': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUOTk5T0ZQNzFUTFg0TUZMTk01WTlKVk8xMy4u',
-            
-            // Legal and utility redirects
-            '/mjuris': 'https://www.eek.nz/mjuris',
-            '/map': 'https://www.google.com/maps/search/where+am+I',
-            '/privacy-report': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUMzRTVVRQQVVGN0s2QjRQTUVNOEVNR1QwOC4u',
-            '/more-options': 'https://www.eek.nz/more-options',
-            
-            // Case variations (common typos)
-            '/Apply': 'https://forms.office.com/r/XLdGk4wDYY',
-            '/APPLY': 'https://forms.office.com/r/XLdGk4wDYY',
-            '/Availability': 'https://forms.office.com/r/jGgFgQUj0N',
-            '/RESCUE-ME': 'https://forms.office.com/r/sdf0YirK6s',
-            '/Rescue-Me': 'https://forms.office.com/r/sdf0YirK6s',
-            '/CC': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUOTk5T0ZQNzFUTFg0TUZMTk01WTlKVk8xMy4u',
-            '/Thanks': 'https://www.eek.nz/thanks',
-            '/THANKS': 'https://www.eek.nz/thanks',
-            '/Authorize': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNDlJVldJUlJKOVRJTVJUVThTRk40N0JPRC4u',
-            '/AUTHORIZE': 'https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUNDlJVldJUlJKOVRJTVJUVThTRk40N0JPRC4u'
-        };
-
-        function handleRedirect() {
-            const currentPath = window.location.pathname;
-            
-            // Handle trackable URLs with dynamic job IDs - this creates a Power Automate run link
-            if (currentPath.startsWith('/trackable/')) {
-                const jobId = currentPath.replace('/trackable/', '');
-                // This will redirect to Power Automate login if customer clicks it (they won't have access)
-                // But for internal staff, it goes directly to the workflow run
-                const powerAutomateUrl = `https://make.powerautomate.com/manage/environments/Default/flows/${jobId}`;
-                performRedirect(powerAutomateUrl, currentPath);
-                return;
-            }
-            
-            // Check for exact match
-            if (redirectDatabase[currentPath]) {
-                performRedirect(redirectDatabase[currentPath], currentPath);
-                return;
-            }
-            
-            // Check for case-insensitive match
-            const lowerPath = currentPath.toLowerCase();
-            for (const [key, value] of Object.entries(redirectDatabase)) {
-                if (key.toLowerCase() === lowerPath) {
-                    performRedirect(value, currentPath);
-                    return;
-                }
-            }
-            
-            // No match found - show error page
-            showErrorPage(currentPath);
-        }
-        
-        function performRedirect(url, originalPath) {
-            // Fire Reddit Pixel purchase event for /job path
-            if (originalPath === '/job' || originalPath.toLowerCase() === '/job') {
-                fireRedditPurchaseEvent();
-            }
-            
-            // Determine what type of service they're accessing
-            let serviceInfo = getServiceInfo(url, originalPath);
-            
-            document.querySelector('.message').innerHTML = `
-                <strong style="color: #ff5500;">✅ ${serviceInfo.title}</strong><br>
-                ${serviceInfo.description}
-            `;
-            
-            document.querySelector('.brand-tagline').innerHTML = 
-                'Securely connecting you to the right service...';
-            
-            document.getElementById('countdown').style.display = 'none';
-            
-            // Show loading for a brief moment for UX, then redirect immediately
-            setTimeout(() => {
-                window.location.href = url;
-            }, 1500);
-        }
-        
-        function fireRedditPurchaseEvent() {
-            try {
-                if (typeof rdt !== 'undefined') {
-                    // Track as a purchase/conversion event
-                    rdt('track', 'Purchase', {
-                        'customEventName': 'Job_Form_Access',
-                        'currency': 'NZD',
-                        'eventSource': 'job_redirect',
-                        'transactionId': 'job_' + Date.now(),
-                        'value': 1
-                    });
-                    
-                    // Also track as a Lead event
-                    rdt('track', 'Lead', {
-                        'customEventName': 'Job_Form_Lead',
-                        'eventSource': 'job_redirect'
-                    });
-                    
-                    console.log('Reddit Pixel purchase event fired for /job');
-                } else {
-                    console.warn('Reddit Pixel not loaded when trying to fire purchase event');
-                }
-            } catch (error) {
-                console.error('Error firing Reddit Pixel event:', error);
-            }
-        }
-        
-        function getServiceInfo(url, path) {
-            // Handle trackable URLs
-            if (path.startsWith('/trackable/')) {
-                return {
-                    title: 'Job Tracking Access',
-                    description: 'Connecting you to the secure job tracking portal. Staff can view full details, customers will be prompted to log in.'
-                };
-            }
-            
-            // Customer-friendly explanations for each service
-            if (path === '/apply') {
-                return {
-                    title: 'Joining Our Team',
-                    description: 'Taking you to our secure application form. We\'re excited you want to join our team of mobile mechanical experts!'
-                };
-            }
-            if (path === '/availability') {
-                return {
-                    title: 'Checking Technician Availability',
-                    description: 'Connecting you to our real-time availability system to show when our certified technicians can help you.'
-                };
-            }
-            if (path === '/supplier') {
-                return {
-                    title: 'Supplier Partnership Portal',
-                    description: 'Connecting you to our supplier network information and application portal for mobile technicians.'
-                };
-            }
-            if (path === '/mjuris') {
-                return {
-                    title: 'Legal Authority Access',
-                    description: 'Accessing MJuris Central Enforcement Authority for contract and compliance matters.'
-                };
-            }
-            if (path === '/more-options') {
-                return {
-                    title: 'Service Directory',
-                    description: 'Taking you to our complete directory of all services, forms, and contact options.'
-                };
-            }
-            if (path === '/find-me') {
-                return {
-                    title: 'Location Services',
-                    description: 'Opening our secure location service to help us find you quickly for faster emergency response.'
-                };
-            }
-            if (path === '/rescue-me' || path === '/start') {
-                return {
-                    title: 'Emergency Service Request',
-                    description: 'Taking you to our secure emergency booking system. Our dispatch team will contact you within minutes.'
-                };
-            }
-            if (path === '/customer-escalation' || path === '/dispute-form') {
-                return {
-                    title: 'Customer Support',
-                    description: 'Connecting you to our customer care team. We\'re here to resolve any concerns quickly and fairly.'
-                };
-            }
-            if (path === '/authorize' || path === '/third-party' || path.toLowerCase() === '/authorize' || path.toLowerCase() === '/third-party') {
-                return {
-                    title: 'Third Party Authorization',
-                    description: 'Taking you to our secure Privacy Act 2020 compliant form to authorize someone to act on your behalf. Your privacy rights are protected.'
-                };
-            }
-            if (path === '/supplier-relations') {
-                return {
-                    title: 'Supplier Partnership',
-                    description: 'Taking you to our secure supplier portal for business inquiries and partnership opportunities.'
-                };
-            }
-            if (path === '/insurance-form') {
-                return {
-                    title: 'Insurance Liaison & Claims',
-                    description: 'Taking you to our secure insurance claim consent form. We\'ll coordinate directly with your insurance provider for faster processing.'
-                };
-            }
-            if (path === '/review-form') {
-                return {
-                    title: 'Customer Experience Feedback',
-                    description: 'Taking you to our secure feedback form. Your experience matters to us and helps us improve our services.'
-                };
-            }
-            if (path === '/cc') {
-                return {
-                    title: 'Customer Care Form',
-                    description: 'Taking you to our secure customer care form. Our support team will review your request and respond promptly.'
-                };
-            }
-            if (path === '/job') {
-                return {
-                    title: 'Service Request Form',
-                    description: 'Taking you to our secure job booking form. Our team will process your request and contact you with next steps.'
-                };
-            }
-            if (path === '/map') {
-                return {
-                    title: 'Finding Your Location',
-                    description: 'Opening location services to help our technicians reach you faster. Your privacy and security are protected.'
-                };
-            }
-            if (path === '/thanks' || path.toLowerCase() === '/thanks') {
-                return {
-                    title: 'Payment Confirmation',
-                    description: 'Taking you to your secure payment confirmation page. Your service is confirmed and being processed.'
-                };
-            }
-            if (url.includes('sharepoint.com')) {
-                return {
-                    title: 'Secure Document Access',
-                    description: 'Taking you to our secure document portal for terms, policies, and important information.'
-                };
-            }
-            if (url.includes('forms.office.com') || url.includes('forms.cloud.microsoft')) {
-                return {
-                    title: 'Secure Form Access',
-                    description: 'Connecting you to our protected Microsoft Forms system for safe and secure information submission.'
-                };
-            }
-            // Default fallback
-            return {
-                title: 'Connecting You Safely',
-                description: 'Taking you to the secure service you requested. All your information is protected and encrypted.'
-            };
-        }
-        
-        function showErrorPage(path) {
-            document.getElementById('loadingContainer').style.display = 'none';
-            document.getElementById('errorContainer').classList.add('show');
-            
-            // Generate public-facing suggestions - only show main pages, not internal forms or private pages
-            const suggestionsList = document.getElementById('suggestionsList');
-            const suggestions = [
-                { url: 'https://www.eek.nz/', title: '🏠 Homepage', desc: 'Main Eek Mobile Mechanical website' },
-                { url: 'tel:0800769000', title: '📞 Call 0800 769 000', desc: 'Speak directly with our dispatch team' },
-                { url: 'https://www.eek.nz/more-options', title: '📋 More Options', desc: 'Complete directory of all services and forms' },
-                { url: 'https://www.eek.nz/supplier', title: '🤝 Supplier Portal', desc: 'Official supplier partnership portal' },
-                { url: 'https://www.eek.nz/mjuris', title: '⚖️ Legal Authority', desc: 'Legal enforcement and compliance matters' }
-            ];
-            
-            suggestionsList.innerHTML = suggestions.map(s => `
-                <li>
-                    <a href="${s.url}">
-                        <strong>${s.title}</strong><br>
-                        <small>${s.desc}</small>
-                    </a>
-                </li>
-            `).join('');
-        }
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(handleRedirect, 800); // Slightly longer to show trust indicators
-        });
-    </script>
 </body>
 </html>
