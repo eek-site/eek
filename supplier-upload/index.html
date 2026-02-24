@@ -1,54 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Supplier Upload Portal | Eek Mobile Mechanical</title>
-  <meta name="description" content="Secure document upload portal for Eek Mobile Mechanical suppliers. Submit invoices, job sheets, certificates, and other required documentation." />
-  <meta name="keywords" content="supplier upload, invoice submission, document portal, job sheets, certificates, eek suppliers" />
-  <meta property="og:title" content="Supplier Upload Portal | Eek Mobile Mechanical" />
-  <meta property="og:description" content="Secure portal for suppliers to upload invoices and documents to the Eek Mobile Mechanical system." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.eek.nz/supplier-upload" />
-  <meta property="og:image" content="https://www.eek.nz/supplier-upload-og-image.jpg" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supplier Upload Portal | Eek Mechanical</title>
+  <meta name="description" content="Secure document upload portal for Eek Mechanical suppliers. Submit invoices, job sheets, and documentation.">
+  <meta name="keywords" content="supplier upload, invoice submission, document portal, eek mechanical">
+  <meta property="og:title" content="Supplier Upload Portal | Eek Mechanical">
+  <meta property="og:description" content="Secure portal for suppliers to upload invoices and documents.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.eek.nz/supplier-upload">
 
-  <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'AW-17084465163');
-  </script>
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com;
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data: https:;
+    connect-src 'self' https://www.eek.nz https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com https://static.cloudflareinsights.com;
+    frame-src 'self';
+    font-src 'self' data:;">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 
-  <!-- Google Analytics tag -->
-  <script>
-    gtag('config', 'G-DQNKF1YLWR');
-  </script>
+  <!-- Centralized Scripts -->
+  <script src="/data-sanitizer.js?v=20251224.1"></script>
+  <script src="/phone-manager.js?v=20251020"></script>
+  <script src="/unified-tracking.js?v=20251224.1"></script>
+  <script src="/footer-new.js?v=20251020"></script>
 
+  <!-- Schema.org Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Eek Mobile Mechanical Supplier Upload Portal",
+    "name": "Eek Mechanical Supplier Upload Portal",
     "description": "Secure document upload system for suppliers to submit invoices and documentation.",
     "url": "https://www.eek.nz/supplier-upload",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web Browser",
     "parentOrganization": {
       "@type": "LocalBusiness",
-      "name": "Eek Mobile Mechanical"
+      "name": "Eek Mechanical"
     }
   }
   </script>
 
-  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -58,11 +59,8 @@
       min-height: 100vh;
     }
 
-    .container {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+    .container-narrow { max-width: 650px; margin: 0 auto; padding: 0 20px; }
 
     /* Header */
     .header {
@@ -75,10 +73,8 @@
     .header::before {
       content: '';
       position: absolute;
-      top: -50%;
-      right: -50%;
-      width: 200%;
-      height: 200%;
+      top: -50%; right: -50%;
+      width: 200%; height: 200%;
       background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
       animation: float 15s infinite linear;
     }
@@ -88,23 +84,9 @@
       100% { transform: translateX(-50px) translateY(-50px); }
     }
 
-    .header-content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-    }
-
-    .header h1 {
-      font-size: 2.8em;
-      margin-bottom: 15px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-
-    .header .subtitle {
-      font-size: 1.2em;
-      opacity: 0.9;
-      margin-bottom: 20px;
-    }
+    .header-content { position: relative; z-index: 2; text-align: center; }
+    .header h1 { font-size: 2.5em; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    .header .subtitle { font-size: 1.1em; opacity: 0.9; margin-bottom: 20px; }
 
     .security-badge {
       display: inline-block;
@@ -127,137 +109,448 @@
       border-bottom: 1px solid #333;
     }
 
-    .nav-content {
-      display: flex;
-      justify-content: center;
-      padding: 15px 0;
-      gap: 30px;
-    }
+    .nav-content { display: flex; justify-content: center; padding: 15px 0; gap: 30px; flex-wrap: wrap; }
+    .nav a { color: #ccc; text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+    .nav a:hover { color: #ff5500; }
 
-    .nav a {
-      color: #ccc;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s ease;
-      position: relative;
-    }
+    /* Main Section */
+    .main-section { padding: 50px 0; }
 
-    .nav a:hover {
-      color: #ff5500;
-    }
-
-    /* Authentication Section */
-    .auth-section {
-      padding: 60px 0;
-    }
-
-    .auth-container {
-      background: rgba(255,255,255,0.1);
+    /* Form Card */
+    .form-card {
+      background: rgba(255,255,255,0.08);
       backdrop-filter: blur(15px);
       border-radius: 20px;
-      padding: 50px;
-      border: 1px solid rgba(255,255,255,0.2);
+      padding: 40px;
+      border: 1px solid rgba(255,255,255,0.15);
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-      text-align: center;
     }
 
-    .auth-container h2 {
+    .form-card h2 { color: #ff5500; font-size: 1.8em; margin-bottom: 10px; }
+    .form-card > p { color: #bbb; margin-bottom: 25px; font-size: 1.05em; }
+
+    .form-section { margin-bottom: 28px; }
+
+    .form-section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
       color: #ff5500;
-      font-size: 2.2em;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid rgba(255,255,255,0.15);
+    }
+
+    .form-group { margin-bottom: 20px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      .form-card { padding: 25px 20px; }
+      .header h1 { font-size: 1.8em; }
+      .nav-content { flex-direction: column; align-items: center; gap: 12px; }
+    }
+
+    label { display: block; font-weight: 600; color: #fff; margin-bottom: 6px; font-size: 0.9rem; }
+    label .required { color: #ef4444; }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #ff5500;
+      background: rgba(255,255,255,0.12);
+      box-shadow: 0 0 0 4px rgba(255,85,0,0.15);
+    }
+
+    input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.4); }
+
+    input[type="file"] { padding: 10px; cursor: pointer; }
+    input[type="file"]::file-selector-button {
+      background: #ff5500;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 12px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    input[type="file"]::file-selector-button:hover { background: #e04400; }
+
+    textarea { resize: vertical; min-height: 100px; }
+    select option { background: #1a1a2e; color: #fff; }
+
+    .input-prefix, .input-suffix { position: relative; }
+    .input-prefix span, .input-suffix span {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.5);
+      font-weight: 500;
+    }
+    .input-prefix span { left: 16px; }
+    .input-suffix span { right: 16px; }
+    .input-prefix input { padding-left: 32px; }
+    .input-suffix input { padding-right: 32px; }
+
+    .bank-inputs { display: grid; grid-template-columns: 70px 80px 110px 60px; gap: 8px; }
+    @media (max-width: 500px) { .bank-inputs { grid-template-columns: 1fr 1fr; } }
+    .bank-inputs input { text-align: center; }
+
+    .help-text { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+    input:disabled, input[readonly], textarea:disabled, textarea[readonly] {
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.6);
+      cursor: not-allowed;
+    }
+
+    /* Invoice Method Toggle */
+    .invoice-toggle {
+      display: flex;
+      background: rgba(255,255,255,0.08);
+      border-radius: 30px;
+      padding: 4px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .toggle-option {
+      flex: 1;
+      padding: 12px 16px;
+      text-align: center;
+      border-radius: 26px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      color: rgba(255,255,255,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .toggle-option:hover {
+      color: rgba(255,255,255,0.9);
+    }
+
+    .toggle-option.active {
+      background: linear-gradient(135deg, #ff5500 0%, #ff7700 100%);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(255,85,0,0.4);
+    }
+
+    .toggle-option .toggle-icon {
+      font-size: 1.1em;
+    }
+
+    .invoice-method-section {
+      display: none;
+      animation: fadeSlideIn 0.3s ease;
+    }
+
+    .invoice-method-section.active {
+      display: block;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Buyer Invoice Notice */
+    .buyer-invoice-notice {
+      display: flex;
+      gap: 16px;
+      padding: 20px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 16px;
+    }
+
+    .buyer-invoice-icon {
+      font-size: 2.5em;
+      flex-shrink: 0;
+    }
+
+    .buyer-invoice-content strong {
+      display: block;
+      color: #ff5500;
+      margin-bottom: 6px;
+      font-size: 1.05em;
+    }
+
+    .buyer-invoice-content p {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .invoice-method-section label input[type="checkbox"] {
+      width: auto;
+      margin-right: 10px;
+      accent-color: #ff5500;
+    }
+
+    .invoice-method-section label {
+      display: flex;
+      align-items: flex-start;
+      cursor: pointer;
+      font-weight: normal;
+      color: rgba(255,255,255,0.9);
+    }
+
+    /* Help Popout Modals */
+    .help-triggers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .help-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.8);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .help-trigger:hover {
+      background: rgba(255,85,0,0.2);
+      border-color: #ff5500;
+      color: #fff;
+    }
+
+    .help-trigger .help-icon {
+      font-size: 1em;
+    }
+
+    .help-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .help-modal.show {
+      display: flex;
+    }
+
+    .help-modal-content {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 550px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+      animation: modalSlide 0.3s ease;
+    }
+
+    .help-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .help-modal-header h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ff5500;
+      font-size: 1.3em;
+    }
+
+    .help-modal-close {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.6);
+      font-size: 1.5em;
+      cursor: pointer;
+      padding: 5px;
+      line-height: 1;
+    }
+
+    .help-modal-close:hover {
+      color: #fff;
+    }
+
+    .help-steps {
       margin-bottom: 20px;
     }
 
-    .auth-container p {
-      font-size: 1.2em;
-      margin-bottom: 30px;
-      color: #ddd;
+    .help-step {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
     }
 
-    .auth-button {
-      background: linear-gradient(135deg, #0078d4, #106ebe);
-      color: white;
-      padding: 18px 40px;
-      border: none;
-      border-radius: 50px;
-      font-size: 1.2em;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin: 10px;
-      box-shadow: 0 10px 30px rgba(0,120,212,0.3);
+    .help-step-number {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      background: #ff5500;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+
+    .help-step-content {
+      flex: 1;
+    }
+
+    .help-step-content strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #fff;
+    }
+
+    .help-step-content p {
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    .help-link {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #ff5500 0%, #ff7700 100%);
+      color: #fff;
       text-decoration: none;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
     }
 
-    .auth-button:hover {
+    .help-link:hover {
       transform: translateY(-2px);
-      box-shadow: 0 15px 40px rgba(0,120,212,0.4);
-      background: linear-gradient(135deg, #106ebe, #005a9e);
+      box-shadow: 0 5px 20px rgba(255,85,0,0.4);
     }
 
-    .upload-button {
-      background: linear-gradient(135deg, #ff5500, #ff7700);
+    .help-tip {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: rgba(255,85,0,0.1);
+      border-left: 3px solid #ff5500;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 16px 32px;
+      background: linear-gradient(135deg, #ff5500 0%, #ff7700 100%);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
       box-shadow: 0 10px 30px rgba(255,85,0,0.3);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
 
-    .upload-button:hover {
-      background: linear-gradient(135deg, #ff7700, #e04400);
-      box-shadow: 0 15px 40px rgba(255,85,0,0.4);
-    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(255,85,0,0.4); }
+    .btn:active { transform: translateY(0); }
+    .btn:disabled { background: #555; cursor: not-allowed; transform: none; box-shadow: none; }
 
-    /* Status Messages */
-    .status-message {
-      padding: 20px;
+    .btn-secondary { background: linear-gradient(135deg, #0078d4, #106ebe); box-shadow: 0 10px 30px rgba(0,120,212,0.3); }
+    .btn-secondary:hover { box-shadow: 0 15px 40px rgba(0,120,212,0.4); }
+
+    .spinner {
+      width: 20px; height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Alerts */
+    .alert {
+      padding: 16px 20px;
       border-radius: 10px;
-      margin: 20px 0;
-      text-align: center;
+      margin-bottom: 20px;
       font-weight: 500;
+      display: none;
     }
+    .alert-success { background: rgba(40,167,69,0.15); color: #5cb85c; border: 1px solid rgba(40,167,69,0.3); }
+    .alert-error { background: rgba(220,53,69,0.15); color: #e74c3c; border: 1px solid rgba(220,53,69,0.3); }
+    .alert-info { background: rgba(23,162,184,0.15); color: #17a2b8; border: 1px solid rgba(23,162,184,0.3); }
+    .alert a { color: inherit; }
 
-    .status-message.info {
-      background: rgba(23,162,184,0.2);
-      border: 1px solid #17a2b8;
-      color: #17a2b8;
-    }
-
-    .status-message.warning {
-      background: rgba(255,193,7,0.2);
-      border: 1px solid #ffc107;
-      color: #ffc107;
-    }
-
-    .status-message.error {
-      background: rgba(220,53,69,0.2);
-      border: 1px solid #dc3545;
-      color: #dc3545;
-    }
+    .hidden { display: none !important; }
 
     /* Guidelines */
+    .guidelines-section { padding: 30px 0 50px; }
+
     .upload-guidelines {
       background: rgba(255,255,255,0.05);
       border-left: 4px solid #ff5500;
-      padding: 25px;
-      margin: 30px 0;
-      border-radius: 10px;
+      padding: 20px 25px;
+      margin: 15px 0;
+      border-radius: 8px;
     }
 
-    .upload-guidelines h4 {
-      color: #ff5500;
-      margin-bottom: 15px;
-    }
-
-    .upload-guidelines ul {
-      list-style: none;
-      padding: 0;
-    }
-
+    .upload-guidelines h4 { color: #ff5500; margin-bottom: 12px; font-size: 1em; }
+    .upload-guidelines ul { list-style: none; padding: 0; }
     .upload-guidelines li {
-      padding: 5px 0;
-      position: relative;
+      padding: 6px 0;
       padding-left: 25px;
+      position: relative;
+      color: #aaa;
+      font-size: 0.95em;
     }
-
     .upload-guidelines li::before {
       content: '✓';
       position: absolute;
@@ -266,63 +559,44 @@
       font-weight: bold;
     }
 
-    /* Footer */
-    .footer {
-      background: rgba(0,0,0,0.8);
-      color: #666;
-      padding: 30px 0;
+    /* Success Modal */
+    .success-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+    }
+    .success-modal.show { display: flex; }
+
+    .success-modal-content {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 20px;
+      padding: 50px;
+      max-width: 480px;
+      width: 90%;
       text-align: center;
-      margin-top: 60px;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+      animation: modalSlide 0.3s ease;
     }
 
-    .footer a {
-      color: #ff5500;
-      text-decoration: none;
+    @keyframes modalSlide {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
-    /* Hidden state */
-    .hidden {
-      display: none !important;
-    }
-
-    /* Microsoft branding */
-    .ms-logo {
-      width: 20px;
-      height: 20px;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23"><path fill="%23f35325" d="M1 1h10v10H1z"/><path fill="%2381bc06" d="M12 1h10v10H12z"/><path fill="%2305a6f0" d="M1 12h10v10H1z"/><path fill="%23ffba08" d="M12 12h10v10H12z"/></svg>') no-repeat center;
-      background-size: contain;
-      display: inline-block;
-    }
-
-    /* Mobile Responsive */
-    @media (max-width: 768px) {
-      .header h1 {
-        font-size: 2em;
-      }
-      
-      .auth-container {
-        padding: 30px 20px;
-      }
-      
-      .nav-content {
-        flex-direction: column;
-        gap: 15px;
-      }
-      
-      .auth-button {
-        width: 100%;
-        justify-content: center;
-      }
-    }
-
-    /* Smooth scrolling */
-    html {
-      scroll-behavior: smooth;
-    }
+    .success-icon { font-size: 4em; margin-bottom: 20px; }
+    .success-modal-content h2 { color: #28a745; margin-bottom: 15px; font-size: 1.6em; }
+    .success-modal-content p { color: #8892b0; margin-bottom: 25px; }
   </style>
 </head>
 <body>
 
+<!-- Header -->
 <header class="header">
   <div class="container">
     <div class="header-content">
@@ -333,1014 +607,1062 @@
   </div>
 </header>
 
+<!-- Navigation -->
 <nav class="nav">
   <div class="container">
     <div class="nav-content">
-      <a href="#auth">Secure Access</a>
+      <a href="#form">Upload Form</a>
       <a href="#guidelines">Guidelines</a>
-      <a href="/supplier">← Supplier Portal</a>
-      <a href="tel:0800769000">📞 Support</a>
+      <a href="/">← Back to Home</a>
+      <a href="tel:0800769000">📞 0800 769 000</a>
     </div>
   </div>
 </nav>
 
-<section id="auth" class="auth-section">
-  <div class="container">
-    <div class="auth-container">
-      <!-- Login Button (shown when not authenticated) -->
-      <div id="loginContainer">
-        <h2>🔐 Secure Supplier Access</h2>
-        <p>Access the secure Microsoft Forms upload system for invoices, job sheets, and supplier documentation.</p>
-        
-        <div class="status-message info">
-          <strong>🔒 Enhanced Security:</strong> This system uses Microsoft Enterprise authentication to ensure your documents are submitted securely to the correct Eek supplier account.
-        </div>
-        
-        <button id="loginButton" class="auth-button">
-          <div class="ms-logo"></div>
-          Sign in with Microsoft
-        </button>
-        
-        <div style="margin-top: 20px; font-size: 0.9em; color: #ccc;">
-          <p>You'll be redirected to Microsoft's secure login system</p>
-        </div>
+<!-- Main Content -->
+<main class="main-section" id="form">
+  <div class="container-narrow">
+
+    <!-- ======================================== -->
+    <!-- CONTACT FORM (no ?d= parameter)         -->
+    <!-- ======================================== -->
+    <div id="contactSection" class="form-card hidden" style="scroll-margin-top:100px;">
+      <h2>📧 Request Upload Access</h2>
+      <p>Need to submit an invoice or documentation? Request your secure upload link below.</p>
+
+      <div id="contactAlertSuccess" class="alert alert-success">
+        ✅ Request submitted successfully! We'll send your upload link shortly.
+      </div>
+      <div id="contactAlertError" class="alert alert-error">
+        ❌ Something went wrong. Please try again or call <a href="tel:0800769000">0800 769 000</a>
       </div>
 
-      <!-- Upload Button (shown when authenticated) -->
-      <div id="uploadContainer" class="hidden">
-        <h2>✅ Authentication Successful</h2>
-        <p id="uploadDescription">You're now authenticated as an Eek supplier. Click below to access the secure document upload form.</p>
-        
-        <div id="uploadInfoMessage" class="status-message info">
-          <strong>📋 Ready to Upload:</strong> You can now submit invoices, job sheets, certificates, and other supplier documentation through our secure Microsoft Forms system.
-        </div>
-        
-        <div id="uploadButtons">
-          <!-- Invoice Upload Button (default) -->
-          <a id="invoiceUploadButton" href="#" class="auth-button upload-button" target="_blank">
-            📄 Upload Invoice Documents
-          </a>
+      <form id="contactForm" novalidate>
+        <div class="form-section">
+          <div class="form-section-title">Your Details</div>
           
-          <!-- Pre-purchase Inspection Button (when ?pp parameter) -->
-          <a id="ppUploadButton" href="#" class="auth-button upload-button" target="_blank" style="background: linear-gradient(135deg, #28a745, #20c997);">
-            🔍 Upload Pre-Purchase Inspection
-          </a>
-        </div>
-        
-        <div style="margin-top: 20px; font-size: 0.9em; color: #ccc;">
-          <p>The form will open in a new tab with your supplier credentials pre-filled</p>
-        </div>
-      </div>
+          <div class="form-group">
+            <label for="contactName">Full Name <span class="required">*</span></label>
+            <input type="text" id="contactName" name="name" required placeholder="John Smith">
+          </div>
 
-      <!-- Error Message Container -->
-      <div id="errorContainer" class="hidden">
-        <div class="status-message error">
-          <strong>⚠️ Authentication Configuration Issue:</strong><br>
-          The authentication system needs to be configured properly. Please contact IT support at 
-          <a href="tel:0800769000" style="color: #dc3545;">0800 769 000</a> for assistance.
-          <br><br>
-          <small>Error: Redirect URI mismatch in Azure AD application registration</small>
+          <div class="form-group">
+            <label for="contactEmail">Email Address <span class="required">*</span></label>
+            <input type="email" id="contactEmail" name="email" required placeholder="you@company.com">
+          </div>
+
+          <div class="form-group">
+            <label for="contactPhone">Phone Number</label>
+            <input type="tel" id="contactPhone" name="phone" placeholder="021 123 4567">
+          </div>
+
+          <div class="form-group">
+            <label for="contactCompany">Company Name</label>
+            <input type="text" id="contactCompany" name="company" placeholder="Your Company Ltd">
+          </div>
         </div>
-      </div>
+
+        <div class="form-section">
+          <div class="form-section-title">Request Details</div>
+          
+          <div class="form-group">
+            <label for="contactSubject">Subject <span class="required">*</span></label>
+            <select id="contactSubject" name="subject" required>
+              <option value="Request Upload Path">Request Upload Path</option>
+              <option value="Invoice Submission Query">Invoice Submission Query</option>
+              <option value="Technical Support">Technical Support</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="contactMessage">Message <span class="required">*</span></label>
+            <textarea id="contactMessage" name="message" required placeholder="Please describe what you need to upload and any relevant job or reference numbers..."></textarea>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-secondary" id="contactSubmitBtn">
+          📧 Send Request
+        </button>
+      </form>
     </div>
-  </div>
-</section>
 
-<section id="guidelines" class="upload-section">
+    <!-- ======================================== -->
+    <!-- INVOICE UPLOAD FORM (with ?d= parameter) -->
+    <!-- ======================================== -->
+    <div id="invoiceSection" class="form-card hidden">
+      <h2>⛽ Fuel Extraction Invoice</h2>
+      <p>Submit your job details and invoice for payment processing.</p>
+
+      <div id="invoiceAlertSuccess" class="alert alert-success">
+        ✅ Invoice submitted successfully! Payment will be processed shortly.
+      </div>
+      <div id="invoiceAlertError" class="alert alert-error">
+        ❌ <span id="invoiceErrorText">Something went wrong. Please try again.</span>
+      </div>
+      <div id="invoiceAlertLoading" class="alert alert-info">
+        ⏳ Loading job data from system...
+      </div>
+
+      <form id="invoiceForm" novalidate>
+        <!-- Vehicle Section -->
+        <div class="form-section">
+          <div class="form-section-title">Vehicle Details</div>
+          <div class="form-group">
+            <label for="rego">Registration <span class="required">*</span></label>
+            <input type="text" id="rego" name="rego" required placeholder="ABC123" maxlength="10" style="text-transform:uppercase;">
+          </div>
+        </div>
+
+        <!-- Fuel Section -->
+        <div class="form-section">
+          <div class="form-section-title">Fuel Details</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="litresExtracted">Litres Extracted <span class="required">*</span></label>
+              <div class="input-suffix">
+                <input type="number" id="litresExtracted" name="litresExtracted" required placeholder="0" min="0" step="0.1">
+                <span>L</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="litresIntroduced">Litres Introduced <span class="required">*</span></label>
+              <div class="input-suffix">
+                <input type="number" id="litresIntroduced" name="litresIntroduced" required placeholder="0" min="0" step="0.1">
+                <span>L</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="description">Job Description</label>
+            <textarea id="description" name="description" placeholder="E.g., Petrol in diesel tank, drained fuel system, flushed lines, added 50L diesel..."></textarea>
+          </div>
+        </div>
+
+        <!-- Supplier Section -->
+        <div class="form-section">
+          <div class="form-section-title">Supplier / Mechanic Details</div>
+          <div class="form-group">
+            <label for="supplierName">Name <span class="required">*</span></label>
+            <input type="text" id="supplierName" name="supplierName" required placeholder="John Smith">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="supplierEmail">Email <span class="required">*</span></label>
+              <input type="email" id="supplierEmail" name="supplierEmail" required placeholder="mechanic@example.com">
+            </div>
+            <div class="form-group">
+              <label for="supplierPhone">Phone</label>
+              <input type="tel" id="supplierPhone" name="supplierPhone" placeholder="021 123 4567">
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Section -->
+        <div class="form-section">
+          <div class="form-section-title">Payment Details</div>
+          <div class="form-group">
+            <label for="amount">Invoice Amount <span class="required">*</span></label>
+            <div class="input-prefix">
+              <span>$</span>
+              <input type="number" id="amount" name="amount" required placeholder="0.00" min="0" step="0.01">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="billableHours">Billable Hours <span class="required">*</span></label>
+            <input type="number" id="billableHours" name="billableHours" required placeholder="0.0" min="0" step="0.5">
+            <div class="help-text">Total hours worked for this job (e.g., 1.5, 2, 3.5)</div>
+          </div>
+          <div class="form-group">
+            <label>Bank Account <span class="required">*</span></label>
+            <div class="bank-inputs">
+              <input type="text" id="bank1" name="bank1" placeholder="XX" maxlength="2" required>
+              <input type="text" id="bank2" name="bank2" placeholder="XXXX" maxlength="4" required>
+              <input type="text" id="bank3" name="bank3" placeholder="XXXXXXX" maxlength="8" required>
+              <input type="text" id="bank4" name="bank4" placeholder="XXX" maxlength="3" required>
+            </div>
+            <div class="help-text">NZ bank account format: XX-XXXX-XXXXXXX-XXX</div>
+          </div>
+        </div>
+
+        <!-- Invoice Document Section with Toggle -->
+        <div class="form-section">
+          <div class="form-section-title">Invoice <span class="required">*</span></div>
+          
+          <!-- Toggle Slider -->
+          <div class="invoice-toggle">
+            <div class="toggle-option active" data-method="link" onclick="setInvoiceMethod('link')">
+              <span class="toggle-icon">🔗</span>
+              <span>Invoice Link</span>
+            </div>
+            <div class="toggle-option" data-method="file" onclick="setInvoiceMethod('file')">
+              <span class="toggle-icon">📄</span>
+              <span>Upload File</span>
+            </div>
+            <div class="toggle-option" data-method="buyer" onclick="setInvoiceMethod('buyer')">
+              <span class="toggle-icon">🧾</span>
+              <span>Eek Invoice</span>
+            </div>
+          </div>
+
+          <!-- Invoice Link Section -->
+          <div class="invoice-method-section active" id="invoiceLinkSection">
+            <div class="form-group">
+              <label for="invoiceLink">Invoice Link <span class="required">*</span></label>
+              <input type="url" id="invoiceLink" name="invoiceLink" placeholder="https://in.xero.com/...">
+              <div class="help-text">Paste your invoice link from Xero, MYOB, or QuickBooks</div>
+              
+              <!-- Help triggers -->
+              <div class="help-triggers">
+                <span class="help-trigger" onclick="showHelpModal('xero')">
+                  <span class="help-icon">❓</span> How to get Xero link
+                </span>
+                <span class="help-trigger" onclick="showHelpModal('myob')">
+                  <span class="help-icon">❓</span> How to get MYOB link
+                </span>
+                <span class="help-trigger" onclick="showHelpModal('quickbooks')">
+                  <span class="help-icon">❓</span> How to get QuickBooks link
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- File Upload Section -->
+          <div class="invoice-method-section" id="invoiceFileSection">
+            <div class="form-group">
+              <label for="invoiceFile">Upload Invoice <span class="required">*</span></label>
+              <input type="file" id="invoiceFile" name="invoiceFile" accept=".pdf,.jpg,.jpeg,.png">
+              <div class="help-text">PDF, JPG, PNG (max 10MB)</div>
+            </div>
+          </div>
+
+          <!-- Buyer Created Invoice Section -->
+          <div class="invoice-method-section" id="invoiceBuyerSection">
+            <div class="buyer-invoice-notice">
+              <div class="buyer-invoice-icon">🧾</div>
+              <div class="buyer-invoice-content">
+                <strong>Buyer-Created Tax Invoice</strong>
+                <p>Eek Mechanical will generate a compliant tax invoice on your behalf. By submitting this form, you agree to accept a buyer-created tax invoice for this job.</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>
+                <input type="checkbox" id="buyerInvoiceConsent" name="buyerInvoiceConsent">
+                I agree to receive a buyer-created tax invoice from Eek Mechanical
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden Tracking Fields -->
+        <input type="hidden" id="bookingId" name="bookingId">
+        <input type="hidden" id="sessionId" name="sessionId">
+        <input type="hidden" id="timestamp" name="timestamp">
+        <input type="hidden" id="timezone" name="timezone">
+        <input type="hidden" id="userAgent" name="userAgent">
+        <input type="hidden" id="referrer" name="referrer">
+        <input type="hidden" id="screenResolution" name="screenResolution">
+        <input type="hidden" id="language" name="language">
+        <input type="hidden" id="platform" name="platform">
+
+        <button type="submit" class="btn" id="invoiceSubmitBtn">
+          📤 Submit Invoice for Payment
+        </button>
+      </form>
+    </div>
+
+  </div>
+</main>
+
+<!-- Guidelines Section -->
+<section class="guidelines-section" id="guidelines">
   <div class="container">
     <div class="upload-guidelines">
       <h4>📋 Upload Guidelines</h4>
-      <ul id="generalGuidelines">
-        <li>Documents should be clear, legible, and in acceptable formats</li>
-        <li>Maximum file size: 10MB per file</li>
-        <li>Supported formats: PDF, JPG, PNG</li>
-        <li>Ensure contact information matches your supplier records</li>
-      </ul>
-      
-      <!-- Invoice-specific guidelines -->
-      <ul id="invoiceGuidelines">
-        <li>All invoices must include job reference numbers when applicable</li>
-        <li>Include GST details on all invoices (if applicable)</li>
-        <li>Include purchase order numbers when provided</li>
-      </ul>
-      
-      <!-- Pre-purchase inspection guidelines -->
-      <ul id="ppGuidelines" class="hidden">
-        <li>Include all required inspection photos and documentation</li>
-        <li>Clearly label each inspection item with reference numbers</li>
-        <li>Include inspection date and inspector details</li>
-        <li>Submit reports within 24 hours of inspection completion</li>
+      <ul>
+        <li>Invoices must include your business name and bank account details</li>
+        <li>Include the vehicle registration and job description</li>
+        <li>Maximum file size: 10MB per document</li>
+        <li>Accepted formats: PDF, JPG, PNG — or paste a link from Xero/MYOB</li>
+        <li>Ensure all figures are clearly legible</li>
       </ul>
     </div>
-    
+
+    <div class="upload-guidelines">
+      <h4>🔗 Using Invoice Links</h4>
+      <ul>
+        <li>Copy the invoice link directly from Xero, MYOB, or your accounting software</li>
+        <li>In Xero: Click "Email" on the invoice, then copy the online invoice link</li>
+        <li>We'll store the link with your submission for reference</li>
+        <li>If you prefer, you can also upload a PDF copy instead</li>
+      </ul>
+    </div>
+
     <div class="upload-guidelines">
       <h4>🔒 Security & Privacy</h4>
       <ul>
         <li>All uploads are encrypted using bank-level SSL security</li>
         <li>Documents are stored in secure, access-controlled systems</li>
-        <li>Only authorized Eek personnel can access your submissions</li>
-        <li>Files are automatically scanned for viruses and malware</li>
-        <li>Data is retained according to our privacy policy</li>
+        <li>Only authorized Eek Mechanical personnel can access submissions</li>
+        <li>Files are automatically scanned for security threats</li>
         <li>You will receive email confirmation of successful uploads</li>
       </ul>
     </div>
 
     <div class="upload-guidelines">
-      <h4>🔧 Technical Requirements</h4>
+      <h4>💳 Payment Processing</h4>
       <ul>
-        <li>Azure AD application must be configured with correct redirect URIs</li>
-        <li>Redirect URI must exactly match: https://www.eek.nz/supplier-upload</li>
-        <li>Application requires proper permissions and tenant configuration</li>
-        <li>Contact IT support if authentication issues persist</li>
+        <li>Payments are processed via <a href="https://www.anz.co.nz/business/manage-your-banking/digital-banking-tools/direct-online/" target="_blank" rel="noopener" style="color:#ff5500;">ANZ Direct Online</a> batch payment system</li>
+        <li>Domestic NZ payments are available 7 days a week, including weekends and public holidays</li>
+        <li>Same-day payments are processed immediately when submitted before cut-off</li>
+        <li>ANZ processes payments from 4am on the payment date to ANZ accounts instantly</li>
+        <li>Payments to other NZ banks are sent from 9am on the payment date</li>
+        <li>Ensure your bank account details are correct — incorrect details will delay payment</li>
+        <li>You'll receive confirmation when your invoice is processed</li>
+        <li>For payment queries, <a href="#contact" id="showContactLink" style="color:#ff5500;cursor:pointer;">submit a request here</a></li>
       </ul>
     </div>
   </div>
 </section>
 
-<footer class="footer">
-  <div class="container">
-    <p>&copy; 2025 Eek Mobile Mechanical. All rights reserved. | 
-    <a href="/privacy">Privacy Policy</a> | 
-    <a href="/terms">Terms of Service</a></p>
-    <p style="margin-top: 10px;">📞 Upload Support: <a href="tel:0800769000">0800 769 000</a> | 
-    🌐 Supplier Portal: <a href="/supplier">www.eek.nz/supplier</a></p>
+<!-- Success Modal -->
+<div class="success-modal" id="successModal">
+  <div class="success-modal-content">
+    <div class="success-icon">✅</div>
+    <h2>Invoice Submitted!</h2>
+    <p>Thank you. Your invoice has been received and queued for payment via ANZ batch processing.</p>
+    <button class="btn" id="modalCloseBtn">Return to Home</button>
   </div>
-</footer>
+</div>
+
+<!-- Footer injected by footer-new.js -->
+
+<!-- Help Modals -->
+<!-- Xero Help Modal -->
+<div class="help-modal" id="helpModalXero">
+  <div class="help-modal-content">
+    <div class="help-modal-header">
+      <h3>📘 Get Invoice Link from Xero</h3>
+      <button class="help-modal-close" onclick="closeHelpModal('xero')">&times;</button>
+    </div>
+    
+    <div class="help-steps">
+      <div class="help-step">
+        <div class="help-step-number">1</div>
+        <div class="help-step-content">
+          <strong>Open Your Invoice</strong>
+          <p>Find and open the invoice you want to share (no need to email it first)</p>
+        </div>
+      </div>
+      
+      <div class="help-step">
+        <div class="help-step-number">2</div>
+        <div class="help-step-content">
+          <strong>Get the Link</strong>
+          <p><strong>On desktop:</strong> Click the ••• menu → "Get link" → Copy<br>
+          <strong>On mobile:</strong> Tap "Options" → "Share"</p>
+        </div>
+      </div>
+      
+      <div class="help-step">
+        <div class="help-step-number">3</div>
+        <div class="help-step-content">
+          <strong>Paste Here</strong>
+          <p>Paste the link into the Invoice Link field above</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="help-tip">
+      💡 <strong>Tips:</strong><br>
+      • Works from the Xero app on your phone<br>
+      • Draft invoices are auto-approved when you copy the link<br>
+      • You don't need to email the invoice first
+    </div>
+    
+    <div style="margin-top: 20px;">
+      <a href="https://central.xero.com/s/article/Share-an-online-invoice-link-with-your-customer" target="_blank" rel="noopener" class="help-link">
+        📖 Xero Help Article →
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- MYOB Help Modal -->
+<div class="help-modal" id="helpModalMyob">
+  <div class="help-modal-content">
+    <div class="help-modal-header">
+      <h3>📗 Get Invoice Link from MYOB</h3>
+      <button class="help-modal-close" onclick="closeHelpModal('myob')">&times;</button>
+    </div>
+    
+    <div class="help-steps">
+      <div class="help-step">
+        <div class="help-step-number">1</div>
+        <div class="help-step-content">
+          <strong>Open Your Invoice</strong>
+          <p>Find and open the invoice you want to share</p>
+        </div>
+      </div>
+      
+      <div class="help-step">
+        <div class="help-step-number">2</div>
+        <div class="help-step-content">
+          <strong>Get the Link</strong>
+          <p><strong>On desktop:</strong> Click "Share" → "Copy link"<br>
+          <strong>On mobile:</strong> Tap the share icon → Copy link</p>
+        </div>
+      </div>
+      
+      <div class="help-step">
+        <div class="help-step-number">3</div>
+        <div class="help-step-content">
+          <strong>Paste Here</strong>
+          <p>Paste the link into the Invoice Link field above</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="help-tip">
+      💡 <strong>Tips:</strong><br>
+      • Works from the MYOB app on your phone<br>
+      • You can also click "View PDF" → "Copy Link"<br>
+      • Online invoices update in real-time if you make changes
+    </div>
+    
+    <div style="margin-top: 20px;">
+      <a href="https://www.myob.com/au/support/myob-business/sales/online-invoicing/sending-an-online-invoice-link-to-a-customer" target="_blank" rel="noopener" class="help-link">
+        📖 MYOB Help Article →
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- QuickBooks Help Modal -->
+<div class="help-modal" id="helpModalQuickbooks">
+  <div class="help-modal-content">
+    <div class="help-modal-header">
+      <h3>📕 Get Invoice Link from QuickBooks</h3>
+      <button class="help-modal-close" onclick="closeHelpModal('quickbooks')">&times;</button>
+    </div>
+    
+    <div class="help-steps">
+      <div class="help-step">
+        <div class="help-step-number">1</div>
+        <div class="help-step-content">
+          <strong>Open Your Invoice</strong>
+          <p>Find and open the invoice you want to share</p>
+        </div>
+      </div>
+      
+      <div class="help-step">
+        <div class="help-step-number">2</div>
+        <div class="help-step-content">
+          <strong>Get the Link</strong>
+          <p><strong>On desktop:</strong> Click dropdown next to "Save and Close" → "Share link" → Copy<br>
+          <strong>On mobile:</strong> Open invoice in browser, use same steps above</p>
+        </div>
+      </div>
+      
+      <div class="help-step">
+        <div class="help-step-number">3</div>
+        <div class="help-step-content">
+          <strong>Paste Here</strong>
+          <p>Paste the link into the Invoice Link field above</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="help-tip">
+      💡 <strong>Tips:</strong><br>
+      • QuickBooks needs an email in the customer field first (use yours if needed)<br>
+      • Keyboard shortcut: Ctrl + Alt + L to share link<br>
+      • Mobile app: sign into QBO through your phone's browser
+    </div>
+    
+    <div style="margin-top: 20px;">
+      <a href="https://quickbooks.intuit.com/learn-support/en-us/reports-and-accounting/how-do-i-send-invoices-through-text-messages/00/1107539" target="_blank" rel="noopener" class="help-link">
+        📖 QuickBooks Help Article →
+      </a>
+    </div>
+  </div>
+</div>
 
 <script>
-// Microsoft Authentication Configuration
-const config = {
-  clientId: "23549916-65b7-485c-aca0-55ca600331a2",
-  tenantId: "61ffc6bc-d9ce-458b-8120-d32187c3770d", // Correct tenant ID with the missing '1'
-  loginHint: "supplier.upload@eek.nz",
-  redirectUri: "https://www.eek.nz/supplier-upload",
-  // Form URLs
-  invoiceFormUrl: "https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFURFAwNUxPNVUxWEpBNDJKWlhZV0tLR0I4VC4u&login_hint=supplier.upload@eek.nz",
-  ppFormUrl: "https://forms.office.com/Pages/ResponsePage.aspx?id=vMb_Yc7Zi0WBINMhh8N3DSnleyJD3nBGm0qPafV8nlFUMTg2OVQ5OFo5U0NYTFNOV09HWktHUjJKSy4u&login_hint=supplier.upload@eek.nz"
-};
+// ============================================
+// INVOICE METHOD TOGGLE
+// ============================================
+let currentInvoiceMethod = 'link';
 
-// Check authentication status on page load
-document.addEventListener('DOMContentLoaded', function() {
-  checkAuthenticationStatus();
-  setupEventListeners();
-  configureFormType(); // Configure which form to show based on URL parameters
-});
-
-function configureFormType() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const isPP = urlParams.has('pp');
+function setInvoiceMethod(method) {
+  currentInvoiceMethod = method;
   
-  // Store the form type in sessionStorage to persist through authentication
-  if (isPP) {
-    sessionStorage.setItem('formType', 'pp');
-  } else if (!sessionStorage.getItem('formType')) {
-    sessionStorage.setItem('formType', 'invoice');
+  // Update toggle buttons
+  document.querySelectorAll('.toggle-option').forEach(opt => {
+    opt.classList.toggle('active', opt.dataset.method === method);
+  });
+  
+  // Show/hide sections
+  document.getElementById('invoiceLinkSection').classList.toggle('active', method === 'link');
+  document.getElementById('invoiceFileSection').classList.toggle('active', method === 'file');
+  document.getElementById('invoiceBuyerSection').classList.toggle('active', method === 'buyer');
+  
+  // Clear other fields when switching
+  if (method !== 'link') {
+    document.getElementById('invoiceLink').value = '';
   }
-  
-  // Get the actual form type (from URL or sessionStorage)
-  const formType = isPP ? 'pp' : sessionStorage.getItem('formType');
-  const isPrePurchase = (formType === 'pp');
-  
-  // Get elements
-  const invoiceButton = document.getElementById('invoiceUploadButton');
-  const ppButton = document.getElementById('ppUploadButton');
-  const description = document.getElementById('uploadDescription');
-  const infoMessage = document.getElementById('uploadInfoMessage');
-  const invoiceGuidelines = document.getElementById('invoiceGuidelines');
-  const ppGuidelines = document.getElementById('ppGuidelines');
-  
-  if (isPrePurchase) {
-    // Pre-purchase inspection mode
-    invoiceButton.style.display = 'none';
-    ppButton.style.display = 'inline-flex';
-    
-    description.textContent = "You're authenticated for pre-purchase inspection upload. Click below to submit inspection documentation.";
-    infoMessage.innerHTML = '<strong>🔍 Pre-Purchase Inspection:</strong> Upload inspection reports, photos, and documentation through our secure Microsoft Forms system.';
-    
-    // Show PP guidelines, hide invoice guidelines
-    invoiceGuidelines.classList.add('hidden');
-    ppGuidelines.classList.remove('hidden');
-    
-    // Update page title and header
-    document.title = 'Pre-Purchase Inspection Upload | Eek Mobile Mechanical';
-    document.querySelector('.header h1').textContent = '🔍 Pre-Purchase Inspection Upload';
-    document.querySelector('.header .subtitle').textContent = 'Secure Inspection Documentation System';
-  } else {
-    // Default invoice mode
-    invoiceButton.style.display = 'inline-flex';
-    ppButton.style.display = 'none';
-    
-    description.textContent = "You're now authenticated as an Eek supplier. Click below to access the secure document upload form.";
-    infoMessage.innerHTML = '<strong>📋 Ready to Upload:</strong> You can now submit invoices, job sheets, certificates, and other supplier documentation through our secure Microsoft Forms system.';
-    
-    // Show invoice guidelines, hide PP guidelines
-    invoiceGuidelines.classList.remove('hidden');
-    ppGuidelines.classList.add('hidden');
-    
-    // Keep default title and header
-    document.title = 'Supplier Upload Portal | Eek Mobile Mechanical';
-    document.querySelector('.header h1').textContent = '📁 Supplier Upload Portal';
-    document.querySelector('.header .subtitle').textContent = 'Secure Document Submission System';
+  if (method !== 'file') {
+    document.getElementById('invoiceFile').value = '';
+  }
+  if (method !== 'buyer') {
+    const consent = document.getElementById('buyerInvoiceConsent');
+    if (consent) consent.checked = false;
   }
 }
 
-function checkAuthenticationStatus() {
-  // Check URL fragment for authentication token
-  const fragment = window.location.hash.substring(1);
-  const params = new URLSearchParams(fragment);
+// ============================================
+// HELP MODAL FUNCTIONS
+// ============================================
+function showHelpModal(platform) {
+  const modalId = 'helpModal' + platform.charAt(0).toUpperCase() + platform.slice(1);
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeHelpModal(platform) {
+  const modalId = 'helpModal' + platform.charAt(0).toUpperCase() + platform.slice(1);
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('help-modal')) {
+    e.target.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.help-modal.show').forEach(modal => {
+      modal.classList.remove('show');
+    });
+    document.body.style.overflow = '';
+  }
+});
+
+// ============================================
+// CONFIGURATION
+// ============================================
+const CONFIG = {
+  CONTACT_URL: 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/252cde504791494e823972d9651d0cee/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Qw5TH6rHqrevOeXH2VjtBtLGb1ggI7zRCIYEhBl3Xrw',
   
-  // Check for authentication errors first
-  if (params.has('error')) {
-    const error = params.get('error');
-    const errorDescription = params.get('error_description');
+  SHAREPOINT_LOOKUP_URL: 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c35b9414a0be42f88182ae7e6e409f1d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2ztt24wScLuAfifD0pjzovseRDKXBAEtCQtScGMgPqQ',
+  
+  INVOICE_URL: 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/b884bb04c6594edb906cdfdb22193b2f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=z7Dd14tvZp2UVGe4DfXewImCbHHJmo3lXsTJmle1jA8'
+};
+
+// State
+let bookingData = null;
+
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
+function decodeBase64(encoded) {
+  try {
+    return atob(encoded).trim();
+  } catch (e) {
+    console.error('Decode error:', e);
+    return null;
+  }
+}
+
+function normalizeValue(val) {
+  if (val === null || val === undefined) return '';
+  return String(val).trim();
+}
+
+async function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+  });
+}
+
+function getOrCreateSessionId() {
+  let sid = localStorage.getItem('eek_session_id');
+  if (!sid) {
+    sid = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem('eek_session_id', sid);
+  }
+  return sid;
+}
+
+function captureTrackingData() {
+  document.getElementById('sessionId').value = getOrCreateSessionId();
+  document.getElementById('timestamp').value = new Date().toISOString();
+  document.getElementById('timezone').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  document.getElementById('userAgent').value = navigator.userAgent;
+  document.getElementById('referrer').value = document.referrer;
+  document.getElementById('screenResolution').value = `${screen.width}x${screen.height}`;
+  document.getElementById('language').value = navigator.language;
+  document.getElementById('platform').value = navigator.platform;
+}
+
+// ============================================
+// SHAREPOINT DATA FETCH
+// ============================================
+async function fetchBookingData(bookingId) {
+  if (!bookingId) return null;
+  
+  try {
+    const res = await fetch(CONFIG.SHAREPOINT_LOOKUP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bookingId: String(bookingId) })
+    });
     
-    console.error('Authentication error:', error, errorDescription);
-    showErrorInterface('Authentication error: ' + error);
+    if (!res.ok) return null;
+    
+    const result = await res.json();
+    if (result.success && result.bookingData) {
+      return JSON.parse(atob(result.bookingData));
+    }
+    return null;
+  } catch (err) {
+    console.error('SharePoint fetch error:', err);
+    return null;
+  }
+}
+
+// ============================================
+// FORM POPULATION FROM SHAREPOINT
+// ============================================
+function populateInvoiceForm(data) {
+  if (!data) return;
+  
+  const customerData = data.customerData || {};
+  const supplierData = data.supplierData || {};
+  
+  const getValue = (...keys) => {
+    for (const key of keys) {
+      if (data[key]) return data[key];
+      if (customerData[key]) return customerData[key];
+      if (supplierData[key]) return supplierData[key];
+    }
+    return null;
+  };
+  
+  // Vehicle
+  const rego = getValue('rego', 'Rego', 'vehicleRego');
+  if (rego) {
+    document.getElementById('rego').value = normalizeValue(rego).toUpperCase();
+  }
+  
+  // Supplier - lock if pre-populated
+  const supplierName = getValue('supplierName', 'Supplier', 'mechanicName');
+  if (supplierName) {
+    const el = document.getElementById('supplierName');
+    el.value = normalizeValue(supplierName);
+    el.readOnly = true;
+  }
+  
+  const supplierEmail = getValue('supplierEmail', 'EmailJobToSupplier', 'mechanicEmail');
+  if (supplierEmail) {
+    const el = document.getElementById('supplierEmail');
+    el.value = normalizeValue(supplierEmail);
+    el.readOnly = true;
+  }
+  
+  const supplierPhone = getValue('supplierPhone', 'TextJobToMobileNumber', 'mechanicPhone');
+  if (supplierPhone) {
+    const el = document.getElementById('supplierPhone');
+    el.value = normalizeValue(supplierPhone);
+    el.readOnly = true;
+  }
+  
+  // Description
+  const notes = getValue('description', 'JobNotes', 'jobNotes', 'notes');
+  if (notes) {
+    document.getElementById('description').value = normalizeValue(notes);
+  }
+  
+  // Bank Account
+  const bank = getValue('bankAccount', 'Bank');
+  if (bank && typeof bank === 'string') {
+    const parts = bank.split('-');
+    if (parts.length === 4) {
+      document.getElementById('bank1').value = parts[0];
+      document.getElementById('bank2').value = parts[1];
+      document.getElementById('bank3').value = parts[2];
+      document.getElementById('bank4').value = parts[3];
+    }
+  }
+  
+  console.log('✅ Form populated from SharePoint data');
+}
+
+// ============================================
+// CONTACT FORM HANDLER
+// ============================================
+function setupContactForm() {
+  const form = document.getElementById('contactForm');
+  const submitBtn = document.getElementById('contactSubmitBtn');
+  const alertSuccess = document.getElementById('contactAlertSuccess');
+  const alertError = document.getElementById('contactAlertError');
+  
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    alertSuccess.style.display = 'none';
+    alertError.style.display = 'none';
+    
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
+    
+    try {
+      const payload = {
+        formType: 'supplier_upload_request',
+        formVersion: '1.0',
+        submittedAt: new Date().toISOString(),
+        sessionId: getOrCreateSessionId(),
+        
+        // Form fields
+        name: document.getElementById('contactName').value.trim(),
+        email: document.getElementById('contactEmail').value.trim(),
+        phone: document.getElementById('contactPhone').value.trim(),
+        company: document.getElementById('contactCompany').value.trim(),
+        subject: document.getElementById('contactSubject').value,
+        message: document.getElementById('contactMessage').value.trim(),
+        
+        // Fields array for dynamic email
+        fields: [
+          { name: 'Name', value: document.getElementById('contactName').value.trim() },
+          { name: 'Email', value: document.getElementById('contactEmail').value.trim() },
+          { name: 'Phone', value: document.getElementById('contactPhone').value.trim() || 'Not provided' },
+          { name: 'Company', value: document.getElementById('contactCompany').value.trim() || 'Not provided' },
+          { name: 'Subject', value: document.getElementById('contactSubject').value },
+          { name: 'Message', value: document.getElementById('contactMessage').value.trim() }
+        ],
+        
+        // Tracking
+        referrer: document.referrer,
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Internal tracking
+      if (window.unifiedTracking?.sendTrackingData) {
+        window.unifiedTracking.sendTrackingData('contact_form_submit', payload);
+      }
+      
+      const response = await fetch(CONFIG.CONTACT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      if (response.ok) {
+        alertSuccess.style.display = 'block';
+        form.reset();
+        
+        if (window.unifiedTracking?.sendTrackingData) {
+          window.unifiedTracking.sendTrackingData('contact_form_success', { formType: 'supplier_upload_request' });
+        }
+      } else {
+        throw new Error('Server returned ' + response.status);
+      }
+    } catch (error) {
+      console.error('Contact form error:', error);
+      alertError.style.display = 'block';
+      
+      if (window.unifiedTracking?.sendTrackingData) {
+        window.unifiedTracking.sendTrackingData('contact_form_error', { error: error.message });
+      }
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '📧 Send Request';
+    }
+  });
+}
+
+// ============================================
+// INVOICE FORM HANDLER
+// ============================================
+function setupInvoiceForm() {
+  const form = document.getElementById('invoiceForm');
+  const submitBtn = document.getElementById('invoiceSubmitBtn');
+  const alertSuccess = document.getElementById('invoiceAlertSuccess');
+  const alertError = document.getElementById('invoiceAlertError');
+  const errorText = document.getElementById('invoiceErrorText');
+  const successModal = document.getElementById('successModal');
+  
+  // Bank field auto-advance
+  const bankFields = ['bank1', 'bank2', 'bank3', 'bank4'];
+  bankFields.forEach((id, i) => {
+    document.getElementById(id).addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '');
+      if (this.value.length >= this.maxLength && i < bankFields.length - 1) {
+        document.getElementById(bankFields[i + 1]).focus();
+      }
+    });
+  });
+  
+  // Rego uppercase
+  document.getElementById('rego').addEventListener('input', function() {
+    this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  });
+  
+  // Capture tracking data
+  captureTrackingData();
+  
+  // Submission protection
+  let isSubmitting = false;
+  
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    if (isSubmitting) return;
+    isSubmitting = true;
+    
+    const submissionId = `sub_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    alertSuccess.style.display = 'none';
+    alertError.style.display = 'none';
+    
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span> Uploading...';
+    
+    try {
+      // Get invoice inputs based on selected method
+      const invoiceFile = document.getElementById('invoiceFile');
+      const invoiceLink = document.getElementById('invoiceLink').value.trim();
+      const buyerConsent = document.getElementById('buyerInvoiceConsent')?.checked;
+      const hasFile = invoiceFile.files.length > 0;
+      const hasLink = invoiceLink !== '';
+      
+      // Validate based on selected method
+      if (currentInvoiceMethod === 'link' && !hasLink) {
+        throw new Error('Please provide an invoice link from Xero, MYOB, or QuickBooks');
+      }
+      if (currentInvoiceMethod === 'file' && !hasFile) {
+        throw new Error('Please upload an invoice file');
+      }
+      if (currentInvoiceMethod === 'buyer' && !buyerConsent) {
+        throw new Error('Please agree to receive a buyer-created tax invoice');
+      }
+      
+      // Collect form values
+      const bankAccount = bankFields.map(id => document.getElementById(id).value).join('-');
+      const rego = document.getElementById('rego').value.trim();
+      const supplierName = document.getElementById('supplierName').value.trim();
+      const supplierEmail = document.getElementById('supplierEmail').value.trim();
+      const supplierPhone = document.getElementById('supplierPhone').value.trim();
+      const amount = parseFloat(document.getElementById('amount').value) || 0;
+      const billableHours = parseFloat(document.getElementById('billableHours').value) || 0;
+      const litresExtracted = parseFloat(document.getElementById('litresExtracted').value) || 0;
+      const litresIntroduced = parseFloat(document.getElementById('litresIntroduced').value) || 0;
+      const description = document.getElementById('description').value.trim();
+      
+      // Build payload - always include all fields to prevent null errors in Power Automate
+      const payload = {
+        formType: 'fuel_extraction_job',
+        formVersion: '2.1',
+        submissionId: submissionId,
+        submittedAt: new Date().toISOString(),
+        
+        // Flat fields for Power Automate processing
+        rego: rego || '',
+        supplierName: supplierName || '',
+        supplierEmail: supplierEmail || '',
+        supplierPhone: supplierPhone || '',
+        amount: amount,
+        billableHours: billableHours,
+        bankAccount: bankAccount || '',
+        litresExtracted: litresExtracted,
+        litresIntroduced: litresIntroduced,
+        description: description || '',
+        
+        // Invoice - include based on method selected
+        invoiceMethod: currentInvoiceMethod,
+        invoiceLink: (currentInvoiceMethod === 'link' && hasLink) ? invoiceLink : '',
+        buyerCreatedInvoice: currentInvoiceMethod === 'buyer',
+        invoiceFileName: '',
+        invoiceFileType: '',
+        invoiceFileSize: 0,
+        invoiceFileBase64: '',
+        
+        // Fields array for dynamic email builder
+        fields: [
+          { name: 'Rego', value: rego || '' },
+          { name: 'Supplier Name', value: supplierName || '' },
+          { name: 'Supplier Email', value: supplierEmail || '' },
+          { name: 'Supplier Phone', value: supplierPhone || 'Not provided' },
+          { name: 'Amount', value: '$' + amount.toFixed(2) },
+          { name: 'Billable Hours', value: billableHours > 0 ? billableHours + ' hrs' : 'Not specified' },
+          { name: 'Bank Account', value: bankAccount || '' },
+          { name: 'Litres Extracted', value: litresExtracted + ' L' },
+          { name: 'Litres Introduced', value: litresIntroduced + ' L' },
+          { name: 'Description', value: description || 'No description provided' }
+        ],
+        
+        // Tracking data - always include with defaults
+        bookingId: document.getElementById('bookingId').value || '',
+        sessionId: document.getElementById('sessionId').value || '',
+        timestamp: document.getElementById('timestamp').value || new Date().toISOString(),
+        timezone: document.getElementById('timezone').value || '',
+        userAgent: document.getElementById('userAgent').value || '',
+        referrer: document.getElementById('referrer').value || '',
+        screenResolution: document.getElementById('screenResolution').value || '',
+        language: document.getElementById('language').value || '',
+        platform: document.getElementById('platform').value || ''
+      };
+      
+      // Add invoice info to fields based on method
+      if (currentInvoiceMethod === 'link' && hasLink) {
+        payload.fields.push({ name: 'Invoice Link', value: invoiceLink });
+      } else if (currentInvoiceMethod === 'file' && hasFile) {
+        payload.fields.push({ name: 'Invoice File', value: invoiceFile.files[0].name });
+      } else if (currentInvoiceMethod === 'buyer') {
+        payload.fields.push({ name: 'Invoice Type', value: 'Buyer-Created Tax Invoice (Eek to generate)' });
+      }
+      
+      // Handle file upload if file method selected
+      if (currentInvoiceMethod === 'file' && hasFile) {
+        const file = invoiceFile.files[0];
+        
+        // Validate file size (10MB)
+        if (file.size > 10 * 1024 * 1024) {
+          throw new Error('File size exceeds 10MB limit');
+        }
+        
+        payload.invoiceFileName = file.name;
+        payload.invoiceFileType = file.type;
+        payload.invoiceFileSize = file.size;
+        payload.invoiceFileBase64 = await fileToBase64(file);
+      }
+      
+      // Internal tracking - submission attempt
+      if (window.unifiedTracking?.sendTrackingData) {
+        window.unifiedTracking.sendTrackingData('invoice_submit_attempt', {
+          formType: 'fuel_extraction_job',
+          amount: amount,
+          submissionId: submissionId,
+          invoiceMethod: currentInvoiceMethod,
+          hasLink: hasLink,
+          hasFile: hasFile
+        });
+      }
+      
+      // Submit to Power Automate
+      const response = await fetch(CONFIG.INVOICE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      if (response.ok) {
+        // Success
+        submitBtn.disabled = true;
+        submitBtn.textContent = '✓ Submitted Successfully';
+        successModal.classList.add('show');
+        
+        // Internal tracking - success
+        if (window.unifiedTracking?.sendTrackingData) {
+          window.unifiedTracking.sendTrackingData('invoice_submit_success', {
+            formType: 'fuel_extraction_job',
+            amount: amount,
+            submissionId: submissionId
+          });
+        }
+        
+        // Redirect after 8 seconds
+        setTimeout(() => { window.location.href = '/'; }, 8000);
+        
+      } else {
+        throw new Error('Server returned ' + response.status);
+      }
+      
+    } catch (error) {
+      console.error('Invoice submission error:', error);
+      errorText.textContent = error.message || 'Something went wrong. Please try again.';
+      alertError.style.display = 'block';
+      isSubmitting = false;
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '📤 Submit Invoice for Payment';
+      
+      // Internal tracking - error
+      if (window.unifiedTracking?.sendTrackingData) {
+        window.unifiedTracking.sendTrackingData('invoice_submit_error', { error: error.message });
+      }
+    }
+  });
+  
+  // Modal close
+  document.getElementById('modalCloseBtn').addEventListener('click', () => {
+    window.location.href = '/';
+  });
+}
+
+// ============================================
+// PAGE INITIALIZATION
+// ============================================
+document.addEventListener('DOMContentLoaded', async function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const encodedData = urlParams.get('d');
+  
+  // Track page view
+  if (window.unifiedTracking?.trackEvent) {
+    window.unifiedTracking.trackEvent('page_view', {
+      page: 'supplier-upload',
+      hasBookingId: !!encodedData
+    });
+  }
+  
+  // Handle "submit a request here" link click - show contact form
+  document.getElementById('showContactLink')?.addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('contactSection').classList.remove('hidden');
+    document.getElementById('contactSection').scrollIntoView({ behavior: 'smooth' });
+    setupContactForm();
+  });
+  
+  // STATE 1: No ?d= parameter → Contact Form
+  if (!encodedData) {
+    document.getElementById('contactSection').classList.remove('hidden');
+    setupContactForm();
     return;
   }
   
-  // Check for ID token (successful authentication)
-  if (params.has('id_token')) {
-    // Token received - show upload interface
-    showUploadInterface();
+  // STATE 2: Has ?d= parameter → Invoice Upload Form
+  document.getElementById('invoiceSection').classList.remove('hidden');
+  document.getElementById('invoiceAlertLoading').style.display = 'block';
+  
+  // Decode booking ID from base64
+  const bookingId = decodeBase64(encodedData);
+  
+  if (bookingId) {
+    document.getElementById('bookingId').value = bookingId;
     
-    // Clean up URL
-    window.history.replaceState({}, document.title, window.location.pathname);
-    
-    // Track successful authentication
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'supplier_authentication_success', {
-        'event_category': 'Authentication',
-        'event_label': 'Microsoft Auth Success'
-      });
+    // Fetch data from SharePoint and populate form
+    bookingData = await fetchBookingData(bookingId);
+    if (bookingData) {
+      populateInvoiceForm(bookingData);
     }
-  } else {
-    // No authentication yet - show login interface
-    showLoginInterface();
-  }
-}
-
-function showLoginInterface() {
-  document.getElementById('loginContainer').classList.remove('hidden');
-  document.getElementById('uploadContainer').classList.add('hidden');
-  document.getElementById('errorContainer').classList.add('hidden');
-}
-
-function showUploadInterface() {
-  document.getElementById('loginContainer').classList.add('hidden');
-  document.getElementById('uploadContainer').classList.remove('hidden');
-  document.getElementById('errorContainer').classList.add('hidden');
-  
-  // Re-configure the form type after authentication to ensure correct button shows
-  configureFormType();
-  
-  // Set the upload button links based on stored form type
-  const formType = sessionStorage.getItem('formType');
-  const isPP = (formType === 'pp');
-  
-  if (isPP) {
-    document.getElementById('ppUploadButton').href = config.ppFormUrl;
-  } else {
-    document.getElementById('invoiceUploadButton').href = config.invoiceFormUrl;
-  }
-}
-
-function showErrorInterface(errorMessage) {
-  document.getElementById('loginContainer').classList.add('hidden');
-  document.getElementById('uploadContainer').classList.add('hidden');
-  document.getElementById('errorContainer').classList.remove('hidden');
-  
-  // Update error message if needed
-  const errorContainer = document.querySelector('#errorContainer .status-message');
-  if (errorMessage.includes('redirect_uri')) {
-    errorContainer.innerHTML = `
-      <strong>⚠️ Azure AD Configuration Issue:</strong><br>
-      The redirect URI is not properly configured in the Azure AD application registration. 
-      The IT administrator needs to add this exact URL to the application:
-      <br><br>
-      <code style="background: rgba(0,0,0,0.3); padding: 5px; border-radius: 3px;">https://www.eek.nz/supplier-upload</code>
-      <br><br>
-      Please contact IT support at <a href="tel:0800769000" style="color: #dc3545;">0800 769 000</a> for assistance.
-      <br><br>
-      <small>Technical details: ${errorMessage}</small>
-    `;
-  }
-}
-
-function setupEventListeners() {
-  // Login button click handler
-  document.getElementById('loginButton').addEventListener('click', function() {
-    initiateAuthentication();
-  });
-
-  // Invoice upload button click handler
-  document.getElementById('invoiceUploadButton').addEventListener('click', function() {
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'supplier_invoice_form_access', {
-        'event_category': 'Supplier',
-        'event_label': 'Invoice Upload Form Access'
-      });
-    }
-  });
-
-  // Pre-purchase upload button click handler
-  document.getElementById('ppUploadButton').addEventListener('click', function() {
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'supplier_pp_form_access', {
-        'event_category': 'Supplier',
-        'event_label': 'Pre-Purchase Inspection Form Access'
-      });
-    }
-  });
-}
-
-async function initiateAuthentication() {
-  const nonce = Date.now().toString();
-  
-  // Microsoft OAuth 2.0 implicit flow with ID tokens
-  const authUrl = `https://login.microsoftonline.com/${config.tenantId}/oauth2/v2.0/authorize` +
-    `?client_id=${encodeURIComponent(config.clientId)}` +
-    `&response_type=id_token` +
-    `&redirect_uri=${encodeURIComponent(config.redirectUri)}` +
-    `&response_mode=fragment` +
-    `&scope=openid` +
-    `&login_hint=${encodeURIComponent(config.loginHint)}` +
-    `&domain_hint=organizations` +
-    `&prompt=login` +
-    `&nonce=${nonce}`;
-  
-  // Track authentication attempt
-  if (typeof gtag !== 'undefined') {
-    gtag('event', 'supplier_authentication_attempt', {
-      'event_category': 'Authentication',
-      'event_label': 'Microsoft Auth Initiated'
-    });
   }
   
-  try {
-    // Redirect to Microsoft authentication
-    window.location.href = authUrl;
-  } catch (error) {
-    console.error('Failed to initiate authentication:', error);
-    showErrorInterface('Failed to start authentication process');
-  }
-}
-
-// PKCE helper functions
-function generateCodeVerifier() {
-  const array = new Uint8Array(32);
-  crypto.getRandomValues(array);
-  return base64URLEncode(array);
-}
-
-async function generateCodeChallenge(verifier) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(verifier);
-  const hash = await crypto.subtle.digest('SHA-256', data);
-  return base64URLEncode(new Uint8Array(hash));
-}
-
-function base64URLEncode(buffer) {
-  return btoa(String.fromCharCode.apply(null, buffer))
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=/g, '');
-}
-
-// Track page visits
-window.addEventListener('load', function() {
-  if (typeof gtag !== 'undefined') {
-    gtag('event', 'supplier_upload_page_view', {
-      'page_title': 'Supplier Upload Portal',
-      'page_location': window.location.href,
-      'event_category': 'Supplier'
-    });
-  }
-});
-
-// Handle authentication errors more gracefully
-window.addEventListener('error', function(e) {
-  console.error('Application error:', e);
-  
-  // Only show error UI if it's auth-related
-  if (e.message && e.message.toLowerCase().includes('auth')) {
-    showErrorInterface('An authentication error occurred');
-  }
-});
-
-// Handle URL hash changes (for Single Page App behavior)
-window.addEventListener('hashchange', function() {
-  checkAuthenticationStatus();
-});
-</script>
-
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MJuris - Central Enforcement Authority | Eek Mechanical</title>
-  <meta name="description" content="MJuris is the centralized legal execution function of Eek Mechanical. Contract enforcement, compliance, and litigation clearinghouse for all jurisdictions." />
-  <meta name="keywords" content="legal enforcement, contract disputes, supplier compliance, terms violations, litigation clearinghouse, mjuris, legal authority" />
-  <meta property="og:title" content="MJuris - Central Enforcement Authority | Eek Mechanical" />
-  <meta property="og:description" content="Centralized legal execution function for contract breaches, terms violations, and compliance enforcement across all jurisdictions." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.eek.nz/mjuris" />
-  <meta property="og:image" content="https://www.eek.nz/mjuris-og-image.jpg" />
-
-  <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'AW-17084465163');
-  </script>
-
-  <!-- Google Analytics tag -->
-  <script>
-    gtag('config', 'G-DQNKF1YLWR');
-  </script>
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "LegalService",
-    "name": "MJuris - Eek Mechanical Legal Authority",
-    "description": "Central Enforcement Authority for contract compliance, dispute resolution, and legal execution across all jurisdictions.",
-    "url": "https://www.eek.nz/mjuris",
-    "parentOrganization": {
-      "@type": "LocalBusiness",
-      "name": "Eek Mechanical"
-    },
-    "areaServed": {
-      "@type": "Country",
-      "name": "New Zealand"
-    },
-    "serviceType": "Legal Enforcement and Compliance"
-  }
-  </script>
-
-  <link rel="icon" type="image/x-icon" href="../favicon.ico">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Georgia', 'Times New Roman', serif;
-      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-      color: #e0e0e0;
-      line-height: 1.7;
-      min-height: 100vh;
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    /* Header */
-    .header {
-      background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
-      border-bottom: 3px solid #ff5500;
-      padding: 40px 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="1" height="1" fill="rgba(255,85,0,0.05)"/></svg>') repeat;
-      pointer-events: none;
-    }
-
-    .header-content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-    }
-
-    .authority-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, #ff5500, #cc4400);
-      color: white;
-      padding: 8px 20px;
-      border-radius: 25px;
-      font-size: 0.9em;
-      font-weight: bold;
-      letter-spacing: 1px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 15px rgba(255,85,0,0.3);
-    }
-
-    .header h1 {
-      font-size: 3.5em;
-      font-weight: bold;
-      color: #ff5500;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-      letter-spacing: 2px;
-    }
-
-    .header .subtitle {
-      font-size: 1.4em;
-      color: #cccccc;
-      margin-bottom: 15px;
-      font-style: italic;
-    }
-
-    .header .legal-notice {
-      font-size: 0.95em;
-      color: #999;
-      font-weight: 300;
-    }
-
-    /* Navigation */
-    .nav {
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      border-bottom: 1px solid #333;
-    }
-
-    .nav-content {
-      display: flex;
-      justify-content: center;
-      padding: 15px 0;
-      gap: 30px;
-    }
-
-    .nav a {
-      color: #ccc;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s ease;
-      position: relative;
-    }
-
-    .nav a:hover {
-      color: #ff5500;
-    }
-
-    .nav a::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: #ff5500;
-      transition: width 0.3s ease;
-    }
-
-    .nav a:hover::after {
-      width: 100%;
-    }
-
-    /* Main Content */
-    .section {
-      padding: 60px 0;
-    }
-
-    .section-title {
-      font-size: 2.2em;
-      margin-bottom: 30px;
-      color: #ff5500;
-      text-align: center;
-      position: relative;
-    }
-
-    .section-title::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 3px;
-      background: linear-gradient(90deg, #ff5500, #ff7700);
-    }
-
-    /* Authority Description */
-    .authority-description {
-      background: rgba(0,0,0,0.6);
-      border: 1px solid #333;
-      border-left: 5px solid #ff5500;
-      padding: 40px;
-      margin: 40px 0;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    .authority-description h2 {
-      color: #ff5500;
-      font-size: 1.8em;
-      margin-bottom: 20px;
-    }
-
-    .authority-description p {
-      font-size: 1.1em;
-      margin-bottom: 20px;
-      color: #ddd;
-    }
-
-    /* Warning Box */
-    .warning-box {
-      background: linear-gradient(135deg, #cc0000, #990000);
-      border: 2px solid #ff0000;
-      padding: 30px;
-      margin: 40px 0;
-      border-radius: 10px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .warning-box::before {
-      content: '⚠️';
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      font-size: 2em;
-      opacity: 0.3;
-    }
-
-    .warning-box h3 {
-      color: #fff;
-      font-size: 1.5em;
-      margin-bottom: 15px;
-      font-weight: bold;
-    }
-
-    .warning-box p {
-      color: #ffcccc;
-      font-size: 1em;
-      margin-bottom: 10px;
-    }
-
-    /* Enforcement Scope */
-    .enforcement-scope {
-      background: rgba(255,85,0,0.1);
-      border: 1px solid rgba(255,85,0,0.3);
-      padding: 35px;
-      margin: 40px 0;
-      border-radius: 10px;
-    }
-
-    .enforcement-list {
-      list-style: none;
-      margin: 20px 0;
-    }
-
-    .enforcement-list li {
-      padding: 15px 0;
-      border-bottom: 1px solid rgba(255,85,0,0.2);
-      position: relative;
-      padding-left: 30px;
-    }
-
-    .enforcement-list li:last-child {
-      border-bottom: none;
-    }
-
-    .enforcement-list li::before {
-      content: '⚖️';
-      position: absolute;
-      left: 0;
-      top: 15px;
-    }
-
-    .enforcement-list li strong {
-      color: #ff5500;
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    /* Contact Section */
-    .contact-authority {
-      background: linear-gradient(135deg, #333, #1a1a1a);
-      border: 2px solid #ff5500;
-      padding: 40px;
-      margin: 40px 0;
-      border-radius: 15px;
-      text-align: center;
-    }
-
-    .contact-authority h3 {
-      color: #ff5500;
-      font-size: 1.8em;
-      margin-bottom: 25px;
-    }
-
-    .contact-item {
-      background: rgba(0,0,0,0.5);
-      padding: 20px;
-      margin: 15px 0;
-      border-radius: 8px;
-      border-left: 4px solid #ff5500;
-    }
-
-    .contact-item a {
-      color: #ff5500;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 1.1em;
-    }
-
-    .contact-item a:hover {
-      color: #ff7700;
-    }
-
-    .contact-item .label {
-      color: #ccc;
-      font-size: 0.9em;
-      margin-bottom: 8px;
-    }
-
-    /* Final Notice */
-    .final-notice {
-      background: rgba(0,0,0,0.8);
-      border: 3px solid #ff5500;
-      padding: 30px;
-      margin: 40px 0;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 0 30px rgba(255,85,0,0.3);
-    }
-
-    .final-notice h3 {
-      color: #ff5500;
-      font-size: 1.6em;
-      margin-bottom: 20px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .final-notice p {
-      font-size: 1.1em;
-      color: #ddd;
-      font-weight: 500;
-    }
-
-    /* Footer */
-    .footer {
-      background: #000;
-      color: #666;
-      padding: 30px 0;
-      text-align: center;
-      border-top: 2px solid #ff5500;
-    }
-
-    .footer a {
-      color: #ff5500;
-      text-decoration: none;
-    }
-
-    .footer a:hover {
-      color: #ff7700;
-    }
-
-    /* Mobile Responsive */
-    @media (max-width: 768px) {
-      .header h1 {
-        font-size: 2.5em;
-      }
-      
-      .nav-content {
-        flex-direction: column;
-        gap: 15px;
-      }
-      
-      .authority-description,
-      .warning-box,
-      .enforcement-scope,
-      .contact-authority {
-        padding: 25px;
-      }
-      
-      .section {
-        padding: 40px 0;
-      }
-    }
-
-    /* Smooth scrolling */
-    html {
-      scroll-behavior: smooth;
-    }
-
-    /* Selection styling */
-    ::selection {
-      background: rgba(255,85,0,0.3);
-      color: white;
-    }
-  </style>
-</head>
-<body>
-
-<header class="header">
-  <div class="container">
-    <div class="header-content">
-      <div class="authority-badge">🏛️ CENTRAL ENFORCEMENT AUTHORITY</div>
-      <h1>MJuris</h1>
-      <p class="subtitle">The Compliance & Litigation Clearinghouse</p>
-      <p class="legal-notice">Eek Mechanical | Legal Execution Function</p>
-    </div>
-  </div>
-</header>
-
-<nav class="nav">
-  <div class="container">
-    <div class="nav-content">
-      <a href="#authority">Authority</a>
-      <a href="#enforcement">Enforcement Scope</a>
-      <a href="#contact">Contact Authority</a>
-      <a href="/">← Return to Eek.nz</a>
-    </div>
-  </div>
-</nav>
-
-<section id="authority" class="section">
-  <div class="container">
-    <h2 class="section-title">Legal Authority & Jurisdiction</h2>
-    
-    <div class="authority-description">
-      <h2>⚖️ Centralized Legal Execution Function</h2>
-      <p>The Compliance & Litigation Clearinghouse (MJuris) is the centralized legal execution function of Eek Mechanical. It operates across all jurisdictions and is responsible for the processing, enforcement, and closure of disputes relating to contract breaches, terms violations, supplier misconduct, and user non-compliance.</p>
-      
-      <p><strong>This is a legal authority channel — not a customer service gateway.</strong> Submissions are reviewed against contractual terms, supplier agreements, and regional regulations, and actions are taken in accordance with Eek Mechanical's legally binding policies. Communications are logged, timestamped, and retained for audit and litigation purposes.</p>
-    </div>
-
-    <div class="warning-box">
-      <h3>🚨 LEGAL NOTICE</h3>
-      <p><strong>MJuris actions are not subject to negotiation.</strong> Once activated, all correspondence with regional or operational teams is terminated.</p>
-      <p>All determinations issued by MJuris are final. Legal rights are enforced exactly as agreed. Terms are not advisory — they are executable. Evidence-based processing is mandatory.</p>
-      <p><strong>Failure to respond is considered a formal default.</strong></p>
-    </div>
-  </div>
-</section>
-
-<section id="enforcement" class="section">
-  <div class="container">
-    <h2 class="section-title">Enforcement Scope</h2>
-    
-    <div class="enforcement-scope">
-      <ul class="enforcement-list">
-        <li>
-          <strong>Supplier Enforcement:</strong>
-          Suppliers in breach of commercial obligations, pricing terms, communication protocols, or service delivery conditions will be subject to financial remedy, account termination, blacklisting, and jurisdictional enforcement.
-        </li>
-        
-        <li>
-          <strong>User Compliance:</strong>
-          Users who reverse payments, abandon jobs, misuse services, or fail to comply with service terms may face formal escalation, account revocation, debt recovery, and legal proceedings without further notice.
-        </li>
-        
-        <li>
-          <strong>Contract Violations:</strong>
-          Any breach of terms, misrepresentation, fraudulent activity, or non-compliance with agreed service conditions will result in immediate enforcement action through appropriate legal channels.
-        </li>
-        
-        <li>
-          <strong>Payment Disputes:</strong>
-          Unauthorized chargebacks, payment reversals, or attempts to avoid legitimate service charges will be pursued through debt collection agencies and legal proceedings as applicable.
-        </li>
-        
-        <li>
-          <strong>Service Abuse:</strong>
-          Misuse of emergency services, false claims, harassment of technicians, or abuse of the Eek Mechanical platform will result in permanent service prohibition and potential legal action.
-        </li>
-      </ul>
-    </div>
-
-    <div class="final-notice">
-      <h3>⚠️ FINAL AUTHORITY</h3>
-      <p>This is Eek Mechanical's legal enforcement function. All matters received here are closed here. No appeals or negotiations will be entertained once enforcement proceedings have commenced.</p>
-    </div>
-  </div>
-</section>
-
-<section id="contact" class="section">
-  <div class="container">
-    <h2 class="section-title">Contact Authority</h2>
-    
-    <div class="contact-authority">
-      <h3>📧 Legal Communications</h3>
-      
-      <div class="contact-item">
-        <div class="label">Contract Enforcement & Disputes</div>
-        <a href="mailto:clx@eek.nz">clx@eek.nz</a>
-      </div>
-      
-      <div class="contact-item">
-        <div class="label">Jurisdictional Policy Reference</div>
-        <a href="/terms" target="_blank">Terms of Service</a>
-      </div>
-      
-      <div class="contact-item">
-        <div class="label">Supplier Agreement Reference</div>
-        <a href="/supplier-terms" target="_blank">Supplier Terms</a>
-      </div>
-      
-      <div style="background: rgba(255,0,0,0.1); padding: 20px; margin-top: 30px; border-radius: 8px; border: 1px solid rgba(255,0,0,0.3);">
-        <p style="color: #ffcccc; font-size: 0.95em; margin: 0;">
-          <strong>⚠️ IMPORTANT:</strong> This email address is exclusively for legal enforcement matters. Customer service inquiries, routine support requests, or operational questions sent to this address will not receive a response. For customer support, call <a href="tel:0800769000" style="color: #ff5500;">0800 769 000</a> or visit <a href="/" style="color: #ff5500;">www.eek.nz</a>.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer class="footer">
-  <div class="container">
-    <p>&copy; 2025 Eek Mechanical. All rights reserved. | 
-    <a href="/privacy">Privacy Statement</a></p>
-    <p style="margin-top: 10px; font-size: 0.9em; color: #555;">
-      MJuris is the registered legal authority of Eek Mechanical. Operating under New Zealand law with international jurisdiction as applicable.
-    </p>
-  </div>
-</footer>
-
-<script>
-// Track page visits for legal/compliance purposes
-window.addEventListener('load', function() {
-  if (typeof gtag !== 'undefined') {
-    gtag('event', 'mjuris_page_view', {
-      'page_title': 'MJuris Legal Authority Access',
-      'page_location': window.location.href,
-      'event_category': 'Legal',
-      'event_label': 'Authority Page Access'
-    });
-  }
-});
-
-// Track email clicks for enforcement tracking
-document.addEventListener('DOMContentLoaded', function() {
-  const emailLinks = document.querySelectorAll('a[href^="mailto:clx@"]');
-  emailLinks.forEach(function(link) {
-    link.addEventListener('click', function() {
-      if (typeof gtag !== 'undefined') {
-        gtag('event', 'legal_contact_attempt', {
-          'event_category': 'Legal',
-          'event_label': 'Enforcement Email Click'
-        });
-      }
-    });
-  });
-});
-
-// Track document access
-document.querySelectorAll('a[href*="/terms"], a[href*="/supplier-terms"], a[href*="/privacy"]').forEach(function(link) {
-  link.addEventListener('click', function() {
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'legal_document_access', {
-        'event_category': 'Legal',
-        'event_label': 'Policy Document Access'
-      });
-    }
-  });
-});
-
-// Prevent right-click and text selection for legal protection
-document.addEventListener('contextmenu', function(e) {
-  e.preventDefault();
-});
-
-document.addEventListener('selectstart', function(e) {
-  if (e.target.tagName === 'A' || e.target.closest('a')) {
-    return true; // Allow selection of links
-  }
-  e.preventDefault();
-});
-
-// Add timestamp logging for audit purposes
-console.log('%cMJuris Legal Authority Page Access', 'color: #ff5500; font-weight: bold; font-size: 14px;');
-console.log('Access Time:', new Date().toISOString());
-console.log('User Agent:', navigator.userAgent);
-console.log('Referrer:', document.referrer || 'Direct Access');
-
-// Smooth scrolling for navigation links
-document.querySelectorAll('.nav a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function (e) {
-    e.preventDefault();
-    const target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      target.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
-  });
+  document.getElementById('invoiceAlertLoading').style.display = 'none';
+  setupInvoiceForm();
 });
 </script>
 

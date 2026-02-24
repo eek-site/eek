@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Legal Authority Access | Eek Mechanical Ltd</title>
-  <meta name="description" content="Official legal authority access portal for Eek Mechanical Ltd. Law enforcement, regulatory bodies, court officers, and government agencies." />
+  <meta name="description" content="Official legal authority access portal for Eek Mechanical Ltd. 353+ vetted mechanics nationwide. Law enforcement, regulatory bodies, court officers, and government agencies." />
   <meta name="keywords" content="legal authority, law enforcement, regulatory access, court documents, government agencies, eek mechanical" />
   <meta property="og:title" content="Legal Authority Access | Eek Mechanical Ltd" />
   <meta property="og:description" content="Secure access portal for legal authorities, law enforcement, and regulatory bodies requiring official information from Eek Mechanical Ltd." />
@@ -12,84 +12,19 @@
   <meta property="og:url" content="https://www.eek.nz/mjuris" />
 
   <!-- Security Headers -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.eek.nz https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com https://static.cloudflareinsights.com; font-src 'self' data:;">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
   <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
 
-  <!-- Reddit Pixel -->
-  <script>
-    !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
-    (window,document);
-    
-    // Extract user data for enhanced tracking
-    function getEmailFromForm() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const emailParam = urlParams.get('email');
-      if (emailParam) return emailParam;
-      
-      const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"], input[id*="email"]');
-      for (let input of emailInputs) {
-        if (input.value && input.value.includes('@')) {
-          return input.value;
-        }
-      }
-      return null;
-    }
-    
-    function getPhoneFromForm() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const phoneParam = urlParams.get('phone');
-      if (phoneParam) return phoneParam;
-      
-      const phoneInputs = document.querySelectorAll('input[type="tel"], input[name*="phone"], input[id*="phone"]');
-      for (let input of phoneInputs) {
-        if (input.value) {
-          return input.value;
-        }
-      }
-      return null;
-    }
-    
-    function getUserId() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('uid') || urlParams.get('user_id') || urlParams.get('customer_id');
-    }
-    
-    function getMobileIds() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return {
-        idfa: urlParams.get('idfa'),
-        aaid: urlParams.get('aaid')
-      };
-    }
-    
-    const mobileIds = getMobileIds();
-    const initConfig = {};
-    
-    const email = getEmailFromForm();
-    const phoneNumber = getPhoneFromForm();
-    const externalId = getUserId();
-    
-    if (email) initConfig.email = email;
-    if (phoneNumber) initConfig.phoneNumber = phoneNumber;
-    if (externalId) initConfig.externalId = externalId;
-    if (mobileIds.idfa) initConfig.idfa = mobileIds.idfa;
-    if (mobileIds.aaid) initConfig.aaid = mobileIds.aaid;
-    
-    rdt('init', 'a2_hf16791nsdhx', Object.keys(initConfig).length > 0 ? initConfig : undefined);
-    rdt('track', 'PageVisit');
-  </script>
-
-  <!-- Google tag (gtag.js) for Google Ads Conversion Tracking -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'AW-17084465163');
-    gtag('config', 'G-DQNKF1YLWR');
-  </script>
+  <!-- Centralized Phone Number Management -->
+  <script src="/phone-manager.js?v={{ site.version }}"></script>
+  
+  <!-- Unified Tracking System (Internal Analytics) -->
+  <script src="/unified-tracking.js?v={{ site.version }}"></script>
+  
+  <!-- Centralized Footer Management -->
+  <script src="/footer-new.js?v={{ site.version }}"></script>
 
   <script type="application/ld+json">
   {
@@ -112,6 +47,76 @@
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   
   <style>
+    :root {
+      /* Brand Colors */
+      --primary: #ff5500;
+      --primary-light: #ff7733;
+      --primary-dark: #e04400;
+      --secondary: #28a745;
+      --secondary-light: #20c997;
+      --accent: #17a2b8;
+      --danger: #dc3545;
+      --warning: #ffc107;
+      --info: #17a2b8;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      
+      /* Neutral Colors */
+      --white: #ffffff;
+      --gray-100: #f8f9fa;
+      --gray-200: #e9ecef;
+      --gray-300: #dee2e6;
+      --gray-400: #ced4da;
+      --gray-500: #adb5bd;
+      --gray-600: #6c757d;
+      --gray-700: #495057;
+      --gray-800: #343a40;
+      --gray-900: #212529;
+      
+      /* Typography */
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      --font-size-base: 1rem;
+      --font-size-sm: 0.875rem;
+      --font-size-lg: 1.125rem;
+      --font-size-xl: 1.25rem;
+      --font-size-2xl: 1.5rem;
+      --font-size-3xl: 1.875rem;
+      --font-size-4xl: 2.25rem;
+      
+      /* Spacing */
+      --spacing-1: 0.25rem;
+      --spacing-2: 0.5rem;
+      --spacing-3: 0.75rem;
+      --spacing-4: 1rem;
+      --spacing-5: 1.25rem;
+      --spacing-6: 1.5rem;
+      --spacing-8: 2rem;
+      --spacing-10: 2.5rem;
+      --spacing-12: 3rem;
+      --spacing-16: 4rem;
+      --spacing-20: 5rem;
+      
+      /* Border Radius */
+      --border-radius-sm: 0.25rem;
+      --border-radius: 0.5rem;
+      --border-radius-lg: 0.75rem;
+      --border-radius-xl: 1rem;
+      --border-radius-2xl: 1.5rem;
+      --border-radius-full: 9999px;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      
+      /* Transitions */
+      --transition-fast: 0.15s ease-in-out;
+      --transition: 0.3s ease-in-out;
+      --transition-slow: 0.5s ease-in-out;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -119,11 +124,12 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-      background: #f8f9fa;
-      color: #333333;
+      font-family: var(--font-family);
+      background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
+      color: var(--gray-800);
       line-height: 1.6;
       min-height: 100vh;
+      font-size: var(--font-size-base);
     }
 
     .container {
@@ -134,11 +140,11 @@
 
     /* Header */
     .header {
-      background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
-      color: white;
-      padding: 40px 0;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: var(--white);
+      padding: var(--spacing-16) 0;
       text-align: center;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      box-shadow: var(--shadow-xl);
     }
 
     .header h1 {
@@ -436,17 +442,85 @@
 
   <header class="header">
     <div class="container">
+      <img src="/brand-image.png" alt="Eek Mechanical - Emergency Roadside Services" style="max-width: 300px; height: auto; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 0 auto 20px auto; display: block;" />
       <h1>Legal Authority Access Portal</h1>
-      <p class="subtitle">Eek Mechanical Ltd | Official Information Requests</p>
+      <p class="subtitle">Eek Mechanical Ltd | 353+ Vetted Mechanics Nationwide | Official Information Requests</p>
     </div>
   </header>
 
   <div class="authority-warning">
-    <h2>🛡️ RESTRICTED ACCESS</h2>
+    <h2>ðŸ›¡ï¸ RESTRICTED ACCESS</h2>
     <p><strong>This portal is exclusively for verified legal authorities, law enforcement, regulatory bodies, and government agencies.</strong></p>
     <p>Unauthorized access or misrepresentation of authority may result in legal action.</p>
     <p>All access attempts are logged and monitored for security purposes.</p>
   </div>
+  
+  <!-- Urgency Banner -->
+  <div style="background: linear-gradient(135deg, #dc3545, #c82333); color: white; padding: 20px; border-radius: 12px; margin: 30px 0; text-align: center; box-shadow: 0 4px 12px rgba(220,53,69,0.3);">
+    <strong style="font-size: 1.3em;">âš¡ URGENT LEGAL MATTERS: Contact us for immediate assistance</strong>
+    <p style="margin: 10px 0 0 0; font-size: 1.1em; opacity: 0.9;">24/7 legal authority support - 353+ vetted mechanics nationwide</p>
+  </div>
+
+  <!-- Helpful Redirects for Non-Legal Issues -->
+  <section class="section">
+    <h2 class="section-title">ðŸ”§ Need Help with Something Else?</h2>
+    <div class="info-grid">
+      <div class="info-item">
+        <strong>Customer Service:</strong>
+        <a href="/more-options" style="color: #ff5500; text-decoration: none;">Complete Service Directory</a><br>
+        <small style="color: #666;">Emergency services, booking, support</small>
+      </div>
+      <div class="info-item">
+        <strong>Supplier Inquiries:</strong>
+        <a href="/supplier" style="color: #ff5500; text-decoration: none;">Supplier Portal</a><br>
+        <small style="color: #666;">Partnership opportunities and applications</small>
+      </div>
+      <div class="info-item">
+        <strong>Emergency Service:</strong>
+        <a href="/rescue-me" style="color: #ff5500; text-decoration: none;">Emergency Booking</a><br>
+        <small style="color: #666;">Immediate roadside assistance</small>
+      </div>
+      <div class="info-item">
+        <strong>Disputes & Mediation:</strong>
+        <a href="#disputes-tribunal" style="color: #ff5500; text-decoration: none;">Disputes Tribunal Process</a><br>
+        <small style="color: #666;">Free mediation services and tribunal support</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- Disputes Tribunal Process -->
+  <section class="section" id="disputes-tribunal">
+    <h2 class="section-title">âš–ï¸ Disputes Tribunal Process</h2>
+    <div class="info-grid">
+      <div class="info-item">
+        <strong>Our Mediation Service:</strong>
+        We provide free mediation services for any disputes between customers and mechanics. As an intermediary service, we cannot be sued directly, but we will mediate fairly and professionally.
+      </div>
+      <div class="info-item">
+        <strong>Disputes Tribunal Form:</strong>
+        <a href="/disputes-tribunal" style="color: #ff5500; text-decoration: none;">Complete Tribunal Form</a><br>
+        <small style="color: #666;">We will pay the tribunal fees - you just need to complete the form</small>
+      </div>
+      <div class="info-item">
+        <strong>Third Party Authorization:</strong>
+        <a href="/authorize" style="color: #ff5500; text-decoration: none;">Privacy Act Authorization Form</a><br>
+        <small style="color: #666;">Authorize someone to act on your behalf in legal matters</small>
+      </div>
+    </div>
+    
+    <div style="background: linear-gradient(135deg, #17a2b8, #138496); color: white; padding: 20px; border-radius: 12px; margin: 20px 0; box-shadow: 0 4px 12px rgba(23,162,184,0.3);">
+      <h4 style="color: white; margin-bottom: 15px;">ðŸ›¡ï¸ Our Legal Position</h4>
+      <p style="margin-bottom: 10px; color: rgba(255,255,255,0.9);">
+        <strong>We are an intermediary service</strong> - we connect customers with vetted mechanics but do not directly provide mechanical services. This means:
+      </p>
+      <ul style="margin: 10px 0; padding-left: 20px; color: rgba(255,255,255,0.9);">
+        <li>We cannot be sued for mechanical work performed by our network mechanics</li>
+        <li>We provide mediation services to resolve any disputes fairly</li>
+        <li>We will represent you at the Disputes Tribunal if needed</li>
+        <li>All our mechanics are fully insured and vetted</li>
+      </ul>
+    </div>
+  </section>
 
   <section class="section">
     <h2 class="section-title">Company Registration Information</h2>
@@ -487,8 +561,7 @@
         </div>
         <div class="info-item">
           <strong>Legal Counsel:</strong>
-          In-House Legal Department<br>
-          Wellington, New Zealand
+          In-House Legal Department
         </div>
       </div>
     </div>
@@ -499,29 +572,29 @@
     
     <div class="contact-grid">
       <div class="contact-card priority">
-        <h3>🚨 Emergency Services & Police</h3>
+        <h3>ðŸš¨ Emergency Services & Police</h3>
         <p><strong>NZ Police, Fire & Emergency NZ, Ambulance Services</strong><br>
         Emergency investigations, active incidents, immediate response required</p>
-        <a href="mailto:clx@eek.nz" class="contact-btn priority" data-track="emergency_law_enforcement" onclick="trackInteraction(this)">📧 clx@eek.nz</a>
-        <a href="tel:+6498724612" class="contact-btn priority phone-link" data-track="emergency_call" onclick="trackInteraction(this)">📞 Emergency Line</a>
+        <a href="mailto:clx@eek.nz" class="contact-btn priority" data-track="emergency_law_enforcement" onclick="trackInteraction(this)">ðŸ“§ clx@eek.nz</a>
+        <a href="tel:+6498724612" class="contact-btn priority phone-link" data-track="emergency_call" onclick="trackInteraction(this)">ðŸ“ž Emergency Line</a>
         <p style="font-size: 0.85em; margin-top: 10px; color: #dc3545;">
           <strong>24/7 Response:</strong> +64 9 872 4612
         </p>
       </div>
       
       <div class="contact-card">
-        <h3>🏛️ Government Agencies</h3>
+        <h3>ðŸ›ï¸ Government Agencies</h3>
         <p><strong>WorkSafe NZ, NZTA, Commerce Commission, MBIE</strong><br>
         Regulatory compliance, inspections, official inquiries</p>
-        <a href="mailto:comms.apac@eek.nz" class="contact-btn" data-track="government_agency_email" onclick="trackInteraction(this)">📧 comms.apac@eek.nz</a>
-        <a href="tel:+6498724612" class="contact-btn phone-link" data-track="government_agency_call" onclick="trackInteraction(this)">📞 Official Line</a>
+        <a href="mailto:comms.apac@eek.nz" class="contact-btn" data-track="government_agency_email" onclick="trackInteraction(this)">ðŸ“§ comms.apac@eek.nz</a>
+        <a href="tel:+6498724612" class="contact-btn phone-link" data-track="government_agency_call" onclick="trackInteraction(this)">ðŸ“ž Official Line</a>
       </div>
       
       <div class="contact-card">
-        <h3>⚖️ Court Officers & Legal</h3>
+        <h3>âš–ï¸ Court Officers & Legal</h3>
         <p><strong>Court Registrars, Bailiffs, Legal Representatives</strong><br>
         Service of documents, court orders, legal proceedings</p>
-        <a href="mailto:legal@eek.nz" class="contact-btn" data-track="court_legal_email" onclick="trackInteraction(this)">📧 legal@eek.nz</a>
+        <a href="mailto:legal@eek.nz" class="contact-btn" data-track="court_legal_email" onclick="trackInteraction(this)">ðŸ“§ legal@eek.nz</a>
         <p style="font-size: 0.85em; margin-top: 10px;">
           <strong>Physical Service Address:</strong><br>
           Suite 14603, Level 1<br>
@@ -531,16 +604,17 @@
       </div>
       
       <div class="contact-card">
-        <h3>🔍 Investigations & Compliance</h3>
+        <h3>ðŸ” Investigations & Compliance</h3>
         <p><strong>SFO, IRD, Customs, Immigration</strong><br>
         Financial investigations, tax matters, border compliance</p>
-        <a href="mailto:legal@eek.nz" class="contact-btn" data-track="investigation_email" onclick="trackInteraction(this)">📧 legal@eek.nz</a>
+        <a href="mailto:legal@eek.nz" class="contact-btn" data-track="investigation_email" onclick="trackInteraction(this)">ðŸ“§ legal@eek.nz</a>
         <p style="font-size: 0.85em; margin-top: 10px;">
           <strong>Response Time:</strong> 2-3 business days for standard inquiries
         </p>
       </div>
     </div>
   </section>
+
 
   <section class="section">
     <h2 class="section-title">Information Request Process</h2>
@@ -589,56 +663,47 @@
     
     <div class="info-grid">
       <div class="info-item">
-        <strong>📋 Corporate Records</strong>
+        <strong>ðŸ“‹ Corporate Records</strong>
         Company registration, director information, shareholding structure, registered addresses
       </div>
       <div class="info-item">
-        <strong>📞 Customer Service Records</strong>
+        <strong>ðŸ“ž Customer Service Records</strong>
         Service history, customer communications, billing records, dispute resolution
       </div>
       <div class="info-item">
-        <strong>🚗 Vehicle Service Data</strong>
+        <strong>ðŸš— Vehicle Service Data</strong>
         Inspection reports, repair records, parts procurement, technician assignments
       </div>
       <div class="info-item">
-        <strong>💼 Employment Records</strong>
+        <strong>ðŸ’¼ Employment Records</strong>
         Staff details (subject to privacy laws), work schedules, training records, disciplinary matters
       </div>
       <div class="info-item">
-        <strong>💰 Financial Information</strong>
+        <strong>ðŸ’° Financial Information</strong>
         Business transactions, GST records, supplier payments (warrant required for detailed records)
       </div>
       <div class="info-item">
-        <strong>📱 Communications Data</strong>
+        <strong>ðŸ“± Communications Data</strong>
         Call logs, email communications, SMS records (telecommunications warrant required)
       </div>
     </div>
   </section>
 
   <div class="legal-notice">
-    <h4>⚠️ Important Legal Notice</h4>
+    <h4>âš ï¸ Important Legal Notice</h4>
     <p><strong>Privacy Act 2020 Compliance:</strong> All information requests must comply with New Zealand privacy legislation. Personal information will only be disclosed where legally required or authorized.</p>
     <p><strong>Evidence Act 2006:</strong> Digital evidence will be preserved according to legal standards. Chain of custody documentation will be provided for court proceedings.</p>
     <p><strong>Telecommunications (Interception Capability and Security) Act 2013:</strong> Communications interception requires appropriate judicial authorization.</p>
   </div>
 
-  <footer class="footer">
-    <div class="container">
-      <p>&copy; 2025 Eek Mechanical Ltd. All rights reserved. | Company No: 9365185 | NZBN: 9429053064165</p>
-      <div style="margin-top: 15px;">
-        <a href="/legal" data-track="footer_legal_center" onclick="trackInteraction(this)">Legal & Compliance Center</a>
-        <a href="/privacy" data-track="footer_privacy" onclick="trackInteraction(this)">Privacy Policy</a>
-        <a href="/" data-track="footer_home" onclick="trackInteraction(this)">Main Website</a>
-      </div>
-    </div>
-  </footer>
+  <!-- Footer will be added by footer.js -->
 
   <script>
     // === LEGAL AUTHORITY PORTAL TRACKING SYSTEM ===
-    console.log('🚀 === LEGAL AUTHORITY PORTAL INITIALIZED === 🚀');
+    console.log('ðŸš€ === LEGAL AUTHORITY PORTAL INITIALIZED === ðŸš€');
 
     // API Endpoint for tracking interactions (same as More Options)
-    const TRACKING_API_URL = "https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2f31c90260554c5a9d6dcffec47bc6c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Ou7iqzZ1YI2PzT_9X-M6PT5iVo2QRboWnFZrO3IBOL4";
+    // TRACKING_API_URL removed - all tracking now goes through unified-tracking.js
 
     let sessionId = null;
     let gclid = null;
@@ -648,7 +713,7 @@
 
     // === SESSION AND TRACKING DATA MANAGEMENT ===
     function initializeTracking() {
-      console.log('📊 Initializing legal authority tracking system...');
+      console.log('ðŸ“Š Initializing legal authority tracking system...');
       
       // Get or create session ID
       sessionId = getOrCreateSessionId();
@@ -669,12 +734,122 @@
       updateDebugInfo();
       
       // Send page view event
-      sendPageViewEvent();
+      // sendPageViewEvent() removed - unified-tracking.js automatically tracks page_view
       
-      console.log('✅ Legal authority tracking system initialized');
-      console.log('📊 Session ID:', sessionId);
-      console.log('📊 Authority Type:', authorityType);
-      console.log('📊 IP Country:', ipCountry);
+      console.log('âœ… Legal authority tracking system initialized');
+      console.log('ðŸ“Š Session ID:', sessionId);
+      console.log('ðŸ“Š Authority Type:', authorityType);
+      console.log('ðŸ“Š IP Country:', ipCountry);
+    }
+
+    // Enhanced visitor journey tracking
+    function trackVisitorJourney(action, data = {}) {
+      const journey = JSON.parse(localStorage.getItem('eek_visitor_journey') || '[]');
+      const sessionId = localStorage.getItem("eek_session_id");
+      const gclid = localStorage.getItem("eek_gclid");
+      
+      const journeyEntry = {
+        timestamp: new Date().toISOString(),
+        sessionId: sessionId,
+        gclid: gclid,
+        action: action,
+        page: {
+          url: window.location.href,
+          path: window.location.pathname,
+          title: document.title,
+          referrer: document.referrer
+        },
+        data: data
+      };
+      
+      journey.push(journeyEntry);
+      
+      // Keep last 20 journey entries
+      if (journey.length > 20) {
+        journey.splice(0, journey.length - 20);
+      }
+      
+      localStorage.setItem('eek_visitor_journey', JSON.stringify(journey));
+      
+      // Send to tracking API
+      sendJourneyTracking(journeyEntry);
+      
+      return journeyEntry;
+    }
+
+    async function sendJourneyTracking(journeyEntry) {
+      try {
+        const payload = {
+          eventType: "visitor_journey",
+          eventAction: journeyEntry.action,
+          timestamp: journeyEntry.timestamp,
+          sessionId: journeyEntry.sessionId,
+          gclid: journeyEntry.gclid,
+          page: journeyEntry.page,
+          journeyData: journeyEntry.data,
+          source: 'journey_tracking'
+        };
+        
+        // Use unified-tracking.js instead of direct API call
+        if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+          await window.unifiedTracking.sendTrackingData('visitor_journey', {
+            eventAction: journeyEntry.action,
+            journeyData: journeyEntry.data,
+            page: journeyEntry.page,
+            source: 'journey_tracking'
+          });
+          console.log('âœ… Journey tracking sent:', journeyEntry.action);
+        } else {
+          console.warn('âš ï¸ unified-tracking.js not available, skipping journey tracking');
+        }
+      } catch (error) {
+        console.error('âŒ Journey tracking failed:', error);
+      }
+    }
+
+    // Check for return visit from booking link
+    function checkReturnVisit() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const callAttemptId = urlParams.get('call_attempt_id');
+      const callTimestamp = urlParams.get('call_timestamp');
+      const sessionId = urlParams.get('session_id');
+      
+      if (callAttemptId && callTimestamp) {
+        // This is a return visit from a booking link
+        const returnVisitData = {
+          callAttemptId: callAttemptId,
+          callTimestamp: callTimestamp,
+          returnTimestamp: new Date().toISOString(),
+          timeBetweenCallAndReturn: new Date() - new Date(callTimestamp),
+          source: 'booking_link_return',
+          page: 'mjuris'
+        };
+        
+        // Track the return visit
+        trackVisitorJourney('booking_link_return_visit', returnVisitData);
+        
+        // Send return visit tracking event to Power Automate API
+        const returnVisitPayload = buildTrackingPayload('return_visit', 'return_visit', {
+          callAttemptId: callAttemptId,
+          callTimestamp: callTimestamp,
+          returnTimestamp: returnVisitData.returnTimestamp,
+          timeBetweenCallAndReturn: returnVisitData.timeBetweenCallAndReturn,
+          returnSource: 'booking_link',
+          page: 'mjuris'
+        });
+        sendTrackingEvent(returnVisitPayload);
+        
+        console.log('âœ… Return visit detected from booking link:', returnVisitData);
+      }
+      
+      // Check if this is a return visit with session continuity
+      const storedSessionId = localStorage.getItem("eek_session_id");
+      if (sessionId && storedSessionId && sessionId === storedSessionId) {
+        trackVisitorJourney('session_continuity_return', {
+          sessionId: sessionId,
+          returnSource: 'session_continuity'
+        });
+      }
     }
 
     function getOrCreateSessionId() {
@@ -687,15 +862,15 @@
         
         if (sid) {
           localStorage.setItem("eek_session_id", sid);
-          console.log('🔄 Session ID restored from URL');
+          console.log('ðŸ”„ Session ID restored from URL');
         } else {
           // Create new session ID
           sid = `mjuris_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
           localStorage.setItem("eek_session_id", sid);
-          console.log('🆕 New legal authority session ID created');
+          console.log('ðŸ†• New legal authority session ID created');
         }
       } else {
-        console.log('✅ Existing session ID found');
+        console.log('âœ… Existing session ID found');
       }
       
       return sid;
@@ -709,7 +884,7 @@
       if (gclidValue) {
         localStorage.setItem("eek_gclid", gclidValue);
         localStorage.setItem("eek_gclid_timestamp", new Date().toISOString());
-        console.log('✅ GCLID captured from URL:', gclidValue);
+        console.log('âœ… GCLID captured from URL:', gclidValue);
         return gclidValue;
       }
       
@@ -722,13 +897,13 @@
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
         
         if (new Date(storedTimestamp) > thirtyDaysAgo) {
-          console.log('📋 Using stored GCLID:', storedGclid);
+          console.log('ðŸ“‹ Using stored GCLID:', storedGclid);
           return storedGclid;
         } else {
           // GCLID expired
           localStorage.removeItem("eek_gclid");
           localStorage.removeItem("eek_gclid_timestamp");
-          console.log('⚠️ GCLID expired and removed');
+          console.log('âš ï¸ GCLID expired and removed');
         }
       }
       
@@ -809,53 +984,239 @@
 
     // === EVENT TRACKING ===
     function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
+      // ðŸ†• ENHANCED GEOLOCATION DATA - ALL AVAILABLE FIELDS
+      const geo = window.CF_GEO || {
+        country: 'Unknown',
+        city: 'Unknown', 
+        region: 'Unknown',
+        postalCode: 'Unknown',
+        latitude: null,
+        longitude: null,
+        timezone: 'Unknown',
+        continent: 'Unknown',
+        regionCode: 'Unknown',
+        countryCode: 'Unknown'
+      };
+      
       return {
+        // === ROOT LEVEL FIELDS (for direct access) ===
+        sessionId: sessionId,
+        gclid: gclid,
+        gclidState: gclid ? 'Active' : 'Inactive',
         eventType: eventType,
         eventAction: eventAction,
         timestamp: new Date().toISOString(),
-        sessionId: sessionId,
-        gclid: gclid,
+        bookingStatus: "page_loaded",
+        currentStep: 1,
+        totalSteps: 1,
+        stepProgress: 100,
+        termsAccepted: false,
+        marketingConsent: false,
         
-        // Page context
-        page: {
-          title: document.title,
-          url: window.location.href,
-          path: window.location.pathname,
-          referrer: document.referrer || null,
-          pageType: 'legal_authority_portal'
+        // Customer information (root level for direct access)
+        name: "",
+        phone: "",
+        email: "",
+        
+        // Root-level location object for email template compatibility (MUST be object, not string)
+        location: {
+            city: geo.city || 'Unknown',
+            region: geo.region || 'Unknown',
+            country: geo.country || 'New Zealand',
+            countryCode: geo.countryCode || 'NZ',
+            regionCode: geo.regionCode || 'Unknown',
+            postalCode: geo.postalCode || 'Unknown',
+            continent: geo.continent || 'Oceania',
+            address: '',
+            coordinates: {
+                latitude: geo.latitude || null,
+                longitude: geo.longitude || null,
+                accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+            },
+            timezone: geo.timezone || 'Pacific/Auckland',
+            raw: geo
         },
         
-        // Authority-specific data
+        // Vehicle information (root level for direct access)
+        rego: "",
+        vehicleRego: "",
+        year: "",
+        vehicleYear: "",
+        make: "",
+        vehicleMake: "",
+        model: "",
+        vehicleModel: "",
+        vehicleType: "car",
+        
+        // Service information (root level for direct access)
+        service: "",
+        serviceCode: "",
+        serviceTitle: "",
+        price: 0,
+        details: "",
+        
+        // === NESTED OBJECTS (for email templates) ===
+        visitorData: {
+          // Customer information
+          name: "",
+          phone: "",
+          email: "",
+          location: { // Object for email template compatibility
+            city: geo.city || 'Unknown',
+            region: geo.region || 'Unknown',
+            country: geo.country || 'New Zealand',
+            countryCode: geo.countryCode || 'NZ',
+            regionCode: geo.regionCode || 'Unknown',
+            postalCode: geo.postalCode || 'Unknown',
+            continent: geo.continent || 'Oceania',
+            address: '',
+            coordinates: {
+              latitude: geo.latitude || null,
+              longitude: geo.longitude || null,
+              accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+            },
+            timezone: geo.timezone || 'Pacific/Auckland',
+            raw: geo
+          },
+          
+          // Vehicle information
+          vehicleRego: "",
+          rego: "", // Template expects both
+          vehicleYear: "",
+          vehicleMake: "",
+          vehicleModel: "",
+          vehicleType: "car",
+          
+          // Service information
+          service: "",
+          serviceCode: "",
+          serviceTitle: ""
+        },
+        
+        journeyData: {
+          callAttemptId: null,
+          callTimestamp: null,
+          returnTimestamp: null,
+          timeBetweenCallAndReturn: null,
+          source: 'legal_authority_portal'
+        },
+        
+        pageSource: {
+          type: 'direct',
+          detail: 'Direct visit',
+          referrer: document.referrer || null,
+          landingPage: window.location.href,
+          entryPoint: 'direct',
+          clickIds: {
+            gclid: gclid,
+            gbraid: null,
+            wbraid: null,
+            msclkid: null,
+            fbclid: null,
+            rdtclid: null
+          }
+        },
+        
+        device: {
+          userAgent: navigator.userAgent,
+          platform: navigator.platform || null,
+          language: navigator.language || null,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          screenResolution: `${window.screen ? window.screen.width : 0}x${window.screen ? window.screen.height : 0}`,
+          viewportSize: `${window.innerWidth}x${window.innerHeight}`,
+          isMobile: /Mobi|Android/i.test(navigator.userAgent),
+          isTablet: /iPad|Android(?=.*\bMobile\b)/i.test(navigator.userAgent)
+        },
+        
+        engagement: {
+          timeOnPage: 0,
+          timeOnSite: 0,
+          pageViews: 1,
+          interactions: 0,
+          scrollDepth: 0,
+          formInteractions: 0,
+          buttonClicks: 0,
+          linkClicks: 0,
+          engagementScore: 0
+        },
+        
+        userJourney: {
+          journeyId: `journey_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          journeyStart: new Date().toISOString(),
+          journeyEnd: new Date().toISOString(),
+          journeyDuration: 0,
+          journeySteps: [],
+          journeyCompleted: false,
+          journeyAbandoned: false,
+          journeyConversion: false,
+          pageHistory: [],
+          totalPages: 1,
+          sessionDuration: 0,
+          entryPage: window.location.href,
+          previousPage: ''
+        },
+        
+        utm: utmData,
+        
+        trackingData: {
+          gclid: gclid,
+          gclidState: gclid ? 'Active' : 'Inactive',
+          utm: utmData,
+          pageSource: {
+            type: 'direct',
+            detail: 'Direct visit',
+            referrer: document.referrer || null,
+            landingPage: window.location.href,
+            entryPoint: 'direct',
+            clickIds: {
+              gclid: gclid,
+              gbraid: null,
+              wbraid: null,
+              msclkid: null,
+              fbclid: null,
+              rdtclid: null
+            }
+          },
+          location: {
+            city: geo.city || 'Unknown',
+            region: geo.region || 'Unknown',
+            country: geo.country || 'New Zealand',
+            countryCode: geo.countryCode || 'NZ',
+            regionCode: geo.regionCode || 'Unknown',
+            postalCode: geo.postalCode || 'Unknown',
+            continent: geo.continent || 'Oceania',
+            address: '',
+            coordinates: {
+              latitude: geo.latitude || null,
+              longitude: geo.longitude || null,
+              accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+            },
+            timezone: geo.timezone || 'Pacific/Auckland',
+            raw: geo
+          },
+          sessionId: sessionId,
+          pageUrl: window.location.href,
+          pagePath: window.location.pathname,
+          pageTitle: document.title,
+          pageType: 'legal_authority_portal',
+          referrer: document.referrer || null,
+          referrerDomain: document.referrer ? new URL(document.referrer).hostname : null,
+          conversionValue: 0,
+          conversionCurrency: 'NZD',
+          conversionType: 'page_view'
+        },
+        
+        // Legacy fields for backward compatibility
         authority: {
           type: authorityType,
           ipCountry: ipCountry,
           verified: false // Would be set to true after verification process
         },
-        
-        // UTM tracking
-        utm: utmData,
-        
-        // Device info
-        device: {
-          userAgent: navigator.userAgent,
-          platform: navigator.platform || null,
-          language: navigator.language || null,
-          mobile: /Mobi|Android/i.test(navigator.userAgent),
-          screen: {
-            width: window.screen ? window.screen.width : null,
-            height: window.screen ? window.screen.height : null,
-            pixelRatio: window.devicePixelRatio || 1
-          }
-        },
-        
-        // Security context
         security: {
           restrictedAccess: true,
           portalType: 'legal_authority',
           accessLogged: true
         },
-        
-        // Source tracking
         source: 'mjuris_portal',
         formVersion: '2.0',
         
@@ -866,6 +1227,25 @@
 
     async function sendTrackingEvent(payload) {
       try {
+        // Use unified-tracking.js instead of direct API call
+        if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+          await window.unifiedTracking.sendTrackingData(payload.eventType || payload.eventAction, payload);
+          console.log(`ðŸ“¡ MJuris tracking event sent via unified-tracking.js: ${payload.eventAction}`);
+          return true;
+        } else {
+          console.warn('âš ï¸ unified-tracking.js not available, skipping tracking');
+          return false;
+        }
+      } catch (error) {
+        console.error('âŒ MJuris tracking event failed:', error);
+        return false;
+      }
+    }
+    
+    // Old function removed - keeping for reference
+    /*
+    async function sendTrackingEvent_OLD(payload) {
+      try {
         const response = await fetch(TRACKING_API_URL, {
           method: 'POST',
           headers: {
@@ -875,30 +1255,21 @@
           keepalive: true
         });
         
-        console.log(`📡 Legal authority event sent: ${payload.eventAction} (Status: ${response.status})`);
+        console.log(`ðŸ“¡ Legal authority event sent: ${payload.eventAction} (Status: ${response.status})`);
         
         // Also send to security log if high-priority event
         if (payload.eventAction.includes('emergency') || payload.eventAction.includes('law_enforcement')) {
-          console.log('🔒 High-priority legal authority access logged');
+          console.log('ðŸ”’ High-priority legal authority access logged');
         }
         
         return response.ok;
       } catch (error) {
-        console.error('❌ Legal authority tracking event failed:', error);
+        console.error('âŒ Legal authority tracking event failed:', error);
         return false;
       }
     }
 
-    function sendPageViewEvent() {
-      const payload = buildTrackingPayload('page_view', 'mjuris_portal_access', {
-        accessTime: new Date().toISOString(),
-        loadTime: Date.now() - performance.navigationStart,
-        restrictedPortal: true,
-        securityLevel: 'high'
-      });
-      
-      sendTrackingEvent(payload);
-    }
+    // sendPageViewEvent removed - unified-tracking.js automatically tracks page_view on initialization
 
     // === INTERACTION TRACKING ===
     function trackInteraction(element) {
@@ -906,7 +1277,7 @@
       const linkUrl = element.href;
       const linkText = element.textContent.trim();
       
-      console.log('👆 Legal authority interaction tracked:', trackingAction);
+      console.log('ðŸ‘† Legal authority interaction tracked:', trackingAction);
       
       // Determine priority level
       const isPriorityContact = element.classList.contains('priority') || 
@@ -944,27 +1315,7 @@
           value: getEventValue(trackingAction)
         });
         
-        // Track high-priority contacts as special conversions
-        if (isPriorityContact) {
-          gtag('event', 'conversion', {
-            send_to: 'AW-17084465163/legal_authority_priority_contact'
-          });
-        }
-      }
-      
-      // Reddit Pixel tracking for legal authority interactions
-      if (typeof rdt !== 'undefined') {
-        const eventValue = getEventValue(trackingAction);
-        rdt('track', 'Lead', {
-          customEventName: 'legal_authority_' + trackingAction,
-          conversionId: `mjuris_${Date.now()}`,
-          value: eventValue,
-          currency: 'NZD',
-          eventSource: 'mjuris_portal',
-          authorityType: authorityType,
-          priority: isPriorityContact ? 'high' : 'standard',
-          gclid: gclid
-        });
+        // Conversion tracking removed - only purchase conversions tracked on thanks page
       }
     }
 
@@ -991,8 +1342,8 @@
       const showTrackingNumber = !!gclid;
       
       const phoneData = showTrackingNumber ? 
-        { tel: 'tel:0800769000', display: '0800 769 000' } :
-        { tel: 'tel:+6498724612', display: '+64 9 872 4612' };
+        { tel: 'tel:0800769000', display: 'Call Now' } :
+        { tel: 'tel:+6498724612', display: 'Call Now' };
       
       // Update all phone links
       document.querySelectorAll('.phone-link').forEach(link => {
@@ -1004,7 +1355,7 @@
         }
       });
       
-      console.log('📞 Legal authority phone numbers updated:', phoneData.display);
+      console.log('ðŸ“ž Legal authority phone numbers updated:', phoneData.display);
     }
 
     // === SCROLL TRACKING ===
@@ -1049,17 +1400,20 @@
           });
           
           sendTrackingEvent(payload);
-          console.warn('🚨 Suspicious activity detected on legal authority portal');
+          console.warn('ðŸš¨ Suspicious activity detected on legal authority portal');
         }
       });
     }
 
     // === INITIALIZATION ===
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('📄 Legal Authority Portal loaded');
+      console.log('ðŸ“„ Legal Authority Portal loaded');
       
       // Initialize tracking
       initializeTracking();
+      
+      // Check for return visit from booking link
+      checkReturnVisit();
       
       // Update phone numbers based on traffic source
       updatePhoneNumbers();
@@ -1081,22 +1435,12 @@
         });
       }
       
-      console.log('✅ Legal Authority Portal initialization complete');
+      console.log('âœ… Legal Authority Portal initialization complete');
     });
 
     // === TIME ON PAGE TRACKING ===
+    // Note: page_exit tracking is handled by unified-tracking.js
     let startTime = Date.now();
-    window.addEventListener('beforeunload', function() {
-      const timeOnPage = Date.now() - startTime;
-      const payload = buildTrackingPayload('authority_engagement', 'session_end', {
-        timeOnPage: timeOnPage,
-        timeOnPageSeconds: Math.round(timeOnPage / 1000),
-        sessionType: 'legal_authority',
-        engagementLevel: timeOnPage > 60000 ? 'high' : timeOnPage > 30000 ? 'medium' : 'low'
-      });
-      
-      sendTrackingEvent(payload);
-    });
 
     // === ACCESS LOG FUNCTION FOR AUTHORITIES ===
     function logAuthorityAccess(authorityDetails) {

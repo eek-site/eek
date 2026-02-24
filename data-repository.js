@@ -6,12 +6,14 @@
  * 
  * PAYMENT JSON IS THE SINGLE SOURCE OF TRUTH (SSOT)
  * 
- * Version: 1.0
- * Last Updated: 2025-01-24
+ * Version: 1.1
+ * Last Updated: 2025-12-23
  */
 
 class EekDataRepository {
     constructor() {
+        // Get sanitizer instance if available
+        this.sanitizer = window.dataSanitizer || null;
         // === CORE FIELD DEFINITIONS ===
         this.CORE_FIELDS = {
             // Session & Tracking
@@ -332,20 +334,12 @@ class EekDataRepository {
 
         // === SERVICE TYPES ===
         this.SERVICE_TYPES = {
-            JUMPSTART: 'jumpstart',
-            INSPECTION_BASIC: 'inspection_basic',
-            INSPECTION_COMPREHENSIVE: 'inspection_comprehensive',
-            MOBILE_MECHANIC: 'mobile_mechanic',
-            WINZ: 'winz'
+            FUEL_EXTRACTION: 'fuel-extraction'
         };
 
         // === SERVICE CODES ===
         this.SERVICE_CODES = {
-            JUMPSTART: 'JUMP',
-            INSPECTION_BASIC: 'INSP_BASIC',
-            INSPECTION_COMPREHENSIVE: 'INSP_COMP',
-            MOBILE_MECHANIC: 'MECH',
-            WINZ: 'WINZ'
+            FUEL_EXTRACTION: 'FUEL'
         };
     }
 
@@ -565,6 +559,54 @@ class EekDataRepository {
         if (path.includes('/mjuris/')) return this.PAGE_TYPES.LEGAL_PORTAL;
         if (path === '/' || path === '/index.html') return this.PAGE_TYPES.HOMEPAGE;
         return this.PAGE_TYPES.OTHER;
+    }
+
+    /**
+     * Sanitize data before sending to flow
+     * Removes corrupted characters, encoding issues, and other anomalies
+     * @param {Object} data - Data to sanitize
+     * @returns {Object} Sanitized data
+     */
+    sanitizeForFlow(data) {
+        // Use global sanitizer if available
+        if (window.dataSanitizer) {
+            return window.dataSanitizer.sanitizeForFlow(data);
+        }
+        
+        // Fallback basic sanitization if sanitizer not loaded
+        console.warn('⚠️ DataSanitizer not loaded, using basic sanitization');
+        return this.basicSanitize(data);
+    }
+
+    /**
+     * Basic fallback sanitization if data-sanitizer.js is not loaded
+     * @param {*} value - Value to sanitize
+     * @returns {*} Sanitized value
+     */
+    basicSanitize(value) {
+        if (typeof value === 'string') {
+            // Remove Unicode replacement character and other common issues
+            return value
+                .replace(/\uFFFD/g, '')           // Unicode replacement char
+                .replace(/[\u200B-\u200D\uFEFF]/g, '') // Zero-width chars
+                .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '') // Control chars
+                .replace(/\s{2,}/g, ' ')          // Multiple spaces
+                .trim();
+        }
+        
+        if (Array.isArray(value)) {
+            return value.map(item => this.basicSanitize(item));
+        }
+        
+        if (value && typeof value === 'object') {
+            const sanitized = {};
+            for (const [key, val] of Object.entries(value)) {
+                sanitized[key] = this.basicSanitize(val);
+            }
+            return sanitized;
+        }
+        
+        return value;
     }
 }
 

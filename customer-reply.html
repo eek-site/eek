@@ -18,84 +18,22 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 
-    <!-- Reddit Pixel -->
-    <script>
-        !function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}
-        (window,document);
-        
-        function getEmailFromForm() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const emailParam = urlParams.get('email');
-            if (emailParam) return emailParam;
-            
-            const emailInputs = document.querySelectorAll('input[type="email"], input[name*="email"], input[id*="email"]');
-            for (let input of emailInputs) {
-                if (input.value && input.value.includes('@')) {
-                    return input.value;
-                }
-            }
-            return null;
-        }
-        
-        function getPhoneFromForm() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const phoneParam = urlParams.get('phone');
-            if (phoneParam) return phoneParam;
-            
-            const phoneInputs = document.querySelectorAll('input[type="tel"], input[name*="phone"], input[id*="phone"]');
-            for (let input of phoneInputs) {
-                if (input.value) {
-                    return input.value;
-                }
-            }
-            return null;
-        }
-        
-        function getUserId() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('uid') || urlParams.get('user_id') || urlParams.get('customer_id');
-        }
-        
-        function getMobileIds() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return {
-                idfa: urlParams.get('idfa'),
-                aaid: urlParams.get('aaid')
-            };
-        }
-        
-        const mobileIds = getMobileIds();
-        const initConfig = {};
-        
-        const email = getEmailFromForm();
-        const phoneNumber = getPhoneFromForm();
-        const externalId = getUserId();
-        
-        if (email) initConfig.email = email;
-        if (phoneNumber) initConfig.phoneNumber = phoneNumber;
-        if (externalId) initConfig.externalId = externalId;
-        if (mobileIds.idfa) initConfig.idfa = mobileIds.idfa;
-        if (mobileIds.aaid) initConfig.aaid = mobileIds.aaid;
-        
-        rdt('init', 'a2_hf16791nsdhx', Object.keys(initConfig).length > 0 ? initConfig : undefined);
-        rdt('track', 'PageVisit');
-    </script>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17084465163"></script>
+    <!-- Google Analytics (GA4 only - no ads tracking) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DQNKF1YLWR"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'AW-17084465163');
         gtag('config', 'G-DQNKF1YLWR');
     </script>
     
     <!-- Centralized Phone Number Management -->
     <script src="/phone-manager.js?v=20251020.39"></script>
     
+    <!-- Data Sanitizer (must load before tracking systems) -->
+    <script src="/data-sanitizer.js?v=20251224.1"></script>
     <!-- Unified Tracking System -->
-    <script src="/unified-tracking.js?v=20251020.39"></script>
+    <script src="/unified-tracking.js?v=20251224.1"></script>
     
     <!-- Centralized Footer Management -->
     <script src="/footer-new.js?v=20251020.39"></script>
@@ -566,6 +504,30 @@
         textarea:valid:not(:placeholder-shown) {
             border-color: var(--success);
         }
+
+        /* Customer Support Section Styles */
+        .customer-support-section {
+            background: var(--gray-50);
+            padding: var(--space-xl);
+            border-radius: var(--radius-md);
+            border: 2px dashed var(--primary);
+            margin: var(--space-xl) 0;
+        }
+
+        .customer-support-section h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: var(--space-sm);
+        }
+
+        .customer-support-section .form-group {
+            margin-bottom: var(--space-lg);
+        }
+
+        .customer-support-section .info-text {
+            color: var(--gray-600);
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -598,17 +560,17 @@
                     <div class="info-text">Enter your vehicle's registration number</div>
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group customer-only-field">
                     <label for="vehicleMake">Vehicle Make</label>
                     <input type="text" id="vehicleMake" name="vehicleMake" placeholder="e.g., Toyota">
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group customer-only-field">
                     <label for="vehicleModel">Vehicle Model</label>
                     <input type="text" id="vehicleModel" name="vehicleModel" placeholder="e.g., Camry">
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group customer-only-field">
                     <label for="vehicleYear">Vehicle Year</label>
                     <input type="text" id="vehicleYear" name="vehicleYear" placeholder="e.g., 2020" maxlength="4" pattern="\d{4}" inputmode="numeric">
                 </div>
@@ -617,22 +579,43 @@
                 <div class="section-divider"></div>
                 <h2 style="color: var(--primary); margin-bottom: var(--space-lg); font-size: 1.3em;" id="contactSectionTitle">Your Information</h2>
                 
-                <div class="form-group">
+                <!-- STAFF MODE: Read-only recipient display -->
+                <div class="form-group staff-mode-field" style="display: none;">
+                    <label for="recipientDisplay">Sending To</label>
+                    <input type="text" id="recipientDisplay" name="recipientDisplay" readonly placeholder="Recipient name" style="background-color: var(--gray-100); font-weight: 600;">
+                    <div class="info-text">Message will be sent from EEK Mechanical</div>
+                </div>
+                
+                <!-- Hidden fields for recipient info (staff mode) -->
+                <input type="hidden" id="recipientNameHidden" name="recipientNameHidden" value="">
+                <input type="hidden" id="recipientEmailHidden" name="recipientEmailHidden" value="">
+                <input type="hidden" id="recipientPhoneHidden" name="recipientPhoneHidden" value="">
+                <input type="hidden" id="isStaffMode" name="isStaffMode" value="false">
+                <input type="hidden" id="replyLinkForRecipient" name="replyLinkForRecipient" value="">
+                
+                <div class="form-group customer-only-field non-staff-field">
                     <label for="customerName" id="nameLabel">Your Name <span class="required">*</span></label>
                     <input type="text" id="customerName" name="customerName" required placeholder="Full name" autocomplete="name">
                 </div>
                 
-                <div class="form-group">
+                <!-- Supplier view: Customer Name (read-only, restricted data) -->
+                <div class="form-group supplier-only-field" style="display: none;">
+                    <label for="customerNameSupplier">Customer Name</label>
+                    <input type="text" id="customerNameSupplier" name="customerNameSupplier" readonly placeholder="Customer name will appear here" style="background-color: var(--gray-100);">
+                    <div class="info-text">This is the only customer information available to suppliers</div>
+                </div>
+                
+                <div class="form-group customer-only-field">
                     <label for="email" id="emailLabel">Email Address <span class="required">*</span></label>
                     <input type="email" id="email" name="email" required placeholder="your.email@example.com" autocomplete="email">
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group customer-only-field">
                     <label for="phone" id="phoneLabel">Phone Number <span class="required">*</span></label>
                     <input type="tel" id="phone" name="phone" required placeholder="+64 21 123 4567" autocomplete="tel">
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group customer-only-field">
                     <label for="preferredContact">Preferred Contact Method</label>
                     <select id="preferredContact" name="preferredContact">
                         <option value="email">Email</option>
@@ -640,6 +623,22 @@
                         <option value="text">Text Message</option>
                         <option value="any">Any Method</option>
                     </select>
+                </div>
+                
+                <!-- Supplier Information Section -->
+                <div class="form-group supplier-only-field" style="display: none;">
+                    <label for="supplierName" id="supplierNameLabel">Your Name <span class="required">*</span></label>
+                    <input type="text" id="supplierName" name="supplierName" placeholder="Your full name" autocomplete="name">
+                </div>
+                
+                <div class="form-group supplier-only-field" style="display: none;">
+                    <label for="supplierEmail" id="supplierEmailLabel">Your Email Address <span class="required">*</span></label>
+                    <input type="email" id="supplierEmail" name="supplierEmail" placeholder="your.email@example.com" autocomplete="email">
+                </div>
+                
+                <div class="form-group supplier-only-field" style="display: none;">
+                    <label for="supplierPhone" id="supplierPhoneLabel">Your Phone Number <span class="required">*</span></label>
+                    <input type="tel" id="supplierPhone" name="supplierPhone" placeholder="+64 21 123 4567" autocomplete="tel">
                 </div>
                 
                 <!-- Message Details Section -->
@@ -670,7 +669,7 @@
                 <div class="section-divider"></div>
                 <h2 style="color: var(--primary); margin-bottom: var(--space-lg); font-size: 1.3em;">Additional Information</h2>
                 
-                <div class="form-group">
+                <div class="form-group customer-only-field">
                     <label for="serviceLocation">Preferred Service Location</label>
                     <input type="text" id="serviceLocation" name="serviceLocation" placeholder="e.g., Auckland CBD, Home address" autocomplete="street-address">
                 </div>
@@ -685,9 +684,73 @@
                     </select>
                 </div>
                 
-                <div class="checkbox-group">
+                <div class="checkbox-group customer-only-field">
                     <input type="checkbox" id="allowMarketing" name="allowMarketing">
                     <label for="allowMarketing" id="marketingLabel">I'd like to receive service reminders and special offers</label>
+                </div>
+                
+                <!-- Customer Support Section (Staff Only) -->
+                <div class="section-divider customer-support-divider" style="display: none;"></div>
+                <div class="customer-support-section" style="display: none;">
+                    <h2 style="color: var(--primary); margin-bottom: var(--space-lg); font-size: 1.3em;">Customer Support (Staff Only)</h2>
+                    
+                    <div class="form-group">
+                        <label for="internalNotes">Internal Notes</label>
+                        <textarea id="internalNotes" name="internalNotes" placeholder="Add internal notes or observations about this customer interaction..." rows="4"></textarea>
+                        <div class="info-text">These notes are only visible to staff and will not be shared with the customer</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="staffPriority">Priority Level (Staff Override)</label>
+                        <select id="staffPriority" name="staffPriority">
+                            <option value="">Use customer-selected urgency</option>
+                            <option value="low">Low Priority</option>
+                            <option value="normal">Normal Priority</option>
+                            <option value="high">High Priority</option>
+                            <option value="urgent">Urgent</option>
+                            <option value="emergency">Emergency</option>
+                        </select>
+                        <div class="info-text">Override the customer's urgency selection if needed</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ticketStatus">Ticket Status</label>
+                        <select id="ticketStatus" name="ticketStatus">
+                            <option value="">Not Set</option>
+                            <option value="new">New</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="waiting-customer">Waiting for Customer</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="closed">Closed</option>
+                            <option value="escalated">Escalated</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="assignedTo">Assigned To</label>
+                        <input type="text" id="assignedTo" name="assignedTo" placeholder="Staff member name or email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="followUpDate">Follow-Up Date</label>
+                        <input type="date" id="followUpDate" name="followUpDate">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tags">Tags (comma-separated)</label>
+                        <input type="text" id="tags" name="tags" placeholder="e.g., warranty, billing, technical">
+                        <div class="info-text">Add tags to categorize this ticket</div>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="requiresEscalation" name="requiresEscalation">
+                        <label for="requiresEscalation">Requires Escalation</label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="customerFollowUp" name="customerFollowUp">
+                        <label for="customerFollowUp">Schedule Customer Follow-Up</label>
+                    </div>
                 </div>
                 
                 <!-- Hidden fields for tracking -->
@@ -760,6 +823,10 @@
     <script>
         // SharePoint Lookup API URL
         const SHAREPOINT_LOOKUP_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c35b9414a0be42f88182ae7e6e409f1d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2ztt24wScLuAfifD0pjzovseRDKXBAEtCQtScGMgPqQ';
+        
+        // SharePoint Write API URL (SPI - SharePoint Integration)
+        // This flow should write customer reply data to SharePoint
+        const SHAREPOINT_WRITE_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/d7b779dc910d4a39afb0ab37eea63aea/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SbV2SpR0S7muf9RC2KiAa6AE1CgCzqGYtTyzprK2I6I';
 
         // Contact type configuration
         const CONTACT_TYPE_CONFIG = {
@@ -790,14 +857,14 @@
             supplier: {
                 pageTitle: 'Supplier Contact Form',
                 pageTagline: 'Send us a message about your service or parts',
-                sectionTitle: 'Get in Touch',
-                sectionSubtitle: 'We\'re here to help with supplier and mechanic communications',
-                contactSectionTitle: 'Your Information',
+                sectionTitle: 'Supplier Communication',
+                sectionSubtitle: 'Contact us about parts, services, or job updates',
+                contactSectionTitle: 'Supplier Information',
                 nameLabel: 'Your Name',
-                emailLabel: 'Email Address',
-                phoneLabel: 'Phone Number',
+                emailLabel: 'Your Email Address',
+                phoneLabel: 'Your Phone Number',
                 messageLabel: 'Your Message',
-                messagePlaceholder: 'Please describe your inquiry or update...',
+                messagePlaceholder: 'Please describe your inquiry, update, or message...',
                 marketingLabel: 'I\'d like to receive updates and communications',
                 submitButton: 'Send Message',
                 messageTypeOptions: [
@@ -806,6 +873,7 @@
                     { value: 'invoice', text: 'Invoice Query' },
                     { value: 'availability', text: 'Availability Check' },
                     { value: 'quote', text: 'Quote Request' },
+                    { value: 'job-update', text: 'Job Status Update' },
                     { value: 'urgent', text: 'Urgent Matter' },
                     { value: 'other', text: 'Other' }
                 ]
@@ -829,6 +897,51 @@
                     { value: 'access', text: 'Vehicle Access' },
                     { value: 'results', text: 'Inspection Results' },
                     { value: 'question', text: 'Question About Inspection' },
+                    { value: 'other', text: 'Other' }
+                ]
+            },
+            // STAFF MODE configurations - when staff is sending TO customers/suppliers
+            staff_to_customer: {
+                pageTitle: 'Message to Customer',
+                pageTagline: 'Send a message to this customer',
+                sectionTitle: 'Contact Customer',
+                sectionSubtitle: 'Message from EEK Mechanical',
+                contactSectionTitle: 'Recipient',
+                messageLabel: 'Your Message',
+                messagePlaceholder: 'Enter your message to the customer...',
+                submitButton: 'Send to Customer',
+                messageTypeOptions: [
+                    { value: 'booking-confirm', text: 'Booking Confirmation' },
+                    { value: 'service-update', text: 'Service Update' },
+                    { value: 'quote', text: 'Quote' },
+                    { value: 'payment-request', text: 'Payment Request' },
+                    { value: 'job-complete', text: 'Job Complete' },
+                    { value: 'inspection-ready', text: 'Inspection Report Ready' },
+                    { value: 'schedule-change', text: 'Schedule Change' },
+                    { value: 'follow-up', text: 'Follow Up' },
+                    { value: 'general', text: 'General Message' },
+                    { value: 'other', text: 'Other' }
+                ]
+            },
+            staff_to_supplier: {
+                pageTitle: 'Message to Supplier',
+                pageTagline: 'Send a message to this supplier',
+                sectionTitle: 'Contact Supplier',
+                sectionSubtitle: 'Message from EEK Mechanical',
+                contactSectionTitle: 'Recipient',
+                messageLabel: 'Your Message',
+                messagePlaceholder: 'Enter your message to the supplier...',
+                submitButton: 'Send to Supplier',
+                messageTypeOptions: [
+                    { value: 'job-assignment', text: 'Job Assignment' },
+                    { value: 'job-update', text: 'Job Update' },
+                    { value: 'job-cancellation', text: 'Job Cancellation' },
+                    { value: 'parts-request', text: 'Parts Request' },
+                    { value: 'schedule-query', text: 'Schedule Query' },
+                    { value: 'payment-sent', text: 'Payment Sent' },
+                    { value: 'availability-check', text: 'Availability Check' },
+                    { value: 'follow-up', text: 'Follow Up' },
+                    { value: 'general', text: 'General Message' },
                     { value: 'other', text: 'Other' }
                 ]
             }
@@ -898,10 +1011,12 @@
         }
 
         // Populate form from booking data
-        function populateFormFromBookingData(bookingData) {
+        function populateFormFromBookingData(bookingData, contactType, isStaffMode) {
             if (!bookingData) return;
 
             console.log('📝 Populating form from booking data:', bookingData);
+            console.log('📋 Contact type:', contactType);
+            console.log('👤 Staff mode:', isStaffMode);
 
             // Get customerData if it exists (nested structure)
             const customerData = bookingData.customerData || {};
@@ -919,77 +1034,128 @@
                 return null;
             };
 
-            // Vehicle Information
+            // Vehicle Information - ALWAYS show rego
             const regoValue = getValue('rego', 'vehicleRego');
             if (regoValue) {
                 document.getElementById('rego').value = normalizeValue(regoValue);
             }
             
-            const makeValue = getValue('make', 'vehicleMake');
-            if (makeValue) {
-                document.getElementById('vehicleMake').value = normalizeValue(makeValue);
+            // STAFF MODE: Only show recipient context, don't populate editable contact fields
+            if (isStaffMode) {
+                // Store recipient info for display and submission
+                const recipientName = getValue('name', 'customerName', 'supplierName');
+                const recipientEmail = getValue('email', 'customerEmail', 'supplierEmail');
+                const recipientPhone = getValue('phone', 'customerPhone', 'supplierPhone');
+                
+                // Populate the read-only recipient display field
+                const recipientDisplayField = document.getElementById('recipientDisplay');
+                if (recipientDisplayField && recipientName) {
+                    recipientDisplayField.value = recipientName;
+                }
+                
+                // Store in hidden fields for submission
+                document.getElementById('recipientNameHidden').value = recipientName || '';
+                document.getElementById('recipientEmailHidden').value = recipientEmail || '';
+                document.getElementById('recipientPhoneHidden').value = recipientPhone || '';
+                
+                console.log('✅ Staff mode: Recipient context loaded (no editable contact fields)');
+                console.log('📧 Recipient:', recipientName, recipientEmail, recipientPhone);
+                return;
             }
             
-            const modelValue = getValue('model', 'vehicleModel');
-            if (modelValue) {
-                document.getElementById('vehicleModel').value = normalizeValue(modelValue);
-            }
+            // NON-STAFF MODE: Normal behavior - populate editable fields
             
-            const yearValue = getValue('year', 'vehicleYear');
-            if (yearValue) {
-                document.getElementById('vehicleYear').value = normalizeValue(yearValue);
-            }
-
-            // Contact Information
-            const nameValue = getValue('name', 'customerName');
-            if (nameValue) {
-                document.getElementById('customerName').value = normalizeValue(nameValue);
-            }
-            
-            const emailValue = getValue('email', 'customerEmail');
-            if (emailValue) {
-                document.getElementById('email').value = normalizeValue(emailValue);
-            }
-            
-            const phoneValue = getValue('phone', 'customerPhone');
-            if (phoneValue) {
-                document.getElementById('phone').value = normalizeValue(phoneValue);
-            }
-
-            // Location - check root level, customerData, and trackingData
-            let locationValue = null;
-            if (bookingData.location) {
-                if (typeof bookingData.location === 'string') {
-                    locationValue = bookingData.location;
-                } else if (bookingData.location.address || bookingData.location.city) {
-                    locationValue = bookingData.location.address || bookingData.location.city;
+            // Vehicle details - only for customers
+            if (contactType !== 'supplier') {
+                const makeValue = getValue('make', 'vehicleMake');
+                if (makeValue) {
+                    document.getElementById('vehicleMake').value = normalizeValue(makeValue);
+                }
+                
+                const modelValue = getValue('model', 'vehicleModel');
+                if (modelValue) {
+                    document.getElementById('vehicleModel').value = normalizeValue(modelValue);
+                }
+                
+                const yearValue = getValue('year', 'vehicleYear');
+                if (yearValue) {
+                    document.getElementById('vehicleYear').value = normalizeValue(yearValue);
                 }
             }
-            if (!locationValue && customerData.location) {
-                locationValue = typeof customerData.location === 'string' 
-                    ? customerData.location 
-                    : (customerData.location.address || customerData.location.city || '');
-            }
-            if (!locationValue && bookingData.trackingData && bookingData.trackingData.location) {
-                try {
-                    const trackingLocation = typeof bookingData.trackingData.location === 'string'
-                        ? JSON.parse(bookingData.trackingData.location)
-                        : bookingData.trackingData.location;
-                    locationValue = trackingLocation.address || trackingLocation.city || '';
-                } catch (e) {
-                    // Ignore parse errors
+
+            // Contact Information - RESTRICTED FOR SUPPLIERS
+            if (contactType === 'supplier') {
+                // Suppliers ONLY see customer name (read-only)
+                const nameValue = getValue('name', 'customerName');
+                if (nameValue) {
+                    const supplierNameField = document.getElementById('customerNameSupplier');
+                    if (supplierNameField) {
+                        supplierNameField.value = normalizeValue(nameValue);
+                    }
+                }
+                // DO NOT populate email, phone, or any other customer details for suppliers
+                console.log('🔒 Supplier view: Only showing rego and customer name (data restricted)');
+            } else {
+                // Customers see full contact information
+                const nameValue = getValue('name', 'customerName');
+                if (nameValue) {
+                    document.getElementById('customerName').value = normalizeValue(nameValue);
+                }
+                
+                const emailValue = getValue('email', 'customerEmail');
+                if (emailValue) {
+                    document.getElementById('email').value = normalizeValue(emailValue);
+                }
+                
+                const phoneValue = getValue('phone', 'customerPhone');
+                if (phoneValue) {
+                    document.getElementById('phone').value = normalizeValue(phoneValue);
                 }
             }
-            if (locationValue) {
-                document.getElementById('serviceLocation').value = normalizeValue(locationValue);
+
+            // Location - ONLY for customers (suppliers cannot see location)
+            if (contactType !== 'supplier') {
+                let locationValue = null;
+                if (bookingData.location) {
+                    if (typeof bookingData.location === 'string') {
+                        locationValue = bookingData.location;
+                    } else if (bookingData.location.address || bookingData.location.city) {
+                        locationValue = bookingData.location.address || bookingData.location.city;
+                    }
+                }
+                if (!locationValue && customerData.location) {
+                    locationValue = typeof customerData.location === 'string' 
+                        ? customerData.location 
+                        : (customerData.location.address || customerData.location.city || '');
+                }
+                if (!locationValue && bookingData.trackingData && bookingData.trackingData.location) {
+                    try {
+                        const trackingLocation = typeof bookingData.trackingData.location === 'string'
+                            ? JSON.parse(bookingData.trackingData.location)
+                            : bookingData.trackingData.location;
+                        locationValue = trackingLocation.address || trackingLocation.city || '';
+                    } catch (e) {
+                        // Ignore parse errors
+                    }
+                }
+                if (locationValue) {
+                    document.getElementById('serviceLocation').value = normalizeValue(locationValue);
+                }
             }
 
-            console.log('✅ Form populated from booking data');
+            console.log('✅ Form populated from booking data (with data restrictions applied)');
         }
 
-        // Update page language based on contact type
-        function updatePageLanguage(contactType) {
-            const config = CONTACT_TYPE_CONFIG[contactType] || CONTACT_TYPE_CONFIG.customer;
+        // Update page language and form visibility based on contact type and staff mode
+        function updatePageLanguage(contactType, isStaffMode) {
+            // Determine which config to use
+            let configKey = contactType;
+            if (isStaffMode) {
+                configKey = contactType === 'supplier' ? 'staff_to_supplier' : 'staff_to_customer';
+            }
+            const config = CONTACT_TYPE_CONFIG[configKey] || CONTACT_TYPE_CONFIG.customer;
+            
+            console.log('🎨 Updating page language for:', configKey, 'Staff mode:', isStaffMode);
             
             // Update page elements
             document.getElementById('pageTitle').textContent = config.pageTitle;
@@ -998,12 +1164,90 @@
             document.getElementById('sectionSubtitle').textContent = config.sectionSubtitle;
             document.getElementById('contactSectionTitle').textContent = config.contactSectionTitle;
             
-            // Update labels
-            document.getElementById('nameLabel').innerHTML = config.nameLabel + ' <span class="required">*</span>';
-            document.getElementById('emailLabel').innerHTML = config.emailLabel + ' <span class="required">*</span>';
-            document.getElementById('phoneLabel').innerHTML = config.phoneLabel + ' <span class="required">*</span>';
+            // Show/hide form sections based on contact type AND staff mode
+            const customerOnlyFields = document.querySelectorAll('.customer-only-field');
+            const supplierOnlyFields = document.querySelectorAll('.supplier-only-field');
+            const staffModeFields = document.querySelectorAll('.staff-mode-field');
+            const nonStaffFields = document.querySelectorAll('.non-staff-field');
+            
+            if (isStaffMode) {
+                // STAFF MODE: Hide all contact input fields, show recipient display
+                customerOnlyFields.forEach(field => field.style.display = 'none');
+                supplierOnlyFields.forEach(field => field.style.display = 'none');
+                staffModeFields.forEach(field => field.style.display = 'block');
+                nonStaffFields.forEach(field => field.style.display = 'none');
+                
+                // Make contact fields not required (they're hidden)
+                document.getElementById('customerName').required = false;
+                document.getElementById('email').required = false;
+                document.getElementById('phone').required = false;
+                const supplierName = document.getElementById('supplierName');
+                const supplierEmail = document.getElementById('supplierEmail');
+                const supplierPhone = document.getElementById('supplierPhone');
+                if (supplierName) supplierName.required = false;
+                if (supplierEmail) supplierEmail.required = false;
+                if (supplierPhone) supplierPhone.required = false;
+                
+                console.log('✅ Staff mode UI enabled - contact fields hidden, recipient display shown');
+            } else if (contactType === 'supplier') {
+                // SUPPLIER MODE (non-staff): Supplier contacting EEK
+                customerOnlyFields.forEach(field => field.style.display = 'none');
+                supplierOnlyFields.forEach(field => field.style.display = 'block');
+                staffModeFields.forEach(field => field.style.display = 'none');
+                nonStaffFields.forEach(field => field.style.display = 'block');
+                
+                // Update supplier-specific labels
+                const supplierNameLabel = document.getElementById('supplierNameLabel');
+                const supplierEmailLabel = document.getElementById('supplierEmailLabel');
+                const supplierPhoneLabel = document.getElementById('supplierPhoneLabel');
+                if (supplierNameLabel) supplierNameLabel.innerHTML = config.nameLabel + ' <span class="required">*</span>';
+                if (supplierEmailLabel) supplierEmailLabel.innerHTML = config.emailLabel + ' <span class="required">*</span>';
+                if (supplierPhoneLabel) supplierPhoneLabel.innerHTML = config.phoneLabel + ' <span class="required">*</span>';
+                
+                // Make supplier fields required
+                const supplierName = document.getElementById('supplierName');
+                const supplierEmail = document.getElementById('supplierEmail');
+                const supplierPhone = document.getElementById('supplierPhone');
+                if (supplierName) supplierName.required = true;
+                if (supplierEmail) supplierEmail.required = true;
+                if (supplierPhone) supplierPhone.required = true;
+                
+                // Make customer fields not required (they're hidden)
+                document.getElementById('customerName').required = false;
+                document.getElementById('email').required = false;
+                document.getElementById('phone').required = false;
+            } else {
+                // CUSTOMER MODE (non-staff): Customer contacting EEK
+                customerOnlyFields.forEach(field => field.style.display = 'block');
+                supplierOnlyFields.forEach(field => field.style.display = 'none');
+                staffModeFields.forEach(field => field.style.display = 'none');
+                nonStaffFields.forEach(field => field.style.display = 'block');
+                
+                // Update customer labels
+                document.getElementById('nameLabel').innerHTML = config.nameLabel + ' <span class="required">*</span>';
+                document.getElementById('emailLabel').innerHTML = config.emailLabel + ' <span class="required">*</span>';
+                document.getElementById('phoneLabel').innerHTML = config.phoneLabel + ' <span class="required">*</span>';
+                
+                // Make customer fields required
+                document.getElementById('customerName').required = true;
+                document.getElementById('email').required = true;
+                document.getElementById('phone').required = true;
+                
+                // Make supplier fields not required (they're hidden)
+                const supplierName = document.getElementById('supplierName');
+                const supplierEmail = document.getElementById('supplierEmail');
+                const supplierPhone = document.getElementById('supplierPhone');
+                if (supplierName) supplierName.required = false;
+                if (supplierEmail) supplierEmail.required = false;
+                if (supplierPhone) supplierPhone.required = false;
+            }
+            
+            // Update labels (for visible fields)
             document.getElementById('messageLabel').innerHTML = config.messageLabel + ' <span class="required">*</span>';
-            document.getElementById('marketingLabel').textContent = config.marketingLabel;
+            const marketingLabel = document.getElementById('marketingLabel');
+            if (marketingLabel && !isStaffMode && contactType !== 'supplier') {
+                marketingLabel.textContent = config.marketingLabel;
+            }
             document.getElementById('submitBtn').textContent = config.submitButton;
             
             // Update placeholders
@@ -1023,6 +1267,8 @@
             
             // Update document title
             document.title = config.pageTitle + ' - Eek Mechanical';
+            
+            console.log('✅ Form updated for:', configKey);
         }
 
         // Get URL parameters (in case you pass data from email/SMS)
@@ -1127,20 +1373,31 @@
             
             let bookingId = null;
             let contactType = 'customer'; // Default to customer
+            let decodedData = {}; // Store all decoded params
             
-            // Decode hash to get bookingId and contactType
+            // Decode hash to get bookingId, contactType, customerSupport, supplierSupport, and contact details
+            let customerSupport = false;
+            let supplierSupport = false;
             if (encodedData) {
-                const decodedData = decodeBase64(encodedData);
-                if (decodedData) {
-                    bookingId = decodedData.bookingId || null;
-                    contactType = decodedData.contactType || decodedData.contacttype || 'customer';
-                    
-                    console.log('📋 Decoded hash data:', { bookingId, contactType });
-                }
+                decodedData = decodeBase64(encodedData) || {};
+                bookingId = decodedData.bookingId || null;
+                contactType = decodedData.contactType || decodedData.contacttype || 'customer';
+                // Check for customerSupport parameter (case-insensitive)
+                const customerSupportValue = decodedData.customerSupport || decodedData.customersupport || decodedData.customer_support || '';
+                customerSupport = customerSupportValue === 'true' || customerSupportValue === true;
+                // Check for supplierSupport parameter (case-insensitive)
+                const supplierSupportValue = decodedData.supplierSupport || decodedData.suppliersupport || decodedData.supplier_support || '';
+                supplierSupport = supplierSupportValue === 'true' || supplierSupportValue === true;
+                
+                console.log('📋 Decoded hash data:', decodedData);
             } else {
                 // Fall back to regular URL parameters (for backward compatibility)
                 bookingId = getUrlParameter('bookingId');
                 contactType = getUrlParameter('contactType') || getUrlParameter('contacttype') || 'customer';
+                const customerSupportValue = getUrlParameter('customerSupport') || getUrlParameter('customersupport') || getUrlParameter('customer_support') || '';
+                customerSupport = customerSupportValue === 'true' || customerSupportValue === true;
+                const supplierSupportValue = getUrlParameter('supplierSupport') || getUrlParameter('suppliersupport') || getUrlParameter('supplier_support') || '';
+                supplierSupport = supplierSupportValue === 'true' || supplierSupportValue === true;
             }
             
             // Validate contactType
@@ -1149,22 +1406,118 @@
                 contactType = 'customer';
             }
             
+            // STAFF MODE: customerSupport=true (for customers) or supplierSupport=true (for suppliers)
+            // This means STAFF is sending a message TO a customer/supplier
+            const isStaffMode = (contactType === 'customer' && customerSupport === true) || 
+                               (contactType === 'supplier' && supplierSupport === true);
+            
+            console.log('👤 Staff mode:', isStaffMode);
+            
+            // Set staff mode in hidden field
+            document.getElementById('isStaffMode').value = isStaffMode ? 'true' : 'false';
+            
+            // Extract supplier details from URL (supplier data comes from URL, not SharePoint)
+            const supplierDataFromUrl = {
+                supplierName: decodedData.supplierName || decodedData.suppliername || '',
+                supplierEmail: decodedData.supplierEmail || decodedData.supplieremail || '',
+                supplierPhone: decodedData.supplierPhone || decodedData.supplierphone || '',
+                rego: decodedData.rego || decodedData.vehicleRego || ''
+            };
+            console.log('📧 Supplier data from URL:', supplierDataFromUrl);
+            
+            // Generate reply link for recipient (they'll use this to reply back)
+            // Reply link does NOT include support flags - recipient sees normal form
+            // For suppliers, include their details in the reply link so they're pre-filled
+            if (bookingId && isStaffMode) {
+                let replyParams = `bookingId=${bookingId}&contactType=${contactType}`;
+                // Include supplier details in reply link so their form is pre-filled
+                if (contactType === 'supplier') {
+                    if (supplierDataFromUrl.supplierName) replyParams += `&supplierName=${encodeURIComponent(supplierDataFromUrl.supplierName)}`;
+                    if (supplierDataFromUrl.supplierEmail) replyParams += `&supplierEmail=${encodeURIComponent(supplierDataFromUrl.supplierEmail)}`;
+                    if (supplierDataFromUrl.supplierPhone) replyParams += `&supplierPhone=${encodeURIComponent(supplierDataFromUrl.supplierPhone)}`;
+                    if (supplierDataFromUrl.rego) replyParams += `&rego=${encodeURIComponent(supplierDataFromUrl.rego)}`;
+                }
+                const replyBase64 = btoa(replyParams);
+                const replyLink = `https://www.eek.nz/customer-reply?d=${replyBase64}`;
+                document.getElementById('replyLinkForRecipient').value = replyLink;
+                console.log('🔗 Reply link for recipient:', replyLink);
+            }
+            
+            // Show/hide customer support section (internal staff fields) - only in staff mode
+            const customerSupportSection = document.querySelector('.customer-support-section');
+            const customerSupportDivider = document.querySelector('.customer-support-divider');
+            
+            if (isStaffMode) {
+                if (customerSupportSection) {
+                    customerSupportSection.style.display = 'block';
+                }
+                if (customerSupportDivider) {
+                    customerSupportDivider.style.display = 'block';
+                }
+                console.log('✅ Staff mode enabled - staff-only items visible for', contactType);
+            } else {
+                if (customerSupportSection) {
+                    customerSupportSection.style.display = 'none';
+                }
+                if (customerSupportDivider) {
+                    customerSupportDivider.style.display = 'none';
+                }
+                console.log('ℹ️', contactType, 'view - staff-only items hidden');
+            }
+            
             // Set contactType in hidden field
             document.getElementById('contactType').value = contactType;
             if (bookingId) {
                 document.getElementById('bookingId').value = bookingId;
             }
             
-            // Update page language based on contact type
-            updatePageLanguage(contactType);
+            // Update page language based on contact type AND staff mode
+            updatePageLanguage(contactType, isStaffMode);
             
-            // Fetch booking data if bookingId is provided
-            if (bookingId) {
-                console.log('🔄 Fetching booking data for bookingId:', bookingId);
+            // SUPPLIER: Get details from URL params (not SharePoint)
+            if (contactType === 'supplier') {
+                console.log('📋 Supplier mode - using URL params for contact details');
+                
+                // Set rego from URL
+                if (supplierDataFromUrl.rego) {
+                    document.getElementById('rego').value = supplierDataFromUrl.rego;
+                }
+                
+                if (isStaffMode) {
+                    // STAFF → SUPPLIER: Show supplier name in read-only display
+                    const recipientDisplay = document.getElementById('recipientDisplay');
+                    if (recipientDisplay && supplierDataFromUrl.supplierName) {
+                        recipientDisplay.value = supplierDataFromUrl.supplierName;
+                    }
+                    // Store in hidden fields for submission
+                    document.getElementById('recipientNameHidden').value = supplierDataFromUrl.supplierName;
+                    document.getElementById('recipientEmailHidden').value = supplierDataFromUrl.supplierEmail;
+                    document.getElementById('recipientPhoneHidden').value = supplierDataFromUrl.supplierPhone;
+                    console.log('✅ Staff mode: Supplier recipient details loaded');
+                } else {
+                    // SUPPLIER → EEK: Pre-fill their own details
+                    const supplierNameField = document.getElementById('supplierName');
+                    const supplierEmailField = document.getElementById('supplierEmail');
+                    const supplierPhoneField = document.getElementById('supplierPhone');
+                    if (supplierNameField && supplierDataFromUrl.supplierName) {
+                        supplierNameField.value = supplierDataFromUrl.supplierName;
+                    }
+                    if (supplierEmailField && supplierDataFromUrl.supplierEmail) {
+                        supplierEmailField.value = supplierDataFromUrl.supplierEmail;
+                    }
+                    if (supplierPhoneField && supplierDataFromUrl.supplierPhone) {
+                        supplierPhoneField.value = supplierDataFromUrl.supplierPhone;
+                    }
+                    console.log('✅ Supplier mode: Contact details pre-filled from URL');
+                }
+            }
+            // CUSTOMER: Get details from SharePoint
+            else if (bookingId) {
+                console.log('🔄 Customer mode - fetching booking data from SharePoint for bookingId:', bookingId);
                 try {
                     const bookingData = await fetchBookingDataFromSharePoint(bookingId);
                     if (bookingData) {
-                        populateFormFromBookingData(bookingData);
+                        populateFormFromBookingData(bookingData, contactType, isStaffMode);
                     } else {
                         console.log('ℹ️ No booking data found, form will remain empty');
                     }
@@ -1176,41 +1529,47 @@
                 console.log('ℹ️ No bookingId provided, form will remain empty');
             }
             
-            // Set hidden tracking fields
-            const sessionId = getOrCreateSessionId();
-            const gclid = getGCLID();
-            const utmData = getUTMData();
-            
-            document.getElementById('timestamp').value = new Date().toISOString();
-            document.getElementById('timezone').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            document.getElementById('userAgent').value = navigator.userAgent;
-            document.getElementById('referrer').value = document.referrer;
-            document.getElementById('screenResolution').value = `${screen.width}x${screen.height}`;
-            document.getElementById('language').value = navigator.language;
-            document.getElementById('platform').value = navigator.platform;
-            document.getElementById('sessionId').value = sessionId;
-            document.getElementById('gclid').value = gclid || '';
-            document.getElementById('utmSource').value = utmData.utm_source || '';
-            document.getElementById('utmMedium').value = utmData.utm_medium || '';
-            document.getElementById('utmCampaign').value = utmData.utm_campaign || '';
-            document.getElementById('utmTerm').value = utmData.utm_term || '';
-            document.getElementById('utmContent').value = utmData.utm_content || '';
+            // Set hidden tracking fields - SKIP for staff mode (no need to track internal messages)
+            if (!isStaffMode) {
+                const sessionId = getOrCreateSessionId();
+                const gclid = getGCLID();
+                const utmData = getUTMData();
+                
+                document.getElementById('timestamp').value = new Date().toISOString();
+                document.getElementById('timezone').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                document.getElementById('userAgent').value = navigator.userAgent;
+                document.getElementById('referrer').value = document.referrer;
+                document.getElementById('screenResolution').value = `${screen.width}x${screen.height}`;
+                document.getElementById('language').value = navigator.language;
+                document.getElementById('platform').value = navigator.platform;
+                document.getElementById('sessionId').value = sessionId;
+                document.getElementById('gclid').value = gclid || '';
+                document.getElementById('utmSource').value = utmData.utm_source || '';
+                document.getElementById('utmMedium').value = utmData.utm_medium || '';
+                document.getElementById('utmCampaign').value = utmData.utm_campaign || '';
+                document.getElementById('utmTerm').value = utmData.utm_term || '';
+                document.getElementById('utmContent').value = utmData.utm_content || '';
 
-            // Track page view
-            if (typeof gtag === 'function') {
-                gtag('event', 'page_view', {
-                    page_title: 'Customer Reply Form',
-                    page_location: window.location.href,
-                    page_path: window.location.pathname
-                });
-            }
+                // Track page view
+                if (typeof gtag === 'function') {
+                    gtag('event', 'page_view', {
+                        page_title: 'Customer Reply Form',
+                        page_location: window.location.href,
+                        page_path: window.location.pathname
+                    });
+                }
 
-            // Track with unified tracking if available
-            if (window.unifiedTracking && typeof window.unifiedTracking.trackEvent === 'function') {
-                window.unifiedTracking.trackEvent('form_view', {
-                    formType: 'customer_reply',
-                    pageUrl: window.location.href
-                });
+                // Track with unified tracking if available
+                if (window.unifiedTracking && typeof window.unifiedTracking.trackEvent === 'function') {
+                    window.unifiedTracking.trackEvent('form_view', {
+                        formType: 'customer_reply',
+                        pageUrl: window.location.href
+                    });
+                }
+            } else {
+                // Staff mode - just set timestamp for record keeping
+                document.getElementById('timestamp').value = new Date().toISOString();
+                console.log('⏭️ Staff mode - skipping tracking fields');
             }
         });
 
@@ -1222,14 +1581,35 @@
         
         // Create a hash of form data to detect duplicates
         function createFormHash(data) {
-            const keyFields = [
-                data.rego,
-                data.customerName,
-                data.email,
-                data.phone,
-                data.messageType,
-                data.message
-            ].join('|');
+            // Helper to get field value from fields array
+            const getField = (name) => {
+                const field = data.fields.find(f => f.name === name);
+                return field ? field.value : '';
+            };
+            
+            // Use appropriate fields based on contact type
+            const contactType = getField('contactType') || 'customer';
+            let keyFields;
+            
+            if (contactType === 'supplier') {
+                keyFields = [
+                    getField('rego'),
+                    getField('supplierName'),
+                    getField('supplierEmail'),
+                    getField('supplierPhone'),
+                    getField('messageType'),
+                    getField('message')
+                ].join('|');
+            } else {
+                keyFields = [
+                    getField('rego'),
+                    getField('customerName'),
+                    getField('email'),
+                    getField('phone'),
+                    getField('messageType'),
+                    getField('message')
+                ].join('|');
+            }
             return btoa(keyFields).substring(0, 20); // Short hash
         }
 
@@ -1258,15 +1638,117 @@
             successModal.classList.remove('show');
             errorMessage.style.display = 'none';
             
-            // Collect form data
-            const formData = new FormData(this);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
+            // Get contact type to determine which fields to include
+            const contactTypeValue = document.getElementById('contactType').value || 'customer';
+            const isStaffModeValue = document.getElementById('isStaffMode').value === 'true';
+            const bookingIdValue = document.getElementById('bookingId').value;
             
-            // Add checkbox value explicitly
-            data.allowMarketing = document.getElementById('allowMarketing').checked;
+            // Build fields array - ONLY actual form fields, no tracking data
+            const fields = [];
+            
+            // Core form fields (rego, message type, urgency, message)
+            fields.push({ name: 'rego', value: document.getElementById('rego').value || '' });
+            fields.push({ name: 'messageType', value: document.getElementById('messageType').value || '' });
+            fields.push({ name: 'urgency', value: document.getElementById('urgency').value || '' });
+            fields.push({ name: 'message', value: document.getElementById('message').value || '' });
+            
+            // Contact-specific fields
+            if (contactTypeValue === 'supplier') {
+                // Supplier fields
+                const supplierName = document.getElementById('supplierName');
+                const supplierEmail = document.getElementById('supplierEmail');
+                const supplierPhone = document.getElementById('supplierPhone');
+                const customerNameSupplier = document.getElementById('customerNameSupplier');
+                if (supplierName && supplierName.value) fields.push({ name: 'supplierName', value: supplierName.value });
+                if (supplierEmail && supplierEmail.value) fields.push({ name: 'supplierEmail', value: supplierEmail.value });
+                if (supplierPhone && supplierPhone.value) fields.push({ name: 'supplierPhone', value: supplierPhone.value });
+                if (customerNameSupplier && customerNameSupplier.value) fields.push({ name: 'customerNameReadOnly', value: customerNameSupplier.value });
+            } else {
+                // Customer fields
+                fields.push({ name: 'customerName', value: document.getElementById('customerName').value || '' });
+                fields.push({ name: 'email', value: document.getElementById('email').value || '' });
+                fields.push({ name: 'phone', value: document.getElementById('phone').value || '' });
+                fields.push({ name: 'allowMarketing', value: document.getElementById('allowMarketing').checked });
+            }
+            
+            // Include customer support fields if visible (staff-only)
+            const customerSupportSection = document.querySelector('.customer-support-section');
+            if (customerSupportSection && customerSupportSection.style.display !== 'none') {
+                fields.push({ name: 'internalNotes', value: document.getElementById('internalNotes').value || '' });
+                fields.push({ name: 'staffPriority', value: document.getElementById('staffPriority').value || '' });
+                fields.push({ name: 'ticketStatus', value: document.getElementById('ticketStatus').value || '' });
+                fields.push({ name: 'assignedTo', value: document.getElementById('assignedTo').value || '' });
+                fields.push({ name: 'followUpDate', value: document.getElementById('followUpDate').value || '' });
+                fields.push({ name: 'tags', value: document.getElementById('tags').value || '' });
+                fields.push({ name: 'requiresEscalation', value: document.getElementById('requiresEscalation').checked });
+                fields.push({ name: 'customerFollowUp', value: document.getElementById('customerFollowUp').checked });
+                fields.push({ name: 'isStaffSubmission', value: true });
+                console.log('📋 Including customer support fields in submission');
+            }
+            
+            // Essential metadata only
+            fields.push({ name: 'formVersion', value: '2.0' });
+            fields.push({ name: 'submissionTimestamp', value: new Date().toISOString() });
+            fields.push({ name: 'submissionId', value: submissionId });
+            fields.push({ name: 'contactType', value: contactTypeValue });
+            fields.push({ name: 'bookingId', value: bookingIdValue || '' });
+            
+            // Build final data object with fields array structure
+            // Include key fields at top level for easy access in Power Automate
+            // Pre-compute everything so Power Automate doesn't need any conditions
+            const isSupplier = contactTypeValue === 'supplier';
+            const isStaff = customerSupportSection && customerSupportSection.style.display !== 'none';
+            
+            // Get recipient info from hidden fields (populated in staff mode)
+            const recipientNameHidden = document.getElementById('recipientNameHidden').value || '';
+            const recipientEmailHidden = document.getElementById('recipientEmailHidden').value || '';
+            const recipientPhoneHidden = document.getElementById('recipientPhoneHidden').value || '';
+            const replyLinkForRecipient = document.getElementById('replyLinkForRecipient').value || '';
+            
+            const data = {
+                formType: 'customer_reply',
+                // Top-level fields for Power Automate (no filter, no switch, no condition needed)
+                contactType: contactTypeValue,
+                rego: document.getElementById('rego').value || '',
+                bookingId: bookingIdValue || '',
+                isStaffSubmission: isStaff,
+                isStaffMode: isStaffModeValue,
+                // Pre-computed recipient fields
+                // In staff mode: use hidden fields (recipient from booking data)
+                // In non-staff mode: use form input fields (sender's own info)
+                recipientEmail: isStaffModeValue 
+                    ? recipientEmailHidden
+                    : (isSupplier 
+                        ? (document.getElementById('supplierEmail')?.value || '') 
+                        : (document.getElementById('email').value || '')),
+                recipientName: isStaffModeValue 
+                    ? recipientNameHidden
+                    : (isSupplier 
+                        ? (document.getElementById('supplierName')?.value || '') 
+                        : (document.getElementById('customerName')?.value || '')),
+                recipientPhone: isStaffModeValue 
+                    ? recipientPhoneHidden
+                    : (isSupplier 
+                        ? (document.getElementById('supplierPhone')?.value || '') 
+                        : (document.getElementById('phone')?.value || '')),
+                // Sender info (for staff mode, always EEK Mechanical)
+                senderName: isStaffModeValue ? 'EEK Mechanical' : '',
+                senderEmail: isStaffModeValue ? 'support@eek.nz' : '',
+                senderPhone: isStaffModeValue ? (isSupplier ? '09 872 4612' : '0800 769 000') : '',
+                // Pre-computed support phone (different for customer vs supplier)
+                supportPhone: isSupplier ? '09 872 4612' : '0800 769 000',
+                // Reply link for recipient to respond
+                replyLink: isStaffModeValue 
+                    ? replyLinkForRecipient 
+                    : `https://www.eek.nz/customer-reply?d=${btoa('bookingId=' + (bookingIdValue || '') + '&contactType=' + contactTypeValue)}`,
+                // Pre-computed email wording
+                emailGreeting: isStaffModeValue 
+                    ? (isSupplier ? 'You have a new message from EEK Mechanical regarding a job.' : 'You have a new message from EEK Mechanical regarding your vehicle.')
+                    : (isSupplier ? 'Thank you for contacting us. We have received your message and will review it shortly.' : 'Thank you for contacting us. We have received your message and will get back to you soon.'),
+                emailSubjectPrefix: isStaffModeValue ? 'Message from EEK Mechanical' : 'We received your message',
+                // Fields array for dynamic table
+                fields: fields
+            };
             
             // Check for duplicate submission (same content within 5 seconds)
             const formHash = createFormHash(data);
@@ -1285,78 +1767,91 @@
             lastSubmissionHash = formHash;
             lastSubmissionTime = now;
             
-            // Add form metadata
-            data.formType = 'customer_reply';
-            data.formVersion = '2.0';
-            data.submissionTimestamp = new Date().toISOString();
-            data.submissionId = submissionId; // Unique ID to track this specific submission
-            
-            // Ensure contactType is included (from hidden field)
-            const contactTypeValue = document.getElementById('contactType').value || 'customer';
-            data.contactType = contactTypeValue;
-            
-            // Include bookingId if available
-            const bookingIdValue = document.getElementById('bookingId').value;
-            if (bookingIdValue) {
-                data.bookingId = bookingIdValue;
-            }
-            
-            // Track form submission attempt
-            if (typeof gtag === 'function') {
-                gtag('event', 'form_submit', {
-                    form_type: 'customer_reply',
-                    message_type: data.messageType,
-                    urgency: data.urgency
-                });
-            }
-
-            // Track with unified tracking if available
-            if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
-                try {
-                    await window.unifiedTracking.sendTrackingData('customer_reply_submission', {
-                        ...data,
-                        eventType: 'customer_reply_submission',
-                        formType: 'customer_reply'
+            // Track form submission attempt - skip for EEK-initiated actions (staff mode)
+            if (!isStaffModeValue) {
+                if (typeof gtag === 'function') {
+                    const getField = (name) => fields.find(f => f.name === name)?.value;
+                    gtag('event', 'form_submit', {
+                        form_type: 'customer_reply',
+                        message_type: getField('messageType'),
+                        urgency: getField('urgency')
                     });
-                } catch (trackingError) {
-                    console.warn('Tracking error (non-blocking):', trackingError);
                 }
+
+                // Track with unified tracking if available
+                if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+                    try {
+                        const trackingData = { formType: data.formType };
+                        fields.forEach(field => { trackingData[field.name] = field.value; });
+                        await window.unifiedTracking.sendTrackingData('customer_reply_submission', {
+                            ...trackingData,
+                            eventType: 'customer_reply_submission',
+                            formType: 'customer_reply'
+                        });
+                    } catch (trackingError) {
+                        console.warn('Tracking error (non-blocking):', trackingError);
+                    }
+                }
+            } else {
+                console.log('⏭️ Staff mode - skipping tracking for EEK-initiated action');
             }
             
             try {
-                // Send to Power Automate webhook
-                const response = await fetch('https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/d7b779dc910d4a39afb0ab37eea63aea/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SbV2SpR0S7muf9RC2KiAa6AE1CgCzqGYtTyzprK2I6I', {
+                // Sanitize data before sending to prevent anomalies like corrupted characters
+                const sanitizedData = window.dataSanitizer 
+                    ? window.dataSanitizer.sanitizeForFlow(data)
+                    : data;
+                
+                // Send to Power Automate webhook (SharePoint Integration - SPI)
+                console.log('📤 Sending data to SharePoint via Power Automate (SPI):', sanitizedData);
+                const response = await fetch(SHAREPOINT_WRITE_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(sanitizedData)
                 });
                 
+                // Log response for debugging
+                let responseText = '';
+                try {
+                    responseText = await response.text();
+                    console.log('📥 SharePoint response status:', response.status);
+                    console.log('📥 SharePoint response:', responseText);
+                } catch (textError) {
+                    console.warn('⚠️ Could not read response text:', textError);
+                }
+                
                 if (response.ok) {
+                    console.log('✅ Data successfully sent to SharePoint (SPI)');
                     // Success - prevent any further submissions
                     // Keep isSubmitting = true to prevent duplicate submissions
                     // Don't reset it so form can't be submitted again
                     
-                    // Track successful submission
-                    if (typeof gtag === 'function') {
-                        gtag('event', 'form_submit_success', {
-                            form_type: 'customer_reply',
-                            message_type: data.messageType,
-                            submission_id: submissionId
-                        });
-                    }
-
-                    // Track conversion with unified tracking
-                    if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
-                        try {
-                            await window.unifiedTracking.sendTrackingData('customer_reply_success', {
-                                ...data,
-                                eventType: 'customer_reply_success',
-                                formType: 'customer_reply'
+                    // Track successful submission - skip for EEK-initiated actions (staff mode)
+                    if (!isStaffModeValue) {
+                        if (typeof gtag === 'function') {
+                            const getField = (name) => data.fields.find(f => f.name === name)?.value;
+                            gtag('event', 'form_submit_success', {
+                                form_type: 'customer_reply',
+                                message_type: getField('messageType'),
+                                submission_id: submissionId
                             });
-                        } catch (trackingError) {
-                            console.warn('Tracking error (non-blocking):', trackingError);
+                        }
+
+                        // Track conversion with unified tracking
+                        if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+                            try {
+                                const trackingData = { formType: data.formType };
+                                data.fields.forEach(field => { trackingData[field.name] = field.value; });
+                                await window.unifiedTracking.sendTrackingData('customer_reply_success', {
+                                    ...trackingData,
+                                    eventType: 'customer_reply_success',
+                                    formType: 'customer_reply'
+                                });
+                            } catch (trackingError) {
+                                console.warn('Tracking error (non-blocking):', trackingError);
+                            }
                         }
                     }
                     
@@ -1427,10 +1922,22 @@
                     };
                     
                 } else {
-                    throw new Error(`Server returned ${response.status}`);
+                    // Try to parse error response
+                    let errorDetails = `Server returned ${response.status}`;
+                    try {
+                        const errorData = JSON.parse(responseText);
+                        if (errorData.error || errorData.message) {
+                            errorDetails += `: ${errorData.error || errorData.message}`;
+                        }
+                    } catch (e) {
+                        errorDetails += `: ${responseText.substring(0, 200)}`;
+                    }
+                    console.error('❌ SharePoint write failed:', errorDetails);
+                    throw new Error(errorDetails);
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('❌ Error submitting to SharePoint:', error);
+                errorMessage.textContent = `Error: ${error.message}. Please try again or contact support.`;
                 errorMessage.style.display = 'block';
                 
                 // Reset submission flag on error so user can try again
@@ -1476,4 +1983,3 @@
     </script>
 </body>
 </html>
-

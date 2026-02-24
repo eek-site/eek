@@ -1,46 +1,6 @@
 # Netlify _redirects file
-# Save this as "_redirects" (no extension) in your site's publish directory
-# https://docs.netlify.com/routing/redirects/
+# All paths route to 404.html with 200 status
+# 404.html handles all redirects and 404 errors via its redirectDatabase
 
-# REAL Road & Rescue redirects from actual Wix site
-# Note: /mjuris and /supplier are NOT redirected - will be built as new pages on eek.nz
-
-# Application and availability forms
-/apply                   https://forms.office.com/r/XLdGk4wDYY              301
-/availability            https://forms.office.com/r/jGgFgQUj0N              301
-/candidate               https://forms.office.com/r/EsHxc7mAb4              301
-
-# Legal and policy documents
-/privacy                 https://roadandrescue.sharepoint.com/:b:/s/rar/EePeZL039ZdBisigeixY7lkBMWcEEC4SBcSdN5rDmp_B3w?e=0stgCb  301
-/terms                   https://roadandrescue.sharepoint.com/:b:/s/rar/EdoYqNDR0HBKn-XLMtPP2BIBhgNR-mMBJKxTVmnyIbeEJA?e=o8SCDY  301
-/terms-of-service        https://roadandrescue.sharepoint.com/:b:/s/rar/EdoYqNDR0HBKn-XLMtPP2BIBhgNR-mMBJKxTVmnyIbeEJA?e=NAzALO  301
-
-# Supplier forms (but not /supplier itself - that will be a new page)
-/supplier-relations      https://forms.office.com/r/4XP7Rwpefq              301
-/supplier-terms          https://roadandrescue.sharepoint.com/:b:/s/rar/EZJjHEYujzdOlfcniAlJ8toBE_AcQHZf_o9l0hliX1Ydwg?e=qrrONR  301
-
-# Customer support and escalation forms
-/customer-escalation     https://forms.office.com/r/qDtVHgBbJk              301
-/dispute-form            https://forms.office.com/r/qDtVHgBbJk              301
-/helper-form             https://forms.office.com/r/BE90j85gJr              301
-/triage                  https://forms.office.com/r/hLJkX3NeLq              301
-
-# Service and job forms
-/rescue-me               https://forms.office.com/r/sdf0YirK6s              301
-/start                   https://forms.office.com/r/sdf0YirK6s              301
-/job-sheet               https://forms.office.com/r/FNTtRBwQtT              301
-/find-me                 https://form.jotform.com/251017058434047           301
-
-# Utility redirects
-/map                     https://www.google.com/maps/search/where+am+I      301
-
-# Case variations (common typos)
-/Apply                   https://forms.office.com/r/XLdGk4wDYY              301
-/APPLY                   https://forms.office.com/r/XLdGk4wDYY              301
-/Availability            https://forms.office.com/r/jGgFgQUj0N              301
-/RESCUE-ME               https://forms.office.com/r/sdf0YirK6s              301
-/Rescue-Me               https://forms.office.com/r/sdf0YirK6s              301
-
-# Catch-all for dynamic 404 handling
-# This should be the LAST line in your _redirects file
-/*                       /404.html                                          404
+# Route everything to 404.html - it will handle redirects and 404s
+/*                       /404.html                                          200

@@ -1,12 +1,14 @@
-/**
+﻿/**
  * Unified Tracking System - Single Source of Truth
  * Standardizes all tracking data, field names, and API calls across the entire platform
  * Replaces: enhanced-tracking.js, tracking-manager.js, phone-manager.js
- * Cache busting: v20251020.7
+ * Cache busting: v20251224.1
  */
 
 class UnifiedTrackingSystem {
     constructor() {
+        // Get sanitizer instance for cleaning data before flow submission
+        this.sanitizer = null; // Will be set after DOM ready
         // Standardized field names - these are the ONLY field names used across the platform
         this.STANDARD_FIELDS = {
             // Session & Identity
@@ -127,8 +129,15 @@ class UnifiedTrackingSystem {
      * Initialize the tracking system
      */
     init() {
+        // Initialize sanitizer reference
+        this.sanitizer = window.dataSanitizer || null;
+        
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.initializeTracking().catch(console.error));
+            document.addEventListener('DOMContentLoaded', () => {
+                // Re-check for sanitizer after DOM ready
+                this.sanitizer = window.dataSanitizer || null;
+                this.initializeTracking().catch(console.error);
+            });
         } else {
             this.initializeTracking().catch(console.error);
         }
@@ -138,7 +147,7 @@ class UnifiedTrackingSystem {
      * Initialize comprehensive tracking with automatic page_view (once per session)
      */
     async initializeTracking() {
-        console.log('🚀 Unified Tracking System v2.1 initialized');
+        console.log('ðŸš€ Unified Tracking System v2.1 initialized');
         
         // Initialize tracking data with proper CF_GEO waiting
         this.trackingData = await this.initializeTrackingData();
@@ -148,9 +157,9 @@ class UnifiedTrackingSystem {
         if (!sessionStorage.getItem(pageViewKey)) {
             this.trackPageView();
             sessionStorage.setItem(pageViewKey, 'true');
-            console.log('✅ First page_view event sent for this session');
+            console.log('âœ… First page_view event sent for this session');
         } else {
-            console.log('⏭️ Page view already sent for this session, skipping');
+            console.log('â­ï¸ Page view already sent for this session, skipping');
         }
         
         this.trackPageSource();
@@ -167,7 +176,7 @@ class UnifiedTrackingSystem {
         // Retry location detection after CF_GEO loads
         this.retryLocationDetection();
         
-        console.log('📊 Tracking Data:', this.trackingData);
+        console.log('ðŸ“Š Tracking Data:', this.trackingData);
     }
 
     /**
@@ -179,14 +188,14 @@ class UnifiedTrackingSystem {
             
             const checkCFGeo = () => {
                 if (window.CF_GEO && window.CF_GEO.country && window.CF_GEO.country !== 'Unknown') {
-                    console.log('✅ CF_GEO loaded successfully:', window.CF_GEO);
+                    console.log('âœ… CF_GEO loaded successfully:', window.CF_GEO);
                     resolve(window.CF_GEO);
                 } else if (retries < maxRetries) {
                     retries++;
-                    console.log(`⏳ Waiting for CF_GEO... (attempt ${retries}/${maxRetries})`);
+                    console.log(`â³ Waiting for CF_GEO... (attempt ${retries}/${maxRetries})`);
                     setTimeout(checkCFGeo, delay);
                 } else {
-                    console.log('⚠️ CF_GEO not available, using fallback data');
+                    console.log('âš ï¸ CF_GEO not available, using fallback data');
                     resolve({
                         country: 'Unknown',
                         city: 'Unknown', 
@@ -217,7 +226,7 @@ class UnifiedTrackingSystem {
             attempts++;
             
             if (window.CF_GEO && window.CF_GEO.country) {
-                console.log('🌍 CF_GEO loaded, updating location data');
+                console.log('ðŸŒ CF_GEO loaded, updating location data');
                 this.updateLocationData();
                 return;
             }
@@ -225,7 +234,7 @@ class UnifiedTrackingSystem {
             if (attempts < maxAttempts) {
                 setTimeout(checkLocation, 500); // Check every 500ms
             } else {
-                console.log('🌍 CF_GEO not available after 5 seconds, using defaults');
+                console.log('ðŸŒ CF_GEO not available after 5 seconds, using defaults');
             }
         };
         
@@ -248,7 +257,7 @@ class UnifiedTrackingSystem {
             if (currentCountry === 'Unknown' || currentCountry === 'New Zealand' || 
                 currentCity === 'Unknown' || currentCity === 'Auckland') {
                 
-                console.log('🌍 Updating location data from CF_GEO (non-destructive)');
+                console.log('ðŸŒ Updating location data from CF_GEO (non-destructive)');
                 
                 // Only update fields that are actually available in CF_GEO
                 if (geo.country && geo.country !== 'Unknown') {
@@ -282,9 +291,9 @@ class UnifiedTrackingSystem {
                 // Always update raw data for debugging
                 this.trackingData.location.raw = geo;
                 
-                console.log('🌍 Location data updated (non-destructive):', this.trackingData.location);
+                console.log('ðŸŒ Location data updated (non-destructive):', this.trackingData.location);
             } else {
-                console.log('🌍 Location data already accurate, skipping update:', currentCountry, currentCity);
+                console.log('ðŸŒ Location data already accurate, skipping update:', currentCountry, currentCity);
             }
         }
     }
@@ -410,8 +419,8 @@ class UnifiedTrackingSystem {
         const geo = await this.waitForCFGeo();
         
         // Debug logging for location data
-        console.log('🌍 CF_GEO Data:', geo);
-        console.log('🌍 Geo available:', !!window.CF_GEO);
+        console.log('ðŸŒ CF_GEO Data:', geo);
+        console.log('ðŸŒ Geo available:', !!window.CF_GEO);
         
         return {
             // Session data
@@ -497,7 +506,7 @@ class UnifiedTrackingSystem {
      * Track page view with standardized data
      */
     trackPageView() {
-        console.log('📊 Tracking page view...');
+        console.log('ðŸ“Š Tracking page view...');
         
         if (typeof gtag !== 'undefined') {
             gtag('event', 'page_view', {
@@ -509,14 +518,6 @@ class UnifiedTrackingSystem {
                 source_detail: this.trackingData.pageSource.detail,
                 session_id: this.trackingData[this.STANDARD_FIELDS.sessionId],
                 user_journey_length: this.trackingData.userJourney.length
-            });
-        }
-
-        if (typeof rdt !== 'undefined') {
-            rdt('track', 'PageVisit', {
-                pageType: this.trackingData[this.STANDARD_FIELDS.pageType],
-                sourceType: this.trackingData.pageSource.type,
-                sessionId: this.trackingData[this.STANDARD_FIELDS.sessionId]
             });
         }
 
@@ -751,7 +752,7 @@ class UnifiedTrackingSystem {
                     buttonClicks: this.trackingData.engagement.buttonClicks
                 });
             } else {
-                console.log('📊 Skipping page exit tracking - insufficient engagement');
+                console.log('ðŸ“Š Skipping page exit tracking - insufficient engagement');
             }
         });
     }
@@ -771,7 +772,7 @@ class UnifiedTrackingSystem {
             }
         });
         
-        console.log('📞 Phone numbers updated:', phoneData.display);
+        console.log('ðŸ“ž Phone numbers updated:', phoneData.display);
     }
 
     /**
@@ -806,17 +807,7 @@ class UnifiedTrackingSystem {
             });
         }
 
-        if (typeof rdt !== 'undefined') {
-            rdt('track', 'Custom', {
-                customEventName: eventName,
-                eventCategory: category,
-                eventLabel: label,
-                sessionId: this.trackingData[this.STANDARD_FIELDS.sessionId],
-                ...additionalData
-            });
-        }
-
-        console.log(`📊 Tracked: ${eventName} (${category}) - ${label}`);
+        console.log(`ðŸ“Š Tracked: ${eventName} (${category}) - ${label}`);
     }
 
     /**
@@ -896,13 +887,13 @@ class UnifiedTrackingSystem {
     shouldSendTrackingData(eventType, additionalData = {}) {
         // Always send if this is the first time (no lastSentData)
         if (!this.lastSentData || !this.lastSentData.timestamp) {
-            console.log('📊 Sending first tracking event (no previous data):', eventType);
+            console.log('ðŸ“Š Sending first tracking event (no previous data):', eventType);
             return true;
         }
 
         // Always send significant events
         if (this.significantEvents.has(eventType)) {
-            console.log('📊 Sending significant event:', eventType);
+            console.log('ðŸ“Š Sending significant event:', eventType);
             return true;
         }
 
@@ -914,7 +905,7 @@ class UnifiedTrackingSystem {
         const hasServiceDataChange = this.hasServiceDataChanged(currentData);
 
         if (hasLocationChange || hasEngagementChange || hasCustomerDataChange || hasServiceDataChange) {
-            console.log('📊 Sending due to data changes:', {
+            console.log('ðŸ“Š Sending due to data changes:', {
                 location: hasLocationChange,
                 engagement: hasEngagementChange,
                 customer: hasCustomerDataChange,
@@ -928,7 +919,7 @@ class UnifiedTrackingSystem {
         if (lastSent) {
             const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
             if (new Date(lastSent) < fiveMinutesAgo) {
-                console.log('📊 Sending due to time threshold (5 minutes)');
+                console.log('ðŸ“Š Sending due to time threshold (5 minutes)');
                 return true;
             }
         }
@@ -1039,7 +1030,7 @@ class UnifiedTrackingSystem {
     async sendTrackingData(eventType, additionalData = {}) {
         // Check if this is a significant change that warrants sending
         if (!this.shouldSendTrackingData(eventType, additionalData)) {
-            console.log('📊 Skipping tracking data send - no significant changes');
+            console.log('ðŸ“Š Skipping tracking data send - no significant changes');
             return;
         }
 
@@ -1225,17 +1216,21 @@ class UnifiedTrackingSystem {
             })()
         };
 
-        console.log('📊 SENDING TRACKING DATA:', {
+        // Sanitize payload before sending to prevent anomalies like corrupted characters
+        const sanitizedPayload = this.sanitizePayload(trackingPayload);
+
+        console.log('ðŸ“Š SENDING TRACKING DATA:', {
             eventType: eventType,
-            payload: trackingPayload,
-            payloadSize: JSON.stringify(trackingPayload).length
+            payload: sanitizedPayload,
+            payloadSize: JSON.stringify(sanitizedPayload).length,
+            wasSanitized: this.sanitizer !== null
         });
         
         // Debug Google Ads data
-        console.log('🎯 Google Ads Debug:', {
-            gclid: trackingPayload.gclid,
-            utm: trackingPayload.utm,
-            pageSource: trackingPayload.pageSource
+        console.log('ðŸŽ¯ Google Ads Debug:', {
+            gclid: sanitizedPayload.gclid,
+            utm: sanitizedPayload.utm,
+            pageSource: sanitizedPayload.pageSource
         });
 
         try {
@@ -1245,10 +1240,10 @@ class UnifiedTrackingSystem {
                     'Content-Type': 'application/json',
                     'User-Agent': navigator.userAgent
                 },
-                body: JSON.stringify(trackingPayload)
+                body: JSON.stringify(sanitizedPayload)
             });
             
-            console.log('📡 Tracking API Response:', {
+            console.log('ðŸ“¡ Tracking API Response:', {
                 status: response.status,
                 statusText: response.statusText,
                 ok: response.ok
@@ -1256,14 +1251,14 @@ class UnifiedTrackingSystem {
             
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error('❌ Tracking API Error Response:', errorText);
+                console.error('âŒ Tracking API Error Response:', errorText);
             } else {
                 // Save current data as last sent data after successful send
                 this.saveLastSentData(trackingPayload);
-                console.log('💾 Saved tracking data for future comparison');
+                console.log('ðŸ’¾ Saved tracking data for future comparison');
             }
         } catch (error) {
-            console.error('❌ Tracking API Error:', {
+            console.error('âŒ Tracking API Error:', {
                 message: error.message,
                 stack: error.stack,
                 name: error.name
@@ -1284,18 +1279,21 @@ class UnifiedTrackingSystem {
             paymentStatus: 'confirmed'
         };
 
+        // Sanitize payload before sending
+        const sanitizedPayload = this.sanitizePayload(payload);
+
         try {
             const response = await fetch(this.API_ENDPOINTS.paymentConfirmed, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(sanitizedPayload)
             });
             
             return response.ok;
         } catch (error) {
-            console.error('❌ Payment confirmed API error:', error);
+            console.error('âŒ Payment confirmed API error:', error);
             return false;
         }
     }
@@ -1382,7 +1380,7 @@ class UnifiedTrackingSystem {
     updateTrackingData(fieldName, value, eventType = 'data_update') {
         if (this.STANDARD_FIELDS[fieldName]) {
             this.trackingData[this.STANDARD_FIELDS[fieldName]] = value;
-            console.log(`📊 Updated ${fieldName}:`, value);
+            console.log(`ðŸ“Š Updated ${fieldName}:`, value);
             
             // Send immediately for significant data changes
             if (this.isSignificantField(fieldName)) {
@@ -1426,6 +1424,55 @@ class UnifiedTrackingSystem {
         if (hasSignificantChanges) {
             this.sendTrackingData(eventType, updates);
         }
+    }
+
+    /**
+     * Sanitize payload before sending to flow
+     * Removes corrupted characters, encoding issues, and other anomalies
+     * @param {Object} payload - Payload to sanitize
+     * @returns {Object} Sanitized payload
+     */
+    sanitizePayload(payload) {
+        // Use global sanitizer if available
+        if (window.dataSanitizer) {
+            return window.dataSanitizer.sanitizeForFlow(payload);
+        }
+        
+        // Fallback basic sanitization
+        return this.basicSanitize(payload);
+    }
+
+    /**
+     * Basic fallback sanitization if data-sanitizer.js is not loaded
+     * @param {*} value - Value to sanitize
+     * @returns {*} Sanitized value
+     */
+    basicSanitize(value) {
+        if (typeof value === 'string') {
+            // Remove Unicode replacement character and other common issues
+            return value
+                .replace(/\uFFFD/g, '')           // Unicode replacement char (ï¿½)
+                .replace(/[\u200B-\u200D\uFEFF]/g, '') // Zero-width chars
+                .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '') // Control chars
+                .replace(/[\uE000-\uF8FF]/g, '')  // Private use area
+                .replace(/[\uD800-\uDFFF]/g, '')  // Invalid surrogates
+                .replace(/\s{2,}/g, ' ')          // Multiple spaces
+                .trim();
+        }
+        
+        if (Array.isArray(value)) {
+            return value.map(item => this.basicSanitize(item));
+        }
+        
+        if (value && typeof value === 'object') {
+            const sanitized = {};
+            for (const [key, val] of Object.entries(value)) {
+                sanitized[key] = this.basicSanitize(val);
+            }
+            return sanitized;
+        }
+        
+        return value;
     }
 
     // Helper methods for urgency mapping

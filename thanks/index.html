@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Payment Confirmed - Thank You | Eek Mobile Mechanical</title>
+  <title>Payment Confirmed - Thank You | Eek Mechanical</title>
   <meta name="description" content="Payment confirmed! Your mobile mechanic service is being dispatched. We'll contact you within minutes with your technician's details and arrival time." />
   <meta name="robots" content="noindex, nofollow" />
-  <meta property="og:title" content="Payment Confirmed - Thank You | Eek Mobile Mechanical" />
+  <meta property="og:title" content="Payment Confirmed - Thank You | Eek Mechanical" />
   <meta property="og:description" content="Payment confirmed! Your mobile mechanic service is being dispatched." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.eek.nz/thanks" />
   <meta property="og:image" content="https://www.eek.nz/sweet-ride.png" />
 
   <!-- Security Headers -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://prod-22.australiasoutheast.logic.azure.com https://prod-26.australiasoutheast.logic.azure.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.redditstatic.com https://googleads.g.doubleclick.net https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://www.redditstatic.com https://pixel-config.reddit.com https://conversions-config.reddit.com https://www.googletagmanager.com https://googleads.g.doubleclick.net https://www.google.com https://www.googleadservices.com https://www.google.hn https://prod-22.australiasoutheast.logic.azure.com https://prod-26.australiasoutheast.logic.azure.com https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com https://static.cloudflareinsights.com; frame-src 'self' https://td.doubleclick.net https://www.googletagmanager.com;">
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
@@ -36,6 +36,23 @@
     gtag('config', 'AW-17084465163');
     gtag('config', 'G-DQNKF1YLWR');
   </script>
+  
+  <!-- Centralized Phone Number Management -->
+  <script src="/phone-manager.js?v={{ site.version }}"></script>
+  
+  <!-- Data Repository - Single Source of Truth -->
+  <script src="/data-repository.js?v={{ site.version }}"></script>
+  
+  <!-- Payment Utilities - Payment-specific data handling -->
+  <script src="/payment-utils.js?v={{ site.version }}"></script>
+  
+  <!-- Data Sanitizer (must load before tracking systems) -->
+  <script src="/data-sanitizer.js?v=20251224.1"></script>
+  <!-- Unified Tracking System (replaces tracking-manager.js) -->
+  <script src="/unified-tracking.js?v=20251224.1"></script>
+  
+  <!-- Centralized Footer Management -->
+  <script src="/footer-new.js?v={{ site.version }}"></script>
 
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <style>
@@ -46,8 +63,10 @@
       min-height: 100vh; display: flex; flex-direction: column;
     }
     .container { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
-    .success-card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.1); max-width: 700px; width: 100%; margin: 20px; position: relative; overflow: hidden; }
-    .success-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #28a745, #20c997, #17a2b8); }
+    .success-card { background: white; padding: 50px; border-radius: 20px; box-shadow: 0 12px 40px rgba(0,0,0,0.15); max-width: 700px; width: 100%; margin: 20px; position: relative; overflow: hidden; }
+    .success-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, #28a745, #20c997, #17a2b8); }
+    .success-card::after { content: '✨'; position: absolute; top: 20px; right: 20px; font-size: 2em; opacity: 0.3; animation: sparkle 2s ease-in-out infinite; }
+    @keyframes sparkle { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.1); } }
     .success-card.winz::before { background: linear-gradient(90deg, #6f42c1, #5a32a3, #8b5cf6); }
     .success-icon { font-size: 4em; color: #28a745; margin-bottom: 20px; animation: bounce 1s ease-in-out; }
     .success-icon.winz { color: #6f42c1; }
@@ -93,7 +112,7 @@
     .footer-links a:hover { color: #ff5500; text-decoration: underline; }
     .loading-animation { display: inline-block; width: 20px; height: 20px; border: 3px solid #f3f3f3; border-top: 3px solid #ff5500; border-radius: 50%; animation: spin 1s linear infinite; margin-left: 10px; }
     @keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
-    .processing-indicator { background: #d4edda; color: #155724; padding: 10px; border-radius: 8px; margin: 15px 0; display: none; }
+    .processing-indicator { display: none; }
     @media (max-width:768px){
       .success-card{padding:30px 20px;margin:10px}
       h1{font-size:2em}
@@ -104,13 +123,156 @@
       .detail-label{min-width:unset}
       .detail-value{text-align:left}
     }
+
+    /* Service Selection Modal Styles */
+    .service-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      backdrop-filter: blur(5px);
+    }
+
+    .service-modal-content {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .service-modal-header {
+      background: linear-gradient(135deg, #ff5500, #e04a00);
+      color: white;
+      padding: 20px;
+      border-radius: 12px 12px 0 0;
+      position: relative;
+    }
+
+    .service-modal-header h3 {
+      margin: 0 0 5px 0;
+      font-size: 1.5em;
+    }
+
+    .service-modal-header p {
+      margin: 0;
+      opacity: 0.9;
+    }
+
+    .service-modal-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 2em;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .service-modal-body {
+      padding: 0;
+    }
+
+    .service-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .service-option {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      border: none;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .service-option:hover {
+      background: #f8f9fa;
+      transform: translateX(5px);
+    }
+
+    .service-option:last-child {
+      border-bottom: none;
+    }
+
+    .service-icon {
+      font-size: 2em;
+      margin-right: 15px;
+      min-width: 50px;
+    }
+
+    .service-details h4 {
+      margin: 0 0 5px 0;
+      color: #333;
+      font-size: 1.2em;
+    }
+
+    .service-details p {
+      margin: 0;
+      color: #666;
+      font-size: 0.9em;
+    }
   </style>
 </head>
 <body>
+  <!-- Service Selection Modal -->
+  <div id="serviceModal" class="service-modal" style="display: none;">
+    <div class="service-modal-content">
+      <div class="service-modal-header">
+        <h3>⛽ Wrong Fuel Emergency</h3>
+        <p>⚠️ DON'T START YOUR ENGINE - Call us immediately for professional fuel extraction</p>
+        <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
+      </div>
+      <div class="service-modal-body">
+        <div class="service-options">
+          <button class="service-option" onclick="selectService('wrong_fuel')" data-service="wrong_fuel" style="width: 100%; max-width: 500px; margin: 0 auto;">
+            <span class="service-icon">⛽</span>
+            <div class="service-details">
+              <h4>Wrong Fuel Emergency</h4>
+              <p>⚠️ DON'T START YOUR ENGINE - Petrol in diesel or diesel in petrol</p>
+              <p style="margin-top: 10px; font-weight: 600; color: #dc3545;">Call us immediately for professional fuel extraction</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <header style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-      <img src="https://www.eek.nz/sweet-ride.png" alt="Sweet! - Eek Mobile Mechanical Success" style="max-width: 300px; height: auto; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
-      <h1 style="margin: 0.5em 0 0.2em; font-size: 2em;">Eek Mobile Mechanical</h1>
+      <img src="https://www.eek.nz/sweet-ride.png" alt="Sweet! - Eek Mechanical Success" style="max-width: 300px; height: auto; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
+      <h1 style="margin: 0.5em 0 0.2em; font-size: 2em;">Eek Mechanical</h1>
       <p style="font-size: 1.2em; color: #666; margin-bottom: 0;">NZ-Wide Mobile Mechanics</p>
     </header>
 
@@ -119,7 +281,7 @@
       <h1 id="mainTitle">Payment Confirmed!</h1>
       <p class="subtitle" id="mainSubtitle">Your mobile mechanic is already on the way</p>
 
-      <div class="processing-indicator" id="processingIndicator">✓ Booking data sent successfully</div>
+      <div class="processing-indicator" id="processingIndicator"></div>
 
       <!-- Booking Details -->
       <div class="booking-details" id="bookingDetails">
@@ -154,7 +316,7 @@
           <h3>📞 Need Help?</h3>
           <p>If you need assistance with the WINZ process or haven't received your quote</p>
           <div class="contact-buttons">
-            <a href="tel:0800769000" class="btn btn-winz" onclick="trackCall('winz_quote_help')">📞 Call Eek: 0800 769 000</a>
+            <a href="javascript:void(0)" class="btn btn-winz phone-link" onclick="openServiceModal(); trackCall('winz_quote_help')">📞 Call Eek</a>
             <a href="tel:0800559009" class="btn btn-primary" onclick="trackCall('winz_help')">📞 Call WINZ: 0800 559 009</a>
           </div>
         </div>
@@ -182,7 +344,7 @@
           <h3>📞 Need Immediate Assistance?</h3>
           <p>Our dispatch team is standing by if you need to update your location or have urgent questions</p>
           <div class="contact-buttons">
-            <a href="tel:0800769000" class="btn btn-primary" onclick="trackCall('thanks_page_call')">📞 Call 0800 769 000</a>
+            <a href="javascript:void(0)" class="btn btn-primary phone-link" onclick="openServiceModal(); trackCall('thanks_page_call')">📞 Call Now</a>
           </div>
         </div>
       </div>
@@ -191,28 +353,25 @@
         <h3>🛠️ Need Additional Services?</h3>
         <p>Access our complete range of services and support options</p>
         <div class="service-links">
-          <a href="https://www.eek.nz/customer-escalation">📝 Customer Support</a>
-          <a href="https://www.eek.nz/review-form">⭐ Leave a Review</a>
-          <a href="https://www.eek.nz/insurance-form">🛡️ Insurance Claims</a>
-          <a href="https://www.eek.nz/more-options">📋 More Services</a>
-          <a href="https://www.eek.nz/find-me">📍 Update Location</a>
-          <a href="https://www.eek.nz/helper-form">🆘 Emergency Help</a>
+          <a href="https://www.eek.nz/customer-escalation" data-track="customer_support" onclick="trackInteraction(this)">📝 Customer Support</a>
+          <a href="https://www.eek.nz/review-form" data-track="leave_review" onclick="trackInteraction(this)">⭐ Leave a Review</a>
+          <a href="https://www.eek.nz/insurance-form" data-track="insurance_claims" onclick="trackInteraction(this)">🛡️ Insurance Claims</a>
+          <a href="https://www.eek.nz/more-options" data-track="more_services" onclick="trackInteraction(this)">📋 More Services</a>
+          <a href="https://www.eek.nz/find-me" data-track="update_location" onclick="trackInteraction(this)">📍 Update Location</a>
+          <a href="https://www.eek.nz/helper-form" data-track="emergency_help" onclick="trackInteraction(this)">🆘 Emergency Help</a>
         </div>
       </div>
 
-      <div class="footer-links">
-        <a href="https://www.eek.nz/">← Back to Home</a>
-        <a href="https://www.eek.nz/terms">Terms of Service</a>
-        <a href="https://www.eek.nz/privacy">Privacy Policy</a>
-      </div>
+      <!-- Footer will be added by footer.js -->
     </div>
   </div>
 
   <script>
     // === INITIALIZATION ===
-    console.log('🚀 === THANKS PAGE INITIALIZED (Enhanced Data Retention) === 🚀');
+    console.log('🚀 === THANKS PAGE INITIALIZED (Enhanced Data Retention & Protection) === 🚀');
 
-    // Power Automate URLs
+    // Power Automate URLs for payment confirmation and tracking
+    // TRACKING_API_URL removed - all tracking now goes through unified-tracking.js
     const PAYMENT_CONFIRMED_WEBHOOK_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c8ac1b8ac2574f66ad4efcdc23165379/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=kg6bffZKUQzUVR7jzpdTRaeudIa_T99V1hpzb_VlXPk';
     const SHAREPOINT_LOOKUP_URL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c35b9414a0be42f88182ae7e6e409f1d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2ztt24wScLuAfifD0pjzovseRDKXBAEtCQtScGMgPqQ';
 
@@ -235,34 +394,35 @@
       
       canonical.formVersion = coalesce(raw.formVersion, '2.0');
 
-      canonical.name   = cleanText(coalesce(raw.name, raw.customerName));
-      canonical.phone  = sanitizePhone(coalesce(raw.phone, raw.customerPhone));
-      canonical.email  = cleanText(coalesce(raw.email, raw.customerEmail));
-      canonical.location = cleanText(raw.location);
+      canonical.name   = cleanText(coalesce(raw.name, raw.customerName, raw.customerData?.name));
+      canonical.phone  = sanitizePhone(coalesce(raw.phone, raw.customerPhone, raw.customerData?.phone));
+      canonical.email  = cleanText(coalesce(raw.email, raw.customerEmail, raw.customerData?.email));
+      canonical.location = cleanText(coalesce(raw.location, raw.customerData?.location));
 
-      canonical.rego   = cleanText(coalesce(raw.rego, raw.vehicleRego));
-      canonical.year   = cleanText(coalesce(raw.year, raw.vehicleYear));
-      canonical.make   = cleanText(coalesce(raw.make, raw.vehicleMake));
-      canonical.model  = cleanText(coalesce(raw.model, raw.vehicleModel));
-      canonical.vehicleType  = cleanText(raw.vehicleType);
-      canonical.vehicleAddon = coalesce(raw.vehicleAddon, '');
+      canonical.rego   = cleanText(coalesce(raw.rego, raw.vehicleRego, raw.customerData?.vehicleRego));
+      canonical.year   = cleanText(coalesce(raw.year, raw.vehicleYear, raw.customerData?.vehicleYear));
+      canonical.make   = cleanText(coalesce(raw.make, raw.vehicleMake, raw.customerData?.vehicleMake));
+      canonical.model  = cleanText(coalesce(raw.model, raw.vehicleModel, raw.customerData?.vehicleModel));
+      canonical.vehicleType  = cleanText(coalesce(raw.vehicleType, raw.customerData?.vehicleType));
+      canonical.vehicleAddon = coalesce(raw.vehicleAddon, raw.customerData?.vehicleTypeAddon, '');
 
-      canonical.batteryVoltage = cleanText(coalesce(raw.batteryVoltage, raw.selectedVoltage));
+      canonical.batteryVoltage = cleanText(coalesce(raw.batteryVoltage, raw.selectedVoltage, raw.customerData?.batteryVoltage));
+      canonical.tyreSize = cleanText(coalesce(raw.tyreSize, raw.customerData?.tyreSize));
 
-      canonical.sellerName  = cleanText(raw.sellerName);
-      canonical.sellerPhone = sanitizePhone(raw.sellerPhone);
+      canonical.sellerName  = cleanText(coalesce(raw.sellerName, raw.customerData?.sellerName));
+      canonical.sellerPhone = sanitizePhone(coalesce(raw.sellerPhone, raw.customerData?.sellerPhone));
 
-      canonical.service      = cleanText(coalesce(raw.service, raw.serviceType));
-      canonical.serviceCode  = cleanText(raw.serviceCode);
-      canonical.serviceTitle = cleanText(coalesce(raw.serviceTitle, (raw.service === 'inspection' ? 'Pre Purchase Vehicle Inspection' : 'Mobile Mechanic Service')));
+      canonical.service      = cleanText(coalesce(raw.service, raw.serviceType, raw.customerData?.service));
+      canonical.serviceCode  = cleanText(coalesce(raw.serviceCode, raw.customerData?.serviceCode));
+      canonical.serviceTitle = cleanText(coalesce(raw.serviceTitle, raw.customerData?.serviceTitle, (raw.service === 'inspection' ? 'Pre Purchase Vehicle Inspection' : 'Mobile Mechanic Service')));
 
       canonical.scheduledDate   = cleanText(coalesce(raw.scheduledDate));
       canonical.scheduledDateNZ = cleanText(coalesce(raw.scheduledDateNZ));
       canonical.timeWindow      = cleanText(coalesce(raw.timeWindow, raw.selectedTime));
       canonical.urgencyLevel    = cleanText(coalesce(raw.urgencyLevel, raw.selectedUrgency));
 
-      canonical.price   = String(coalesce(raw.price, raw.finalPrice, raw.calculatedPrice, ''));
-      canonical.details = cleanText(coalesce(raw.details, raw.description));
+      canonical.price   = String(coalesce(raw.price, raw.finalPrice, raw.calculatedPrice, raw.customerData?.price, ''));
+      canonical.details = cleanText(coalesce(raw.details, raw.description, raw.customerData?.details));
 
       canonical.emergencyType  = cleanText(raw.emergencyType);
       canonical.quoteReference = cleanText(raw.quoteReference);
@@ -294,24 +454,420 @@
       ].some(Boolean);
     }
 
-    // === IDEMPOTENCY (Submit once) ===
-    function idKeyFor(canon){
-      return canon.sharepointId || canon.sessionId || (canon.quoteReference ? canon.quoteReference : (canon.phone ? `${canon.phone}_${canon.bookingTime}` : 'unknown'));
-    }
-    function postedKey(id){ return `eek_paid_posted:${id}`; }
-    function hasAlreadyPosted(id){
-      try{
-        const raw = localStorage.getItem(postedKey(id));
-        if(!raw) return false;
-        const rec = JSON.parse(raw);
-        return rec && rec.status === 'sent';
-      }catch{ return true; }
-    }
-    function markPosted(id){
-      try{ localStorage.setItem(postedKey(id), JSON.stringify({status:'sent', ts:new Date().toISOString()})); }catch{}
+    // === TRACKING FUNCTIONALITY ===
+    function buildTrackingPayload(eventType, eventAction, additionalData = {}) {
+      // Enhanced geolocation data
+      const geo = window.CF_GEO || {
+        country: 'Unknown',
+        city: 'Unknown', 
+        region: 'Unknown',
+        postalCode: 'Unknown',
+        latitude: null,
+        longitude: null,
+        timezone: 'Unknown',
+        continent: 'Unknown',
+        regionCode: 'Unknown',
+        countryCode: 'Unknown'
+      };
+      
+      // Preserve user's location address from booking data
+      const userLocationAddress = typeof bookingData.location === 'string' 
+        ? bookingData.location 
+        : (bookingData.location?.address || bookingData.location?.city || '');
+      
+      return {
+        eventType: eventType,
+        eventAction: eventAction,
+        timestamp: new Date().toISOString(),
+        sessionId: bookingData.sessionId || `thanks_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        gclid: bookingData.gclid || localStorage.getItem("eek_gclid"),
+        
+        // Comprehensive location data - preserve user's address input
+        location: {
+          // User's actual address input (most important)
+          address: userLocationAddress || '',
+          city: userLocationAddress || geo.city || 'Unknown',
+          
+          // Basic location info from geo
+          country: geo.country || 'Unknown',
+          countryCode: geo.countryCode || geo.country || 'Unknown',
+          region: geo.region || 'Unknown',
+          regionCode: geo.regionCode || 'Unknown',
+          postalCode: geo.postalCode || 'Unknown',
+          continent: geo.continent || 'Unknown',
+          coordinates: {
+            latitude: geo.latitude || null,
+            longitude: geo.longitude || null,
+            accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+          },
+          timezone: geo.timezone || 'Unknown',
+          raw: geo
+        },
+        
+        // Page context
+        page: {
+          title: document.title,
+          url: window.location.href,
+          path: window.location.pathname,
+          referrer: document.referrer || null,
+          pageType: 'thanks_page'
+        },
+        
+        // Booking data
+        booking: {
+          service: bookingData.service || '',
+          serviceCode: bookingData.serviceCode || '',
+          serviceTitle: bookingData.serviceTitle || '',
+          price: bookingData.price || 0,
+          currency: bookingData.currency || 'NZD',
+          paymentStatus: 'confirmed',
+          isWinzQuote: isWinzQuote(bookingData),
+          bookingId: bookingData.sharepointId || bookingData.sessionId
+        },
+        
+        // UTM tracking
+        utm: {
+          source: bookingData.utm_source || null,
+          medium: bookingData.utm_medium || null,
+          campaign: bookingData.utm_campaign || null,
+          term: bookingData.utm_term || null,
+          content: bookingData.utm_content || null,
+          gclid: bookingData.gclid || null
+        },
+        
+        // Device info
+        device: {
+          userAgent: navigator.userAgent,
+          platform: navigator.platform || null,
+          language: navigator.language || null,
+          mobile: /Mobi|Android/i.test(navigator.userAgent),
+          screen: {
+            width: window.screen ? window.screen.width : null,
+            height: window.screen ? window.screen.height : null,
+            pixelRatio: window.devicePixelRatio || 1
+          }
+        },
+        
+        // Source tracking
+        source: 'thanks_page',
+        formVersion: '2.1',
+        
+        // Additional data
+        ...additionalData
+      };
     }
 
-    // === ENHANCED DATA RETRIEVAL ===
+    async function sendTrackingEvent(payload) {
+      try {
+        // Use unified-tracking.js instead of direct API call
+        if (window.unifiedTracking && typeof window.unifiedTracking.sendTrackingData === 'function') {
+          await window.unifiedTracking.sendTrackingData(payload.eventType || payload.eventAction, payload);
+          console.log(`📡 Thanks page tracking event sent via unified-tracking.js: ${payload.eventAction}`);
+          return true;
+        } else {
+          console.warn('⚠️ unified-tracking.js not available, skipping tracking');
+          return false;
+        }
+      } catch (error) {
+        console.error('❌ Thanks page tracking event failed:', error);
+        return false;
+      }
+    }
+
+    // sendPageViewEvent removed - unified-tracking.js automatically tracks page_view on initialization
+
+    function sendConversionEvent() {
+      const payload = buildTrackingPayload('conversion', 'payment_confirmed', {
+        conversionValue: bookingData.price || 0,
+        conversionCurrency: bookingData.currency || 'NZD',
+        serviceType: bookingData.service || 'unknown',
+        isWinzQuote: isWinzQuote(bookingData),
+        paymentMethod: 'stripe',
+        conversionPath: 'booking_to_payment'
+      });
+      
+      sendTrackingEvent(payload);
+    }
+
+    function trackInteraction(element) {
+      const trackingAction = element.dataset.track;
+      const linkUrl = element.href;
+      const linkText = element.textContent.trim();
+      
+      console.log('👆 Thanks page interaction tracked:', trackingAction);
+      
+      const payload = buildTrackingPayload('user_interaction', trackingAction, {
+        element: {
+          tag: element.tagName.toLowerCase(),
+          text: linkText,
+          href: linkUrl,
+          className: element.className
+        },
+        interactionType: element.href && element.href.startsWith('tel:') ? 'phone_call' : 
+                        element.href && element.href.startsWith('mailto:') ? 'email' : 'link_click',
+        conversionContext: 'post_payment'
+      });
+      
+      sendTrackingEvent(payload);
+    }
+
+    // === ENHANCED IDEMPOTENCY PROTECTION ===
+    class SubmissionGuard {
+      constructor() {
+        this.inFlightSubmissions = new Set();
+        this.storageKey = 'eek_paid_posted';
+        this.lockKey = 'eek_submission_lock';
+        this.lockTimeout = 30000;
+      }
+
+      generateId(canon) {
+        if (canon.sharepointId) return `sp_${canon.sharepointId}`;
+        if (canon.sessionId) return `session_${canon.sessionId}`;
+        if (canon.quoteReference) return `quote_${canon.quoteReference}`;
+        if (canon.phone && canon.bookingTime) {
+          return `phone_${canon.phone}_${new Date(canon.bookingTime).getTime()}`;
+        }
+        return `fallback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      }
+
+      hasBeenSubmitted(bookingId) {
+        try {
+          const key = `${this.storageKey}:${bookingId}`;
+          const stored = localStorage.getItem(key);
+          
+          if (!stored) return false;
+          
+          const record = JSON.parse(stored);
+          
+          if (record.status === 'sent' && record.timestamp) {
+            const submittedAt = new Date(record.timestamp);
+            const now = new Date();
+            const hoursSinceSubmission = (now - submittedAt) / (1000 * 60 * 60);
+            
+            if (hoursSinceSubmission > 24) {
+              console.log(`⚠️ Submission record is ${Math.floor(hoursSinceSubmission)} hours old - treating as stale`);
+              return false;
+            }
+            
+            console.log(`🛑 Booking ${bookingId} was already submitted at ${record.timestamp}`);
+            return true;
+          }
+          
+          return false;
+        } catch (err) {
+          console.error('Error checking submission status:', err);
+          return false;
+        }
+      }
+
+      isInProgress(bookingId) {
+        return this.inFlightSubmissions.has(bookingId);
+      }
+
+      acquireLock(bookingId) {
+        try {
+          const lockKey = `${this.lockKey}:${bookingId}`;
+          const existingLock = localStorage.getItem(lockKey);
+          
+          if (existingLock) {
+            const lockData = JSON.parse(existingLock);
+            const lockAge = Date.now() - lockData.acquiredAt;
+            
+            if (lockAge < this.lockTimeout) {
+              console.log(`🔒 Lock already held by another process (age: ${lockAge}ms)`);
+              return false;
+            }
+            
+            console.log(`⚠️ Stale lock detected (age: ${lockAge}ms) - taking over`);
+          }
+          
+          const lockData = {
+            acquiredAt: Date.now(),
+            bookingId: bookingId,
+            tabId: `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+          };
+          
+          localStorage.setItem(lockKey, JSON.stringify(lockData));
+          
+          const verification = localStorage.getItem(lockKey);
+          const verifiedData = JSON.parse(verification);
+          
+          if (verifiedData.tabId !== lockData.tabId) {
+            console.log('🔒 Lost race condition for lock');
+            return false;
+          }
+          
+          console.log('✅ Lock acquired successfully');
+          return true;
+          
+        } catch (err) {
+          console.error('Error acquiring lock:', err);
+          return true;
+        }
+      }
+
+      releaseLock(bookingId) {
+        try {
+          const lockKey = `${this.lockKey}:${bookingId}`;
+          localStorage.removeItem(lockKey);
+          console.log('🔓 Lock released');
+        } catch (err) {
+          console.error('Error releasing lock:', err);
+        }
+      }
+
+      markSubmitted(bookingId, additionalData = {}) {
+        try {
+          const key = `${this.storageKey}:${bookingId}`;
+          const record = {
+            status: 'sent',
+            timestamp: new Date().toISOString(),
+            bookingId: bookingId,
+            ...additionalData
+          };
+          
+          localStorage.setItem(key, JSON.stringify(record));
+          console.log(`✅ Booking ${bookingId} marked as submitted`);
+          
+          this.inFlightSubmissions.delete(bookingId);
+          
+        } catch (err) {
+          console.error('Error marking submission:', err);
+        }
+      }
+
+      async canSubmit(canon, forceResend = false) {
+        const bookingId = this.generateId(canon);
+        
+        console.log(`🔍 Checking submission eligibility for: ${bookingId}`);
+        
+        if (forceResend) {
+          console.log('⚡ Force resend enabled - bypassing all checks');
+          return { allowed: true, bookingId, reason: 'force_resend' };
+        }
+        
+        if (this.hasBeenSubmitted(bookingId)) {
+          return { 
+            allowed: false, 
+            bookingId, 
+            reason: 'already_submitted',
+            message: 'This booking has already been submitted successfully'
+          };
+        }
+        
+        if (this.isInProgress(bookingId)) {
+          return { 
+            allowed: false, 
+            bookingId, 
+            reason: 'in_progress',
+            message: 'Submission already in progress'
+          };
+        }
+        
+        if (!this.acquireLock(bookingId)) {
+          return { 
+            allowed: false, 
+            bookingId, 
+            reason: 'lock_failed',
+            message: 'Another tab/window is currently submitting this booking'
+          };
+        }
+        
+        this.inFlightSubmissions.add(bookingId);
+        
+        return { allowed: true, bookingId, reason: 'approved' };
+      }
+
+      cleanup(bookingId, success = false) {
+        this.inFlightSubmissions.delete(bookingId);
+        this.releaseLock(bookingId);
+        
+        if (!success) {
+          console.log(`🧹 Cleaned up failed submission for ${bookingId}`);
+        }
+      }
+    }
+
+    const submissionGuard = new SubmissionGuard();
+
+    // === HELPERS ===
+    function coalesce(...vals){ for (const v of vals){ if (v !== undefined && v !== null && v !== '') return v; } return undefined; }
+    function sanitizePhone(v){ return (v||'').replace(/\D/g,''); }
+    function cleanText(v){ return (v||'').toString().trim().replace(/\s+/g,' '); }
+
+    function toCanonical(raw){
+      const canonical = {};
+      canonical.sessionId   = coalesce(raw.sessionId, raw.sid, `session_${Date.now()}`);
+      
+      const gclid = coalesce(raw.gclid, localStorage.getItem("eek_gclid"));
+      canonical.source = gclid ? 'gclid' : 'organic';
+      
+      canonical.formVersion = coalesce(raw.formVersion, '2.0');
+
+      canonical.name   = cleanText(coalesce(raw.name, raw.customerName, raw.customerData?.name));
+      canonical.phone  = sanitizePhone(coalesce(raw.phone, raw.customerPhone, raw.customerData?.phone));
+      canonical.email  = cleanText(coalesce(raw.email, raw.customerEmail, raw.customerData?.email));
+      canonical.location = cleanText(coalesce(raw.location, raw.customerData?.location));
+
+      canonical.rego   = cleanText(coalesce(raw.rego, raw.vehicleRego, raw.customerData?.vehicleRego));
+      canonical.year   = cleanText(coalesce(raw.year, raw.vehicleYear, raw.customerData?.vehicleYear));
+      canonical.make   = cleanText(coalesce(raw.make, raw.vehicleMake, raw.customerData?.vehicleMake));
+      canonical.model  = cleanText(coalesce(raw.model, raw.vehicleModel, raw.customerData?.vehicleModel));
+      canonical.vehicleType  = cleanText(coalesce(raw.vehicleType, raw.customerData?.vehicleType));
+      canonical.vehicleAddon = coalesce(raw.vehicleAddon, raw.customerData?.vehicleTypeAddon, '');
+
+      canonical.batteryVoltage = cleanText(coalesce(raw.batteryVoltage, raw.selectedVoltage, raw.customerData?.batteryVoltage));
+      canonical.tyreSize = cleanText(coalesce(raw.tyreSize, raw.customerData?.tyreSize));
+
+      canonical.sellerName  = cleanText(coalesce(raw.sellerName, raw.customerData?.sellerName));
+      canonical.sellerPhone = sanitizePhone(coalesce(raw.sellerPhone, raw.customerData?.sellerPhone));
+
+      canonical.service      = cleanText(coalesce(raw.service, raw.serviceType, raw.customerData?.service));
+      canonical.serviceCode  = cleanText(coalesce(raw.serviceCode, raw.customerData?.serviceCode));
+      canonical.serviceTitle = cleanText(coalesce(raw.serviceTitle, raw.customerData?.serviceTitle, (raw.service === 'inspection' ? 'Pre Purchase Vehicle Inspection' : 'Mobile Mechanic Service')));
+
+      canonical.scheduledDate   = cleanText(coalesce(raw.scheduledDate));
+      canonical.scheduledDateNZ = cleanText(coalesce(raw.scheduledDateNZ));
+      canonical.timeWindow      = cleanText(coalesce(raw.timeWindow, raw.selectedTime));
+      canonical.urgencyLevel    = cleanText(coalesce(raw.urgencyLevel, raw.selectedUrgency));
+
+      canonical.price   = String(coalesce(raw.price, raw.finalPrice, raw.calculatedPrice, raw.customerData?.price, ''));
+      canonical.details = cleanText(coalesce(raw.details, raw.description, raw.customerData?.details));
+
+      canonical.emergencyType  = cleanText(raw.emergencyType);
+      canonical.quoteReference = cleanText(raw.quoteReference);
+      canonical.isWinz         = coalesce(raw.isWinz, (raw.serviceCode === 'WINZ'), (raw.service || '').toLowerCase() === 'winz') ? 'true' : 'false';
+
+      canonical.bookingTime    = coalesce(raw.bookingTime, new Date().toISOString());
+
+      canonical.gclid = coalesce(raw.gclid, localStorage.getItem("eek_gclid"));
+      canonical.utm_source = coalesce(raw.utm_source, localStorage.getItem("eek_utm_source"));
+      canonical.utm_medium = coalesce(raw.utm_medium, localStorage.getItem("eek_utm_medium"));
+      canonical.utm_campaign = coalesce(raw.utm_campaign, localStorage.getItem("eek_utm_campaign"));
+      canonical.utm_term = coalesce(raw.utm_term, localStorage.getItem("eek_utm_term"));
+      canonical.utm_content = coalesce(raw.utm_content, localStorage.getItem("eek_utm_content"));
+
+      canonical.sharepointId   = cleanText(raw.sharepointId);
+      
+      // Capture token from URL for token-based payments
+      const urlParams = new URLSearchParams(window.location.search);
+      canonical.token = urlParams.get('token') || raw.token || null;
+      
+      canonical._raw = raw;
+      return canonical;
+    }
+
+    function isWinzQuote(data){
+      return [
+        (data.service || '').toLowerCase() === 'winz',
+        (data.serviceCode || '').toUpperCase() === 'WINZ',
+        !!data.emergencyType,
+        !!(data.quoteReference && data.quoteReference.toUpperCase().includes('WINZ')),
+        (data.serviceTitle || '').toLowerCase().includes('winz'),
+        String(data.isWinz) === 'true'
+      ].some(Boolean);
+    }
+
     async function fetchBookingDataFromSharePoint(bookingId){
       console.log('🔍 Fetching booking from SharePoint…', bookingId);
       
@@ -337,76 +893,6 @@
         console.error('❌ SharePoint fetch error:', err);
         return null;
       }
-    }
-
-    // Enhanced data retrieval with multiple fallback sources
-    function getComprehensiveBookingData(){
-      console.log('📊 Building comprehensive booking data from all sources...');
-      const data = {};
-      
-      // 1. URL Parameters (highest priority for explicit data)
-      const params = new URLSearchParams(window.location.search);
-      console.log('🔗 URL parameters found:', params.toString());
-      
-      // Handle encoded data blob
-      const encoded = params.get('d');
-      if (encoded){
-        try{ 
-          const decoded = JSON.parse(atob(encoded));
-          Object.assign(data, decoded);
-          console.log('✅ Decoded URL data blob');
-        }catch(e){ 
-          console.warn('⚠️ Legacy blob decode failed', e); 
-        }
-      }
-      
-      // Individual URL parameters
-      for (const [k,v] of params){
-        if (k !== 'd' && k !== 'bookingId'){ 
-          data[k] = decodeURIComponent(v);
-        }
-      }
-      
-      // 2. Session Storage (booking form data)
-      try{ 
-        const ss = sessionStorage.getItem('eekBookingData'); 
-        if (ss) {
-          const sessionData = JSON.parse(ss);
-          Object.assign(data, sessionData);
-          console.log('✅ Session storage data merged');
-        }
-      }catch(e){
-        console.warn('⚠️ Session storage read failed', e);
-      }
-      
-      // 3. Local Storage (persistent booking data)
-      try{ 
-        const ls = localStorage.getItem('eekBookingData'); 
-        if (ls) {
-          const localData = JSON.parse(ls);
-          Object.assign(data, localData);
-          console.log('✅ Local storage data merged');
-        }
-      }catch(e){
-        console.warn('⚠️ Local storage read failed', e);
-      }
-      
-      // 4. Google Tracking Data (GCLID and attribution)
-      const trackingData = getGoogleTrackingData();
-      if (trackingData) {
-        Object.assign(data, trackingData);
-        console.log('✅ Google tracking data merged');
-      }
-      
-      // 5. Session ID continuity
-      const sessionId = getSessionId();
-      if (sessionId) {
-        data.sessionId = sessionId;
-        console.log('✅ Session ID preserved:', sessionId);
-      }
-      
-      console.log('📋 Final comprehensive data object:', data);
-      return data;
     }
 
     // Get Google tracking data from localStorage
@@ -455,6 +941,47 @@
       return Object.keys(trackingData).length > 0 ? trackingData : null;
     }
 
+    // === HELPER FUNCTION - Normalize values for Power Automate ===
+    // Converts null/undefined to empty strings so Power Automate Excel trim() works
+    // Previously returned null, but Power Automate trim() requires strings
+    function normalizeValue(value) {
+      // If value is undefined, null, or empty string, return empty string
+      // Power Automate trim() function requires strings, not null
+      if (value === undefined || value === null || value === '') {
+        return '';
+      }
+      // If it's a string with only whitespace, return empty string
+      if (typeof value === 'string' && value.trim() === '') {
+        return '';
+      }
+      // If it's already a string, return as-is
+      if (typeof value === 'string') {
+        return value;
+      }
+      // For other types (numbers, booleans), convert to string
+      // This ensures Power Automate Excel actions can trim() all values
+      return String(value);
+    }
+
+    // === HELPER FUNCTION - Normalize entire object ===
+    function normalizeObject(obj) {
+      if (!obj || typeof obj !== 'object') return obj;
+      
+      const normalized = {};
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          const value = obj[key];
+          if (value && typeof value === 'object' && !Array.isArray(value)) {
+            // Recursively normalize nested objects
+            normalized[key] = normalizeObject(value);
+          } else {
+            normalized[key] = normalizeValue(value);
+          }
+        }
+      }
+      return normalized;
+    }
+
     // Get session ID with fallback creation
     function getSessionId(){
       let sessionId = localStorage.getItem("eek_session_id");
@@ -480,6 +1007,581 @@
       return sessionId;
     }
 
+    function getComprehensiveBookingData(){
+      console.log('📊 Building comprehensive booking data from all sources...');
+      const data = {};
+      
+      const params = new URLSearchParams(window.location.search);
+      console.log('🔗 URL parameters found:', params.toString());
+      
+      const encoded = params.get('d');
+      if (encoded){
+        try{ 
+          const decoded = JSON.parse(atob(encoded));
+          Object.assign(data, decoded);
+          console.log('✅ Decoded URL data blob');
+        }catch(e){ 
+          console.warn('⚠️ Legacy blob decode failed', e); 
+        }
+      }
+      
+      for (const [k,v] of params){
+        if (k !== 'd' && k !== 'bookingId'){ 
+          // Map common parameter name variations
+          const mappedKey = k === 'session_id' ? 'sessionId' : k;
+          data[mappedKey] = normalizeValue(decodeURIComponent(v));
+        }
+      }
+      
+      try{ 
+        const ss = sessionStorage.getItem('eekBookingData'); 
+        if (ss) {
+          const sessionData = JSON.parse(ss);
+          Object.assign(data, sessionData);
+          console.log('✅ Session storage data merged');
+        }
+      }catch(e){
+        console.warn('⚠️ Session storage read failed', e);
+      }
+      
+      try{ 
+        const ls = localStorage.getItem('eekBookingData'); 
+        if (ls) {
+          const localData = JSON.parse(ls);
+          Object.assign(data, localData);
+          console.log('✅ Local storage data merged');
+        }
+      }catch(e){
+        console.warn('⚠️ Local storage read failed', e);
+      }
+      
+      const trackingData = getGoogleTrackingData();
+      if (trackingData) {
+        Object.assign(data, trackingData);
+        console.log('✅ Google tracking data merged');
+      }
+      
+      const sessionId = getSessionId();
+      if (sessionId) {
+        data.sessionId = sessionId;
+        console.log('✅ Session ID preserved:', sessionId);
+      }
+      
+      // Get comprehensive tracking data from unified tracking system
+      const enhancedTrackingData = window.unifiedTracking ? window.unifiedTracking.getTrackingData() : {};
+      const geo = window.CF_GEO || {
+        country: 'Unknown',
+        city: 'Unknown', 
+        region: 'Unknown',
+        postalCode: 'Unknown',
+        latitude: null,
+        longitude: null,
+        timezone: 'Unknown',
+        continent: 'Unknown',
+        regionCode: 'Unknown',
+        countryCode: 'Unknown'
+      };
+      
+      // Add all comprehensive data points expected by Power Automate template
+      data.bookingStatus = 'PAID';
+      data.eventType = 'payment_confirmed';
+      
+      // Page source data
+      data.pageSource = {
+        type: enhancedTrackingData.pageSource?.type || 'direct',
+        detail: enhancedTrackingData.pageSource?.detail || 'Direct visit',
+        referrer: enhancedTrackingData.pageSource?.referrer || '',
+        utm: {
+          source: enhancedTrackingData.pageSource?.utm?.source || '',
+          medium: enhancedTrackingData.pageSource?.utm?.medium || '',
+          campaign: enhancedTrackingData.pageSource?.utm?.campaign || '',
+          term: enhancedTrackingData.pageSource?.utm?.term || '',
+          content: enhancedTrackingData.pageSource?.utm?.content || ''
+        },
+        clickIds: {
+          gclid: enhancedTrackingData.pageSource?.clickIds?.gclid || '',
+          fbclid: enhancedTrackingData.pageSource?.clickIds?.fbclid || '',
+          msclkid: enhancedTrackingData.pageSource?.clickIds?.msclkid || ''
+        }
+      };
+      
+      // Device and engagement data
+      data.device = {
+        userAgent: enhancedTrackingData.userAgent || navigator.userAgent || '',
+        screenResolution: enhancedTrackingData.screenResolution || `${screen.width}x${screen.height}`,
+        viewportSize: enhancedTrackingData.viewportSize || `${window.innerWidth}x${window.innerHeight}`,
+        language: enhancedTrackingData.language || navigator.language || '',
+        timezone: enhancedTrackingData.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+      };
+      
+      data.engagement = {
+        timeOnPage: enhancedTrackingData.engagement?.timeOnPage || 0,
+        scrollDepth: enhancedTrackingData.engagement?.scrollDepth || 0,
+        clicks: enhancedTrackingData.engagement?.clicks || 0,
+        formInteractions: enhancedTrackingData.engagement?.formInteractions || 0,
+        buttonClicks: enhancedTrackingData.engagement?.buttonClicks || 0
+      };
+      
+      // User journey data
+      data.userJourney = {
+        pageHistory: enhancedTrackingData.userJourney?.pageHistory || [],
+        totalPages: enhancedTrackingData.userJourney?.totalPages || 1,
+        sessionDuration: enhancedTrackingData.userJourney?.sessionDuration || 0,
+        entryPage: enhancedTrackingData.userJourney?.entryPage || window.location.href,
+        previousPage: enhancedTrackingData.userJourney?.previousPage || ''
+      };
+      
+      // Page data
+      data.pageUrl = enhancedTrackingData.pageUrl || window.location.href;
+      data.pagePath = enhancedTrackingData.pagePath || window.location.pathname;
+      data.pageTitle = enhancedTrackingData.pageTitle || document.title;
+      data.pageType = enhancedTrackingData.pageType || 'thanks';
+      
+      // Enhanced geolocation data - preserve user's address input
+      const userLocationAddress = typeof data.location === 'string' 
+        ? data.location 
+        : (data.location?.address || data.location?.city || '');
+      
+      data.location = {
+        // User's actual address input (most important)
+        address: userLocationAddress || '',
+        city: userLocationAddress || geo.city || 'Unknown',
+        
+        // Basic location info from geo
+        country: geo.country || 'Unknown',
+        countryCode: geo.countryCode || geo.country || 'Unknown',
+        region: geo.region || 'Unknown',
+        regionCode: geo.regionCode || 'Unknown',
+        postalCode: geo.postalCode || 'Unknown',
+        continent: geo.continent || 'Unknown',
+        
+        // Coordinates
+        coordinates: {
+          latitude: geo.latitude || null,
+          longitude: geo.longitude || null,
+          accuracy: geo.latitude && geo.longitude ? 'IP-based' : null
+        },
+        
+        // Timezone
+        timezone: geo.timezone || 'Unknown',
+        
+        // Raw CF_GEO data for debugging
+        raw: geo
+      };
+      console.log('✅ Enhanced Cloudflare geolocation data added:', data.location);
+      
+      console.log('📋 Final comprehensive data object:', data);
+      return data;
+    }
+
+    function getGoogleTrackingData(){
+      const trackingData = {};
+      
+      const gclid = localStorage.getItem("eek_gclid");
+      const gclidTimestamp = localStorage.getItem("eek_gclid_timestamp");
+      
+      if (gclid && gclidTimestamp) {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        
+        if (new Date(gclidTimestamp) > thirtyDaysAgo) {
+          trackingData.gclid = gclid;
+          trackingData.gclidTimestamp = gclidTimestamp;
+          console.log('📊 Valid GCLID found:', gclid);
+        } else {
+          console.log('⚠️ GCLID expired, removing');
+          localStorage.removeItem("eek_gclid");
+          localStorage.removeItem("eek_gclid_timestamp");
+        }
+      }
+      
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(param => {
+        const value = localStorage.getItem(`eek_${param}`);
+        if (value) {
+          trackingData[param] = value;
+        }
+      });
+      
+      const lastCallId = localStorage.getItem("eek_last_call_attempt_id");
+      const lastCallTimestamp = localStorage.getItem("eek_last_call_timestamp");
+      const lastCallGclid = localStorage.getItem("eek_last_gclid");
+      
+      if (lastCallId) {
+        trackingData.lastCallAttemptId = lastCallId;
+        trackingData.lastCallTimestamp = lastCallTimestamp;
+        trackingData.lastCallGclid = lastCallGclid;
+        console.log('📞 Call tracking data found');
+      }
+      
+      return Object.keys(trackingData).length > 0 ? trackingData : null;
+    }
+
+    function getSessionId(){
+      let sessionId = localStorage.getItem("eek_session_id");
+      
+      if (!sessionId) {
+        const params = new URLSearchParams(window.location.search);
+        sessionId = params.get('session_id');
+        
+        if (sessionId) {
+          localStorage.setItem("eek_session_id", sessionId);
+          console.log('🔄 Session ID restored from URL');
+        } else {
+          sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+          localStorage.setItem("eek_session_id", sessionId);
+          console.log('🆕 New session ID created');
+        }
+      } else {
+        console.log('✅ Existing session ID found');
+      }
+      
+      return sessionId;
+    }
+
+    function addDetailRow(buf, label, value){
+      if (value !== undefined && value !== null && String(value).trim() !== ''){
+        buf.push(`<div class="detail-row"><span class="detail-label">${label}:</span><span class="detail-value">${value}</span></div>`);
+      }
+    }
+
+    function displayBookingDetails(data){
+      const container = document.getElementById('bookingDetails');
+      const content = document.getElementById('detailsContent');
+      const rows = [];
+
+      addDetailRow(rows, 'Name', data.name);
+      addDetailRow(rows, 'Phone', data.phone);
+      addDetailRow(rows, 'Email', data.email);
+
+      addDetailRow(rows, 'Service', data.serviceTitle || data.service);
+      addDetailRow(rows, 'Service Code', data.serviceCode);
+      // Extract location string - handle both string and object cases
+      const locationDisplay = typeof data.location === 'string' 
+        ? data.location 
+        : (data.location?.address || data.location?.city || (typeof data.location === 'object' ? '' : data.location) || '');
+      addDetailRow(rows, 'Location', locationDisplay);
+
+      addDetailRow(rows, 'Registration', data.rego);
+      const vehicleLine = [data.year, data.make, data.model].filter(Boolean).join(' ');
+      addDetailRow(rows, 'Vehicle', vehicleLine);
+      addDetailRow(rows, 'Battery Type', data.batteryVoltage);
+      addDetailRow(rows, 'Vehicle Type', data.vehicleType);
+      addDetailRow(rows, 'Vehicle Addon', data.vehicleAddon ? `$${data.vehicleAddon}` : '');
+
+      if (isWinzQuote(data)){
+        addDetailRow(rows, 'Emergency Type', data.emergencyType);
+        addDetailRow(rows, 'Quote Reference', data.quoteReference);
+        addDetailRow(rows, 'Quote Amount', data.price ? `$${data.price}` : '');
+      }
+
+      addDetailRow(rows, 'Seller Name', data.sellerName);
+      addDetailRow(rows, 'Seller Phone', data.sellerPhone);
+
+      addDetailRow(rows, 'Scheduled Date', data.scheduledDate);
+      addDetailRow(rows, 'Time Window', data.timeWindow);
+      addDetailRow(rows, 'Urgency Level', data.urgencyLevel);
+
+      if (!isWinzQuote(data)){
+        addDetailRow(rows, 'Amount Paid', data.price ? `$${data.price}` : '');
+      }
+
+      addDetailRow(rows, 'Details', data.details);
+      addDetailRow(rows, 'Booking Time', data.bookingTime);
+
+      addDetailRow(rows, 'GCLID', data.gclid);
+      addDetailRow(rows, 'UTM Source', data.utm_source);
+      addDetailRow(rows, 'UTM Medium', data.utm_medium);
+      addDetailRow(rows, 'UTM Campaign', data.utm_campaign);
+
+      addDetailRow(rows, 'Session ID', data.sessionId);
+
+      content.innerHTML = rows.join('');
+      container.style.display = rows.length ? 'block' : 'none';
+    }
+
+    function displayContent(canon){
+      const winz = isWinzQuote(canon);
+      const successCard = document.getElementById('successCard');
+      const successIcon = document.getElementById('successIcon');
+      const mainTitle = document.getElementById('mainTitle');
+      const mainSubtitle = document.getElementById('mainSubtitle');
+      const winzSection = document.getElementById('winzSection');
+      const paymentSection = document.getElementById('paymentSection');
+      const bookingDetails = document.getElementById('bookingDetails');
+
+      displayBookingDetails(canon);
+
+      if (winz){
+        successCard.classList.add('winz');
+        successIcon.classList.add('winz');
+        successIcon.textContent = '📋';
+        mainTitle.classList.add('winz');
+        mainTitle.textContent = 'WINZ Quote Generated!';
+        mainSubtitle.textContent = 'Your quote has been sent to your email and phone';
+        bookingDetails.classList.add('winz');
+        winzSection.style.display = 'block';
+        paymentSection.style.display = 'none';
+        document.title = 'WINZ Quote Generated - Eek Mechanical';
+      }else{
+        winzSection.style.display = 'none';
+        paymentSection.style.display = 'block';
+        if (canon.serviceTitle){
+          document.getElementById('serviceTypeText').textContent = `Your ${canon.serviceTitle} is now being processed`;
+        }
+      }
+    }
+
+    // === INDICATOR HELPER ===
+    function showIndicator(type, message, duration = 5000) {
+      const indicator = document.getElementById('processingIndicator');
+      if (!indicator) return;
+      
+      const styles = {
+        success: { background: '#d4edda', color: '#155724', border: '2px solid #c3e6cb' },
+        error: { background: '#f8d7da', color: '#721c24', border: '2px solid #f5c6cb' },
+        warning: { background: '#fff3cd', color: '#856404', border: '2px solid #ffeaa7' },
+        info: { background: '#d1ecf1', color: '#0c5460', border: '2px solid #bee5eb' },
+        loading: { background: '#e7f3ff', color: '#004085', border: '2px solid #b8daff' }
+      };
+      
+      const style = styles[type] || styles.info;
+      
+      indicator.style.display = 'block';
+      indicator.style.background = style.background;
+      indicator.style.color = style.color;
+      indicator.style.border = style.border;
+      indicator.style.padding = '15px 20px';
+      indicator.style.borderRadius = '8px';
+      indicator.style.marginTop = '20px';
+      indicator.textContent = message;
+      
+      if (duration > 0) {
+        setTimeout(() => {
+          indicator.style.display = 'none';
+        }, duration);
+      }
+    }
+
+    // === UPDATED SUBMISSION FUNCTION ===
+    async function sendToPaymentConfirmedFlow(canon) {
+      if (isWinzQuote(canon)) {
+        console.log('🛑 Skipping payment-confirmed webhook (WINZ quote).');
+        return { success: true, skipped: true, reason: 'winz_quote' };
+      }
+
+      if (!canon.name || !canon.phone) {
+        console.log('🛑 Missing required data (name/phone) — not posting to webhook.');
+        showIndicator('error', '⚠️ Missing required booking information');
+        return { success: false, reason: 'missing_data' };
+      }
+
+      const params = new URLSearchParams(window.location.search);
+      const forceResend = params.get('resend') === '1';
+
+      const guardCheck = await submissionGuard.canSubmit(canon, forceResend);
+      
+      if (!guardCheck.allowed) {
+        console.log(`🛑 Submission blocked: ${guardCheck.reason}`);
+        
+        if (guardCheck.reason === 'already_submitted') {
+          showIndicator('info', '✓ This booking was already confirmed (no duplicate sent)', 8000);
+        } else if (guardCheck.reason === 'in_progress') {
+          showIndicator('info', '⏳ Submission in progress...', 3000);
+        } else if (guardCheck.reason === 'lock_failed') {
+          showIndicator('warning', '⚠️ Another window is processing this booking', 5000);
+        }
+        
+        return { success: false, reason: guardCheck.reason, bookingId: guardCheck.bookingId };
+      }
+
+      const bookingId = guardCheck.bookingId;
+      console.log(`✅ Proceeding with submission for ${bookingId}`);
+
+      // Use PaymentUtils to build payload (uses data-repository.js as SSOT)
+      const paymentUtils = new PaymentUtils();
+      const payload = paymentUtils.buildPaymentConfirmedPayload(canon, bookingId);
+
+      const maxRetries = 3;
+      let lastError = null;
+
+      // Verify location is a string (for Excel compatibility)
+      if (typeof payload.location !== 'string') {
+        console.warn('⚠️ Location is not a string, converting:', typeof payload.location, payload.location);
+        payload.location = String(payload.location || '');
+      }
+      console.log('📤 Payload location:', payload.location);
+
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          console.log(`📤 Submission attempt ${attempt}/${maxRetries} for ${bookingId}`);
+          
+          showIndicator('loading', `⏳ Sending booking confirmation... (attempt ${attempt})`, 0);
+
+        const res = await fetch(PAYMENT_CONFIRMED_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...payload, submissionAttempt: attempt })
+          });
+
+          if (res.ok) {
+            console.log(`✅ Payment confirmation sent successfully on attempt ${attempt}`);
+            
+            submissionGuard.markSubmitted(bookingId, {
+              attempt: attempt,
+              timestamp: new Date().toISOString()
+            });
+            
+            showIndicator('success', '✅ Booking confirmed successfully!', 5000);
+            
+            return { success: true, bookingId, attempt };
+            
+          } else {
+            const errorText = await res.text();
+            lastError = `HTTP ${res.status}: ${errorText}`;
+            console.error(`❌ Attempt ${attempt} failed:`, lastError);
+            
+            if (res.status >= 400 && res.status < 500) {
+              console.log('🛑 Client error - not retrying');
+              break;
+            }
+            
+            if (attempt < maxRetries) {
+              const waitTime = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+              console.log(`⏳ Waiting ${waitTime}ms before retry...`);
+              await new Promise(resolve => setTimeout(resolve, waitTime));
+            }
+          }
+          
+        } catch (err) {
+          lastError = err.message;
+          console.error(`❌ Attempt ${attempt} error:`, err);
+          
+          if (attempt < maxRetries) {
+            const waitTime = Math.min(1000 * Math.pow(2, attempt - 1), 5000);
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+          }
+        }
+      }
+
+      console.error('❌ All submission attempts failed:', lastError);
+      submissionGuard.cleanup(bookingId, false);
+      
+      showIndicator('error', 
+        '⚠️ Unable to confirm booking automatically. Please call us at 0800 769 000 to verify your booking.', 
+        15000
+      );
+      
+      return { success: false, bookingId, error: lastError };
+    }
+
+    function trackCall(source){
+      if (typeof gtag !== 'undefined'){
+        gtag('event','phone_call',{event_category:'Contact', event_label:source, value:1});
+      }
+      if (typeof rdt !== 'undefined'){
+        rdt('track','Lead',{customEventName:'Post_Payment_Call', eventSource:source});
+      }
+    }
+
+    // Google Ads Purchase Conversion Tracking
+    function trackPurchaseConversion(canon) {
+      if (typeof gtag === 'undefined') {
+        console.warn('⚠️ gtag not available - Google Ads conversion not tracked');
+        return;
+      }
+
+      // Get price from booking data - handle both initial payment and token-based payments
+      const price = parseFloat(canon.price) || 0;
+      
+      // Generate unique transaction ID - use sessionId if available, otherwise create one
+      // For token-based payments, we want a unique ID per payment
+      const baseTransactionId = canon.sessionId || canon.quoteReference || `eek_${Date.now()}`;
+      const transactionId = canon.token ? `${baseTransactionId}_token_${canon.token.substring(0, 8)}` : baseTransactionId;
+      
+      // Only track if there's a valid price
+      if (price > 0) {
+        gtag('event', 'conversion', {
+          'send_to': 'AW-17084465163/VkFHCNfslMAbEIuAwdI_',
+          'value': price,
+          'currency': 'NZD',
+          'transaction_id': transactionId
+        });
+        
+        console.log('✅ Google Ads purchase conversion tracked:', {
+          value: price,
+          currency: 'NZD',
+          transaction_id: transactionId,
+          payment_type: canon.token ? 'token_payment' : 'initial_payment'
+        });
+      } else {
+        console.log('⚠️ No price found - conversion not tracked');
+      }
+    }
+
+    function trackConversion(canon){
+      const isWinz = isWinzQuote(canon);
+      const price = parseFloat(canon.price) || 0;
+      
+      const conversionData = {
+        gclid: normalizeValue(canon.gclid),
+        session_id: canon.sessionId,
+        utm_source: canon.utm_source,
+        utm_medium: canon.utm_medium,
+        utm_campaign: canon.utm_campaign
+      };
+      
+      if (typeof gtag !== 'undefined'){
+        if (isWinz){
+          gtag('event','generate_lead',{
+            currency:'NZD', 
+            value: price || 299, 
+            lead_source:'WINZ Quote', 
+            service_type: canon.emergencyType || 'unknown',
+            gclid: normalizeValue(canon.gclid),
+            session_id: canon.sessionId
+          });
+        }else if (price > 0){
+          // Google Analytics purchase event
+          gtag('event','purchase',{
+            transaction_id: canon.sessionId || String(Date.now()), 
+            value: price, 
+            currency:'NZD', 
+            items:[{ 
+              item_name: canon.serviceTitle || 'Mobile Mechanic Service', 
+              price, 
+              quantity:1, 
+              item_category: canon.service || 'service' 
+            }],
+            gclid: normalizeValue(canon.gclid),
+            session_id: canon.sessionId
+          });
+          
+          // Google Ads purchase conversion tracking
+          trackPurchaseConversion(canon);
+        }
+      }
+      
+      if (typeof rdt !== 'undefined'){
+        if (isWinz){
+          rdt('track','Lead',{
+            customEventName:'WINZ_Quote_Generated', 
+            currency:'NZD', 
+            value: price || 299, 
+            eventSource:'winz_quote_success',
+            gclid: canon.gclid
+          });
+        }else if (price > 0){
+          rdt('track','Purchase',{
+            customEventName:'Payment_Completed', 
+            currency:'NZD', 
+            value: price, 
+            eventSource:'thanks_page',
+            gclid: canon.gclid
+          });
+        }
+      }
+    }
+
     // Get Google tracking data from localStorage
     function addDetailRow(buf, label, value){
       if (value !== undefined && value !== null && String(value).trim() !== ''){
@@ -500,7 +1602,11 @@
       // Service
       addDetailRow(rows, 'Service', data.serviceTitle || data.service);
       addDetailRow(rows, 'Service Code', data.serviceCode);
-      addDetailRow(rows, 'Location', data.location);
+      // Extract location string - handle both string and object cases
+      const locationDisplay = typeof data.location === 'string' 
+        ? data.location 
+        : (data.location?.address || data.location?.city || (typeof data.location === 'object' ? '' : data.location) || '');
+      addDetailRow(rows, 'Location', locationDisplay);
 
       // Vehicle
       addDetailRow(rows, 'Registration', data.rego);
@@ -580,133 +1686,10 @@
       }
     }
 
-    // === INTEGRATIONS ===
-    async function sendToPaymentConfirmedFlow(canon){
-      // Only for PAID (non-WINZ)
-      if (isWinzQuote(canon)){
-        console.log('🛑 Skipping payment-confirmed webhook (WINZ quote).');
-        return;
-      }
-      // Guardrails
-      if (!canon.name || !canon.phone){
-        console.log('🛑 Missing name/phone — not posting to payment-confirmed webhook.');
-        return;
-      }
-
-      const id = idKeyFor(canon);
-      const params = new URLSearchParams(window.location.search);
-      const forceResend = params.get('resend') === '1';
-
-      if (!forceResend && hasAlreadyPosted(id)){
-        console.log(`🟨 Duplicate detected for id=${id}. Skipping webhook post.`);
-        // Show subtle indicator so support knows it was previously sent
-        const indicator = document.getElementById('processingIndicator');
-        indicator.style.display = 'block';
-        indicator.textContent = 'ℹ Booking was already sent earlier (not re-posted)';
-        setTimeout(()=> indicator.style.display='none', 5000);
-        return;
-      }
-
-      const payload = {
-        ...canon,
-        idempotencyKey: id,                // helpful if the flow implements dedupe
-        paymentConfirmedAt: new Date().toISOString(),
-        paymentStatus: 'confirmed',
-        pageLoadedAt: new Date().toISOString()
-      };
-
-      console.log('📤 Posting to Payment Confirmed webhook:', payload);
-      try{
-        const res = await fetch(PAYMENT_CONFIRMED_WEBHOOK_URL, {
-          method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
-        });
-        if (res.ok){
-          console.log('✅ Payment confirmation sent.');
-          markPosted(id);
-          const indicator = document.getElementById('processingIndicator');
-          indicator.style.display = 'block';
-          indicator.textContent = '✅ Booking data sent successfully';
-          setTimeout(()=> indicator.style.display='none', 5000);
-        }else{
-          console.error('❌ Payment confirmation failed:', res.status, await res.text());
-        }
-      }catch(err){
-        console.error('❌ Payment confirmation error:', err);
-      }
-    }
-
-    function trackCall(source){
-      if (typeof gtag !== 'undefined'){
-        gtag('event','phone_call',{event_category:'Contact', event_label:source, value:1});
-      }
-      if (typeof rdt !== 'undefined'){
-        rdt('track','Lead',{customEventName:'Post_Payment_Call', eventSource:source});
-      }
-    }
-
-    function trackConversion(canon){
-      const isWinz = isWinzQuote(canon);
-      const price = parseFloat(canon.price) || 0;
-      
-      // Enhanced conversion tracking with GCLID
-      const conversionData = {
-        gclid: canon.gclid,
-        session_id: canon.sessionId,
-        utm_source: canon.utm_source,
-        utm_medium: canon.utm_medium,
-        utm_campaign: canon.utm_campaign
-      };
-      
-      if (typeof gtag !== 'undefined'){
-        if (isWinz){
-          gtag('event','generate_lead',{
-            currency:'NZD', 
-            value: price || 299, 
-            lead_source:'WINZ Quote', 
-            service_type: canon.emergencyType || 'unknown',
-            gclid: canon.gclid,
-            session_id: canon.sessionId
-          });
-        }else if (price > 0){
-          gtag('event','purchase',{
-            transaction_id: canon.sessionId || String(Date.now()), 
-            value: price, 
-            currency:'NZD', 
-            items:[{ 
-              item_name: canon.serviceTitle || 'Mobile Mechanic Service', 
-              price, 
-              quantity:1, 
-              item_category: canon.service || 'service' 
-            }],
-            gclid: canon.gclid,
-            session_id: canon.sessionId
-          });
-        }
-      }
-      
-      if (typeof rdt !== 'undefined'){
-        if (isWinz){
-          rdt('track','Lead',{
-            customEventName:'WINZ_Quote_Generated', 
-            currency:'NZD', 
-            value: price || 299, 
-            eventSource:'winz_quote_success',
-            gclid: canon.gclid
-          });
-        }else if (price > 0){
-          rdt('track','Purchase',{
-            customEventName:'Payment_Completed', 
-            currency:'NZD', 
-            value: price, 
-            eventSource:'thanks_page',
-            gclid: canon.gclid
-          });
-        }
-      }
-    }
-
     // === BOOTSTRAP ===
     window.addEventListener('load', async () => {
+      console.log('🚀 === THANKS PAGE INITIALIZED (Protected) === 🚀');
+      
       const params = new URLSearchParams(window.location.search);
       const bookingId = params.get('bookingId');
 
@@ -717,19 +1700,282 @@
         bookingData = getComprehensiveBookingData();
       }
 
-      // Canonicalize once
       bookingData = toCanonical(bookingData);
       console.log('✅ Canonical booking data:', bookingData);
+      console.log('🔍 DEBUG - Raw data before canonicalization:', bookingData._raw || 'No _raw field');
+      console.log('🔍 DEBUG - Name fields:', {
+        'raw.name': bookingData._raw?.name,
+        'raw.customerName': bookingData._raw?.customerName, 
+        'raw.customerData.name': bookingData._raw?.customerData?.name,
+        'canonical.name': bookingData.name
+      });
+      console.log('🔍 DEBUG - Phone fields:', {
+        'raw.phone': bookingData._raw?.phone,
+        'raw.customerPhone': bookingData._raw?.customerPhone,
+        'raw.customerData.phone': bookingData._raw?.customerData?.phone,
+        'canonical.phone': bookingData.phone
+      });
+      console.log('🔍 DEBUG - Email fields:', {
+        'raw.email': bookingData._raw?.email,
+        'raw.customerEmail': bookingData._raw?.customerEmail,
+        'raw.customerData.email': bookingData._raw?.customerData?.email,
+        'canonical.email': bookingData.email
+      });
+      console.log('🔍 DEBUG - Service fields:', {
+        'raw.service': bookingData._raw?.service,
+        'raw.customerData.service': bookingData._raw?.customerData?.service,
+        'canonical.service': bookingData.service
+      });
 
-      // Render
       displayContent(bookingData);
 
-      // Integrations
-      await sendToPaymentConfirmedFlow(bookingData);
-      trackConversion(bookingData);
+      // sendPageViewEvent() removed - unified-tracking.js automatically tracks page_view on initialization
 
-      // Store for quick debugging
-      try { sessionStorage.setItem('lastThanksPageData', JSON.stringify(bookingData)); } catch {}
+      // Check if submission should be skipped (e.g., from pageshow handler for cached page)
+      if (window.skipSubmission) {
+        console.log('🛑 Submission skipped (page restored from cache or already submitted)');
+        window.skipSubmission = false; // Reset flag
+        return;
+      }
+
+      const submissionResult = await sendToPaymentConfirmedFlow(bookingData);
+      
+      if (submissionResult.success) {
+        console.log('✅ Submission completed successfully');
+        // Send conversion tracking event
+        sendConversionEvent();
+      } else if (submissionResult.skipped) {
+        console.log('ℹ️ Submission skipped:', submissionResult.reason);
+      } else {
+        console.error('❌ Submission failed:', submissionResult.reason);
+      }
+
+      if (!submissionResult.reason || submissionResult.reason === 'force_resend') {
+      trackConversion(bookingData);
+      }
+
+      try {
+        sessionStorage.setItem('lastThanksPageData', JSON.stringify({
+          bookingData,
+          submissionResult,
+          timestamp: new Date().toISOString()
+        }));
+      } catch {}
+    });
+
+    // === PREVENT PAGE RELOAD SPAM ===
+    window.addEventListener('beforeunload', () => {
+      sessionStorage.setItem('eek_page_was_unloaded', 'true');
+    });
+
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted || sessionStorage.getItem('eek_page_was_unloaded') === 'true') {
+        console.log('⚠️ Page was restored from cache - checking submission status');
+        sessionStorage.removeItem('eek_page_was_unloaded');
+        
+        // Check if this booking was already submitted
+        const bookingData = getComprehensiveBookingData();
+        const canon = toCanonical(bookingData);
+        const bookingId = submissionGuard.generateId(canon);
+        
+        if (submissionGuard.hasBeenSubmitted(bookingId)) {
+          console.log('🛑 Booking already submitted - preventing re-submission');
+          showIndicator('info', '✓ Your booking has already been confirmed (no duplicate sent)', 8000);
+          // Prevent the load event from submitting
+          window.skipSubmission = true;
+        }
+      }
+    });
+
+    // === SERVICE MODAL FUNCTIONS ===
+    function openServiceModal() {
+      const modal = document.getElementById('serviceModal');
+      if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeServiceModal() {
+      const modal = document.getElementById('serviceModal');
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    }
+
+    function selectService(serviceType) {
+      if (window.trackingManager) {
+        window.trackingManager.trackServiceSelection(serviceType);
+      }
+      
+      const serviceNames = {
+        'emergency_breakdown': 'Emergency Breakdown',
+        'battery_jumpstart': 'Dead Battery',
+        'wrong_fuel': 'Wrong Fuel Emergency',
+        'pre_purchase': 'Pre-Purchase Inspection'
+      };
+      
+      const serviceName = serviceNames[serviceType] || 'Service';
+      
+      let phoneData;
+      if (window.phoneManager && typeof window.phoneManager.getModalPhoneNumber === 'function') {
+        phoneData = window.phoneManager.getModalPhoneNumber();
+      } else if (window.unifiedTracking && typeof window.unifiedTracking.getModalPhoneNumber === 'function') {
+        phoneData = window.unifiedTracking.getModalPhoneNumber();
+      } else {
+        phoneData = { tel: 'tel:0800769000', display: 'Call Now' };
+      }
+      const phoneHref = phoneData.tel;
+      const phoneNumber = phoneData.display;
+      
+      const modalContent = document.querySelector('.service-modal-content');
+      
+      if (phoneHref && phoneNumber) {
+        modalContent.innerHTML = `
+          <div class="service-modal-header">
+            <h3>📞 Ready to Call</h3>
+            <p>Call now for ${serviceName} service</p>
+            <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
+          </div>
+          <div class="service-modal-body">
+            <div style="text-align: center; padding: 20px;">
+              <div id="phoneNumberDisplay" style="font-size: 2em; margin-bottom: 20px; color: #ff5500; font-weight: bold; display: none;">
+                ${phoneNumber}
+              </div>
+              <p style="margin-bottom: 30px; color: #666;">
+                Our dispatch team is ready to help with your ${serviceName.toLowerCase()} request
+              </p>
+              <a href="${phoneHref}" class="cta-button" style="display: inline-block; background: #ff5500; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-size: 1.2em; font-weight: bold; margin: 10px;" onclick="showPhoneNumber()">
+                📞 Call Now
+              </a>
+              <button onclick="openServiceModal()" style="display: block; margin: 20px auto 0; background: none; border: 1px solid #ddd; padding: 10px 20px; border-radius: 6px; cursor: pointer; color: #666;">
+                ← Back to Services
+              </button>
+            </div>
+          </div>
+        `;
+      } else {
+        modalContent.innerHTML = `
+          <div class="service-modal-header">
+            <h3>📞 Service Selected</h3>
+            <p>${serviceName} service selected</p>
+            <button class="service-modal-close" onclick="closeServiceModal()">&times;</button>
+          </div>
+          <div class="service-modal-body">
+            <div style="text-align: center; padding: 20px;">
+              <p style="margin-bottom: 30px; color: #666;">
+                Please use the main call button to contact us for ${serviceName.toLowerCase()} service
+              </p>
+              <button onclick="openServiceModal()" style="display: block; margin: 20px auto 0; background: none; border: 1px solid #ddd; padding: 10px 20px; border-radius: 6px; cursor: pointer; color: #666;">
+                ← Back to Services
+              </button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function showPhoneNumber() {
+      const phoneDisplay = document.getElementById('phoneNumberDisplay');
+      if (phoneDisplay) {
+        phoneDisplay.style.display = 'block';
+      }
+    }
+
+    document.addEventListener('click', function(event) {
+      const modal = document.getElementById('serviceModal');
+      if (event.target === modal) {
+        closeServiceModal();
+      }
+    });
+
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeServiceModal();
+      }
+    });
+
+    // === DEBUG/ADMIN FUNCTIONS ===
+    window.eekDebug = {
+      checkStatus: (sessionId) => {
+        const id = sessionId || (bookingData ? submissionGuard.generateId(bookingData) : null);
+        if (!id) {
+          console.log('No booking ID available');
+          return;
+        }
+        
+        console.log('Submission Status:', {
+          id: id,
+          hasBeenSubmitted: submissionGuard.hasBeenSubmitted(id),
+          isInProgress: submissionGuard.isInProgress(id),
+          storageRecord: localStorage.getItem(`${submissionGuard.storageKey}:${id}`)
+        });
+      },
+      
+      clearSubmissionRecords: () => {
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+          if (key.startsWith('eek_paid_posted:') || key.startsWith('eek_submission_lock:')) {
+            localStorage.removeItem(key);
+            console.log('Removed:', key);
+          }
+        });
+        console.log('✅ All submission records cleared');
+      },
+      
+      forceResubmit: async () => {
+        if (!bookingData) {
+          console.error('No booking data available');
+          return;
+        }
+        
+        console.log('⚡ Forcing resubmission...');
+        const result = await sendToPaymentConfirmedFlow(bookingData);
+        console.log('Result:', result);
+      }
+    };
+
+    console.log('💡 Debug functions available: window.eekDebug.checkStatus(), window.eekDebug.clearSubmissionRecords()');
+
+    // Make tracking functions globally accessible
+    window.trackInteraction = trackInteraction;
+
+    // Add event listeners for tracking
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add click tracking to all elements with data-track attribute
+      document.querySelectorAll('[data-track]').forEach(element => {
+        element.addEventListener('click', function(e) {
+          trackInteraction(this);
+        });
+      });
+
+      // Prevent back button navigation - replace current history entry
+      // This prevents users from going back to the form after submission
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', window.location.href);
+        
+        // Listen for popstate events (back/forward button)
+        window.addEventListener('popstate', function(event) {
+          // Push the current state again to prevent back navigation
+          window.history.pushState(null, '', window.location.href);
+          // Redirect to home page
+          window.location.href = '/';
+        });
+        
+        // Push a new state to prevent back navigation
+        window.history.pushState(null, '', window.location.href);
+      }
+
+      // Auto-redirect to home page after 10 seconds
+      const redirectTimeout = setTimeout(() => {
+        window.location.href = '/';
+      }, 10000);
+
+      // Clear timeout if user navigates away manually
+      window.addEventListener('beforeunload', () => {
+        clearTimeout(redirectTimeout);
+      });
     });
   </script>
 </body>

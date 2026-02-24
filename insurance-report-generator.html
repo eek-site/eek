@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EEK Insurance Report Generator</title>
+    <!-- Data Sanitizer for cleaning data before sending to flows -->
+    <script src="/data-sanitizer.js?v=20251224.1"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes slideIn {
@@ -203,15 +205,27 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Litres Extracted</label>
-                        <input type="number" name="LITERS_EXTRACTED"
+                        <input type="number" name="LITERS_EXTRACTED" id="litersExtracted"
                             class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                             placeholder="65" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tank Capacity (L)</label>
+                        <input type="number" name="TANK_CAPACITY" id="tankCapacity" value="60"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            placeholder="60" required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Litres Refueled</label>
                         <input type="number" name="LITERS_REFUELED"
                             class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                             placeholder="70" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Contamination %</label>
+                        <input type="text" name="CONTAMINATION_PERCENT" id="contaminationPercent" readonly
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            placeholder="Calculated automatically">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Correct Fuel Type</label>
@@ -490,6 +504,12 @@
                             placeholder="125.00">
                     </div>
                     <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Parts Cost ($)</label>
+                        <input type="number" step="0.01" name="PARTS_COST"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent cost-input"
+                            placeholder="130.00">
+                    </div>
+                    <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Consumables Cost ($)</label>
                         <input type="number" step="0.01" name="CONSUMABLES_COST"
                             class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent cost-input"
@@ -552,8 +572,8 @@
             'SPARK_PLUG_CONDITION', 'SPARK_PLUG_ACTION', 'SPARK_PLUG_TECHNICAL',
             'FILTER_TECHNICAL_JUSTIFICATION', 'COMPONENTS_REPLACED', 'TECHNICAL_FINDINGS',
             'TESTING_PROCEDURE', 'INITIAL_RESPONSE', 'EMERGENCY_JUSTIFICATION', 'CORRECT_FUEL_TYPE',
-            'FUEL_PRESSURE_SPEC', 'ECU_CODES', 'LITERS_REFUELED', 'COMPONENTS_COST_BREAKDOWN',
-            'CALLOUT_COST', 'DIAGNOSTIC_COST', 'EXTRACTION_COST', 'FUEL_COST', 'LABOR_COST',
+            'FUEL_PRESSURE_SPEC', 'ECU_CODES', 'LITERS_REFUELED', 'TANK_CAPACITY', 'CONTAMINATION_PERCENT', 'COMPONENTS_COST_BREAKDOWN',
+            'PARTS_COST', 'CALLOUT_COST', 'DIAGNOSTIC_COST', 'EXTRACTION_COST', 'FUEL_COST', 'LABOR_COST',
             'CONSUMABLES_COST', 'STOTAL', 'TOTAL_COST', 'AOS', 'APAID'
         ];
 
@@ -573,7 +593,9 @@
             const base64Data = urlParams.get('data');
             
             if (!base64Data) {
-                console.log('No data parameter found in URL');
+                // No data parameter - redirect to home page
+                alert('Access denied. This form must be accessed via the EEK job management system.');
+                window.location.href = 'https://www.eek.nz';
                 return;
             }
             
@@ -601,13 +623,15 @@
                     }
                 });
                 
-                // Recalculate totals
+                // Recalculate totals and contamination
                 calculateTotals();
+                calculateContamination();
                 
                 console.log('Data loaded successfully!');
             } catch (e) {
                 console.error('Error loading data:', e);
-                alert('Error loading pre-filled data. Please fill in manually.');
+                alert('Invalid or corrupted data. Redirecting to home page.');
+                window.location.href = 'https://www.eek.nz';
             }
         }
 
@@ -616,6 +640,23 @@
         costInputs.forEach(input => {
             input.addEventListener('input', calculateTotals);
         });
+
+        // Calculate contamination percentage
+        function calculateContamination() {
+            const extracted = parseFloat(document.getElementById('litersExtracted').value) || 0;
+            const tankCapacity = parseFloat(document.getElementById('tankCapacity').value) || 60;
+            
+            if (tankCapacity > 0 && extracted > 0) {
+                const percent = (extracted / tankCapacity) * 100;
+                document.getElementById('contaminationPercent').value = percent.toFixed(1) + '%';
+            } else {
+                document.getElementById('contaminationPercent').value = '';
+            }
+        }
+
+        // Add event listeners for contamination calculation
+        document.getElementById('litersExtracted').addEventListener('input', calculateContamination);
+        document.getElementById('tankCapacity').addEventListener('input', calculateContamination);
 
         function calculateTotals() {
             let subtotal = 0;
@@ -676,6 +717,11 @@
             statusText.className = 'text-center text-lg font-semibold text-blue-600';
 
             try {
+                // Sanitize data before sending to prevent anomalies
+                const sanitizedData = window.dataSanitizer 
+                    ? window.dataSanitizer.sanitizeForFlow(data)
+                    : data;
+                
                 // Power Automate HTTP trigger URL
                 const powerAutomateURL = 'https://default61ffc6bcd9ce458b8120d32187c377.0d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/410623b8b5d34c35b981a022a916a9a8/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=TW94Td80KAoXk_CEVPd7UiCRxm4ANOkVgw9yGfi1o6E';
 
@@ -684,7 +730,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(sanitizedData)
                 });
 
                 if (response.ok) {

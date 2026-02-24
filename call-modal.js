@@ -321,7 +321,7 @@ function handlePostJobRedirect() {
 
 // Handle post-job type selection (customer or supplier)
 function selectPostJobType(userType) {
-  const redirectUrl = userType === 'supplier' ? 'https://www.eek.nz/supplier-relations' : 'https://www.eek.nz/customer-escalation';
+  const redirectUrl = userType === 'supplier' ? '/contact.html?formType=supplier-relations' : '/contact.html?formType=customer-escalation';
   const pageName = userType === 'supplier' ? 'Supplier Relations' : 'Customer Escalation';
   
   // Track the user type selection
@@ -371,7 +371,7 @@ function trackPostJobRedirect(userType) {
   trackModalEvent('post_job_redirect', {
     action: 'redirect_post_job',
     userType: userType,
-    redirectUrl: userType === 'supplier' ? 'https://www.eek.nz/supplier-relations' : 'https://www.eek.nz/customer-escalation',
+    redirectUrl: userType === 'supplier' ? '/contact.html?formType=supplier-relations' : '/contact.html?formType=customer-escalation',
     trigger: 'redirect_click',
     value: 1
   });
