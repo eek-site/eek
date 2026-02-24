@@ -100,7 +100,7 @@ class UnifiedTrackingSystem {
         // Phone number management
         this.PHONE_NUMBERS = {
             main: { tel: 'tel:0800769000', display: 'Call Now' },
-            tracking: { tel: 'tel:0800447153', display: 'Call Now' },
+            tracking: { tel: 'tel:0800769000', display: 'Call Now' },
             emergency: { tel: 'tel:0800769000', display: 'Call Now' },
             winz: { tel: 'tel:0800559009', display: 'Call Now' }
         };
@@ -680,7 +680,7 @@ class UnifiedTrackingSystem {
         const hasGclid = !!this.trackingData.pageSource?.clickIds?.gclid;
         
         if (hasGclid) {
-            return this.PHONE_NUMBERS.tracking; // 0800 447 153
+            return this.PHONE_NUMBERS.tracking; // 0800 769 000
         } else {
             return this.PHONE_NUMBERS.main; // 0800 769 000
         }

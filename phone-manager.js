@@ -14,8 +14,8 @@ class PhoneManager {
             },
             // Google Ads tracking number
             tracking: {
-                tel: 'tel:0800447153', 
-                display: '0800 447 153'
+                tel: 'tel:0800769000', 
+                display: '0800 769 000'
             },
             // Supplier direct contact
             supplier: {
