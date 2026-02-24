@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Unified Tracking System - Single Source of Truth
  * Standardizes all tracking data, field names, and API calls across the entire platform
  * Replaces: enhanced-tracking.js, tracking-manager.js, phone-manager.js
@@ -147,7 +147,7 @@ class UnifiedTrackingSystem {
      * Initialize comprehensive tracking with automatic page_view (once per session)
      */
     async initializeTracking() {
-        console.log('ðŸš€ Unified Tracking System v2.1 initialized');
+        console.log('🚀 Unified Tracking System v2.1 initialized');
         
         // Initialize tracking data with proper CF_GEO waiting
         this.trackingData = await this.initializeTrackingData();
@@ -157,9 +157,9 @@ class UnifiedTrackingSystem {
         if (!sessionStorage.getItem(pageViewKey)) {
             this.trackPageView();
             sessionStorage.setItem(pageViewKey, 'true');
-            console.log('âœ… First page_view event sent for this session');
+            console.log('✅ First page_view event sent for this session');
         } else {
-            console.log('â­ï¸ Page view already sent for this session, skipping');
+            console.log('⏭️ Page view already sent for this session, skipping');
         }
         
         this.trackPageSource();
@@ -176,7 +176,7 @@ class UnifiedTrackingSystem {
         // Retry location detection after CF_GEO loads
         this.retryLocationDetection();
         
-        console.log('ðŸ“Š Tracking Data:', this.trackingData);
+        console.log('📊 Tracking Data:', this.trackingData);
     }
 
     /**
@@ -188,14 +188,14 @@ class UnifiedTrackingSystem {
             
             const checkCFGeo = () => {
                 if (window.CF_GEO && window.CF_GEO.country && window.CF_GEO.country !== 'Unknown') {
-                    console.log('âœ… CF_GEO loaded successfully:', window.CF_GEO);
+                    console.log('✅ CF_GEO loaded successfully:', window.CF_GEO);
                     resolve(window.CF_GEO);
                 } else if (retries < maxRetries) {
                     retries++;
-                    console.log(`â³ Waiting for CF_GEO... (attempt ${retries}/${maxRetries})`);
+                    console.log(`⏳ Waiting for CF_GEO... (attempt ${retries}/${maxRetries})`);
                     setTimeout(checkCFGeo, delay);
                 } else {
-                    console.log('âš ï¸ CF_GEO not available, using fallback data');
+                    console.log('⚠️ CF_GEO not available, using fallback data');
                     resolve({
                         country: 'Unknown',
                         city: 'Unknown', 
@@ -226,7 +226,7 @@ class UnifiedTrackingSystem {
             attempts++;
             
             if (window.CF_GEO && window.CF_GEO.country) {
-                console.log('ðŸŒ CF_GEO loaded, updating location data');
+                console.log('🌍 CF_GEO loaded, updating location data');
                 this.updateLocationData();
                 return;
             }
@@ -234,7 +234,7 @@ class UnifiedTrackingSystem {
             if (attempts < maxAttempts) {
                 setTimeout(checkLocation, 500); // Check every 500ms
             } else {
-                console.log('ðŸŒ CF_GEO not available after 5 seconds, using defaults');
+                console.log('🌍 CF_GEO not available after 5 seconds, using defaults');
             }
         };
         
@@ -257,7 +257,7 @@ class UnifiedTrackingSystem {
             if (currentCountry === 'Unknown' || currentCountry === 'New Zealand' || 
                 currentCity === 'Unknown' || currentCity === 'Auckland') {
                 
-                console.log('ðŸŒ Updating location data from CF_GEO (non-destructive)');
+                console.log('🌍 Updating location data from CF_GEO (non-destructive)');
                 
                 // Only update fields that are actually available in CF_GEO
                 if (geo.country && geo.country !== 'Unknown') {
@@ -291,9 +291,9 @@ class UnifiedTrackingSystem {
                 // Always update raw data for debugging
                 this.trackingData.location.raw = geo;
                 
-                console.log('ðŸŒ Location data updated (non-destructive):', this.trackingData.location);
+                console.log('🌍 Location data updated (non-destructive):', this.trackingData.location);
             } else {
-                console.log('ðŸŒ Location data already accurate, skipping update:', currentCountry, currentCity);
+                console.log('🌍 Location data already accurate, skipping update:', currentCountry, currentCity);
             }
         }
     }
@@ -419,8 +419,8 @@ class UnifiedTrackingSystem {
         const geo = await this.waitForCFGeo();
         
         // Debug logging for location data
-        console.log('ðŸŒ CF_GEO Data:', geo);
-        console.log('ðŸŒ Geo available:', !!window.CF_GEO);
+        console.log('🌍 CF_GEO Data:', geo);
+        console.log('🌍 Geo available:', !!window.CF_GEO);
         
         return {
             // Session data
@@ -506,7 +506,7 @@ class UnifiedTrackingSystem {
      * Track page view with standardized data
      */
     trackPageView() {
-        console.log('ðŸ“Š Tracking page view...');
+        console.log('📊 Tracking page view...');
         
         if (typeof gtag !== 'undefined') {
             gtag('event', 'page_view', {
@@ -752,7 +752,7 @@ class UnifiedTrackingSystem {
                     buttonClicks: this.trackingData.engagement.buttonClicks
                 });
             } else {
-                console.log('ðŸ“Š Skipping page exit tracking - insufficient engagement');
+                console.log('📊 Skipping page exit tracking - insufficient engagement');
             }
         });
     }
@@ -772,7 +772,7 @@ class UnifiedTrackingSystem {
             }
         });
         
-        console.log('ðŸ“ž Phone numbers updated:', phoneData.display);
+        console.log('📞 Phone numbers updated:', phoneData.display);
     }
 
     /**
@@ -807,7 +807,7 @@ class UnifiedTrackingSystem {
             });
         }
 
-        console.log(`ðŸ“Š Tracked: ${eventName} (${category}) - ${label}`);
+        console.log(`📊 Tracked: ${eventName} (${category}) - ${label}`);
     }
 
     /**
@@ -887,13 +887,13 @@ class UnifiedTrackingSystem {
     shouldSendTrackingData(eventType, additionalData = {}) {
         // Always send if this is the first time (no lastSentData)
         if (!this.lastSentData || !this.lastSentData.timestamp) {
-            console.log('ðŸ“Š Sending first tracking event (no previous data):', eventType);
+            console.log('📊 Sending first tracking event (no previous data):', eventType);
             return true;
         }
 
         // Always send significant events
         if (this.significantEvents.has(eventType)) {
-            console.log('ðŸ“Š Sending significant event:', eventType);
+            console.log('📊 Sending significant event:', eventType);
             return true;
         }
 
@@ -905,7 +905,7 @@ class UnifiedTrackingSystem {
         const hasServiceDataChange = this.hasServiceDataChanged(currentData);
 
         if (hasLocationChange || hasEngagementChange || hasCustomerDataChange || hasServiceDataChange) {
-            console.log('ðŸ“Š Sending due to data changes:', {
+            console.log('📊 Sending due to data changes:', {
                 location: hasLocationChange,
                 engagement: hasEngagementChange,
                 customer: hasCustomerDataChange,
@@ -919,7 +919,7 @@ class UnifiedTrackingSystem {
         if (lastSent) {
             const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
             if (new Date(lastSent) < fiveMinutesAgo) {
-                console.log('ðŸ“Š Sending due to time threshold (5 minutes)');
+                console.log('📊 Sending due to time threshold (5 minutes)');
                 return true;
             }
         }
@@ -1030,7 +1030,7 @@ class UnifiedTrackingSystem {
     async sendTrackingData(eventType, additionalData = {}) {
         // Check if this is a significant change that warrants sending
         if (!this.shouldSendTrackingData(eventType, additionalData)) {
-            console.log('ðŸ“Š Skipping tracking data send - no significant changes');
+            console.log('📊 Skipping tracking data send - no significant changes');
             return;
         }
 
@@ -1219,7 +1219,7 @@ class UnifiedTrackingSystem {
         // Sanitize payload before sending to prevent anomalies like corrupted characters
         const sanitizedPayload = this.sanitizePayload(trackingPayload);
 
-        console.log('ðŸ“Š SENDING TRACKING DATA:', {
+        console.log('📊 SENDING TRACKING DATA:', {
             eventType: eventType,
             payload: sanitizedPayload,
             payloadSize: JSON.stringify(sanitizedPayload).length,
@@ -1227,7 +1227,7 @@ class UnifiedTrackingSystem {
         });
         
         // Debug Google Ads data
-        console.log('ðŸŽ¯ Google Ads Debug:', {
+        console.log('🎯 Google Ads Debug:', {
             gclid: sanitizedPayload.gclid,
             utm: sanitizedPayload.utm,
             pageSource: sanitizedPayload.pageSource
@@ -1243,7 +1243,7 @@ class UnifiedTrackingSystem {
                 body: JSON.stringify(sanitizedPayload)
             });
             
-            console.log('ðŸ“¡ Tracking API Response:', {
+            console.log('📡 Tracking API Response:', {
                 status: response.status,
                 statusText: response.statusText,
                 ok: response.ok
@@ -1251,14 +1251,14 @@ class UnifiedTrackingSystem {
             
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error('âŒ Tracking API Error Response:', errorText);
+                console.error('❌ Tracking API Error Response:', errorText);
             } else {
                 // Save current data as last sent data after successful send
                 this.saveLastSentData(trackingPayload);
-                console.log('ðŸ’¾ Saved tracking data for future comparison');
+                console.log('💾 Saved tracking data for future comparison');
             }
         } catch (error) {
-            console.error('âŒ Tracking API Error:', {
+            console.error('❌ Tracking API Error:', {
                 message: error.message,
                 stack: error.stack,
                 name: error.name
@@ -1293,7 +1293,7 @@ class UnifiedTrackingSystem {
             
             return response.ok;
         } catch (error) {
-            console.error('âŒ Payment confirmed API error:', error);
+            console.error('❌ Payment confirmed API error:', error);
             return false;
         }
     }
@@ -1380,7 +1380,7 @@ class UnifiedTrackingSystem {
     updateTrackingData(fieldName, value, eventType = 'data_update') {
         if (this.STANDARD_FIELDS[fieldName]) {
             this.trackingData[this.STANDARD_FIELDS[fieldName]] = value;
-            console.log(`ðŸ“Š Updated ${fieldName}:`, value);
+            console.log(`📊 Updated ${fieldName}:`, value);
             
             // Send immediately for significant data changes
             if (this.isSignificantField(fieldName)) {
@@ -1451,7 +1451,7 @@ class UnifiedTrackingSystem {
         if (typeof value === 'string') {
             // Remove Unicode replacement character and other common issues
             return value
-                .replace(/\uFFFD/g, '')           // Unicode replacement char (ï¿½)
+                .replace(/\uFFFD/g, '')           // Unicode replacement char (�)
                 .replace(/[\u200B-\u200D\uFEFF]/g, '') // Zero-width chars
                 .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '') // Control chars
                 .replace(/[\uE000-\uF8FF]/g, '')  // Private use area
