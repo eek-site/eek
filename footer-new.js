@@ -50,8 +50,7 @@ class FooterManager {
           </div>
           
           <div class="eek-footer-bottom">
-            <p>© 2025 Eek Mechanical Ltd. All rights reserved.</p>
-            <p>Company No: 9365185 | NZBN: 9429053064165</p>
+            <p>© 2025 Forman Pacific, LLC ("EEK Mechanical"). All rights reserved.</p>
             <div>
               <a href="/more-options">More Options</a>
               <a href="/certification">NZIFDA Certification</a>
